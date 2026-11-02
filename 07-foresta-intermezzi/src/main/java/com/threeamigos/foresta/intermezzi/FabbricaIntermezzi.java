@@ -6,7 +6,7 @@ import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.function.Function;
-import com.threeamigos.foresta.testi.Testi;
+import com.threeamigos.foresta.testi.ProduttoreDiFrasiDelMondoCasuale;
 
 /**
  * Costruisce l'intermezzo di ogni TipoIntermezzo. La funzione riceve il tipo stesso: un intermezzo può usarlo come
@@ -15,13 +15,13 @@ import com.threeamigos.foresta.testi.Testi;
  */
 public final class FabbricaIntermezzi {
 
-	// I saluti dei negozianti (nei testi degli intermezzi)
+	// I saluti dei negozianti (da mondo.txt)
 	private static String salutoAlchimista() {
-		return Testi.formatta("intermezzi", "Fabbrica.salutoAlchimista");
+		return ProduttoreDiFrasiDelMondoCasuale.salutoDellAlchimista();
 	}
 
 	private static String salutoIncantatore() {
-		return Testi.formatta("intermezzi", "Fabbrica.salutoIncantatore");
+		return ProduttoreDiFrasiDelMondoCasuale.salutoDellIncantatore();
 	}
 
 	private static final Map<TipoIntermezzo, Function<TipoIntermezzo, Intermezzo>> COSTRUTTORI = new EnumMap<>(TipoIntermezzo.class);
@@ -31,10 +31,10 @@ public final class FabbricaIntermezzi {
 		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_FINE_PRIMA_LOCAZIONE, tipo -> new IntermezzoFinePrimaLocazione());
 		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_LOCANDA_PRIMA_VISITA, tipo -> new IntermezzoLocandaPrimaVisita());
 		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_LOCANDA_VISITA_SUCCESSIVA, tipo -> new IntermezzoLocandaVisitaSuccessiva());
-		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_ARMAIOLO, tipo -> new IntermezzoBenvenutoNegozio(tipo, NegozioInScena.ARMAIOLO, Testi.formatta("intermezzi", "Fabbrica.salutoArmaiolo")));
+		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_ARMAIOLO, tipo -> new IntermezzoBenvenutoNegozio(tipo, NegozioInScena.ARMAIOLO, ProduttoreDiFrasiDelMondoCasuale.salutoDellArmaiolo()));
 		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_ALCHIMISTA, tipo -> new IntermezzoOroscopo(tipo, salutoAlchimista()));
 		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_SPADA_NASCOSTA, tipo -> new IntermezzoSpadaNascosta(tipo, salutoAlchimista()));
-		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_VENDITORE_DI_PERGAMENE, tipo -> new IntermezzoBenvenutoNegozio(tipo, NegozioInScena.VENDITORE_DI_PERGAMENE, Testi.formatta("intermezzi", "Fabbrica.salutoVenditore")));
+		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_VENDITORE_DI_PERGAMENE, tipo -> new IntermezzoBenvenutoNegozio(tipo, NegozioInScena.VENDITORE_DI_PERGAMENE, ProduttoreDiFrasiDelMondoCasuale.salutoDelVenditoreDiPergamene()));
 		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_INCANTATORE, tipo -> new IntermezzoBenvenutoNegozio(tipo, NegozioInScena.INCANTATORE, salutoIncantatore()));
 		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_RIPROGRAMMAZIONE, tipo -> new IntermezzoRiprogrammazione(tipo, salutoIncantatore()));
 		COSTRUTTORI.put(TipoIntermezzo.INTERMEZZO_ACCAMPAMENTO, tipo -> new IntermezzoAccampamento());

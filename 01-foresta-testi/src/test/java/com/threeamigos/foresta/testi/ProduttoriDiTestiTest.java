@@ -39,6 +39,42 @@ class ProduttoriDiTestiTest {
 	}
 
 	@Test
+	void iSalutiDeiNegozianti() {
+		java.util.Map<String, java.util.function.Supplier<String>> saluti = new java.util.LinkedHashMap<>();
+		saluti.put("armaiolo", ProduttoreDiFrasiDelMondoCasuale::salutoDellArmaiolo);
+		saluti.put("alchimista", ProduttoreDiFrasiDelMondoCasuale::salutoDellAlchimista);
+		saluti.put("incantatore", ProduttoreDiFrasiDelMondoCasuale::salutoDellIncantatore);
+		saluti.put("venditore", ProduttoreDiFrasiDelMondoCasuale::salutoDelVenditoreDiPergamene);
+		for (java.util.Map.Entry<String, java.util.function.Supplier<String>> saluto : saluti.entrySet()) {
+			java.util.Set<String> viste = new java.util.HashSet<>();
+			for (int i = 0; i < 300; i++) {
+				String frase = saluto.getValue().get();
+				assertNonVuoto(frase, saluto.getKey());
+				assertFalse(frase.matches("(?s).*[\\[\\]{}|].*"), frase);
+				viste.add(frase);
+			}
+			assertTrue(viste.size() >= 3, saluto.getKey() + ": le varianti escono, non una sola: " + viste);
+		}
+	}
+
+	@Test
+	void laScenettaDelNegozioAperto() {
+		java.util.Set<String> domande = new java.util.HashSet<>();
+		java.util.Set<String> risposte = new java.util.HashSet<>();
+		for (int i = 0; i < 300; i++) {
+			String domanda = ProduttoreDiFrasiDelMondoCasuale.domandaAlNegozianteSempreAperto("armaioli");
+			String risposta = ProduttoreDiFrasiDelMondoCasuale.rispostaDelNegozianteSempreAperto();
+			assertTrue(domanda.contains("armaioli") && !domanda.contains("negozianti"), domanda);
+			assertNonVuoto(risposta, "risposta");
+			assertFalse((domanda + risposta).matches("(?s).*[\\[\\]{}|].*"), domanda + risposta);
+			domande.add(domanda);
+			risposte.add(risposta);
+		}
+		assertEquals(4, domande.size());
+		assertEquals(9, risposte.size());
+	}
+
+	@Test
 	void leFrasiDellaSfidaNonSonoVuote() {
 		assertNonVuoto(ProduttoreDiSfideCasuale.fraseDiSfida(), "sfida");
 		assertNonVuoto(ProduttoreDiSfideCasuale.fraseSeIlGiocatoreVince(), "vince");

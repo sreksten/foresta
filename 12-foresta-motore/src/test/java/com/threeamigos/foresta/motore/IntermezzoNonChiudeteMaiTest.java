@@ -18,6 +18,11 @@ import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Predicate;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -27,9 +32,26 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class IntermezzoNonChiudeteMaiTest {
 
-	private static final String DOMANDA_ALL_ARMAIOLO = "Ma voi armaioli non chiudete mai?";
-	private static final String DOMANDA_AL_LOCANDIERE = "Ma voi locandieri non chiudete mai?";
-	private static final String RISPOSTA = "No, perché esistono clienti come te.";
+	// Domanda e risposta sono estratte a caso fra le varianti di mondo.txt: qui si riconoscono tutte
+	private static final Predicate<String> DOMANDA_ALL_ARMAIOLO = domandaA("armaioli");
+	private static final Predicate<String> DOMANDA_AL_LOCANDIERE = domandaA("locandieri");
+	private static final Set<String> RISPOSTE = new HashSet<>(Arrays.asList(
+			"No, perché esistono clienti come te.",
+			"Chiudere? Di notte si fanno gli affari migliori: i clienti non guardano il prezzo, guardano dietro di sé.",
+			"Di giorno i clienti chiedono lo sconto. Di notte pagano e non fanno domande.",
+			"Di notte nessuno contratta: hanno tutti fretta, e la fretta si paga.",
+			"Chiudo quando smettono di bussare. I clienti notturni, poi, sono i migliori: pagano il doppio per non farsi vedere.",
+			"Chiudere? E chi pagherebbe l'affitto?",
+			"Chiudo quando finiscono i clienti. Purtroppo ne arrivano sempre.",
+			"Il sonno è per chi non ha debiti.",
+			"Il denaro non dorme mai, e nemmeno io."));
+	private static final Predicate<String> RISPOSTA = RISPOSTE::contains;
+
+	/** Una delle domande del capo ai {@code negozianti}, qualunque variante. */
+	private static Predicate<String> domandaA(String negozianti) {
+		return testo -> testo.contains(negozianti) && (testo.contains("non chiudete mai") || testo.contains("non dovreste essere chiusi")
+				|| testo.contains("non dormite mai") || testo.contains("non avete una casa"));
+	}
 
 	@Test
 	void diNotteLaPrimaVoltaInNegozioCeSoloIlBenvenutoPoiLaScenettaUnaVoltaSola() {
@@ -148,10 +170,10 @@ class IntermezzoNonChiudeteMaiTest {
 	/**
 	 * Quante volte e' stata detta una battuta, in tutti gli intermezzi mostrati finora.
 	 */
-	private static long conta(PartitaDiTest partita, String battuta) {
+	private static long conta(PartitaDiTest partita, Predicate<String> battuta) {
 		return partita.eventi().tutti(NotificaPaginaIntermezzo.class).stream()
 				.flatMap(n -> n.getPagina().getBattuteProgrammate().stream())
-				.filter(b -> battuta.equals(b.getBattuta().getTesto()))
+				.filter(b -> battuta.test(b.getBattuta().getTesto()))
 				.count();
 	}
 }

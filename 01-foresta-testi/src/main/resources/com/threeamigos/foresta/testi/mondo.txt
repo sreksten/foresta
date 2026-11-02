@@ -20,3 +20,50 @@ SCOPO_EROE
     Sto cercando il Drago.
     Cacciatore di draghi.
     Sono {sulle tracce|a caccia} del Drago.
+
+// I saluti dei negozianti quando il gruppo entra per la prima volta nella bottega (intermezzi di ingresso nei negozi). La prima
+// alternativa di ognuno è il saluto originale: dice che cosa fa il negozio, le altre ci girano intorno.
+SALUTO_ARMAIOLO
+    Benvenuto nella mia bottega da armaiolo. Compro e vendo armi, armature, elmi, tutto della migliore qualità.
+    Avanti, avanti! Qui si forgia, si compra e si vende: armi, armature, elmi. Niente scarti, solo roba buona.
+    Benvenuti. Spade, scudi, armature ed elmi: se serve per picchiare o per non essere picchiati, qui lo trovate.
+    Entrate pure, ma non toccate la merce con i guanti sporchi. Compro e vendo ogni genere di arma e di armatura.
+
+SALUTO_ALCHIMISTA
+    Benvenuti nella mia bottega da Alchimista! Posso vendervi incantesimi, pozioni, mappe oppure incrementare il vostro potere magico.
+    Entrate, entrate, ma non toccate niente! Ho incantesimi, pozioni e mappe, e posso anche accrescere il vostro potere magico.
+    Benvenuti nella mia bottega! Pozioni, incantesimi, mappe e, per chi vuole di più, un bel potenziamento magico.
+    Ah, clienti! Attenti a dove mettete i piedi: alcune pozioni sono ancora in fase di sperimentazione. Vendo incantesimi, pozioni e mappe, e accresco il potere magico.
+
+SALUTO_INCANTATORE
+    Benvenuti nel mio laboratorio di incantamenti. Posso migliorare le vostre armi con quel pizzico di magia in più.
+    Benvenuti nel mio laboratorio. Datemi le vostre armi e ve le restituirò con quel pizzico di magia in più.
+    Salve! Qui gli incantamenti sono la specialità della casa: posso migliorare le vostre armi con un tocco di magia.
+
+SALUTO_VENDITORE
+    Benvenuti nel mio negozio di Pergamene, Amuleti, Gingilli e Ninnoli vari! Questi sono gli ingredienti di base necessari per migliorare le vostre armi.
+    Benvenuti! Pergamene, amuleti, gingilli e ninnoli: tutto ciò che serve per migliorare le vostre armi, a portata di mano.
+    Avvicinatevi, avvicinatevi! Ninnoli e gingilli d'ogni sorta, e gli ingredienti di base per potenziare le vostre armi.
+
+// La scenetta della notte nei negozi: il capo chiede se non chiudono mai e il negoziante risponde. Domanda e risposta si
+// estraggono a caso, indipendenti. NEGOZIANTI (il plurale del mestiere, "gli armaioli") lo fissa il codice prima di produrre; il
+// valore scritto qui serve solo a far esistere la produzione.
+NEGOZIANTI
+    i negozianti
+
+NON_CHIUDETE_MAI_DOMANDA
+    Ma voi [*NEGOZIANTI] non chiudete mai?
+    Scusate, a quest'ora non dovreste essere chiusi, voi [*NEGOZIANTI]?
+    Ma non dormite mai, voi [*NEGOZIANTI]?
+    Aperti a quest'ora? Ma voi [*NEGOZIANTI] non avete una casa?
+
+NON_CHIUDETE_MAI_RISPOSTA
+    No, perché esistono clienti come te.
+    Chiudere? Di notte si fanno gli affari migliori: i clienti non guardano il prezzo, guardano dietro di sé.
+    Di giorno i clienti chiedono lo sconto. Di notte pagano e non fanno domande.
+    Di notte nessuno contratta: hanno tutti fretta, e la fretta si paga.
+    Chiudo quando smettono di bussare. I clienti notturni, poi, sono i migliori: pagano il doppio per non farsi vedere.
+    Chiudere? E chi pagherebbe l'affitto?
+    Chiudo quando finiscono i clienti. Purtroppo ne arrivano sempre.
+    Il sonno è per chi non ha debiti.
+    Il denaro non dorme mai, e nemmeno io.

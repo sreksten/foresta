@@ -70,8 +70,9 @@ public class ScacciareINonMorti implements Abilita {
 				avversario.addEffettoDiStato(TipoEffettoDiStato.SPAVENTATO,
 						CalcolatoreCombattimento.calcolaDurataStato(avversario, TipoEffettoDiStato.SPAVENTATO), 0);
 			} else {
-				BusEventi.pubblica(new NotificaTestoFrase(avversario.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-						Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " resiste."));
+				BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "ScacciareINonMorti.resiste",
+						avversario.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+								Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 			}
 		}
 		return true;

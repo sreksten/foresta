@@ -7,7 +7,7 @@ import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 
 import java.util.List;
-import com.threeamigos.foresta.testi.Testi;
+import com.threeamigos.foresta.testi.ProduttoreDiFrasiDelMondoCasuale;
 
 /**
  * Scenetta di chi entra in un negozio o in una locanda a ore impossibili (dopo la chiusura
@@ -56,8 +56,8 @@ public class IntermezzoNonChiudeteMai implements Intermezzo {
 	@Override
 	public List<PaginaIntermezzo> getPagine() {
 		return negozio.entraIlGruppo()
-				.parlaIlCapo(Testi.formatta("intermezzi", "IntermezzoNonChiudeteMai.1", negozio.getNegozianti()))
-				.parlaIlNegoziante(Testi.formatta("intermezzi", "IntermezzoNonChiudeteMai.2"))
+				.parlaIlCapo(ProduttoreDiFrasiDelMondoCasuale.domandaAlNegozianteSempreAperto(negozio.getNegozianti()))
+				.parlaIlNegoziante(ProduttoreDiFrasiDelMondoCasuale.rispostaDelNegozianteSempreAperto())
 				.getPagine();
 	}
 }

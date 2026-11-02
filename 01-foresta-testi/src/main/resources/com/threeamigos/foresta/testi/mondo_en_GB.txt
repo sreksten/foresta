@@ -1,0 +1,69 @@
+// The phrases the characters of the world speak in the comic bubbles and in dialogues, with some variety. Same productions as
+// mondo.txt, the Italian base. Used by ProduttoreDiFrasiDelMondoCasuale and, with #include, by the grammars that need a shared
+// formula (for example the one an innkeeper uses to say his name).
+//
+// Characters not to use in the texts: [ ] { } | " (GrammarBean syntax).
+
+// The hero introduces himself to the hermit (introductory intermezzo). NOME_EROE is passed by whoever produces (addFixedProduction).
+PRESENTAZIONE_EROE
+    [FORMULA_NOME] [*NOME_EROE]. [SCOPO_EROE]
+
+// NOME_EROE is fixed by the code before producing; the value written here only makes the production exist.
+NOME_EROE
+    the hero
+
+// How people introduce themselves: followed by the name.
+FORMULA_NOME
+    My name is | I'm | Name's
+
+SCOPO_EROE
+    I am looking for the Dragon.
+    Dragon hunter.
+    I'm {chasing|hunting} the Dragon.
+
+// The shopkeepers' greetings when the party enters a shop for the first time (shop entrance intermezzi). The first alternative of
+// each is the original greeting: it says what the shop does, the others play around it.
+SALUTO_ARMAIOLO
+    Welcome to my armourer's shop. I buy and sell weapons, armour, helmets, everything of the finest quality.
+    Come in, come in! Here we forge, buy and sell: weapons, armour, helmets. No junk, only the good stuff.
+    Welcome. Swords, shields, armour and helmets: if it hits things or stops things hitting you, you'll find it here.
+    Step inside, but don't touch the merchandise with dirty gloves. I buy and sell every kind of weapon and armour.
+
+SALUTO_ALCHIMISTA
+    Welcome to my Alchemist's shop! I can sell you spells, potions, maps, or increase your magic power.
+    Come in, come in, but don't touch anything! I have spells, potions and maps, and I can also increase your magic power.
+    Welcome to my shop! Potions, spells, maps and, for those who want more, a nice magical upgrade.
+    Ah, customers! Mind where you step: some potions are still being tested. I sell spells, potions and maps, and I increase magic power.
+
+SALUTO_INCANTATORE
+    Welcome to my enchantment workshop. I can improve your weapons with that extra pinch of magic.
+    Welcome to my workshop. Hand me your weapons and I'll give them back with that extra pinch of magic.
+    Hello there! Enchantments are the house specialty: I can improve your weapons with a touch of magic.
+
+SALUTO_VENDITORE
+    Welcome to my shop of Scrolls, Amulets, Knickknacks and Trinkets! These are the basic ingredients needed to improve your weapons.
+    Welcome! Scrolls, amulets, knickknacks and trinkets: everything you need to improve your weapons, right at hand.
+    Step right up! Trinkets and knickknacks of every sort, plus the basic ingredients to upgrade your weapons.
+
+// The night scene in the shops: the leader asks whether they ever close and the shopkeeper answers. Question and answer are
+// drawn at random, independently. NEGOZIANTI (the plural of the trade, "the armourers") is fixed by the code before producing;
+// the value written here only makes the production exist.
+NEGOZIANTI
+    shopkeepers
+
+NON_CHIUDETE_MAI_DOMANDA
+    Don't you [*NEGOZIANTI] ever close?
+    Excuse me, shouldn't you [*NEGOZIANTI] be closed at this hour?
+    Don't you [*NEGOZIANTI] ever sleep?
+    Open at this hour? Don't you [*NEGOZIANTI] have a home?
+
+NON_CHIUDETE_MAI_RISPOSTA
+    No, because customers like you exist.
+    Close? The best deals are made at night: customers don't look at the price, they look over their shoulders.
+    By day customers ask for a discount. At night they pay and ask no questions.
+    Nobody haggles at night: everyone is in a hurry, and hurry has a price.
+    I close when the knocking stops. Night customers are the best anyway: they pay double not to be seen.
+    Close? And who would pay the rent?
+    I close when the customers run out. Sadly, more keep coming.
+    Sleep is for people without debts.
+    Money never sleeps, and neither do I.
