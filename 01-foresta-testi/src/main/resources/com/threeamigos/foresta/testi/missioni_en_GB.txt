@@ -3926,4 +3926,182 @@ INTERMEZZO_EREMITA_ROMPISCATOLE_1
 INTERMEZZO_EREMITA_ROMPISCATOLE_2
     This forest was a peaceful place before you damned pests arrived!
 
+// ---------------------------------------------------------------------------------------------
+// Il genere (vedi MaterialeRichiesto, OggettoSmarrito, Spedizione): pronomi, aggettivi e participi che cambiano secondo il genere dell'oggetto
+// ---------------------------------------------------------------------------------------------
+
+// Il genere: il testo cambia fra femminile (F) e maschile (M)
+GENERE_PRONOME_PLURALE_F
+    them
+
+GENERE_PRONOME_PLURALE_M
+    them
+
+GENERE_TUTTI_F
+    all
+
+GENERE_TUTTI_M
+    all
+
+GENERE_POSSESSIVO_PLURALE_F
+    My
+
+GENERE_POSSESSIVO_PLURALE_M
+    My
+
+GENERE_PRONOME_SINGOLARE_F
+    it
+
+GENERE_PRONOME_SINGOLARE_M
+    it
+
+GENERE_QUESTO_F
+    this
+
+GENERE_QUESTO_M
+    this
+
+GENERE_PERSO_F
+    lost
+
+GENERE_PERSO_M
+    lost
+
+// ---------------------------------------------------------------------------------------------
+// I luoghi dove si trovano i materiali (vedi MaterialeRichiesto)
+// ---------------------------------------------------------------------------------------------
+
+// Dove si trovano i materiali, secondo il luogo
+LUOGO_IN_RADURA
+    in clearings
+
+LUOGO_IN_BOSCO
+    in the woods
+
+LUOGO_IN_GROTTA
+    in caves
+
+LUOGO_IN_ROVINE
+    among ruins
+
+LUOGO_IN_PALUDE
+    in swamps
+
+// ---------------------------------------------------------------------------------------------
+// I luoghi con l'articolo (vedi TestiDeiLuoghi)
+// ---------------------------------------------------------------------------------------------
+
+// I luoghi con l'articolo, indeterminativo (UN_...) e determinativo (IL_..., LA_...); DENTRO e DENTRO_ROVINE sono la preposizione davanti all'indeterminativo (il codice mette lo spazio)
+TESTI_DEI_LUOGHI_UNA_GROTTA
+    a cave
+
+TESTI_DEI_LUOGHI_DELLE_ROVINE
+    some ruins
+
+TESTI_DEI_LUOGHI_UN_BOSCO
+    a wood
+
+TESTI_DEI_LUOGHI_UNA_PALUDE
+    a swamp
+
+TESTI_DEI_LUOGHI_UNA_RADURA
+    a clearing
+
+TESTI_DEI_LUOGHI_UN_TEMPIO
+    a temple
+
+TESTI_DEI_LUOGHI_UNA_LOCANDA
+    an inn
+
+TESTI_DEI_LUOGHI_UN_POSTO
+    a place
+
+TESTI_DEI_LUOGHI_IL_POSTO
+    the place
+
+TESTI_DEI_LUOGHI_LA_GROTTA
+    the cave
+
+TESTI_DEI_LUOGHI_IL_BOSCO
+    the wood
+
+TESTI_DEI_LUOGHI_LA_PALUDE
+    the swamp
+
+TESTI_DEI_LUOGHI_LA_RADURA
+    the clearing
+
+TESTI_DEI_LUOGHI_LA_LOCANDA
+    the inn
+
+TESTI_DEI_LUOGHI_DENTRO
+    in
+
+TESTI_DEI_LUOGHI_DENTRO_ROVINE
+    among
+
+// ---------------------------------------------------------------------------------------------
+// Dove si trovano i materiali richiesti (vedi MaterialeRichiesto)
+// ---------------------------------------------------------------------------------------------
+
+// Come si prendono i materiali
+MATERIALE_RICHIESTO_UNA_PER_UNA
+    one by one
+
+MATERIALE_RICHIESTO_UNO_PER_UNO
+    one by one
+
+MATERIALE_RICHIESTO_SI_PRENDONO
+    are obtained by defeating %PARAM_ELENCO%
+
+MATERIALE_RICHIESTO_SI_TROVANO
+    are found %PARAM_ELENCO%
+
+MATERIALE_RICHIESTO_SI_PRENDONO_FRASE
+    you get them by defeating %PARAM_ELENCO%
+
+MATERIALE_RICHIESTO_SI_TROVANO_FRASE
+    you'll find them %PARAM_ELENCO%
+
+// ---------------------------------------------------------------------------------------------
+// I mandanti degli incarichi di materiali (vedi Mandante): %PARAM_NOME_PROPRIO% è ', Nome,' oppure ','; %PARAM_PRONOME% è il pronome dei materiali
+// ---------------------------------------------------------------------------------------------
+
+// I mandanti: il nome, la prima battuta (con il nome proprio, se c'è) e che cosa fanno dei materiali (con il pronome)
+MANDANTE_NOME_ALCHIMISTA
+    the alchemist
+
+MANDANTE_NOME_ARMAIOLO
+    the armourer
+
+MANDANTE_NOME_LOCANDIERE
+    the innkeeper
+
+MANDANTE_NOME_CAPITANO
+    the captain of the guard
+
+MANDANTE_APERTURA_ALCHIMISTA
+    Good day, travellers. By any chance, are you going around the forest?
+
+MANDANTE_ALLA_CONSEGNA_ALCHIMISTA
+    who sniffs %PARAM_PRONOME% with satisfaction
+
+MANDANTE_APERTURA_ARMAIOLO
+    Hey, you! I need some material for the forge, and you look like folks who aren't afraid to get their hands dirty.
+
+MANDANTE_ALLA_CONSEGNA_ARMAIOLO
+    who weighs %PARAM_PRONOME% with a craftsman's eye
+
+MANDANTE_APERTURA_CAPITANO
+    You look like folks who know how to use a sword. I'm the captain of the guard%PARAM_NOME_PROPRIO% and I need proof.
+
+MANDANTE_ALLA_CONSEGNA_CAPITANO
+    who counts %PARAM_PRONOME% carefully
+
+MANDANTE_APERTURA_LOCANDIERE
+    Travellers! My swamp soups are famous throughout the forest, but nobody brings me swamp ingredients any more.
+
+MANDANTE_ALLA_CONSEGNA_LOCANDIERE
+    who takes %PARAM_PRONOME% straight to the kitchen
+
 #include_static <nomi_en_GB.txt>

@@ -8,6 +8,7 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.*;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.testi.Genere;
@@ -171,28 +172,28 @@ public final class MaterialeRichiesto {
 	 * Il pronome per il plurale: "le" o "li".
 	 */
 	public String getPronome() {
-		return Testi.formatta("missioni", "Genere.pronomePlurale." + (femminile ? "F" : "M"));
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("GENERE_PRONOME_PLURALE_" + (femminile ? "F" : "M"));
 	}
 
 	/**
 	 * "tutte" o "tutti".
 	 */
 	public String getTutti() {
-		return Testi.formatta("missioni", "Genere.tutti." + (femminile ? "F" : "M"));
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("GENERE_TUTTI_" + (femminile ? "F" : "M"));
 	}
 
 	/**
 	 * "una per una" o "uno per uno".
 	 */
 	public String getUnoPerUno() {
-		return femminile ? Testi.formatta("missioni", "MaterialeRichiesto.s1") : Testi.formatta("missioni", "MaterialeRichiesto.s2");
+		return femminile ? ProduttoreDiMissioniCasuale.testoDellaMissione("MATERIALE_RICHIESTO_UNA_PER_UNA") : ProduttoreDiMissioniCasuale.testoDellaMissione("MATERIALE_RICHIESTO_UNO_PER_UNO");
 	}
 
 	/**
 	 * "Le mie" o "I miei".
 	 */
 	public String getPossessivo() {
-		return Testi.formatta("missioni", "Genere.possessivoPlurale." + (femminile ? "F" : "M"));
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("GENERE_POSSESSIVO_PLURALE_" + (femminile ? "F" : "M"));
 	}
 
 	public int getQuantitaMinima() {
@@ -227,7 +228,7 @@ public final class MaterialeRichiesto {
 	 * inglese la forma dopo "which" ("which are found in the clearings") non regge da sola.
 	 */
 	public String getDaDoveVieneComeFrase() {
-		return daDoveViene(".frase");
+		return daDoveViene("_FRASE");
 	}
 
 	private String daDoveViene(String suffisso) {
@@ -237,31 +238,31 @@ public final class MaterialeRichiesto {
 				Personaggio modello = FabbricaPersonaggi.modello(nemico);
 				parti.add(modello.getADP() + modello.getNomePlurale());
 			}
-			return Testi.formatta("missioni", "MaterialeRichiesto.t1" + suffisso, elenco(parti));
+			return ProduttoreDiMissioniCasuale.testoDellaMissione("MATERIALE_RICHIESTO_SI_PRENDONO" + suffisso, "PARAM_ELENCO", elenco(parti));
 		}
 		for (TipoLocazione luogo : luoghi) {
 			switch (luogo) {
 				case RADURA:
-					parti.add(Testi.formatta("missioni", "Luogo.in.RADURA"));
+					parti.add(ProduttoreDiMissioniCasuale.testoDellaMissione("LUOGO_IN_RADURA"));
 					break;
 				case BOSCO:
-					parti.add(Testi.formatta("missioni", "Luogo.in.BOSCO"));
+					parti.add(ProduttoreDiMissioniCasuale.testoDellaMissione("LUOGO_IN_BOSCO"));
 					break;
 				case GROTTA:
-					parti.add(Testi.formatta("missioni", "Luogo.in.GROTTA"));
+					parti.add(ProduttoreDiMissioniCasuale.testoDellaMissione("LUOGO_IN_GROTTA"));
 					break;
 				case ROVINE:
-					parti.add(Testi.formatta("missioni", "Luogo.in.ROVINE"));
+					parti.add(ProduttoreDiMissioniCasuale.testoDellaMissione("LUOGO_IN_ROVINE"));
 					break;
 				case PALUDE:
-					parti.add(Testi.formatta("missioni", "Luogo.in.PALUDE"));
+					parti.add(ProduttoreDiMissioniCasuale.testoDellaMissione("LUOGO_IN_PALUDE"));
 					break;
 				default:
 					parti.add(Lingue.corrente().conPreposizione(Preposizione.IN, luogo.name().toLowerCase(Locale.ROOT)));
 					break;
 			}
 		}
-		return Testi.formatta("missioni", "MaterialeRichiesto.t2" + suffisso, elenco(parti));
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("MATERIALE_RICHIESTO_SI_TROVANO" + suffisso, "PARAM_ELENCO", elenco(parti));
 	}
 
 	private static String elenco(List<String> parti) {

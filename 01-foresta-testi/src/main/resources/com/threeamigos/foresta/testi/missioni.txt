@@ -4203,4 +4203,182 @@ INTERMEZZO_EREMITA_ROMPISCATOLE_1
 INTERMEZZO_EREMITA_ROMPISCATOLE_2
     Questa foresta era un luogo tranquillo prima che voi maledetti rompiscatole arrivaste!
 
+// ---------------------------------------------------------------------------------------------
+// Il genere (vedi MaterialeRichiesto, OggettoSmarrito, Spedizione): pronomi, aggettivi e participi che cambiano secondo il genere dell'oggetto
+// ---------------------------------------------------------------------------------------------
+
+// Il genere: il testo cambia fra femminile (F) e maschile (M)
+GENERE_PRONOME_PLURALE_F
+    le
+
+GENERE_PRONOME_PLURALE_M
+    li
+
+GENERE_TUTTI_F
+    tutte
+
+GENERE_TUTTI_M
+    tutti
+
+GENERE_POSSESSIVO_PLURALE_F
+    Le mie
+
+GENERE_POSSESSIVO_PLURALE_M
+    I miei
+
+GENERE_PRONOME_SINGOLARE_F
+    la
+
+GENERE_PRONOME_SINGOLARE_M
+    lo
+
+GENERE_QUESTO_F
+    questa
+
+GENERE_QUESTO_M
+    questo
+
+GENERE_PERSO_F
+    persa
+
+GENERE_PERSO_M
+    perso
+
+// ---------------------------------------------------------------------------------------------
+// I luoghi dove si trovano i materiali (vedi MaterialeRichiesto)
+// ---------------------------------------------------------------------------------------------
+
+// Dove si trovano i materiali, secondo il luogo
+LUOGO_IN_RADURA
+    nelle radure
+
+LUOGO_IN_BOSCO
+    nei boschi
+
+LUOGO_IN_GROTTA
+    nelle grotte
+
+LUOGO_IN_ROVINE
+    fra le rovine
+
+LUOGO_IN_PALUDE
+    nelle paludi
+
+// ---------------------------------------------------------------------------------------------
+// I luoghi con l'articolo (vedi TestiDeiLuoghi)
+// ---------------------------------------------------------------------------------------------
+
+// I luoghi con l'articolo, indeterminativo (UN_...) e determinativo (IL_..., LA_...); DENTRO e DENTRO_ROVINE sono la preposizione davanti all'indeterminativo (il codice mette lo spazio)
+TESTI_DEI_LUOGHI_UNA_GROTTA
+    una grotta
+
+TESTI_DEI_LUOGHI_DELLE_ROVINE
+    delle rovine
+
+TESTI_DEI_LUOGHI_UN_BOSCO
+    un bosco
+
+TESTI_DEI_LUOGHI_UNA_PALUDE
+    una palude
+
+TESTI_DEI_LUOGHI_UNA_RADURA
+    una radura
+
+TESTI_DEI_LUOGHI_UN_TEMPIO
+    un tempio
+
+TESTI_DEI_LUOGHI_UNA_LOCANDA
+    una locanda
+
+TESTI_DEI_LUOGHI_UN_POSTO
+    un posto
+
+TESTI_DEI_LUOGHI_IL_POSTO
+    il posto
+
+TESTI_DEI_LUOGHI_LA_GROTTA
+    la grotta
+
+TESTI_DEI_LUOGHI_IL_BOSCO
+    il bosco
+
+TESTI_DEI_LUOGHI_LA_PALUDE
+    la palude
+
+TESTI_DEI_LUOGHI_LA_RADURA
+    la radura
+
+TESTI_DEI_LUOGHI_LA_LOCANDA
+    la locanda
+
+TESTI_DEI_LUOGHI_DENTRO
+    in
+
+TESTI_DEI_LUOGHI_DENTRO_ROVINE
+    fra
+
+// ---------------------------------------------------------------------------------------------
+// Dove si trovano i materiali richiesti (vedi MaterialeRichiesto)
+// ---------------------------------------------------------------------------------------------
+
+// Come si prendono i materiali
+MATERIALE_RICHIESTO_UNA_PER_UNA
+    una per una
+
+MATERIALE_RICHIESTO_UNO_PER_UNO
+    uno per uno
+
+MATERIALE_RICHIESTO_SI_PRENDONO
+    si prendono sconfiggendo %PARAM_ELENCO%
+
+MATERIALE_RICHIESTO_SI_TROVANO
+    si trovano %PARAM_ELENCO%
+
+MATERIALE_RICHIESTO_SI_PRENDONO_FRASE
+    si prendono sconfiggendo %PARAM_ELENCO%
+
+MATERIALE_RICHIESTO_SI_TROVANO_FRASE
+    si trovano %PARAM_ELENCO%
+
+// ---------------------------------------------------------------------------------------------
+// I mandanti degli incarichi di materiali (vedi Mandante): %PARAM_NOME_PROPRIO% è ', Nome,' oppure ','; %PARAM_PRONOME% è il pronome dei materiali
+// ---------------------------------------------------------------------------------------------
+
+// I mandanti: il nome, la prima battuta (con il nome proprio, se c'è) e che cosa fanno dei materiali (con il pronome)
+MANDANTE_NOME_ALCHIMISTA
+    l'alchimista
+
+MANDANTE_NOME_ARMAIOLO
+    l'armaiolo
+
+MANDANTE_NOME_LOCANDIERE
+    il locandiere
+
+MANDANTE_NOME_CAPITANO
+    il capitano delle guardie
+
+MANDANTE_APERTURA_ALCHIMISTA
+    Buongiorno, viaggiatori. Non è che andate in giro per la foresta?
+
+MANDANTE_ALLA_CONSEGNA_ALCHIMISTA
+    che %PARAM_PRONOME% annusa soddisfatto
+
+MANDANTE_APERTURA_ARMAIOLO
+    Ehi, voi! Mi serve del materiale per la forgia, e voi avete l'aria di chi non ha paura di sporcarsi.
+
+MANDANTE_ALLA_CONSEGNA_ARMAIOLO
+    che %PARAM_PRONOME% soppesa con l'occhio del mestiere
+
+MANDANTE_APERTURA_CAPITANO
+    Voi avete l'aria di chi sa usare una spada. Sono il capitano delle guardie%PARAM_NOME_PROPRIO% e ho bisogno di prove.
+
+MANDANTE_ALLA_CONSEGNA_CAPITANO
+    che %PARAM_PRONOME% conta per bene
+
+MANDANTE_APERTURA_LOCANDIERE
+    Viaggiatori! Le mie zuppe di palude sono famose in tutta la foresta, ma la palude non me la porta più nessuno.
+
+MANDANTE_ALLA_CONSEGNA_LOCANDIERE
+    che %PARAM_PRONOME% porta subito in cucina
+
 #include_static <nomi.txt>

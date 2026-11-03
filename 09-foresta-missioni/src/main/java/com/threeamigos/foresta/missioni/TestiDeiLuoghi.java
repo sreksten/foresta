@@ -4,6 +4,7 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
@@ -20,21 +21,21 @@ public final class TestiDeiLuoghi {
 	public static String indefinito(TipoLocazione tipo) {
 		switch (tipo) {
 			case GROTTA:
-				return Testi.formatta("missioni", "TestiDeiLuoghi.t1");
+				return ProduttoreDiMissioniCasuale.testoDellaMissione("TESTI_DEI_LUOGHI_UNA_GROTTA");
 			case ROVINE:
-				return Testi.formatta("missioni", "TestiDeiLuoghi.t2");
+				return ProduttoreDiMissioniCasuale.testoDellaMissione("TESTI_DEI_LUOGHI_DELLE_ROVINE");
 			case BOSCO:
-				return Testi.formatta("missioni", "TestiDeiLuoghi.t3");
+				return ProduttoreDiMissioniCasuale.testoDellaMissione("TESTI_DEI_LUOGHI_UN_BOSCO");
 			case PALUDE:
-				return Testi.formatta("missioni", "TestiDeiLuoghi.t4");
+				return ProduttoreDiMissioniCasuale.testoDellaMissione("TESTI_DEI_LUOGHI_UNA_PALUDE");
 			case RADURA:
-				return Testi.formatta("missioni", "TestiDeiLuoghi.t5");
+				return ProduttoreDiMissioniCasuale.testoDellaMissione("TESTI_DEI_LUOGHI_UNA_RADURA");
 			case TEMPIO:
-				return Testi.formatta("missioni", "TestiDeiLuoghi.t6");
+				return ProduttoreDiMissioniCasuale.testoDellaMissione("TESTI_DEI_LUOGHI_UN_TEMPIO");
 			case LOCANDA:
-				return Testi.formatta("missioni", "TestiDeiLuoghi.t7");
+				return ProduttoreDiMissioniCasuale.testoDellaMissione("TESTI_DEI_LUOGHI_UNA_LOCANDA");
 			default:
-				return Testi.formatta("missioni", "TestiDeiLuoghi.t8");
+				return ProduttoreDiMissioniCasuale.testoDellaMissione("TESTI_DEI_LUOGHI_UN_POSTO");
 		}
 	}
 
@@ -42,7 +43,7 @@ public final class TestiDeiLuoghi {
 	 * Dentro un luogo di quella classe: "in una grotta", "fra delle rovine".
 	 */
 	public static String dentro(TipoLocazione tipo) {
-		return Testi.formatta("missioni", tipo == TipoLocazione.ROVINE ? "TestiDeiLuoghi.dentroRovine" : "TestiDeiLuoghi.dentro") + indefinito(tipo);
+		return ProduttoreDiMissioniCasuale.testoDellaMissione(tipo == TipoLocazione.ROVINE ? "TESTI_DEI_LUOGHI_DENTRO_ROVINE" : "TESTI_DEI_LUOGHI_DENTRO") + " " + indefinito(tipo);
 	}
 
 	/**
@@ -51,7 +52,7 @@ public final class TestiDeiLuoghi {
 	 */
 	public static String nome(CoordinateMD posto) {
 		if (posto == null) {
-			return Testi.formatta("missioni", "TestiDeiLuoghi.t9");
+			return ProduttoreDiMissioniCasuale.testoDellaMissione("TESTI_DEI_LUOGHI_IL_POSTO");
 		}
 		LocazioneMD md = Foresta.getLocazioneMD(posto);
 		switch (md.getTipo()) {
@@ -60,15 +61,15 @@ public final class TestiDeiLuoghi {
 			case ROVINE:
 				return Foresta.nomeDelleRovine(md);
 			case GROTTA:
-				return Testi.formatta("missioni", "TestiDeiLuoghi.t10");
+				return ProduttoreDiMissioniCasuale.testoDellaMissione("TESTI_DEI_LUOGHI_LA_GROTTA");
 			case BOSCO:
-				return Testi.formatta("missioni", "TestiDeiLuoghi.t11");
+				return ProduttoreDiMissioniCasuale.testoDellaMissione("TESTI_DEI_LUOGHI_IL_BOSCO");
 			case PALUDE:
-				return Testi.formatta("missioni", "TestiDeiLuoghi.t12");
+				return ProduttoreDiMissioniCasuale.testoDellaMissione("TESTI_DEI_LUOGHI_LA_PALUDE");
 			case RADURA:
-				return Testi.formatta("missioni", "TestiDeiLuoghi.t13");
+				return ProduttoreDiMissioniCasuale.testoDellaMissione("TESTI_DEI_LUOGHI_LA_RADURA");
 			default:
-				return md.getNome() != null ? md.getNome() : Testi.formatta("missioni", "TestiDeiLuoghi.laLocanda");
+				return md.getNome() != null ? md.getNome() : ProduttoreDiMissioniCasuale.testoDellaMissione("TESTI_DEI_LUOGHI_LA_LOCANDA");
 		}
 	}
 }
