@@ -198,13 +198,13 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	private static Map<String, PersonaggioNoto> mandantiConNome() {
 		// I nomi dei mandanti sono quelli delle righe di missioni_<lingua>.txt: si ricostruisce se la lingua cambia
 		Map<String, PersonaggioNoto> mandanti = new HashMap<>();
-		mandanti.put(Testi.formatta("missioni", "IncaricoInCitta.s1"), PersonaggioNoto.CAPITANO);
-		mandanti.put(Testi.formatta("missioni", "IncaricoInCitta.s5"), PersonaggioNoto.ALCHIMISTA);
-		mandanti.put(Testi.formatta("missioni", "IncaricoInCitta.s6"), PersonaggioNoto.ARMAIOLO);
-		mandanti.put(Testi.formatta("missioni", "IncaricoInCitta.s2"), PersonaggioNoto.VENDITORE_DI_PERGAMENE);
-		mandanti.put(Testi.formatta("missioni", "IncaricoInCitta.s7"), PersonaggioNoto.INCANTATORE);
-		mandanti.put(Testi.formatta("missioni", "IncaricoInCitta.s3"), PersonaggioNoto.BORGOMASTRO);
-		mandanti.put(Testi.formatta("missioni", "IncaricoInCitta.s8"), PersonaggioNoto.LEVATRICE);
+		mandanti.put(ProduttoreDiMissioniCasuale.testoDellaMissione("RUOLO_CAPITANO"), PersonaggioNoto.CAPITANO);
+		mandanti.put(ProduttoreDiMissioniCasuale.testoDellaMissione("RUOLO_ALCHIMISTA"), PersonaggioNoto.ALCHIMISTA);
+		mandanti.put(ProduttoreDiMissioniCasuale.testoDellaMissione("RUOLO_ARMAIOLO"), PersonaggioNoto.ARMAIOLO);
+		mandanti.put(ProduttoreDiMissioniCasuale.testoDellaMissione("RUOLO_VENDITORE_DI_PERGAMENE"), PersonaggioNoto.VENDITORE_DI_PERGAMENE);
+		mandanti.put(ProduttoreDiMissioniCasuale.testoDellaMissione("RUOLO_INCANTATORE"), PersonaggioNoto.INCANTATORE);
+		mandanti.put(ProduttoreDiMissioniCasuale.testoDellaMissione("RUOLO_BORGOMASTRO"), PersonaggioNoto.BORGOMASTRO);
+		mandanti.put(ProduttoreDiMissioniCasuale.testoDellaMissione("RUOLO_LEVATRICE"), PersonaggioNoto.LEVATRICE);
 		return mandanti;
 	}
 
@@ -221,7 +221,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	 * La scena in città con chi parla a nome del mandante: il borgomastro, che ha un'immagine sua, oppure un Uomo qualunque.
 	 */
 	protected static ScenaInCitta scenaDel(String mandante) {
-		return Testi.formatta("missioni", "IncaricoInCitta.s4").equals(mandante) ? ScenaInCitta.conBorgomastro() : ScenaInCitta.conMandante();
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("RUOLO_BORGOMASTRO").equals(mandante) ? ScenaInCitta.conBorgomastro() : ScenaInCitta.conMandante();
 	}
 
 	/**
@@ -235,14 +235,14 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	 * Il mandante e la città dell'incarico: "il fabbro di Ruuna", "l'armaiolo di Ruuna, Mastro Ferruccio,".
 	 */
 	protected final String mandanteDiCitta(String mandante) {
-		return conNome(mandante, Testi.formatta("missioni", "IncaricoInCitta.diCitta", mandante, getNomeCitta()), getCitta(), true);
+		return conNome(mandante, ProduttoreDiMissioniCasuale.testoDellaMissione("INCARICO_IN_CITTA_DI_CITTA", "PARAM_MANDANTE", mandante, "PARAM_CITTA", getNomeCitta()), getCitta(), true);
 	}
 
 	/**
 	 * Come {@link #mandanteDiCitta}, ma senza la virgola finale: per quando il mandante è seguito da un segno di punteggiatura.
 	 */
 	protected final String mandanteDiCittaSenzaVirgolaFinale(String mandante) {
-		return conNome(mandante, Testi.formatta("missioni", "IncaricoInCitta.diCitta", mandante, getNomeCitta()), getCitta(), false);
+		return conNome(mandante, ProduttoreDiMissioniCasuale.testoDellaMissione("INCARICO_IN_CITTA_DI_CITTA", "PARAM_MANDANTE", mandante, "PARAM_CITTA", getNomeCitta()), getCitta(), false);
 	}
 
 	/**

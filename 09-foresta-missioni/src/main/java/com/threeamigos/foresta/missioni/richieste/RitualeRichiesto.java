@@ -6,6 +6,7 @@ import com.threeamigos.foresta.tipi.TipoMissione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.*;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
@@ -89,7 +90,7 @@ public final class RitualeRichiesto {
 			metodo = campi.intero("METODO");
 			if (metodi.size() < METODI_MINIMI || metodi.size() > METODI_MASSIMI || metodi.contains("")
 					|| metodo < 1 || metodo > metodi.size() || errore == null) {
-				throw new IllegalArgumentException(Testi.formatta("missioni", "RitualeRichiesto.s1", METODI_MINIMI, METODI_MASSIMI, riga));
+				throw new IllegalArgumentException(ProduttoreDiMissioniCasuale.testoDellaMissione("RITUALE_RICHIESTO_METODI", "PARAM_MINIMI", METODI_MINIMI, "PARAM_MASSIMI", METODI_MASSIMI, "PARAM_RIGA", riga));
 			}
 		} else {
 			metodo = 0;

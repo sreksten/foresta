@@ -115,9 +115,9 @@ public class LaFalceDelTristoMietitore extends MissioneAPassi {
 			case DONNA:
 				return ProduttoreDiMissioniCasuale.testoDellaMissione("LA_FALCE_DEL_TRISTO_MIETITORE_NARRATORE_DONNA");
 			case ARMAIOLO:
-				return Testi.formatta("missioni", "Ruolo.armaiolo");
+				return ProduttoreDiMissioniCasuale.testoDellaMissione("RUOLO_ARMAIOLO");
 			case ALCHIMISTA:
-				return Testi.formatta("missioni", "Ruolo.alchimista");
+				return ProduttoreDiMissioniCasuale.testoDellaMissione("RUOLO_ALCHIMISTA");
 			case LOCANDIERE:
 				return ProduttoreDiMissioniCasuale.testoDellaMissione("LA_FALCE_DEL_TRISTO_MIETITORE_NARRATORE_LOCANDIERE");
 			case VENDITORE_DI_PERGAMENE:

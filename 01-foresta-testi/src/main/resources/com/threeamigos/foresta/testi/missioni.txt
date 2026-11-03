@@ -4381,4 +4381,82 @@ MANDANTE_APERTURA_LOCANDIERE
 MANDANTE_ALLA_CONSEGNA_LOCANDIERE
     che %PARAM_PRONOME% porta subito in cucina
 
+// ---------------------------------------------------------------------------------------------
+// I ruoli dei mandanti (vedi IncaricoInCitta; Ruolo.* e IncaricoInCitta.s1...s8 avevano gli stessi testi) e il mandante con la sua città
+// ---------------------------------------------------------------------------------------------
+
+// I ruoli dei mandanti, con l'articolo (chiavi dei mandanti e nomi nelle scene)
+RUOLO_CAPITANO
+    il capitano delle guardie
+
+RUOLO_VENDITORE_DI_PERGAMENE
+    il venditore di pergamene
+
+RUOLO_BORGOMASTRO
+    il borgomastro
+
+RUOLO_ALCHIMISTA
+    l'alchimista
+
+RUOLO_ARMAIOLO
+    l'armaiolo
+
+RUOLO_INCANTATORE
+    l'incantatore
+
+RUOLO_LEVATRICE
+    la levatrice
+
+// Il mandante e la sua città
+INCARICO_IN_CITTA_DI_CITTA
+    %PARAM_MANDANTE% di %PARAM_CITTA%
+
+// ---------------------------------------------------------------------------------------------
+// Le etichette delle notifiche di una missione
+// ---------------------------------------------------------------------------------------------
+
+MISSIONE_NUOVA
+    NUOVA MISSIONE
+
+MISSIONE_COMPLETATA
+    MISSIONE COMPLETATA
+
+MISSIONE_FALLITA
+    MISSIONE FALLITA
+
+// ---------------------------------------------------------------------------------------------
+// Messaggi per chi sviluppa: un ciclo fra i passi, una riga di rituale o di torneo non valida (non arrivano al giocatore)
+// ---------------------------------------------------------------------------------------------
+
+MISSIONE_A_PASSI_CICLO
+    La missione %PARAM_MISSIONE% ha concluso %PARAM_PASSI% passi di fila nello stesso controllo: c'è un ciclo fra i passi? Ultimo passo: %PARAM_PASSO%
+
+// ---------------------------------------------------------------------------------------------
+// 
+// ---------------------------------------------------------------------------------------------
+
+RITUALE_RICHIESTO_METODI
+    Da %PARAM_MINIMI% a %PARAM_MASSIMI% metodi, il numero di quello giusto e il testo dell'errore: %PARAM_RIGA%
+
+// ---------------------------------------------------------------------------------------------
+// 
+// ---------------------------------------------------------------------------------------------
+
+TORNEO_RICHIESTO_SFIDANTI
+    Gli sfidanti prima della finale sono %PARAM_SFIDANTI%, separati da uno spazio (GUERRIERO ELFA): %PARAM_RIGA%
+
+// ---------------------------------------------------------------------------------------------
+// Modello della riga dell'anello leggendario della sfida dei campioni (vedi LaSfidaDeiCampioni): i campi li riempie il codice
+// ---------------------------------------------------------------------------------------------
+
+LA_SFIDA_DEI_CAMPIONI_RIGA_ANELLO
+    TIPO=ANELLO;NOME=%PARAM_NOME%;CHIAVE=%PARAM_CHIAVE%;BREVE=%PARAM_BREVE%;DESCRIZIONE=che appartiene a chi ha battuto tutti i campioni;LIVELLO=%PARAM_LIVELLO%;COSTO=%PARAM_COSTO%;PESO=1;MOD=FORZA +%PARAM_FORZA%%;MOD=CORAGGIO +%PARAM_CORAGGIO%%;MOD=VALORE +%PARAM_VALORE%;LEGGENDA=Avete mai sentito parlare di %PARAM_LEGGENDA%?;LEGGENDA=Lo vince solo chi batte, uno dopo l'altro, i quattro campioni di carta, forbici e sasso.
+
+// ---------------------------------------------------------------------------------------------
+// Modello della riga di un'arma leggendaria forgiata (vedi ForgiaRichiesta): i campi li riempie il codice
+// ---------------------------------------------------------------------------------------------
+
+FORGIA_RICHIESTA_RIGA_ARMA
+    TIPO=%PARAM_TIPO%;NOME=%PARAM_NOME%;CHIAVE=%PARAM_CHIAVE%;BREVE=%PARAM_BREVE%;DESCRIZIONE=%PARAM_DESCRIZIONE%;LIVELLO=%PARAM_LIVELLO%;DANNI=%PARAM_DANNI%;COSTO=%PARAM_COSTO%;PESO=%PARAM_PESO%;MOD=%PARAM_ATTRIBUTO% +%PARAM_PERCENTUALE%%;MOD=CRITICO +%PARAM_CRITICO%;INCANTAMENTO=%PARAM_INCANTAMENTO_1% %PARAM_INCANTAMENTO_2% %PARAM_INCANTAMENTO_3% %PARAM_INCANTAMENTO_4%;LEGGENDA=Avete mai sentito parlare di %PARAM_LEGGENDA%?;LEGGENDA=L'ha forgiata un armaiolo con quello che i suoi clienti gli hanno portato, e un pizzico di cattivo carattere.
+
 #include_static <nomi.txt>

@@ -3,6 +3,7 @@ package com.threeamigos.foresta.missioni;
 import com.threeamigos.foresta.statistiche.EsperienzaDelGruppo;
 
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.eventi.interni.InternoMissioneCompletata;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAggiornamentoStatoMissione;
@@ -109,7 +110,7 @@ public abstract class MissioneBase implements Missione {
 	public void attivaMissione() {
 		md.aggiungiProprieta(ATTIVA, "S");
 		if (isDiClassePredefinita()) {
-			BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, Testi.formatta("missioni", "Missione.NUOVA"), getNome()));
+			BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_NUOVA"), getNome()));
 		}
 	}
 
@@ -136,7 +137,7 @@ public abstract class MissioneBase implements Missione {
 		}
 		md.aggiungiProprieta(COMPLETA, "S");
 		RegistroMissioni.completaMissione(this);
-		BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, Testi.formatta("missioni", "Missione.COMPLETATA"), getNome()));
+		BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_COMPLETATA"), getNome()));
 		BusEventi.pubblica(new InternoMissioneCompletata(this));
 		if (isPrimaria()) {
 			EsperienzaDelGruppo.completaMissionePrincipale();
@@ -159,7 +160,7 @@ public abstract class MissioneBase implements Missione {
 		md.aggiungiProprieta(FALLITA, AFFERMATIVO);
 		RegistroMissioni.fallisciMissione(this);
 		if (isDiClassePredefinita()) {
-			BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, Testi.formatta("missioni", "Missione.FALLITA"), getNome()));
+			BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_FALLITA"), getNome()));
 		}
 		md.setDescrizioneVisibile(false);
 	}

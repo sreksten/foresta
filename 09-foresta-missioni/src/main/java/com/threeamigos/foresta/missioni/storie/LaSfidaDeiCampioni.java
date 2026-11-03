@@ -73,7 +73,7 @@ public class LaSfidaDeiCampioni extends MissioneAPassi implements ConLeggendario
 		aggiungiProprieta(LEGGENDARIO, scegliIlLeggendario().getRiga());
 		RegistroMissioni.aggiungiMissioneSecondaria(this);
 		attivaMissione();
-		BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, Testi.formatta("missioni", "Missione.NUOVA"), getNome()));
+		BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_NUOVA"), getNome()));
 		// Non si aspetta il prossimo controllo: i campioni si affidano subito e ognuno trova e segna subito il suo posto,
 		// così la notifica c'è e i quattro segnalini sono già sulla mappa
 		controllaPostLocazione();
@@ -96,7 +96,7 @@ public class LaSfidaDeiCampioni extends MissioneAPassi implements ConLeggendario
 		String nome = ProduttoreDiSfideCasuale.nomeLeggendarioDeiCampioni();
 		String breve = nome;
 		String chiave = "CAMPIONI_" + Math.abs(nome.hashCode()) + "_" + livello;
-		String riga = Testi.formatta("missioni", "LaSfidaDeiCampioni.s1", nome, chiave, breve, livello, (livello * 100), (livello * 10), (livello * 5), livello, nome);
+		String riga = ProduttoreDiMissioniCasuale.testoDellaMissione("LA_SFIDA_DEI_CAMPIONI_RIGA_ANELLO", "PARAM_NOME", nome, "PARAM_CHIAVE", chiave, "PARAM_BREVE", breve, "PARAM_LIVELLO", livello, "PARAM_COSTO", (livello * 100), "PARAM_FORZA", (livello * 10), "PARAM_CORAGGIO", (livello * 5), "PARAM_VALORE", livello, "PARAM_LEGGENDA", nome);
 		return OggettoLeggendario.da(riga);
 	}
 

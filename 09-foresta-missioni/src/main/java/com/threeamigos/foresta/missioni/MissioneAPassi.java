@@ -206,7 +206,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 				return;
 			}
 			if (passiDiFila >= PASSI_DI_FILA_MASSIMI) {
-				throw new IllegalStateException(Testi.formatta("missioni", "MissioneAPassi.s1", getId(), PASSI_DI_FILA_MASSIMI, id));
+				throw new IllegalStateException(ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_PASSI_CICLO", "PARAM_MISSIONE", getId(), "PARAM_PASSI", PASSI_DI_FILA_MASSIMI, "PARAM_PASSO", id));
 			}
 			passo.eseguiAzione();
 			if (passo.haIntermezzo()) {
@@ -975,7 +975,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 		super.fallisciMissione();
 		if (eraInCorso && !isDiClassePredefinita()) {
 			// Per le missioni predefinite l'avviso lo dà già MissioneBase
-			BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, Testi.formatta("missioni", "Missione.FALLITA"), getNome()));
+			BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_FALLITA"), getNome()));
 		}
 		lasciaUnaMissioneNuova();
 	}

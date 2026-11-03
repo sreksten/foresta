@@ -51,7 +51,7 @@ Le dipendenze sono transitive: un modulo vede anche quello che vedono i moduli d
 
 ## Osservazioni
 
-- Le missioni non ancora portate leggono ancora i testi dai `.properties` (`Testi.formatta("missioni", …)`), le portate da `missioni.txt` (`ProduttoreDiMissioniCasuale.testoDellaMissione`): le due convivono finché il porting non è finito (vedi [`testi_delle_missioni.md`](testi_delle_missioni.md) §9). Una missione nuova si scrive già con i testi in `missioni.txt`.
+- **Tutti i testi delle missioni sono in `missioni.txt`** (e `_en`, `_en_GB`, nel modulo `01-foresta-testi`): i `.properties` non esistono più. Una missione nuova si scrive con i testi in `missioni.txt` (`ProduttoreDiMissioniCasuale.testoDellaMissione`); vedi [`testi_delle_missioni.md`](testi_delle_missioni.md).
 - Aggiungere una missione tocca il catalogo (`MissionePredefinita`, `FabbricaMissioni`, la classe, eventualmente una riga di `missioni.txt`) e la documentazione; le regole per chi aggiunge missioni sono in `passi_missioni.md`.
 - `MissioneAPassi` e `RegistroMissioni` sono le classi più grandi del modulo; il piano è di tagliarle quando si interviene su di loro.
 - Le missioni sono il motivo per cui `10-foresta-trofei` e `11-foresta-motore-api` dipendono da questo modulo: ascoltano `InternoMissioneCompletata` e leggono `VistaMissione`.

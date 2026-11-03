@@ -211,27 +211,15 @@ Missioni che **non** sono `IncaricoInCitta` (le principali, le storie, le leggen
 - **I nomi delle produzioni sono globali**: sempre il prefisso con la missione.
 - **Il passo iniziale non salva il modello** (§3): se i parametri non ci sono ancora si rischia di congelare un `null`.
 
-## 9. Stato del lavoro e cosa resta
+## 9. Stato del lavoro
 
-Ultimo aggiornamento: 2026-11-03. **Portate: tutti gli incarichi in città** — `CacciaAiGoblin`, `RichiestaDiMateriali`, `IlCorriere` (con `IlContrabbandiere`), `LaSorveglianza`, `IlSoccorso`, `IlRapimento`, `IlColpo`, `IlCartografo`, `ChiaveDelCustode`, `IlRituale`, `IlTorneo`, `IlPellegrino`, `LOggettoSmarrito`, `LaDocumentazione`, `LIndagine`, `LaTagliaSullaBanda`, `CacciatoreDiTaglie`, `LaForgia`, `IncaricoDiCombattimento` e `IlNegozio` con le sue quattro sottoclassi (tranne il mandante del venditore di pergamene, `IlNegozioDelVenditoreDiPergamene.s2`, che si porta con `Ruolo`). Le frasi condivise che questi incarichi chiamano ancora dai `.properties` sono `Incarico.aspettaA`, `Nemici.guidatiDa`, `TestiDeiLuoghi.*`, `Ruolo.*`, `Mandante.*`, `Genere.*`, `Luogo.*` e quelle di `MaterialeRichiesto`. Tutta la suite è verde (`mvn -o test`). **Il lavoro non è stato committato.**
+Ultimo aggiornamento: 2026-11-04. **Il porting è finito**: tutte le missioni (incarichi in città, storie, principali, leggende, missione a tappe, gli epiloghi degli intermezzi) e i loro aiuti (generi, luoghi, mandanti, ruoli, materiali, etichette di stato, messaggi per lo sviluppo, modelli di riga) leggono i testi da `missioni.txt` (`_en`, `_en_GB`); i tre `missioni_<lingua>.properties` sono stati cancellati e nel codice non resta nessun `Testi.formatta("missioni", …)`. `mvn -o test` è verde. Le righe a campi di `missioni.txt` e `tappe.txt` (`RICHIESTA=…;BATTUTA=…`) usano ancora i vecchi `%NOME%`, `%CITTA%`, `%CAPO%`: da unificare su `PARAM_` è una questione aperta (vedi sotto).
 
-Chiavi ancora nei `.properties` `it`, per classe:
-
-| Gruppo | Prefissi |
-| :--- | :--- |
-| Incarichi in città: la base | `IncaricoInCitta` 10 (+ `Incarico` 1) |
-| Storie e compagni | `IlCampione`, `IlFavore`, `IlGiroDelleSetteChiese`, `IlViaggioDellaMoglie`, `IlViandante`, `LaBenedizione`, `LaLealta`, `LaSfidaDeiCampioni`, `NonSparateSulPianista` |
-| Principali | `SconfiggiIlDrago`, `SconfiggiIlLich`, `SconfiggiIlMinotauroGigante`, `SconfiggiLIdra`, `SconfiggiLaStrega`, `VisitaLocanda`, `DisturbatoreDellaQuietePubblica`, `NessunBoccaleLasciatoIndietro`, `CronacheDiUnFegatoEroico` |
-| Leggende | `LaLeggenda`, `LaLeggendaDelLocandiere`, `LaFalceDelTristoMietitore`, `PescaLeggendaria` |
-| A tappe | `MissioneATappe` |
-| Epiloghi (intermezzi delle missioni) | `IntermezzoEremitaRompiscatole`, `IntermezzoUrloDellaBanshee` |
-| Aiuti condivisi (non sono missioni) | `Genere`, `Luogo`, `Mandante`, `MaterialeRichiesto`, `Nemici`, `Ruolo`, `TestiDeiLuoghi`, `Missione`, `MissioneAPassi`, `OffertaDelSacerdote`, `Incarico`, `RitualeRichiesto`, `TorneoRichiesto` |
-
-Per contarle: `grep -o '^[A-Za-z]*\.' 09-foresta-missioni/src/main/resources/com/threeamigos/foresta/testi/missioni_it.properties | sort | uniq -c`.
+Dove stanno i test: `CoerenzaDeiTestiDegliIncarichiTest` (gli incarichi in città, in tre lingue, con `controllaUnIncarico`) e `CoerenzaDeiTestiDelleStorieTest` (storie, principali e leggende, con `FabbricheDiProvaDelleStorie` per le fabbriche package-private).
 
 **Cosa si è imparato portando gli incarichi** (da rileggere prima di riprendere):
 
-- **Mai chiamare la grammatica in un costruttore** (né in un inizializzatore statico che gira all'avvio): `testoDellaMissione` pesca dalla sorgente condivisa `Dado`, e un tiro in più all'avvio sposta la sequenza di tutte le partite con seme (`ScenarioUccisioniTest` si rompeva). I titoli fissi passati dalla sottoclasse (`IlNegozio*`) si passano come *nome della produzione* e si producono alla prima richiesta (`creaIlNome`).
+- **Una foglia non deve consumare il caso.** Anche con una sola alternativa la scelta a caso estrae un numero dalla sorgente condivisa `Dado`, e ogni testo portato spostava la sequenza di tutte le partite con seme (`ScenarioUccisioniTest`, `ScenarioDuelliTest` si rompevano). `modelloDellaMissione` chiede perciò la *prima* alternativa (modalità `PRIMO`, nessuna estrazione): vale per le foglie, che sono tutti i testi delle missioni; le righe a caso (`rigaDiMissioni`) continuano a pescare. I titoli fissi passati dalla sottoclasse (`IlNegozio*`) si passano comunque come *nome della produzione* e si producono alla prima richiesta (`creaIlNome`).
 - **Il titolo si salva solo quando è definitivo.** Se dipende da qualcosa che l'incarico sceglie in `allIncarico()` (`IlCorriere`: la destinazione) si ridefinisce `getNome()` perché non salvi il titolo provvisorio. I titoli che vengono dalla riga di grammatica (`testo(getTitolo())`) restano com'erano.
 - **I valori stabili si calcolano a ogni ingresso in un passo**, anche prima che l'incarico sia offerto o prima che la missione abbia scelto le sue cose: `valori()` deve essere sicuro (`IlNegozio`, `IlTorneo`, `LaForgia` restituiscono solo i valori che già ci sono) e non deve far pescare parametri in anticipo (cambierebbe la sequenza casuale).
 - **Le descrizioni che cambiano dentro un passo** (le visite mancanti della sorveglianza, gli indizi trovati dell'indagine o i reperti della documentazione) o hanno due varianti per lo stesso passo si risolvono così: il valore che cambia è un segnaposto (`valoriDellaDescrizione`), composto dal codice quando è una lista; la variante che cambia dopo l'ingresso (`LaSorveglianza`) si sceglie in `getDescrizione()` senza modello salvato.

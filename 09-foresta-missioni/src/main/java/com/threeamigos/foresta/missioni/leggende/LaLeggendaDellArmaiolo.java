@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.leggende;
 
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
@@ -30,7 +31,7 @@ public class LaLeggendaDellArmaiolo extends LaLeggenda {
 
 	@Override
 	protected String getNarratore() {
-		return Testi.formatta("missioni", "Ruolo.armaiolo");
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("RUOLO_ARMAIOLO");
 	}
 
 	@Override

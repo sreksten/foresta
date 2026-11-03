@@ -7,6 +7,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
@@ -57,7 +58,7 @@ public final class TorneoRichiesto {
 			sfidanti.add(TipoPersonaggio.valueOf(sfidante));
 		}
 		if (sfidanti.size() != SFIDANTI_PRIMA_DELLA_FINALE) {
-			throw new IllegalArgumentException(Testi.formatta("missioni", "TorneoRichiesto.s1", SFIDANTI_PRIMA_DELLA_FINALE, riga));
+			throw new IllegalArgumentException(ProduttoreDiMissioniCasuale.testoDellaMissione("TORNEO_RICHIESTO_SFIDANTI", "PARAM_SFIDANTI", SFIDANTI_PRIMA_DELLA_FINALE, "PARAM_RIGA", riga));
 		}
 		campione = campi.enumerato("CAMPIONE", TipoPersonaggio.class);
 		nomeDelCampione = CapoDellaRiga.da(campi.facoltativo("NOME"));

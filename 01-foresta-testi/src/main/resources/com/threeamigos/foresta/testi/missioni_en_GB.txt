@@ -4104,4 +4104,82 @@ MANDANTE_APERTURA_LOCANDIERE
 MANDANTE_ALLA_CONSEGNA_LOCANDIERE
     who takes %PARAM_PRONOME% straight to the kitchen
 
+// ---------------------------------------------------------------------------------------------
+// I ruoli dei mandanti (vedi IncaricoInCitta; Ruolo.* e IncaricoInCitta.s1...s8 avevano gli stessi testi) e il mandante con la sua città
+// ---------------------------------------------------------------------------------------------
+
+// I ruoli dei mandanti, con l'articolo (chiavi dei mandanti e nomi nelle scene)
+RUOLO_CAPITANO
+    the captain of the guard
+
+RUOLO_VENDITORE_DI_PERGAMENE
+    the scroll seller
+
+RUOLO_BORGOMASTRO
+    the mayor
+
+RUOLO_ALCHIMISTA
+    the alchemist
+
+RUOLO_ARMAIOLO
+    the armourer
+
+RUOLO_INCANTATORE
+    the enchanter
+
+RUOLO_LEVATRICE
+    the midwife
+
+// Il mandante e la sua città
+INCARICO_IN_CITTA_DI_CITTA
+    %PARAM_MANDANTE% of %PARAM_CITTA%
+
+// ---------------------------------------------------------------------------------------------
+// Le etichette delle notifiche di una missione
+// ---------------------------------------------------------------------------------------------
+
+MISSIONE_NUOVA
+    NEW QUEST
+
+MISSIONE_COMPLETATA
+    QUEST COMPLETED
+
+MISSIONE_FALLITA
+    QUEST FAILED
+
+// ---------------------------------------------------------------------------------------------
+// Messaggi per chi sviluppa: un ciclo fra i passi, una riga di rituale o di torneo non valida (non arrivano al giocatore)
+// ---------------------------------------------------------------------------------------------
+
+MISSIONE_A_PASSI_CICLO
+    The quest %PARAM_MISSIONE% has completed %PARAM_PASSI% steps in a row in the same check: is there a loop among the steps? Last step: %PARAM_PASSO%
+
+// ---------------------------------------------------------------------------------------------
+// 
+// ---------------------------------------------------------------------------------------------
+
+RITUALE_RICHIESTO_METODI
+    From %PARAM_MINIMI% to %PARAM_MASSIMI% methods, the number of the right one and the text of the error: %PARAM_RIGA%
+
+// ---------------------------------------------------------------------------------------------
+// 
+// ---------------------------------------------------------------------------------------------
+
+TORNEO_RICHIESTO_SFIDANTI
+    The challengers before the final are %PARAM_SFIDANTI%, separated by a space (GUERRIERO ELFA): %PARAM_RIGA%
+
+// ---------------------------------------------------------------------------------------------
+// Modello della riga dell'anello leggendario della sfida dei campioni (vedi LaSfidaDeiCampioni): i campi li riempie il codice
+// ---------------------------------------------------------------------------------------------
+
+LA_SFIDA_DEI_CAMPIONI_RIGA_ANELLO
+    TIPO=ANELLO;NOME=%PARAM_NOME%;CHIAVE=%PARAM_CHIAVE%;BREVE=%PARAM_BREVE%;DESCRIZIONE=that belongs to whoever has beaten all the champions;LIVELLO=%PARAM_LIVELLO%;COSTO=%PARAM_COSTO%;PESO=1;MOD=FORZA +%PARAM_FORZA%%;MOD=CORAGGIO +%PARAM_CORAGGIO%%;MOD=VALORE +%PARAM_VALORE%;LEGGENDA=Have you ever heard of %PARAM_LEGGENDA%?;LEGGENDA=It's won only by whoever beats, one after another, the four champions of rock, paper, scissors.
+
+// ---------------------------------------------------------------------------------------------
+// Modello della riga di un'arma leggendaria forgiata (vedi ForgiaRichiesta): i campi li riempie il codice
+// ---------------------------------------------------------------------------------------------
+
+FORGIA_RICHIESTA_RIGA_ARMA
+    TIPO=%PARAM_TIPO%;NOME=%PARAM_NOME%;CHIAVE=%PARAM_CHIAVE%;BREVE=%PARAM_BREVE%;DESCRIZIONE=%PARAM_DESCRIZIONE%;LIVELLO=%PARAM_LIVELLO%;DANNI=%PARAM_DANNI%;COSTO=%PARAM_COSTO%;PESO=%PARAM_PESO%;MOD=%PARAM_ATTRIBUTO% +%PARAM_PERCENTUALE%%;MOD=CRITICO +%PARAM_CRITICO%;INCANTAMENTO=%PARAM_INCANTAMENTO_1% %PARAM_INCANTAMENTO_2% %PARAM_INCANTAMENTO_3% %PARAM_INCANTAMENTO_4%;LEGGENDA=Have you ever heard of %PARAM_LEGGENDA%?;LEGGENDA=It was forged by an armourer from whatever his customers brought him, and a pinch of bad temper.
+
 #include_static <nomi_en_GB.txt>
