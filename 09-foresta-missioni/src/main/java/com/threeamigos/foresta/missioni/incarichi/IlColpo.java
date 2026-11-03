@@ -18,6 +18,7 @@ import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.testi.Genere;
+import com.threeamigos.foresta.testi.RegoleDellaLingua;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
@@ -108,10 +109,35 @@ public class IlColpo extends IncaricoInCitta {
 
 	@Override
 	public String getDescrizione() {
-		if (RITORNO.equals(getPassoCorrente())) {
-			return Testi.formatta("missioni", "IlColpo.t1", Lingue.corrente().conPreposizione(Preposizione.PRESSO, mandante(getColpo().getMandante())), getNomeCitta());
-		}
-		return Testi.formatta("missioni", "IlColpo.t2", Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()), getNomeDelleGuardie());
+		return descrizioneDalModello();
+	}
+
+	@Override
+	protected String produzioneDellaDescrizione(String passo) {
+		return RITORNO.equals(passo) ? "IL_COLPO_DESCRIZIONE_RITORNO" : "IL_COLPO_DESCRIZIONE_COLPO";
+	}
+
+	@Override
+	protected Object[] valoriStabiliDellaDescrizione() {
+		return valori();
+	}
+
+	/**
+	 * Tutti i segnaposto dei testi della missione: il luogo, le guardie, la città, le monete e il mandante nelle sue forme.
+	 * Senza "private" per i test.
+	 */
+	Object[] valori() {
+		ColpoRichiesto colpo = getColpo();
+		RegoleDellaLingua lingua = Lingue.corrente();
+		String mandante = mandante(colpo.getMandante());
+		return new Object[] {
+				"PARAM_DENTRO_LUOGO", TestiDeiLuoghi.dentro(colpo.getLuogo()),
+				"PARAM_GUARDIE", getNomeDelleGuardie(),
+				"PARAM_CITTA", getNomeCitta(),
+				"PARAM_MONETE", getRicompensa(),
+				"PARAM_MANDANTE_MAIUSC", lingua.inizialeMaiuscola(mandante),
+				"PARAM_MANDANTE_DI_CITTA_MAIUSC", lingua.inizialeMaiuscola(getMandanteDiCitta()),
+				"PARAM_PRESSO_MANDANTE", lingua.conPreposizione(Preposizione.PRESSO, mandante)};
 	}
 
 	@Override
@@ -132,7 +158,7 @@ public class IlColpo extends IncaricoInCitta {
 				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, colpo.getLuogo())
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getPosto());
-							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlColpo.s1")));
+							BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_COLPO_POSTO_SEGNATO", valori())));
 						})
 						.poi(COLPO);
 			case COLPO:
@@ -153,7 +179,7 @@ public class IlColpo extends IncaricoInCitta {
 		ColpoRichiesto colpo = getColpo();
 		return colpo.getAspetto().nuovaScena()
 				.parlaIlMandante(testo(colpo.getRichiesta()))
-				.parlaIlMandante(Testi.formatta("missioni", "IlColpo.1", TestiDeiLuoghi.dentro(colpo.getLuogo()), getNomeDelleGuardie(), getRicompensa()))
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_COLPO_INCARICO_1", valori()))
 				.parlaIlCapo(testo(colpo.getBattutaDelCapo()))
 				.parlaIlMandante(testo(colpo.getRisposta()));
 	}
@@ -162,17 +188,17 @@ public class IlColpo extends IncaricoInCitta {
 	protected ScenaInCitta scenaRingraziamento() {
 		return getColpo().getAspetto().nuovaScena()
 				.parlaIlMandante(testo(getColpo().getRingraziamento()))
-				.parlaIlMandante(Testi.formatta("missioni", "IlColpo.2", getRicompensa()));
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_COLPO_RINGRAZIAMENTO_2", valori()));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return Testi.formatta("missioni", "IlColpo.t3", Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()), getRicompensa(), TestiDeiLuoghi.dentro(getColpo().getLuogo()));
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("IL_COLPO_ACCETTAZIONE", valori());
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Testi.formatta("missioni", "IlColpo.t4", Lingue.corrente().inizialeMaiuscola(mandante(getColpo().getMandante())), getRicompensa());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("IL_COLPO_RICOMPENSA", valori());
 	}
 
 	@Override

@@ -9,12 +9,12 @@ import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
+import com.threeamigos.foresta.testi.RegoleDellaLingua;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
-import com.threeamigos.foresta.testi.Testi;
 
 /**
  * In città una donna chiede di accompagnare suo fratello, un pellegrino, fino a un tempio nella foresta: la
@@ -48,22 +48,44 @@ public class IlPellegrino extends IncaricoInCitta {
 	}
 
 	@Override
-	public String getNome() {
-		return Testi.formatta("missioni", "IlPellegrino.t1");
+	protected String creaIlNome() {
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("IL_PELLEGRINO_TITOLO");
 	}
 
 	@Override
 	public String getDescrizione() {
-		String passo = getPassoCorrente();
-		if (RITORNO.equals(passo)) {
-			return Testi.formatta("missioni", "IlPellegrino.t2", getPellegrino(), Lingue.corrente().conPreposizione(Preposizione.ARRIVO, getNomeDelTempio()), getNomeCitta());
-		}
-		return Testi.formatta("missioni", "IlPellegrino.t3", getPellegrino(), Lingue.corrente().conPreposizione(Preposizione.A, getNomeDelTempio()));
+		return descrizioneDalModello();
+	}
+
+	@Override
+	protected String produzioneDellaDescrizione(String passo) {
+		return RITORNO.equals(passo) ? "IL_PELLEGRINO_DESCRIZIONE_RITORNO" : "IL_PELLEGRINO_DESCRIZIONE_VIAGGIO";
+	}
+
+	@Override
+	protected Object[] valoriStabiliDellaDescrizione() {
+		return valori();
+	}
+
+	/**
+	 * Tutti i segnaposto dei testi della missione: il pellegrino, il tempio nelle sue forme (il nome vero solo dopo averlo trovato), la
+	 * città e le monete.
+	 */
+	private Object[] valori() {
+		RegoleDellaLingua lingua = Lingue.corrente();
+		String tempio = getNomeDelTempio();
+		return new Object[] {
+				"PARAM_PELLEGRINO", getPellegrino(),
+				"PARAM_A_TEMPIO", lingua.conPreposizione(Preposizione.A, tempio),
+				"PARAM_ARRIVO_TEMPIO", lingua.conPreposizione(Preposizione.ARRIVO, tempio),
+				"PARAM_TEMPIO_MAIUSC", lingua.inizialeMaiuscola(tempio),
+				"PARAM_CITTA", getNomeCitta(),
+				"PARAM_MONETE", getRicompensa()};
 	}
 
 	@Override
 	public String getRicordoDellaLocazione() {
-		return Testi.formatta("missioni", "IlPellegrino.t4", getPellegrino());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("IL_PELLEGRINO_RICORDO", valori());
 	}
 
 	/**
@@ -77,7 +99,7 @@ public class IlPellegrino extends IncaricoInCitta {
 	 * Il nome del tempio della meta, con l'articolo; "il tempio" finché la missione non l'ha trovato.
 	 */
 	private String getNomeDelTempio() {
-		return getTempio() == null ? Testi.formatta("missioni", "IlPellegrino.ilTempio") : Foresta.nomeDelTempio(getTempio());
+		return getTempio() == null ? ProduttoreDiMissioniCasuale.testoDellaMissione("IL_PELLEGRINO_TEMPIO_GENERICO") : Foresta.nomeDelTempio(getTempio());
 	}
 
 	private boolean nelTempio() {
@@ -96,7 +118,7 @@ public class IlPellegrino extends IncaricoInCitta {
 				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, TipoLocazione.TEMPIO)
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getTempio());
-							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlPellegrino.s1", Lingue.corrente().inizialeMaiuscola(getNomeDelTempio()), getPellegrino())));
+							BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_PELLEGRINO_TEMPIO_SEGNATO", valori())));
 						})
 						.poi(PARTENZA);
 			case PARTENZA:
@@ -108,7 +130,7 @@ public class IlPellegrino extends IncaricoInCitta {
 								RegistroMissioni.sopprimiContenutoLocazione(getTempio());
 							}
 						})
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlPellegrino.s2", Lingue.corrente().conPreposizione(Preposizione.ARRIVO, getNomeDelTempio()), getPellegrino(), getNomeCitta()))))
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_PELLEGRINO_ARRIVATO", valori()))))
 						.poi(RITORNO);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
@@ -118,28 +140,28 @@ public class IlPellegrino extends IncaricoInCitta {
 	@Override
 	protected ScenaInCitta scenaIncarico() {
 		return ScenaInCitta.conMandante()
-				.parlaIlMandante(Testi.formatta("missioni", "IlPellegrino.1", getPellegrino()))
-				.parlaIlMandante(Testi.formatta("missioni", "IlPellegrino.2", getRicompensa()))
-				.parlaIlCapo(Testi.formatta("missioni", "IlPellegrino.3"))
-				.parlaIlMandante(Testi.formatta("missioni", "IlPellegrino.4"));
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_PELLEGRINO_INCARICO_1", valori()))
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_PELLEGRINO_INCARICO_2", valori()))
+				.parlaIlCapo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_PELLEGRINO_INCARICO_3", valori()))
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_PELLEGRINO_INCARICO_4", valori()));
 	}
 
 	@Override
 	protected ScenaInCitta scenaRingraziamento() {
 		return ScenaInCitta.conMandante()
-				.parlaIlMandante(Testi.formatta("missioni", "IlPellegrino.5", getPellegrino(), Lingue.corrente().conPreposizione(Preposizione.ARRIVO, getNomeDelTempio())))
-				.parlaIlMandante(Testi.formatta("missioni", "IlPellegrino.6", getRicompensa()))
-				.parlaIlCapo(Testi.formatta("missioni", "IlPellegrino.7"));
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_PELLEGRINO_RINGRAZIAMENTO_1", valori()))
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_PELLEGRINO_RINGRAZIAMENTO_2", valori()))
+				.parlaIlCapo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_PELLEGRINO_RINGRAZIAMENTO_3", valori()));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return Testi.formatta("missioni", "IlPellegrino.t5", getPellegrino(), getRicompensa());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("IL_PELLEGRINO_ACCETTAZIONE", valori());
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Testi.formatta("missioni", "IlPellegrino.t6", getPellegrino(), getRicompensa());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("IL_PELLEGRINO_RICOMPENSA", valori());
 	}
 
 	@Override

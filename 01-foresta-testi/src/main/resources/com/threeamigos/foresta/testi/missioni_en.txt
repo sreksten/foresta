@@ -1948,4 +1948,1029 @@ RICHIESTA_DI_MATERIALI_CONSEGNA
 RICHIESTA_DI_MATERIALI_RICOMPENSA
     %PARAM_MANDANTE_MAIUSC% pays the %PARAM_MONETE% promised coins.
 
+// ---------------------------------------------------------------------------------------------
+// Il corriere (vedi IlCorriere e IlContrabbandiere, che ne usa gli stessi testi), in ordine di copione. I segnaposto %PARAM_CHIAVE% li
+// riempie il codice: l'oggetto (%PARAM_OGGETTO%, %PARAM_QUESTO_OGGETTO%, %PARAM_PRONOME%), la città di destinazione (%PARAM_CITTA%),
+// il destinatario e il mittente nelle loro forme, le monete e le ore (%PARAM_ORE% concesse, %PARAM_ORE_RIMASTE% finora: l'unico che cambia).
+// Il titolo si conserva nei dati; la richiesta, la battuta del capo, la risposta
+// e il ringraziamento sono della spedizione (vedi le righe di spedizioni qui sopra)
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+IL_CORRIERE_TITOLO
+    %PARAM_OGGETTO_MAIUSC% for %PARAM_DESTINATARIO_DI_CITTA%
+
+// La scena dell'incarico, in città: %PARAM_QUANDO% è una delle tre frasi seguenti (la terza si aggiunge se è di nascosto)
+IL_CORRIERE_INCARICO_1
+    Deliver %PARAM_QUESTO_OGGETTO% %PARAM_A_DESTINATARIO_DI_CITTA%.%PARAM_QUANDO% On delivery you'll get %PARAM_MONETE% coins.
+
+IL_CORRIERE_QUANDO_URGENTE
+    And hurry: you have %PARAM_ORE% hours, no more.
+
+IL_CORRIERE_QUANDO_SENZA_FRETTA
+    There is no rush, but don't lose %PARAM_PRONOME% on the way.
+
+IL_CORRIERE_QUANDO_DI_NASCOSTO
+    And let no one notice you: no fights on the road, or word reaches the guards.
+
+// Il giocatore accetta (la seconda se la spedizione è urgente)
+IL_CORRIERE_ACCETTAZIONE
+    %PARAM_DESTINATARIO_DI_CITTA_MAIUSC% will pay %PARAM_MONETE% coins for %PARAM_OGGETTO% sent by %PARAM_MITTENTE_SENZA_VIRGOLA%.
+
+IL_CORRIERE_ACCETTAZIONE_URGENTE
+    %PARAM_DESTINATARIO_DI_CITTA_MAIUSC% will pay %PARAM_MONETE% coins for %PARAM_OGGETTO% sent by %PARAM_MITTENTE_SENZA_VIRGOLA%, if it arrives within %PARAM_ORE% hours.
+
+// La descrizione nel diario (la seconda se la spedizione è urgente: le ore rimaste cambiano)
+IL_CORRIERE_DESCRIZIONE
+    Deliver %PARAM_OGGETTO% %PARAM_A_DESTINATARIO_DI_CITTA%, who will pay you %PARAM_MONETE% coins.
+
+IL_CORRIERE_DESCRIZIONE_URGENTE
+    Deliver %PARAM_OGGETTO% %PARAM_A_DESTINATARIO_DI_CITTA%, who will pay you %PARAM_MONETE% coins. Hours left: %PARAM_ORE_RIMASTE%.
+
+// La partenza
+IL_CORRIERE_DESTINAZIONE_SEGNATA
+    %PARAM_CITTA% is marked on the map.
+
+// Se la spedizione urgente è in ritardo
+IL_CORRIERE_IN_RITARDO
+    Too late: %PARAM_OGGETTO% will no longer get %PARAM_A_DESTINATARIO_DI_CITTA% in time.
+
+// Se il gruppo combatte con una spedizione di nascosto
+IL_CORRIERE_VOCE_SPARSA
+    Word of the fight has spread: %PARAM_DESTINATARIO_IN% will no longer want anything to do with %PARAM_OGGETTO%, and %PARAM_MITTENTE% won't do business with you either.
+
+// Se la città di destinazione viene distrutta
+IL_CORRIERE_CITTA_DISTRUTTA
+    %PARAM_CITTA% has been destroyed: %PARAM_OGGETTO% will no longer get %PARAM_A_DESTINATARIO_SENZA_VIRGOLA%.
+
+// La scena del ringraziamento, nella città di destinazione (la prima battuta è della spedizione)
+IL_CORRIERE_RINGRAZIAMENTO_2
+    Here are the %PARAM_MONETE% coins, you earned them.
+
+// La consegna
+IL_CORRIERE_CONSEGNA
+    %PARAM_OGGETTO_MAIUSC% goes %PARAM_A_DESTINATARIO_SENZA_VIRGOLA%.
+
+// La ricompensa
+IL_CORRIERE_RICOMPENSA
+    %PARAM_DESTINATARIO_IN_MAIUSC% pays the %PARAM_MONETE% promised coins.
+
+// ---------------------------------------------------------------------------------------------
+// La sorveglianza (vedi LaSorveglianza), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: il luogo (%PARAM_DENTRO_LUOGO%,
+// %PARAM_LUOGO_INDEFINITO%), le visite (%PARAM_VISITE%, %PARAM_ORE%, %PARAM_INTERVALLO% e %PARAM_MANCANTI%, che cambia a ogni visita),
+// la città (%PARAM_CITTA%), il mandante nelle sue forme, i nemici e le monete. Il titolo, la richiesta, la veglia, la scoperta, la vittoria,
+// la battuta del capo, la risposta e il ringraziamento sono della riga di SORVEGLIANZA (vedi le righe di sorveglianze qui sopra)
+// ---------------------------------------------------------------------------------------------
+
+// La scena dell'incarico, in città
+LA_SORVEGLIANZA_INCARICO_1
+    The place is %PARAM_DENTRO_LUOGO% nearby: I'll mark it on your map. Pass through it %PARAM_VISITE% times, %PARAM_INTERVALLO%. %PARAM_MONETE% coins once the job is done.
+
+// L'intervallo fra le visite, dentro altre frasi
+LA_SORVEGLIANZA_INTERVALLO
+    letting at least %PARAM_ORE% hours pass between one visit and the next
+
+// Quante visite mancano (la prima se ne manca una sola)
+LA_SORVEGLIANZA_MANCANTI_UNA
+    once more
+
+LA_SORVEGLIANZA_MANCANTI_N
+    %PARAM_VOLTE% more times
+
+// Il giocatore accetta
+LA_SORVEGLIANZA_ACCETTAZIONE
+    %PARAM_MANDANTE_DI_CITTA_MAIUSC% will pay %PARAM_MONETE% coins for watching over %PARAM_LUOGO_INDEFINITO%.
+
+// La descrizione nel diario: all'inizio, e poi dalla prima visita in avanti (le visite mancanti cambiano)
+LA_SORVEGLIANZA_DESCRIZIONE
+    %PARAM_MANDANTE_DI_CITTA_MAIUSC% has asked you to watch over the place marked on the map, passing through %PARAM_VISITE% times and %PARAM_INTERVALLO%.
+
+LA_SORVEGLIANZA_DESCRIZIONE_IN_CORSO
+    %PARAM_MANDANTE_DI_CITTA_MAIUSC% has asked you to watch over the place marked on the map: go there %PARAM_MANCANTI%, %PARAM_INTERVALLO%.
+
+// Il posto compare sulla mappa
+LA_SORVEGLIANZA_POSTO_SEGNATO
+    The place to watch over is marked on the map.
+
+// A ogni visita che conta, tranne l'ultima: dopo il testo della veglia
+LA_SORVEGLIANZA_VEGLIA
+    %PARAM_VEGLIA% You must come back here %PARAM_MANCANTI%, %PARAM_INTERVALLO%.
+
+// Il passo dell'agguato: la descrizione nel diario
+LA_SORVEGLIANZA_DESCRIZIONE_AGGUATO
+    Defeat %PARAM_NEMICI% at the place marked on the map, then go back %PARAM_PRESSO_MANDANTE% in %PARAM_CITTA%.
+
+// Dopo la scoperta o la vittoria: il mandante aspetta
+LA_SORVEGLIANZA_ATTESA
+    %PARAM_MANDANTE_MAIUSC% is waiting at %PARAM_CITTA%.
+
+// Il passo del ritorno: la descrizione nel diario
+LA_SORVEGLIANZA_DESCRIZIONE_RITORNO
+    Done: go back %PARAM_PRESSO_MANDANTE% in %PARAM_CITTA% to collect.
+
+// La scena del ringraziamento, in città (la prima battuta è della riga)
+LA_SORVEGLIANZA_RINGRAZIAMENTO_2
+    Here are the %PARAM_MONETE% promised coins.
+
+// La ricompensa
+LA_SORVEGLIANZA_RICOMPENSA
+    %PARAM_MANDANTE_MAIUSC% pays the %PARAM_MONETE% promised coins.
+
+// ---------------------------------------------------------------------------------------------
+// Il soccorso (vedi IlSoccorso, su LaLiberazione), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: la persona
+// (%PARAM_NOME%, %PARAM_NOME_E_PERSONA%), la città (%PARAM_CITTA%), il mandante nelle sue forme, i nemici (%PARAM_NEMICI%), il luogo
+// (%PARAM_DENTRO_LUOGO%) e le monete. Il titolo, la richiesta, la battuta del capo, la risposta, il ringraziamento, il lutto e il testo del
+// soccorso sono della riga di SOCCORSO (vedi le righe di soccorsi qui sopra)
+// ---------------------------------------------------------------------------------------------
+
+// La scena dell'incarico, in città
+IL_SOCCORSO_INCARICO_1
+    He's %PARAM_DENTRO_LUOGO% nearby: I'll mark the place on your map. Bring him back alive and you'll get %PARAM_MONETE% coins.
+
+// Il giocatore accetta
+IL_SOCCORSO_ACCETTAZIONE
+    %PARAM_MANDANTE_DI_CITTA_MAIUSC% will pay %PARAM_MONETE% coins to have %PARAM_NOME% back home alive.
+
+// Il passo del soccorso: la descrizione nel diario (la prima se il nemico è uno solo)
+IL_SOCCORSO_DESCRIZIONE_UNO
+    %PARAM_MANDANTE_DI_CITTA_MAIUSC% has asked you to rescue %PARAM_NOME_E_PERSONA%, from the place marked on the map, where %PARAM_NEMICI% threatens him.
+
+IL_SOCCORSO_DESCRIZIONE_MOLTI
+    %PARAM_MANDANTE_DI_CITTA_MAIUSC% has asked you to rescue %PARAM_NOME_E_PERSONA%, from the place marked on the map, where %PARAM_NEMICI% threaten him.
+
+// Il posto compare sulla mappa
+IL_SOCCORSO_COVO_SEGNATO
+    The place where %PARAM_NOME% is held is marked on the map.
+
+// Sconfitti i nemici
+IL_SOCCORSO_LIBERATO
+    %PARAM_SOCCORSO% Bring him back alive to %PARAM_CITTA%.
+
+// Il passo del viaggio: la descrizione nel diario
+IL_SOCCORSO_DESCRIZIONE_VIAGGIO
+    %PARAM_NOME% is safe but weak: bring him back alive to %PARAM_CITTA%, and protect him on the road.
+
+// Se la persona muore per strada
+IL_SOCCORSO_MORTO
+    %PARAM_NOME% didn't make it. %PARAM_A_MANDANTE_SENZA_VIRGOLA% must be told, at %PARAM_CITTA%.
+
+// Il passo del lutto: la descrizione nel diario
+IL_SOCCORSO_DESCRIZIONE_LUTTO
+    %PARAM_NOME% is dead: you must give the news %PARAM_A_MANDANTE_SENZA_VIRGOLA%, at %PARAM_CITTA%.
+
+// La scena del lutto, in città (la terza battuta è della riga)
+IL_SOCCORSO_LUTTO_1
+    You're back! But... where is %PARAM_NOME%?
+
+IL_SOCCORSO_LUTTO_2
+    I'm sorry. We had saved him, but we were attacked on the road.
+
+// Il mandante non apre
+IL_SOCCORSO_PORTA_CHIUSA
+    %PARAM_MANDANTE_MAIUSC% closes the door without a word.
+
+// Il passo del ritorno: la descrizione nel diario
+IL_SOCCORSO_DESCRIZIONE_RITORNO
+    %PARAM_NOME% is home: %PARAM_MANDANTE% is waiting for you at %PARAM_CITTA%.
+
+// La scena del ringraziamento, in città (la prima battuta è della riga)
+IL_SOCCORSO_RINGRAZIAMENTO_2
+    Here are the %PARAM_MONETE% promised coins.
+
+// La ricompensa
+IL_SOCCORSO_RICOMPENSA
+    %PARAM_MANDANTE_MAIUSC% pays the %PARAM_MONETE% promised coins.
+
+// ---------------------------------------------------------------------------------------------
+// Il rapimento (vedi IlRapimento, su LaLiberazione), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: l'ostaggio
+// (%PARAM_OSTAGGIO%), il capo dei rapitori (%PARAM_CAPOBANDA%), la città (%PARAM_CITTA%) e le monete
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+IL_RAPIMENTO_TITOLO
+    The kidnapping of %PARAM_OSTAGGIO%
+
+// La scena dell'incarico, in città
+IL_RAPIMENTO_INCARICO_1
+    Please, help me! A band of goblins has kidnapped my husband %PARAM_OSTAGGIO%.
+
+IL_RAPIMENTO_INCARICO_2
+    They are holding him in a cave nearby, and their leader, %PARAM_CAPOBANDA%, is asking for a ransom I can't pay.
+
+IL_RAPIMENTO_INCARICO_3
+    We'll bring them the ransom, in our own way.
+
+IL_RAPIMENTO_INCARICO_4
+    Bring him back to me alive and you'll get %PARAM_MONETE% coins.
+
+// Il giocatore accetta
+IL_RAPIMENTO_ACCETTAZIONE
+    %PARAM_OSTAGGIO%'s wife will pay %PARAM_MONETE% coins to have him back home alive.
+
+// Il passo della liberazione: la descrizione nel diario
+IL_RAPIMENTO_DESCRIZIONE_LIBERAZIONE
+    The goblin band of %PARAM_CAPOBANDA% is holding %PARAM_OSTAGGIO% prisoner in a cave marked on the map. Free him and bring him back to %PARAM_CITTA%.
+
+// Il ricordo della grotta
+IL_RAPIMENTO_RICORDO
+    In this cave the goblins of %PARAM_CAPOBANDA% held %PARAM_OSTAGGIO% prisoner.
+
+// Il covo compare sulla mappa
+IL_RAPIMENTO_COVO_SEGNATO
+    The cave where the goblins are holding %PARAM_OSTAGGIO% prisoner is marked on the map.
+
+// Sconfitti i rapitori
+IL_RAPIMENTO_LIBERATO
+    %PARAM_OSTAGGIO% is free, but he's weak and can't defend himself: bring him back alive to %PARAM_CITTA%.
+
+// Il passo del viaggio: la descrizione nel diario
+IL_RAPIMENTO_DESCRIZIONE_VIAGGIO
+    %PARAM_OSTAGGIO% is free but weak: bring him back alive to %PARAM_CITTA%, and protect him on the road.
+
+// Se l'ostaggio muore per strada
+IL_RAPIMENTO_MORTO
+    %PARAM_OSTAGGIO% didn't make it: his kidnappers had friends. His wife must be told, at %PARAM_CITTA%.
+
+// Il passo del lutto: la descrizione nel diario
+IL_RAPIMENTO_DESCRIZIONE_LUTTO
+    %PARAM_OSTAGGIO% is dead: you must give the news to his wife, at %PARAM_CITTA%.
+
+// La scena del lutto, in città
+IL_RAPIMENTO_LUTTO_1
+    You're back! But... where is %PARAM_OSTAGGIO%?
+
+IL_RAPIMENTO_LUTTO_2
+    I'm sorry. We had freed him, but we were attacked on the road.
+
+IL_RAPIMENTO_LUTTO_3
+    No... I don't want to hear any more. Go away.
+
+// La moglie non apre
+IL_RAPIMENTO_PORTA_CHIUSA
+    %PARAM_OSTAGGIO%'s wife closes the door without a word.
+
+// Il passo del ritorno: la descrizione nel diario
+IL_RAPIMENTO_DESCRIZIONE_RITORNO
+    %PARAM_OSTAGGIO% is home: his wife is waiting for you at %PARAM_CITTA%.
+
+// La scena del ringraziamento, in città
+IL_RAPIMENTO_RINGRAZIAMENTO_1
+    %PARAM_OSTAGGIO%! You're back!
+
+IL_RAPIMENTO_RINGRAZIAMENTO_2
+    I don't know how to thank you. Here are the %PARAM_MONETE% coins.
+
+IL_RAPIMENTO_RINGRAZIAMENTO_3
+    Keep an eye on him next time.
+
+// La ricompensa
+IL_RAPIMENTO_RICOMPENSA
+    %PARAM_OSTAGGIO%'s wife pays the %PARAM_MONETE% promised coins.
+
+// ---------------------------------------------------------------------------------------------
+// Il colpo (vedi IlColpo), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: il luogo (%PARAM_DENTRO_LUOGO%), le guardie
+// (%PARAM_GUARDIE%), la città (%PARAM_CITTA%), il mandante nelle sue forme e le monete. Il titolo, la richiesta, la battuta del capo, la risposta, il
+// ringraziamento, il colpo, gli scoperti e il ricordo sono della riga di COLPO (vedi le righe di colpi qui sopra)
+// ---------------------------------------------------------------------------------------------
+
+// La scena dell'incarico, in città
+IL_COLPO_INCARICO_1
+    The place is %PARAM_DENTRO_LUOGO% nearby, guarded by %PARAM_GUARDIE%: I'll mark it on your map. Don't let yourselves be seen, and don't fight: if they spot you, all is lost. %PARAM_MONETE% coins once the job is done.
+
+// Il giocatore accetta
+IL_COLPO_ACCETTAZIONE
+    %PARAM_MANDANTE_DI_CITTA_MAIUSC% will pay %PARAM_MONETE% coins for a job %PARAM_DENTRO_LUOGO%.
+
+// Il passo del colpo: la descrizione nel diario
+IL_COLPO_DESCRIZIONE_COLPO
+    %PARAM_MANDANTE_DI_CITTA_MAIUSC% has asked you for a job at the place marked on the map, guarded by %PARAM_GUARDIE%: slip by unnoticed. If you fight there, the job fails.
+
+// Il posto compare sulla mappa
+IL_COLPO_POSTO_SEGNATO
+    The place of the job is marked on the map.
+
+// Il passo del ritorno: la descrizione nel diario
+IL_COLPO_DESCRIZIONE_RITORNO
+    The job is done: go back %PARAM_PRESSO_MANDANTE% in %PARAM_CITTA% to collect.
+
+// La scena del ringraziamento, in città (la prima battuta è della riga)
+IL_COLPO_RINGRAZIAMENTO_2
+    Here are the %PARAM_MONETE% promised coins. And we've never met.
+
+// La ricompensa
+IL_COLPO_RICOMPENSA
+    %PARAM_MANDANTE_MAIUSC% pays the %PARAM_MONETE% promised coins.
+
+// ---------------------------------------------------------------------------------------------
+// Il cartografo (vedi IlCartografo), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: la città (%PARAM_CITTA%), le zone
+// da esplorare (%PARAM_CASELLE%), quelle già viste (%PARAM_ESPLORATE%: l'unico che cambia) e le monete
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+IL_CARTOGRAFO_TITOLO
+    The cartographer
+
+// La scena dell'incarico, in città
+IL_CARTOGRAFO_INCARICO_1
+    Are you explorers? I draw maps, but I haven't set foot in the forest for years.
+
+IL_CARTOGRAFO_INCARICO_2
+    Go where none of you has ever been, %PARAM_CASELLE% new areas, and come back to tell me about them. I'll pay you %PARAM_MONETE% coins.
+
+IL_CARTOGRAFO_INCARICO_3
+    And if we get lost?
+
+IL_CARTOGRAFO_INCARICO_4
+    Then the map will be even more useful to you.
+
+// Il giocatore accetta
+IL_CARTOGRAFO_ACCETTAZIONE
+    The cartographer will pay %PARAM_MONETE% coins for %PARAM_CASELLE% never-visited areas of the forest.
+
+// Il passo dell'esplorazione: la descrizione nel diario
+IL_CARTOGRAFO_DESCRIZIONE_ESPLORAZIONE
+    The cartographer of %PARAM_CITTA% wants to know what is in %PARAM_CASELLE% areas of the forest where you have never been. So far: %PARAM_ESPLORATE%.
+
+// Esplorate abbastanza zone
+IL_CARTOGRAFO_ESPLORATO
+    You have seen enough forest to fill a map: the cartographer of %PARAM_CITTA% awaits you.
+
+// Il passo del ritorno: la descrizione nel diario
+IL_CARTOGRAFO_DESCRIZIONE_RITORNO
+    You have explored enough: go back to the cartographer of %PARAM_CITTA% and tell them what you saw.
+
+// La scena del ringraziamento, in città
+IL_CARTOGRAFO_RINGRAZIAMENTO_1
+    Tell me, tell me! A swamp here, some ruins there...
+
+IL_CARTOGRAFO_RINGRAZIAMENTO_2
+    And lots of monsters everywhere. Mark those well.
+
+// La ricompensa
+IL_CARTOGRAFO_RICOMPENSA
+    The cartographer copies everything onto their map and pays the %PARAM_MONETE% promised coins.
+
+// ---------------------------------------------------------------------------------------------
+// La chiave del custode (vedi ChiaveDelCustode, missione figlia di una leggenda), in ordine di copione. I segnaposto %PARAM_CHIAVE% li
+// riempie il codice con i parametri della missione: il testo del custode (%PARAM_TESTO%), la chiave (%PARAM_CHIAVE_DEL_CUSTODE%), i posti, e se il
+// custode vuole un oggetto in cambio, l'oggetto e il suo testo
+// ---------------------------------------------------------------------------------------------
+
+// Il passo del custode: la descrizione nel diario
+CHIAVE_DEL_CUSTODE_DESCRIZIONE
+    %PARAM_TESTO% The place is %PARAM_POSTO%, marked on the map.
+
+// Il custode vuole un oggetto: la descrizione nel diario, dopo che l'ha chiesto
+CHIAVE_DEL_CUSTODE_DESCRIZIONE_CON_OGGETTO
+    %PARAM_TESTO% The place is %PARAM_POSTO%, marked on the map. %PARAM_TESTO_OGGETTO% The place is %PARAM_POSTO_OGGETTO%, marked on the map.
+
+// Il custode è vinto
+CHIAVE_DEL_CUSTODE_VINTO
+    The keeper is defeated: %PARAM_CHIAVE_DEL_CUSTODE% is yours.
+
+// Il custode chiede l'oggetto
+CHIAVE_DEL_CUSTODE_OGGETTO_CHIESTO
+    %PARAM_TESTO_OGGETTO% The place is %PARAM_POSTO_OGGETTO%: it's marked on the map.
+
+// L'oggetto è recuperato
+CHIAVE_DEL_CUSTODE_OGGETTO_RECUPERATO
+    You have recovered %PARAM_OGGETTO%: now you must bring it back.
+
+// Lo scambio
+CHIAVE_DEL_CUSTODE_SCAMBIO
+    In exchange for %PARAM_OGGETTO% the keeper gives you %PARAM_CHIAVE_DEL_CUSTODE%.
+
+// ---------------------------------------------------------------------------------------------
+// Il rituale (vedi IlRituale), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: il luogo (%PARAM_DENTRO_LUOGO%), gli ingredienti
+// (%PARAM_QUANTI%, %PARAM_DA_DOVE_VIENE%, %PARAM_INGREDIENTI%, %PARAM_TUTTI%, %PARAM_RACCOLTI%: l'unico che cambia), la città (%PARAM_CITTA%), il mandante nelle
+// sue forme e le monete. Il titolo, la richiesta, la domanda, il rito, la vittoria, l'errore, la battuta del capo, la risposta, il ringraziamento e il
+// ricordo sono della riga di RITUALE (vedi le righe di rituali qui sopra)
+// ---------------------------------------------------------------------------------------------
+
+// La scena dell'incarico, in città
+IL_RITUALE_INCARICO_1
+    The ritual is held %PARAM_DENTRO_LUOGO% nearby: I'll mark it on your map. You need %PARAM_QUANTI%, which %PARAM_DA_DOVE_VIENE%. %PARAM_MONETE% coins once the ritual is done.
+
+// Il giocatore accetta
+IL_RITUALE_ACCETTAZIONE
+    %PARAM_MANDANTE_DI_CITTA_MAIUSC% will pay %PARAM_MONETE% coins for a ritual %PARAM_DENTRO_LUOGO%.
+
+// Il passo della raccolta (e della ricerca del luogo): la descrizione nel diario
+IL_RITUALE_DESCRIZIONE_RACCOLTA
+    %PARAM_MANDANTE_DI_CITTA_MAIUSC% has asked you to perform a ritual at the place marked on the map. First you need %PARAM_QUANTI%, which %PARAM_DA_DOVE_VIENE%. So far: %PARAM_RACCOLTI%.
+
+// Il posto compare sulla mappa
+IL_RITUALE_POSTO_SEGNATO
+    The place of the ritual is marked on the map.
+
+// Raccolti gli ingredienti
+IL_RITUALE_RACCOLTO
+    %PARAM_INGREDIENTI_MAIUSC% you have %PARAM_TUTTI%: now the ritual can be performed, at the place marked on the map.
+
+// Il passo del rito: la descrizione nel diario (anche se è rinviato)
+IL_RITUALE_DESCRIZIONE_RITO
+    You have %PARAM_TUTTI% %PARAM_INGREDIENTI%: go to the place marked on the map to perform the ritual.
+
+// Se il rito è un'opzione di una scelta fra più metodi
+IL_RITUALE_NON_ANCORA
+    Not yet
+
+// Il rito è rinviato
+IL_RITUALE_RINVIATO
+    The ritual can wait: it will be done another time, when you come back here.
+
+// Il passo del guardiano: la descrizione nel diario
+IL_RITUALE_DESCRIZIONE_GUARDIANO
+    The ritual has begun: defeat whoever came to disturb it, at the place marked on the map.
+
+// Dopo il rito o la vittoria: il mandante aspetta
+IL_RITUALE_ATTESA
+    %PARAM_MANDANTE_MAIUSC% is waiting at %PARAM_CITTA%.
+
+// Il passo del ritorno: la descrizione nel diario
+IL_RITUALE_DESCRIZIONE_RITORNO
+    Done: go back %PARAM_PRESSO_MANDANTE% in %PARAM_CITTA% to collect.
+
+// La scena del ringraziamento, in città (la prima battuta è della riga)
+IL_RITUALE_RINGRAZIAMENTO_2
+    Here are the %PARAM_MONETE% promised coins.
+
+// La ricompensa
+IL_RITUALE_RICOMPENSA
+    %PARAM_MANDANTE_MAIUSC% pays the %PARAM_MONETE% promised coins.
+
+// ---------------------------------------------------------------------------------------------
+// Il torneo (vedi IlTorneo), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: il luogo (%PARAM_DENTRO_LUOGO%), il campione della finale
+// (%PARAM_CAMPIONE%), il premio in palio (%PARAM_PREMIO%, dalle due produzioni IN_PALIO; %PARAM_PREMIO_BREVE% è il solo nome), il turno e lo sfidante
+// (%PARAM_TURNO%, %PARAM_CHI%), la città, il mandante nelle sue forme e le monete. Il titolo, la richiesta, i turni vinti, la finale, la battuta del capo,
+// la risposta, il ringraziamento e il ricordo sono della riga di TORNEO (vedi le righe di tornei qui sopra)
+// ---------------------------------------------------------------------------------------------
+
+// La scena dell'incarico, in città
+IL_TORNEO_INCARICO_1
+    The fight is %PARAM_DENTRO_LUOGO% nearby, one on one until surrender: two rounds, and in the final %PARAM_CAMPIONE%. The prize is %PARAM_PREMIO%, plus a purse of %PARAM_MONETE% coins.
+
+// Il premio in palio: un oggetto solo, oppure un paio o un set
+IL_TORNEO_IN_PALIO
+    %PARAM_PREMIO_BREVE%
+
+IL_TORNEO_IN_PALIO_PLURALE
+    %PARAM_PREMIO_BREVE%
+
+// Il giocatore accetta
+IL_TORNEO_ACCETTAZIONE
+    %PARAM_MANDANTE_DI_CITTA_MAIUSC% has entered your party in the tournament: the prize is %PARAM_PREMIO%.
+
+// Prima che il torneo sia bandito: la descrizione nel diario
+IL_TORNEO_DESCRIZIONE_ATTESA
+    Sooner or later, in the city, a tournament will be announced with a legendary item as the prize.
+
+// Il posto compare sulla mappa
+IL_TORNEO_LIZZA_SEGNATA
+    The tournament lists are marked on the map: one round is fought on each visit, one on one until surrender.
+
+// I turni, per la descrizione nel diario
+IL_TORNEO_TURNO_1
+    the first round
+
+IL_TORNEO_TURNO_2
+    the second round
+
+IL_TORNEO_TURNO_FINALE
+    the final
+
+// Il passo di un turno o della finale: la descrizione nel diario
+IL_TORNEO_DESCRIZIONE_TURNO
+    %PARAM_TITOLO%, %PARAM_TURNO%: face %PARAM_CHI% in the lists marked on the map, one on one until surrender. The prize is %PARAM_PREMIO%.
+
+// Dopo un turno vinto (dopo il testo del turno): la prossima visita
+IL_TORNEO_PROSSIMA_FINALE
+    At the next visit to the lists, the final.
+
+IL_TORNEO_PROSSIMO_TURNO
+    At the next visit to the lists, the next round.
+
+// Vinta la finale (dopo il testo della finale)
+IL_TORNEO_PREMIO
+    %PARAM_FINALE% The tournament judge hands the party %PARAM_PREMIO_BREVE%: it goes into the party's inventory. The purse of %PARAM_MONETE% coins awaits at %PARAM_CITTA%.
+
+// Il passo del ritorno: la descrizione nel diario
+IL_TORNEO_DESCRIZIONE_RITORNO
+    You have won the tournament: go back %PARAM_PRESSO_MANDANTE% in %PARAM_CITTA% for the winner's purse.
+
+// La scena del ringraziamento, in città (la prima battuta è della riga)
+IL_TORNEO_RINGRAZIAMENTO_2
+    Here's the winner's purse: %PARAM_MONETE% coins.
+
+// La ricompensa
+IL_TORNEO_RICOMPENSA
+    %PARAM_MANDANTE_MAIUSC% hands over the winner's purse: %PARAM_MONETE% coins.
+
+// ---------------------------------------------------------------------------------------------
+// Il pellegrino (vedi IlPellegrino), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: il pellegrino (%PARAM_PELLEGRINO%), il tempio nelle sue
+// forme con la preposizione (%PARAM_A_TEMPIO%, %PARAM_ARRIVO_TEMPIO%: il nome vero si sa solo dopo averlo trovato), la città e le monete
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+IL_PELLEGRINO_TITOLO
+    The pilgrim
+
+// La scena dell'incarico, in città
+IL_PELLEGRINO_INCARICO_1
+    Excuse me, are you headed for the forest? My brother %PARAM_PELLEGRINO% wants to go on a pilgrimage to a temple.
+
+IL_PELLEGRINO_INCARICO_2
+    He won't get there alive on his own. Go with him, and on your return I'll give you %PARAM_MONETE% coins.
+
+IL_PELLEGRINO_INCARICO_3
+    Does he at least know how to hold a sword?
+
+IL_PELLEGRINO_INCARICO_4
+    He knows how to pray. A lot.
+
+// Il giocatore accetta
+IL_PELLEGRINO_ACCETTAZIONE
+    %PARAM_PELLEGRINO% will travel with the party to the temple. Reward on return: %PARAM_MONETE% coins.
+
+// Il tempio, finché non si è trovato
+IL_PELLEGRINO_TEMPIO_GENERICO
+    the temple
+
+// Il passo del viaggio (e della ricerca del tempio): la descrizione nel diario
+IL_PELLEGRINO_DESCRIZIONE_VIAGGIO
+    Accompany the pilgrim %PARAM_PELLEGRINO% %PARAM_A_TEMPIO%, marked on the map.
+
+// Il tempio compare sulla mappa
+IL_PELLEGRINO_TEMPIO_SEGNATO
+    %PARAM_TEMPIO_MAIUSC%, where %PARAM_PELLEGRINO% wants to go, is marked on the map.
+
+// Il ricordo del tempio
+IL_PELLEGRINO_RICORDO
+    The pilgrim %PARAM_PELLEGRINO% came to pray in this temple.
+
+// Arrivati al tempio
+IL_PELLEGRINO_ARRIVATO
+    Having arrived %PARAM_ARRIVO_TEMPIO%, %PARAM_PELLEGRINO% thanks you and begins to pray. His sister is waiting for news at %PARAM_CITTA%.
+
+// Il passo del ritorno: la descrizione nel diario
+IL_PELLEGRINO_DESCRIZIONE_RITORNO
+    %PARAM_PELLEGRINO% has arrived %PARAM_ARRIVO_TEMPIO%: go back to his sister at %PARAM_CITTA%.
+
+// La scena del ringraziamento, in città
+IL_PELLEGRINO_RINGRAZIAMENTO_1
+    %PARAM_PELLEGRINO% has arrived %PARAM_ARRIVO_TEMPIO%? May heaven bless you!
+
+IL_PELLEGRINO_RINGRAZIAMENTO_2
+    Here are the %PARAM_MONETE% coins.
+
+IL_PELLEGRINO_RINGRAZIAMENTO_3
+    He prayed for us too, we hope.
+
+// La ricompensa
+IL_PELLEGRINO_RICOMPENSA
+    %PARAM_PELLEGRINO%'s sister pays the %PARAM_MONETE% promised coins.
+
+// ---------------------------------------------------------------------------------------------
+// L'oggetto smarrito (vedi LOggettoSmarrito), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: l'oggetto (%PARAM_OGGETTO%,
+// %PARAM_PRONOME%, %PARAM_PERSO%, %PARAM_SUFFISSO%), il proprietario nelle sue forme, il posto (%PARAM_POSTO%, %PARAM_VICINO_POSTO%), il raggio della ricerca
+// (%PARAM_RAGGIO%), la città e le monete. Il racconto, la battuta del capo, la risposta e il ringraziamento sono della riga di OGGETTO_SMARRITO
+// ---------------------------------------------------------------------------------------------
+
+// La scena dell'incarico, in città
+L_OGGETTO_SMARRITO_INCARICO_1
+    I lost it near %PARAM_VICINO_POSTO%. I'll mark the place on your map: it must be around there, no more than %PARAM_RAGGIO% steps away. Bring it back to me and you'll get %PARAM_MONETE% coins.
+
+// Il giocatore accetta
+L_OGGETTO_SMARRITO_ACCETTAZIONE
+    %PARAM_PROPRIETARIO_DI_CITTA_MAIUSC% will pay %PARAM_MONETE% coins for %PARAM_OGGETTO% lost near %PARAM_VICINO_POSTO%.
+
+// Il passo della ricerca: la descrizione nel diario
+L_OGGETTO_SMARRITO_DESCRIZIONE_RICERCA
+    Look for %PARAM_OGGETTO% that %PARAM_PROPRIETARIO_DI_CITTA% lost near %PARAM_VICINO_POSTO%, which you can find on the map: it's at most %PARAM_RAGGIO% steps from there.
+
+// Il posto compare sulla mappa
+L_OGGETTO_SMARRITO_POSTO_SEGNATO
+    %PARAM_POSTO% is now on the map: %PARAM_OGGETTO% is somewhere around there.
+
+// Trovato l'oggetto
+L_OGGETTO_SMARRITO_TROVATO
+    Here is %PARAM_OGGETTO% %PARAM_DI_PROPRIETARIO%! %PARAM_PROPRIETARIO_MAIUSC% is waiting in %PARAM_CITTA%.
+
+// Il ricordo del posto
+L_OGGETTO_SMARRITO_RICORDO
+    Around here %PARAM_PROPRIETARIO% of %PARAM_CITTA% lost %PARAM_OGGETTO%.
+
+// Il passo del ritorno: la descrizione nel diario
+L_OGGETTO_SMARRITO_DESCRIZIONE_RITORNO
+    You have found %PARAM_OGGETTO%: bring it back %PARAM_A_PROPRIETARIO_DI_CITTA%.
+
+// La consegna
+L_OGGETTO_SMARRITO_CONSEGNA
+    %PARAM_OGGETTO_MAIUSC% goes back %PARAM_A_PROPRIETARIO%.
+
+// La scena del ringraziamento, in città (la prima battuta è della riga)
+L_OGGETTO_SMARRITO_RINGRAZIAMENTO_2
+    Here are the %PARAM_MONETE% promised coins.
+
+// La ricompensa
+L_OGGETTO_SMARRITO_RICOMPENSA
+    %PARAM_PROPRIETARIO_MAIUSC% pays the %PARAM_MONETE% promised coins.
+
+// ---------------------------------------------------------------------------------------------
+// La documentazione (vedi LaDocumentazione), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: il mandante nelle sue forme, il numero
+// dei posti (%PARAM_NUMERO%), il luogo (%PARAM_DENTRO_LUOGO%), la città, le monete e le note già raccolte (%PARAM_REPERTI%: l'unico che cambia, già
+// composto dal codice: " 1: nota 2: nota"). Il titolo, la richiesta, i reperti, la battuta del capo, la risposta e il ringraziamento sono della riga di
+// DOCUMENTAZIONE
+// ---------------------------------------------------------------------------------------------
+
+// La scena dell'incarico, in città
+LA_DOCUMENTAZIONE_INCARICO_1
+    I'll mark on your map where to begin. Bring me the notes from all the places, and you'll get %PARAM_MONETE% coins.
+
+// Il giocatore accetta
+LA_DOCUMENTAZIONE_ACCETTAZIONE
+    %PARAM_MANDANTE_DI_CITTA_MAIUSC% will pay %PARAM_MONETE% coins for the notes on %PARAM_NUMERO% places.
+
+// I passi delle tracce e dei reperti: la descrizione nel diario
+LA_DOCUMENTAZIONE_DESCRIZIONE
+    %PARAM_MANDANTE_DI_CITTA_MAIUSC% has asked you to document %PARAM_NUMERO% places: go to the one marked on the map.%PARAM_REPERTI%
+
+// Il posto compare sulla mappa: il primo, e poi gli altri
+LA_DOCUMENTAZIONE_COMINCIA
+    Start %PARAM_DENTRO_LUOGO%: the place is marked on the map.
+
+LA_DOCUMENTAZIONE_PROSEGUE
+    Carry on %PARAM_DENTRO_LUOGO%: the place is marked on the map.
+
+// Dopo l'ultimo reperto (dopo il suo testo)
+LA_DOCUMENTAZIONE_NOTE_COMPLETE
+    The notes are complete: %PARAM_MANDANTE% is waiting at %PARAM_CITTA%.
+
+// Il passo del ritorno: la descrizione nel diario
+LA_DOCUMENTAZIONE_DESCRIZIONE_RITORNO
+    You have documented everything: go back %PARAM_DA_MANDANTE% in %PARAM_CITTA% to hand in the notes.%PARAM_REPERTI%
+
+// La scena del ringraziamento, in città (la prima battuta è della riga)
+LA_DOCUMENTAZIONE_RINGRAZIAMENTO_2
+    Here are the %PARAM_MONETE% promised coins.
+
+// La ricompensa
+LA_DOCUMENTAZIONE_RICOMPENSA
+    %PARAM_MANDANTE_MAIUSC% pays the %PARAM_MONETE% promised coins.
+
+// ---------------------------------------------------------------------------------------------
+// L'indagine (vedi LIndagine), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: il mandante nelle sue forme, la città, le monete, la domanda
+// dell'indagine (%PARAM_DOMANDA%), il luogo (%PARAM_DENTRO_LUOGO%) e gli indizi già trovati (%PARAM_INDIZI%: l'unico che cambia, composto dal codice con
+// la produzione INDIZIO). Il titolo, la richiesta, gli indizi, la domanda, lo smascheramento, la vittoria, l'errore, la battuta del capo, la risposta e il
+// ringraziamento sono della riga di INDAGINE
+// ---------------------------------------------------------------------------------------------
+
+// La scena dell'incarico, in città
+L_INDAGINE_INCARICO_1
+    I'll mark on your map where to start looking. Find the culprit and you'll get %PARAM_MONETE% coins. But take care not to accuse an innocent.
+
+// Il giocatore accetta
+L_INDAGINE_ACCETTAZIONE
+    %PARAM_MANDANTE_DI_CITTA_MAIUSC% will pay %PARAM_MONETE% coins to find the culprit.
+
+// Un indizio già trovato, nella descrizione nel diario (dopo uno spazio)
+L_INDAGINE_INDIZIO
+    Clue %PARAM_NUMERO%: %PARAM_TESTO%
+
+// I passi delle tracce e degli indizi: la descrizione nel diario (il primo indizio, e poi i successivi)
+L_INDAGINE_DESCRIZIONE_PRIMO
+    %PARAM_MANDANTE_DI_CITTA_MAIUSC% has asked you to investigate: look for the first clue at the place marked on the map.%PARAM_INDIZI%
+
+L_INDAGINE_DESCRIZIONE_SUCCESSIVO
+    %PARAM_MANDANTE_DI_CITTA_MAIUSC% has asked you to investigate: look for the next clue at the place marked on the map.%PARAM_INDIZI%
+
+// Il posto dell'indizio compare sulla mappa: il primo, e poi i successivi
+L_INDAGINE_COMINCIA
+    Look for the first clue %PARAM_DENTRO_LUOGO%: the place is marked on the map.
+
+L_INDAGINE_PROSEGUE
+    Look for the next clue %PARAM_DENTRO_LUOGO%: the place is marked on the map.
+
+// Il passo dell'accusa: la descrizione nel diario
+L_INDAGINE_DESCRIZIONE_ACCUSA
+    You have found all the clues. %PARAM_DOMANDA%%PARAM_INDIZI%
+
+// Il nascondiglio compare sulla mappa (dopo il testo dello smascheramento)
+L_INDAGINE_NASCONDIGLIO_SEGNATO
+    %PARAM_SMASCHERAMENTO% The hideout is marked on the map.
+
+// Il passo della cattura: la descrizione nel diario
+L_INDAGINE_DESCRIZIONE_CATTURA
+    You have found the culprit: defeat them in their hideout, marked on the map, then go back %PARAM_PRESSO_MANDANTE% in %PARAM_CITTA%.
+
+// Dopo la vittoria: il mandante aspetta
+L_INDAGINE_ATTESA
+    %PARAM_MANDANTE_MAIUSC% is waiting at %PARAM_CITTA%.
+
+// Il passo del ritorno: la descrizione nel diario
+L_INDAGINE_DESCRIZIONE_RITORNO
+    Done: go back %PARAM_PRESSO_MANDANTE% in %PARAM_CITTA% to collect.
+
+// La scena del ringraziamento, in città (la prima battuta è della riga)
+L_INDAGINE_RINGRAZIAMENTO_2
+    Here are the %PARAM_MONETE% promised coins.
+
+// La ricompensa
+L_INDAGINE_RICOMPENSA
+    %PARAM_MANDANTE_MAIUSC% pays the %PARAM_MONETE% promised coins.
+
+// ---------------------------------------------------------------------------------------------
+// La taglia sulla banda (vedi LaTagliaSullaBanda), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: il capo della banda
+// (%PARAM_CAPOBANDA%), la città (%PARAM_CITTA%) e le monete
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+LA_TAGLIA_SULLA_BANDA_TITOLO
+    The bounty on %PARAM_CAPOBANDA%
+
+// La scena dell'incarico, in città
+LA_TAGLIA_SULLA_BANDA_INCARICO_1
+    Have you seen the notice? There's a bounty on %PARAM_CAPOBANDA%, the leader of the hobgoblins.
+
+LA_TAGLIA_SULLA_BANDA_INCARICO_2
+    He and his band are hiding in a wood nearby. %PARAM_MONETE% coins to whoever deals with them.
+
+LA_TAGLIA_SULLA_BANDA_INCARICO_3
+    Tell us where the wood is.
+
+// Il giocatore accetta
+LA_TAGLIA_SULLA_BANDA_ACCETTAZIONE
+    The bounty on %PARAM_CAPOBANDA% is worth %PARAM_MONETE% coins.
+
+// Il passo del covo e della caccia: la descrizione nel diario
+LA_TAGLIA_SULLA_BANDA_DESCRIZIONE_CACCIA
+    In %PARAM_CITTA% there's a bounty on %PARAM_CAPOBANDA%, the leader of a hobgoblin band hiding in a wood marked on the map.
+
+// Il bosco compare sulla mappa
+LA_TAGLIA_SULLA_BANDA_COVO_SEGNATO
+    The wood where the band of %PARAM_CAPOBANDA% hides is marked on the map.
+
+// Il ricordo del bosco
+LA_TAGLIA_SULLA_BANDA_RICORDO
+    The band of %PARAM_CAPOBANDA% hid in this wood.
+
+// Sconfitta la banda
+LA_TAGLIA_SULLA_BANDA_SCONFITTA
+    %PARAM_CAPOBANDA% and his band will bother no one anymore: the bounty awaits at %PARAM_CITTA%.
+
+// Il passo del ritorno: la descrizione nel diario
+LA_TAGLIA_SULLA_BANDA_DESCRIZIONE_RITORNO
+    %PARAM_CAPOBANDA% will bother no one anymore: go back to %PARAM_CITTA% to collect the bounty.
+
+// La scena del ringraziamento, in città
+LA_TAGLIA_SULLA_BANDA_RINGRAZIAMENTO_1
+    %PARAM_CAPOBANDA% is gone? At last we can sleep peacefully again.
+
+LA_TAGLIA_SULLA_BANDA_RINGRAZIAMENTO_2
+    Here's the bounty, you earned it.
+
+LA_TAGLIA_SULLA_BANDA_RINGRAZIAMENTO_3
+    He was a nice fellow, deep down. No, he wasn't.
+
+// La ricompensa
+LA_TAGLIA_SULLA_BANDA_RICOMPENSA
+    The bounty of %PARAM_MONETE% coins is yours.
+
+// ---------------------------------------------------------------------------------------------
+// Il cacciatore di taglie (vedi CacciatoreDiTaglie), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: il ricercato (%PARAM_RICERCATO%),
+// la città, la direzione delle rovine rispetto al gruppo (%PARAM_DIREZIONE%, senza il punto finale: si sa solo dopo averle trovate) e le monete
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+CACCIATORE_DI_TAGLIE_TITOLO
+    Wanted: %PARAM_RICERCATO%
+
+// La scena dell'incarico, in città
+CACCIATORE_DI_TAGLIE_INCARICO_1
+    Looking for work? Read this: wanted, dead or alive, %PARAM_RICERCATO%.
+
+CACCIATORE_DI_TAGLIE_INCARICO_2
+    He's a hobgoblin, the leader of a goblin band that attacks anyone who passes. He's hiding among some ruins.
+
+CACCIATORE_DI_TAGLIE_INCARICO_3
+    Where exactly?
+
+CACCIATORE_DI_TAGLIE_INCARICO_4
+    If I knew, I'd have caught him myself. Bring me proof that he's dead and you'll have %PARAM_MONETE% coins.
+
+// Il giocatore accetta
+CACCIATORE_DI_TAGLIE_ACCETTAZIONE
+    The bounty on %PARAM_RICERCATO% is worth %PARAM_MONETE% coins.
+
+// Il passo della ricerca delle rovine: la descrizione nel diario
+CACCIATORE_DI_TAGLIE_DESCRIZIONE_COVO
+    There's a bounty on %PARAM_RICERCATO%, the hobgoblin leading a band of goblins. He hides among some ruins.
+
+// Trovate le rovine
+CACCIATORE_DI_TAGLIE_COVO_TROVATO
+    They say the band of %PARAM_RICERCATO% hides among some ruins, %PARAM_DIREZIONE%.
+
+// Il passo della caccia: la descrizione nel diario
+CACCIATORE_DI_TAGLIE_DESCRIZIONE_CACCIA
+    There's a bounty on %PARAM_RICERCATO%, the hobgoblin leading a band of goblins. He hides among some ruins, %PARAM_DIREZIONE% of %PARAM_CITTA%.
+
+// Il ricordo delle rovine
+CACCIATORE_DI_TAGLIE_RICORDO
+    The band of %PARAM_RICERCATO% hid among these ruins.
+
+// Abbattuto il ricercato
+CACCIATORE_DI_TAGLIE_ABBATTUTO
+    %PARAM_RICERCATO% has been brought down: the bounty awaits at %PARAM_CITTA%.
+
+// Il passo del ritorno: la descrizione nel diario
+CACCIATORE_DI_TAGLIE_DESCRIZIONE_RITORNO
+    %PARAM_RICERCATO% has been brought down: go back to %PARAM_CITTA% to collect the bounty.
+
+// La scena del ringraziamento, in città
+CACCIATORE_DI_TAGLIE_RINGRAZIAMENTO_1
+    %PARAM_RICERCATO% won't bother anyone anymore? Excellent work.
+
+CACCIATORE_DI_TAGLIE_RINGRAZIAMENTO_2
+    Here's the bounty.
+
+CACCIATORE_DI_TAGLIE_RINGRAZIAMENTO_3
+    If you have any more, you know where to find us.
+
+// La ricompensa
+CACCIATORE_DI_TAGLIE_RICOMPENSA
+    The bounty of %PARAM_MONETE% coins on %PARAM_RICERCATO% is yours.
+
+// ---------------------------------------------------------------------------------------------
+// La forgia (vedi LaForgia), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: l'armaiolo nelle sue forme (%PARAM_ARMAIOLO_MAIUSC%,
+// %PARAM_ARMAIOLO_DI_CITTA%, %PARAM_PRESSO_ARMAIOLO_DI_CITTA%...), l'arma (%PARAM_ARMA%), il metallo e il trofeo (%PARAM_QUANTI_METALLO%, %PARAM_DA_DOVE_METALLO%,
+// %PARAM_METALLI%, %PARAM_TUTTI_METALLO%, e lo stesso per il trofeo; %PARAM_RACCOLTI_METALLO% e %PARAM_RACCOLTI_TROFEO% sono i soli che cambiano), il costo e le ore di
+// lavoro. Il nome dell'arma, la richiesta, la battuta del capo, la risposta e la consegna sono della riga di FORGIA (vedi le righe di forge qui sopra)
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo, finché l'arma non è scelta
+LA_FORGIA_LA_FORGIA
+    the forge
+
+// La scena dell'incarico, in città
+LA_FORGIA_INCARICO_1
+    I need %PARAM_QUANTI_METALLO%, which %PARAM_DA_DOVE_METALLO%, and then %PARAM_QUANTI_TROFEO%, which %PARAM_DA_DOVE_TROFEO%. For the work, %PARAM_COSTO% coins: the fire isn't free.
+
+LA_FORGIA_INCARICO_2
+    It's a deal.
+
+// Il giocatore accetta
+LA_FORGIA_ACCETTAZIONE
+    %PARAM_ARMAIOLO_MAIUSC% will forge %PARAM_ARMA%: they need %PARAM_QUANTI_METALLO% and %PARAM_QUANTI_TROFEO%, plus %PARAM_COSTO% coins for the work.
+
+// Prima che l'incarico sia offerto: la descrizione nel diario
+LA_FORGIA_DESCRIZIONE_ATTESA
+    %PARAM_ARMAIOLO_MAIUSC% forges exceptional weapons, for those who bring what is needed.
+
+// Il passo della raccolta del metallo: la descrizione nel diario
+LA_FORGIA_DESCRIZIONE_METALLO
+    %PARAM_ARMAIOLO_DI_CITTA_MAIUSC% will forge %PARAM_ARMA%. They need %PARAM_QUANTI_METALLO%, which %PARAM_DA_DOVE_METALLO%. So far: %PARAM_RACCOLTI_METALLO%.
+
+// Raccolto il metallo
+LA_FORGIA_METALLO_PRONTO
+    %PARAM_METALLI_MAIUSC% are all here: now you need %PARAM_QUANTI_TROFEO%.
+
+// Il passo della raccolta del trofeo: la descrizione nel diario
+LA_FORGIA_DESCRIZIONE_TROFEO
+    %PARAM_ARMAIOLO_DI_CITTA_MAIUSC% will forge %PARAM_ARMA%. We have the metal: now they need %PARAM_QUANTI_TROFEO%, which %PARAM_DA_DOVE_TROFEO%. So far: %PARAM_RACCOLTI_TROFEO%.
+
+// Raccolto il trofeo
+LA_FORGIA_TUTTO_PRONTO
+    You have everything needed: %PARAM_ARMAIOLO_DI_CITTA% can light the forge.
+
+// Il passo della forgiatura: la descrizione nel diario
+LA_FORGIA_DESCRIZIONE_FORGIATURA
+    You have everything needed: bring %PARAM_METALLI% and %PARAM_TROFEI% %PARAM_A_ARMAIOLO_DI_CITTA_SENZA_VIRGOLA%, with %PARAM_COSTO% coins for the work.
+
+// La forgiatura
+LA_FORGIA_FORGIATURA
+    %PARAM_ARMAIOLO_MAIUSC% lights the forge and hammers the iron for %PARAM_ORE% hours. The job cost %PARAM_COSTO% coins.
+
+// Il saluto
+LA_FORGIA_SALUTO
+    %PARAM_ARMAIOLO_MAIUSC% dismisses you: “Come back in half a day. %PARAM_ARMA_MAIUSC% must cool down, and forcing it ruins it.”
+
+// I passi del saluto e del raffreddamento: la descrizione nel diario
+LA_FORGIA_DESCRIZIONE_RAFFREDDAMENTO
+    %PARAM_ARMA_MAIUSC% is at the forge: the blade must cool down. Come back %PARAM_PRESSO_ARMAIOLO_DI_CITTA% in a few hours.
+
+// La lama è raffreddata
+LA_FORGIA_RAFFREDDATA
+    The blade should have cooled down by now: %PARAM_ARMAIOLO_DI_CITTA% is waiting for you.
+
+// Il passo del ritorno: la descrizione nel diario
+LA_FORGIA_DESCRIZIONE_RITORNO
+    %PARAM_ARMA_MAIUSC% is ready: collect it %PARAM_DA_ARMAIOLO_DI_CITTA_SENZA_VIRGOLA%.
+
+// La scena del ringraziamento, in città (la prima battuta è della riga)
+LA_FORGIA_RINGRAZIAMENTO_2
+    It was worth the wait.
+
+// La ricompensa
+LA_FORGIA_RICOMPENSA
+    %PARAM_ARMAIOLO_MAIUSC% hands you %PARAM_ARMA%.
+
+// ---------------------------------------------------------------------------------------------
+// L'incarico di combattimento (vedi IncaricoDiCombattimento), in ordine di copione; le varianti _UNO e _MOLTI sono per un nemico solo e per più nemici. I segnaposto
+// %PARAM_CHIAVE% li riempie il codice: il luogo (%PARAM_DENTRO_LUOGO%), i nemici (%PARAM_NEMICI%), la città, il mandante nelle sue forme e le monete. Il titolo, la
+// richiesta, la vittoria, la battuta del capo, la risposta, il ringraziamento e il ricordo sono della riga di INCARICO_DI_COMBATTIMENTO (vedi qui sopra)
+// ---------------------------------------------------------------------------------------------
+
+// La scena dell'incarico, in città
+INCARICO_DI_COMBATTIMENTO_INCARICO_1_UNO
+    It's %PARAM_DENTRO_LUOGO% nearby: I'll mark it on your map. %PARAM_MONETE% coins once the job is done.
+
+INCARICO_DI_COMBATTIMENTO_INCARICO_1_MOLTI
+    They're %PARAM_DENTRO_LUOGO% nearby: I'll mark the place on your map. %PARAM_MONETE% coins once the job is done.
+
+// Il giocatore accetta
+INCARICO_DI_COMBATTIMENTO_ACCETTAZIONE
+    %PARAM_MANDANTE_DI_CITTA_MAIUSC% will pay %PARAM_MONETE% coins for defeating %PARAM_NEMICI%.
+
+// Il passo della caccia: la descrizione nel diario
+INCARICO_DI_COMBATTIMENTO_DESCRIZIONE_UNO
+    %PARAM_MANDANTE_DI_CITTA_MAIUSC% has asked you to defeat %PARAM_NEMICI%, who is at the place marked on the map.
+
+INCARICO_DI_COMBATTIMENTO_DESCRIZIONE_MOLTI
+    %PARAM_MANDANTE_DI_CITTA_MAIUSC% has asked you to defeat %PARAM_NEMICI%, who are at the place marked on the map.
+
+// Il posto compare sulla mappa
+INCARICO_DI_COMBATTIMENTO_POSTO_UNO
+    The place where it's located is marked on the map.
+
+INCARICO_DI_COMBATTIMENTO_POSTO_MOLTI
+    The place where they are located is marked on the map.
+
+// Il passo del ritorno: la descrizione nel diario
+INCARICO_DI_COMBATTIMENTO_DESCRIZIONE_RITORNO
+    Done: go back %PARAM_PRESSO_MANDANTE% in %PARAM_CITTA% to collect.
+
+// La scena del ringraziamento, in città (la prima battuta è della riga)
+INCARICO_DI_COMBATTIMENTO_RINGRAZIAMENTO_2
+    Here are the %PARAM_MONETE% promised coins.
+
+// La ricompensa
+INCARICO_DI_COMBATTIMENTO_RICOMPENSA
+    %PARAM_MANDANTE_MAIUSC% pays the %PARAM_MONETE% promised coins.
+
+// ---------------------------------------------------------------------------------------------
+// Il negozio (vedi IlNegozio e le sue quattro sottoclassi, una per bottega), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: il mandante
+// nelle sue forme, la città, le rovine (%PARAM_ROVINA%), il negoziante e la bottega (%PARAM_NEGOZIANTE%, %PARAM_BOTTEGA%), la risposta pescata dalla riga di
+// NEGOZIO (%PARAM_RISPOSTA%) e le monete. I titoli stanno in testa, uno per bottega. Le altre battute (causa, eredità, appello, battuta del capo, vittoria,
+// ringraziamento) sono ancora nelle righe NEGOZIO_* qui sopra, con i vecchi segnaposto %NOME%, %ROVINA%, %NEMICI%, %BOTTEGA%
+// ---------------------------------------------------------------------------------------------
+
+// I titoli, uno per bottega 
+IL_NEGOZIO_DEL_VENDITORE_DI_PERGAMENE_TITOLO
+    The scroll seller's shop
+
+IL_NEGOZIO_DELL_ALCHIMISTA_TITOLO
+    The alchemist's shop
+
+IL_NEGOZIO_DELL_ARMAIOLO_TITOLO
+    The armorer's shop
+
+IL_NEGOZIO_DELL_INCANTATORE_TITOLO
+    The enchanter's shop
+
+// La scena dell'incarico, in città (dopo la risposta pescata)
+IL_NEGOZIO_INCARICO_1
+    %PARAM_RISPOSTA% I'll mark the ruins on your map. %PARAM_MONETE% coins once the work is done.
+
+// Il giocatore accetta
+IL_NEGOZIO_ACCETTAZIONE
+    %PARAM_MANDANTE_DI_CITTA_MAIUSC% will pay %PARAM_MONETE% coins for clearing %PARAM_ROVINA%.
+
+// Prima che l'incarico sia offerto: la descrizione nel diario
+IL_NEGOZIO_DESCRIZIONE_ATTESA
+    %PARAM_MANDANTE_RUOLO_MAIUSC% has a relative who wants to open a shop in the Forest.
+
+// Il passo della disinfestazione: la descrizione nel diario
+IL_NEGOZIO_DESCRIZIONE_DISINFESTAZIONE
+    %PARAM_MANDANTE_DI_CITTA_MAIUSC% has asked you to clear %PARAM_ROVINA%, marked on the map, for a relative who will open %PARAM_BOTTEGA% there.
+
+// Le rovine compaiono sulla mappa
+IL_NEGOZIO_ROVINE_SEGNATE
+    The place to clear is marked on the map: %PARAM_ROVINA%.
+
+// Il ricordo delle rovine
+IL_NEGOZIO_RICORDO
+    Here, where there used to be ruins, %PARAM_NEGOZIANTE% has opened %PARAM_BOTTEGA%.
+
+// Il passo del ritorno: la descrizione nel diario
+IL_NEGOZIO_DESCRIZIONE_RITORNO
+    Done: go back %PARAM_PRESSO_MANDANTE% in %PARAM_CITTA% to collect.
+
+// La scena del ringraziamento, in città (la prima battuta è della riga)
+IL_NEGOZIO_RINGRAZIAMENTO_2
+    Here are the %PARAM_MONETE% promised coins.
+
+// La ricompensa
+IL_NEGOZIO_RICOMPENSA
+    %PARAM_MANDANTE_MAIUSC% pays the %PARAM_MONETE% promised coins.
+
 #include_static <nomi_en.txt>

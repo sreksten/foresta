@@ -13,6 +13,7 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.mondo.RegistroArtefatti;
 import com.threeamigos.foresta.strumenti.dado.Dado;
+import com.threeamigos.foresta.testi.RegoleDellaLingua;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -24,7 +25,6 @@ import java.util.Set;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.testi.Genere;
-import com.threeamigos.foresta.testi.Testi;
 
 /**
  * In città qualcuno ha perso qualcosa nella foresta, vicino a un posto che si ricorda (un tempio, delle rovine, una
@@ -157,16 +157,51 @@ public class LOggettoSmarrito extends IncaricoInCitta {
 
 	@Override
 	public String getDescrizione() {
+		return descrizioneDalModello();
+	}
+
+	@Override
+	protected String produzioneDellaDescrizione(String passo) {
+		return RITORNO.equals(passo) ? "L_OGGETTO_SMARRITO_DESCRIZIONE_RITORNO" : "L_OGGETTO_SMARRITO_DESCRIZIONE_RICERCA";
+	}
+
+	@Override
+	protected Object[] valoriStabiliDellaDescrizione() {
+		return valori();
+	}
+
+	/**
+	 * Tutti i segnaposto dei testi della missione: l'oggetto, il proprietario nelle sue forme, il posto (vuoto finché non è scelto), il
+	 * raggio della ricerca, la città e le monete.
+	 */
+	private Object[] valori() {
 		OggettoSmarrito smarrito = getSmarrito();
-		if (RITORNO.equals(getPassoCorrente())) {
-			return Testi.formatta("missioni", "LOggettoSmarrito.t1", smarrito.getOggettoConArticolo(), smarrito.getPronome(), Lingue.corrente().conPreposizione(Preposizione.A, getProprietarioDiCitta()));
-		}
-		return Testi.formatta("missioni", "LOggettoSmarrito.t2", smarrito.getOggettoConArticolo(), getProprietarioDiCitta(), Lingue.corrente().conPreposizione(Preposizione.VICINO, getNomeDelPosto()), Lingue.corrente().cardinale(RAGGIO, Genere.MASCHILE));
+		RegoleDellaLingua lingua = Lingue.corrente();
+		String posto = getPosto() == null ? "" : getNomeDelPosto();
+		String proprietario = smarrito.getProprietario();
+		return new Object[] {
+				"PARAM_OGGETTO", smarrito.getOggettoConArticolo(),
+				"PARAM_OGGETTO_MAIUSC", lingua.inizialeMaiuscola(smarrito.getOggettoConArticolo()),
+				"PARAM_PRONOME", smarrito.getPronome(),
+				"PARAM_PERSO", smarrito.getPerso(),
+				"PARAM_SUFFISSO", smarrito.isFemminile() ? "a" : "o",
+				"PARAM_PROPRIETARIO", proprietario,
+				"PARAM_PROPRIETARIO_MAIUSC", lingua.inizialeMaiuscola(proprietario),
+				"PARAM_DI_PROPRIETARIO", lingua.conPreposizione(Preposizione.DI, proprietario),
+				"PARAM_A_PROPRIETARIO", lingua.conPreposizione(Preposizione.A, proprietario),
+				"PARAM_PROPRIETARIO_DI_CITTA", getProprietarioDiCitta(),
+				"PARAM_PROPRIETARIO_DI_CITTA_MAIUSC", lingua.inizialeMaiuscola(getProprietarioDiCitta()),
+				"PARAM_A_PROPRIETARIO_DI_CITTA", lingua.conPreposizione(Preposizione.A, getProprietarioDiCitta()),
+				"PARAM_POSTO", posto,
+				"PARAM_VICINO_POSTO", lingua.conPreposizione(Preposizione.VICINO, posto),
+				"PARAM_RAGGIO", lingua.cardinale(RAGGIO, Genere.MASCHILE),
+				"PARAM_CITTA", getNomeCitta(),
+				"PARAM_MONETE", getRicompensa()};
 	}
 
 	@Override
 	public String getRicordoDellaLocazione() {
-		return Testi.formatta("missioni", "LOggettoSmarrito.t3", getSmarrito().getProprietario(), getNomeCitta(), getSmarrito().getOggettoConArticolo());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("L_OGGETTO_SMARRITO_RICORDO", valori());
 	}
 
 	@Override
@@ -182,14 +217,12 @@ public class LOggettoSmarrito extends IncaricoInCitta {
 				return Passo.quando(MomentoControllo.IN_LOCAZIONE, this::nellaCitta)
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getPosto());
-							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LOggettoSmarrito.s1", getNomeDelPosto(), smarrito.getOggettoConArticolo())));
+							BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("L_OGGETTO_SMARRITO_POSTO_SEGNATO", valori())));
 						})
 						.poi(RICERCA);
 			case RICERCA:
 				return raccogli(MomentoControllo.POST_LOCAZIONE, getOggettoDaCercare())
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LOggettoSmarrito.ecco",
-								smarrito.getOggettoConArticolo(), Lingue.corrente().conPreposizione(Preposizione.DI, smarrito.getProprietario()),
-								Lingue.corrente().inizialeMaiuscola(smarrito.getProprietario()), smarrito.getPronome(), getNomeCitta()))))
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("L_OGGETTO_SMARRITO_TROVATO", valori()))))
 						.poi(RITORNO);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
@@ -211,7 +244,7 @@ public class LOggettoSmarrito extends IncaricoInCitta {
 	@Override
 	protected String testoConsegna() {
 		OggettoSmarrito smarrito = getSmarrito();
-		return Testi.formatta("missioni", "LOggettoSmarrito.torna", Lingue.corrente().inizialeMaiuscola(smarrito.getOggettoConArticolo()), Lingue.corrente().conPreposizione(Preposizione.A, smarrito.getProprietario()));
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("L_OGGETTO_SMARRITO_CONSEGNA", valori());
 	}
 
 	@Override
@@ -219,7 +252,7 @@ public class LOggettoSmarrito extends IncaricoInCitta {
 		OggettoSmarrito smarrito = getSmarrito();
 		return ScenaInCitta.conMandante()
 				.parlaIlMandante(smarrito.getRacconto())
-				.parlaIlMandante(Testi.formatta("missioni", "LOggettoSmarrito.1", smarrito.getPerso(), Lingue.corrente().conPreposizione(Preposizione.VICINO, getNomeDelPosto()), Lingue.corrente().cardinale(RAGGIO, Genere.MASCHILE), (smarrito.isFemminile() ? "a" : "o"), getRicompensa()))
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("L_OGGETTO_SMARRITO_INCARICO_1", valori()))
 				.parlaIlCapo(smarrito.getBattutaDelCapo())
 				.parlaIlMandante(smarrito.getRisposta());
 	}
@@ -228,18 +261,18 @@ public class LOggettoSmarrito extends IncaricoInCitta {
 	protected ScenaInCitta scenaRingraziamento() {
 		return ScenaInCitta.conMandante()
 				.parlaIlMandante(getSmarrito().getRingraziamento())
-				.parlaIlMandante(Testi.formatta("missioni", "LOggettoSmarrito.2", getRicompensa()));
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("L_OGGETTO_SMARRITO_RINGRAZIAMENTO_2", valori()));
 	}
 
 	@Override
 	protected String testoAccettazione() {
 		OggettoSmarrito smarrito = getSmarrito();
-		return Testi.formatta("missioni", "LOggettoSmarrito.t4", Lingue.corrente().inizialeMaiuscola(getProprietarioDiCitta()), getRicompensa(), smarrito.getOggettoConArticolo(), Lingue.corrente().conPreposizione(Preposizione.VICINO, getNomeDelPosto()));
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("L_OGGETTO_SMARRITO_ACCETTAZIONE", valori());
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Testi.formatta("missioni", "LOggettoSmarrito.t5", Lingue.corrente().inizialeMaiuscola(getSmarrito().getProprietario()), getRicompensa());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("L_OGGETTO_SMARRITO_RICOMPENSA", valori());
 	}
 
 	@Override

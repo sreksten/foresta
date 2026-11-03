@@ -11,6 +11,7 @@ import com.threeamigos.foresta.missioni.richieste.DocumentazioneRichiesta;
 import com.threeamigos.foresta.missioni.richieste.IndagineRichiesta.Indizio;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
+import com.threeamigos.foresta.testi.RegoleDellaLingua;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 
@@ -18,7 +19,6 @@ import java.util.List;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.testi.Genere;
-import com.threeamigos.foresta.testi.Testi;
 
 /**
  * In città uno studioso chiede di documentare qualcosa nella foresta: copiare le iscrizioni di più rovine, descrivere
@@ -87,21 +87,48 @@ public class LaDocumentazione extends IncaricoInCitta {
 
 	@Override
 	public String getDescrizione() {
+		return descrizioneDalModello();
+	}
+
+	@Override
+	protected String produzioneDellaDescrizione(String passo) {
+		return RITORNO.equals(passo) ? "LA_DOCUMENTAZIONE_DESCRIZIONE_RITORNO" : "LA_DOCUMENTAZIONE_DESCRIZIONE";
+	}
+
+	@Override
+	protected Object[] valoriStabiliDellaDescrizione() {
+		return valori();
+	}
+
+	/**
+	 * Le note dei reperti già trovati, in fila (" 1: nota 2: nota"): l'unico valore che cambia mentre la missione dura.
+	 */
+	@Override
+	protected Object[] valoriDellaDescrizione() {
+		List<Indizio> reperti = getDocumentazione().getReperti();
+		StringBuilder trovati = new StringBuilder();
+		for (int i = 0; i < getRepertiTrovati(); i++) {
+			trovati.append(" ").append(i + 1).append(": ").append(reperti.get(i).getTesto());
+		}
+		return new Object[] {"PARAM_REPERTI", trovati.toString()};
+	}
+
+	/**
+	 * Tutti i segnaposto dei testi della missione che non cambiano mentre dura: il mandante nelle sue forme, il numero dei posti, la
+	 * città e le monete.
+	 */
+	private Object[] valori() {
 		DocumentazioneRichiesta documentazione = getDocumentazione();
-		List<Indizio> reperti = documentazione.getReperti();
-		int trovati = getRepertiTrovati();
-		StringBuilder descrizione = new StringBuilder();
-		if (RITORNO.equals(getPassoCorrente())) {
-			descrizione.append(Testi.formatta("missioni", "LaDocumentazione.s1")).append(Lingue.corrente().conPreposizione(Preposizione.DA, mandante(documentazione.getMandante())))
-					.append(" a ").append(getNomeCitta()).append(Testi.formatta("missioni", "LaDocumentazione.s2"));
-		} else {
-			descrizione.append(Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta())).append(Testi.formatta("missioni", "LaDocumentazione.s3"))
-					.append(Lingue.corrente().cardinale(reperti.size(), Genere.MASCHILE)).append(Testi.formatta("missioni", "LaDocumentazione.s4"));
-		}
-		for (int i = 0; i < trovati; i++) {
-			descrizione.append(" ").append(i + 1).append(": ").append(reperti.get(i).getTesto());
-		}
-		return descrizione.toString();
+		RegoleDellaLingua lingua = Lingue.corrente();
+		String mandante = mandante(documentazione.getMandante());
+		return new Object[] {
+				"PARAM_NUMERO", lingua.cardinale(documentazione.getReperti().size(), Genere.MASCHILE),
+				"PARAM_CITTA", getNomeCitta(),
+				"PARAM_MONETE", getRicompensa(),
+				"PARAM_MANDANTE", mandante,
+				"PARAM_MANDANTE_MAIUSC", lingua.inizialeMaiuscola(mandante),
+				"PARAM_MANDANTE_DI_CITTA_MAIUSC", lingua.inizialeMaiuscola(getMandanteDiCitta()),
+				"PARAM_DA_MANDANTE", lingua.conPreposizione(Preposizione.DA, mandante)};
 	}
 
 	@Override
@@ -119,7 +146,7 @@ public class LaDocumentazione extends IncaricoInCitta {
 			return cercaLocazione(MomentoControllo.IN_LOCAZIONE, reperto.getLuogo())
 					.esegui(() -> {
 						Foresta.setLocazioneConosciuta(getPosto());
-						BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", numero == 1 ? "LaDocumentazione.s5.comincia" : "LaDocumentazione.s5.prosegue", TestiDeiLuoghi.dentro(reperto.getLuogo()))));
+						BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione(numero == 1 ? "LA_DOCUMENTAZIONE_COMINCIA" : "LA_DOCUMENTAZIONE_PROSEGUE", "PARAM_DENTRO_LUOGO", TestiDeiLuoghi.dentro(reperto.getLuogo()))));
 					})
 					.poi(REPERTO + numero);
 		}
@@ -128,7 +155,7 @@ public class LaDocumentazione extends IncaricoInCitta {
 			boolean ultimo = numero == reperti.size();
 			return Passo.quando(MomentoControllo.IN_LOCAZIONE, this::nelPosto)
 					.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(reperti.get(numero - 1).getTesto()
-							+ (ultimo ? Testi.formatta("missioni", "LaDocumentazione.s6", mandante(documentazione.getMandante()), getNomeCitta()) : ""))))
+							+ (ultimo ? " " + ProduttoreDiMissioniCasuale.testoDellaMissione("LA_DOCUMENTAZIONE_NOTE_COMPLETE", valori()) : ""))))
 					.poi(ultimo ? RITORNO : TRACCIA + (numero + 1));
 		}
 		throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
@@ -139,7 +166,7 @@ public class LaDocumentazione extends IncaricoInCitta {
 		DocumentazioneRichiesta documentazione = getDocumentazione();
 		return documentazione.getAspetto().nuovaScena()
 				.parlaIlMandante(documentazione.getRichiesta())
-				.parlaIlMandante(Testi.formatta("missioni", "LaDocumentazione.1", getRicompensa()))
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_DOCUMENTAZIONE_INCARICO_1", valori()))
 				.parlaIlCapo(documentazione.getBattutaDelCapo())
 				.parlaIlMandante(documentazione.getRisposta());
 	}
@@ -148,17 +175,17 @@ public class LaDocumentazione extends IncaricoInCitta {
 	protected ScenaInCitta scenaRingraziamento() {
 		return getDocumentazione().getAspetto().nuovaScena()
 				.parlaIlMandante(getDocumentazione().getRingraziamento())
-				.parlaIlMandante(Testi.formatta("missioni", "LaDocumentazione.2", getRicompensa()));
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_DOCUMENTAZIONE_RINGRAZIAMENTO_2", valori()));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return Testi.formatta("missioni", "LaDocumentazione.t1", Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()), getRicompensa(), Lingue.corrente().cardinale(getDocumentazione().getReperti().size(), Genere.MASCHILE));
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("LA_DOCUMENTAZIONE_ACCETTAZIONE", valori());
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Testi.formatta("missioni", "LaDocumentazione.t2", Lingue.corrente().inizialeMaiuscola(mandante(getDocumentazione().getMandante())), getRicompensa());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("LA_DOCUMENTAZIONE_RICOMPENSA", valori());
 	}
 
 	@Override

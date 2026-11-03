@@ -11,6 +11,7 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.testi.RegoleDellaLingua;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.testi.Lingue;
@@ -143,11 +144,37 @@ public class IncaricoDiCombattimento extends IncaricoInCitta {
 
 	@Override
 	public String getDescrizione() {
-		if (RITORNO.equals(getPassoCorrente())) {
-			return Testi.formatta("missioni", "IncaricoDiCombattimento.t1", Lingue.corrente().conPreposizione(Preposizione.PRESSO, mandante(getIncarico().getMandante())), getNomeCitta());
+		return descrizioneDalModello();
+	}
+
+	@Override
+	protected String produzioneDellaDescrizione(String passo) {
+		if (RITORNO.equals(passo)) {
+			return "INCARICO_DI_COMBATTIMENTO_DESCRIZIONE_RITORNO";
 		}
-		return Testi.formatta("missioni", getNumero() == 1 ? "IncaricoDiCombattimento.descrizioneUno" : "IncaricoDiCombattimento.descrizioneMolti",
-				Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()), getNomeDeiNemici());
+		return getNumero() == 1 ? "INCARICO_DI_COMBATTIMENTO_DESCRIZIONE_UNO" : "INCARICO_DI_COMBATTIMENTO_DESCRIZIONE_MOLTI";
+	}
+
+	@Override
+	protected Object[] valoriStabiliDellaDescrizione() {
+		return valori();
+	}
+
+	/**
+	 * Tutti i segnaposto dei testi della missione: il luogo, i nemici, la città, le monete e il mandante nelle sue forme.
+	 */
+	private Object[] valori() {
+		CombattimentoRichiesto incarico = getIncarico();
+		RegoleDellaLingua lingua = Lingue.corrente();
+		String mandante = mandante(incarico.getMandante());
+		return new Object[] {
+				"PARAM_DENTRO_LUOGO", TestiDeiLuoghi.dentro(incarico.getLuogo()),
+				"PARAM_NEMICI", getNomeDeiNemici(),
+				"PARAM_CITTA", getNomeCitta(),
+				"PARAM_MONETE", getRicompensa(),
+				"PARAM_MANDANTE_MAIUSC", lingua.inizialeMaiuscola(mandante),
+				"PARAM_MANDANTE_DI_CITTA_MAIUSC", lingua.inizialeMaiuscola(getMandanteDiCitta()),
+				"PARAM_PRESSO_MANDANTE", lingua.conPreposizione(Preposizione.PRESSO, mandante)};
 	}
 
 	@Override
@@ -168,7 +195,7 @@ public class IncaricoDiCombattimento extends IncaricoInCitta {
 				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, incarico.getLuogo())
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getCovo());
-							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", getNumero() == 1 ? "IncaricoDiCombattimento.posto.uno" : "IncaricoDiCombattimento.posto.molti")));
+							BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione(getNumero() == 1 ? "INCARICO_DI_COMBATTIMENTO_POSTO_UNO" : "INCARICO_DI_COMBATTIMENTO_POSTO_MOLTI")));
 						})
 						.poi(CACCIA);
 			case CACCIA:
@@ -186,7 +213,7 @@ public class IncaricoDiCombattimento extends IncaricoInCitta {
 		CombattimentoRichiesto incarico = getIncarico();
 		return incarico.getAspetto().nuovaScena()
 				.parlaIlMandante(testo(incarico.getRichiesta()))
-				.parlaIlMandante(Testi.formatta("missioni", getNumero() == 1 ? "IncaricoDiCombattimento.1.uno" : "IncaricoDiCombattimento.1.molti", TestiDeiLuoghi.dentro(incarico.getLuogo()), getRicompensa()))
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione(getNumero() == 1 ? "INCARICO_DI_COMBATTIMENTO_INCARICO_1_UNO" : "INCARICO_DI_COMBATTIMENTO_INCARICO_1_MOLTI", valori()))
 				.parlaIlCapo(testo(incarico.getBattutaDelCapo()))
 				.parlaIlMandante(testo(incarico.getRisposta()));
 	}
@@ -195,17 +222,17 @@ public class IncaricoDiCombattimento extends IncaricoInCitta {
 	protected ScenaInCitta scenaRingraziamento() {
 		return getIncarico().getAspetto().nuovaScena()
 				.parlaIlMandante(testo(getIncarico().getRingraziamento()))
-				.parlaIlMandante(Testi.formatta("missioni", "IncaricoDiCombattimento.2", getRicompensa()));
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("INCARICO_DI_COMBATTIMENTO_RINGRAZIAMENTO_2", valori()));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return Testi.formatta("missioni", "IncaricoDiCombattimento.t2", Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()), getRicompensa(), getNomeDeiNemici());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("INCARICO_DI_COMBATTIMENTO_ACCETTAZIONE", valori());
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Testi.formatta("missioni", "IncaricoDiCombattimento.t3", Lingue.corrente().inizialeMaiuscola(mandante(getIncarico().getMandante())), getRicompensa());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("INCARICO_DI_COMBATTIMENTO_RICOMPENSA", valori());
 	}
 
 	@Override

@@ -204,7 +204,7 @@ Missioni che **non** sono `IncaricoInCitta` (le principali, le storie, le leggen
 
 - **Un gruppo con una sola opzione è un errore.** `{0}` scritto nudo in una grammatica non si carica (`{a|b}` è l'alternanza). Per questo i `{n}` sono stati sostituiti da `%PARAM_…%`.
 - **Una virgoletta dritta fuori da uno span** rompe la grammatica («Missing closing '"'»): nei `.properties` c'era una sola riga così (`LaForgia.t8`). Si usano `“ ”`.
-- **Il test sulle stringhe italiane nel codice** (`ConvenzioniDiLocalizzazioneTest`) considera italiana una stringa con due parole comuni (`di`, `da`, `a`, `dove`, `del`…) dopo averla spezzata sulle non-lettere: `"DA_DOVE_VIENE"` lo faceva salire. Da qui la regola del prefisso `PARAM_`, che il test ignora.
+- **Il test sulle stringhe italiane nel codice** (`ConvenzioniDiLocalizzazioneTest`) considera italiana una stringa con due parole comuni (`di`, `da`, `a`, `dove`, `del`…) dopo averla spezzata sulle non-lettere: `"DA_DOVE_VIENE"` lo faceva salire. Da qui la regola del prefisso `PARAM_`, che il test ignora. Per lo stesso motivo il test ignora anche le stringhe tutte maiuscole (`IL_CORRIERE_QUANDO_DI_NASCOSTO`: i nomi delle produzioni delle classi `Il…`/`La…` contengono parole come `IL`, `IN`, `DI`).
 - **Sostituzioni di massa**: rinominando i segnaposto con un replace sul `"MATERIALE"` si è cambiato per errore anche la costante `RichiestaDiMateriali.MATERIALE` (la chiave del contatore e del parametro salvato). I replace sui sorgenti vanno limitati ai pezzi giusti e riletti con `git diff`.
 - **`Lingue.corrente()`** restituisce `RegoleDellaLingua`, non `Lingue`.
 - **`GrammarBean` non è thread-safe**: i produttori leggono dal thread del gioco; non chiamarli da altri thread senza la sincronizzazione che `ProduttoreDiMissioniCasuale` già usa dove serve.
@@ -213,21 +213,33 @@ Missioni che **non** sono `IncaricoInCitta` (le principali, le storie, le leggen
 
 ## 9. Stato del lavoro e cosa resta
 
-Ultimo aggiornamento: 2026-11-03. **Portate: 2 missioni** — `CacciaAiGoblin` e `RichiestaDiMateriali` (le cui frasi con `MaterialeRichiesto` restano però in parte nei `.properties`: vedi sotto). Tutta la suite è verde (`mvn -o test`). **Il lavoro non è stato committato.**
+Ultimo aggiornamento: 2026-11-03. **Portate: tutti gli incarichi in città** — `CacciaAiGoblin`, `RichiestaDiMateriali`, `IlCorriere` (con `IlContrabbandiere`), `LaSorveglianza`, `IlSoccorso`, `IlRapimento`, `IlColpo`, `IlCartografo`, `ChiaveDelCustode`, `IlRituale`, `IlTorneo`, `IlPellegrino`, `LOggettoSmarrito`, `LaDocumentazione`, `LIndagine`, `LaTagliaSullaBanda`, `CacciatoreDiTaglie`, `LaForgia`, `IncaricoDiCombattimento` e `IlNegozio` con le sue quattro sottoclassi (tranne il mandante del venditore di pergamene, `IlNegozioDelVenditoreDiPergamene.s2`, che si porta con `Ruolo`). Le frasi condivise che questi incarichi chiamano ancora dai `.properties` sono `Incarico.aspettaA`, `Nemici.guidatiDa`, `TestiDeiLuoghi.*`, `Ruolo.*`, `Mandante.*`, `Genere.*`, `Luogo.*` e quelle di `MaterialeRichiesto`. Tutta la suite è verde (`mvn -o test`). **Il lavoro non è stato committato.**
 
-Chiavi ancora nei `.properties` `it` (550 righe di chiavi, 62 prefissi), per classe:
+Chiavi ancora nei `.properties` `it`, per classe:
 
-| Gruppo | Prefissi (numero di chiavi) |
+| Gruppo | Prefissi |
 | :--- | :--- |
-| Incarichi in città | `CacciatoreDiTaglie` 16, `ChiaveDelCustode` 8, `IlCartografo` 12, `IlColpo` 7, `IlCorriere` 16, `IlNegozio` 9 (+ `IlNegozioDellAlchimista`/`…Armaiolo`/`…Incantatore` 1 ciascuno, `…VenditoreDiPergamene` 2), `IlPellegrino` 16, `IlRapimento` 22, `IlRituale` 13, `IlSoccorso` 15, `IlTorneo` 16, `IncaricoDiCombattimento` 10, `LIndagine` 16, `LOggettoSmarrito` 10, `LaDocumentazione` 11, `LaForgia` 17 (+ `ForgiaRichiesta` 1), `LaSorveglianza` 15, `LaTagliaSullaBanda` 14, `IncaricoInCitta` 10 |
-| Storie e compagni | `IlCampione` 5, `IlFavore` 7, `IlGiroDelleSetteChiese` 25, `IlViaggioDellaMoglie` 20, `IlViandante` 12, `LaBenedizione` 7, `LaLealta` 7, `LaSfidaDeiCampioni` 6, `NonSparateSulPianista` 17 |
-| Principali | `SconfiggiIlDrago` 8, `SconfiggiIlLich` 4, `SconfiggiIlMinotauroGigante` 4, `SconfiggiLIdra` 4, `SconfiggiLaStrega` 4, `VisitaLocanda` 5, `DisturbatoreDellaQuietePubblica` 8, `NessunBoccaleLasciatoIndietro` 8, `CronacheDiUnFegatoEroico` 5 |
-| Leggende | `LaLeggenda` 13, `LaLeggendaDelLocandiere` 1, `LaFalceDelTristoMietitore` 16, `PescaLeggendaria` 4 |
-| A tappe | `MissioneATappe` 28 |
-| Epiloghi (intermezzi delle missioni) | `IntermezzoEremitaRompiscatole` 2, `IntermezzoUrloDellaBanshee` 7 |
-| Aiuti condivisi (non sono missioni) | `Genere` 12, `Luogo` 5, `Mandante` 12, `MaterialeRichiesto` 6, `Nemici` 1, `Ruolo` 3, `TestiDeiLuoghi` 16, `Missione` 3, `MissioneAPassi` 2, `OffertaDelSacerdote` 1, `Incarico` 1, `RitualeRichiesto` 1, `TorneoRichiesto` 1 |
+| Incarichi in città: la base | `IncaricoInCitta` 10 (+ `Incarico` 1) |
+| Storie e compagni | `IlCampione`, `IlFavore`, `IlGiroDelleSetteChiese`, `IlViaggioDellaMoglie`, `IlViandante`, `LaBenedizione`, `LaLealta`, `LaSfidaDeiCampioni`, `NonSparateSulPianista` |
+| Principali | `SconfiggiIlDrago`, `SconfiggiIlLich`, `SconfiggiIlMinotauroGigante`, `SconfiggiLIdra`, `SconfiggiLaStrega`, `VisitaLocanda`, `DisturbatoreDellaQuietePubblica`, `NessunBoccaleLasciatoIndietro`, `CronacheDiUnFegatoEroico` |
+| Leggende | `LaLeggenda`, `LaLeggendaDelLocandiere`, `LaFalceDelTristoMietitore`, `PescaLeggendaria` |
+| A tappe | `MissioneATappe` |
+| Epiloghi (intermezzi delle missioni) | `IntermezzoEremitaRompiscatole`, `IntermezzoUrloDellaBanshee` |
+| Aiuti condivisi (non sono missioni) | `Genere`, `Luogo`, `Mandante`, `MaterialeRichiesto`, `Nemici`, `Ruolo`, `TestiDeiLuoghi`, `Missione`, `MissioneAPassi`, `OffertaDelSacerdote`, `Incarico`, `RitualeRichiesto`, `TorneoRichiesto` |
 
-Ordine suggerito: prima gli incarichi in città (stessa forma dei due esempi; `IlCorriere`, `LaSorveglianza`, `IlSoccorso` sono i più vicini), poi gli aiuti condivisi quando un incarico li richiede, poi le storie, le leggende, le principali e `MissioneATappe`; per ultimo gli epiloghi, e quando i `.properties` sono vuoti si cancellano i tre file e si toglie il controllo che li riguarda da `ConvenzioniDiLocalizzazioneTest`.
+Per contarle: `grep -o '^[A-Za-z]*\.' 09-foresta-missioni/src/main/resources/com/threeamigos/foresta/testi/missioni_it.properties | sort | uniq -c`.
+
+**Cosa si è imparato portando gli incarichi** (da rileggere prima di riprendere):
+
+- **Mai chiamare la grammatica in un costruttore** (né in un inizializzatore statico che gira all'avvio): `testoDellaMissione` pesca dalla sorgente condivisa `Dado`, e un tiro in più all'avvio sposta la sequenza di tutte le partite con seme (`ScenarioUccisioniTest` si rompeva). I titoli fissi passati dalla sottoclasse (`IlNegozio*`) si passano come *nome della produzione* e si producono alla prima richiesta (`creaIlNome`).
+- **Il titolo si salva solo quando è definitivo.** Se dipende da qualcosa che l'incarico sceglie in `allIncarico()` (`IlCorriere`: la destinazione) si ridefinisce `getNome()` perché non salvi il titolo provvisorio. I titoli che vengono dalla riga di grammatica (`testo(getTitolo())`) restano com'erano.
+- **I valori stabili si calcolano a ogni ingresso in un passo**, anche prima che l'incarico sia offerto o prima che la missione abbia scelto le sue cose: `valori()` deve essere sicuro (`IlNegozio`, `IlTorneo`, `LaForgia` restituiscono solo i valori che già ci sono) e non deve far pescare parametri in anticipo (cambierebbe la sequenza casuale).
+- **Le descrizioni che cambiano dentro un passo** (le visite mancanti della sorveglianza, gli indizi trovati dell'indagine o i reperti della documentazione) o hanno due varianti per lo stesso passo si risolvono così: il valore che cambia è un segnaposto (`valoriDellaDescrizione`), composto dal codice quando è una lista; la variante che cambia dopo l'ingresso (`LaSorveglianza`) si sceglie in `getDescrizione()` senza modello salvato.
+- **`en_GB`**: i `.properties` `en_GB` hanno poche chiavi (grafie britanniche: «any more», «armourer»); se `togli(prefisso)` ne toglie, la grafia va riportata in `missioni_en_GB.txt` (l'aiuto di scrittura accetta un quinto testo per `en_GB`).
+- **Difetti trovati e corretti per strada**: le frasi di `LaForgia` sul raffreddamento e sul ritiro cominciavano con l'iniziale minuscola («la Lancia … è nella forgia»); il testo inglese di `LaDocumentazione` aveva un « a » italiano nel ritorno; `IlNegozio.isPossibileQui` dava `NullPointerException` su una casella di città mai costruita (`MondiEstremiTest.conPocheCittaCostruite`).
+- **I test**: `CoerenzaDeiTestiDegliIncarichiTest.controllaUnIncarico(classe, seme, passi, metodiExtra…)` controlla un incarico in tre lingue (scene, accettazione, ricompensa, descrizione di ogni passo, altri testi): per una nuova missione basta una riga. Se la missione non è un `IncaricoInCitta` (`ChiaveDelCustode`) si usa un aiuto in `TestiDiUnIncarico`. `ConvenzioniDiLocalizzazioneTest` ignora le stringhe tutte maiuscole (nomi di produzioni come `IL_CORRIERE_QUANDO_DI_NASCOSTO`).
+
+Ordine suggerito: la base `IncaricoInCitta` e gli aiuti condivisi che servono, poi le storie, le leggende, le principali e `MissioneATappe`; per ultimo gli epiloghi, e quando i `.properties` sono vuoti si cancellano i tre file e si toglie il controllo che li riguarda da `ConvenzioniDiLocalizzazioneTest`.
 
 **Da decidere o da rivedere** (non sono stati risolti):
 

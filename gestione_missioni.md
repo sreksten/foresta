@@ -215,7 +215,7 @@ Le partite di test (`PartitaDiTest`) spengono il sorteggio, perché i test guida
 
 ## 13. Porting dei testi delle missioni: stato e come riprendere
 
-Questa sezione basta per riprendere il lavoro senza altro contesto (la guida lunga, con gli esempi, è in [`testi_delle_missioni.md`](testi_delle_missioni.md); lì stanno anche l'elenco delle chiavi ancora da portare e le questioni aperte). **Stato al 2026-11-03: portate 2 missioni (`CacciaAiGoblin`, `RichiestaDiMateriali`), `mvn -o test` verde, lavoro non committato** (per continuare su un altro computer va prima committato e spinto).
+Questa sezione basta per riprendere il lavoro senza altro contesto (la guida lunga, con gli esempi, è in [`testi_delle_missioni.md`](testi_delle_missioni.md); lì stanno anche l'elenco delle chiavi ancora da portare e le questioni aperte). **Stato al 2026-11-03: portati tutti gli incarichi in città (elenco in `testi_delle_missioni.md` §9), `mvn -o test` verde, lavoro non committato** (per continuare su un altro computer va prima committato e spinto).
 
 **L'obiettivo.** Tutti i testi delle missioni passano da `09-foresta-missioni/…/testi/missioni_{it,en,en_GB}.properties` a `01-foresta-testi/…/testi/missioni.txt` (+ `_en`, `_en_GB`): un unico file per lingua, **non** un file per missione e **nessun** `#include` fra i testi delle missioni (resta solo l'ultima riga `#include_static <nomi.txt>`). Alla fine i `.properties` delle missioni si cancellano.
 
@@ -244,6 +244,6 @@ Questa sezione basta per riprendere il lavoro senza altro contesto (la guida lun
 8. `mvn -o test` dalla radice (mai `-pl` senza `-am`, mai `mvn install`). Il baseline di `ConvenzioniDiLocalizzazioneTest` (`09-foresta-missioni` = 5) non deve salire.
 9. Aggiornare il §9 di `testi_delle_missioni.md` (stato) e la riga della missione in `passi_missioni.md`.
 
-**Cosa resta** (dettaglio per classe nel §9 di `testi_delle_missioni.md`): gli altri incarichi in città (i più vicini ai due esempi: `IlCorriere`, `LaSorveglianza`, `IlSoccorso`), poi gli aiuti condivisi quando servono (`MaterialeRichiesto`, `TestiDeiLuoghi`, `Mandante`, `Genere`, `Luogo`, `Ruolo`…), le storie, le leggende, le principali, `MissioneATappe` e per ultimi gli epiloghi degli intermezzi (`IntermezzoEremitaRompiscatole`, `IntermezzoUrloDellaBanshee`); infine si cancellano i `.properties` e si toglie il controllo che li riguarda da `ConvenzioniDiLocalizzazioneTest`.
+**Cosa resta** (dettaglio nel §9 di `testi_delle_missioni.md`, con le lezioni imparate): la base `IncaricoInCitta` e gli aiuti condivisi (`Incarico.aspettaA`, `Nemici`, `TestiDeiLuoghi`, `Ruolo`, `Mandante`, `Genere`, `Luogo`, `MaterialeRichiesto`), poi le storie, le leggende, le principali, `MissioneATappe` e per ultimi gli epiloghi degli intermezzi; infine si cancellano i `.properties` e si toglie il controllo che li riguarda da `ConvenzioniDiLocalizzazioneTest`.
 
 **Questioni aperte:** le forme del mandante non si salvano nelle proprietà (il codice le ricalcola a ogni uso: da rivedere solo se dipendono da qualcosa che cambia dopo la creazione); le righe a campi di `missioni.txt` e `tappe.txt` usano ancora i vecchi `%NOME%`, `%CITTA%`, `%CAPO%`, da unificare su `PARAM_` quando si portano quelle famiglie; non c'è ancora un esempio di missione a scelte portato.

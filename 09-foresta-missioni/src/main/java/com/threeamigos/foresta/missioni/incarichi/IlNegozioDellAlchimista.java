@@ -12,7 +12,7 @@ import com.threeamigos.foresta.testi.Testi;
 public class IlNegozioDellAlchimista extends IlNegozio {
 
 	public IlNegozioDellAlchimista() {
-		super(MissionePredefinita.IL_NEGOZIO_DELL_ALCHIMISTA, Testi.formatta("missioni", "IlNegozioDellAlchimista.s1"), TipoLocazione.ALCHIMISTA, PersonaggioNoto.ALCHIMISTA_DELLA_FORESTA, AspettoDelMandante.ALCHIMISTA,
+		super(MissionePredefinita.IL_NEGOZIO_DELL_ALCHIMISTA, "IL_NEGOZIO_DELL_ALCHIMISTA_TITOLO", TipoLocazione.ALCHIMISTA, PersonaggioNoto.ALCHIMISTA_DELLA_FORESTA, AspettoDelMandante.ALCHIMISTA,
 				Testi.formatta("missioni", "Ruolo.alchimista"));
 	}
 }

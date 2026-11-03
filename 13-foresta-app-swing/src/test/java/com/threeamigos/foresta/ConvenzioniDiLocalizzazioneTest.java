@@ -156,6 +156,7 @@ class ConvenzioniDiLocalizzazioneTest {
 		assertFalse(italiana("%d"));
 		assertFalse(italiana("Goblin"));
 		assertFalse(italiana("PARAM_DA_DOVE_VIENE"));
+		assertFalse(italiana("IL_CORRIERE_QUANDO_DI_NASCOSTO"));
 	}
 
 	// ---- il contatore ----
@@ -180,6 +181,10 @@ class ConvenzioniDiLocalizzazioneTest {
 	static boolean italiana(String testo) {
 		// Il nome di un segnaposto dei testi delle missioni (PARAM_DA_DOVE_VIENE) è un identificativo, anche se sono parole italiane
 		if (testo.startsWith("PARAM_")) {
+			return false;
+		}
+		// Il nome di una produzione di missioni.txt (IL_CORRIERE_QUANDO_DI_NASCOSTO, nome della classe e ruolo) lo stesso
+		if (testo.matches("[A-Z][A-Z0-9_]*")) {
 			return false;
 		}
 		if (LETTERA_ACCENTATA.matcher(testo.toLowerCase(java.util.Locale.ROOT)).find()) {

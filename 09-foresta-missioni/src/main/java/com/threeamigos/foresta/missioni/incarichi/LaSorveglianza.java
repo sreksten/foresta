@@ -16,7 +16,10 @@ import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.testi.Genere;
+import com.threeamigos.foresta.testi.RegoleDellaLingua;
 import com.threeamigos.foresta.testi.Testi;
+
+import java.util.Arrays;
 
 /**
  * In città qualcuno vuole che si tenga d'occhio un posto nella foresta: vegliare una tomba, scoprire chi passa da un
@@ -106,11 +109,12 @@ public class LaSorveglianza extends IncaricoInCitta {
 	 */
 	private String getVisiteMancanti() {
 		int mancanti = getSorveglianza().getVisite() - getVisiteNelPassoCorrente();
-		return mancanti == 1 ? Testi.formatta("missioni", "LaSorveglianza.mancanti.1") : Testi.formatta("missioni", "LaSorveglianza.mancanti.N", Lingue.corrente().cardinale(mancanti, Genere.FEMMINILE));
+		return mancanti == 1 ? ProduttoreDiMissioniCasuale.testoDellaMissione("LA_SORVEGLIANZA_MANCANTI_UNA")
+				: ProduttoreDiMissioniCasuale.testoDellaMissione("LA_SORVEGLIANZA_MANCANTI_N", "PARAM_VOLTE", Lingue.corrente().cardinale(mancanti, Genere.FEMMINILE));
 	}
 
 	private String getIntervallo() {
-		return Testi.formatta("missioni", "LaSorveglianza.t1", getSorveglianza().getOre());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("LA_SORVEGLIANZA_INTERVALLO", "PARAM_ORE", getSorveglianza().getOre());
 	}
 
 	/**
@@ -123,11 +127,40 @@ public class LaSorveglianza extends IncaricoInCitta {
 			return;
 		}
 		aggiungiProprieta(VEGLIE, String.valueOf(visite));
-		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LaSorveglianza.s1", testo(getSorveglianza().getVeglia()), getVisiteMancanti(), getIntervallo())));
+		BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_SORVEGLIANZA_VEGLIA", con(valori(),
+				"PARAM_VEGLIA", testo(getSorveglianza().getVeglia()), "PARAM_MANCANTI", getVisiteMancanti()))));
 	}
 
 	private String getAttesa() {
-		return Testi.formatta("missioni", "LaSorveglianza.t2", Lingue.corrente().inizialeMaiuscola(mandante(getSorveglianza().getMandante())), getNomeCitta());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("LA_SORVEGLIANZA_ATTESA", valori());
+	}
+
+	/**
+	 * Tutti i segnaposto dei testi della missione che non cambiano mentre dura (quelli che cambiano, le visite mancanti, si mettono
+	 * dove servono): il luogo, le visite, la città, il mandante nelle sue forme, i nemici e le monete. Senza "private" per i test.
+	 */
+	Object[] valori() {
+		SorveglianzaRichiesta sorveglianza = getSorveglianza();
+		RegoleDellaLingua lingua = Lingue.corrente();
+		String mandante = mandante(sorveglianza.getMandante());
+		return new Object[] {
+				"PARAM_DENTRO_LUOGO", TestiDeiLuoghi.dentro(sorveglianza.getLuogo()),
+				"PARAM_LUOGO_INDEFINITO", TestiDeiLuoghi.indefinito(sorveglianza.getLuogo()),
+				"PARAM_VISITE", lingua.cardinale(sorveglianza.getVisite(), Genere.FEMMINILE),
+				"PARAM_ORE", sorveglianza.getOre(),
+				"PARAM_INTERVALLO", getIntervallo(),
+				"PARAM_MONETE", getRicompensa(),
+				"PARAM_CITTA", getNomeCitta(),
+				"PARAM_MANDANTE_MAIUSC", lingua.inizialeMaiuscola(mandante),
+				"PARAM_MANDANTE_DI_CITTA_MAIUSC", lingua.inizialeMaiuscola(getMandanteDiCitta()),
+				"PARAM_PRESSO_MANDANTE", lingua.conPreposizione(Preposizione.PRESSO, mandante),
+				"PARAM_NEMICI", sorveglianza.isConNemici() ? getNomeDeiNemici() : ""};
+	}
+
+	private static Object[] con(Object[] valori, Object... altri) {
+		Object[] tutti = Arrays.copyOf(valori, valori.length + altri.length);
+		System.arraycopy(altri, 0, tutti, valori.length, altri.length);
+		return tutti;
 	}
 
 	@Override
@@ -144,18 +177,23 @@ public class LaSorveglianza extends IncaricoInCitta {
 
 	@Override
 	public String getDescrizione() {
-		String passo = getPassoCorrente();
+		if (SORVEGLIA.equals(getPassoCorrente()) && getVisiteNelPassoCorrente() > 0) {
+			return ProduttoreDiMissioniCasuale.testoDellaMissione("LA_SORVEGLIANZA_DESCRIZIONE_IN_CORSO", con(valori(), "PARAM_MANCANTI", getVisiteMancanti()));
+		}
+		return descrizioneDalModello();
+	}
+
+	@Override
+	protected String produzioneDellaDescrizione(String passo) {
 		if (RITORNO.equals(passo)) {
-			return Testi.formatta("missioni", "LaSorveglianza.t3", Lingue.corrente().conPreposizione(Preposizione.PRESSO, mandante(getSorveglianza().getMandante())), getNomeCitta());
+			return "LA_SORVEGLIANZA_DESCRIZIONE_RITORNO";
 		}
-		if (AGGUATO.equals(passo)) {
-			return Testi.formatta("missioni", "LaSorveglianza.t4", getNomeDeiNemici(), Lingue.corrente().conPreposizione(Preposizione.PRESSO, mandante(getSorveglianza().getMandante())), getNomeCitta());
-		}
-		String descrizione =Testi.formatta("missioni", "LaSorveglianza.s2", Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()));
-		if (SORVEGLIA.equals(passo) && getVisiteNelPassoCorrente() > 0) {
-			return Testi.formatta("missioni", "LaSorveglianza.passaci", descrizione, getVisiteMancanti(), getIntervallo());
-		}
-		return Testi.formatta("missioni", "LaSorveglianza.t5", descrizione, Lingue.corrente().cardinale(getSorveglianza().getVisite(), Genere.FEMMINILE), getIntervallo());
+		return AGGUATO.equals(passo) ? "LA_SORVEGLIANZA_DESCRIZIONE_AGGUATO" : "LA_SORVEGLIANZA_DESCRIZIONE";
+	}
+
+	@Override
+	protected Object[] valoriStabiliDellaDescrizione() {
+		return valori();
 	}
 
 	/**
@@ -190,7 +228,7 @@ public class LaSorveglianza extends IncaricoInCitta {
 				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, sorveglianza.getLuogo())
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getPosto());
-							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LaSorveglianza.s3")));
+							BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_SORVEGLIANZA_POSTO_SEGNATO")));
 						})
 						.poi(SORVEGLIA);
 			case SORVEGLIA:
@@ -213,7 +251,7 @@ public class LaSorveglianza extends IncaricoInCitta {
 		SorveglianzaRichiesta sorveglianza = getSorveglianza();
 		return sorveglianza.getAspetto().nuovaScena()
 				.parlaIlMandante(testo(sorveglianza.getRichiesta()))
-				.parlaIlMandante(Testi.formatta("missioni", "LaSorveglianza.1", TestiDeiLuoghi.dentro(sorveglianza.getLuogo()), Lingue.corrente().cardinale(sorveglianza.getVisite(), Genere.FEMMINILE), getIntervallo(), getRicompensa()))
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_SORVEGLIANZA_INCARICO_1", valori()))
 				.parlaIlCapo(testo(sorveglianza.getBattutaDelCapo()))
 				.parlaIlMandante(testo(sorveglianza.getRisposta()));
 	}
@@ -222,17 +260,17 @@ public class LaSorveglianza extends IncaricoInCitta {
 	protected ScenaInCitta scenaRingraziamento() {
 		return getSorveglianza().getAspetto().nuovaScena()
 				.parlaIlMandante(testo(getSorveglianza().getRingraziamento()))
-				.parlaIlMandante(Testi.formatta("missioni", "LaSorveglianza.2", getRicompensa()));
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_SORVEGLIANZA_RINGRAZIAMENTO_2", valori()));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return Testi.formatta("missioni", "LaSorveglianza.t6", Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()), getRicompensa(), TestiDeiLuoghi.indefinito(getSorveglianza().getLuogo()));
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("LA_SORVEGLIANZA_ACCETTAZIONE", valori());
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Testi.formatta("missioni", "LaSorveglianza.t7", Lingue.corrente().inizialeMaiuscola(mandante(getSorveglianza().getMandante())), getRicompensa());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("LA_SORVEGLIANZA_RICOMPENSA", valori());
 	}
 
 	@Override

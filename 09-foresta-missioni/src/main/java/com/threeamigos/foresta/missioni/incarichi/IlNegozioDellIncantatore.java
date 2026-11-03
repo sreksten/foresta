@@ -12,7 +12,7 @@ import com.threeamigos.foresta.testi.Testi;
 public class IlNegozioDellIncantatore extends IlNegozio {
 
 	public IlNegozioDellIncantatore() {
-		super(MissionePredefinita.IL_NEGOZIO_DELL_INCANTATORE, Testi.formatta("missioni", "IlNegozioDellIncantatore.s1"), TipoLocazione.INCANTATORE, PersonaggioNoto.INCANTATORE_DELLA_FORESTA, AspettoDelMandante.INCANTATORE,
+		super(MissionePredefinita.IL_NEGOZIO_DELL_INCANTATORE, "IL_NEGOZIO_DELL_INCANTATORE_TITOLO", TipoLocazione.INCANTATORE, PersonaggioNoto.INCANTATORE_DELLA_FORESTA, AspettoDelMandante.INCANTATORE,
 				Testi.formatta("missioni", "Ruolo.incantatore"));
 	}
 }

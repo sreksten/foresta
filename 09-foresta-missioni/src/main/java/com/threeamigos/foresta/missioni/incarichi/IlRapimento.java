@@ -6,7 +6,6 @@ import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.testi.Testi;
 
 /**
  * In città una donna chiede di liberare suo marito, rapito da una banda di goblin che lo tiene in una grotta (vedi
@@ -55,28 +54,51 @@ public class IlRapimento extends LaLiberazione {
 	}
 
 	@Override
-	public String getNome() {
-		return Testi.formatta("missioni", "IlRapimento.t1", getOstaggio());
+	protected String creaIlNome() {
+		return testo("IL_RAPIMENTO_TITOLO");
 	}
 
 	@Override
 	public String getDescrizione() {
-		String passo = getPassoCorrente();
+		return descrizioneDalModello();
+	}
+
+	@Override
+	protected String produzioneDellaDescrizione(String passo) {
 		if (VIAGGIO.equals(passo)) {
-			return Testi.formatta("missioni", "IlRapimento.t2", getOstaggio(), getNomeCitta());
+			return "IL_RAPIMENTO_DESCRIZIONE_VIAGGIO";
 		}
 		if (RITORNO.equals(passo)) {
-			return Testi.formatta("missioni", "IlRapimento.t3", getOstaggio(), getNomeCitta());
+			return "IL_RAPIMENTO_DESCRIZIONE_RITORNO";
 		}
 		if (LUTTO.equals(passo) || FALLIMENTO.equals(passo)) {
-			return Testi.formatta("missioni", "IlRapimento.t4", getOstaggio(), getNomeCitta());
+			return "IL_RAPIMENTO_DESCRIZIONE_LUTTO";
 		}
-		return Testi.formatta("missioni", "IlRapimento.t5", getCapobanda(), getOstaggio(), getNomeCitta());
+		return "IL_RAPIMENTO_DESCRIZIONE_LIBERAZIONE";
+	}
+
+	@Override
+	protected Object[] valoriStabiliDellaDescrizione() {
+		return valori();
+	}
+
+	/**
+	 * Il testo di quella produzione di missioni.txt, con l'ostaggio, il capo dei rapitori, la città e le monete.
+	 */
+	private String testo(String produzione) {
+		return ProduttoreDiMissioniCasuale.testoDellaMissione(produzione, valori());
+	}
+
+	/**
+	 * Tutti i segnaposto dei testi della missione. Senza "private" per i test.
+	 */
+	Object[] valori() {
+		return new Object[] {"PARAM_OSTAGGIO", getOstaggio(), "PARAM_CAPOBANDA", getCapobanda(), "PARAM_CITTA", getNomeCitta(), "PARAM_MONETE", getRicompensa()};
 	}
 
 	@Override
 	public String getRicordoDellaLocazione() {
-		return Testi.formatta("missioni", "IlRapimento.t6", getCapobanda(), getOstaggio());
+		return testo("IL_RAPIMENTO_RICORDO");
 	}
 
 	@Override
@@ -96,57 +118,57 @@ public class IlRapimento extends LaLiberazione {
 
 	@Override
 	protected String testoCovoSegnato() {
-		return Testi.formatta("missioni", "IlRapimento.t7", getOstaggio());
+		return testo("IL_RAPIMENTO_COVO_SEGNATO");
 	}
 
 	@Override
 	protected String testoLiberato() {
-		return Testi.formatta("missioni", "IlRapimento.t8", getOstaggio(), getNomeCitta());
+		return testo("IL_RAPIMENTO_LIBERATO");
 	}
 
 	@Override
 	protected String testoMorto() {
-		return Testi.formatta("missioni", "IlRapimento.t9", getOstaggio(), getNomeCitta());
+		return testo("IL_RAPIMENTO_MORTO");
 	}
 
 	@Override
 	protected String testoPortaChiusa() {
-		return Testi.formatta("missioni", "IlRapimento.t10", getOstaggio());
+		return testo("IL_RAPIMENTO_PORTA_CHIUSA");
 	}
 
 	@Override
 	protected ScenaInCitta scenaIncarico() {
 		return ScenaInCitta.conMandante()
-				.parlaIlMandante(Testi.formatta("missioni", "IlRapimento.1", getOstaggio()))
-				.parlaIlMandante(Testi.formatta("missioni", "IlRapimento.2", getCapobanda()))
-				.parlaIlCapo(Testi.formatta("missioni", "IlRapimento.3"))
-				.parlaIlMandante(Testi.formatta("missioni", "IlRapimento.4", getRicompensa()));
+				.parlaIlMandante(testo("IL_RAPIMENTO_INCARICO_1"))
+				.parlaIlMandante(testo("IL_RAPIMENTO_INCARICO_2"))
+				.parlaIlCapo(testo("IL_RAPIMENTO_INCARICO_3"))
+				.parlaIlMandante(testo("IL_RAPIMENTO_INCARICO_4"));
 	}
 
 	@Override
 	protected ScenaInCitta scenaRingraziamento() {
 		return ScenaInCitta.conMandante()
-				.parlaIlMandante(Testi.formatta("missioni", "IlRapimento.5", getOstaggio()))
-				.parlaIlMandante(Testi.formatta("missioni", "IlRapimento.6", getRicompensa()))
-				.parlaIlCapo(Testi.formatta("missioni", "IlRapimento.7"));
+				.parlaIlMandante(testo("IL_RAPIMENTO_RINGRAZIAMENTO_1"))
+				.parlaIlMandante(testo("IL_RAPIMENTO_RINGRAZIAMENTO_2"))
+				.parlaIlCapo(testo("IL_RAPIMENTO_RINGRAZIAMENTO_3"));
 	}
 
 	@Override
 	protected ScenaInCitta scenaDelLutto() {
 		return ScenaInCitta.conMandante()
-				.parlaIlMandante(Testi.formatta("missioni", "IlRapimento.8", getOstaggio()))
-				.parlaIlCapo(Testi.formatta("missioni", "IlRapimento.9"))
-				.parlaIlMandante(Testi.formatta("missioni", "IlRapimento.10"));
+				.parlaIlMandante(testo("IL_RAPIMENTO_LUTTO_1"))
+				.parlaIlCapo(testo("IL_RAPIMENTO_LUTTO_2"))
+				.parlaIlMandante(testo("IL_RAPIMENTO_LUTTO_3"));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return Testi.formatta("missioni", "IlRapimento.t11", getOstaggio(), getRicompensa());
+		return testo("IL_RAPIMENTO_ACCETTAZIONE");
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Testi.formatta("missioni", "IlRapimento.t12", getOstaggio(), getRicompensa());
+		return testo("IL_RAPIMENTO_RICOMPENSA");
 	}
 
 	@Override

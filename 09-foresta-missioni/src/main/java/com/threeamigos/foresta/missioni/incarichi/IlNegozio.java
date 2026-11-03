@@ -22,6 +22,7 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.strumenti.dado.Dado;
+import com.threeamigos.foresta.testi.RegoleDellaLingua;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.*;
 
@@ -83,7 +84,8 @@ public abstract class IlNegozio extends IncaricoInCitta {
 
 	private static final int RICOMPENSA_BASE = 50;
 
-	private final String nome;
+	// La produzione di missioni.txt del titolo (si produce alla prima richiesta, non alla costruzione: non consuma il caso prima del tempo)
+	private final String produzioneDelTitolo;
 	private final TipoLocazione bottega;
 	private final PersonaggioNoto negoziante;
 	private final AspettoDelMandante aspetto;
@@ -92,10 +94,10 @@ public abstract class IlNegozio extends IncaricoInCitta {
 	// La produzione di missioni.txt dei nomi di questa bottega
 	private final String produzioneDelNome;
 
-	protected IlNegozio(MissionePredefinita classe, String nome, TipoLocazione bottega, PersonaggioNoto negoziante,
+	protected IlNegozio(MissionePredefinita classe, String produzioneDelTitolo, TipoLocazione bottega, PersonaggioNoto negoziante,
 						AspettoDelMandante aspetto, String mandante) {
 		super(classe);
-		this.nome = nome;
+		this.produzioneDelTitolo = produzioneDelTitolo;
 		this.bottega = bottega;
 		this.negoziante = negoziante;
 		this.aspetto = aspetto;
@@ -148,8 +150,8 @@ public abstract class IlNegozio extends IncaricoInCitta {
 	}
 
 	@Override
-	public String getNome() {
-		return nome;
+	protected String creaIlNome() {
+		return ProduttoreDiMissioniCasuale.testoDellaMissione(produzioneDelTitolo);
 	}
 
 	@Override
@@ -169,6 +171,7 @@ public abstract class IlNegozio extends IncaricoInCitta {
 	@Override
 	protected boolean isPossibileQui() {
 		return getCittaAssegnata() == Foresta.getLocazioneDelGruppo()
+				&& Foresta.getCoordinateLocazioneUnica(getCittaAssegnata()) != null
 				&& (getCovo() != null || RegistroMissioni.esisteUnPostoPer(TipoLocazione.ROVINE, this));
 	}
 
@@ -247,18 +250,47 @@ public abstract class IlNegozio extends IncaricoInCitta {
 
 	@Override
 	public String getDescrizione() {
+		return descrizioneDalModello();
+	}
+
+	@Override
+	protected String produzioneDellaDescrizione(String passo) {
 		if (getParametro(NOME_ROVINA) == null) {
-			return Testi.formatta("missioni", "IlNegozio.t1", Lingue.corrente().inizialeMaiuscola(mandante));
+			return "IL_NEGOZIO_DESCRIZIONE_ATTESA";
 		}
-		if (RITORNO.equals(getPassoCorrente())) {
-			return Testi.formatta("missioni", "IlNegozio.t2", Lingue.corrente().conPreposizione(Preposizione.PRESSO, mandante(mandante)), getNomeCitta());
+		return RITORNO.equals(passo) ? "IL_NEGOZIO_DESCRIZIONE_RITORNO" : "IL_NEGOZIO_DESCRIZIONE_DISINFESTAZIONE";
+	}
+
+	@Override
+	protected Object[] valoriStabiliDellaDescrizione() {
+		return valori();
+	}
+
+	/**
+	 * Tutti i segnaposto dei testi della missione: il mandante nelle sue forme, la città, le rovine, il negoziante e la bottega, la risposta
+	 * e le monete. Finché l'incarico non è offerto (le rovine non sono scelte) c'è solo il ruolo del mandante.
+	 */
+	private Object[] valori() {
+		RegoleDellaLingua lingua = Lingue.corrente();
+		if (getParametro(NOME_ROVINA) == null) {
+			return new Object[] {"PARAM_MANDANTE_RUOLO_MAIUSC", lingua.inizialeMaiuscola(mandante)};
 		}
-		return Testi.formatta("missioni", "IlNegozio.t3", Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()), getParametro(NOME_ROVINA), getParametro(NOME_BOTTEGA));
+		return new Object[] {
+				"PARAM_MANDANTE_RUOLO_MAIUSC", lingua.inizialeMaiuscola(mandante),
+				"PARAM_MANDANTE_MAIUSC", lingua.inizialeMaiuscola(mandante(mandante)),
+				"PARAM_MANDANTE_DI_CITTA_MAIUSC", lingua.inizialeMaiuscola(getMandanteDiCitta()),
+				"PARAM_PRESSO_MANDANTE", lingua.conPreposizione(Preposizione.PRESSO, mandante(mandante)),
+				"PARAM_CITTA", getNomeCitta(),
+				"PARAM_ROVINA", getParametro(NOME_ROVINA),
+				"PARAM_BOTTEGA", getParametro(NOME_BOTTEGA),
+				"PARAM_NEGOZIANTE", getNomeDelNegoziante(),
+				"PARAM_RISPOSTA", testo(RISPOSTA),
+				"PARAM_MONETE", getRicompensa()};
 	}
 
 	@Override
 	public String getRicordoDellaLocazione() {
-		return Testi.formatta("missioni", "IlNegozio.t4", getNomeDelNegoziante(), getParametro(NOME_BOTTEGA));
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("IL_NEGOZIO_RICORDO", valori());
 	}
 
 	@Override
@@ -273,7 +305,7 @@ public abstract class IlNegozio extends IncaricoInCitta {
 				return Passo.quando(MomentoControllo.IN_LOCAZIONE, this::nellaCitta)
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getCovo());
-							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlNegozio.s1", getParametro(NOME_ROVINA))));
+							BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_NEGOZIO_ROVINE_SEGNATE", valori())));
 						})
 						.poi(DISINFESTAZIONE);
 			case DISINFESTAZIONE:
@@ -292,24 +324,24 @@ public abstract class IlNegozio extends IncaricoInCitta {
 				.parlaIlMandante(testo(CAUSA))
 				.parlaIlMandante(testo(EREDITA) + " " + testo(APPELLO))
 				.parlaIlCapo(testo(BATTUTA))
-				.parlaIlMandante(Testi.formatta("missioni", "IlNegozio.1", testo(RISPOSTA), getRicompensa()));
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_NEGOZIO_INCARICO_1", valori()));
 	}
 
 	@Override
 	protected ScenaInCitta scenaRingraziamento() {
 		return aspetto.nuovaScena()
 				.parlaIlMandante(testo(RINGRAZIAMENTO))
-				.parlaIlMandante(Testi.formatta("missioni", "IlNegozio.2", getRicompensa()));
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_NEGOZIO_RINGRAZIAMENTO_2", valori()));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return Testi.formatta("missioni", "IlNegozio.t5", Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()), getRicompensa(), getParametro(NOME_ROVINA));
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("IL_NEGOZIO_ACCETTAZIONE", valori());
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Testi.formatta("missioni", "IlNegozio.t6", Lingue.corrente().inizialeMaiuscola(mandante(mandante)), getRicompensa());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("IL_NEGOZIO_RICOMPENSA", valori());
 	}
 
 	@Override

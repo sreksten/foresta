@@ -20,12 +20,12 @@ import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.testi.RegoleDellaLingua;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
-import com.threeamigos.foresta.testi.Testi;
 
 /**
  * In città qualcuno bandisce un torneo (vedi {@link TorneoRichiesto}, da missioni.txt), con in palio un oggetto
@@ -49,7 +49,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 	private static final String LEGGENDARIO = "LEGGENDARIO";
 	private static final String LIZZA = "LIZZA";
 	private static final String[] TURNI = {"PRIMO_TURNO", "SECONDO_TURNO"};
-	// I nomi dei turni (e della finale) stanno in missioni_<lingua>.properties: IlTorneo.turno.1, .2 e .finale
+	// I nomi dei turni (e della finale) stanno in missioni.txt: IL_TORNEO_TURNO_1, _2 e _FINALE
 	private static final String FINALE = "FINALE";
 
 	public IlTorneo() {
@@ -148,9 +148,8 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 	 * Che cosa c'è in palio: "c'è lo Scudo Fiscale", "ci sono gli Stivali del Fango".
 	 */
 	private String inPalio() {
-		String breve = getLeggendario().getNomeBreve();
-		boolean plurale = getLeggendario().isPlurale();
-		return Testi.formatta("missioni", plurale ? "IlTorneo.inPalioPlurale" : "IlTorneo.s1") + breve;
+		return ProduttoreDiMissioniCasuale.testoDellaMissione(getLeggendario().isPlurale() ? "IL_TORNEO_IN_PALIO_PLURALE" : "IL_TORNEO_IN_PALIO",
+				"PARAM_PREMIO_BREVE", getLeggendario().getNomeBreve());
 	}
 
 	private void premia() {
@@ -158,7 +157,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 		Artefatto leggendario = getLeggendario().costruisci(Statistiche.getLivello());
 		GruppoGiocatore.getIstanza().addArtefatto(leggendario);
 		BusEventi.pubblica(new NotificaArtefattoTrovato(leggendario, Statistiche.getLivello()));
-		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlTorneo.s2", testo(torneo.getFinale()), getLeggendario().getNomeBreve(), getRicompensa(), getNomeCitta())));
+		BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_TORNEO_PREMIO", valori())));
 	}
 
 	@Override
@@ -168,25 +167,56 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 
 	@Override
 	public String getDescrizione() {
+		return descrizioneDalModello();
+	}
+
+	@Override
+	protected String produzioneDellaDescrizione(String passo) {
 		if (getLeggendario() == null) {
-			return Testi.formatta("missioni", "IlTorneo.t1");
+			return "IL_TORNEO_DESCRIZIONE_ATTESA";
 		}
+		return RITORNO.equals(passo) ? "IL_TORNEO_DESCRIZIONE_RITORNO" : "IL_TORNEO_DESCRIZIONE_TURNO";
+	}
+
+	@Override
+	protected Object[] valoriStabiliDellaDescrizione() {
+		return valori();
+	}
+
+	/**
+	 * Tutti i segnaposto dei testi della missione: il luogo, il campione, il premio, il turno in corso e chi si affronta (vuoti prima del
+	 * primo turno e al ritorno), la città, le monete e il mandante nelle sue forme. Prima che il torneo sia bandito il premio non c'è.
+	 */
+	private Object[] valori() {
 		TorneoRichiesto torneo = getTorneo();
+		RegoleDellaLingua lingua = Lingue.corrente();
+		String mandante = mandante(torneo.getMandante());
 		String passo = getPassoCorrente();
-		if (RITORNO.equals(passo)) {
-			return Testi.formatta("missioni", "IlTorneo.t2", Lingue.corrente().conPreposizione(Preposizione.PRESSO, mandante(torneo.getMandante())), getNomeCitta());
-		}
-		String chi;
-		String turno;
+		String turno = "";
+		String chi = "";
 		if (FINALE.equals(passo)) {
+			turno = ProduttoreDiMissioniCasuale.testoDellaMissione("IL_TORNEO_TURNO_FINALE");
 			chi = ilCampione();
-			turno = Testi.formatta("missioni", "IlTorneo.turno.finale");
-		} else {
+		} else if (TURNI[0].equals(passo) || TURNI[1].equals(passo)) {
 			int indice = TURNI[1].equals(passo) ? 1 : 0;
+			turno = ProduttoreDiMissioniCasuale.testoDellaMissione("IL_TORNEO_TURNO_" + (indice + 1));
 			chi = unSfidante(torneo.getSfidanti().get(indice));
-			turno = Testi.formatta("missioni", "IlTorneo.turno." + (indice + 1));
 		}
-		return Testi.formatta("missioni", "IlTorneo.t3", getNome(), turno, chi, inPalio());
+		boolean bandito = getLeggendario() != null;
+		return new Object[] {
+				"PARAM_TITOLO", getNome(),
+				"PARAM_DENTRO_LUOGO", TestiDeiLuoghi.dentro(torneo.getLuogo()),
+				"PARAM_CAMPIONE", ilCampione(),
+				"PARAM_PREMIO", bandito ? inPalio() : "",
+				"PARAM_PREMIO_BREVE", bandito ? getLeggendario().getNomeBreve() : "",
+				"PARAM_TURNO", turno,
+				"PARAM_CHI", chi,
+				"PARAM_FINALE", testo(torneo.getFinale()),
+				"PARAM_CITTA", getNomeCitta(),
+				"PARAM_MONETE", getRicompensa(),
+				"PARAM_MANDANTE_MAIUSC", lingua.inizialeMaiuscola(mandante),
+				"PARAM_MANDANTE_DI_CITTA_MAIUSC", lingua.inizialeMaiuscola(mandanteDiCitta(torneo.getMandante())),
+				"PARAM_PRESSO_MANDANTE", lingua.conPreposizione(Preposizione.PRESSO, mandante)};
 	}
 
 	@Override
@@ -207,7 +237,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, torneo.getLuogo())
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getLizza());
-							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlTorneo.s3")));
+							BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_TORNEO_LIZZA_SEGNATA", valori())));
 						})
 						.poi(TURNI[0]);
 			case FINALE:
@@ -221,7 +251,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 						String prossimo = turno + 1 < TURNI.length ? TURNI[turno + 1] : FINALE;
 						return combatti(this::getLizza, getSfidante(turno))
 								.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(testo(vinto)
-										+ (FINALE.equals(prossimo) ? Testi.formatta("missioni", "IlTorneo.s4") : Testi.formatta("missioni", "IlTorneo.s5")))))
+										+ " " + ProduttoreDiMissioniCasuale.testoDellaMissione(FINALE.equals(prossimo) ? "IL_TORNEO_PROSSIMA_FINALE" : "IL_TORNEO_PROSSIMO_TURNO"))))
 								.poi(prossimo);
 					}
 				}
@@ -234,7 +264,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 		TorneoRichiesto torneo = getTorneo();
 		return torneo.getAspetto().nuovaScena()
 				.parlaIlMandante(testo(torneo.getRichiesta()))
-				.parlaIlMandante(Testi.formatta("missioni", "IlTorneo.1", TestiDeiLuoghi.dentro(torneo.getLuogo()), ilCampione(), inPalio(), getRicompensa()))
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_TORNEO_INCARICO_1", valori()))
 				.parlaIlCapo(testo(torneo.getBattutaDelCapo()))
 				.parlaIlMandante(testo(torneo.getRisposta()));
 	}
@@ -243,17 +273,17 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 	protected ScenaInCitta scenaRingraziamento() {
 		return getTorneo().getAspetto().nuovaScena()
 				.parlaIlMandante(testo(getTorneo().getRingraziamento()))
-				.parlaIlMandante(Testi.formatta("missioni", "IlTorneo.2", getRicompensa()));
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_TORNEO_RINGRAZIAMENTO_2", valori()));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return Testi.formatta("missioni", "IlTorneo.t4", Lingue.corrente().inizialeMaiuscola(mandanteDiCitta(getTorneo().getMandante())), inPalio());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("IL_TORNEO_ACCETTAZIONE", valori());
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Testi.formatta("missioni", "IlTorneo.t5", Lingue.corrente().inizialeMaiuscola(mandante(getTorneo().getMandante())), getRicompensa());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("IL_TORNEO_RICOMPENSA", valori());
 	}
 
 	@Override

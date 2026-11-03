@@ -7,9 +7,9 @@ import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Genere;
-import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Il cartografo: in città un cartografo vuole sapere che cosa c'è nella foresta, e paga il gruppo perché esplori un
@@ -40,16 +40,35 @@ public class IlCartografo extends IncaricoInCitta {
 	}
 
 	@Override
-	public String getNome() {
-		return Testi.formatta("missioni", "IlCartografo.t1");
+	protected String creaIlNome() {
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("IL_CARTOGRAFO_TITOLO");
 	}
 
 	@Override
 	public String getDescrizione() {
-		if (RITORNO.equals(getPassoCorrente())) {
-			return Testi.formatta("missioni", "IlCartografo.t2", getNomeCitta());
-		}
-		return Testi.formatta("missioni", "IlCartografo.t3", getNomeCitta(), Lingue.corrente().cardinale(getCaselle(), Genere.FEMMINILE), getCaselleEsplorate());
+		return descrizioneDalModello();
+	}
+
+	@Override
+	protected String produzioneDellaDescrizione(String passo) {
+		return RITORNO.equals(passo) ? "IL_CARTOGRAFO_DESCRIZIONE_RITORNO" : "IL_CARTOGRAFO_DESCRIZIONE_ESPLORAZIONE";
+	}
+
+	@Override
+	protected Object[] valoriStabiliDellaDescrizione() {
+		return valori();
+	}
+
+	@Override
+	protected Object[] valoriDellaDescrizione() {
+		return new Object[] {"PARAM_ESPLORATE", getCaselleEsplorate()};
+	}
+
+	/**
+	 * Tutti i segnaposto dei testi della missione che non cambiano mentre dura: la città, le zone da esplorare e le monete.
+	 */
+	private Object[] valori() {
+		return new Object[] {"PARAM_CITTA", getNomeCitta(), "PARAM_CASELLE", Lingue.corrente().cardinale(getCaselle(), Genere.FEMMINILE), "PARAM_MONETE", getRicompensa()};
 	}
 
 	@Override
@@ -63,34 +82,34 @@ public class IlCartografo extends IncaricoInCitta {
 			throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
 		}
 		return esplora(getCaselle())
-				.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlCartografo.s1", getNomeCitta()))))
+				.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_CARTOGRAFO_ESPLORATO", valori()))))
 				.poi(RITORNO);
 	}
 
 	@Override
 	protected ScenaInCitta scenaIncarico() {
 		return ScenaInCitta.conMandante()
-				.parlaIlMandante(Testi.formatta("missioni", "IlCartografo.1"))
-				.parlaIlMandante(Testi.formatta("missioni", "IlCartografo.2", Lingue.corrente().cardinale(getCaselle(), Genere.FEMMINILE), getRicompensa()))
-				.parlaIlCapo(Testi.formatta("missioni", "IlCartografo.3"))
-				.parlaIlMandante(Testi.formatta("missioni", "IlCartografo.4"));
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_CARTOGRAFO_INCARICO_1", valori()))
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_CARTOGRAFO_INCARICO_2", valori()))
+				.parlaIlCapo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_CARTOGRAFO_INCARICO_3", valori()))
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_CARTOGRAFO_INCARICO_4", valori()));
 	}
 
 	@Override
 	protected ScenaInCitta scenaRingraziamento() {
 		return ScenaInCitta.conMandante()
-				.parlaIlMandante(Testi.formatta("missioni", "IlCartografo.5"))
-				.parlaIlCapo(Testi.formatta("missioni", "IlCartografo.6"));
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_CARTOGRAFO_RINGRAZIAMENTO_1", valori()))
+				.parlaIlCapo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_CARTOGRAFO_RINGRAZIAMENTO_2", valori()));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return Testi.formatta("missioni", "IlCartografo.t4", getRicompensa(), Lingue.corrente().cardinale(getCaselle(), Genere.FEMMINILE));
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("IL_CARTOGRAFO_ACCETTAZIONE", valori());
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Testi.formatta("missioni", "IlCartografo.t5", getRicompensa());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("IL_CARTOGRAFO_RICOMPENSA", valori());
 	}
 
 	/**

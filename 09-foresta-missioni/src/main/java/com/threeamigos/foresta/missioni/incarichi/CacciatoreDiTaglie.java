@@ -15,7 +15,6 @@ import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Il cacciatore di taglie: in città c'è un manifesto con una taglia sul capo di una banda di goblin, un hobgoblin. La
@@ -64,23 +63,40 @@ public class CacciatoreDiTaglie extends IncaricoInCitta {
 	}
 
 	@Override
-	public String getNome() {
-		return Testi.formatta("missioni", "CacciatoreDiTaglie.nome", getRicercato());
+	protected String creaIlNome() {
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("CACCIATORE_DI_TAGLIE_TITOLO", valori());
 	}
 
 	@Override
 	public String getDescrizione() {
-		if (RITORNO.equals(getPassoCorrente())) {
-			return Testi.formatta("missioni", "CacciatoreDiTaglie.t1", getRicercato(), getNomeCitta());
+		return descrizioneDalModello();
+	}
+
+	@Override
+	protected String produzioneDellaDescrizione(String passo) {
+		if (RITORNO.equals(passo)) {
+			return "CACCIATORE_DI_TAGLIE_DESCRIZIONE_RITORNO";
 		}
+		return ottieniProprieta(DIREZIONE) == null ? "CACCIATORE_DI_TAGLIE_DESCRIZIONE_COVO" : "CACCIATORE_DI_TAGLIE_DESCRIZIONE_CACCIA";
+	}
+
+	@Override
+	protected Object[] valoriStabiliDellaDescrizione() {
+		return valori();
+	}
+
+	/**
+	 * Tutti i segnaposto dei testi della missione: il ricercato, la città, le monete e, dopo aver trovato le rovine, la loro direzione.
+	 */
+	private Object[] valori() {
 		String direzione = ottieniProprieta(DIREZIONE);
-		return direzione == null ? Testi.formatta("missioni", "CacciatoreDiTaglie.descrizione", getRicercato())
-				: Testi.formatta("missioni", "CacciatoreDiTaglie.descrizioneConDirezione", getRicercato(), direzione.replaceAll("\\.$", ""), getNomeCitta());
+		return new Object[] {"PARAM_RICERCATO", getRicercato(), "PARAM_CITTA", getNomeCitta(), "PARAM_MONETE", getRicompensa(),
+				"PARAM_DIREZIONE", direzione == null ? "" : direzione.replaceAll("\\.$", "")};
 	}
 
 	@Override
 	public String getRicordoDellaLocazione() {
-		return Testi.formatta("missioni", "CacciatoreDiTaglie.t2", getRicercato());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("CACCIATORE_DI_TAGLIE_RICORDO", valori());
 	}
 
 	@Override
@@ -97,12 +113,12 @@ public class CacciatoreDiTaglie extends IncaricoInCitta {
 						.esegui(() -> {
 							String direzione = Direzioni.getDirezione(Foresta.getPosizioneDelGruppo(), getCovo());
 							aggiungiProprieta(DIREZIONE, direzione);
-							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "CacciatoreDiTaglie.s1", getRicercato(), direzione.replaceAll("\\.$", ""))));
+							BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("CACCIATORE_DI_TAGLIE_COVO_TROVATO", "PARAM_RICERCATO", getRicercato(), "PARAM_DIREZIONE", direzione.replaceAll("\\.$", ""))));
 						})
 						.poi(CACCIA);
 			case CACCIA:
 				return combattiIlCapo(this::getCovo, getBanda())
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "CacciatoreDiTaglie.s2", getRicercato(), getNomeCitta()))))
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("CACCIATORE_DI_TAGLIE_ABBATTUTO", valori()))))
 						.poi(RITORNO);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
@@ -112,28 +128,28 @@ public class CacciatoreDiTaglie extends IncaricoInCitta {
 	@Override
 	protected ScenaInCitta scenaIncarico() {
 		return ScenaInCitta.conCapitano()
-				.parlaIlMandante(Testi.formatta("missioni", "CacciatoreDiTaglie.1", getRicercato()))
-				.parlaIlMandante(Testi.formatta("missioni", "CacciatoreDiTaglie.2"))
-				.parlaIlCapo(Testi.formatta("missioni", "CacciatoreDiTaglie.3"))
-				.parlaIlMandante(Testi.formatta("missioni", "CacciatoreDiTaglie.4", getRicompensa()));
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("CACCIATORE_DI_TAGLIE_INCARICO_1", valori()))
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("CACCIATORE_DI_TAGLIE_INCARICO_2", valori()))
+				.parlaIlCapo(ProduttoreDiMissioniCasuale.testoDellaMissione("CACCIATORE_DI_TAGLIE_INCARICO_3", valori()))
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("CACCIATORE_DI_TAGLIE_INCARICO_4", valori()));
 	}
 
 	@Override
 	protected ScenaInCitta scenaRingraziamento() {
 		return ScenaInCitta.conCapitano()
-				.parlaIlMandante(Testi.formatta("missioni", "CacciatoreDiTaglie.5", getRicercato()))
-				.parlaIlMandante(Testi.formatta("missioni", "CacciatoreDiTaglie.6"))
-				.parlaIlCapo(Testi.formatta("missioni", "CacciatoreDiTaglie.7"));
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("CACCIATORE_DI_TAGLIE_RINGRAZIAMENTO_1", valori()))
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("CACCIATORE_DI_TAGLIE_RINGRAZIAMENTO_2", valori()))
+				.parlaIlCapo(ProduttoreDiMissioniCasuale.testoDellaMissione("CACCIATORE_DI_TAGLIE_RINGRAZIAMENTO_3", valori()));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return Testi.formatta("missioni", "CacciatoreDiTaglie.t3", getRicercato(), getRicompensa());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("CACCIATORE_DI_TAGLIE_ACCETTAZIONE", valori());
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Testi.formatta("missioni", "CacciatoreDiTaglie.t4", getRicompensa(), getRicercato());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("CACCIATORE_DI_TAGLIE_RICOMPENSA", valori());
 	}
 
 	@Override

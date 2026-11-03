@@ -12,7 +12,7 @@ import com.threeamigos.foresta.testi.Testi;
 public class IlNegozioDelVenditoreDiPergamene extends IlNegozio {
 
 	public IlNegozioDelVenditoreDiPergamene() {
-		super(MissionePredefinita.IL_NEGOZIO_DEL_VENDITORE_DI_PERGAMENE, Testi.formatta("missioni", "IlNegozioDelVenditoreDiPergamene.s1"), TipoLocazione.VENDITORE_DI_PERGAMENE, PersonaggioNoto.VENDITORE_DI_PERGAMENE_DELLA_FORESTA, AspettoDelMandante.VENDITORE_DI_PERGAMENE,
+		super(MissionePredefinita.IL_NEGOZIO_DEL_VENDITORE_DI_PERGAMENE, "IL_NEGOZIO_DEL_VENDITORE_DI_PERGAMENE_TITOLO", TipoLocazione.VENDITORE_DI_PERGAMENE, PersonaggioNoto.VENDITORE_DI_PERGAMENE_DELLA_FORESTA, AspettoDelMandante.VENDITORE_DI_PERGAMENE,
 				Testi.formatta("missioni", "IlNegozioDelVenditoreDiPergamene.s2"));
 	}
 }

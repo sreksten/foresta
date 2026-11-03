@@ -16,13 +16,13 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
 import com.threeamigos.foresta.personaggi.Viandante;
+import com.threeamigos.foresta.testi.RegoleDellaLingua;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 
 import java.util.List;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
-import com.threeamigos.foresta.testi.Testi;
 
 /**
  * In città qualcuno chiede di scoprire chi ha fatto qualcosa: chi ha rubato le campane, chi passa le notizie al nemico,
@@ -132,7 +132,7 @@ public class LIndagine extends IncaricoInCitta {
 	}
 
 	private String getAttesa() {
-		return Testi.formatta("missioni", "LIndagine.t1", Lingue.corrente().inizialeMaiuscola(mandante(getIndagine().getMandante())), getNomeCitta());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("L_INDAGINE_ATTESA", valori());
 	}
 
 	private boolean nelPosto() {
@@ -153,28 +153,57 @@ public class LIndagine extends IncaricoInCitta {
 
 	@Override
 	public String getDescrizione() {
-		IndagineRichiesta indagine = getIndagine();
-		String passo = getPassoCorrente();
+		return descrizioneDalModello();
+	}
+
+	@Override
+	protected String produzioneDellaDescrizione(String passo) {
 		if (RITORNO.equals(passo)) {
-			return Testi.formatta("missioni", "LIndagine.t2", Lingue.corrente().conPreposizione(Preposizione.PRESSO, mandante(indagine.getMandante())), getNomeCitta());
+			return "L_INDAGINE_DESCRIZIONE_RITORNO";
 		}
 		if (NASCONDIGLIO.equals(passo) || CATTURA.equals(passo)) {
-			return Testi.formatta("missioni", "LIndagine.t3", Lingue.corrente().conPreposizione(Preposizione.PRESSO, mandante(indagine.getMandante())), getNomeCitta());
+			return "L_INDAGINE_DESCRIZIONE_CATTURA";
 		}
-		StringBuilder descrizione = new StringBuilder();
-		int trovati = getIndiziTrovati();
-		int indizi = indagine.getIndizi().size();
-		if (trovati < indizi) {
-			descrizione.append(Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta())).append(Testi.formatta("missioni", "LIndagine.s1"))
-					.append(trovati == 0 ? Testi.formatta("missioni", "LIndagine.s2") : Testi.formatta("missioni", "LIndagine.successivo")).append(Testi.formatta("missioni", "LIndagine.s3"));
-		} else {
-			descrizione.append(Testi.formatta("missioni", "LIndagine.s4")).append(testo(indagine.getDomanda()));
+		if (passo.startsWith(TRACCIA) || passo.startsWith(INDIZIO)) {
+			int numero = Integer.parseInt(passo.substring(passo.indexOf('_') + 1));
+			return numero == 1 ? "L_INDAGINE_DESCRIZIONE_PRIMO" : "L_INDAGINE_DESCRIZIONE_SUCCESSIVO";
 		}
-		List<Indizio> elenco = indagine.getIndizi();
-		for (int i = 0; i < trovati; i++) {
-			descrizione.append(" Indizio ").append(i + 1).append(": ").append(testo(elenco.get(i).getTesto()));
+		return ACCUSA.equals(passo) || ERRORE.equals(passo) ? "L_INDAGINE_DESCRIZIONE_ACCUSA" : "L_INDAGINE_DESCRIZIONE_PRIMO";
+	}
+
+	@Override
+	protected Object[] valoriStabiliDellaDescrizione() {
+		return valori();
+	}
+
+	/**
+	 * Gli indizi già trovati, in fila (" Indizio 1: testo Indizio 2: testo"): l'unico valore che cambia mentre la missione dura.
+	 */
+	@Override
+	protected Object[] valoriDellaDescrizione() {
+		IndagineRichiesta indagine = getIndagine();
+		StringBuilder trovati = new StringBuilder();
+		for (int i = 0; i < getIndiziTrovati(); i++) {
+			trovati.append(" ").append(ProduttoreDiMissioniCasuale.testoDellaMissione("L_INDAGINE_INDIZIO", "PARAM_NUMERO", i + 1, "PARAM_TESTO", testo(indagine.getIndizi().get(i).getTesto())));
 		}
-		return descrizione.toString();
+		return new Object[] {"PARAM_INDIZI", trovati.toString()};
+	}
+
+	/**
+	 * Tutti i segnaposto dei testi della missione che non cambiano mentre dura: il mandante nelle sue forme, la città, le monete e la
+	 * domanda dell'indagine.
+	 */
+	private Object[] valori() {
+		IndagineRichiesta indagine = getIndagine();
+		RegoleDellaLingua lingua = Lingue.corrente();
+		String mandante = mandante(indagine.getMandante());
+		return new Object[] {
+				"PARAM_CITTA", getNomeCitta(),
+				"PARAM_MONETE", getRicompensa(),
+				"PARAM_DOMANDA", testo(indagine.getDomanda()),
+				"PARAM_MANDANTE_MAIUSC", lingua.inizialeMaiuscola(mandante),
+				"PARAM_MANDANTE_DI_CITTA_MAIUSC", lingua.inizialeMaiuscola(getMandanteDiCitta()),
+				"PARAM_PRESSO_MANDANTE", lingua.conPreposizione(Preposizione.PRESSO, mandante)};
 	}
 
 	@Override
@@ -197,7 +226,7 @@ public class LIndagine extends IncaricoInCitta {
 			return cercaLocazione(MomentoControllo.IN_LOCAZIONE, indizio.getLuogo())
 					.esegui(() -> {
 						Foresta.setLocazioneConosciuta(getPosto());
-						BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LIndagine.s5", Testi.formatta("missioni", numero == 1 ? "LIndagine.primoDaCercare" : "LIndagine.prossimoDaCercare"), TestiDeiLuoghi.dentro(indizio.getLuogo()))));
+						BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione(numero == 1 ? "L_INDAGINE_COMINCIA" : "L_INDAGINE_PROSEGUE", "PARAM_DENTRO_LUOGO", TestiDeiLuoghi.dentro(indizio.getLuogo()))));
 					})
 					.poi(INDIZIO + numero);
 		}
@@ -216,7 +245,7 @@ public class LIndagine extends IncaricoInCitta {
 				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, indagine.getLuogo())
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getPosto());
-							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LIndagine.s6", testo(indagine.getSmascheramento()))));
+							BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("L_INDAGINE_NASCONDIGLIO_SEGNATO", "PARAM_SMASCHERAMENTO", testo(indagine.getSmascheramento()))));
 						})
 						.poi(CATTURA);
 			case CATTURA:
@@ -246,7 +275,7 @@ public class LIndagine extends IncaricoInCitta {
 		IndagineRichiesta indagine = getIndagine();
 		return indagine.getAspetto().nuovaScena()
 				.parlaIlMandante(testo(indagine.getRichiesta()))
-				.parlaIlMandante(Testi.formatta("missioni", "LIndagine.1", getRicompensa()))
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("L_INDAGINE_INCARICO_1", valori()))
 				.parlaIlCapo(testo(indagine.getBattutaDelCapo()))
 				.parlaIlMandante(testo(indagine.getRisposta()));
 	}
@@ -255,17 +284,17 @@ public class LIndagine extends IncaricoInCitta {
 	protected ScenaInCitta scenaRingraziamento() {
 		return getIndagine().getAspetto().nuovaScena()
 				.parlaIlMandante(testo(getIndagine().getRingraziamento()))
-				.parlaIlMandante(Testi.formatta("missioni", "LIndagine.2", getRicompensa()));
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("L_INDAGINE_RINGRAZIAMENTO_2", valori()));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return Testi.formatta("missioni", "LIndagine.t4", Lingue.corrente().inizialeMaiuscola(getMandanteDiCitta()), getRicompensa());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("L_INDAGINE_ACCETTAZIONE", valori());
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Testi.formatta("missioni", "LIndagine.t5", Lingue.corrente().inizialeMaiuscola(mandante(getIndagine().getMandante())), getRicompensa());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("L_INDAGINE_RICOMPENSA", valori());
 	}
 
 	@Override

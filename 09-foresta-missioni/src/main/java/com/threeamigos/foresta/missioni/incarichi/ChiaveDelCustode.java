@@ -11,8 +11,8 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.testi.Lingue;
-import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Una delle chiavi di una {@link MissioneATappe} a chiavi, che la madre affida quando il gruppo ne scopre i custodi (le tre ricerche si
@@ -127,13 +127,31 @@ public class ChiaveDelCustode extends MissioneAPassi {
 
 	@Override
 	public String getDescrizione() {
-		StringBuilder descrizione = new StringBuilder(getParametro(TESTO)).append(Testi.formatta("missioni", "ChiaveDelCustode.s1")).append(getParametro(NOME_DEL_POSTO))
-				.append(Testi.formatta("missioni", "ChiaveDelCustode.s2"));
-		if (isInScambio() && !CUSTODE.equals(getPassoCorrente()) && !CHIEDE.equals(getPassoCorrente())) {
-			descrizione.append(" ").append(getParametro(TESTO_DELL_OGGETTO)).append(Testi.formatta("missioni", "ChiaveDelCustode.s3")).append(getParametro(NOME_DEL_POSTO_DELL_OGGETTO))
-					.append(Testi.formatta("missioni", "ChiaveDelCustode.s4"));
-		}
-		return descrizione.toString();
+		return descrizioneDalModello();
+	}
+
+	@Override
+	protected String produzioneDellaDescrizione(String passo) {
+		return isInScambio() && !CUSTODE.equals(passo) && !CHIEDE.equals(passo)
+				? "CHIAVE_DEL_CUSTODE_DESCRIZIONE_CON_OGGETTO" : "CHIAVE_DEL_CUSTODE_DESCRIZIONE";
+	}
+
+	@Override
+	protected Object[] valoriStabiliDellaDescrizione() {
+		return valori();
+	}
+
+	/**
+	 * Tutti i segnaposto dei testi della missione, presi dai suoi parametri (quelli dell'oggetto sono vuoti se il custode combatte).
+	 */
+	private Object[] valori() {
+		return new Object[] {
+				"PARAM_TESTO", getParametro(TESTO),
+				"PARAM_POSTO", getParametro(NOME_DEL_POSTO),
+				"PARAM_CHIAVE_DEL_CUSTODE", getParametro(CHIAVE),
+				"PARAM_OGGETTO", isInScambio() ? getParametro(OGGETTO) : "",
+				"PARAM_TESTO_OGGETTO", isInScambio() ? getParametro(TESTO_DELL_OGGETTO) : "",
+				"PARAM_POSTO_OGGETTO", isInScambio() ? getParametro(NOME_DEL_POSTO_DELL_OGGETTO) : ""};
 	}
 
 	@Override
@@ -151,7 +169,7 @@ public class ChiaveDelCustode extends MissioneAPassi {
 		switch (id) {
 			case CUSTODE:
 				return combatti(this::getPosto, incontroDelCustode())
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "ChiaveDelCustode.s5", getParametro(CHIAVE)))))
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("CHIAVE_DEL_CUSTODE_VINTO", valori()))))
 						.poi(Passo.FINE);
 			case CHIEDE:
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, this::isNelPostoDelCustode)
@@ -162,7 +180,7 @@ public class ChiaveDelCustode extends MissioneAPassi {
 						})
 						.esegui(() -> {
 							BusEventi.pubblica(new NotificaTestoParagrafo(getParametro(TESTO)));
-							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "ChiaveDelCustode.s6", getParametro(TESTO_DELL_OGGETTO), getParametro(NOME_DEL_POSTO_DELL_OGGETTO))));
+							BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("CHIAVE_DEL_CUSTODE_OGGETTO_CHIESTO", valori())));
 							Foresta.setLocazioneConosciuta(getPostoDellOggetto());
 						})
 						.poi(OGGETTO);
@@ -170,7 +188,7 @@ public class ChiaveDelCustode extends MissioneAPassi {
 				return combatti(this::getPostoDellOggetto, IncontroDiMissione.di(TipoPersonaggio.valueOf(getParametro(NEMICO_DELL_OGGETTO)),
 						Integer.parseInt(getParametro(NUMERO_DELL_OGGETTO))))
 						.esegui(() -> {
-							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "ChiaveDelCustode.s7", getParametro(OGGETTO))));
+							BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("CHIAVE_DEL_CUSTODE_OGGETTO_RECUPERATO", valori())));
 							Foresta.setLocazioneConosciuta(getPosto());
 						})
 						.poi(CONSEGNA);
@@ -181,7 +199,7 @@ public class ChiaveDelCustode extends MissioneAPassi {
 								RegistroMissioni.sopprimiContenutoLocazione(getPosto());
 							}
 						})
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "ChiaveDelCustode.s8", getParametro(OGGETTO), getParametro(CHIAVE)))))
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("CHIAVE_DEL_CUSTODE_SCAMBIO", valori()))))
 						.poi(Passo.FINE);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
