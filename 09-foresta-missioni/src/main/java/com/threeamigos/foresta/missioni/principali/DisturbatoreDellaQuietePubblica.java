@@ -11,6 +11,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Genere;
 import com.threeamigos.foresta.testi.Testi;
@@ -27,7 +28,7 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 
 	// Si legge a ogni uso, non una volta sola: la lingua può cambiare fra una partita e l'altra
 	private static String descrizioneBase() {
-		return Testi.formatta("missioni", "DisturbatoreDellaQuietePubblica.descrizioneBase", Lingue.corrente().cardinale(EREMITI_DA_INCONTRARE, Genere.MASCHILE));
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("DISTURBATORE_DELLA_QUIETE_PUBBLICA_DESCRIZIONE_BASE", "PARAM_NUMERO", Lingue.corrente().cardinale(EREMITI_DA_INCONTRARE, Genere.MASCHILE));
 	}
 
 	// Gli identificativi degli eremiti già contati, separati da virgole
@@ -38,23 +39,23 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 	}
 
 	@Override
-	public String getNome() {
-		return Testi.formatta("missioni", "DisturbatoreDellaQuietePubblica.t1");
+	protected String creaIlNome() {
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("DISTURBATORE_DELLA_QUIETE_PUBBLICA_TITOLO");
 	}
 
 	@Override
 	public String getDescrizione() {
 		if (isCompleta()) {
-			return Testi.formatta("missioni", "DisturbatoreDellaQuietePubblica.t2", descrizioneBase());
+			return ProduttoreDiMissioniCasuale.testoDellaMissione("DISTURBATORE_DELLA_QUIETE_PUBBLICA_DESCRIZIONE_INIZIO", "PARAM_DESCRIZIONE", descrizioneBase());
 		}
 		int mancanti = EREMITI_DA_INCONTRARE - getEremitiIncontrati();
 		if (mancanti == 1) {
-			return Testi.formatta("missioni", "DisturbatoreDellaQuietePubblica.t3", descrizioneBase());
+			return ProduttoreDiMissioniCasuale.testoDellaMissione("DISTURBATORE_DELLA_QUIETE_PUBBLICA_DESCRIZIONE_ULTIMO", "PARAM_DESCRIZIONE", descrizioneBase());
 		}
 		if (mancanti == 10) {
 			return descrizioneBase() + ".";
 		}
-		return Testi.formatta("missioni", "DisturbatoreDellaQuietePubblica.t4", descrizioneBase(), Lingue.corrente().cardinale(mancanti, Genere.MASCHILE));
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("DISTURBATORE_DELLA_QUIETE_PUBBLICA_DESCRIZIONE_MANCANO", "PARAM_DESCRIZIONE", descrizioneBase(), "PARAM_MANCANTI", Lingue.corrente().cardinale(mancanti, Genere.MASCHILE));
 	}
 
 	@Override
@@ -80,7 +81,7 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 			return;
 		}
 		if (!isAttiva()) {
-			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "DisturbatoreDellaQuietePubblica.s1", descrizioneBase())));
+			BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("DISTURBATORE_DELLA_QUIETE_PUBBLICA_INIZIO", "PARAM_DESCRIZIONE", descrizioneBase())));
 			attivaMissione();
 		}
 		// Si conta l'incontro, non il suo esito: qui la locazione è appena stata
@@ -89,9 +90,9 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 		aggiungiProprieta(EREMITI_CONTATI, String.join(",", contati));
 		if (incontrati >= EREMITI_DA_INCONTRARE) {
 			completaMissione();
-			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "DisturbatoreDellaQuietePubblica.s2")));
+			BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("DISTURBATORE_DELLA_QUIETE_PUBBLICA_FINE")));
 		} else {
-			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "DisturbatoreDellaQuietePubblica.s3", Lingue.corrente().ordinale(incontrati, Genere.MASCHILE, false))));
+			BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("DISTURBATORE_DELLA_QUIETE_PUBBLICA_TURBATA", "PARAM_ORDINALE", Lingue.corrente().ordinale(incontrati, Genere.MASCHILE, false))));
 		}
 	}
 

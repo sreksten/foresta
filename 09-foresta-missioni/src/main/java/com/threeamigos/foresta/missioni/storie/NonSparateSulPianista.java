@@ -21,6 +21,7 @@ import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.testi.Testi;
@@ -63,8 +64,8 @@ public class NonSparateSulPianista extends MissioneAPassi {
 	}
 
 	@Override
-	public String getNome() {
-		return Testi.formatta("missioni", "NonSparateSulPianista.t1");
+	protected String creaIlNome() {
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("NON_SPARATE_SUL_PIANISTA_TITOLO");
 	}
 
 	/**
@@ -76,7 +77,26 @@ public class NonSparateSulPianista extends MissioneAPassi {
 
 	@Override
 	public String getDescrizione() {
-		return Testi.formatta("missioni", "NonSparateSulPianista.t2", getBardo(), Lingue.corrente().conPreposizione(Preposizione.IN, getNomeCitta()));
+		return descrizioneDalModello();
+	}
+
+	@Override
+	protected String produzioneDellaDescrizione(String passo) {
+		return "NON_SPARATE_SUL_PIANISTA_DESCRIZIONE";
+	}
+
+	@Override
+	protected Object[] valoriStabiliDellaDescrizione() {
+		return valori();
+	}
+
+	/**
+	 * Tutti i segnaposto dei testi della storia: il bardo, la città dove abita (la sua città, finché non è accettata) e le monete.
+	 * Senza "private" per i test.
+	 */
+	Object[] valori() {
+		return new Object[] {"PARAM_BARDO", getBardo(), "PARAM_CITTA", getNomeCitta(),
+				"PARAM_IN_CITTA", Lingue.corrente().conPreposizione(Preposizione.IN, getNomeCitta()), "PARAM_MONETE", getRicompensa()};
 	}
 
 	@Override
@@ -93,7 +113,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 	}
 
 	private String getNomeCitta() {
-		return getCitta() == null ? Testi.formatta("missioni", "NonSparateSulPianista.s1") : getCitta().getNomeProprio();
+		return getCitta() == null ? ProduttoreDiMissioniCasuale.testoDellaMissione("NON_SPARATE_SUL_PIANISTA_SUA_CITTA") : getCitta().getNomeProprio();
 	}
 
 	@Override
@@ -123,18 +143,18 @@ public class NonSparateSulPianista extends MissioneAPassi {
 						.esegui(() -> {
 							aggiungiProprieta(CITTA, cittaPiuVicina().name());
 							aggiungiProprieta(LIVELLO_DELL_INCARICO, String.valueOf(Statistiche.getLivello()));
-							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "NonSparateSulPianista.s2", getBardo(), Lingue.corrente().conPreposizione(Preposizione.IN, getNomeCitta()))));
+							BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("NON_SPARATE_SUL_PIANISTA_ACCETTATO", valori())));
 							attivaMissione();
 						})
 						.poi(VIAGGIO);
 			case VIAGGIO:
 				return scorta(MomentoControllo.PRE_LOCAZIONE, () -> Foresta.getCoordinateLocazioneUnica(getCitta()), false)
-						.falliscoSe(this::isCittaDistrutta, () ->Testi.formatta("missioni", "NonSparateSulPianista.s3", getNomeCitta(), getBardo()))
+						.falliscoSe(this::isCittaDistrutta, () ->ProduttoreDiMissioniCasuale.testoDellaMissione("NON_SPARATE_SUL_PIANISTA_CITTA_DISTRUTTA", valori()))
 						.conIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, () -> scenaDellaMoglie().getPagine())
 						.poi(ARRIVO);
 			case ARRIVO:
 				return ricompensa(MomentoControllo.IN_LOCAZIONE, getRicompensa(),
-								() ->Testi.formatta("missioni", "NonSparateSulPianista.s4", RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO).getNome(), getBardo(), getRicompensa()))
+								() ->ProduttoreDiMissioniCasuale.testoDellaMissione("NON_SPARATE_SUL_PIANISTA_RICOMPENSA", "PARAM_MOGLIE", RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO).getNome(), "PARAM_BARDO", getBardo(), "PARAM_MONETE", getRicompensa()))
 						.poi(Passo.FINE);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
@@ -151,23 +171,23 @@ public class NonSparateSulPianista extends MissioneAPassi {
 
 	private ScenaInLocanda scenaDelLocandiere() {
 		return ScenaInLocanda.conLocandiere()
-				.parlaIlLocandiere(Testi.formatta("missioni", "NonSparateSulPianista.1"))
-				.parlaIlLocandiere(Testi.formatta("missioni", "NonSparateSulPianista.2", getBardo()))
-				.parlaIlLocandiere(Testi.formatta("missioni", "NonSparateSulPianista.3", Lingue.corrente().conPreposizione(Preposizione.IN, cittaPiuVicina().getNomeProprio())))
-				.parlaIlCapo(Testi.formatta("missioni", "NonSparateSulPianista.4"))
-				.parlaIlLocandiere(Testi.formatta("missioni", "NonSparateSulPianista.5"));
+				.parlaIlLocandiere(ProduttoreDiMissioniCasuale.testoDellaMissione("NON_SPARATE_SUL_PIANISTA_INCONTRO_1"))
+				.parlaIlLocandiere(ProduttoreDiMissioniCasuale.testoDellaMissione("NON_SPARATE_SUL_PIANISTA_INCONTRO_2", "PARAM_BARDO", getBardo()))
+				.parlaIlLocandiere(ProduttoreDiMissioniCasuale.testoDellaMissione("NON_SPARATE_SUL_PIANISTA_INCONTRO_3", "PARAM_IN_CITTA", Lingue.corrente().conPreposizione(Preposizione.IN, cittaPiuVicina().getNomeProprio())))
+				.parlaIlCapo(ProduttoreDiMissioniCasuale.testoDellaMissione("NON_SPARATE_SUL_PIANISTA_INCONTRO_4"))
+				.parlaIlLocandiere(ProduttoreDiMissioniCasuale.testoDellaMissione("NON_SPARATE_SUL_PIANISTA_INCONTRO_5"));
 	}
 
 	private ScenaInCitta scenaDellaMoglie() {
 		// Il bardo (il BardoLocanda, con il nome che ha in tutto il mondo) è ancora nel gruppo, si congeda a fine missione:
 		// la scena lo mette dopo il capo, rivolto verso la moglie
 		return ScenaInCitta.conMoglieDelBardo()
-				.parlaIlMandante(Testi.formatta("missioni", "NonSparateSulPianista.6", getBardo()))
-				.parlaIlCapo(Testi.formatta("missioni", "NonSparateSulPianista.7"))
-				.parlaIlMandante(Testi.formatta("missioni", "NonSparateSulPianista.8"))
-				.parlaIlMandante(Testi.formatta("missioni", "NonSparateSulPianista.9", getBardo()))
-				.parlaLOspite(Testi.formatta("missioni", "NonSparateSulPianista.10"))
-				.parlaIlCapo(Testi.formatta("missioni", "NonSparateSulPianista.11"));
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("NON_SPARATE_SUL_PIANISTA_MOGLIE_1", "PARAM_BARDO", getBardo()))
+				.parlaIlCapo(ProduttoreDiMissioniCasuale.testoDellaMissione("NON_SPARATE_SUL_PIANISTA_MOGLIE_2"))
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("NON_SPARATE_SUL_PIANISTA_MOGLIE_3"))
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("NON_SPARATE_SUL_PIANISTA_MOGLIE_4", "PARAM_BARDO", getBardo()))
+				.parlaLOspite(ProduttoreDiMissioniCasuale.testoDellaMissione("NON_SPARATE_SUL_PIANISTA_MOGLIE_5"))
+				.parlaIlCapo(ProduttoreDiMissioniCasuale.testoDellaMissione("NON_SPARATE_SUL_PIANISTA_MOGLIE_6"));
 	}
 
 	private boolean isTerzaVisitaAUnaLocanda() {

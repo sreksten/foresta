@@ -10,6 +10,7 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
@@ -24,13 +25,13 @@ public class SconfiggiLIdra extends MissioneBase implements Missione {
 	}
 
     @Override
-    public String getNome() {
-        return Testi.formatta("missioni", "SconfiggiLIdra.t1");
+    protected String creaIlNome() {
+        return ProduttoreDiMissioniCasuale.testoDellaMissione("SCONFIGGI_L_IDRA_TITOLO");
     }
 
     @Override
     public String getDescrizione() {
-        return Testi.formatta("missioni", "SconfiggiLIdra.t2");
+        return ProduttoreDiMissioniCasuale.testoDellaMissione("SCONFIGGI_L_IDRA_DESCRIZIONE");
     }
 
     @Override
@@ -52,7 +53,7 @@ public class SconfiggiLIdra extends MissioneBase implements Missione {
         GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
         if (Foresta.getLocazioneDelGruppo() == TipoLocazione.CASTELLO_IDRA && RegistroMissioni.isLocazioneCompleta()) {
             completaMissione();
-            BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "SconfiggiLIdra.s1")));
+            BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("SCONFIGGI_L_IDRA_VITTORIA")));
         }
     }
 
@@ -63,6 +64,6 @@ public class SconfiggiLIdra extends MissioneBase implements Missione {
 
     @Override
     public String getRicordoDellaLocazione() {
-        return Testi.formatta("missioni", "SconfiggiLIdra.t3");
+        return ProduttoreDiMissioniCasuale.testoDellaMissione("SCONFIGGI_L_IDRA_RICORDO");
     }
 }

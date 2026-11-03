@@ -22,6 +22,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.Collections;
 import java.util.List;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Genere;
 import com.threeamigos.foresta.testi.Testi;
@@ -79,26 +80,32 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 	}
 
 	@Override
-	public String getNome() {
-		return Testi.formatta("missioni", "IlGiroDelleSetteChiese.t1");
+	protected String creaIlNome() {
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("IL_GIRO_DELLE_SETTE_CHIESE_TITOLO");
+	}
+
+	/**
+	 * Il sacerdote o la sacerdotessa, per i testi: "il sacerdote", "la sacerdotessa".
+	 */
+	private String ilSacerdote() {
+		return ProduttoreDiMissioniCasuale.testoDellaMissione(getSacerdote() == TipoPersonaggio.SACERDOTESSA ? "IL_GIRO_DELLE_SETTE_CHIESE_SACERDOTESSA" : "IL_GIRO_DELLE_SETTE_CHIESE_SACERDOTE");
 	}
 
 	@Override
 	public String getDescrizione() {
-		String cardinale = Lingue.corrente().cardinale(TEMPLI_DA_LIBERARE, Genere.MASCHILE);
 		if (isCompleta()) {
-			return Testi.formatta("missioni", "IlGiroDelleSetteChiese.t2");
+			return ProduttoreDiMissioniCasuale.testoDellaMissione("IL_GIRO_DELLE_SETTE_CHIESE_DESCRIZIONE_COMPLETA");
 		}
 		if (!isAttiva()) {
-			return Testi.formatta("missioni", "IlGiroDelleSetteChiese.t3");
+			return ProduttoreDiMissioniCasuale.testoDellaMissione("IL_GIRO_DELLE_SETTE_CHIESE_DESCRIZIONE_ATTESA");
 		}
 		int mancanti = TEMPLI_DA_LIBERARE - contaTempliRipuliti();
-		String descrizione = Testi.formatta("missioni", "IlGiroDelleSetteChiese.descrizione",
-				Testi.formatta("missioni", getSacerdote() == TipoPersonaggio.SACERDOTESSA ? "IlGiroDelleSetteChiese.laSacerdotessa" : "IlGiroDelleSetteChiese.ilSacerdote"), cardinale);
+		String descrizione = ProduttoreDiMissioniCasuale.testoDellaMissione("IL_GIRO_DELLE_SETTE_CHIESE_DESCRIZIONE", "PARAM_SACERDOTE", ilSacerdote(),
+				"PARAM_NUMERO", Lingue.corrente().cardinale(TEMPLI_DA_LIBERARE, Genere.MASCHILE));
 		if (mancanti == 1) {
-			return Testi.formatta("missioni", "IlGiroDelleSetteChiese.t4", descrizione);
+			return ProduttoreDiMissioniCasuale.testoDellaMissione("IL_GIRO_DELLE_SETTE_CHIESE_ULTIMO", "PARAM_DESCRIZIONE", descrizione);
 		}
-		return Testi.formatta("missioni", "IlGiroDelleSetteChiese.mancano", descrizione, Lingue.corrente().cardinale(mancanti, Genere.MASCHILE));
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("IL_GIRO_DELLE_SETTE_CHIESE_MANCANO", "PARAM_DESCRIZIONE", descrizione, "PARAM_MANCANTI", Lingue.corrente().cardinale(mancanti, Genere.MASCHILE));
 	}
 
 	/**
@@ -138,7 +145,7 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 		ripulisciIlTempioCorrente();
 		int ripuliti = contaTempliRipuliti();
 		if (ripuliti < TEMPLI_DA_LIBERARE) {
-			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlGiroDelleSetteChiese.s1", Lingue.corrente().cardinale(ripuliti, Genere.MASCHILE), Lingue.corrente().cardinale(TEMPLI_DA_LIBERARE, Genere.MASCHILE))));
+			BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_GIRO_DELLE_SETTE_CHIESE_TEMPIO_LIBERO", "PARAM_LIBERATI", Lingue.corrente().cardinale(ripuliti, Genere.MASCHILE), "PARAM_NUMERO", Lingue.corrente().cardinale(TEMPLI_DA_LIBERARE, Genere.MASCHILE))));
 		}
 	}
 
@@ -163,8 +170,8 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 		for (TipoIncantesimo incantesimo : INCANTESIMI_IN_DONO) {
 			gruppo.addIncantesimi(incantesimo, 1);
 		}
-		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlGiroDelleSetteChiese.s2", elencoDeiDoni())));
-		OffertaDelSacerdote.avvisaSeIlGruppoEPieno(getSacerdote() == TipoPersonaggio.SACERDOTESSA ? Testi.formatta("missioni", "IlGiroDelleSetteChiese.s3") : "il sacerdote");
+		BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_GIRO_DELLE_SETTE_CHIESE_DONI", "PARAM_DONI", elencoDeiDoni())));
+		OffertaDelSacerdote.avvisaSeIlGruppoEPieno(ilSacerdote());
 	}
 
 	/**
@@ -196,19 +203,19 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 
 	private List<PaginaIntermezzo> getPagineDellaPresentazione() {
 		boolean donna = getSacerdote() == TipoPersonaggio.SACERDOTESSA;
-		return Collections.singletonList(scenaNelTempio(Testi.formatta("missioni", "IlGiroDelleSetteChiese.s4"))
-				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, Testi.formatta("missioni", "IlGiroDelleSetteChiese.1")).daSecondo(2))
-				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, Testi.formatta("missioni", "IlGiroDelleSetteChiese.2", Testi.formatta("missioni", donna ? "IlGiroDelleSetteChiese.unaSacerdotessa" : "IlGiroDelleSetteChiese.unSacerdote"))))
-				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, Testi.formatta("missioni", "IlGiroDelleSetteChiese.3")))
-				.conBattuta(BattutaIntermezzo.di(ID_EROE, Testi.formatta("missioni", "IlGiroDelleSetteChiese.4")))
-				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, Testi.formatta("missioni", "IlGiroDelleSetteChiese.5"))));
+		return Collections.singletonList(scenaNelTempio(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_GIRO_DELLE_SETTE_CHIESE_INCONTRO_TITOLO"))
+				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, ProduttoreDiMissioniCasuale.testoDellaMissione("IL_GIRO_DELLE_SETTE_CHIESE_INCONTRO_1")).daSecondo(2))
+				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, ProduttoreDiMissioniCasuale.testoDellaMissione("IL_GIRO_DELLE_SETTE_CHIESE_INCONTRO_2", "PARAM_SACERDOTE", ProduttoreDiMissioniCasuale.testoDellaMissione(donna ? "IL_GIRO_DELLE_SETTE_CHIESE_UNA_SACERDOTESSA" : "IL_GIRO_DELLE_SETTE_CHIESE_UN_SACERDOTE"))))
+				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, ProduttoreDiMissioniCasuale.testoDellaMissione("IL_GIRO_DELLE_SETTE_CHIESE_INCONTRO_3")))
+				.conBattuta(BattutaIntermezzo.di(ID_EROE, ProduttoreDiMissioniCasuale.testoDellaMissione("IL_GIRO_DELLE_SETTE_CHIESE_INCONTRO_4")))
+				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, ProduttoreDiMissioniCasuale.testoDellaMissione("IL_GIRO_DELLE_SETTE_CHIESE_INCONTRO_5"))));
 	}
 
 	private List<PaginaIntermezzo> getPagineDelRingraziamento() {
-		return Collections.singletonList(scenaNelTempio(Testi.formatta("missioni", "IlGiroDelleSetteChiese.titoloRingraziamento"))
-				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, Testi.formatta("missioni", "IlGiroDelleSetteChiese.6")).daSecondo(2))
-				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, Testi.formatta("missioni", "IlGiroDelleSetteChiese.7", elencoDeiDoni())))
-				.conBattuta(BattutaIntermezzo.di(ID_EROE, Testi.formatta("missioni", "IlGiroDelleSetteChiese.8"))));
+		return Collections.singletonList(scenaNelTempio(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_GIRO_DELLE_SETTE_CHIESE_RINGRAZIAMENTO_TITOLO"))
+				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, ProduttoreDiMissioniCasuale.testoDellaMissione("IL_GIRO_DELLE_SETTE_CHIESE_RINGRAZIAMENTO_1")).daSecondo(2))
+				.conBattuta(BattutaIntermezzo.di(ID_SACERDOTE, ProduttoreDiMissioniCasuale.testoDellaMissione("IL_GIRO_DELLE_SETTE_CHIESE_RINGRAZIAMENTO_2", "PARAM_DONI", elencoDeiDoni())))
+				.conBattuta(BattutaIntermezzo.di(ID_EROE, ProduttoreDiMissioniCasuale.testoDellaMissione("IL_GIRO_DELLE_SETTE_CHIESE_RINGRAZIAMENTO_3"))));
 	}
 
 	@Override
@@ -237,7 +244,7 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 				// A fine locazione, subito dopo il settimo tempio (e prima della scena del ringraziamento, che si mostra dopo i controlli), non alla
 				// partenza per la locazione dopo
 				return Passo.quando(MomentoControllo.POST_LOCAZIONE, () -> true)
-						.chiediConferma(Testi.formatta("missioni", getSacerdote() == TipoPersonaggio.SACERDOTESSA ? "IlGiroDelleSetteChiese.unisciti.F" : "IlGiroDelleSetteChiese.unisciti.M"))
+						.chiediConferma(ProduttoreDiMissioniCasuale.testoDellaMissione(getSacerdote() == TipoPersonaggio.SACERDOTESSA ? "IL_GIRO_DELLE_SETTE_CHIESE_UNISCITI_F" : "IL_GIRO_DELLE_SETTE_CHIESE_UNISCITI_M"))
 						.esegui(() -> {
 							if (Passo.SI.equals(getRisposta(COMPAGNO))) {
 								OffertaDelSacerdote.accogli(getSacerdote());

@@ -10,6 +10,7 @@ import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
@@ -40,12 +41,12 @@ public class VisitaLocanda extends MissioneBase {
 
 	@Override
 	public String getNome() {
-		return Testi.formatta("missioni", "VisitaLocanda.nome", getNomeLocanda());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("VISITA_LOCANDA_TITOLO", "PARAM_LOCANDA", getNomeLocanda());
 	}
 
 	@Override
 	public String getDescrizione() {
-		return Testi.formatta("missioni", "VisitaLocanda.t1", getNomeLocanda());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("VISITA_LOCANDA_DESCRIZIONE", "PARAM_LOCANDA", getNomeLocanda());
 	}
 
 	/**
@@ -60,7 +61,7 @@ public class VisitaLocanda extends MissioneBase {
 		}
 		CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(getTipoCitta());
 		if (coordinate == null) {
-			return Testi.formatta("missioni", "VisitaLocanda.t2");
+			return ProduttoreDiMissioniCasuale.testoDellaMissione("VISITA_LOCANDA_LOCANDA_PERDUTA");
 		}
 		nome = Locande.getNome(Foresta.getLocazioneMD(coordinate));
 		if (nome != null) {
@@ -81,7 +82,7 @@ public class VisitaLocanda extends MissioneBase {
 			RegistroMissioni.segnalaLocazione(this, Foresta.getCoordinateLocazioneUnica(getTipoCitta()));
 		} else if (!isCompleta() && getTipoCitta() != null && Foresta.isCittaDistrutta(getTipoCitta())) {
 			// Distrutta la citta', la sua locanda non c'e' piu'
-			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "VisitaLocanda.s1", getNomeLocanda())));
+			BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("VISITA_LOCANDA_DISTRUTTA", "PARAM_LOCANDA", getNomeLocanda())));
 			fallisciMissione();
 		}
 	}
@@ -102,7 +103,7 @@ public class VisitaLocanda extends MissioneBase {
 		CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(tipoCitta);
 		if (coordinate != null && Foresta.getLocazioneMD(coordinate).ottieniProprieta(Locande.LOCANDA_VISITATA) != null) {
 			completaMissione();
-			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "VisitaLocanda.s2", getNome())));
+			BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("VISITA_LOCANDA_FATTA", "PARAM_NOME", getNome())));
 		}
 	}
 

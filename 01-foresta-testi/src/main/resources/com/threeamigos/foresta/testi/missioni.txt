@@ -3475,4 +3475,453 @@ IL_VIANDANTE_SALUTO
 IL_VIANDANTE_RICOMPENSA
     Il viandante vi paga le %PARAM_MONETE% monete promesse.
 
+// ---------------------------------------------------------------------------------------------
+// Non sparate sul pianista (vedi NonSparateSulPianista, storia del bardo ubriaco), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: il bardo
+// (%PARAM_BARDO%), la città dove abita (%PARAM_CITTA%, %PARAM_IN_CITTA%), la moglie (%PARAM_MOGLIE%) e le monete. «Sglord» è un nome inventato e resta com'è in ogni lingua
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+NON_SPARATE_SUL_PIANISTA_TITOLO
+    Non sparate sul pianista
+
+// La città del bardo, finché la missione non è accettata
+NON_SPARATE_SUL_PIANISTA_SUA_CITTA
+    la sua città
+
+// La scena dell'incontro, nella locanda
+NON_SPARATE_SUL_PIANISTA_INCONTRO_1
+    Ah, siete voi! Proprio voi cercavo. Vedete quello là, abbracciato al liuto sotto il tavolo?
+
+NON_SPARATE_SUL_PIANISTA_INCONTRO_2
+    È %PARAM_BARDO%, il bardo. Stasera ha preso una sbronza solenne e non si regge in piedi.
+
+NON_SPARATE_SUL_PIANISTA_INCONTRO_3
+    Abita %PARAM_IN_CITTA%, non è lontano, ma da solo non ci arriva vivo. Me lo riportereste a casa?
+
+NON_SPARATE_SUL_PIANISTA_INCONTRO_4
+    Purché non canti per tutto il viaggio.
+
+NON_SPARATE_SUL_PIANISTA_INCONTRO_5
+    Questo non ve lo posso promettere.
+
+// Il giocatore accetta
+NON_SPARATE_SUL_PIANISTA_ACCETTATO
+    %PARAM_BARDO% il bardo, che non si regge in piedi, si unisce al gruppo: va riportato a casa, %PARAM_IN_CITTA%. È così ubriaco che i mostri non si curano nemmeno di lui.
+
+// La descrizione nel diario
+NON_SPARATE_SUL_PIANISTA_DESCRIZIONE
+    %PARAM_BARDO% il bardo ha bevuto troppo: riportalo sano e salvo a casa, %PARAM_IN_CITTA%, e proteggilo per strada.
+
+// La città è distrutta
+NON_SPARATE_SUL_PIANISTA_CITTA_DISTRUTTA
+    %PARAM_CITTA% è stata distrutta: %PARAM_BARDO% non ha più una casa a cui tornare.
+
+// La scena della moglie, all'arrivo
+NON_SPARATE_SUL_PIANISTA_MOGLIE_1
+    %PARAM_BARDO%! Di nuovo in queste condizioni!
+
+NON_SPARATE_SUL_PIANISTA_MOGLIE_2
+    Lo abbiamo trovato in una locanda, abbracciato al suo liuto.
+
+NON_SPARATE_SUL_PIANISTA_MOGLIE_3
+    Grazie, viandanti. A lui ci penso io.
+
+NON_SPARATE_SUL_PIANISTA_MOGLIE_4
+    %PARAM_BARDO%, non ti basteranno tre Pozioni della Salute grandi quando avrò finito con te!
+
+NON_SPARATE_SUL_PIANISTA_MOGLIE_5
+    Qualcuno ha un boccale di Sglord?
+
+NON_SPARATE_SUL_PIANISTA_MOGLIE_6
+    (Non vorrei essere nei suoi panni.)
+
+// La ricompensa
+NON_SPARATE_SUL_PIANISTA_RICOMPENSA
+    %PARAM_MOGLIE%, la moglie di %PARAM_BARDO%, paga %PARAM_MONETE% monete e trascina il marito in casa per un orecchio.
+
+// ---------------------------------------------------------------------------------------------
+// Il viaggio della moglie (vedi IlViaggioDellaMoglie, storia del bardo), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: il bardo e la moglie
+// (%PARAM_BARDO%, %PARAM_MOGLIE%), le città di partenza e di arrivo (%PARAM_PARTENZA%, %PARAM_A_ARRIVO%, %PARAM_IN_PARTENZA%, %PARAM_ARRIVO%) e le monete
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+IL_VIAGGIO_DELLA_MOGLIE_TITOLO
+    Il viaggio di %PARAM_MOGLIE%
+
+// Il nome di una città, se non c'è
+IL_VIAGGIO_DELLA_MOGLIE_CITTA_GENERICA
+    La città
+
+// La scena del bardo, nella locanda
+IL_VIAGGIO_DELLA_MOGLIE_BARDO_1
+    Ma guarda chi si rivede! Siete voi che mi avete riportato a casa, tempo fa. Vi ringrazio, nonostante le nefaste conseguenze.
+
+IL_VIAGGIO_DELLA_MOGLIE_BARDO_2
+    Nefaste conseguenze?
+
+IL_VIAGGIO_DELLA_MOGLIE_BARDO_3
+    Mia moglie %PARAM_MOGLIE% non mi ha rivolto la parola per una settimana, e ho speso una fortuna in Pozioni della Salute.
+
+IL_VIAGGIO_DELLA_MOGLIE_BARDO_4
+    Ma sono vivo, e vi sono debitore. Anzi, visto come ve la cavate, vorrei chiedervi un altro favore.
+
+IL_VIAGGIO_DELLA_MOGLIE_BARDO_5
+    %PARAM_MOGLIE% vive %PARAM_IN_PARTENZA%, e deve raggiungere %PARAM_ARRIVO%. Le strade sono pericolose: la accompagnereste voi?
+
+IL_VIAGGIO_DELLA_MOGLIE_BARDO_6
+    Ci penseremo noi.
+
+IL_VIAGGIO_DELLA_MOGLIE_BARDO_7
+    Grazie. E, vi prego, non ditele che mi avete trovato di nuovo in una locanda.
+
+// Prima di accettare: la descrizione nel diario
+IL_VIAGGIO_DELLA_MOGLIE_DESCRIZIONE_ATTESA
+    %PARAM_BARDO% vorrebbe che il gruppo accompagnasse sua moglie %PARAM_MOGLIE% in un'altra città.
+
+// La descrizione nel diario
+IL_VIAGGIO_DELLA_MOGLIE_DESCRIZIONE
+    %PARAM_BARDO% ti ha chiesto di accompagnare sua moglie %PARAM_MOGLIE% da %PARAM_PARTENZA% %PARAM_A_ARRIVO%. Non può essere ferita: i mostri non osano toccare la moglie del bardo.
+
+// Il giocatore accetta
+IL_VIAGGIO_DELLA_MOGLIE_AFFIDATA
+    %PARAM_BARDO% vi affida sua moglie %PARAM_MOGLIE%: va accompagnata da %PARAM_PARTENZA% %PARAM_A_ARRIVO%. Nessun mostro oserà toccarla.
+
+// La città di partenza è distrutta
+IL_VIAGGIO_DELLA_MOGLIE_PARTENZA_DISTRUTTA
+    %PARAM_CITTA% è stata distrutta: %PARAM_MOGLIE% non ha più una casa da cui partire.
+
+// La moglie si unisce al gruppo
+IL_VIAGGIO_DELLA_MOGLIE_SI_UNISCE
+    %PARAM_MOGLIE% si unisce al gruppo: va accompagnata %PARAM_A_ARRIVO%.
+
+// La città di arrivo è distrutta
+IL_VIAGGIO_DELLA_MOGLIE_ARRIVO_DISTRUTTO
+    %PARAM_CITTA% è stata distrutta: %PARAM_MOGLIE% non ha più dove andare.
+
+// La scena della moglie, all'arrivo
+IL_VIAGGIO_DELLA_MOGLIE_MOGLIE_1
+    Siete voi! Mio marito %PARAM_BARDO% mi ha scritto di voi. Io sono %PARAM_MOGLIE%.
+
+IL_VIAGGIO_DELLA_MOGLIE_MOGLIE_2
+    Devo andare %PARAM_A_ARRIVO%, e da sola non mi fido delle strade.
+
+IL_VIAGGIO_DELLA_MOGLIE_MOGLIE_3
+    Con noi sarete al sicuro.
+
+IL_VIAGGIO_DELLA_MOGLIE_MOGLIE_4
+    Lo so, ho una bella sensazione. Prendo il bagaglio e la ramazza, caso mai incontrassimo mio marito.
+
+// La ricompensa
+IL_VIAGGIO_DELLA_MOGLIE_RICOMPENSA
+    %PARAM_MOGLIE% ringrazia il gruppo per averla scortata, e paga %PARAM_MONETE% monete.
+
+// ---------------------------------------------------------------------------------------------
+// Il giro delle sette chiese (vedi IlGiroDelleSetteChiese, missione principale del sacerdote), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice:
+// il sacerdote o la sacerdotessa (dalle produzioni SACERDOTE), i templi da liberare e quelli che mancano, e l'elenco dei doni
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+IL_GIRO_DELLE_SETTE_CHIESE_TITOLO
+    Il Giro delle Sette Chiese
+
+// Chi è, secondo il sesso
+IL_GIRO_DELLE_SETTE_CHIESE_SACERDOTE
+    il sacerdote
+
+IL_GIRO_DELLE_SETTE_CHIESE_SACERDOTESSA
+    la sacerdotessa
+
+IL_GIRO_DELLE_SETTE_CHIESE_UN_SACERDOTE
+    un sacerdote
+
+IL_GIRO_DELLE_SETTE_CHIESE_UNA_SACERDOTESSA
+    una sacerdotessa
+
+// La descrizione nel diario: prima di cominciare, durante (con quanti ne mancano) e alla fine
+IL_GIRO_DELLE_SETTE_CHIESE_DESCRIZIONE_ATTESA
+    Qualcuno, lassù, apprezzerebbe che un tempio infestato tornasse a essere un luogo di preghiera.
+
+IL_GIRO_DELLE_SETTE_CHIESE_DESCRIZIONE
+    Aiuta %PARAM_SACERDOTE% a liberare %PARAM_NUMERO% templi dai mostri che li infestano.
+
+IL_GIRO_DELLE_SETTE_CHIESE_ULTIMO
+    %PARAM_DESCRIZIONE% Ne manca uno.
+
+IL_GIRO_DELLE_SETTE_CHIESE_MANCANO
+    %PARAM_DESCRIZIONE% Ne mancano %PARAM_MANCANTI%.
+
+IL_GIRO_DELLE_SETTE_CHIESE_DESCRIZIONE_COMPLETA
+    Sette templi liberati dai mostri: i devoti sono tornati in pellegrinaggio.
+
+// Un tempio è libero
+IL_GIRO_DELLE_SETTE_CHIESE_TEMPIO_LIBERO
+    Il tempio è libero dai mostri: sono %PARAM_LIBERATI% su %PARAM_NUMERO%.
+
+// Il premio, dai devoti
+IL_GIRO_DELLE_SETTE_CHIESE_DONI
+    In dono dai devoti, per aiutarvi durante il vostro viaggio: %PARAM_DONI%.
+
+// La scena dell'incontro, nel primo tempio
+IL_GIRO_DELLE_SETTE_CHIESE_INCONTRO_TITOLO
+    Il tempio è libero dai mostri.
+
+IL_GIRO_DELLE_SETTE_CHIESE_INCONTRO_1
+    Siate benedetti, viandanti! Questi muri erano infestati dai mostri, e nessun devoto osava più venire a pregare.
+
+IL_GIRO_DELLE_SETTE_CHIESE_INCONTRO_2
+    Sono %PARAM_SACERDOTE% e mi prendo cura di questi luoghi sacri.
+
+IL_GIRO_DELLE_SETTE_CHIESE_INCONTRO_3
+    Altri sei templi della Foresta soffrono dello stesso male. Volete aiutarmi a liberarli?
+
+IL_GIRO_DELLE_SETTE_CHIESE_INCONTRO_4
+    Va bene, ci penseremo noi.
+
+IL_GIRO_DELLE_SETTE_CHIESE_INCONTRO_5
+    Che la Luce vi accompagni. Ogni tempio che libererete tornerà a essere un rifugio sicuro.
+
+// La scena del ringraziamento, nell'ultimo tempio
+IL_GIRO_DELLE_SETTE_CHIESE_RINGRAZIAMENTO_TITOLO
+    Sette templi liberi.
+
+IL_GIRO_DELLE_SETTE_CHIESE_RINGRAZIAMENTO_1
+    Sette templi liberi! Grazie a voi i devoti potranno tornare in pellegrinaggio.
+
+IL_GIRO_DELLE_SETTE_CHIESE_RINGRAZIAMENTO_2
+    Accettate questi doni a nome loro, per aiutarvi durante il vostro viaggio: %PARAM_DONI%.
+
+IL_GIRO_DELLE_SETTE_CHIESE_RINGRAZIAMENTO_3
+    Siamo onorati. Che la Luce vi accompagni.
+
+// Il sacerdote chiede di unirsi al gruppo
+IL_GIRO_DELLE_SETTE_CHIESE_UNISCITI_M
+    Liberato anche l'ultimo tempio, il sacerdote chiede se desiderate che si unisca a voi in pianta stabile. Accettate?
+
+IL_GIRO_DELLE_SETTE_CHIESE_UNISCITI_F
+    Liberato anche l'ultimo tempio, la sacerdotessa chiede se desiderate che si unisca a voi in pianta stabile. Accettate?
+
+// ---------------------------------------------------------------------------------------------
+// SconfiggiIlLich (missione principale, vedi la classe): titolo, descrizione, vittoria e ricordo del castello, in ordine di copione
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+SCONFIGGI_IL_LICH_TITOLO
+    Sconfiggi il Lich
+
+// La descrizione nel diario
+SCONFIGGI_IL_LICH_DESCRIZIONE
+    Il Lich, alleato per convenienza del Drago, infesta un castello e sta risvegliando i morti.
+
+// La vittoria
+SCONFIGGI_IL_LICH_VITTORIA
+    Il Lich è stato sconfitto!
+
+// Il ricordo del castello
+SCONFIGGI_IL_LICH_RICORDO
+    Qui sorgeva il castello del Lich.
+
+// ---------------------------------------------------------------------------------------------
+// SconfiggiLIdra (missione principale, vedi la classe): titolo, descrizione, vittoria e ricordo del castello, in ordine di copione
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+SCONFIGGI_L_IDRA_TITOLO
+    Sconfiggi l'Idra
+
+// La descrizione nel diario
+SCONFIGGI_L_IDRA_DESCRIZIONE
+    Una gigantesca Idra, alleata del Drago, infesta un castello e le lande adiacenti.
+
+// La vittoria
+SCONFIGGI_L_IDRA_VITTORIA
+    L'Idra è stata sconfitta!
+
+// Il ricordo del castello
+SCONFIGGI_L_IDRA_RICORDO
+    Qui sorgeva il castello dell'Idra.
+
+// ---------------------------------------------------------------------------------------------
+// SconfiggiLaStrega (missione principale, vedi la classe): titolo, descrizione, vittoria e ricordo del castello, in ordine di copione
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+SCONFIGGI_LA_STREGA_TITOLO
+    Sconfiggi la Strega
+
+// La descrizione nel diario
+SCONFIGGI_LA_STREGA_DESCRIZIONE
+    La Strega, Signora delle Arti Oscure ed alleata del Drago, ha preso possesso di un castello e sta facendo avvizzire il territorio circostante.
+
+// La vittoria
+SCONFIGGI_LA_STREGA_VITTORIA
+    La Strega è stata sconfitta!
+
+// Il ricordo del castello
+SCONFIGGI_LA_STREGA_RICORDO
+    Qui sorgeva il castello della Strega.
+
+// ---------------------------------------------------------------------------------------------
+// SconfiggiIlMinotauroGigante (missione principale, vedi la classe): titolo, descrizione, vittoria e ricordo del castello, in ordine di copione
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+SCONFIGGI_IL_MINOTAURO_GIGANTE_TITOLO
+    Sconfiggi il Minotauro Gigante
+
+// La descrizione nel diario
+SCONFIGGI_IL_MINOTAURO_GIGANTE_DESCRIZIONE
+    Il Minotauro Gigante, alleato del Drago, infesta un castello e terrorizza gli abitanti.
+
+// La vittoria
+SCONFIGGI_IL_MINOTAURO_GIGANTE_VITTORIA
+    Il Minotauro è stato sconfitto!
+
+// Il ricordo del castello
+SCONFIGGI_IL_MINOTAURO_GIGANTE_RICORDO
+    Qui sorgeva il castello del Minotauro Gigante.
+
+// ---------------------------------------------------------------------------------------------
+// Sconfiggi il Drago (missione principale finale, vedi la classe): titolo, descrizione nel diario nelle due fasi, castello rivelato, vittoria e ricordo, in ordine di copione
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+SCONFIGGI_IL_DRAGO_TITOLO
+    Sconfiggi il Drago
+
+// La descrizione nel diario: il castello è nascosto da un incantesimo, finché gli alleati non sono sconfitti
+SCONFIGGI_IL_DRAGO_DESCRIZIONE_NASCOSTO
+    La Foresta è minacciata da un temibile Drago. Il Castello dove si trova è nascosto da un incantesimo. %PARAM_CAPO% deve sconfiggere tutti i suoi alleati per poterlo affrontare!
+
+// La descrizione nel diario: il castello è aperto
+SCONFIGGI_IL_DRAGO_DESCRIZIONE_APERTO
+    La Foresta è minacciata da un temibile Drago. Occorre entrare nel suo Castello ed affrontarlo!
+
+// L'incantesimo svanisce
+SCONFIGGI_IL_DRAGO_CASTELLO_RIVELATO
+    L'incantesimo che nascondeva il castello del Drago è svanito! La missione è quasi giunta al termine!
+
+// La vittoria
+SCONFIGGI_IL_DRAGO_VITTORIA
+    Il drago è morto
+
+// Il ricordo del castello
+SCONFIGGI_IL_DRAGO_RICORDO
+    Qui sorgeva il castello del Drago.
+
+// ---------------------------------------------------------------------------------------------
+// Disturbatore della quiete pubblica (missione principale degli eremiti, vedi la classe): titolo, descrizioni e annunci. I segnaposto %PARAM_CHIAVE% li riempie il codice
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+DISTURBATORE_DELLA_QUIETE_PUBBLICA_TITOLO
+    Disturbatore della Quiete Pubblica
+
+// La frase base, dentro le altre
+DISTURBATORE_DELLA_QUIETE_PUBBLICA_DESCRIZIONE_BASE
+    Angustia %PARAM_NUMERO% Eremiti
+
+// La descrizione nel diario: all'inizio, con uno solo che manca, con più che mancano
+DISTURBATORE_DELLA_QUIETE_PUBBLICA_DESCRIZIONE_INIZIO
+    %PARAM_DESCRIZIONE%. Dieci ritiri spirituali interrotti sul nascere.
+
+DISTURBATORE_DELLA_QUIETE_PUBBLICA_DESCRIZIONE_ULTIMO
+    %PARAM_DESCRIZIONE%. Ne manca uno, e si sta già preoccupando.
+
+DISTURBATORE_DELLA_QUIETE_PUBBLICA_DESCRIZIONE_MANCANO
+    %PARAM_DESCRIZIONE%. Ne mancano %PARAM_MANCANTI%.
+
+// La missione comincia
+DISTURBATORE_DELLA_QUIETE_PUBBLICA_INIZIO
+    Nella Foresta vivono uomini che hanno scelto la solitudine dopo lunga riflessione. %PARAM_DESCRIZIONE%, e fai in modo che se ne ricordino.
+
+// Un eremita è disturbato
+DISTURBATORE_DELLA_QUIETE_PUBBLICA_TURBATA
+    La quiete del %PARAM_ORDINALE% Eremita è stata ufficialmente turbata.
+
+// La fine
+DISTURBATORE_DELLA_QUIETE_PUBBLICA_FINE
+    Dieci Eremiti su dieci confermano che la Foresta era molto più tranquilla prima. Il titolo di Disturbatore della Quiete Pubblica è meritato.
+
+// ---------------------------------------------------------------------------------------------
+// Nessun boccale lasciato indietro (missione principale delle locande, vedi la classe): titolo, descrizioni e annunci. I segnaposto %PARAM_CHIAVE% li riempie il codice
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+NESSUN_BOCCALE_LASCIATO_INDIETRO_TITOLO
+    Nessun boccale lasciato indietro
+
+// La frase base, dentro le altre
+NESSUN_BOCCALE_LASCIATO_INDIETRO_DESCRIZIONE_BASE
+    Visita %PARAM_NUMERO% locande nel mezzo della Foresta
+
+// La descrizione nel diario: all'inizio, con una sola che manca, con più che mancano
+NESSUN_BOCCALE_LASCIATO_INDIETRO_DESCRIZIONE_INIZIO
+    %PARAM_DESCRIZIONE%. Tutte e dieci, e nessun ricordo particolarmente nitido.
+
+NESSUN_BOCCALE_LASCIATO_INDIETRO_DESCRIZIONE_ULTIMA
+    %PARAM_DESCRIZIONE%. Ne manca una, e il fegato lo sa.
+
+NESSUN_BOCCALE_LASCIATO_INDIETRO_DESCRIZIONE_MANCANO
+    %PARAM_DESCRIZIONE%. Ne mancano %PARAM_MANCANTI%.
+
+// La missione comincia
+NESSUN_BOCCALE_LASCIATO_INDIETRO_INIZIO
+    Da qualche parte fra le paludi e i castelli ci sono osti che non hanno ancora conosciuto la tua sete. %PARAM_DESCRIZIONE%, e non lasciarne indietro nemmeno una.
+
+// Una locanda è censita
+NESSUN_BOCCALE_LASCIATO_INDIETRO_CENSITA
+    Locanda numero %PARAM_NUMERO% debitamente censita.
+
+// La fine
+NESSUN_BOCCALE_LASCIATO_INDIETRO_FINE
+    Dieci locande, dieci osti, un solo fegato. Nessun boccale è stato lasciato indietro, e la Foresta ha un nuovo esperto di birre a cui nessuno ha chiesto un parere.
+
+// ---------------------------------------------------------------------------------------------
+// Cronache di un fegato eroico (missione principale delle locande cittadine, vedi la classe): titolo, descrizione e annunci
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+CRONACHE_DI_UN_FEGATO_EROICO_TITOLO
+    Cronache di un Fegato Eroico
+
+// La descrizione nel diario
+CRONACHE_DI_UN_FEGATO_EROICO_DESCRIZIONE
+    Visita tutte le locande cittadine
+
+// La missione comincia
+CRONACHE_DI_UN_FEGATO_EROICO_INIZIO
+    %PARAM_DESCRIZIONE%: %PARAM_NOME% si scrive un boccale per volta.
+
+// Una locanda non esiste più
+CRONACHE_DI_UN_FEGATO_EROICO_INCOMPIUTE
+    Una delle locande cittadine non esiste più: le Cronache di un Fegato Eroico resteranno incompiute.
+
+// La fine
+CRONACHE_DI_UN_FEGATO_EROICO_COMPLETE
+    Tutte le locande cittadine della Foresta sono state visitate. Le Cronache di un Fegato Eroico sono complete: un'impresa che nessun bardo oserà mai cantare.
+
+// ---------------------------------------------------------------------------------------------
+// Visita locanda (missione principale delle locande, una per locanda, vedi la classe): titolo, descrizione e annunci. I segnaposto %PARAM_CHIAVE% li riempie il codice
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+VISITA_LOCANDA_TITOLO
+    Visita '%PARAM_LOCANDA%'
+
+// La descrizione nel diario
+VISITA_LOCANDA_DESCRIZIONE
+    Fatti servire almeno un boccale alla '%PARAM_LOCANDA%'.
+
+// La locanda non esiste più
+VISITA_LOCANDA_LOCANDA_PERDUTA
+    locanda perduta
+
+// La locanda è distrutta con la sua città
+VISITA_LOCANDA_DISTRUTTA
+    La '%PARAM_LOCANDA%' è andata distrutta con la sua città: una tappa che non si potrà più fare.
+
+// Una tappa in meno
+VISITA_LOCANDA_FATTA
+    Una tappa in meno: %PARAM_NOME% è cosa fatta.
+
 #include_static <nomi.txt>

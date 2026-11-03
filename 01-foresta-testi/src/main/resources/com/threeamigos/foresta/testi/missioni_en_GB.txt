@@ -3198,4 +3198,453 @@ IL_VIANDANTE_SALUTO
 IL_VIANDANTE_RICOMPENSA
     The wayfarer pays you the %PARAM_MONETE% promised coins.
 
+// ---------------------------------------------------------------------------------------------
+// Non sparate sul pianista (vedi NonSparateSulPianista, storia del bardo ubriaco), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: il bardo
+// (%PARAM_BARDO%), la città dove abita (%PARAM_CITTA%, %PARAM_IN_CITTA%), la moglie (%PARAM_MOGLIE%) e le monete. «Sglord» è un nome inventato e resta com'è in ogni lingua
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+NON_SPARATE_SUL_PIANISTA_TITOLO
+    Don't shoot the piano player
+
+// La città del bardo, finché la missione non è accettata
+NON_SPARATE_SUL_PIANISTA_SUA_CITTA
+    his city
+
+// La scena dell'incontro, nella locanda
+NON_SPARATE_SUL_PIANISTA_INCONTRO_1
+    Ah, it's you! You're just who I was looking for. See that one over there, hugging his lute under the table?
+
+NON_SPARATE_SUL_PIANISTA_INCONTRO_2
+    That's %PARAM_BARDO%, the bard. Tonight he got solemnly drunk and can't stand up.
+
+NON_SPARATE_SUL_PIANISTA_INCONTRO_3
+    He lives %PARAM_IN_CITTA%: it's not far, but he won't get there alive on his own. Would you take him home?
+
+NON_SPARATE_SUL_PIANISTA_INCONTRO_4
+    As long as he doesn't sing the whole way.
+
+NON_SPARATE_SUL_PIANISTA_INCONTRO_5
+    That I can't promise you.
+
+// Il giocatore accetta
+NON_SPARATE_SUL_PIANISTA_ACCETTATO
+    %PARAM_BARDO% the bard, who can't stand up, joins the party: he must be taken home, %PARAM_IN_CITTA%. He's so drunk that the monsters don't even bother with him.
+
+// La descrizione nel diario
+NON_SPARATE_SUL_PIANISTA_DESCRIZIONE
+    %PARAM_BARDO% the bard has drunk too much: bring him home safe and sound, %PARAM_IN_CITTA%, and protect him on the road.
+
+// La città è distrutta
+NON_SPARATE_SUL_PIANISTA_CITTA_DISTRUTTA
+    %PARAM_CITTA% has been destroyed: %PARAM_BARDO% no longer has a home to return to.
+
+// La scena della moglie, all'arrivo
+NON_SPARATE_SUL_PIANISTA_MOGLIE_1
+    %PARAM_BARDO%! In this state again!
+
+NON_SPARATE_SUL_PIANISTA_MOGLIE_2
+    We found him in an inn, hugging his lute.
+
+NON_SPARATE_SUL_PIANISTA_MOGLIE_3
+    Thank you, travellers. I'll deal with him.
+
+NON_SPARATE_SUL_PIANISTA_MOGLIE_4
+    %PARAM_BARDO%, three large health potions won't be enough for you when I'm done with you!
+
+NON_SPARATE_SUL_PIANISTA_MOGLIE_5
+    Anyone have a mug of Sglord?
+
+NON_SPARATE_SUL_PIANISTA_MOGLIE_6
+    (I wouldn't want to be in his shoes.)
+
+// La ricompensa
+NON_SPARATE_SUL_PIANISTA_RICOMPENSA
+    %PARAM_MOGLIE%, %PARAM_BARDO%'s wife, pays %PARAM_MONETE% coins and drags her husband home by the ear.
+
+// ---------------------------------------------------------------------------------------------
+// Il viaggio della moglie (vedi IlViaggioDellaMoglie, storia del bardo), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: il bardo e la moglie
+// (%PARAM_BARDO%, %PARAM_MOGLIE%), le città di partenza e di arrivo (%PARAM_PARTENZA%, %PARAM_A_ARRIVO%, %PARAM_IN_PARTENZA%, %PARAM_ARRIVO%) e le monete
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+IL_VIAGGIO_DELLA_MOGLIE_TITOLO
+    %PARAM_MOGLIE%'s journey
+
+// Il nome di una città, se non c'è
+IL_VIAGGIO_DELLA_MOGLIE_CITTA_GENERICA
+    The city
+
+// La scena del bardo, nella locanda
+IL_VIAGGIO_DELLA_MOGLIE_BARDO_1
+    Look who's here! You're the ones who brought me home, some time ago. Thanks, despite the dire consequences.
+
+IL_VIAGGIO_DELLA_MOGLIE_BARDO_2
+    Dire consequences?
+
+IL_VIAGGIO_DELLA_MOGLIE_BARDO_3
+    My wife %PARAM_MOGLIE% didn't speak to me for a week, and I spent a fortune on health potions.
+
+IL_VIAGGIO_DELLA_MOGLIE_BARDO_4
+    But I'm alive, and I'm in your debt. In fact, seeing how well you manage, I'd like to ask you another favour.
+
+IL_VIAGGIO_DELLA_MOGLIE_BARDO_5
+    %PARAM_MOGLIE% lives %PARAM_IN_PARTENZA%, and must reach %PARAM_ARRIVO%. The roads are dangerous: would you accompany her?
+
+IL_VIAGGIO_DELLA_MOGLIE_BARDO_6
+    We'll take care of it.
+
+IL_VIAGGIO_DELLA_MOGLIE_BARDO_7
+    Thank you. And please, don't tell her you found me in an inn again.
+
+// Prima di accettare: la descrizione nel diario
+IL_VIAGGIO_DELLA_MOGLIE_DESCRIZIONE_ATTESA
+    %PARAM_BARDO% would like the party to escort his wife %PARAM_MOGLIE% to another city.
+
+// La descrizione nel diario
+IL_VIAGGIO_DELLA_MOGLIE_DESCRIZIONE
+    %PARAM_BARDO% has asked you to escort his wife %PARAM_MOGLIE% from %PARAM_PARTENZA% %PARAM_A_ARRIVO%. She can't be hurt: monsters don't dare touch the bard's wife.
+
+// Il giocatore accetta
+IL_VIAGGIO_DELLA_MOGLIE_AFFIDATA
+    %PARAM_BARDO% asks you to look after his wife %PARAM_MOGLIE%: she must be escorted from %PARAM_PARTENZA% %PARAM_A_ARRIVO%. No monster will dare touch her.
+
+// La città di partenza è distrutta
+IL_VIAGGIO_DELLA_MOGLIE_PARTENZA_DISTRUTTA
+    %PARAM_CITTA% has been destroyed: %PARAM_MOGLIE% no longer has a home to leave from.
+
+// La moglie si unisce al gruppo
+IL_VIAGGIO_DELLA_MOGLIE_SI_UNISCE
+    %PARAM_MOGLIE% joins the party: she must be escorted %PARAM_A_ARRIVO%.
+
+// La città di arrivo è distrutta
+IL_VIAGGIO_DELLA_MOGLIE_ARRIVO_DISTRUTTO
+    %PARAM_CITTA% has been destroyed: %PARAM_MOGLIE% no longer has anywhere to go.
+
+// La scena della moglie, all'arrivo
+IL_VIAGGIO_DELLA_MOGLIE_MOGLIE_1
+    It's you! My husband %PARAM_BARDO% wrote to me about you. I'm %PARAM_MOGLIE%.
+
+IL_VIAGGIO_DELLA_MOGLIE_MOGLIE_2
+    I must go %PARAM_A_ARRIVO%, and I don't trust the roads alone.
+
+IL_VIAGGIO_DELLA_MOGLIE_MOGLIE_3
+    You'll be safe with us.
+
+IL_VIAGGIO_DELLA_MOGLIE_MOGLIE_4
+    I know, I have a good feeling. I'll take my luggage and the broom, in case we meet my husband.
+
+// La ricompensa
+IL_VIAGGIO_DELLA_MOGLIE_RICOMPENSA
+    %PARAM_MOGLIE% thanks the party for escorting her, and pays %PARAM_MONETE% coins.
+
+// ---------------------------------------------------------------------------------------------
+// Il giro delle sette chiese (vedi IlGiroDelleSetteChiese, missione principale del sacerdote), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice:
+// il sacerdote o la sacerdotessa (dalle produzioni SACERDOTE), i templi da liberare e quelli che mancano, e l'elenco dei doni
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+IL_GIRO_DELLE_SETTE_CHIESE_TITOLO
+    The Tour of the Seven Churches
+
+// Chi è, secondo il sesso
+IL_GIRO_DELLE_SETTE_CHIESE_SACERDOTE
+    the priest
+
+IL_GIRO_DELLE_SETTE_CHIESE_SACERDOTESSA
+    the priestess
+
+IL_GIRO_DELLE_SETTE_CHIESE_UN_SACERDOTE
+    a priest
+
+IL_GIRO_DELLE_SETTE_CHIESE_UNA_SACERDOTESSA
+    a priestess
+
+// La descrizione nel diario: prima di cominciare, durante (con quanti ne mancano) e alla fine
+IL_GIRO_DELLE_SETTE_CHIESE_DESCRIZIONE_ATTESA
+    Someone up there would appreciate it if an infested temple became a place of prayer again.
+
+IL_GIRO_DELLE_SETTE_CHIESE_DESCRIZIONE
+    Help %PARAM_SACERDOTE% free %PARAM_NUMERO% temples from the monsters that infest them.
+
+IL_GIRO_DELLE_SETTE_CHIESE_ULTIMO
+    %PARAM_DESCRIZIONE% One is missing.
+
+IL_GIRO_DELLE_SETTE_CHIESE_MANCANO
+    %PARAM_DESCRIZIONE% Only %PARAM_MANCANTI% to go.
+
+IL_GIRO_DELLE_SETTE_CHIESE_DESCRIZIONE_COMPLETA
+    Seven temples freed of monsters: the worshippers have returned on pilgrimage.
+
+// Un tempio è libero
+IL_GIRO_DELLE_SETTE_CHIESE_TEMPIO_LIBERO
+    The temple is free of monsters: %PARAM_LIBERATI% out of %PARAM_NUMERO%.
+
+// Il premio, dai devoti
+IL_GIRO_DELLE_SETTE_CHIESE_DONI
+    A gift from the worshippers, to help you on your journey: %PARAM_DONI%.
+
+// La scena dell'incontro, nel primo tempio
+IL_GIRO_DELLE_SETTE_CHIESE_INCONTRO_TITOLO
+    The temple is free of monsters.
+
+IL_GIRO_DELLE_SETTE_CHIESE_INCONTRO_1
+    Blessed be you, travellers! These walls were infested with monsters, and no worshipper dared come to pray any more.
+
+IL_GIRO_DELLE_SETTE_CHIESE_INCONTRO_2
+    I'm %PARAM_SACERDOTE% and I look after these holy places.
+
+IL_GIRO_DELLE_SETTE_CHIESE_INCONTRO_3
+    Six other temples of the Forest suffer from the same evil. Will you help me free them?
+
+IL_GIRO_DELLE_SETTE_CHIESE_INCONTRO_4
+    All right, we'll take care of it.
+
+IL_GIRO_DELLE_SETTE_CHIESE_INCONTRO_5
+    May the Light go with you. Every temple you free will be a safe refuge again.
+
+// La scena del ringraziamento, nell'ultimo tempio
+IL_GIRO_DELLE_SETTE_CHIESE_RINGRAZIAMENTO_TITOLO
+    Seven free temples.
+
+IL_GIRO_DELLE_SETTE_CHIESE_RINGRAZIAMENTO_1
+    Seven temples freed! Thanks to you the worshippers can return on pilgrimage.
+
+IL_GIRO_DELLE_SETTE_CHIESE_RINGRAZIAMENTO_2
+    Accept these gifts on their behalf, to help you on your journey: %PARAM_DONI%.
+
+IL_GIRO_DELLE_SETTE_CHIESE_RINGRAZIAMENTO_3
+    We're honoured. May the Light go with you.
+
+// Il sacerdote chiede di unirsi al gruppo
+IL_GIRO_DELLE_SETTE_CHIESE_UNISCITI_M
+    With the last temple freed too, the priest asks whether you would like him to join you permanently. Do you accept?
+
+IL_GIRO_DELLE_SETTE_CHIESE_UNISCITI_F
+    With the last temple freed too, the priestess asks whether you would like her to join you permanently. Do you accept?
+
+// ---------------------------------------------------------------------------------------------
+// SconfiggiIlLich (missione principale, vedi la classe): titolo, descrizione, vittoria e ricordo del castello, in ordine di copione
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+SCONFIGGI_IL_LICH_TITOLO
+    Defeat the Lich
+
+// La descrizione nel diario
+SCONFIGGI_IL_LICH_DESCRIZIONE
+    The Lich, an ally of convenience of the Dragon, infests a castle and is raising the dead.
+
+// La vittoria
+SCONFIGGI_IL_LICH_VITTORIA
+    The Lich has been defeated!
+
+// Il ricordo del castello
+SCONFIGGI_IL_LICH_RICORDO
+    Here stood the Lich's castle.
+
+// ---------------------------------------------------------------------------------------------
+// SconfiggiLIdra (missione principale, vedi la classe): titolo, descrizione, vittoria e ricordo del castello, in ordine di copione
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+SCONFIGGI_L_IDRA_TITOLO
+    Defeat the Hydra
+
+// La descrizione nel diario
+SCONFIGGI_L_IDRA_DESCRIZIONE
+    A gigantic Hydra, an ally of the Dragon, infests a castle and the surrounding lands.
+
+// La vittoria
+SCONFIGGI_L_IDRA_VITTORIA
+    The Hydra has been defeated!
+
+// Il ricordo del castello
+SCONFIGGI_L_IDRA_RICORDO
+    Here stood the Hydra's castle.
+
+// ---------------------------------------------------------------------------------------------
+// SconfiggiLaStrega (missione principale, vedi la classe): titolo, descrizione, vittoria e ricordo del castello, in ordine di copione
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+SCONFIGGI_LA_STREGA_TITOLO
+    Defeat the Witch
+
+// La descrizione nel diario
+SCONFIGGI_LA_STREGA_DESCRIZIONE
+    The Witch, Lady of the Dark Arts and ally of the Dragon, has taken possession of a castle and is withering the surrounding land.
+
+// La vittoria
+SCONFIGGI_LA_STREGA_VITTORIA
+    The Witch has been defeated!
+
+// Il ricordo del castello
+SCONFIGGI_LA_STREGA_RICORDO
+    Here stood the Witch's castle.
+
+// ---------------------------------------------------------------------------------------------
+// SconfiggiIlMinotauroGigante (missione principale, vedi la classe): titolo, descrizione, vittoria e ricordo del castello, in ordine di copione
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+SCONFIGGI_IL_MINOTAURO_GIGANTE_TITOLO
+    Defeat the Giant Minotaur
+
+// La descrizione nel diario
+SCONFIGGI_IL_MINOTAURO_GIGANTE_DESCRIZIONE
+    The Giant Minotaur, an ally of the Dragon, infests a castle and terrorises the inhabitants.
+
+// La vittoria
+SCONFIGGI_IL_MINOTAURO_GIGANTE_VITTORIA
+    The Minotaur has been defeated!
+
+// Il ricordo del castello
+SCONFIGGI_IL_MINOTAURO_GIGANTE_RICORDO
+    Here stood the Giant Minotaur's castle.
+
+// ---------------------------------------------------------------------------------------------
+// Sconfiggi il Drago (missione principale finale, vedi la classe): titolo, descrizione nel diario nelle due fasi, castello rivelato, vittoria e ricordo, in ordine di copione
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+SCONFIGGI_IL_DRAGO_TITOLO
+    Defeat the Dragon
+
+// La descrizione nel diario: il castello è nascosto da un incantesimo, finché gli alleati non sono sconfitti
+SCONFIGGI_IL_DRAGO_DESCRIZIONE_NASCOSTO
+    The Forest is threatened by a fearsome Dragon. The Castle where it lives is hidden by a spell. %PARAM_CAPO% must defeat all its allies in order to face it!
+
+// La descrizione nel diario: il castello è aperto
+SCONFIGGI_IL_DRAGO_DESCRIZIONE_APERTO
+    The Forest is threatened by a fearsome Dragon. You must enter its Castle and face it!
+
+// L'incantesimo svanisce
+SCONFIGGI_IL_DRAGO_CASTELLO_RIVELATO
+    The spell that hid the Dragon's castle has vanished! The quest is almost at an end!
+
+// La vittoria
+SCONFIGGI_IL_DRAGO_VITTORIA
+    The dragon is dead
+
+// Il ricordo del castello
+SCONFIGGI_IL_DRAGO_RICORDO
+    Here stood the Dragon's castle.
+
+// ---------------------------------------------------------------------------------------------
+// Disturbatore della quiete pubblica (missione principale degli eremiti, vedi la classe): titolo, descrizioni e annunci. I segnaposto %PARAM_CHIAVE% li riempie il codice
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+DISTURBATORE_DELLA_QUIETE_PUBBLICA_TITOLO
+    Public Peace Disturber
+
+// La frase base, dentro le altre
+DISTURBATORE_DELLA_QUIETE_PUBBLICA_DESCRIZIONE_BASE
+    Pester %PARAM_NUMERO% Hermits
+
+// La descrizione nel diario: all'inizio, con uno solo che manca, con più che mancano
+DISTURBATORE_DELLA_QUIETE_PUBBLICA_DESCRIZIONE_INIZIO
+    %PARAM_DESCRIZIONE%. Ten spiritual retreats cut short.
+
+DISTURBATORE_DELLA_QUIETE_PUBBLICA_DESCRIZIONE_ULTIMO
+    %PARAM_DESCRIZIONE%. One is missing, and already worried.
+
+DISTURBATORE_DELLA_QUIETE_PUBBLICA_DESCRIZIONE_MANCANO
+    %PARAM_DESCRIZIONE%. Only %PARAM_MANCANTI% to go.
+
+// La missione comincia
+DISTURBATORE_DELLA_QUIETE_PUBBLICA_INIZIO
+    In the Forest live men who chose solitude after long reflection. %PARAM_DESCRIZIONE%, and make sure they remember it.
+
+// Un eremita è disturbato
+DISTURBATORE_DELLA_QUIETE_PUBBLICA_TURBATA
+    The peace of the %PARAM_ORDINALE% Hermit has been officially disturbed.
+
+// La fine
+DISTURBATORE_DELLA_QUIETE_PUBBLICA_FINE
+    Ten Hermits out of ten confirm that the Forest was much quieter before. The title of Public Peace Disturber is well deserved.
+
+// ---------------------------------------------------------------------------------------------
+// Nessun boccale lasciato indietro (missione principale delle locande, vedi la classe): titolo, descrizioni e annunci. I segnaposto %PARAM_CHIAVE% li riempie il codice
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+NESSUN_BOCCALE_LASCIATO_INDIETRO_TITOLO
+    No mug left behind
+
+// La frase base, dentro le altre
+NESSUN_BOCCALE_LASCIATO_INDIETRO_DESCRIZIONE_BASE
+    Visit %PARAM_NUMERO% inns in the middle of the Forest
+
+// La descrizione nel diario: all'inizio, con una sola che manca, con più che mancano
+NESSUN_BOCCALE_LASCIATO_INDIETRO_DESCRIZIONE_INIZIO
+    %PARAM_DESCRIZIONE%. All ten, and no particularly clear memory.
+
+NESSUN_BOCCALE_LASCIATO_INDIETRO_DESCRIZIONE_ULTIMA
+    %PARAM_DESCRIZIONE%. One is missing, and the liver knows it.
+
+NESSUN_BOCCALE_LASCIATO_INDIETRO_DESCRIZIONE_MANCANO
+    %PARAM_DESCRIZIONE%. Only %PARAM_MANCANTI% to go.
+
+// La missione comincia
+NESSUN_BOCCALE_LASCIATO_INDIETRO_INIZIO
+    Somewhere between the swamps and the castles there are innkeepers who haven't yet met your thirst. %PARAM_DESCRIZIONE%, and don't leave a single one behind.
+
+// Una locanda è censita
+NESSUN_BOCCALE_LASCIATO_INDIETRO_CENSITA
+    Inn number %PARAM_NUMERO% duly recorded.
+
+// La fine
+NESSUN_BOCCALE_LASCIATO_INDIETRO_FINE
+    Ten inns, ten innkeepers, one liver. No mug was left behind, and the Forest has a new beer expert whom no one asked for an opinion.
+
+// ---------------------------------------------------------------------------------------------
+// Cronache di un fegato eroico (missione principale delle locande cittadine, vedi la classe): titolo, descrizione e annunci
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+CRONACHE_DI_UN_FEGATO_EROICO_TITOLO
+    Chronicles of a Heroic Liver
+
+// La descrizione nel diario
+CRONACHE_DI_UN_FEGATO_EROICO_DESCRIZIONE
+    Visit all the city inns
+
+// La missione comincia
+CRONACHE_DI_UN_FEGATO_EROICO_INIZIO
+    %PARAM_DESCRIZIONE%: %PARAM_NOME% is written one mug at a time.
+
+// Una locanda non esiste più
+CRONACHE_DI_UN_FEGATO_EROICO_INCOMPIUTE
+    One of the city inns no longer exists: the Chronicles of a Heroic Liver will remain unfinished.
+
+// La fine
+CRONACHE_DI_UN_FEGATO_EROICO_COMPLETE
+    All the city inns of the Forest have been visited. The Chronicles of a Heroic Liver are complete: a feat that no bard will ever dare sing.
+
+// ---------------------------------------------------------------------------------------------
+// Visita locanda (missione principale delle locande, una per locanda, vedi la classe): titolo, descrizione e annunci. I segnaposto %PARAM_CHIAVE% li riempie il codice
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+VISITA_LOCANDA_TITOLO
+    Visit “%PARAM_LOCANDA%”
+
+// La descrizione nel diario
+VISITA_LOCANDA_DESCRIZIONE
+    Have at least one mug served at “%PARAM_LOCANDA%”.
+
+// La locanda non esiste più
+VISITA_LOCANDA_LOCANDA_PERDUTA
+    lost inn
+
+// La locanda è distrutta con la sua città
+VISITA_LOCANDA_DISTRUTTA
+    “%PARAM_LOCANDA%” was destroyed along with its city: a stage that can no longer be completed.
+
+// Una tappa in meno
+VISITA_LOCANDA_FATTA
+    One stage down: %PARAM_NOME% is done.
+
 #include_static <nomi_en_GB.txt>

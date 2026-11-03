@@ -8,6 +8,7 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Genere;
 import com.threeamigos.foresta.testi.Testi;
@@ -22,7 +23,7 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 	private static final int LOCANDE_DA_VISITARE = 10;
 
 	private static String descrizioneBase() {
-		return Testi.formatta("missioni", "NessunBoccaleLasciatoIndietro.descrizioneBase", Lingue.corrente().cardinale(LOCANDE_DA_VISITARE, Genere.MASCHILE));
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("NESSUN_BOCCALE_LASCIATO_INDIETRO_DESCRIZIONE_BASE", "PARAM_NUMERO", Lingue.corrente().cardinale(LOCANDE_DA_VISITARE, Genere.MASCHILE));
 	}
 	// Quante tappe sono già state annunciate: le caselle sanno quali locande
 	// sono state visitate, questo serve solo a non ripetere l'annuncio
@@ -33,23 +34,23 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 	}
 
 	@Override
-	public String getNome() {
-		return Testi.formatta("missioni", "NessunBoccaleLasciatoIndietro.t1");
+	protected String creaIlNome() {
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("NESSUN_BOCCALE_LASCIATO_INDIETRO_TITOLO");
 	}
 
 	@Override
 	public String getDescrizione() {
 		if (isCompleta()) {
-			return Testi.formatta("missioni", "NessunBoccaleLasciatoIndietro.t2", descrizioneBase());
+			return ProduttoreDiMissioniCasuale.testoDellaMissione("NESSUN_BOCCALE_LASCIATO_INDIETRO_DESCRIZIONE_INIZIO", "PARAM_DESCRIZIONE", descrizioneBase());
 		}
 		int mancanti = LOCANDE_DA_VISITARE - contaLocandeVisitate();
 		if (mancanti == 1) {
-			return Testi.formatta("missioni", "NessunBoccaleLasciatoIndietro.t3", descrizioneBase());
+			return ProduttoreDiMissioniCasuale.testoDellaMissione("NESSUN_BOCCALE_LASCIATO_INDIETRO_DESCRIZIONE_ULTIMA", "PARAM_DESCRIZIONE", descrizioneBase());
 		}
 		if (mancanti == LOCANDE_DA_VISITARE) {
 			return descrizioneBase() + ".";
 		} else {
-			return Testi.formatta("missioni", "NessunBoccaleLasciatoIndietro.t4", descrizioneBase(), Lingue.corrente().cardinale(mancanti, Genere.MASCHILE), '.');
+			return ProduttoreDiMissioniCasuale.testoDellaMissione("NESSUN_BOCCALE_LASCIATO_INDIETRO_DESCRIZIONE_MANCANO", "PARAM_DESCRIZIONE", descrizioneBase(), "PARAM_MANCANTI", Lingue.corrente().cardinale(mancanti, Genere.MASCHILE));
 		}
 	}
 
@@ -66,7 +67,7 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 	public void controllaPostLocazione() {
 		// Il giocatore inizia sempre nel bosco, non può essere in una locanda alla fine del primo turno
 		if (!isCompleta() && !isAttiva()) {
-			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "NessunBoccaleLasciatoIndietro.s1", descrizioneBase())));
+			BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("NESSUN_BOCCALE_LASCIATO_INDIETRO_INIZIO", "PARAM_DESCRIZIONE", descrizioneBase())));
 			attivaMissione();
 			return;
 		}
@@ -81,9 +82,9 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 		aggiungiProprieta(LOCANDE_CENSITE, String.valueOf(visitate));
 		if (visitate >= LOCANDE_DA_VISITARE) {
 			completaMissione();
-			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "NessunBoccaleLasciatoIndietro.s2")));
+			BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("NESSUN_BOCCALE_LASCIATO_INDIETRO_FINE")));
 		} else {
-			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "NessunBoccaleLasciatoIndietro.censita", Lingue.corrente().cardinale(visitate, Genere.MASCHILE))));
+			BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("NESSUN_BOCCALE_LASCIATO_INDIETRO_CENSITA", "PARAM_NUMERO", Lingue.corrente().cardinale(visitate, Genere.MASCHILE))));
 		}
 	}
 

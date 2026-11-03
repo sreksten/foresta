@@ -13,6 +13,7 @@ import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
@@ -32,22 +33,17 @@ public class SconfiggiIlDrago extends MissioneBase implements Missione {
 	private static final String DRAGO_APPARSO = "DRAGO_APPARSO";
 
 	@Override
-	public String getNome() {
-		return Testi.formatta("missioni", "SconfiggiIlDrago.t1");
+	protected String creaIlNome() {
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("SCONFIGGI_IL_DRAGO_TITOLO");
 	}
 
 	@Override
 	public String getDescrizione() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(Testi.formatta("missioni", "SconfiggiIlDrago.s1"));
 		if (isDragoNonApparso()) {
-			sb.append(Testi.formatta("missioni", "SconfiggiIlDrago.s2"));
-			sb.append(GruppoGiocatore.getIstanza().getCapo().getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
-			sb.append(Testi.formatta("missioni", "SconfiggiIlDrago.s3"));			
-		} else {
-			sb.append(Testi.formatta("missioni", "SconfiggiIlDrago.s4"));
+			return ProduttoreDiMissioniCasuale.testoDellaMissione("SCONFIGGI_IL_DRAGO_DESCRIZIONE_NASCOSTO", "PARAM_CAPO",
+					GruppoGiocatore.getIstanza().getCapo().getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
 		}
-		return sb.toString();
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("SCONFIGGI_IL_DRAGO_DESCRIZIONE_APERTO");
 	}
 
 	@Override
@@ -69,14 +65,14 @@ public class SconfiggiIlDrago extends MissioneBase implements Missione {
 			// Come gli altri castelli, anche quello del Drago sorge su un bosco rivendicato dalla missione; se non ce
 			// n'è nessuno libero si riprova alla fine della prossima locazione
 			if (RegistroMissioni.rivendicaPerLocazioneUnica(TipoLocazione.CASTELLO_DRAGO, TipoLocazione.BOSCO, this) != null) {
-				BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "SconfiggiIlDrago.s5")));
+				BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("SCONFIGGI_IL_DRAGO_CASTELLO_RIVELATO")));
 				setDragoApparso();
 			}
 		} else {
 			GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 			if (Foresta.getLocazioneDelGruppo() == TipoLocazione.CASTELLO_DRAGO && RegistroMissioni.isLocazioneCompleta()) {
 				completaMissione();
-				BusEventi.pubblica(new NotificaGlobale("Vittoria", Testi.formatta("missioni", "SconfiggiIlDrago.s6")));
+				BusEventi.pubblica(new NotificaGlobale("Vittoria", ProduttoreDiMissioniCasuale.testoDellaMissione("SCONFIGGI_IL_DRAGO_VITTORIA")));
 				LineaTemporale.setGiocoFinito(true);
 			}
 		}
@@ -107,6 +103,6 @@ public class SconfiggiIlDrago extends MissioneBase implements Missione {
 
 	@Override
 	public String getRicordoDellaLocazione() {
-		return Testi.formatta("missioni", "SconfiggiIlDrago.t2");
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("SCONFIGGI_IL_DRAGO_RICORDO");
 	}
 }

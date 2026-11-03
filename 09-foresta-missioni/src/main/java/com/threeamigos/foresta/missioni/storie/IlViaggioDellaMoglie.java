@@ -27,6 +27,7 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.testi.Testi;
@@ -85,16 +86,35 @@ public class IlViaggioDellaMoglie extends MissioneAPassi {
 	}
 
 	@Override
-	public String getNome() {
-		return Testi.formatta("missioni", "IlViaggioDellaMoglie.t1", getMoglie());
+	protected String creaIlNome() {
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIAGGIO_DELLA_MOGLIE_TITOLO", "PARAM_MOGLIE", getMoglie());
 	}
 
 	@Override
 	public String getDescrizione() {
+		return descrizioneDalModello();
+	}
+
+	@Override
+	protected String produzioneDellaDescrizione(String passo) {
+		return getCittaDiPartenza() == null || getCittaDiArrivo() == null ? "IL_VIAGGIO_DELLA_MOGLIE_DESCRIZIONE_ATTESA" : "IL_VIAGGIO_DELLA_MOGLIE_DESCRIZIONE";
+	}
+
+	@Override
+	protected Object[] valoriStabiliDellaDescrizione() {
+		return valori();
+	}
+
+	/**
+	 * Tutti i segnaposto dei testi della storia: il bardo e la moglie e, quando le città sono scelte, la partenza e l'arrivo e le monete.
+	 * Senza "private" per i test.
+	 */
+	Object[] valori() {
 		if (getCittaDiPartenza() == null || getCittaDiArrivo() == null) {
-			return Testi.formatta("missioni", "IlViaggioDellaMoglie.t2", getBardo(), getMoglie());
+			return new Object[] {"PARAM_BARDO", getBardo(), "PARAM_MOGLIE", getMoglie()};
 		}
-		return Testi.formatta("missioni", "IlViaggioDellaMoglie.t3", getBardo(), getMoglie(), getCittaDiPartenza().getNomeDellaCitta(), Lingue.corrente().conPreposizione(Preposizione.A, getCittaDiArrivo().getNomeProprio()));
+		return new Object[] {"PARAM_BARDO", getBardo(), "PARAM_MOGLIE", getMoglie(), "PARAM_PARTENZA", getCittaDiPartenza().getNomeDellaCitta(),
+				"PARAM_A_ARRIVO", Lingue.corrente().conPreposizione(Preposizione.A, getCittaDiArrivo().getNomeProprio()), "PARAM_MONETE", getRicompensa()};
 	}
 
 	@Override
@@ -147,29 +167,29 @@ public class IlViaggioDellaMoglie extends MissioneAPassi {
 							aggiungiProprieta(LIVELLO_DELL_INCARICO, String.valueOf(Statistiche.getLivello()));
 							Foresta.setLocazioneConosciuta(Foresta.getCoordinateLocazioneUnica(getCittaDiPartenza()));
 							Foresta.setLocazioneConosciuta(Foresta.getCoordinateLocazioneUnica(getCittaDiArrivo()));
-							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlViaggioDellaMoglie.s1", getBardo(), getMoglie(), getCittaDiPartenza().getNomeDellaCitta(), Lingue.corrente().conPreposizione(Preposizione.A, getCittaDiArrivo().getNomeProprio()))));
+							BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIAGGIO_DELLA_MOGLIE_AFFIDATA", valori())));
 							attivaMissione();
 						})
 						.poi(PRELEVAMENTO);
 			case PRELEVAMENTO:
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> Foresta.getLocazioneDelGruppo() == getCittaDiPartenza())
 						.segnala(() -> Foresta.getCoordinateLocazioneUnica(getCittaDiPartenza()))
-						.falliscoSe(() -> isCittaDistrutta(getCittaDiPartenza()), () ->Testi.formatta("missioni", "IlViaggioDellaMoglie.s2", getNomeCitta(getCittaDiPartenza()), getMoglie()))
+						.falliscoSe(() -> isCittaDistrutta(getCittaDiPartenza()), () ->ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIAGGIO_DELLA_MOGLIE_PARTENZA_DISTRUTTA", "PARAM_CITTA", getNomeCitta(getCittaDiPartenza()), "PARAM_MOGLIE", getMoglie()))
 						.conIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, () -> scenaDellaMoglie().getPagine())
 						.poi(PARTENZA);
 			case PARTENZA:
 				return prendiInScorta(MomentoControllo.IN_LOCAZIONE, () -> Foresta.getLocazioneDelGruppo() == getCittaDiPartenza(),
 								() -> RegistroPersonaggi.costruisciPersonaggio(RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO),
 										EquipaggiamentoIniziale.livelloCasuale(Statistiche.getLivello())), false)
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlViaggioDellaMoglie.s3", getMoglie(), Lingue.corrente().conPreposizione(Preposizione.A, getCittaDiArrivo().getNomeProprio())))))
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIAGGIO_DELLA_MOGLIE_SI_UNISCE", valori()))))
 						.poi(VIAGGIO);
 			case VIAGGIO:
 				return scorta(MomentoControllo.PRE_LOCAZIONE, () -> Foresta.getCoordinateLocazioneUnica(getCittaDiArrivo()), false)
-						.falliscoSe(() -> isCittaDistrutta(getCittaDiArrivo()), () ->Testi.formatta("missioni", "IlViaggioDellaMoglie.s4", getNomeCitta(getCittaDiArrivo()), getMoglie()))
+						.falliscoSe(() -> isCittaDistrutta(getCittaDiArrivo()), () ->ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIAGGIO_DELLA_MOGLIE_ARRIVO_DISTRUTTO", "PARAM_CITTA", getNomeCitta(getCittaDiArrivo()), "PARAM_MOGLIE", getMoglie()))
 						.poi(ARRIVO);
 			case ARRIVO:
 				return ricompensa(MomentoControllo.IN_LOCAZIONE, getRicompensa(),
-								() ->Testi.formatta("missioni", "IlViaggioDellaMoglie.s5", getMoglie(), getRicompensa()))
+								() ->ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIAGGIO_DELLA_MOGLIE_RICOMPENSA", "PARAM_MOGLIE", getMoglie(), "PARAM_MONETE", getRicompensa()))
 						.poi(Passo.FINE);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
@@ -188,21 +208,21 @@ public class IlViaggioDellaMoglie extends MissioneAPassi {
 		TipoLocazione partenza = getCittaDiPartenza();
 		TipoLocazione arrivo = getCittaDiArrivo();
 		return ScenaInLocanda.conBardo()
-				.parlaIlBardo(Testi.formatta("missioni", "IlViaggioDellaMoglie.1"))
-				.parlaIlCapo(Testi.formatta("missioni", "IlViaggioDellaMoglie.2"))
-				.parlaIlBardo(Testi.formatta("missioni", "IlViaggioDellaMoglie.3", getMoglie()))
-				.parlaIlBardo(Testi.formatta("missioni", "IlViaggioDellaMoglie.4"))
-				.parlaIlBardo(Testi.formatta("missioni", "IlViaggioDellaMoglie.5", getMoglie(), Lingue.corrente().conPreposizione(Preposizione.IN, partenza.getNomeProprio()), arrivo.getNomeProprio()))
-				.parlaIlCapo(Testi.formatta("missioni", "IlViaggioDellaMoglie.6"))
-				.parlaIlBardo(Testi.formatta("missioni", "IlViaggioDellaMoglie.7"));
+				.parlaIlBardo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIAGGIO_DELLA_MOGLIE_BARDO_1"))
+				.parlaIlCapo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIAGGIO_DELLA_MOGLIE_BARDO_2"))
+				.parlaIlBardo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIAGGIO_DELLA_MOGLIE_BARDO_3", "PARAM_MOGLIE", getMoglie()))
+				.parlaIlBardo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIAGGIO_DELLA_MOGLIE_BARDO_4"))
+				.parlaIlBardo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIAGGIO_DELLA_MOGLIE_BARDO_5", "PARAM_MOGLIE", getMoglie(), "PARAM_IN_PARTENZA", Lingue.corrente().conPreposizione(Preposizione.IN, partenza.getNomeProprio()), "PARAM_ARRIVO", arrivo.getNomeProprio()))
+				.parlaIlCapo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIAGGIO_DELLA_MOGLIE_BARDO_6"))
+				.parlaIlBardo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIAGGIO_DELLA_MOGLIE_BARDO_7"));
 	}
 
 	private ScenaInCitta scenaDellaMoglie() {
 		return ScenaInCitta.conMoglieDelBardo()
-				.parlaIlMandante(Testi.formatta("missioni", "IlViaggioDellaMoglie.8", getBardo(), getMoglie()))
-				.parlaIlMandante(Testi.formatta("missioni", "IlViaggioDellaMoglie.9", Lingue.corrente().conPreposizione(Preposizione.A, getCittaDiArrivo().getNomeProprio())))
-				.parlaIlCapo(Testi.formatta("missioni", "IlViaggioDellaMoglie.10"))
-				.parlaIlMandante(Testi.formatta("missioni", "IlViaggioDellaMoglie.11"));
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIAGGIO_DELLA_MOGLIE_MOGLIE_1", "PARAM_BARDO", getBardo(), "PARAM_MOGLIE", getMoglie()))
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIAGGIO_DELLA_MOGLIE_MOGLIE_2", valori()))
+				.parlaIlCapo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIAGGIO_DELLA_MOGLIE_MOGLIE_3"))
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIAGGIO_DELLA_MOGLIE_MOGLIE_4"));
 	}
 
 	/**
@@ -258,6 +278,6 @@ public class IlViaggioDellaMoglie extends MissioneAPassi {
 	}
 
 	private static String getNomeCitta(TipoLocazione citta) {
-		return citta == null ? Testi.formatta("missioni", "IlViaggioDellaMoglie.s6") : citta.getNomeDellaCitta();
+		return citta == null ? ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIAGGIO_DELLA_MOGLIE_CITTA_GENERICA") : citta.getNomeDellaCitta();
 	}
 }

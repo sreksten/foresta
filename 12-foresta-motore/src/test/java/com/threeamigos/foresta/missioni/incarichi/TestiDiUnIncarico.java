@@ -149,7 +149,11 @@ public final class TestiDiUnIncarico {
 	}
 
 	private static Object[] valoriDi(Object missione) throws ReflectiveOperationException {
-		return (Object[]) chiama(missione, "valori", new Class<?>[0]);
+		try {
+			return (Object[]) chiama(missione, "valori", new Class<?>[0]);
+		} catch (NoSuchMethodException senzaValori) { // una missione che compone da sé i suoi valori: le sue frasi non hanno segnaposto
+			return new Object[0];
+		}
 	}
 
 	private static Object chiama(Object oggetto, String nome, Class<?>[] tipi, Object... argomenti) throws ReflectiveOperationException {
