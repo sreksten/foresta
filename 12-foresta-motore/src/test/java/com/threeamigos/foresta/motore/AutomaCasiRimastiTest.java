@@ -5,11 +5,11 @@ import com.threeamigos.foresta.eventi.interni.InternoPrecaricamentoMotoreComplet
 import com.threeamigos.foresta.eventi.interni.InternoUiInattiva;
 import com.threeamigos.foresta.eventi.interni.InternoUiOccupata;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
-import com.threeamigos.foresta.intermezzi.Intermezzo;
+import com.threeamigos.foresta.interfacce.GestoreSalvataggi;
 import com.threeamigos.foresta.intermezzi.FonteDiIntermezzi;
+import com.threeamigos.foresta.intermezzi.Intermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
-import com.threeamigos.foresta.interfacce.GestoreSalvataggi;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
@@ -249,7 +249,7 @@ class AutomaCasiRimastiTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(96)) {
             partita.comando(Comando.PERGAMENA);
 
-            partita.testo("OmbraFiamma");
+            partita.testo("Alakazam");
 
             assertEquals("Alakazam", partita.gruppo().getCapo().getNomeProprio().orElse(""));
         }

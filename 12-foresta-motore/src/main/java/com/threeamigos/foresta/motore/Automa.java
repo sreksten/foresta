@@ -1,41 +1,31 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.notizie.Notizie;
-import com.threeamigos.foresta.mondo.RegistroPersonaggi;
-import com.threeamigos.foresta.statistiche.Statistiche;
-import com.threeamigos.foresta.statistiche.LineaTemporale;
-import com.threeamigos.foresta.strumenti.ModalitaDiProva;
-import com.threeamigos.foresta.gruppi.GruppoAvversario;
-import com.threeamigos.foresta.gruppi.GruppoGiocatore;
-import com.threeamigos.foresta.tipi.MomentoIntermezzo;
-import com.threeamigos.foresta.tipi.CategoriaLocazione;
-
-import com.threeamigos.foresta.tipi.TipoLocazione;
-
-import com.threeamigos.foresta.mappa.Foresta;
-
 import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.CostruttoreArtefatto;
 import com.threeamigos.foresta.artefatti.GeneratoreArtefatti;
 import com.threeamigos.foresta.artefatti.SpadaNormalmenteNascosta;
-import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.canti.CantoDelBardo;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
-import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.*;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.eventi.richieste.*;
-import com.threeamigos.foresta.incantesimi.*;
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
+import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
+import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.interfacce.ControlloreDiGioco;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.interfacce.GestoreSalvataggi;
-import com.threeamigos.foresta.intermezzi.*;
+import com.threeamigos.foresta.intermezzi.BattutaProgrammata;
+import com.threeamigos.foresta.intermezzi.Intermezzo;
+import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
+import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
 import com.threeamigos.foresta.locazioni.Bottega;
 import com.threeamigos.foresta.locazioni.Locazione;
+import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.Passo;
@@ -44,19 +34,23 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.TatticaMD;
-import com.threeamigos.foresta.tipi.TipoModificatore;
-import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
+import com.threeamigos.foresta.mondo.RegistroPersonaggi;
+import com.threeamigos.foresta.notizie.Notizie;
 import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.salvataggi.SalvataggioInMemoria;
-import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzabile;
-import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzatore;
+import com.threeamigos.foresta.statistiche.LineaTemporale;
+import com.threeamigos.foresta.statistiche.Statistiche;
+import com.threeamigos.foresta.strumenti.ModalitaDiProva;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 import com.threeamigos.foresta.strumenti.logger.Logger;
+import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzabile;
+import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzatore;
 import com.threeamigos.foresta.tattiche.RegistroTattiche;
 import com.threeamigos.foresta.tattiche.TatticheDeiPersonaggi;
 import com.threeamigos.foresta.testi.PrecaricatoreDeiTesti;
+import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.tipi.*;
 import com.threeamigos.foresta.trofei.RegistroTrofei;
 
@@ -66,7 +60,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.LongSupplier;
 import java.util.function.Supplier;
-import com.threeamigos.foresta.testi.Testi;
 
 /**
  * Il motore di gioco: una macchina a stati finiti reattiva, senza ciclo di gioco. Avanza solo in risposta a due stimoli: i comandi del
@@ -647,7 +640,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			personaggio = RegistroPersonaggi.getPersonaggioCasuale();
 		} else {
 			// Qui mettiamo il codice per i personaggi nascosti tipo:
-			if (testoDisponibile.equals("OmbraFiamma")) {
+			if (testoDisponibile.equals("Alakazam")) {
 				personaggio = new OmbraFiamma("Alakazam", 5);
 			}
 		}
