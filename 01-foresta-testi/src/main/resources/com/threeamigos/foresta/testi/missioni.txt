@@ -2131,4 +2131,98 @@ NEGOZIO_NOME_INCANTATORE
     la Bottega degli Incantesimi di %NOME%
     l'Atelier Arcano di %NOME%
 
+// ---------------------------------------------------------------------------------------------
+// Caccia ai goblin (vedi CacciaAiGoblin), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice (vedi ProduttoreDiMissioniCasuale.riempi)
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+CACCIA_AI_GOBLIN_TITOLO
+    Caccia ai goblin
+
+// La scena dell'incarico, in città: il mercante parla (%PARAM_GOBLIN% da sconfiggere, %PARAM_MONETE% di ricompensa) e il capo risponde
+CACCIA_AI_GOBLIN_INCARICO_1
+    Ehi, voi! Avete l'aria di gente che sa menare le mani.
+
+CACCIA_AI_GOBLIN_INCARICO_2
+    I goblin assaltano le mie carovane appena escono dalla città. Ne sconfiggete %PARAM_GOBLIN% e vi do %PARAM_MONETE% monete.
+
+CACCIA_AI_GOBLIN_INCARICO_3
+    Goblin? Affare fatto.
+
+// Il giocatore accetta
+CACCIA_AI_GOBLIN_ACCETTAZIONE
+    Il mercante pagherà %PARAM_MONETE% monete per %PARAM_GOBLIN% goblin sconfitti.
+
+// Passo della caccia: la descrizione nel diario (%PARAM_CITTA%, %PARAM_GOBLIN% da sconfiggere, %PARAM_SCONFITTI% finora: l'unico che cambia durante il passo)
+CACCIA_AI_GOBLIN_DESCRIZIONE_CACCIA
+    Un mercante di %PARAM_CITTA% ti ha chiesto di sconfiggere %PARAM_GOBLIN% goblin. Finora: %PARAM_SCONFITTI%.
+
+// Sconfitto l'ultimo goblin
+CACCIA_AI_GOBLIN_FINE_CACCIA
+    Di goblin, per un po', non se ne vedranno: è ora di tornare dal mercante di %PARAM_CITTA%.
+
+// Passo del ritorno: la descrizione nel diario
+CACCIA_AI_GOBLIN_DESCRIZIONE_RITORNO
+    Le strade sono libere: torna dal mercante di %PARAM_CITTA% a riscuotere.
+
+// La scena del ringraziamento, in città
+CACCIA_AI_GOBLIN_RINGRAZIAMENTO_1
+    Le carovane passano di nuovo! Siete stati di parola.
+
+CACCIA_AI_GOBLIN_RINGRAZIAMENTO_2
+    E adesso tocca a te.
+
+// La ricompensa
+CACCIA_AI_GOBLIN_RICOMPENSA
+    Il mercante paga le %PARAM_MONETE% monete promesse.
+
+// ---------------------------------------------------------------------------------------------
+// Richiesta di materiali (vedi RichiestaDiMateriali), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: i valori
+// del materiale (%PARAM_QUANTI%, %PARAM_TUTTI%, %PARAM_PRONOME%, %PARAM_PLURALE%, %PARAM_POSSESSIVO%...) e le forme del mandante (%PARAM_MANDANTE%, %PARAM_MANDANTE_DI_CITTA%,
+// %PARAM_A_MANDANTE_SENZA_VIRGOLA%...; il suffisso _MAIUSC è la stessa forma con l'iniziale maiuscola). Il titolo lo compone il codice
+// (il mandante e il materiale) e si conserva nei dati; l'apertura del mandante, la battuta del capo e la risposta sono del
+// mandante e del materiale (vedi Mandante e le righe di materiali qui sopra)
+// ---------------------------------------------------------------------------------------------
+
+// La scena dell'incarico, in città
+RICHIESTA_DI_MATERIALI_INCARICO_1
+    Mi servono %PARAM_QUANTI%. %PARAM_DA_DOVE_VIENE_FRASE_MAIUSC%.
+
+RICHIESTA_DI_MATERIALI_INCARICO_2
+    %PARAM_RISPOSTA_DEL_MANDANTE% Ve %PARAM_PRONOME% pago %PARAM_MONETE% monete.
+
+RICHIESTA_DI_MATERIALI_INCARICO_3
+    Affare fatto.
+
+// Il giocatore accetta
+RICHIESTA_DI_MATERIALI_ACCETTAZIONE
+    %PARAM_MANDANTE_MAIUSC% pagherà %PARAM_MONETE% monete per %PARAM_QUANTI%, che %PARAM_DA_DOVE_VIENE%.
+
+// Passo della raccolta: la descrizione nel diario (%PARAM_RACCOLTI% è l'unico che cambia durante il passo)
+RICHIESTA_DI_MATERIALI_DESCRIZIONE_RACCOLTA
+    %PARAM_MANDANTE_DI_CITTA_MAIUSC% ti ha chiesto %PARAM_QUANTI%, che %PARAM_DA_DOVE_VIENE%. Finora: %PARAM_RACCOLTI%.
+
+// Raccolto tutto
+RICHIESTA_DI_MATERIALI_PRONTI
+    %PARAM_MATERIALE_MAIUSC% ci sono %PARAM_TUTTI%: %PARAM_MANDANTE_DI_CITTA% %PARAM_PRONOME% aspetta.
+
+// Passo del ritorno: la descrizione nel diario
+RICHIESTA_DI_MATERIALI_DESCRIZIONE_RITORNO
+    Hai %PARAM_TUTTI% %PARAM_MATERIALE%: porta%PARAM_PRONOME% %PARAM_A_MANDANTE_DI_CITTA_SENZA_VIRGOLA%.
+
+// La scena del ringraziamento, in città
+RICHIESTA_DI_MATERIALI_RINGRAZIAMENTO_1
+    %PARAM_POSSESSIVO% %PARAM_PLURALE%! E sono pure di prima scelta.
+
+RICHIESTA_DI_MATERIALI_RINGRAZIAMENTO_2
+    La prossima volta, nella foresta, ci venite voi.
+
+// La consegna
+RICHIESTA_DI_MATERIALI_CONSEGNA
+    %PARAM_ADP_QUANTI_MAIUSC% passano %PARAM_A_MANDANTE_SENZA_VIRGOLA%, %PARAM_ALLA_CONSEGNA%.
+
+// La ricompensa
+RICHIESTA_DI_MATERIALI_RICOMPENSA
+    %PARAM_MANDANTE_MAIUSC% paga le %PARAM_MONETE% monete promesse.
+
 #include_static <nomi.txt>

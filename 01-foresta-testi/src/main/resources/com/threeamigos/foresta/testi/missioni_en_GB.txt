@@ -1873,4 +1873,79 @@ NEGOZIO_NOME_INCANTATORE
     the Shop of Spells of %NOME%
     the Arcane Atelier of %NOME%
 
+// ---------------------------------------------------------------------------------------------
+// Goblin hunt (see CacciaAiGoblin), in script order. The %PARAM_CHIAVE% placeholders are filled in by the code (see ProduttoreDiMissioniCasuale.riempi)
+// ---------------------------------------------------------------------------------------------
+
+CACCIA_AI_GOBLIN_TITOLO
+    Goblin hunt
+
+CACCIA_AI_GOBLIN_INCARICO_1
+    Hey, you! You look like folks who know how to throw a punch.
+
+CACCIA_AI_GOBLIN_INCARICO_2
+    Goblins raid my caravans as soon as they leave the city. Defeat %PARAM_GOBLIN% of them and I'll give you %PARAM_MONETE% coins.
+
+CACCIA_AI_GOBLIN_INCARICO_3
+    Goblins? You've got a deal.
+
+CACCIA_AI_GOBLIN_ACCETTAZIONE
+    The merchant will pay %PARAM_MONETE% coins for %PARAM_GOBLIN% defeated goblins.
+
+CACCIA_AI_GOBLIN_DESCRIZIONE_CACCIA
+    A merchant of %PARAM_CITTA% has asked you to defeat %PARAM_GOBLIN% goblins. So far: %PARAM_SCONFITTI%.
+
+CACCIA_AI_GOBLIN_FINE_CACCIA
+    There won't be any goblins around for a while: it's time to go back to the merchant of %PARAM_CITTA%.
+
+CACCIA_AI_GOBLIN_DESCRIZIONE_RITORNO
+    The roads are free: go back to the merchant of %PARAM_CITTA% to collect.
+
+CACCIA_AI_GOBLIN_RINGRAZIAMENTO_1
+    The caravans are moving again! You kept your word.
+
+CACCIA_AI_GOBLIN_RINGRAZIAMENTO_2
+    And now it's your turn.
+
+CACCIA_AI_GOBLIN_RICOMPENSA
+    The merchant pays the %PARAM_MONETE% promised coins.
+
+// ---------------------------------------------------------------------------------------------
+// Request for materials (see RichiestaDiMateriali), in script order. The %PARAM_KEY% placeholders are filled in by the code (same
+// keys as the Italian file)
+// ---------------------------------------------------------------------------------------------
+
+RICHIESTA_DI_MATERIALI_INCARICO_1
+    I need %PARAM_QUANTI%. %PARAM_DA_DOVE_VIENE_FRASE_MAIUSC%.
+
+RICHIESTA_DI_MATERIALI_INCARICO_2
+    %PARAM_RISPOSTA_DEL_MANDANTE% I'll pay %PARAM_MONETE% coins for %PARAM_PRONOME%.
+
+RICHIESTA_DI_MATERIALI_INCARICO_3
+    It's a deal.
+
+RICHIESTA_DI_MATERIALI_ACCETTAZIONE
+    %PARAM_MANDANTE_MAIUSC% will pay %PARAM_MONETE% coins for %PARAM_QUANTI%, which %PARAM_DA_DOVE_VIENE%.
+
+RICHIESTA_DI_MATERIALI_DESCRIZIONE_RACCOLTA
+    %PARAM_MANDANTE_DI_CITTA_MAIUSC% has asked you for %PARAM_QUANTI%, which %PARAM_DA_DOVE_VIENE%. So far: %PARAM_RACCOLTI%.
+
+RICHIESTA_DI_MATERIALI_PRONTI
+    %PARAM_MATERIALE_MAIUSC% are all here: %PARAM_MANDANTE_DI_CITTA% is waiting for %PARAM_PRONOME%.
+
+RICHIESTA_DI_MATERIALI_DESCRIZIONE_RITORNO
+    You have %PARAM_TUTTI% %PARAM_MATERIALE%: bring them %PARAM_A_MANDANTE_DI_CITTA_SENZA_VIRGOLA%.
+
+RICHIESTA_DI_MATERIALI_RINGRAZIAMENTO_1
+    %PARAM_POSSESSIVO% %PARAM_PLURALE%! And top quality too.
+
+RICHIESTA_DI_MATERIALI_RINGRAZIAMENTO_2
+    Next time, you go into the forest yourselves.
+
+RICHIESTA_DI_MATERIALI_CONSEGNA
+    %PARAM_ADP_QUANTI_MAIUSC% go %PARAM_A_MANDANTE_SENZA_VIRGOLA%, %PARAM_ALLA_CONSEGNA%.
+
+RICHIESTA_DI_MATERIALI_RICOMPENSA
+    %PARAM_MANDANTE_MAIUSC% pays the %PARAM_MONETE% promised coins.
+
 #include_static <nomi_en_GB.txt>

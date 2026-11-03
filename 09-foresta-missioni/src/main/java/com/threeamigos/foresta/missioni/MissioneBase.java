@@ -58,9 +58,26 @@ public abstract class MissioneBase implements Missione {
 		missioniSecondarie.clear();
 	}
 
+	/**
+	 * Il nome conservato nei dati della missione. Le missioni il cui nome nasce dalla grammatica non lo ricalcolano a ogni
+	 * richiesta: lo creano con {@link #creaIlNome()} la prima volta che serve e da lì in poi è quello salvato.
+	 */
 	@Override
 	public String getNome() {
+		if (md.getNome() == null) {
+			String nome = creaIlNome();
+			if (nome != null) {
+				md.setNome(nome);
+			}
+		}
 		return md.getNome();
+	}
+
+	/**
+	 * Il nome della missione, da conservare (vedi {@link #getNome()}); null se la missione lo dà da sé.
+	 */
+	protected String creaIlNome() {
+		return null;
 	}
 
 	@Override

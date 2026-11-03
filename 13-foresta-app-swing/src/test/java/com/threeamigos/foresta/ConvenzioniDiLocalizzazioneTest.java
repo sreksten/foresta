@@ -155,6 +155,7 @@ class ConvenzioniDiLocalizzazioneTest {
 		assertFalse(italiana("com.threeamigos.foresta"));
 		assertFalse(italiana("%d"));
 		assertFalse(italiana("Goblin"));
+		assertFalse(italiana("PARAM_DA_DOVE_VIENE"));
 	}
 
 	// ---- il contatore ----
@@ -177,6 +178,10 @@ class ConvenzioniDiLocalizzazioneTest {
 			"/salvataggi/GestoreSalvataggiSuFile.java", "/motore/StrumentiDiSviluppoMotore.java", "/motore/DotazioneDiProva.java"};
 
 	static boolean italiana(String testo) {
+		// Il nome di un segnaposto dei testi delle missioni (PARAM_DA_DOVE_VIENE) è un identificativo, anche se sono parole italiane
+		if (testo.startsWith("PARAM_")) {
+			return false;
+		}
 		if (LETTERA_ACCENTATA.matcher(testo.toLowerCase(java.util.Locale.ROOT)).find()) {
 			return true;
 		}

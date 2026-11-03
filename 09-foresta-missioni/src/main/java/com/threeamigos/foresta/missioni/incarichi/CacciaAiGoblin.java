@@ -7,7 +7,7 @@ import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.testi.Testi;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 
 /**
  * In città un mercante chiede di liberare le strade dai goblin che assaltano le carovane: sconfitti
@@ -24,16 +24,28 @@ public class CacciaAiGoblin extends IncaricoInCitta {
 	}
 
 	@Override
-	public String getNome() {
-		return Testi.formatta("missioni", "CacciaAiGoblin.t1");
+	protected String creaIlNome() {
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("CACCIA_AI_GOBLIN_TITOLO");
 	}
 
 	@Override
 	public String getDescrizione() {
-		if (RITORNO.equals(getPassoCorrente())) {
-			return Testi.formatta("missioni", "CacciaAiGoblin.t2", getNomeCitta());
-		}
-		return Testi.formatta("missioni", "CacciaAiGoblin.t3", getNomeCitta(), GOBLIN_DA_SCONFIGGERE, getConteggioNelPassoCorrente(eventoSconfitto(TipoPersonaggio.GOBLIN)));
+		return descrizioneDalModello();
+	}
+
+	@Override
+	protected String produzioneDellaDescrizione(String passo) {
+		return RITORNO.equals(passo) ? "CACCIA_AI_GOBLIN_DESCRIZIONE_RITORNO" : "CACCIA_AI_GOBLIN_DESCRIZIONE_CACCIA";
+	}
+
+	@Override
+	protected Object[] valoriStabiliDellaDescrizione() {
+		return new Object[] {"PARAM_CITTA", getNomeCitta(), "PARAM_GOBLIN", GOBLIN_DA_SCONFIGGERE};
+	}
+
+	@Override
+	protected Object[] valoriDellaDescrizione() {
+		return new Object[] {"PARAM_SCONFITTI", getConteggioNelPassoCorrente(eventoSconfitto(TipoPersonaggio.GOBLIN))};
 	}
 
 	@Override
@@ -47,33 +59,33 @@ public class CacciaAiGoblin extends IncaricoInCitta {
 			throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
 		}
 		return sconfiggi(MomentoControllo.POST_LOCAZIONE, TipoPersonaggio.GOBLIN, GOBLIN_DA_SCONFIGGERE)
-				.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "CacciaAiGoblin.s1", getNomeCitta()))))
+				.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("CACCIA_AI_GOBLIN_FINE_CACCIA", "PARAM_CITTA", getNomeCitta()))))
 				.poi(RITORNO);
 	}
 
 	@Override
 	protected ScenaInCitta scenaIncarico() {
 		return ScenaInCitta.conMandante()
-				.parlaIlMandante(Testi.formatta("missioni", "CacciaAiGoblin.1"))
-				.parlaIlMandante(Testi.formatta("missioni", "CacciaAiGoblin.2", GOBLIN_DA_SCONFIGGERE, getRicompensa()))
-				.parlaIlCapo(Testi.formatta("missioni", "CacciaAiGoblin.3"));
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("CACCIA_AI_GOBLIN_INCARICO_1"))
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("CACCIA_AI_GOBLIN_INCARICO_2", "PARAM_GOBLIN", GOBLIN_DA_SCONFIGGERE, "PARAM_MONETE", getRicompensa()))
+				.parlaIlCapo(ProduttoreDiMissioniCasuale.testoDellaMissione("CACCIA_AI_GOBLIN_INCARICO_3"));
 	}
 
 	@Override
 	protected ScenaInCitta scenaRingraziamento() {
 		return ScenaInCitta.conMandante()
-				.parlaIlMandante(Testi.formatta("missioni", "CacciaAiGoblin.4"))
-				.parlaIlCapo(Testi.formatta("missioni", "CacciaAiGoblin.5"));
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("CACCIA_AI_GOBLIN_RINGRAZIAMENTO_1"))
+				.parlaIlCapo(ProduttoreDiMissioniCasuale.testoDellaMissione("CACCIA_AI_GOBLIN_RINGRAZIAMENTO_2"));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return Testi.formatta("missioni", "CacciaAiGoblin.t4", getRicompensa(), GOBLIN_DA_SCONFIGGERE);
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("CACCIA_AI_GOBLIN_ACCETTAZIONE", "PARAM_MONETE", getRicompensa(), "PARAM_GOBLIN", GOBLIN_DA_SCONFIGGERE);
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Testi.formatta("missioni", "CacciaAiGoblin.t5", getRicompensa());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("CACCIA_AI_GOBLIN_RICOMPENSA", "PARAM_MONETE", getRicompensa());
 	}
 
 	@Override

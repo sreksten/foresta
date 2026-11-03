@@ -14,6 +14,11 @@ public final class ProduttoreDiMissioniCasuale {
 	private static final GrammaticaPigra TAPPE = GrammaticaPigra.deiTesti("tappe.txt", false);
 	private static final Object SERRATURA_DELLE_TAPPE = new Object();
 
+	/**
+	 * Come cominciano i nomi dei segnaposto dei testi delle missioni: "%PARAM_CITTA%" in missioni.txt, "PARAM_CITTA" nel codice.
+	 */
+	public static final String PREFISSO_DEI_PARAMETRI = "PARAM_";
+
 	private ProduttoreDiMissioniCasuale() {
 	}
 
@@ -42,6 +47,46 @@ public final class ProduttoreDiMissioniCasuale {
 				grammatica.reset();
 			}
 		}
+	}
+
+	/**
+	 * Un testo di una missione, una produzione foglia di missioni.txt (CACCIA_AI_GOBLIN_TITOLO...), con i segnaposto
+	 * "%PARAM_NOME%" riempiti dalle coppie chiave-valore (vedi {@link #riempi}).
+	 */
+	public static String testoDellaMissione(String produzione, Object... coppie) {
+		return riempi(modelloDellaMissione(produzione), coppie);
+	}
+
+	/**
+	 * Il testo di una produzione di missioni.txt com'è, con i segnaposto "%PARAM_NOME%" ancora da riempire: è quello che una
+	 * missione conserva nei suoi dati.
+	 */
+	public static String modelloDellaMissione(String produzione) {
+		return MISSIONI.get().produce(produzione).get(0).trim();
+	}
+
+	/**
+	 * Il modello con ogni "%PARAM_NOME%" sostituito dal valore, date le coppie chiave-valore in fila: {@code riempi(testo,
+	 * "PARAM_CITTA", "Fleena", "PARAM_GOBLIN", 3)}. Le chiavi cominciano sempre per {@value #PREFISSO_DEI_PARAMETRI}: così nel
+	 * codice si riconoscono subito (e non si scambiano per frasi da tradurre: vedi ConvenzioniDiLocalizzazioneTest). Un
+	 * segnaposto senza coppia resta com'è, così il modello si può riempire a più riprese: i valori che non cambiano subito,
+	 * gli altri a ogni lettura.
+	 *
+	 * @throws IllegalArgumentException se le coppie sono incomplete o una chiave non comincia per {@value #PREFISSO_DEI_PARAMETRI}
+	 */
+	public static String riempi(String modello, Object... coppie) {
+		if (coppie.length % 2 != 0) {
+			throw new IllegalArgumentException("Servono coppie chiave-valore: " + coppie.length + " argomenti");
+		}
+		String testo = modello;
+		for (int i = 0; i < coppie.length; i += 2) {
+			String chiave = String.valueOf(coppie[i]);
+			if (!chiave.startsWith(PREFISSO_DEI_PARAMETRI)) {
+				throw new IllegalArgumentException("La chiave di un parametro comincia per " + PREFISSO_DEI_PARAMETRI + ": " + chiave);
+			}
+			testo = testo.replace("%" + chiave + "%", String.valueOf(coppie[i + 1]));
+		}
+		return testo;
 	}
 
 	/**

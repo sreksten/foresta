@@ -13,7 +13,7 @@ import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
-import com.threeamigos.foresta.testi.Testi;
+import com.threeamigos.foresta.testi.RegoleDellaLingua;
 
 /**
  * Un mandante in città (l'alchimista, l'armaiolo, il capitano delle guardie, il locandiere: vedi {@link Mandante})
@@ -97,17 +97,57 @@ public class RichiestaDiMateriali extends IncaricoInCitta {
 	}
 
 	@Override
-	public String getNome() {
+	protected String creaIlNome() {
 		return Lingue.corrente().elenco(java.util.Arrays.asList(Lingue.corrente().inizialeMaiuscola(mandante.getNome()), getMateriale().getPluraleConArticolo()));
 	}
 
 	@Override
 	public String getDescrizione() {
+		return descrizioneDalModello();
+	}
+
+	@Override
+	protected String produzioneDellaDescrizione(String passo) {
+		return RITORNO.equals(passo) ? "RICHIESTA_DI_MATERIALI_DESCRIZIONE_RITORNO" : "RICHIESTA_DI_MATERIALI_DESCRIZIONE_RACCOLTA";
+	}
+
+	@Override
+	protected Object[] valoriStabiliDellaDescrizione() {
+		return valori();
+	}
+
+	@Override
+	protected Object[] valoriDellaDescrizione() {
+		return new Object[] {"PARAM_RACCOLTI", getContatore(MATERIALE)};
+	}
+
+	/**
+	 * Tutti i segnaposto dei testi della missione: i valori del materiale e le forme del mandante (con la città o senza,
+	 * con la virgola finale o senza, con la preposizione, con l'iniziale maiuscola).
+	 */
+	private Object[] valori() {
 		MaterialeRichiesto materiale = getMateriale();
-		if (RITORNO.equals(getPassoCorrente())) {
-			return Testi.formatta("missioni", "RichiestaDiMateriali.t1", materiale.getTutti(), materiale.getPluraleConArticolo(), materiale.getPronome(), Lingue.corrente().conPreposizione(Preposizione.A, mandanteDiCittaSenzaVirgolaFinale(mandante.getNome())));
-		}
-		return Testi.formatta("missioni", "RichiestaDiMateriali.t2", Lingue.corrente().inizialeMaiuscola(mandanteDiCitta(mandante.getNome())), materiale.quanti(getQuantita()), materiale.getDaDoveViene(), getContatore(MATERIALE));
+		RegoleDellaLingua lingua = Lingue.corrente();
+		String nome = mandante.getNome();
+		return new Object[] {
+				"PARAM_MONETE", getRicompensa(),
+				"PARAM_QUANTI", materiale.quanti(getQuantita()),
+				"PARAM_TUTTI", materiale.getTutti(),
+				"PARAM_PRONOME", materiale.getPronome(),
+				"PARAM_MATERIALE", materiale.getPluraleConArticolo(),
+				"PARAM_MATERIALE_MAIUSC", lingua.inizialeMaiuscola(materiale.getPluraleConArticolo()),
+				"PARAM_PLURALE", materiale.getPlurale(),
+				"PARAM_POSSESSIVO", materiale.getPossessivo(),
+				"PARAM_DA_DOVE_VIENE", materiale.getDaDoveViene(),
+				"PARAM_DA_DOVE_VIENE_FRASE_MAIUSC", lingua.inizialeMaiuscola(materiale.getDaDoveVieneComeFrase()),
+				"PARAM_RISPOSTA_DEL_MANDANTE", materiale.getRispostaDelMandante(),
+				"PARAM_ADP_QUANTI_MAIUSC", lingua.inizialeMaiuscola(materiale.getNome().getADP() + materiale.quanti(getQuantita())),
+				"PARAM_MANDANTE_MAIUSC", lingua.inizialeMaiuscola(mandante(nome)),
+				"PARAM_MANDANTE_DI_CITTA", mandanteDiCitta(nome),
+				"PARAM_MANDANTE_DI_CITTA_MAIUSC", lingua.inizialeMaiuscola(mandanteDiCitta(nome)),
+				"PARAM_A_MANDANTE_SENZA_VIRGOLA", lingua.conPreposizione(Preposizione.A, mandanteSenzaVirgolaFinale(nome)),
+				"PARAM_A_MANDANTE_DI_CITTA_SENZA_VIRGOLA", lingua.conPreposizione(Preposizione.A, mandanteDiCittaSenzaVirgolaFinale(nome)),
+				"PARAM_ALLA_CONSEGNA", mandante.allaConsegna(materiale.getPronome())};
 	}
 
 	@Override
@@ -122,9 +162,7 @@ public class RichiestaDiMateriali extends IncaricoInCitta {
 		}
 		MaterialeRichiesto materiale = getMateriale();
 		return raccogli(MomentoControllo.POST_LOCAZIONE, getMateriali())
-				.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "RichiestaDiMateriali.pronti",
-						Lingue.corrente().inizialeMaiuscola(materiale.getPluraleConArticolo()), materiale.getTutti(), mandanteDiCitta(mandante.getNome()),
-						materiale.getPronome()))))
+				.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("RICHIESTA_DI_MATERIALI_PRONTI", valori()))))
 				.poi(RITORNO);
 	}
 
@@ -135,39 +173,37 @@ public class RichiestaDiMateriali extends IncaricoInCitta {
 
 	@Override
 	protected String testoConsegna() {
-		MaterialeRichiesto materiale = getMateriale();
-		return Testi.formatta("missioni", "RichiestaDiMateriali.consegna", Lingue.corrente().inizialeMaiuscola(materiale.getNome().getADP() + materiale.quanti(getQuantita())),
-				Lingue.corrente().conPreposizione(Preposizione.A, mandanteSenzaVirgolaFinale(mandante.getNome())), mandante.allaConsegna(materiale.getPronome()));
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("RICHIESTA_DI_MATERIALI_CONSEGNA", valori());
 	}
 
 	@Override
 	protected ScenaInCitta scenaIncarico() {
 		MaterialeRichiesto materiale = getMateriale();
+		Object[] valori = valori();
 		return mandante.nuovaScena()
 				.parlaIlMandante(mandante.getApertura(nomeDelMandante(mandante.getNome())))
-				.parlaIlMandante(Testi.formatta("missioni", "RichiestaDiMateriali.1", materiale.quanti(getQuantita()), Lingue.corrente().inizialeMaiuscola(materiale.getDaDoveVieneComeFrase())))
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("RICHIESTA_DI_MATERIALI_INCARICO_1", valori))
 				.parlaIlCapo(materiale.getBattutaDelCapo())
-				.parlaIlMandante(Testi.formatta("missioni", "RichiestaDiMateriali.2", materiale.getRispostaDelMandante(), materiale.getPronome(), getRicompensa()))
-				.parlaIlCapo(Testi.formatta("missioni", "RichiestaDiMateriali.3"));
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("RICHIESTA_DI_MATERIALI_INCARICO_2", valori))
+				.parlaIlCapo(ProduttoreDiMissioniCasuale.testoDellaMissione("RICHIESTA_DI_MATERIALI_INCARICO_3", valori));
 	}
 
 	@Override
 	protected ScenaInCitta scenaRingraziamento() {
-		MaterialeRichiesto materiale = getMateriale();
+		Object[] valori = valori();
 		return mandante.nuovaScena()
-				.parlaIlMandante(Testi.formatta("missioni", "RichiestaDiMateriali.4", materiale.getPossessivo(), materiale.getPlurale()))
-				.parlaIlCapo(Testi.formatta("missioni", "RichiestaDiMateriali.5"));
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("RICHIESTA_DI_MATERIALI_RINGRAZIAMENTO_1", valori))
+				.parlaIlCapo(ProduttoreDiMissioniCasuale.testoDellaMissione("RICHIESTA_DI_MATERIALI_RINGRAZIAMENTO_2", valori));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		MaterialeRichiesto materiale = getMateriale();
-		return Testi.formatta("missioni", "RichiestaDiMateriali.t3", Lingue.corrente().inizialeMaiuscola(mandante(mandante.getNome())), getRicompensa(), materiale.quanti(getQuantita()), materiale.getDaDoveViene());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("RICHIESTA_DI_MATERIALI_ACCETTAZIONE", valori());
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Testi.formatta("missioni", "RichiestaDiMateriali.t4", Lingue.corrente().inizialeMaiuscola(mandante(mandante.getNome())), getRicompensa());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("RICHIESTA_DI_MATERIALI_RICOMPENSA", valori());
 	}
 
 	/**

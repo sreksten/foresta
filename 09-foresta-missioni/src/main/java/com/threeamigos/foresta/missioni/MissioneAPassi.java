@@ -32,6 +32,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import java.util.*;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
@@ -62,6 +63,7 @@ import com.threeamigos.foresta.testi.Testi;
 public abstract class MissioneAPassi extends MissioneBase {
 
 	private static final String PASSO_CORRENTE = "PASSO_CORRENTE";
+	private static final String DESCRIZIONE_DEL_PASSO = "DESCRIZIONE_DEL_PASSO";
 	private static final String SEQUENZA_PASSI = "SEQUENZA_PASSI";
 	private static final String INTERMEZZI_IN_ATTESA = "INTERMEZZI_IN_ATTESA";
 	private static final String INTERMEZZO_MOSTRATO = "INTERMEZZO_MOSTRATO_";
@@ -236,6 +238,61 @@ public abstract class MissioneAPassi extends MissioneBase {
 
 	private void impostaPassoCorrente(String id) {
 		aggiungiProprieta(PASSO_CORRENTE, validaId(id));
+		conservaIlModelloDellaDescrizione(id);
+	}
+
+	/**
+	 * La produzione di missioni.txt con il modello della descrizione di quel passo, o null se la missione compone la
+	 * descrizione da sé. Si produce una volta sola, all'ingresso nel passo, e si conserva nei dati della missione: così
+	 * non cambia da una lettura all'altra e si salva con la partita.
+	 */
+	protected String produzioneDellaDescrizione(String passo) {
+		return null;
+	}
+
+	/**
+	 * I valori dei segnaposto "%PARAM_NOME%" del modello (coppie chiave-valore in fila, vedi
+	 * {@link ProduttoreDiMissioniCasuale#riempi}) che non cambiano finché la missione dura: si mettono subito, e il
+	 * modello si conserva già riempito di questi. Quando si chiamano all'ingresso in un passo (non il primo) la missione
+	 * ha già i suoi parametri.
+	 */
+	protected Object[] valoriStabiliDellaDescrizione() {
+		return new Object[0];
+	}
+
+	/**
+	 * I valori dei segnaposto che cambiano mentre il passo dura (i contatori): si mettono a ogni richiesta della
+	 * descrizione.
+	 */
+	protected Object[] valoriDellaDescrizione() {
+		return new Object[0];
+	}
+
+	/**
+	 * La descrizione composta dal modello conservato all'ingresso nel passo corrente. Il passo iniziale non ha un
+	 * ingresso, e a quel punto i parametri della missione possono non esserci ancora: se il modello non c'è lo si
+	 * produce e lo si riempie senza conservarlo.
+	 */
+	protected final String descrizioneDalModello() {
+		String modello = ottieniProprieta(DESCRIZIONE_DEL_PASSO);
+		if (modello == null) {
+			String produzione = produzioneDellaDescrizione(getPassoCorrente());
+			if (produzione == null) {
+				return "";
+			}
+			modello = ProduttoreDiMissioniCasuale.riempi(ProduttoreDiMissioniCasuale.modelloDellaMissione(produzione), valoriStabiliDellaDescrizione());
+		}
+		return ProduttoreDiMissioniCasuale.riempi(modello, valoriDellaDescrizione());
+	}
+
+	private void conservaIlModelloDellaDescrizione(String passo) {
+		String produzione = produzioneDellaDescrizione(passo);
+		if (produzione == null) {
+			rimuoviProprieta(DESCRIZIONE_DEL_PASSO);
+		} else {
+			aggiungiProprieta(DESCRIZIONE_DEL_PASSO,
+					ProduttoreDiMissioniCasuale.riempi(ProduttoreDiMissioniCasuale.modelloDellaMissione(produzione), valoriStabiliDellaDescrizione()));
+		}
 	}
 
 	/**

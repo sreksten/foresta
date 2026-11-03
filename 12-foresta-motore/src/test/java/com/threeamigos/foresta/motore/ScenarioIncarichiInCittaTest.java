@@ -115,6 +115,37 @@ class ScenarioIncarichiInCittaTest {
     }
 
     @Test
+    void laDescrizioneDellaCacciaSiConservaNeiDatiConIlContatoreDaRiempire() {
+        try (PartitaDiTest partita = PartitaDiTest.nuova(61)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
+                    () -> partita.spostaGruppoIn(TipoLocazione.CITTA_FLEENA));
+            CacciaAiGoblin caccia = prendiIncaricoAllaSecondaVisita(CacciaAiGoblin.class);
+            assertEquals("CACCIA", caccia.getPassoCorrente());
+            // Nei dati c'è il modello già riempito di ciò che non cambia (città, goblin); resta il segnaposto del contatore, che la descrizione riempie a ogni lettura
+            assertEquals("Un mercante di Fleena ti ha chiesto di sconfiggere 3 goblin. Finora: %PARAM_SCONFITTI%.",
+                    caccia.ottieniProprieta("DESCRIZIONE_DEL_PASSO"));
+            assertTrue(caccia.getDescrizione().endsWith("Finora: 0."), caccia.getDescrizione());
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GOBLIN));
+            assertTrue(caccia.getDescrizione().endsWith("Finora: 1."), caccia.getDescrizione());
+
+            // Il modello si salva con la partita
+            partita.salva(Comando.NUMERO_2);
+            assertTrue(partita.leggi(Comando.NUMERO_2));
+            CacciaAiGoblin riletta = trova(CacciaAiGoblin.class);
+            assertTrue(riletta.getDescrizione().endsWith("Finora: 1."), riletta.getDescrizione());
+
+            // Al passo del ritorno il modello cambia
+            for (int i = 1; i < CacciaAiGoblin.GOBLIN_DA_SCONFIGGERE; i++) {
+                partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GOBLIN));
+            }
+            riletta.controllaPostLocazione();
+            assertEquals("RITORNO", riletta.getPassoCorrente());
+            assertEquals("Le strade sono libere: torna dal mercante di Fleena a riscuotere.", riletta.ottieniProprieta("DESCRIZIONE_DEL_PASSO"));
+            assertTrue(riletta.getDescrizione().contains("Fleena"), riletta.getDescrizione());
+        }
+    }
+
+    @Test
     void leRadiciDiMandragolaCresconoSoloNelleRaduraENeiBoschiMaiVisitati() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(62)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
