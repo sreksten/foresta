@@ -231,7 +231,7 @@ ISTANTE_PRECISO_SURREALISTA
     [NELL_ATTIMO_IN_CUI] a penguin disguised itself as a flamingo
 
 NELL_ATTIMO_IN_CUI
-    at the { precise | } moment when | just as | the instant
+    at the { precise | } moment when | just as | just when
 
 GIORNO_DELLA_SETTIMANA
     Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday
@@ -261,7 +261,7 @@ FATTO_PROEMIO
 	[CREAZIONE_PROTAGONISTA], [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA], { was in the habit of | made a habit of | was fond of } [ABITUDINE]
 
 VIVEVA
-    there lived | there dwelled | there lurked | there skulked | there hid | there lay low
+    there lived | there dwelt | there lurked | there skulked | there hid | there lay low
     there scraped by | there made a not entirely honest living | there bivouacked
 
 CONOSCIUTO_COME
@@ -308,7 +308,7 @@ ANIMALE_DA_COMPAGNIA
 // I protagonisti con nome e cognome sono persone reali: restano com'è nella versione italiana, in ogni lingua (vedi nomi.md §7). L'unica eccezione è il soprannome "il Vox", che diventa "the Vox".
 CREAZIONE_PROTAGONISTA
 	[*NOME_PROTAGONISTA] [*COGNOME_PROTAGONISTA]
-	[COGNOME_PROTAGONISTA=Romy] [NOME_PROTAGONISTA=Jona] [#NOME_PROTAGONISTA] [#COGNOME_PROTAGONISTA]
+	[COGNOME_PROTAGONISTA=Romy] [NOME_PROTAGONISTA=Jona] [#COGNOME_PROTAGONISTA] [#NOME_PROTAGONISTA]
 	[NOME_PROTAGONISTA=Luca] [COGNOME_PROTAGONISTA=Viola] [#NOME_PROTAGONISTA] [#COGNOME_PROTAGONISTA]
 	[NOME_PROTAGONISTA=Massimo] [COGNOME_PROTAGONISTA=Capanni] [#NOME_PROTAGONISTA] [#COGNOME_PROTAGONISTA]
 	[NOME_PROTAGONISTA=Massimiliano] [COGNOME_PROTAGONISTA=Falchi] [#NOME_PROTAGONISTA] [#COGNOME_PROTAGONISTA]
@@ -419,7 +419,7 @@ RACCONTO_P_2_QUANDO
 	at half past eleven | at the changing of the guard | as soon as it was possible | as soon as the moment was favorable | the next day
 
 RACCONTO_P_2_FORNITO_DI
-	{ having with him | provided with | kitted out with | having procured | dragging along | equipped with } \
+	{ carrying | provided with | kitted out with | having procured | dragging along | equipped with } \
 	    [EQUIPAGGIAMENTO={ [EQUIPAGGIAMENTO_CIBO] | [EQUIPAGGIAMENTO_ANIMALE] | [EQUIPAGGIAMENTO_ARMA] | [EQUIPAGGIAMENTO_FUCILE] | [EQUIPAGGIAMENTO_ALTRO] }]
 	shouldering [EQUIPAGGIAMENTO=[EQUIPAGGIAMENTO_FUCILE]]
 	armed with [EQUIPAGGIAMENTO=[EQUIPAGGIAMENTO_ARMA]]
@@ -508,7 +508,7 @@ ATTRIBUTO_ANTAGONISTA
 	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, smelling of vinegar and regret]
 	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST= with pockets full of money that was not his]
 	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, looking like someone who has lost an important bet]
-	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, as dirty as a pan unwashed for years]
+	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, as dirty as a pan left unwashed for years]
 	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST= with the air of someone who has just failed an undertaking]
 	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, muttering curses against people dead for centuries]
 
@@ -682,7 +682,7 @@ BUONA_AZIONE
 	you tell me a decent joke (a Herculean task) | you bring me breakfast in bed for a month
 
 MI_VEDRAI_TORNARE
-	I'll be able to become again | I'll be able to be again | you'll see me return as | I'll turn back into
+	I'll finally be able to become | I'll finally be | you'll see me return as | I'll turn back into
 	the { curse | spell } will { end | vanish } and I'll be once more
 
 REAZIONE_PROTAGONISTA
@@ -827,10 +827,10 @@ NOME_PRINCIPESSA
     [NOME_FEMMINILE]
 
 SVOLGIMENTO_PRINCIPESSA
-	[*NOME_PROTAGONISTA], of course, couldn't care less, and the poor girl came to a { sorry end | sad end | miserable end }.
+	^[*NOME_PROTAGONISTA], of course, couldn't care less, and the poor girl came to a { sorry end | sad end | miserable end }.
 	After countless adventures [*NOME_PROTAGONISTA] { managed to save | saved } \
 	    { [#NOME_PRINCIPESSA? | the princess] | the princess, who was [*ATTRIBUTO_PRINCIPESSA] }. [LIETO_FINE]
-	[*NOME_PROTAGONISTA] set off, crossing [LUOGO_1] and [LUOGO_2], until he reached [LUOGO_3] \
+	^[*NOME_PROTAGONISTA] set off, crossing [LUOGO_1] and [LUOGO_2], until he reached [LUOGO_3] \
 	    where the princess, who was [*ATTRIBUTO_PRINCIPESSA], was [TENUTA_IN_CATTIVITA] by \
 	    [CREAZIONE_MAGO_CATTIVO][#MAGO_CATTIVO_ARTINDET][#MAGO_CATTIVO_AGGETTIVO][#MAGO_CATTIVO]. [SVOLGIMENTO_PRINCIPESSA_2]
 

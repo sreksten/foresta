@@ -38,7 +38,7 @@ class LibroTecnicoRigheTest {
         assertEquals(TipoArtefatto.LIBRO_MAGICO, libro.getTipo());
         assertEquals(2, libro.getMoltiplicatoreDanniMagici());
         assertEquals(Arrays.asList("Uno", "Due"), libro.getBattute());
-        assertEquals("\"Il manuale di prova\", che spiega tutto", libro.getTitoloDaLeggere());
+        assertEquals("“Il manuale di prova”, che spiega tutto", libro.getTitoloDaLeggere());
     }
 
     @Test

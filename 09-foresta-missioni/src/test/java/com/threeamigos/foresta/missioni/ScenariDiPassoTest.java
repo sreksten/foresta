@@ -171,7 +171,7 @@ class ScenariDiPassoTest {
 
     @Test
     void ilTorneoDiceCiSonoPerIPlurali() {
-        String riga = LaSfidaDeiCampioni.costruisciUnLeggendario(3).getRiga().replaceAll("BREVE=[^;]*", "BREVE=le Scarpe del Campione");
+        String riga = LaSfidaDeiCampioni.costruisciUnLeggendario(3).getRiga().replaceAll("BREVE=[^;]*", "BREVE=le Scarpe del Campione;PLURALE=SI");
         IlTorneo torneo = registra(new IlTorneo(), "TORNEO");
         torneo.aggiungiProprieta("LEGGENDARIO", riga);
         torneo.attivaMissione();

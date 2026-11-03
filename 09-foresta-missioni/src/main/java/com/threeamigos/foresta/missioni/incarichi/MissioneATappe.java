@@ -289,12 +289,14 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 	}
 
 	/**
-	 * Le città in piedi, tranne quella del mandante.
+	 * Le città in piedi, tranne quella del mandante: finché l'incarico non si è offerto la città non è ancora scritta nella missione, ed è
+	 * quella in cui si trova il gruppo (altrimenti, con una sola città rimasta, l'incarico sembrerebbe possibile e poi non troverebbe il posto).
 	 */
 	private List<TipoLocazione> altreCitta() {
+		TipoLocazione cittaDelMandante = getCitta() != null ? getCitta() : Foresta.getLocazioneDelGruppo();
 		List<TipoLocazione> altre = new ArrayList<>();
 		for (TipoLocazione citta : TipoLocazione.values()) {
-			if (citta.getCategoriaLocazione() == CategoriaLocazione.CITTA && citta != getCitta() && !Foresta.isCittaDistrutta(citta)
+			if (citta.getCategoriaLocazione() == CategoriaLocazione.CITTA && citta != cittaDelMandante && !Foresta.isCittaDistrutta(citta)
 					&& Foresta.getCoordinateLocazioneUnica(citta) != null) {
 				altre.add(citta);
 			}

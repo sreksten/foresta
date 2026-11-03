@@ -14,13 +14,13 @@ public class NotificaTestoParagrafo extends EventoBase {
     private final String messaggio;
 
     /**
-     * Un messaggio per il giocatore.
+     * Un messaggio per il giocatore; se comincia con una lettera minuscola gli dà la maiuscola (vedi {@link NotificaTestoFrase}).
      *
      * @param messaggio il messaggio da inviare al giocatore
      */
     public NotificaTestoParagrafo(String messaggio) {
         super(TipoEvento.NOTIFICA_TESTO_PARAGRAFO);
-        this.messaggio = messaggio;
+        this.messaggio = NotificaTestoFrase.conInizialeMaiuscola(messaggio);
     }
 
     /**

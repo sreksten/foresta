@@ -78,7 +78,7 @@ class StorieScenariTest {
     /** Un leggendario con un nome al plurale, per le frasi che cambiano verbo. */
     private static String rigaPlurale() {
         String riga = LaSfidaDeiCampioni.costruisciUnLeggendario(3).getRiga();
-        return riga.replaceAll("BREVE=[^;]*", "BREVE=i Guanti dei Campioni");
+        return riga.replaceAll("BREVE=[^;]*", "BREVE=i Guanti dei Campioni;PLURALE=SI");
     }
 
     private static final class ConUnLeggendario extends Sintetica implements ConLeggendario {

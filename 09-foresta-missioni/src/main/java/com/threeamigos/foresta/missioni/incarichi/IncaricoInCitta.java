@@ -6,6 +6,7 @@ import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
+import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.OggettiDaRaccogliere;
@@ -20,6 +21,7 @@ import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -313,7 +315,8 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 							aggiungiProprieta(LIVELLO_DELL_INCARICO, String.valueOf(Statistiche.getLivello()));
 							allIncarico();
 						})
-						.conIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, () -> scenaIncarico().getPagine())
+						// Se l'incarico non ha potuto cominciare (allIncarico l'ha fatto fallire) la scena non si mostra: il mandante chiederebbe aiuto per una missione già persa
+						.conIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, () -> isFallita() ? Collections.<PaginaIntermezzo>emptyList() : scenaIncarico().getPagine())
 						.poi(ACCETTAZIONE);
 			case ACCETTAZIONE:
 				return Passo.quando(MomentoControllo.IN_LOCAZIONE, this::nellaCitta)

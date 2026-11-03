@@ -58,7 +58,9 @@ public final class LinguaInglese implements RegoleDellaLingua {
 
 	@Override
 	public String conPreposizione(Preposizione preposizione, String nomeConArticolo) {
-		return preposizione == Preposizione.VICINO ? nomeConArticolo : preposizione(preposizione) + " " + nomeConArticolo;
+		// Un nome che comincia con l'articolo ("The Teetotal Wolf's Bough") dopo una preposizione, e quindi a metà frase, lo vuole in minuscolo
+		String nome = nomeConArticolo.startsWith("The ") ? "the " + nomeConArticolo.substring("The ".length()) : nomeConArticolo;
+		return preposizione == Preposizione.VICINO ? nome : preposizione(preposizione) + " " + nome;
 	}
 
 	private static String preposizione(Preposizione preposizione) {

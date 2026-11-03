@@ -631,7 +631,7 @@ SGARBO_E_COSA
 	[FRING=The car door is fine, in the dream and out. Here are the coins, and don't ask me what a car is.]
 	[STITOLO=The indiscreet phone][SGARBO=In a dream he read my messages on my phone.][DOMANDA_COSA=What is a phone?]\
 	[RISPOSTA_COSA=A talking tablet, I dreamed it, and he used it worse than I do.]\
-	[FRING=Now I have my dream in peace, and nobody reads my messages anymore. I hadn't even understood where I wrote them.]
+	[FRING=Now I have my dream in peace, and nobody reads my messages any more. I hadn't even understood where I wrote them.]
 	[STITOLO=The loyalty card points][SGARBO=In a dream he swindled me out of the points on my loyalty card.][DOMANDA_COSA=What is a loyalty card?]\
 	[RISPOSTA_COSA=A piece of cardboard with stamps. In the dream you needed thirty for a ham, and I had twenty-nine.]\
 	[FRING=Twenty-nine plus one, the ham is mine. Though, thinking about it, I don't know where you buy it.]
@@ -646,15 +646,15 @@ SGARBO_E_COSA
 	[FRING=Now I have chosen a new word. I won't tell you, but it starts with p.]
 	[STITOLO=The stuck elevator][SGARBO=In a dream he stepped on my foot in the elevator.][DOMANDA_COSA=What is an elevator?]\
 	[RISPOSTA_COSA=A room that goes up. In the dream it never went up, and he kept pressing.]\
-	[FRING=The foot is better, and he doesn't press anything anymore. Thank you, even for the rooms that go up.]
+	[FRING=The foot is better, and he doesn't press anything any more. Thank you, even for the rooms that go up.]
 	[STITOLO=The suspicious greeting][SGARBO=Yesterday he greeted me with too much conviction.][DOMANDA_COSA=That's not an offence.]\
 	[RISPOSTA_COSA=It is, if you had seen how he did it. He even smiled.]\
-	[FRING=You say he doesn't smile anymore? Then all is well. Here are the coins.]
+	[FRING=You say he doesn't smile any more? Then all is well. Here are the coins.]
 	[STITOLO=The sideways look][SGARBO=He gave me a sideways look three times in a row.][DOMANDA_COSA=Maybe he had a tic.]\
 	[RISPOSTA_COSA=A malicious tic, if you ask me. Three times, and always from the same side.]\
 	[FRING=Now he looks straight, they tell me. Whether from fear or respect, I don't care.]
 	[STITOLO=The rooster's name][SGARBO=In a dream he called me by my rooster's name.][DOMANDA_COSA=Do you have a rooster?]\
-	[RISPOSTA_COSA=Not anymore, and that's exactly why it bothered me.]\
+	[RISPOSTA_COSA=Not any more, and that's exactly why it bothered me.]\
 	[FRING=The rooster is gone, but his name is now safe. Thank you, and forgive the emotion.]
 
 // Recuperi: il tizio ha preso qualcosa che non si può prendere

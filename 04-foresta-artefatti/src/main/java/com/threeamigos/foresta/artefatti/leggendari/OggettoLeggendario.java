@@ -31,6 +31,7 @@ public final class OggettoLeggendario {
 	private final TipoArtefatto tipo;
 	private final String nome;
 	private final String nomeBreve;
+	private final boolean plurale;
 	private final String descrizione;
 	private final int livello;
 	private final Integer danni;
@@ -71,6 +72,7 @@ public final class OggettoLeggendario {
 				case "COSTO":
 				case "PESO":
 				case "SET":
+				case "PLURALE":
 					if (campi.put(chiave, valore) != null) {
 						throw new IllegalArgumentException("Campo ripetuto: " + chiave + " in " + riga);
 					}
@@ -99,6 +101,7 @@ public final class OggettoLeggendario {
 			throw new IllegalArgumentException("La leggenda ha almeno " + LEGGENDE_MINIME + " battute: " + riga);
 		}
 		set = campi.get("SET");
+		plurale = campi.containsKey("PLURALE");
 		// Si costruisce una volta qui, così un modificatore o un incantamento sbagliato si scoprono subito
 		costruisci(livello);
 	}
@@ -151,6 +154,14 @@ public final class OggettoLeggendario {
 	 */
 	public String getNomeBreve() {
 		return nomeBreve;
+	}
+
+	/**
+	 * Se il nome è plurale ("gli Stivali del Fango", "the Boots of Mud"): lo dice il campo PLURALE della riga, perché in ogni
+	 * lingua l'articolo è diverso e a volte non c'è, e da questo dipende il verbo di chi ne parla.
+	 */
+	public boolean isPlurale() {
+		return plurale;
 	}
 
 	/**

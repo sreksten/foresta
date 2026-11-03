@@ -179,6 +179,52 @@ class MissioneATappeCasiTest {
         assertTrue(m.isFallita(), "le chiavi ci sono, ma l'ultimo posto, un tempio, non si può costruire da nessuna parte");
     }
 
+    /**
+     * Distrugge tutte le città tranne le prime {@code inPiedi} e mette il gruppo nella prima. L'incarico a tappe ha una città per primo posto:
+     * prima di offrirsi la città del mandante non è ancora scritta nella missione, ed era quella del gruppo a risultare "un'altra città".
+     */
+    private static void soloQuesteCittaInPiediEIlGruppoNellaPrima(int inPiedi) {
+        TipoLocazione prima = null;
+        int rimaste = 0;
+        for (TipoLocazione citta : TipoLocazione.values()) {
+            if (citta.getCategoriaLocazione() == CategoriaLocazione.CITTA && Foresta.getCoordinateLocazioneUnica(citta) != null) {
+                if (rimaste < inPiedi) {
+                    rimaste++;
+                    if (prima == null) {
+                        prima = citta;
+                    }
+                } else {
+                    Foresta.setCittaDistrutta(citta);
+                }
+            }
+        }
+        assertEquals(inPiedi, rimaste, "il mondo di prova ha abbastanza città");
+        Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(prima));
+        assertSame(prima, Foresta.getLocazioneDelGruppo());
+    }
+
+    @Test
+    void conUnaSolaCittaInPiediEQuellaDelGruppoL_incaricoATappeNonSiOffre() throws Exception {
+        soloQuesteCittaInPiediEIlGruppoNellaPrima(1);
+        MissioneATappe m = tappe(CON_COMPAGNO, "TAPPE_UNA_CITTA");
+        assertFalse((Boolean) invoca(m, "isPossibileQui"), "non c'è un'altra città dove far cominciare la pista");
+    }
+
+    @Test
+    void conUnAltraCittaInPiediL_incaricoATappeSiOffre() throws Exception {
+        soloQuesteCittaInPiediEIlGruppoNellaPrima(2);
+        MissioneATappe m = tappe(CON_COMPAGNO, "TAPPE_DUE_CITTA");
+        assertTrue((Boolean) invoca(m, "isPossibileQui"), "un'altra città c'è");
+    }
+
+    @Test
+    void unIncaricoFallitoPrimaDiOffrirsiNonMostraLaScenaDelMandante() throws Exception {
+        MissioneATappe m = tappe(CON_COMPAGNO, "TAPPE_FALLITA");
+        m.fallisciMissione();
+        Passo incarico = (Passo) invoca(m, "costruisciPasso", "INCARICO");
+        assertTrue(incarico.getPagine().isEmpty(), "il mandante non chiede aiuto per una missione già persa (e senza posto il testo avrebbe i segnaposto)");
+    }
+
     @Test
     void unGruppoDiUnoAscoltaLaSceneDaSolo() throws Exception {
         GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();

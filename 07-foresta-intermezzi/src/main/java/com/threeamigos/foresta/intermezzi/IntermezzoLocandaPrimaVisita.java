@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  */
 public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 
-	private static final String REGEX_PER_SPEZZARE_FRASI = "(?<=[.!?][\"“”])(?!\\s*,)(?=(?:[^\"“”]*[\"“”][^\"“”]*[\"“”])*[^\"“”]*$)"
+	private static final String REGEX_PER_SPEZZARE_FRASI = "(?<=[.!?][\"“”])(?!\\s*[,\\p{Ll}])(?=(?:[^\"“”]*[\"“”][^\"“”]*[\"“”])*[^\"“”]*$)"
 			+ "|(?<=[.!?])(?![.!?])(?![\"“”])(?=(?:[^\"“”]*[\"“”][^\"“”]*[\"“”])*[^\"“”]*$)";
 
 	private static final double X_PARTENZA_PERSONAGGI = -0.15;

@@ -149,7 +149,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 	 */
 	private String inPalio() {
 		String breve = getLeggendario().getNomeBreve();
-		boolean plurale = breve.startsWith("gli ") || breve.startsWith("i ") || breve.startsWith("le ");
+		boolean plurale = getLeggendario().isPlurale();
 		return Testi.formatta("missioni", plurale ? "IlTorneo.inPalioPlurale" : "IlTorneo.s1") + breve;
 	}
 

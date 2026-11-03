@@ -64,7 +64,7 @@ public final class NotizieDelleLocande {
 			if (contenuto == null) {
 				continue;
 			}
-			contenuto = contenuto.replace("NOME_LOCANDA", nomeLocanda);
+			contenuto = conIlNomeDellaLocanda(contenuto, nomeLocanda);
 			contenuto = contenuto.replace("NOME_LOCANDIERE", nomeLocandiere);
 			if (contenuto.trim().isEmpty()) {
 				// Una notizia vuota non si mostra: è un difetto della grammatica, e si prova con un'altra
@@ -74,6 +74,28 @@ public final class NotizieDelleLocande {
 			return new NotiziaMD(identificativo, contenuto);
 		}
 		return null;
+	}
+
+	/**
+	 * Mette il nome della locanda al posto di NOME_LOCANDA. Se il nome comincia con l'articolo ("The Stomachache Glade") a metà frase l'articolo
+	 * va in minuscolo ("near the Stomachache Glade"); a inizio frase resta com'è.
+	 */
+	static String conIlNomeDellaLocanda(String contenuto, String nomeLocanda) {
+		final String segnaposto = "NOME_LOCANDA";
+		if (!nomeLocanda.startsWith("The ")) {
+			return contenuto.replace(segnaposto, nomeLocanda);
+		}
+		String senzaArticolo = "the " + nomeLocanda.substring("The ".length());
+		StringBuilder risultato = new StringBuilder();
+		int da = 0;
+		int i;
+		while ((i = contenuto.indexOf(segnaposto, da)) >= 0) {
+			String prima = contenuto.substring(0, i).trim();
+			boolean inizioDiFrase = prima.isEmpty() || prima.endsWith(".") || prima.endsWith("!") || prima.endsWith("?") || prima.endsWith(":") || prima.endsWith("-");
+			risultato.append(contenuto, da, i).append(inizioDiFrase ? nomeLocanda : senzaArticolo);
+			da = i + segnaposto.length();
+		}
+		return risultato.append(contenuto.substring(da)).toString();
 	}
 
 	/**
@@ -96,6 +118,7 @@ public final class NotizieDelleLocande {
 				return null;
 			}
 			contenuto = concordaConLaClasse(contenuto, "BARDO", TipoPersonaggio.BARDO, TipoPersonaggio.CANTASTORIE);
+			contenuto = pronomiDellaClasse(contenuto, "BARDO", TipoPersonaggio.BARDO, TipoPersonaggio.CANTASTORIE);
 			contenuto = sostituisci(contenuto, TipoPersonaggio.CANTASTORIE, TipoPersonaggio.BARDO);
 			contenuto = sostituisci(contenuto, TipoPersonaggio.BARDO, TipoPersonaggio.CANTASTORIE);
 		}
@@ -106,6 +129,7 @@ public final class NotizieDelleLocande {
 				return null;
 			}
 			contenuto = concordaConLaClasse(contenuto, "LADRO", TipoPersonaggio.LADRO, TipoPersonaggio.LADRA);
+			contenuto = pronomiDellaClasse(contenuto, "LADRO", TipoPersonaggio.LADRO, TipoPersonaggio.LADRA);
 			contenuto = sostituisci(contenuto, TipoPersonaggio.LADRA, TipoPersonaggio.LADRO);
 			contenuto = sostituisci(contenuto, TipoPersonaggio.LADRO, TipoPersonaggio.LADRA);
 
@@ -116,6 +140,7 @@ public final class NotizieDelleLocande {
 			if (!applicabile) {
 				return null;
 			}
+			contenuto = pronomiDellaClasse(contenuto, "GUERRIERO", TipoPersonaggio.GUERRIERO, TipoPersonaggio.GUERRIERA);
 			contenuto = sostituisci(contenuto, TipoPersonaggio.GUERRIERA, TipoPersonaggio.GUERRIERO);
 			contenuto = sostituisci(contenuto, TipoPersonaggio.GUERRIERO, TipoPersonaggio.GUERRIERA);
 		}
@@ -125,6 +150,7 @@ public final class NotizieDelleLocande {
 			if (!applicabile) {
 				return null;
 			}
+			contenuto = pronomiDellaClasse(contenuto, "MAGO", TipoPersonaggio.MAGO, TipoPersonaggio.MAGA);
 			contenuto = sostituisci(contenuto, TipoPersonaggio.MAGA, TipoPersonaggio.MAGO);
 			contenuto = sostituisci(contenuto, TipoPersonaggio.MAGO, TipoPersonaggio.MAGA);
 		}
@@ -134,10 +160,12 @@ public final class NotizieDelleLocande {
 			if (!applicabile) {
 				return null;
 			}
+			contenuto = pronomiDellaClasse(contenuto, "ELFO", TipoPersonaggio.ELFO, TipoPersonaggio.ELFA);
 			contenuto = sostituisci(contenuto, TipoPersonaggio.ELFA, TipoPersonaggio.ELFO);
 			contenuto = sostituisci(contenuto, TipoPersonaggio.ELFO, TipoPersonaggio.ELFA);
 		}
 		Personaggio eroe = GruppoGiocatore.getIstanza().getCapo();
+		contenuto = pronomi(contenuto, "EROE", eroe);
 		contenuto = contenuto.replace("EROE", eroe.getNomeProprio().orElseThrow(() -> new IllegalStateException("Personaggio senza nome proprio")));
 		contenuto = contenuto.replace("LETTERA_FINALE", eroe.getLetteraFinaleAttributo());
 		return contenuto;
@@ -155,6 +183,30 @@ public final class NotizieDelleLocande {
 			return contenuto;
 		}
 		return contenuto.replace(segnaposto, trova(principale, alternativa).getLetteraFinaleAttributo());
+	}
+
+	/**
+	 * I pronomi di un personaggio, per le lingue che li hanno diversi per sesso (in italiano non compaiono): {@code SEGNAPOSTO_SUO} è "his" o "her",
+	 * {@code SEGNAPOSTO_LUI} "he" o "she", {@code SEGNAPOSTO_LO} "him" o "her" e {@code SEGNAPOSTO_SE} "himself" o "herself". Come per
+	 * LETTERA_FINALE_CLASSE va fatto prima di sostituire i nomi, che contengono la stessa parola.
+	 */
+	private static String pronomi(String contenuto, String segnaposto, Personaggio personaggio) {
+		boolean femmina = !"o".equals(personaggio.getLetteraFinaleAttributo());
+		return contenuto
+				.replace(segnaposto + "_SUO", femmina ? "her" : "his")
+				.replace(segnaposto + "_LUI", femmina ? "she" : "he")
+				.replace(segnaposto + "_LO", femmina ? "her" : "him")
+				.replace(segnaposto + "_SE", femmina ? "herself" : "himself");
+	}
+
+	/**
+	 * I pronomi del personaggio che prenderà il posto del segnaposto di quella classe (lo stesso che sceglie {@link #sostituisci}).
+	 */
+	private static String pronomiDellaClasse(String contenuto, String classe, TipoPersonaggio principale, TipoPersonaggio alternativa) {
+		if (!contenuto.contains(classe + "_")) {
+			return contenuto;
+		}
+		return pronomi(contenuto, classe, trova(principale, alternativa));
 	}
 
 	private static String sostituisci(String contenuto, TipoPersonaggio classe1, TipoPersonaggio classe2) {

@@ -275,7 +275,7 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 		PescaLeggendaria.battutaDelSet(leggendario, giaPescati()).ifPresent(racconto::narra);
 		leggendario.getLeggenda().forEach(racconto::narra);
 		String breve = leggendario.getNomeBreve();
-		boolean plurale = breve.startsWith("gli ") || breve.startsWith("i ") || breve.startsWith("le ");
+		boolean plurale = leggendario.isPlurale();
 		return racconto
 				.narra(Testi.formatta("missioni", "LaLeggenda.s3", Testi.formatta("missioni", plurale ? "LaLeggenda.verboRiposano" : "LaLeggenda.verboRiposa"), getNomeDeiGuardiani()))
 				.parlaIlCapo(Testi.formatta("missioni", "LaLeggenda.1", breve))

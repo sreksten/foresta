@@ -44,7 +44,7 @@ La regola, controllata da `CostantiDegliEventiTest` in `13-foresta-app-swing`, �
 
 Solo quelli che non hanno bisogno di nessun dato del dominio:
 
-- **`notifiche`**: `NotificaTestoFrase` e `NotificaTestoParagrafo` (la narrazione del gioco, una frase o un paragrafo) e `NotificaGlobale` (un messaggio più importante degli altri).
+- **`notifiche`**: `NotificaTestoFrase` e `NotificaTestoParagrafo` (la narrazione del gioco, una frase o un paragrafo), che mettono la maiuscola al primo carattere del messaggio se comincia in minuscolo (un nome con l'articolo, come "the city of Fleena", messo a inizio frase) e `NotificaGlobale` (un messaggio più importante degli altri).
 - **`interni`**: `InternoException`, `InternoErrore`, `InternoMessaggio` (errori e messaggi per il log); `InternoMostraFinestraStato` e `InternoMostraFinestraIncantesimiEPozioni` (il motore chiede alla UI di portare in primo piano un riquadro, senza conoscerlo); `InternoRichiestaRefreshUI`; e quelli del ciclo di una locazione, `InternoPreparazioneLocazione`, `InternoFineLocazione` e `InternoPassaggioInosservato`.
 
 Il pacchetto `tipi` di questo modulo contiene solo `TipoEvento`. Il significato di ciascuna famiglia nel flusso del gioco è in [`motore_di_gioco.md`](motore_di_gioco.md) §4.

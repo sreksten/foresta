@@ -48,9 +48,9 @@ class LibroTecnicoTest {
 		assertEquals(2, LibroTecnico.tutti().size());
 		LibroTecnico unix = LibroTecnico.getLibro(UNIX).orElseThrow(AssertionError::new);
 		assertEquals("il Manuale di Unix System V", unix.getNome());
-		assertEquals("\"Il Manuale di Unix System V\", che spiega tutto, tranne come si esce dall'editor", unix.getTitoloDaLeggere());
+		assertEquals("“Il Manuale di Unix System V”, che spiega tutto, tranne come si esce dall'editor", unix.getTitoloDaLeggere());
 		LibroTecnico kr = LibroTecnico.getLibro(K_AND_R).orElseThrow(AssertionError::new);
-		assertEquals("\"The C Programming Language\", di B. Kernighan e D. Ritchie", kr.getTitoloDaLeggere());
+		assertEquals("“The C Programming Language”, di B. Kernighan e D. Ritchie", kr.getTitoloDaLeggere());
 		assertFalse(kr.getBattute().isEmpty());
 	}
 

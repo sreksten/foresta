@@ -81,7 +81,7 @@ RICHIESTA_CAPITANO
     F;harpy feather;harpy feathers;NEMICI ARPIA;3-4;6;Don't they fly away?;Harpies do. The feathers, if you hold them tight, don't.
     M;troll tooth;troll teeth;NEMICI TROLL;3-4;7;Trolls have plenty of them.;One apiece. Don't be picky.
     M;centaur hoof;centaur hooves;NEMICI CENTAURO;2-3;8;Do they let you take their hooves off?;Not while alive. But you know how to manage.
-    M;goblin dagger;goblin daggers;NEMICI GOBLIN;3-4;6;Don't they use them anymore?;They still do, which is why I want them here, in the armoury.
+    M;goblin dagger;goblin daggers;NEMICI GOBLIN;3-4;6;Don't they use them any more?;They still do, which is why I want them here, in the armoury.
     M;chimera tuft;chimera tufts;NEMICI CHIMERA;2-3;9;Which of the heads?;The hairiest. You can tell at a glance.
 
 RICHIESTA_LOCANDIERE
@@ -130,14 +130,14 @@ VIANDANTE
     CHIAVE=TROLL_DEL_PONTE;NEMICO=TROLL;NUMERO=2-3;PLURALE=trolls;MONETE=7;RICHIESTA=Hold on a moment, travellers. Near %CITTA% some trolls have made their home under a bridge and demand a toll from everyone. I have nothing left to give.;BATTUTA=What if we went there and explained how commerce works?;RISPOSTA=Explain it to them with a sword. It's the only language they understand. Then come back here, I'll be waiting for you.;ARRIVO=You are at %CITTA%. The bridge trolls, they say, show up mostly at night and after meals.;RITORNO=You did it! The bridge is free, and I can pass without opening my purse. Take what I promised you.
     CHIAVE=ARPIE_DEL_BUCATO;NEMICO=ARPIA;NUMERO=2-4;PLURALE=harpies;MONETE=6;RICHIESTA=Hello there! The harpies near %CITTA% stole all my laundry, and the sheets weren't even mine. I'll pay well if you make them stop.;BATTUTA=The sheets or the harpies?;RISPOSTA=The harpies. Sheets can be bought again. Then come back here to report.;ARRIVO=You are at %CITTA%. Scraps of cloth drift through the air, along with a shrill, satisfied note.;RITORNO=No more harpies, no more flying sheets. I owe you a lot, and I'll pay you too.
     CHIAVE=GOBLIN_DEL_POLLAIO;NEMICO=GOBLIN;NUMERO=3-4;PLURALE=goblins;MONETE=5;RICHIESTA=Friends! Near %CITTA% some goblins take my hens every night. I can't take any more eggs scrambled by fright.;BATTUTA=Are the hens sure they want to be saved?;RISPOSTA=They're hens, they don't ask many questions. Defeat them and come back to me.;ARRIVO=You are at %CITTA%. An empty henhouse and a footprint that looks like a goblin's paw: you've understood everything.;RITORNO=The hens are singing again. Thank you, from me and on behalf of the eggs.
-    CHIAVE=SCHELETRI_DEL_CIMITERO;NEMICO=SCHELETRO;NUMERO=2-4;PLURALE=skeletons;MONETE=7;RICHIESTA=Good day, strangers. In the old cemetery near %CITTA% the skeletons no longer stay in their place and wander around greeting people. Nobody sleeps anymore.;BATTUTA=Greeting? Do they still have something to say?;RISPOSTA=Only hello. But repeated all night. Put them back to rest and come tell me.;ARRIVO=You are at %CITTA%. The cemetery is nearby. From there comes a faint sound of bones lining up.;RITORNO=Silence, at last. The skeletons rest and so do I. Here, you earned it.
-    CHIAVE=MINOTAURO_DEL_LABIRINTO;NEMICO=MINOTAURO;NUMERO=1-2;PLURALE=minotaurs;MONETE=12;RICHIESTA=Wait a moment, travellers! Near %CITTA% a minotaur has taken possession of a hedge maze and lets nobody out anymore. Not even the gardeners.;BATTUTA=And we're supposed to go in?;RISPOSTA=You should get him out, in a way. Then come back here.;ARRIVO=You are at %CITTA%. The hedge maze can be seen from afar. The gardeners, on the other hand, can't.;RITORNO=The maze is just a maze again. What good news. Here's your share.
+    CHIAVE=SCHELETRI_DEL_CIMITERO;NEMICO=SCHELETRO;NUMERO=2-4;PLURALE=skeletons;MONETE=7;RICHIESTA=Good day, strangers. In the old cemetery near %CITTA% the skeletons no longer stay in their place and wander around greeting people. Nobody sleeps any more.;BATTUTA=Greeting? Do they still have something to say?;RISPOSTA=Only hello. But repeated all night. Put them back to rest and come and tell me.;ARRIVO=You are at %CITTA%. The cemetery is nearby. From there comes a faint sound of bones lining up.;RITORNO=Silence, at last. The skeletons rest and so do I. Here, you earned it.
+    CHIAVE=MINOTAURO_DEL_LABIRINTO;NEMICO=MINOTAURO;NUMERO=1-2;PLURALE=minotaurs;MONETE=12;RICHIESTA=Wait a moment, travellers! Near %CITTA% a minotaur has taken possession of a hedge maze and lets nobody out any more. Not even the gardeners.;BATTUTA=And we're supposed to go in?;RISPOSTA=You should get him out, in a way. Then come back here.;ARRIVO=You are at %CITTA%. The hedge maze can be seen from afar. The gardeners, on the other hand, can't.;RITORNO=The maze is just a maze again. What good news. Here's your share.
     CHIAVE=FANTASMI_DEL_MULINO;NEMICO=FANTASMA;NUMERO=2-3;PLURALE=ghosts;MONETE=9;RICHIESTA=Stop, please! Near %CITTA% some ghosts have occupied a mill and move the flour sacks during the night. The miller has given up counting them.;BATTUTA=Ghosts moving flour? And then?;RISPOSTA=And then nothing. That's exactly what drives the miller mad. Drive them away and come back here.;ARRIVO=You are at %CITTA%. The mill, white with flour, can be seen from afar, and the blades turn without wind.;RITORNO=The miller sleeps and the sacks stay where he put them. I really do owe you a reward.
-    CHIAVE=FOLLETTI_DEL_LATTE;NEMICO=FOLLETTO;NUMERO=2-3;PLURALE=sprites;MONETE=6;RICHIESTA=One moment, wayfarers. Near %CITTA% some sprites milk my cows at night and leave the pail full of little pebbles. I never see the milk again.;BATTUTA=Pebbles, what kind?;RISPOSTA=The kind that rattle in your teeth. Drive them away and come tell me.;ARRIVO=You are at %CITTA%. On the rim of the pail there's a shiny pebble and a note: Thanks for the milk.;RITORNO=The cows sleep, the milk is mine, the pebbles are in the meadow. Take your reward and a glass, if you like.
-    CHIAVE=VIVERNA_DEL_FIENILE;NEMICO=VIVERNA;NUMERO=1-2;PLURALE=wyverns;MONETE=8;RICHIESTA=Stop, friends. A wyvern has taken up residence in the barn near %CITTA% and sleeps on the best hay. My animals won't even go in to eat anymore.;BATTUTA=Did the wyvern pay the rent?;RISPOSTA=With a tail to the head, now and then. Defeat it and come report.;ARRIVO=You are at %CITTA%. From the barn comes a long snore and a smell of singed hay.;RITORNO=The barn is mine again, and the hay almost all in one piece. Here's what I owed you.
+    CHIAVE=FOLLETTI_DEL_LATTE;NEMICO=FOLLETTO;NUMERO=2-3;PLURALE=sprites;MONETE=6;RICHIESTA=One moment, wayfarers. Near %CITTA% some sprites milk my cows at night and leave the pail full of little pebbles. I never see the milk again.;BATTUTA=Pebbles, what kind?;RISPOSTA=The kind that rattle in your teeth. Drive them away and come and tell me.;ARRIVO=You are at %CITTA%. On the rim of the pail there's a shiny pebble and a note: Thanks for the milk.;RITORNO=The cows sleep, the milk is mine, the pebbles are in the meadow. Take your reward and a glass, if you like.
+    CHIAVE=VIVERNA_DEL_FIENILE;NEMICO=VIVERNA;NUMERO=1-2;PLURALE=wyverns;MONETE=8;RICHIESTA=Stop, friends. A wyvern has taken up residence in the barn near %CITTA% and sleeps on the best hay. My animals won't even go in to eat any more.;BATTUTA=Did the wyvern pay the rent?;RISPOSTA=With a tail to the head, now and then. Defeat it and come and report.;ARRIVO=You are at %CITTA%. From the barn comes a long snore and a smell of singed hay.;RITORNO=The barn is mine again, and the hay almost all in one piece. Here's what I owed you.
     CHIAVE=HOBGOBLIN_DEL_DAZIO;NEMICO=HOBGOBLIN;NUMERO=2-3;PLURALE=hobgoblins;MONETE=7;RICHIESTA=Hello, wayfarers. Near %CITTA% some hobgoblins have set up an unauthorised toll on the road, and they even issue a receipt. I'm already at three receipts, and I have no coins left.;BATTUTA=Is the receipt valid?;RISPOSTA=That's not the point. Clear the road and come back, I'll tell you what it's worth.;ARRIVO=You are at %CITTA%. At the side of the road a crooked sign reads: Toll, pay here. The rest is illegible.;RITORNO=Road clear and no receipts! Take your pay, and my receipts too: they make good fuel.
-    CHIAVE=SPETTRI_DELLA_LOCANDA;NEMICO=SPETTRO;NUMERO=2-3;PLURALE=spectres;MONETE=9;RICHIESTA=Good day. In the old inn near %CITTA% some spectres offer drinks to passersby. The tankard is empty, but the bill is full.;BATTUTA=Whose bill?;RISPOSTA=Whoever accepted. Free them, and do me the courtesy of not tasting anything.;ARRIVO=You are at %CITTA%. From the inn comes a clinking of tankards that nobody is holding.;RITORNO=The inn is quiet and the bill is settled. Luckily you didn't drink there. Here's what you're owed.
-    CHIAVE=CENTAURI_DELLA_CORSA;NEMICO=CENTAURO;NUMERO=2-3;PLURALE=centaurs;MONETE=8;RICHIESTA=Strangers! Some centaurs near %CITTA% challenge anyone passing to a race, and always win, because they have twice as many legs. Whoever loses pays the stake, and then the road.;BATTUTA=Are the challenges fair, with them?;RISPOSTA=For them, yes. For us, never. Make them stop, and come back to me.;ARRIVO=You are at %CITTA%. In the distance you hear hoofbeats, and a voice shouting: Who accepts?;RITORNO=No more rigged races! Here's your pay, and if you want some advice, never answer the centaurs: All right.
+    CHIAVE=SPETTRI_DELLA_LOCANDA;NEMICO=SPETTRO;NUMERO=2-3;PLURALE=spectres;MONETE=9;RICHIESTA=Good day. In the old inn near %CITTA% some spectres offer drinks to passers-by. The tankard is empty, but the bill is full.;BATTUTA=Whose bill?;RISPOSTA=Whoever accepted. Free them, and do me the courtesy of not tasting anything.;ARRIVO=You are at %CITTA%. From the inn comes a clinking of tankards that nobody is holding.;RITORNO=The inn is quiet and the bill is settled. Luckily you didn't drink there. Here's what you're owed.
+    CHIAVE=CENTAURI_DELLA_CORSA;NEMICO=CENTAURO;NUMERO=2-3;PLURALE=centaurs;MONETE=8;RICHIESTA=Strangers! Some centaurs near %CITTA% challenge anyone passing to a race, and always win, because they have twice as many legs. Whoever loses pays the stake, and then the road.;BATTUTA=Are the challenges fair with them?;RISPOSTA=For them, yes. For us, never. Make them stop, and come back to me.;ARRIVO=You are at %CITTA%. In the distance you hear hoofbeats, and a voice shouting: Who accepts?;RITORNO=No more rigged races! Here's your pay, and if you want some advice, never answer the centaurs: All right.
     CHIAVE=CHIMERA_DEL_MERCATO;NEMICO=CHIMERA;NUMERO=1-2;PLURALE=chimeras;MONETE=10;RICHIESTA=Stop, please. A chimera came down from the woods near %CITTA% and ate the entire cheese stall, and the cheeses weren't even the stall's. The market is in mourning.;BATTUTA=Which head does it eat with?;RISPOSTA=All of them, in turn. Chase it away and come back: the market will be grateful.;ARRIVO=You are at %CITTA%. Among the overturned crates there's a cheese rind and a claw that isn't a chicken's.;RITORNO=The market opens again and the cheeses are safe, the ones that are left. Take your reward and a taste.
 
 // ---------------------------------------------------------------------------------------------
@@ -146,8 +146,8 @@ VIANDANTE
 
 TRASPORTO
     F;sealed letter;the notary;the mayor;CON_CALMA;14;I have a letter I can't entrust to the couriers. The last one opened it to read it.;And what does it say?;If I told you, I'd have to look for another courier.;The seal is intact! So honest people still exist.
-    M;love token;the young apprentice;his betrothed;CON_CALMA;14;She lives far away, and I can't leave the shop. The master has already scolded me twice today.;What if she says no?;Then keep it. No, wait, bring it back to me.;He said he would come and bring it to me himself! Yes, yes, a thousand times yes.
-    M;bag of rare seeds;the palace gardener;the herbalist;CON_CALMA;12;These seeds come from very far away, and in the forest the birds would eat them in one bite.;What grows from them?;If I knew, I wouldn't send them to an herbalist.;Exactly the ones I was looking for! And not a single one pecked.
+    M;love token;the young apprentice;the apprentice's betrothed;CON_CALMA;14;She lives far away, and I can't leave the shop. The master has already scolded me twice today.;What if she says no?;Then keep it. No, wait, bring it back to me.;He said he would come and bring it to me himself! Yes, yes, a thousand times yes.
+    M;bag of rare seeds;the palace gardener;the herbalist;CON_CALMA;12;These seeds come from very far away, and in the forest the birds would eat them in one bite.;What grows from them?;If I knew, I wouldn't send them to a herbalist.;Exactly the ones I was looking for! And not a single one pecked.
     M;chest of coins;the moneychanger;the banker;CON_CALMA;18;I have to send a chest of coins to the banker. I know, I know, it's a test of trust.;What if we're tempted?;The banker knows how much is inside. And now he knows your faces too.;Count, recount... it's all here. How strange.
     F;crate of books;the librarian;the schoolmaster;CON_CALMA;12;The schoolmaster has run out of books for the children to read. That is, the children have run out of them. By biting.;By biting?;They're city children. Don't ask.;New books! This time I'll put them on the highest shelf.
     F;vial of antidote;the herbalist;the blacksmith;URGENTE;20;The blacksmith was bitten by a forest viper, and without this antidote he won't make it to the end of the week.;What if we arrive late?;Then bring him flowers instead.;The poison is going away... I can feel my toes again!
@@ -160,7 +160,7 @@ TRASPORTO
     M;sack of purified salt;the abbess;the mayor;URGENTE;22;A plague is eating the grain, and whoever eats it. This salt, scattered on the thresholds of the houses, stops the contagion.;Does it really work?;It always works. Almost always. Often.;We'll scatter it on every threshold. May heaven bless you!
     M;sales contract;the notary;the cloth merchant;URGENTE;18;The merchant has to sign this contract within a few days, or the deal falls through. And with the deal goes my fee.;What if he doesn't want to sign?;He'll sign. He's the one who asked for it, and he wants it even more than I do.;Signed! And with the seal, look. Now the cloth is mine.
     M;treaty of alliance;the mayor;the council of merchants;CON_CALMA;20;On our own the goblins crush us, but together with the other cities maybe not. This treaty proposes it. It must be delivered by hand, with a nice bow.;What if they don't sign it?;Then bow lower.;An alliance! We'll sign it right away, and toast tonight. Actually, now.
-    F;truce proposal;the captain of the guard;the captain of the militia;URGENTE;22;Our guards and their militia throw stones at each other over a bridge nobody uses anymore. This truce ends the matter, if it arrives before the next stone fight.;And the bridge?;We split it in half. One half each, and the span in the middle goes to the goats.;A truce, at last! My men had run out of stones.
+    F;truce proposal;the captain of the guard;the captain of the militia;URGENTE;22;Our guards and their militia throw stones at each other over a bridge nobody uses any more. This truce ends the matter, if it arrives before the next stone fight.;And the bridge?;We split it in half. One half each, and the span in the middle goes to the goats.;A truce, at last! My men had run out of stones.
     F;settlement proposal;the miller;the fisherman;CON_CALMA;14;The fisherman says my mill scares his fish, I say his fish clog my wheel. I wrote an agreement, but he'd never accept it from me.;And from us he would?;From you maybe. You're neutral. And big.;An agreement? The mill stops on Sundays, and I fish only after sunset. It can be done.
     M;basket of apples;the farmwife;the pastry chef;CON_CALMA;12;The apples from my orchard are the best in the realm, and the pastry chef knows it. My cart, though, has broken.;How many apples?;As many as you can carry. And eat no more than two, I'm counting.;The apples! Two are missing, but I'll turn a blind eye: couriers have to eat too.
     F;vial of cough medicine;the district doctor;the village teacher;URGENTE;18;The teacher has been coughing for a week, and the children now repeat the cough by heart.;Why is it urgent?;Because they're learning the fever too.;At last! One sip and I resume the lesson. The children will have something to say.
@@ -186,7 +186,7 @@ CONTRABBANDO
     M;sack of dirty coins;the fence;the moneychanger;URGENTE;24;These coins come from a theft, and still bear the owner's mark. The moneychanger melts them and gives them back to me clean. More or less clean.;What if someone recognises the mark?;Then you're very unlucky couriers. And I've never seen you.;Marked coins, eh? In an hour they'll be ingots. And in two, brand-new coins.
     M;bag of coins;the grain merchant;the tax collector;CON_CALMA;22;The tax collector taxes my grain twice as much as everyone else's. This bag will convince him to tax it half. But nobody must see me bringing it to him.;What if someone sees it?;Then it's a birthday present. The tax collector has birthdays often.;A gift? For me? How kind. The merchant's grain will weigh half from now on.
     F;ream of satirical sheets;the printer;the town crier;CON_CALMA;18;I printed some sheets about the mayor. They're not true, but they're funny. The crier will read them in the square, if they arrive without the guards seeing them.;What if the mayor gets angry?;He'll get angry. That's what's funny.;These I'll read gladly! Tomorrow the square will be crowded.
-    M;casket of family jewels;the fallen noblewoman;her old nanny;URGENTE;20;Tomorrow the tax collectors come to seize everything. But they won't get my grandmother's jewels: hide them with my old nanny.;What if the tax collectors stop us?;They won't stop you if they don't see you. Don't be seen.;The young lady's jewels! I'll keep them under the stable floor, nobody ever looks there.
+    M;casket of family jewels;the fallen noblewoman;the old nanny;URGENTE;20;Tomorrow the tax collectors come to seize everything. But they won't get my grandmother's jewels: hide them with my old nanny.;What if the tax collectors stop us?;They won't stop you if they don't see you. Don't be seen.;The young lady's jewels! I'll keep them under the stable floor, nobody ever looks there.
     M;trunk of false relics;the relic merchant;the country prior;CON_CALMA;20;These are the bones of a saint. Of three saints, to tell the truth, judging by the number of legs. The prior wants them for his chapel, and the guards would ask too many questions.;Are they real?;They're bones. On that I won't lie to you.;The holy relics! Three legs... he must have been a very fast saint.
     M;load of untaxed salt;the salt-maker;the innkeeper;CON_CALMA;20;Salt has a duty that would make a rock cry. My duty-free salt is just salt.;Then why in secret?;Because the guards are very fond of the duty.;What a taste! The real one, without taxes. Nobody will talk about it, except the soup.
     F;cage of talking parrots;the spice merchant;the noblewoman;CON_CALMA;22;These parrots were trained to repeat everything. Even things they shouldn't repeat.;For example?;A secret, two addresses and the mayor's name. Cover the cage with a cloth.;What sweet little birds! I'll keep the cloth, I'll listen to the secrets. In private.
@@ -320,8 +320,8 @@ INCARICO_DI_COMBATTIMENTO
     LUOGO=GROTTA;MONETE=45;TITOLO=The Pit of Experiments;\
     RICHIESTA=In a cave I dump my failed experiments. Well, now the failed experiments have organised, and they no longer let me in.;\
     BATTUTA=What experiments?;RISPOSTA=Sprites, mostly. And other things. I'll introduce you to the other things when they arrive.;\
-    ONDATA_2=ARPIA 2;ARRIVO_2=Two harpies rise from the bottom of the pit, which surely were not harpies when the alchemist threw them away.;\
-    ONDATA_3=CHIMERA 1;ARRIVO_3=Last of all comes a chimera, with the air of someone who has many complaints for whoever brought it into the world.;\
+    ONDATA_2=ARPIA 2;ARRIVO_2=Two harpies, which surely were not harpies when the alchemist threw them away, rise from the bottom of the pit.;\
+    ONDATA_3=CHIMERA 1;ARRIVO_3=Last of all comes a chimera, with the air of someone who has many complaints against whoever brought it into the world.;\
     VITTORIA=The pit is cleaned out: of the failed experiments only the little bottles remain.;\
     RINGRAZIAMENTO=Thank you! From now on I'll dump the failed experiments in the river. No, I'm joking. Maybe.;\
     RICORDO=In this cave the alchemist dumped his failed experiments, until they organised.
@@ -329,7 +329,7 @@ INCARICO_DI_COMBATTIMENTO
     NUMERO=3;LUOGO=BOSCO;MONETE=30;TITOLO=The Patrol in the Woods;\
     RICHIESTA=A patrol of hobgoblins roams a wood nearby and probes our defences. One skirmish, and they leave.;\
     BATTUTA=And if they don't leave?;RISPOSTA=Then the skirmish becomes a battle, and the pay doubles. Just kidding.;\
-    VITTORIA=The hobgoblin patrol will probe nobody's defences anymore.;\
+    VITTORIA=The hobgoblin patrol will probe nobody's defences any more.;\
     RINGRAZIAMENTO=Nice work. For a while the hobgoblins will keep their distance.;\
     RICORDO=In this wood the hobgoblin patrol used to roam.
     CHIAVE=PREDONI_DELLA_RADURA;TIPO=IMBOSCATA;ASPETTO=CAPITANO;MANDANTE=the captain of the guard;NEMICO=LADRO;NUMERO=4;\
@@ -349,7 +349,7 @@ INCARICO_DI_COMBATTIMENTO
     CHIAVE=SFIDA_DEL_CAMPIONE;TIPO=DUELLO;ASPETTO=GUERRIERO;MANDANTE=the weapons master;NEMICO=GUERRIERO;NUMERO=1;\
     CAPO=NOME_CAMPIONE;RESA=SI;DUELLO=SI;LUOGO=RADURA;MONETE=35;TITOLO=The Challenge of %CAPO%;\
     RICHIESTA=A champion, %CAPO%, has pitched his tent in a clearing and challenges anyone passing by. He has already beaten all my pupils. And me.;\
-    BATTUTA=And why should we be the ones to beat him?;RISPOSTA=Because now nobody wants to take lessons from me anymore.;\
+    BATTUTA=And why should we be the ones to beat him?;RISPOSTA=Because now nobody wants to take lessons from me any more.;\
     VITTORIA=%CAPO% folds his tent and leaves, a little less proud than before.;\
     RINGRAZIAMENTO=The pupils have already come back. I tell everyone I taught him the trick myself.;\
     RICORDO=In this clearing %CAPO% challenged anyone who passed.
@@ -447,7 +447,7 @@ INCARICO_DI_COMBATTIMENTO
     CHIAVE=CAROVANA_DELL_USURAIO;TIPO=BRIGANTAGGIO;ASPETTO=QUALUNQUE;MANDANTE=the blacksmith;NEMICO=GUERRIERO;NUMERO=3;LUOGO=BOSCO;\
     MONETE=40;TITOLO=The Moneylender's Caravan;\
     RICHIESTA=Tomorrow the moneylender's caravan passes through a wood, loaded with the pledges he took from us. Three guards escort it.;\
-    BATTUTA=You're asking us to raid a caravan?;RISPOSTA=I'm asking you to bring home half the town's belongings. That they pass through a caravan is a detail.;\
+    BATTUTA=You're asking us to raid a caravan?;RISPOSTA=I'm asking you to bring home half the town's belongings. That they are in a caravan is a detail.;\
     VITTORIA=The moneylender's guards run off, and the caravan is yours: hammers, pots, wedding rings.;\
     RINGRAZIAMENTO=My hammer! And my wife's ring. The rest I'll return to whoever it belongs to.;\
     RICORDO=In this wood someone raided the moneylender's caravan.
@@ -455,7 +455,7 @@ INCARICO_DI_COMBATTIMENTO
     NUMERO=4;CAPO=SI;LUOGO=ROVINE;MONETE=50;TITOLO=The Assault on the Fortress;\
     RICHIESTA=%CAPO%'s brigands have holed up in an old fortress among some ruins. From there they extort anyone who passes on the road. Take it by storm.;\
     BATTUTA=Wouldn't you need an army?;RISPOSTA=I would, yes. I have you.;\
-    VITTORIA=The fortress is taken: %CAPO% and his brigands will extort nobody anymore.;\
+    VITTORIA=The fortress is taken: %CAPO% and his brigands will extort nobody any more.;\
     RINGRAZIAMENTO=The road is free again. Our flag now flies over the fortress. Well, a rag, but it's ours.;\
     RICORDO=Among these ruins stood the fortress of %CAPO%'s brigands, taken by storm.
     CHIAVE=HOBGOBLIN_ACCERCHIATI;TIPO=CIRCONDAMENTO;ASPETTO=CAPITANO;MANDANTE=the captain of the guard;NEMICO=HOBGOBLIN;\
@@ -639,7 +639,7 @@ SORVEGLIANZA
     BATTUTA=How long can they hold out?;RISPOSTA=They have bread for a week and patience for a day. Hurry.;\
     VEGLIA=The besieged greet you from the tower. The hobgoblins, from the brush, keep an eye on you.;\
     SCOPERTA=Tired of waiting, %CAPO%'s hobgoblins attempt to storm the tower.;\
-    VITTORIA=The siege is broken: %CAPO%'s hobgoblins, the goblins with the ladder and even %CAPO_3% will besiege nobody anymore.;\
+    VITTORIA=The siege is broken: %CAPO%'s hobgoblins, the goblins with the ladder and even %CAPO_3% will besiege nobody any more.;\
     RINGRAZIAMENTO=The patrol is back. Starving, but whole. The bread ran out on the second day, the patience on the first.;\
     RICORDO=Among these ruins stands a tower that withstood the siege of %CAPO%'s hobgoblins.
     CHIAVE=GUADO_DA_TENERE;TIPO=TRINCEA;ASPETTO=QUALUNQUE;MANDANTE=the ferryman;LUOGO=PALUDE;VISITE=2;ORE=20;\
@@ -783,7 +783,7 @@ INDAGINE
     DOMANDA=Who stole the bells?;SOSPETTI=The bell ringer/The gargoyles of the ruins/The harpies/The bell founder;\
     COLPEVOLE=2;NEMICO=GARGOYLE;NUMERO=3;LUOGO=ROVINE;\
     SMASCHERAMENTO=Wings, stone, the ruins: it's the gargoyles, who want the bells for their crumbling belfry.;\
-    ERRORE=You were wrong, and the innocent you accused tells the whole city. The priest would rather you were not seen around anymore.;\
+    ERRORE=You were wrong, and the innocent you accused tells the whole city. The priest would rather you were not seen around any more.;\
     VITTORIA=The gargoyles are defeated, and among the ruins lie the three bells, a bit dented.;\
     RINGRAZIAMENTO=The bells are back in their place. Tomorrow morning we'll ring them loud, so even the gargoyles know.;\
     RICORDO=Among these ruins the gargoyles hid the stolen bells.
@@ -895,7 +895,7 @@ INDAGINE
     RICHIESTA=This morning on the city gate there were runes carved, enormous ones. Nobody can read them, and nobody knows who carved them.;\
     BATTUTA=How enormous?;RISPOSTA=You have to climb a ladder to see them all. That alone worries me.;\
     INDIZIO_1=ROVINE:On a column among the ruins there are the same runes, carved at the height of three men, with beside them the drawing of a hand as big as a cart.;\
-    INDIZIO_2=TEMPIO:The keeper of the temple reads the runes: We will come for your sheep. He says it's the ancient language, the one no goblin or elf uses anymore, but which the greatest of all have never forgotten.;\
+    INDIZIO_2=TEMPIO:The keeper of the temple reads the runes: We will come for your sheep. He says it's the ancient language, the one no goblin or elf uses any more, but which the greatest of all have never forgotten.;\
     DOMANDA=Who carved the runes?;SOSPETTI=The goblins/The elves/The giants;\
     COLPEVOLE=3;NEMICO=GIGANTE;NUMERO=1;LUOGO=GROTTA;\
     SMASCHERAMENTO=Runes carved up high, a hand as big as a cart, the ancient language: it's a giant, and he has settled in a cave.;\
@@ -936,7 +936,7 @@ INDAGINE
     DOMANDA=Who is the rooftop thief?;SOSPETTI=The baker, who gets up at night/The former circus acrobat/The night watchman;\
     COLPEVOLE=2;NEMICO=LADRO;NUMERO=1;CAPO=NOME_BRIGANTE;RESA=SI;LUOGO=ROVINE;\
     SMASCHERAMENTO=Somersaults, full moon, apples: it's the former circus acrobat, %CAPO%, hiding among some ruins.;\
-    ERRORE=You were wrong, and the next night, with the full moon, the thief strikes again. The captain doesn't listen to you anymore.;\
+    ERRORE=You were wrong, and the next night, with the full moon, the thief strikes again. The captain doesn't listen to you any more.;\
     VITTORIA=%CAPO% surrenders, and admits everything. Even the apples.;\
     RINGRAZIAMENTO=The rooftop thief is in a cell. I gave him an apple, for the night. Bitten, naturally.;\
     RICORDO=Among these ruins hid %CAPO%, the rooftop thief.
@@ -1037,7 +1037,7 @@ RITUALE
     BATTUTA=It just obeys?;RISPOSTA=First it wants to see whether the summoner is worthy. Then it obeys. I think.;\
     RITO=The lightning stones split with a clap of thunder, and from the ruins a gargoyle rises, wanting to see whether you are worthy.;\
     VITTORIA=The gargoyle bows: you are worthy. It follows you to the armourer's shop, and settles on the roof.;\
-    RINGRAZIAMENTO=Since the gargoyle has been on the roof, nobody steals anything from me. And no customer comes in anymore. I'll have to think about it.;\
+    RINGRAZIAMENTO=Since the gargoyle has been on the roof, nobody steals anything from me. And no customer comes in any more. I'll have to think about it.;\
     RICORDO=Among these ruins a stone guardian was summoned.
     CHIAVE=BARRIERA_CONTRO_LE_ARPIE;TIPO=BARRIERA_MAGICA;ASPETTO=BORGOMASTRO;MANDANTE=the mayor;LUOGO=RADURA;\
     GENERE=M;INGREDIENTE=quartz crystal;INGREDIENTI=quartz crystals;DOVE=LUOGHI GROTTA;QUANTITA=4;\
@@ -1163,7 +1163,7 @@ RITUALE
     BATTUTA=And what if it leaves?;RISPOSTA=Where would it go? It has a pole instead of legs.;\
     RITO=The scarecrow blinks its button eyes, waves its straw arms, and the crows flee cawing. Then it waves at you.;\
     RINGRAZIAMENTO=There isn't a crow left in the whole valley. The scarecrow, though, now wants to be paid.;\
-    RICORDO=In this clearing there's a scarecrow that waves at passersby.
+    RICORDO=In this clearing there's a scarecrow that waves at passers-by.
     CHIAVE=DRAGO_CHE_NON_C_E;TIPO=ILLUSIONE;ASPETTO=BORGOMASTRO;MANDANTE=the mayor;LUOGO=BOSCO;\
     GENERE=M;INGREDIENTE=monkshood flower;INGREDIENTI=monkshood flowers;DOVE=LUOGHI RADURA;QUANTITA=4;\
     DOMANDA=This is the wood where the brigands hide. Do you burn the monkshood and conjure the illusion?;\
@@ -1258,7 +1258,7 @@ RITUALE
     BATTUTA=But we're the ones lighting the bonfire.;RISPOSTA=Yes, but in my name. Glory has always worked that way.;\
     RITO=The resin bonfire rises high over the clearing, and everyone in the city sees it. Three hobgoblins see it too, and come to snoop around.;\
     VITTORIA=The hobgoblins, drawn by the bonfire, are defeated, and from the city they were seen falling one by one.;\
-    RINGRAZIAMENTO=The city talks of nothing else: the knight and the bonfire! Nobody remembers the siege anymore. Almost nobody.;\
+    RINGRAZIAMENTO=The city talks of nothing else: the knight and the bonfire! Nobody remembers the siege any more. Almost nobody.;\
     RICORDO=In this clearing the bonfire that rehabilitated a knight was lit.
 
 // ---------------------------------------------------------------------------------------------
@@ -1337,7 +1337,7 @@ LEALTA
     BATTUTA=And how much do you owe him?;\
     RISPOSTA=Everything I have, plus interest. I'd rather pay it in steel.;\
     FAVORE=The Gambling Debt;LUOGO=GROTTA;NEMICO=GOBLIN;NUMERO=4;CAPO=SI;\
-    VITTORIA=%CAPO% and his goblins will collect nothing from anyone anymore.;\
+    VITTORIA=%CAPO% and his goblins will never collect from anyone again.;\
     RINGRAZIAMENTO=Debt settled. For the first time in months I'll sleep without one eye open.;\
     LEALTA=COSTITUZIONE VARIAZIONE_FISSA 2;\
     LEALE=With the debt off their shoulders, %PERSONAGGIO% walks with a steadier step.
@@ -1346,7 +1346,7 @@ LEALTA
     BATTUTA=Spectres?;\
     RISPOSTA=Two, and neither is him. They keep him awake, and he was never in a good mood in the morning.;\
     FAVORE=The Master's Tomb;LUOGO=ROVINE;NEMICO=SPETTRO;NUMERO=2;\
-    VITTORIA=The spectres vanish, and a library silence falls among the ruins.;\
+    VITTORIA=The spectres vanish, and a library-like silence falls among the ruins.;\
     RINGRAZIAMENTO=Now the master rests. I almost seem to hear him say I took too long.;\
     LEALTA=SAGGEZZA VARIAZIONE_FISSA 2;\
     LEALE=%PERSONAGGIO% repeats one of the master's lessons under their breath, and for the first time truly understands it.
@@ -1448,7 +1448,7 @@ LEALTA
     RISPOSTA=The well is among ruins now, and it has grown more restless. I'd like it to find peace.;\
     FAVORE=The Spirit of the Well;LUOGO=ROVINE;NEMICO=SPIRITO;NUMERO=1;\
     VITTORIA=The spirit of the well dissolves in a cool breeze, and the water seems cleaner.;\
-    RINGRAZIAMENTO=Who knows if it answers now. In any case, at least it won't look at us like that anymore.;\
+    RINGRAZIAMENTO=Who knows if it answers now. In any case, at least it won't look at us like that any more.;\
     LEALTA=SOGGEZIONE VARIAZIONE_FISSA 1;\
     LEALE=When %PERSONAGGIO% speaks, even the hardest listen in silence.
     CHIAVE=IL_MINOTAURO_DEL_LABIRINTO;\
@@ -1483,7 +1483,7 @@ LEALTA
     BATTUTA=How many do we need?;\
     RISPOSTA=Four bunches, fresh. Bitter herb is hard to find, but it has a smell you don't forget.;\
     FAVORE=Herbs for Grandfather;GENERE=F;INGREDIENTE=bitter herb;INGREDIENTI=bitter herbs;DOVE=LUOGHI BOSCO;QUANTITA=4;\
-    VITTORIA=Four bunches of bitter herb, fresh and fragrant: grandfather's cough's days are numbered.;\
+    VITTORIA=Four bunches of bitter herb, fresh and fragrant: the days of grandfather's cough are numbered.;\
     RINGRAZIAMENTO=I'll prepare him an infusion right away. He'll say it's too bitter, and that will be the proof it works.;\
     LEALTA=RIGENERAZIONE_SALUTE VARIAZIONE_PERCENTUALE 10;\
     LEALE=The wounds of %PERSONAGGIO% close a little faster than before.
@@ -1626,7 +1626,7 @@ TORNEO
     RICORDO=In this clearing the Tournament of the Golden Cabbage is fought every year.
     CHIAVE=TRE_CAMPANE;ASPETTO=SACERDOTE;MANDANTE=the priest;TITOLO=The Tournament of the Three Bells;LUOGO=BOSCO;\
     SFIDANTI=GUERRIERA LADRO;CAMPIONE=GUERRIERO;NOME=NOME_CAMPIONE;MONETE=40;\
-    RICHIESTA=The Tournament of the Three Bells opens to the sound of three bells, which nobody knows the whereabouts of anymore. A spoon is used against a pot, and the priest pretends not to notice.;\
+    RICHIESTA=The Tournament of the Three Bells opens to the sound of three bells, which nobody knows the whereabouts of any more. A spoon is used against a pot, and the priest pretends not to notice.;\
     BATTUTA=And how does the tournament work?;RISPOSTA=Like all of them: first you fight, then you make peace, then you quarrel over the prize.;\
     PRIMO_TURNO=The warrior yields, and salutes with the pot.;\
     SECONDO_TURNO=The thief yields, and the purse he had lifted from you you find again in your pocket, with a note: Just kidding.;\
@@ -1700,7 +1700,7 @@ DOCUMENTAZIONE
 COLPO
     CHIAVE=LIBRO_DELL_USURAIO;TIPO=FURTO;ASPETTO=QUALUNQUE;MANDANTE=the baker;LUOGO=ROVINE;NEMICO=TROLL;NUMERO=2;\
     MONETE=40;TITOLO=The Account Book;\
-    RICHIESTA=The moneylender keeps the ledger of half the city's debts in a tower among some ruins. Without that book, nobody owes him anything anymore.;\
+    RICHIESTA=The moneylender keeps the ledger of half the city's debts in a tower among some ruins. Without that book, nobody owes him anything any more.;\
     BATTUTA=And who guards it?;RISPOSTA=Two trolls. They are strong, but luckily they see poorly and hear even less.;\
     COLPO=Between the two snoring trolls you find the account book, and tuck it under your cloak.;\
     SCOPERTI=The trolls saw you, and the account book ended up who knows where in the confusion. The heist has failed.;\
@@ -1780,7 +1780,7 @@ COLPO
     RICORDO=In these ruins a fake sign made a band of hobgoblins run away.
     CHIAVE=DADI_TRUCCATI;TIPO=IMBROGLIONE;ASPETTO=LOCANDIERE;MANDANTE=the innkeeper;LUOGO=GROTTA;NEMICO=GOBLIN;NUMERO=3;\
     MONETE=30;TITOLO=The Loaded Dice;\
-    RICHIESTA=In a cave some goblins play dice with passersby, and always win. Replace their loaded dice with these, which are loaded better.;\
+    RICHIESTA=In a cave some goblins play dice with passers-by, and always win. Replace their loaded dice with these, which are loaded better.;\
     BATTUTA=Loaded by whom?;RISPOSTA=By me. But I always lose, so mine are honest, in practice.;\
     COLPO=You swap the dice on the table with the innkeeper's. On the first throw the goblin loses everything, and his audience mocks him.;\
     SCOPERTI=The goblins saw you with the dice in hand. The house won, and you were left with nothing.;\

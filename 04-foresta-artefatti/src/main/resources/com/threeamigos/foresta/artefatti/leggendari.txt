@@ -22,6 +22,7 @@
 //                  riposa né chi lo custodisce: lo aggiunge la missione;
 //                  Se la prima non nomina l'oggetto, la missione la fa precedere da una frase di INTRODUZIONE_LEGGENDA
 //                  (in fondo), quindi non serve che la prima battuta dica di quale oggetto si parla;
+//   PLURALE=SI     facoltativo, solo se il nome è plurale ("gli Scarponi Chiodati"): da questo dipende il verbo di chi ne parla;
 //   SET=           facoltativo, la chiave del set di cui l'oggetto è un pezzo (vedi SET_LEGGENDARIO in fondo).
 //
 // Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean), § (salvataggi) e ";" (separa i campi).
@@ -174,7 +175,7 @@ MASCHERA_LEGGENDARIA$
     LEGGENDA=Una volta si arrese anche il suo scudiero. Ci vollero tre giorni per convincerlo che era dalla sua parte.;\
     LEGGENDA=Dicono che sotto la maschera RomyJona sorridesse. Nessuno è mai rimasto abbastanza per controllare.
 
-    TIPO=MASCHERA;NOME=gli Occhiali da Sole del Ribelle;CHIAVE=MASCHERA_DEL_RIBELLE;BREVE=gli Occhiali da Sole del Ribelle;SET=GIOVENTU_RIBELLE;\
+    TIPO=MASCHERA;NOME=gli Occhiali da Sole del Ribelle;CHIAVE=MASCHERA_DEL_RIBELLE;PLURALE=SI;BREVE=gli Occhiali da Sole del Ribelle;SET=GIOVENTU_RIBELLE;\
     DESCRIZIONE=che si portano anche di notte;LIVELLO=5;COSTO=60;PESO=0.1;\
     MOD=CARISMA +4;MOD=SOGGEZIONE +3;MOD=PERCEZIONE -1;\
     LEGGENDA=Un giovane cavaliere rifiutò l'elmo di famiglia e si presentò al torneo con un paio di occhiali scuri.;\
@@ -212,14 +213,14 @@ VESTE_LEGGENDARIA$
     LEGGENDA=Chi la indossa non ha più paura delle magie: sono le magie ad avere paura di lui.
 
 SCHINIERI_LEGGENDARI$
-    TIPO=SCHINIERI;NOME=gli Scarponi Chiodati di RomyJona;CHIAVE=SCHINIERI_DI_ROMY_JONA;BREVE=gli Scarponi Chiodati di RomyJona;SET=ROMY_JONA;\
+    TIPO=SCHINIERI;NOME=gli Scarponi Chiodati di RomyJona;CHIAVE=SCHINIERI_DI_ROMY_JONA;PLURALE=SI;BREVE=gli Scarponi Chiodati di RomyJona;SET=ROMY_JONA;\
     DESCRIZIONE=che lasciano il segno dovunque passino;LIVELLO=5;COSTO=60;PESO=3;\
     MOD=FORZA +20%;MOD=PARATA +25%;MOD=VALORE +2;\
     LEGGENDA=RomyJona non bussava mai alle porte: le apriva con un calcio, con questi scarponi.;\
     LEGGENDA=I fabbri del regno chiedevano di essere pagati in anticipo, quando lo vedevano arrivare.;\
     LEGGENDA=Dove sono passati, dicono, l'erba non è più ricresciuta. Ma solo per paura.
 
-    TIPO=SCHINIERI;NOME=gli Schinieri del Corridore Codardo;CHIAVE=SCHINIERI_DEL_CAVALIERE_SVOGLIATO;BREVE=gli Schinieri del Corridore Codardo;SET=CAVALIERI_SVOGLIATI;\
+    TIPO=SCHINIERI;NOME=gli Schinieri del Corridore Codardo;CHIAVE=SCHINIERI_DEL_CAVALIERE_SVOGLIATO;PLURALE=SI;BREVE=gli Schinieri del Corridore Codardo;SET=CAVALIERI_SVOGLIATI;\
     DESCRIZIONE=che partono da soli;LIVELLO=5;COSTO=60;PESO=3;\
     MOD=VELOCITA +30%;MOD=PARATA +25%;MOD=FURTIVITA +3;\
     LEGGENDA=Il cavaliere Fuggiasco non vinse mai un duello, ma non ne perse nemmeno uno.;\

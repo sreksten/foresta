@@ -55,7 +55,7 @@ Tutti i valori di bilanciamento — probabilità, tetti, prezzi, soglie dei grad
 
 ### Gli oggetti leggendari: `artefatti.leggendari`
 
-Sono letti da `leggendari.txt`, una riga per oggetto con campi `CHIAVE=valore` separati da `;` (tipo, nome, chiave, descrizione, livello, costo, peso, danni, modificatori `MOD=`, incantamenti, battute della `LEGGENDA=`, l'eventuale `SET=`). Il formato è spiegato in testa al file.
+Sono letti da `leggendari.txt`, una riga per oggetto con campi `CHIAVE=valore` separati da `;` (tipo, nome, chiave, descrizione, livello, costo, peso, danni, modificatori `MOD=`, incantamenti, battute della `LEGGENDA=`, l'eventuale `SET=`). Il formato è spiegato in testa al file. Il campo facoltativo `PLURALE=SI` dice che il nome è plurale ("gli Scarponi Chiodati", "the Boots of Mud"): `OggettoLeggendario.isPlurale()` lo legge, perché dal plurale dipende il verbo di chi ne parla (`LaLeggenda`, `IlTorneo`) e in ogni lingua l'articolo è diverso.
 
 - `OggettoLeggendario` è un leggendario già pronto: `costruisci(livello)` fa partire dal livello passato, `alLivello(artefatto, livello)` riallinea uno già esistente.
 - `SetLeggendario` e `RegoleSetLeggendari`: un personaggio che indossa tutti i pezzi di un set ha i bonus di ognuno moltiplicati per il moltiplicatore del set (solo i modificatori positivi e gli incantamenti scritti sull'artefatto, non i malus né quel che l'artefatto dà di suo). Il moltiplicatore si applica nei conti, mai sull'artefatto: togliendo un pezzo i bonus tornano quelli di prima.

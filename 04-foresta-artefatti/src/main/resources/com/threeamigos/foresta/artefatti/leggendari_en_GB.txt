@@ -149,7 +149,7 @@ MASCHERA_LEGGENDARIA$
     LEGGENDA=Once even his squire surrendered. It took three days to convince him he was on his side.;\
     LEGGENDA=They say that under the mask RomyJona smiled. Nobody ever stayed long enough to check.
 
-    TIPO=MASCHERA;NOME=the Rebel's Sunglasses;CHIAVE=MASCHERA_DEL_RIBELLE;BREVE=the Rebel's Sunglasses;SET=GIOVENTU_RIBELLE;\
+    TIPO=MASCHERA;NOME=the Rebel's Sunglasses;CHIAVE=MASCHERA_DEL_RIBELLE;PLURALE=SI;BREVE=the Rebel's Sunglasses;SET=GIOVENTU_RIBELLE;\
     DESCRIZIONE=that are worn even at night;LIVELLO=5;COSTO=60;PESO=0.1;\
     MOD=CARISMA +4;MOD=SOGGEZIONE +3;MOD=PERCEZIONE -1;\
     LEGGENDA=A young knight refused the family helmet and showed up at the tournament with a pair of dark glasses.;\
@@ -160,7 +160,7 @@ MASCHERA_LEGGENDARIA$
     DESCRIZIONE=behind which nobody recognises you;LIVELLO=5;COSTO=60;PESO=0.5;\
     MOD=FURTIVITA +5;MOD=CARISMA +3;MOD=PARATA +15%;\
     LEGGENDA=A merchant put it on at a carnival party, and could never take it off again.;\
-    LEGGENDA=Nobody recognised him anymore: not the creditors, not the mother-in-law, not the guards who had been looking for him for years.;\
+    LEGGENDA=Nobody recognised him any more: not the creditors, not the mother-in-law, not the guards who had been looking for him for years.;\
     LEGGENDA=He lived happily for forty years. The day he took it off, all the bills arrived at once.
 
 ARMATURA_LEGGENDARIA$
@@ -187,14 +187,14 @@ VESTE_LEGGENDARIA$
     LEGGENDA=Whoever wears it is no longer afraid of spells: it's the spells that are afraid of them.
 
 SCHINIERI_LEGGENDARI$
-    TIPO=SCHINIERI;NOME=the Studded Boots of RomyJona;CHIAVE=SCHINIERI_DI_ROMY_JONA;BREVE=the Studded Boots of RomyJona;SET=ROMY_JONA;\
+    TIPO=SCHINIERI;NOME=the Studded Boots of RomyJona;CHIAVE=SCHINIERI_DI_ROMY_JONA;PLURALE=SI;BREVE=the Studded Boots of RomyJona;SET=ROMY_JONA;\
     DESCRIZIONE=that leave their mark wherever they pass;LIVELLO=5;COSTO=60;PESO=3;\
     MOD=FORZA +20%;MOD=PARATA +25%;MOD=VALORE +2;\
     LEGGENDA=RomyJona never knocked on doors: he opened them with a kick, with these boots.;\
     LEGGENDA=The smiths of the realm asked to be paid in advance when they saw him coming.;\
     LEGGENDA=Where they have passed, they say, the grass has never grown back. But only out of fear.
 
-    TIPO=SCHINIERI;NOME=the Greaves of the Cowardly Runner;CHIAVE=SCHINIERI_DEL_CAVALIERE_SVOGLIATO;BREVE=the Greaves of the Cowardly Runner;SET=CAVALIERI_SVOGLIATI;\
+    TIPO=SCHINIERI;NOME=the Greaves of the Cowardly Runner;CHIAVE=SCHINIERI_DEL_CAVALIERE_SVOGLIATO;PLURALE=SI;BREVE=the Greaves of the Cowardly Runner;SET=CAVALIERI_SVOGLIATI;\
     DESCRIZIONE=that set off on their own;LIVELLO=5;COSTO=60;PESO=3;\
     MOD=VELOCITA +30%;MOD=PARATA +25%;MOD=FURTIVITA +3;\
     LEGGENDA=The knight Runaway never won a duel, but never lost one either.;\
@@ -246,7 +246,7 @@ MONILE_LEGGENDARIO$
     DESCRIZIONE=that makes you irresistible;LIVELLO=5;COSTO=60;PESO=0.1;\
     MOD=CARISMA +4;INCANTAMENTO=PSICHICO 12 0.15 Mirror of My Desires;\
     LEGGENDA=Queen Narcissa looked in the mirror two hundred times a day.;\
-    LEGGENDA=The mirror, exasperated, turned itself into a necklace so as not to have to look at her anymore.;\
+    LEGGENDA=The mirror, exasperated, turned itself into a necklace so as not to have to look at her any more.;\
     LEGGENDA=Whoever wears it becomes irresistible. Especially to themselves.
 
 GINGILLO_LEGGENDARIO$

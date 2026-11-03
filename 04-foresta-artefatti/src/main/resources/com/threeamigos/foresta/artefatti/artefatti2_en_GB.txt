@@ -388,7 +388,7 @@ COMPLEMENTO_ELEMENTALE_SCHINIERI
 // Dopo il nome, come "the sword that belonged to Grandpa": in inglese il cosmetico è un complemento (o una relativa: un participio da solo dopo il nome, "the sword rusted over", non è inglese)
 COSMETICO
     for regulation use | that belonged to Grandpa | for collectors | for the kitchen | for display
-    on special offer | made at home | bought at the market | for souvenirs | for training
+    on special offer | made at home | bought at the market | from the souvenir shop | for training
     with the tag still attached | still in its box | for ceremonies | used just once
     on loan | of no great merit | from the junk dealer | kept in reserve
 
@@ -533,7 +533,7 @@ AGGETTIVO
     gutsy<mod:CORAGGIO+2>
     { crusading | gladiatorial }<mod:CORAGGIO+1>
     pouty<mod:CORAGGIO-1>
-    { meritocratic | medaled | chivalrous }<mod:VALORE+2>
+    { meritocratic | medalled | chivalrous }<mod:VALORE+2>
     { union | rousing | popular }<mod:VALORE+1>
     { individualistic | neutral | selfish | freelance | external | autonomous }<mod:VALORE-1>
     { bewitched | focused }<mod:MAGIA+2>

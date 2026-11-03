@@ -57,6 +57,23 @@ class NotizieDelleLocandeCasiRimastiTest {
     }
 
     @Test
+    void l_articoloDelNomeDellaLocandaVaInMinuscolaAMetaFrase() {
+        assertEquals("The Plucked Dragon is closed: nobody goes near the Plucked Dragon. At the Plucked Dragon, dinner. The Plucked Dragon!",
+                NotizieDelleLocande.conIlNomeDellaLocanda("NOME_LOCANDA is closed: nobody goes near NOME_LOCANDA. At NOME_LOCANDA, dinner. NOME_LOCANDA!", "The Plucked Dragon"));
+        assertEquals("Near Bread and Sword, Bread and Sword.", NotizieDelleLocande.conIlNomeDellaLocanda("Near NOME_LOCANDA, NOME_LOCANDA.", "Bread and Sword"));
+    }
+
+    @Test
+    void iPronomiSegnaposto_seguonoIlSessoDelPersonaggio() {
+        // Il capo è il primo del gruppo; i segnaposto con i pronomi sono per le lingue che li hanno diversi per sesso
+        gruppoDi(new Guerriero("Arsenio", 1), new Maga("Morgana", 1), new Ladro("Gualtiero", 1));
+        assertEquals("Arsenio loses his armour and Morgana casts a spell in her sleep, so Gualtiero scares himself: he runs from him.",
+                NotizieDelleLocande.validaNotizia("EROE loses EROE_SUO armour and MAGO casts a spell in MAGO_SUO sleep, so LADRO scares LADRO_SE: LADRO_LUI runs from LADRO_LO."));
+        assertEquals("Morgana sees her own shadow and she is afraid.",
+                NotizieDelleLocande.validaNotizia("MAGO sees MAGO_SUO own shadow and MAGO_LUI is afraid."));
+    }
+
+    @Test
     void senzaBardoNeCantastorieLaNotiziaNonSiApplica() {
         gruppoDi(new Guerriero("Arsenio", 1));
         assertNull(NotizieDelleLocande.validaNotizia("BARDO canta."));

@@ -134,6 +134,9 @@ class RegoleDellaLinguaTest {
 	void inglese_preposizioni_numeri_ed_elenchi() {
 		assertEquals("of the ", EN.preposizioneArticolata(Preposizione.DI, m("Goblin"), false));
 		assertEquals("in the Temple of the Sun", EN.conPreposizione(Preposizione.IN, "the Temple of the Sun"));
+		// Un nome che comincia con l'articolo, dopo una preposizione, lo ha in minuscolo
+		assertEquals("from the Hollow Trunk", EN.conPreposizione(Preposizione.DA, "The Hollow Trunk"));
+		assertEquals("the Wrong Turn", EN.conPreposizione(Preposizione.VICINO, "The Wrong Turn"));
 		assertEquals("three", EN.cardinale(3, Genere.NEUTRO));
 		assertEquals("15", EN.cardinale(15, Genere.NEUTRO));
 		assertEquals("third", EN.ordinale(3, Genere.NEUTRO, false));

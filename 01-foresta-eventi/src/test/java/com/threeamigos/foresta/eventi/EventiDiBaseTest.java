@@ -92,10 +92,12 @@ class EventiDiBaseTest {
     @Test
     void leNotificheDiTestoPortanoIlMessaggioEIlLoroTipo() {
         NotificaTestoFrase frase = new NotificaTestoFrase("continua");
-        assertEquals("continua", frase.getMessaggio());
+        // La notifica dà la maiuscola a un messaggio che comincia in minuscolo (un nome con l'articolo a inizio frase)
+        assertEquals("Continua", frase.getMessaggio());
+        assertEquals("Già maiuscolo", new NotificaTestoFrase("Già maiuscolo").getMessaggio());
         assertEquals(TipoEvento.NOTIFICA_TESTO_FRASE, frase.getTipoEvento());
         NotificaTestoParagrafo paragrafo = new NotificaTestoParagrafo("ricomincia");
-        assertEquals("ricomincia", paragrafo.getMessaggio());
+        assertEquals("Ricomincia", paragrafo.getMessaggio());
         assertEquals(TipoEvento.NOTIFICA_TESTO_PARAGRAFO, paragrafo.getTipoEvento());
     }
 }

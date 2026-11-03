@@ -231,7 +231,7 @@ ISTANTE_PRECISO_SURREALISTA
     [NELL_ATTIMO_IN_CUI] a penguin disguised itself as a flamingo
 
 NELL_ATTIMO_IN_CUI
-    at the { precise | } moment when | just as | the instant
+    at the { precise | } moment when | just as | just when
 
 GIORNO_DELLA_SETTIMANA
     Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday
@@ -261,7 +261,7 @@ FATTO_PROEMIO
 	[CREAZIONE_PROTAGONISTA], [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA], { was in the habit of | made a habit of | was fond of } [ABITUDINE]
 
 VIVEVA
-    there lived | there dwelled | there lurked | there skulked | there hid | there lay low
+    there lived | there dwelt | there lurked | there skulked | there hid | there lay low
     there scraped by | there made a not entirely honest living | there bivouacked
 
 CONOSCIUTO_COME
@@ -308,7 +308,7 @@ ANIMALE_DA_COMPAGNIA
 // I protagonisti con nome e cognome sono persone reali: restano com'è nella versione italiana, in ogni lingua (vedi nomi.md §7). L'unica eccezione è il soprannome "il Vox", che diventa "the Vox".
 CREAZIONE_PROTAGONISTA
 	[*NOME_PROTAGONISTA] [*COGNOME_PROTAGONISTA]
-	[COGNOME_PROTAGONISTA=Romy] [NOME_PROTAGONISTA=Jona] [#NOME_PROTAGONISTA] [#COGNOME_PROTAGONISTA]
+	[COGNOME_PROTAGONISTA=Romy] [NOME_PROTAGONISTA=Jona] [#COGNOME_PROTAGONISTA] [#NOME_PROTAGONISTA]
 	[NOME_PROTAGONISTA=Luca] [COGNOME_PROTAGONISTA=Viola] [#NOME_PROTAGONISTA] [#COGNOME_PROTAGONISTA]
 	[NOME_PROTAGONISTA=Massimo] [COGNOME_PROTAGONISTA=Capanni] [#NOME_PROTAGONISTA] [#COGNOME_PROTAGONISTA]
 	[NOME_PROTAGONISTA=Massimiliano] [COGNOME_PROTAGONISTA=Falchi] [#NOME_PROTAGONISTA] [#COGNOME_PROTAGONISTA]
@@ -416,10 +416,10 @@ RACCONTO_P_2_QUANDO
 	as soon as the sun rose | at dawn | at noon | at sunset | at the beginning of spring | at the beginning of summer
 	in the first days of autumn | in the middle of winter | with the first warm days | on the Feast of the Assumption | on the Ides of March
 	around midnight | after the changing of the guard | at the first government crisis | right after lunch | after he had digested
-	at half past eleven | at the changing of the guard | as soon as it was possible | as soon as the moment was favorable | the next day
+	at half past eleven | at the changing of the guard | as soon as it was possible | as soon as the moment was favourable | the next day
 
 RACCONTO_P_2_FORNITO_DI
-	{ having with him | provided with | kitted out with | having procured | dragging along | equipped with } \
+	{ carrying | provided with | kitted out with | having procured | dragging along | equipped with } \
 	    [EQUIPAGGIAMENTO={ [EQUIPAGGIAMENTO_CIBO] | [EQUIPAGGIAMENTO_ANIMALE] | [EQUIPAGGIAMENTO_ARMA] | [EQUIPAGGIAMENTO_FUCILE] | [EQUIPAGGIAMENTO_ALTRO] }]
 	shouldering [EQUIPAGGIAMENTO=[EQUIPAGGIAMENTO_FUCILE]]
 	armed with [EQUIPAGGIAMENTO=[EQUIPAGGIAMENTO_ARMA]]
@@ -441,7 +441,7 @@ EQUIPAGGIAMENTO_FUCILE
 
 EQUIPAGGIAMENTO_ALTRO
     a remote-controlled magic device | a threadbare cloak | a grimoire he had never read | a sack of manure | a heap of tin
-    a cartload of fertiliser | a checkered handkerchief | a kilo of snot
+    a cartload of fertiliser | a chequered handkerchief | a kilo of snot
 
 // L'articolo dell'antagonista lo porta l'attributo ([#ATTR_ART]: "a" o "an", a seconda dell'aggettivo che viene prima del nome)
 RACCONTO_P_3
@@ -508,7 +508,7 @@ ATTRIBUTO_ANTAGONISTA
 	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, smelling of vinegar and regret]
 	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST= with pockets full of money that was not his]
 	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, looking like someone who has lost an important bet]
-	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, as dirty as a pan unwashed for years]
+	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, as dirty as a pan left unwashed for years]
 	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST= with the air of someone who has just failed an undertaking]
 	[ATTR_ART=a ][ATTR_PRE=][ATTR_POST=, muttering curses against people dead for centuries]
 
@@ -674,7 +674,7 @@ BUONA_AZIONE
 	you kiss me | you lick my paws | you lick my back | you wash me | you make me do three somersaults
 	you pick off the fleas and ticks that infest me | you can stand my smell
 	you beat me in a belching contest | you beat me at arm wrestling | you take off these magic slippers
-	you shave me completely | you badmouth me to your friends | you scream into my ears | you treat my hemorrhoids
+	you shave me completely | you badmouth me to your friends | you scream into my ears | you treat my haemorrhoids
 	you let yourself be skinned | you let yourself be kissed | you throw yourself off that cliff | you let yourself be robbed
 	you let yourself be used as a means of transport | you let yourself be sodomised | you let yourself be shaved bald | you let your ears be cut off
 	you act as lookout for my next robberies | you act as an accomplice in my crimes | you take pity on me
@@ -682,7 +682,7 @@ BUONA_AZIONE
 	you tell me a decent joke (a Herculean task) | you bring me breakfast in bed for a month
 
 MI_VEDRAI_TORNARE
-	I'll be able to become again | I'll be able to be again | you'll see me return as | I'll turn back into
+	I'll finally be able to become | I'll finally be | you'll see me return as | I'll turn back into
 	the { curse | spell } will { end | vanish } and I'll be once more
 
 REAZIONE_PROTAGONISTA
@@ -799,12 +799,12 @@ RACCONTO_P_7
 ATTIVITA_SPREGEVOLE
 	skinning ducks | plucking chickens | robbing travellers
 	drinking { like a fish | without restraint | as if there were no tomorrow } in a disreputable { dive | tavern }
-	robbing passersby | killing flies | scavenging for food in other people's gardens
+	robbing passers-by | killing flies | scavenging for food in other people's gardens
 	minding his own business | strolling through crossroads and alleys | trying to storm a stranded ship
 	planning to attack a caravan | planning the heist of the century | holding up a stagecoach
 	scratching car doors | smashing shop windows | slashing car tyres | double-parking
 	shearing sheep that weren't his | selling fake tickets for the village show
-	betting everything at dice in an underground dive | insulting passersby from the balcony of a seedy little room
+	betting everything at dice in an underground dive | insulting passers-by from the balcony of a seedy little room
 	trying to seduce nuns with promises of marriage | spreading gossip for money in the squares
 	piling up debts with no hope of paying them | pretending to be rich to squeeze loans out of suckers
 	rigging competitions with his livestock | teaching children how to make money dishonestly
@@ -827,10 +827,10 @@ NOME_PRINCIPESSA
     [NOME_FEMMINILE]
 
 SVOLGIMENTO_PRINCIPESSA
-	[*NOME_PROTAGONISTA], of course, couldn't care less, and the poor girl came to a { sorry end | sad end | miserable end }.
+	^[*NOME_PROTAGONISTA], of course, couldn't care less, and the poor girl came to a { sorry end | sad end | miserable end }.
 	After countless adventures [*NOME_PROTAGONISTA] { managed to save | saved } \
 	    { [#NOME_PRINCIPESSA? | the princess] | the princess, who was [*ATTRIBUTO_PRINCIPESSA] }. [LIETO_FINE]
-	[*NOME_PROTAGONISTA] set off, crossing [LUOGO_1] and [LUOGO_2], until he reached [LUOGO_3] \
+	^[*NOME_PROTAGONISTA] set off, crossing [LUOGO_1] and [LUOGO_2], until he reached [LUOGO_3] \
 	    where the princess, who was [*ATTRIBUTO_PRINCIPESSA], was [TENUTA_IN_CATTIVITA] by \
 	    [CREAZIONE_MAGO_CATTIVO][#MAGO_CATTIVO_ARTINDET][#MAGO_CATTIVO_AGGETTIVO][#MAGO_CATTIVO]. [SVOLGIMENTO_PRINCIPESSA_2]
 

@@ -11,7 +11,7 @@ OROSCOPO
 SEGNO
 	Sign of the pillow crease on the face
 	Sign of the open hand on the face
-	Sign of keys scratched along your new car
+	Sign of the keys scratched down the side of your new car
 	[TEMA=MS:the sysadmin]Sign of the sysadmin
 	[TEMA=MS:the programmer]Sign of the programmer
 	Sign of a break-in at your front door
@@ -27,7 +27,7 @@ SEGNO
 	Monday morning rising
 	[TEMA=MS:the badge]Sign of the badge forgotten at home
 	Sign of the slap in the face
-	Sign of keys scratched along the car door
+	Sign of the keys scratched along the car door
 PREVISIONE
 	[PIANETA] [RELAZIONE] [AZIONE]. [CHIOSA]
 PIANETA
@@ -84,7 +84,7 @@ QUALCOSA_PLURALE
 	[TEMA=MP:the cameras]the surveillance cameras
 	the cleaning staff
 	the ornamental plants scattered around the premises
-	[TEMA=MP:the sales people]the sales people
+	[TEMA=MP:the salespeople]the salespeople
 	[TEMA=MP:the updates]the overnight updates
 	[TEMA=MP:the outside consultants]the outside consultants
 	[TEMA=MP:the network cables]the network cables under the carpet
@@ -103,8 +103,8 @@ QUALCOSA_PLURALE
 RELAZIONE
 	in conjunction with [QUALCOSA]
 	in trine with [QUALCOSA]
-	squared to [QUALCOSA]
-	opposite to [QUALCOSA]
+	square to [QUALCOSA]
+	opposite [QUALCOSA]
 	on the cusp with [QUALCOSA]
 	in the [CARDINALE] house
 	allied with [QUALCOSA]
@@ -129,12 +129,12 @@ DANNO
 	[TEMA=MS:the hard disk]a loss of data on your hard disk
 	[TEMA=MP:the crackers]an intrusion by unknown crackers
 	[TEMA=MS:the database cluster]a low-level format of the database cluster
-	[TEMA=MP:the malware]an invasion of viruses and malware
+	[TEMA=MP:the viruses]an invasion of viruses and malware
 	[TEMA=MS:the software]a revocation of the licenses for your software
 	a lawsuit for patent infringement
 	yet another change to the project specifications
 	an attempt to document the company workflows
-	a power drop that in turn [AZIONE]
+	a power cut that in turn [AZIONE]
 	a political split within the majority
 	a parliamentary inquiry
 	irreparable damage
@@ -196,7 +196,7 @@ SUGGERIMENTO
 	take a digestif
 	turn it off and on again, and not just the computer
 	change your password, and this time write it down somewhere
-	don't reply to all
+	refrain from replying to all
 	read the manual, at least the index
 	close all the open tickets before they reopen by themselves
 	avoid saving only on the desktop
@@ -228,7 +228,7 @@ CHIOSA
 	He who makes himself a sheep gets eaten by the wolf.
 	Slow and steady wins the race.
 	Give up in advance on whatever you had planned.
-	Caution advises: [SUGGERIMENTO].
+	Prudence advises: [SUGGERIMENTO].
 	What goes around comes around.
 	[TEMA=MS:the plug]If it doesn't work, unplug it and plug it back in.
 	[TEMA=MS:the backup]Always make a backup, even of the horoscope.
