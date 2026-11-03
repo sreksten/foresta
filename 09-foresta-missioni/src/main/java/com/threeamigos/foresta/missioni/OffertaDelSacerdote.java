@@ -43,7 +43,7 @@ public final class OffertaDelSacerdote {
 	public static void avvisaSeIlGruppoEPieno(String mandante) {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		if (!gruppo.isSacerdoteAccolto() && !puoProporsi()) {
-			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "OffertaDelSacerdote.s1", Lingue.corrente().cardinale(CostantiPersonaggi.MAX_PERSONAGGI_GRUPPO_GIOCATORE, Genere.MASCHILE), Lingue.corrente().conPreposizione(Preposizione.DI, mandante))));
+			BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("OFFERTA_DEL_SACERDOTE_GRUPPO_PIENO", "PARAM_NUMERO", Lingue.corrente().cardinale(CostantiPersonaggi.MAX_PERSONAGGI_GRUPPO_GIOCATORE, Genere.MASCHILE), "PARAM_DEL_SACERDOTE", Lingue.corrente().conPreposizione(Preposizione.DI, mandante))));
 		}
 	}
 

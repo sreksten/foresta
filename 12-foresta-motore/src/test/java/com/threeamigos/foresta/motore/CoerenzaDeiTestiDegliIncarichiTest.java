@@ -35,6 +35,8 @@ import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.testi.ProduttoriDiTesti;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -53,6 +55,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class CoerenzaDeiTestiDegliIncarichiTest {
 
     private static final String[] LINGUE = {"it", "en", "en-GB"};
+
+    /** I nomi e le produzioni a esaurimento consumati qui non devono arrivare ai test che li aspettano come a inizio partita. */
+    @AfterEach
+    void ripristinaLaGrammatica() {
+        ProduttoriDiTesti.resetProduzioni();
+    }
 
     @Test
     void ITestiDellaCacciaAiGoblinParlanoDelloStessoIncarico() {

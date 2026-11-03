@@ -105,6 +105,10 @@ public final class TestiDiUnIncarico {
 				testi.add(ProduttoreDiMissioniCasuale.riempi(ProduttoreDiMissioniCasuale.modelloDellaMissione(produzione), tutti));
 			}
 			for (String metodo : metodi) {
+				if (metodo.matches("[A-Z][A-Z0-9_]*")) { // il nome di una produzione: si riempie con i valori della missione
+					testi.add(ProduttoreDiMissioniCasuale.testoDellaMissione(metodo, valoriDi(incarico)));
+					continue;
+				}
 				Object risultato = chiama(incarico, metodo, new Class<?>[0]);
 				if (risultato instanceof com.threeamigos.foresta.intermezzi.ScenaInCitta) {
 					testi.addAll(battute(((com.threeamigos.foresta.intermezzi.ScenaInCitta) risultato).getPagine()));
@@ -142,6 +146,10 @@ public final class TestiDiUnIncarico {
 			throw new AssertionError(e);
 		}
 		return testi;
+	}
+
+	private static Object[] valoriDi(Object missione) throws ReflectiveOperationException {
+		return (Object[]) chiama(missione, "valori", new Class<?>[0]);
 	}
 
 	private static Object chiama(Object oggetto, String nome, Class<?>[] tipi, Object... argomenti) throws ReflectiveOperationException {

@@ -548,7 +548,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 			aggiungiProprieta(RIPIEGO + oggetti.getChiave(), coordinate.getX() + SEPARATORE + coordinate.getY());
 			Foresta.setLocazioneConosciuta(coordinate);
 			NomeOggetto nome = oggetti.getNome();
-			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "MissioneAPassi.s2", nome.getADP(), nome.getPlurale())));
+			BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_PASSI_VIANDANTE_SEGNA", "PARAM_OGGETTI_ADP", nome.getADP(), "PARAM_OGGETTI", nome.getPlurale())));
 		});
 	}
 

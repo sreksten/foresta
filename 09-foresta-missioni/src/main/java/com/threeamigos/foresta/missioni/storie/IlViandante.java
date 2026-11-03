@@ -125,25 +125,56 @@ public class IlViandante extends MissioneAPassi {
 	}
 
 	@Override
-	public String getNome() {
-		return Testi.formatta("missioni", "IlViandante.t1");
+	protected String creaIlNome() {
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIANDANTE_TITOLO");
 	}
 
 	@Override
 	public String getDescrizione() {
-		ViandanteRichiesto richiesta = getRichiesta();
-		if (richiesta == null || !isAttiva()) {
-			return Testi.formatta("missioni", "IlViandante.t2");
+		return descrizioneDalModello();
+	}
+
+	@Override
+	protected String produzioneDellaDescrizione(String passo) {
+		if (getRichiesta() == null || !isAttiva()) {
+			return "IL_VIANDANTE_DESCRIZIONE_ATTESA";
 		}
-		String mostri = Lingue.corrente().cardinale(getQuantita(), Genere.MASCHILE) + " " + richiesta.getPlurale();
-		switch (getPassoCorrente()) {
+		switch (passo) {
 			case CACCIA:
-				return Testi.formatta("missioni", "IlViandante.t3", nomeDellaCitta(), mostri, getConteggioNelPassoCorrente(eventoSconfitto(richiesta.getNemico())));
+				return "IL_VIANDANTE_DESCRIZIONE_CACCIA";
 			case RITORNO:
-				return Testi.formatta("missioni", "IlViandante.t4");
+				return "IL_VIANDANTE_DESCRIZIONE_RITORNO";
 			default:
-				return Testi.formatta("missioni", "IlViandante.t5", nomeDellaCitta(), mostri);
+				return "IL_VIANDANTE_DESCRIZIONE_ANDATA";
 		}
+	}
+
+	@Override
+	protected Object[] valoriStabiliDellaDescrizione() {
+		return valori();
+	}
+
+	/**
+	 * Quanti mostri sono stati sconfitti finora: l'unico valore che cambia.
+	 */
+	@Override
+	protected Object[] valoriDellaDescrizione() {
+		ViandanteRichiesto richiesta = getRichiesta();
+		return richiesta == null ? new Object[0] : new Object[] {"PARAM_SCONFITTI", getConteggioNelPassoCorrente(eventoSconfitto(richiesta.getNemico()))};
+	}
+
+	/**
+	 * Tutti i segnaposto dei testi della storia che non cambiano mentre dura: la città, i mostri e le monete (vuoti finché non c'è la
+	 * richiesta). Senza "private" per i test.
+	 */
+	Object[] valori() {
+		ViandanteRichiesto richiesta = getRichiesta();
+		if (richiesta == null) {
+			return new Object[0];
+		}
+		String quanti = Lingue.corrente().cardinale(getQuantita(), Genere.MASCHILE);
+		return new Object[] {"PARAM_CITTA", nomeDellaCitta(), "PARAM_QUANTI", quanti, "PARAM_PLURALE", richiesta.getPlurale(),
+				"PARAM_MOSTRI", quanti + " " + richiesta.getPlurale(), "PARAM_MONETE", getMonete()};
 	}
 
 	@Override
@@ -212,7 +243,7 @@ public class IlViandante extends MissioneAPassi {
 	private void accetta() {
 		aggiungiProprieta(LIVELLO_DELL_INCONTRO, String.valueOf(Statistiche.getLivello()));
 		ViandanteRichiesto richiesta = getRichiesta();
-		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlViandante.s1", nomeDellaCitta(), Lingue.corrente().cardinale(getQuantita(), Genere.MASCHILE), richiesta.getPlurale(), getMonete())));
+		BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIANDANTE_ACCETTATO", valori())));
 		attivaMissione();
 	}
 
@@ -234,16 +265,16 @@ public class IlViandante extends MissioneAPassi {
 
 	private List<PaginaIntermezzo> getPagineDellIncontro() {
 		ViandanteRichiesto richiesta = getRichiesta();
-		return Collections.singletonList(scenaNelBosco(Testi.formatta("missioni", "IlViandante.s2"))
+		return Collections.singletonList(scenaNelBosco(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIANDANTE_INCONTRO"))
 				.conBattuta(BattutaIntermezzo.di(ID_VIANDANTE, richiesta.getRichiesta(nomeDellaCitta())).daSecondo(2))
 				.conBattuta(BattutaIntermezzo.di(ID_EROE, richiesta.getBattutaDelCapo()))
 				.conBattuta(BattutaIntermezzo.di(ID_VIANDANTE, richiesta.getRisposta())));
 	}
 
 	private List<PaginaIntermezzo> getPagineDelRitorno() {
-		return Collections.singletonList(scenaNelBosco(Testi.formatta("missioni", "IlViandante.s3"))
+		return Collections.singletonList(scenaNelBosco(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIANDANTE_RITORNO"))
 				.conBattuta(BattutaIntermezzo.di(ID_VIANDANTE, getRichiesta().getRitorno()).daSecondo(2))
-				.conBattuta(BattutaIntermezzo.di(ID_EROE, Testi.formatta("missioni", "IlViandante.1"))));
+				.conBattuta(BattutaIntermezzo.di(ID_EROE, ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIANDANTE_SALUTO"))));
 	}
 
 	@Override
@@ -264,12 +295,12 @@ public class IlViandante extends MissioneAPassi {
 				return Passo.quando(MomentoControllo.IN_LOCAZIONE, () -> true).esegui(this::accetta).poi(ANDATA);
 			case ANDATA:
 				return vai(MomentoControllo.PRE_LOCAZIONE, getCitta())
-						.falliscoSe(this::isCittaDistrutta, () ->Testi.formatta("missioni", "IlViandante.s4", nomeDellaCitta()))
+						.falliscoSe(this::isCittaDistrutta, () ->ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIANDANTE_CITTA_DISTRUTTA", "PARAM_CITTA", nomeDellaCitta()))
 						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(getRichiesta().getArrivo(nomeDellaCitta()))))
 						.poi(CACCIA);
 			case CACCIA:
 				return sconfiggi(MomentoControllo.POST_LOCAZIONE, getRichiesta().getNemico(), getQuantita())
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlViandante.s5"))))
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIANDANTE_CACCIA_FINITA"))))
 						.poi(RITORNO);
 			case RITORNO:
 				return tornaAlPuntoDiPartenza(MomentoControllo.PRE_LOCAZIONE)
@@ -278,7 +309,7 @@ public class IlViandante extends MissioneAPassi {
 						.poi(RICOMPENSA);
 			case RICOMPENSA:
 				return ricompensa(MomentoControllo.IN_LOCAZIONE, Ricompensa.inMonete(getMonete()),
-						() -> Testi.formatta("missioni", "IlViandante.s6", getMonete()))
+						() -> ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIANDANTE_RICOMPENSA", "PARAM_MONETE", getMonete()))
 						.poi(Passo.FINE);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);

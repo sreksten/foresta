@@ -81,7 +81,7 @@ public class IlSoccorso extends LaLiberazione {
 			return soccorso.isConCapo() ? getCapo() + ", " + nemico : nemico;
 		}
 		String nemici = Lingue.corrente().cardinale(soccorso.getNumero(), Genere.MASCHILE) + " " + modello.getNomePlurale();
-		return soccorso.isConCapo() ? Testi.formatta("missioni", "Nemici.guidatiDa", nemici, getCapo()) : nemici;
+		return soccorso.isConCapo() ? ProduttoreDiMissioniCasuale.testoDellaMissione("NEMICI_GUIDATI_DA", "PARAM_NEMICI", nemici, "PARAM_CAPO", getCapo()) : nemici;
 	}
 
 	@Override

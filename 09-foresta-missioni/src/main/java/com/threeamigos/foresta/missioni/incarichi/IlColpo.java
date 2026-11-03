@@ -89,7 +89,7 @@ public class IlColpo extends IncaricoInCitta {
 			return colpo.isConCapo() ? getCapo() + ", " + guardia : guardia;
 		}
 		String guardie = Lingue.corrente().cardinale(colpo.getNumero(), Genere.MASCHILE) + " " + modello.getNomePlurale();
-		return colpo.isConCapo() ? Testi.formatta("missioni", "Nemici.guidatiDa", guardie, getCapo()) : guardie;
+		return colpo.isConCapo() ? ProduttoreDiMissioniCasuale.testoDellaMissione("NEMICI_GUIDATI_DA", "PARAM_NEMICI", guardie, "PARAM_CAPO", getCapo()) : guardie;
 	}
 
 	private boolean haCombattutoNelPosto() {
@@ -167,7 +167,7 @@ public class IlColpo extends IncaricoInCitta {
 						.affronta(this::getPosto, getGuardie())
 						.falliscoSe(this::haCombattutoNelPosto, () -> testo(colpo.getScoperti()))
 						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(testo(colpo.getColpo()) + " "
-								+ Testi.formatta("missioni", "Incarico.aspettaA", Lingue.corrente().inizialeMaiuscola(mandante(colpo.getMandante())), getNomeCitta()))))
+								+ ProduttoreDiMissioniCasuale.testoDellaMissione("INCARICO_ASPETTA", "PARAM_MANDANTE_MAIUSC", Lingue.corrente().inizialeMaiuscola(mandante(colpo.getMandante())), "PARAM_CITTA", getNomeCitta()))))
 						.poi(RITORNO);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);

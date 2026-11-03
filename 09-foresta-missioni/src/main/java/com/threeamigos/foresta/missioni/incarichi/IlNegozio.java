@@ -311,7 +311,7 @@ public abstract class IlNegozio extends IncaricoInCitta {
 			case DISINFESTAZIONE:
 				return combatti(this::getCovo, getNemici())
 						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(testo(VITTORIA) + " "
-								+ Testi.formatta("missioni", "Incarico.aspettaA", Lingue.corrente().inizialeMaiuscola(mandante(mandante)), getNomeCitta()))))
+								+ ProduttoreDiMissioniCasuale.testoDellaMissione("INCARICO_ASPETTA", "PARAM_MANDANTE_MAIUSC", Lingue.corrente().inizialeMaiuscola(mandante(mandante)), "PARAM_CITTA", getNomeCitta()))))
 						.poi(RITORNO);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);

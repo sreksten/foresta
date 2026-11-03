@@ -142,7 +142,7 @@ public class LaBenedizione extends MissioneAPassi {
 		BenedizioneRichiesta benedizione = getBenedizione();
 		personaggio.addModificatore(benedizione.nuovoModificatore());
 		aggiungiProprieta(RICEVUTA_DA, personaggio.getNome());
-		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LaBenedizione.s1", benedizione.getBenedetto().replace(BenedizioneRichiesta.PERSONAGGIO, personaggio.getNome()), Lingue.corrente().inizialeMaiuscola(benedizione.getNomeDellaBenedizione()), personaggio.getNome())));
+		BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_BENEDIZIONE_BENEDETTO", "PARAM_BENEDETTO", benedizione.getBenedetto().replace(BenedizioneRichiesta.PERSONAGGIO, personaggio.getNome()), "PARAM_BENEDIZIONE_MAIUSC", Lingue.corrente().inizialeMaiuscola(benedizione.getNomeDellaBenedizione()), "PARAM_PERSONAGGIO", personaggio.getNome())));
 	}
 
 	/**
@@ -158,7 +158,7 @@ public class LaBenedizione extends MissioneAPassi {
 	private void premia() {
 		aggiungiProprieta(PREMIO_DATO, AFFERMATIVO);
 		GruppoGiocatore.getIstanza().addPozioniAumentoLivello(1);
-		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LaBenedizione.s2", Lingue.corrente().inizialeMaiuscola(getBenedizione().getMandante()))));
+		BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_BENEDIZIONE_PREMIO", valori())));
 		OffertaDelSacerdote.avvisaSeIlGruppoEPieno(getBenedizione().getMandante());
 	}
 
@@ -168,7 +168,7 @@ public class LaBenedizione extends MissioneAPassi {
 				.parlaIlLocandiere(benedizione.getRichiesta())
 				.parlaIlCapo(benedizione.getBattutaDelCapo())
 				.parlaIlLocandiere(benedizione.getRisposta())
-				.parlaIlLocandiere(Testi.formatta("missioni", "LaBenedizione.1", benedizione.getNomeDellaBenedizione()))
+				.parlaIlLocandiere(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_BENEDIZIONE_INCONTRO_1", valori()))
 				.getPagine();
 	}
 
@@ -179,13 +179,43 @@ public class LaBenedizione extends MissioneAPassi {
 
 	@Override
 	public String getDescrizione() {
+		return descrizioneDalModello();
+	}
+
+	@Override
+	protected String produzioneDellaDescrizione(String passo) {
+		return TEMPIO.equals(passo) || ARRIVO.equals(passo) || SCELTA.equals(passo) || DIRETTA.equals(passo)
+				? "LA_BENEDIZIONE_DESCRIZIONE_TEMPIO" : "LA_BENEDIZIONE_DESCRIZIONE_FAVORE";
+	}
+
+	@Override
+	protected Object[] valoriStabiliDellaDescrizione() {
+		return valori();
+	}
+
+	/**
+	 * Il nome del favore chiesto in cambio: l'unico valore che cambia (la missione affidata, quando c'è, ha il suo nome).
+	 */
+	@Override
+	protected Object[] valoriDellaDescrizione() {
+		return new Object[] {"PARAM_FAVORE", getMissioniAffidate(FAVORE).stream().findFirst().map(Missione::getNome).orElse(getBenedizione().getFavore().getNome())};
+	}
+
+	/**
+	 * Tutti i segnaposto dei testi della storia che non cambiano mentre dura: il mandante e la benedizione. Senza "private" per i test.
+	 */
+	Object[] valori() {
 		BenedizioneRichiesta benedizione = getBenedizione();
-		String passo = getPassoCorrente();
-		if (TEMPIO.equals(passo) || ARRIVO.equals(passo) || SCELTA.equals(passo) || DIRETTA.equals(passo)) {
-			return Testi.formatta("missioni", "LaBenedizione.t1", benedizione.getMandante(), benedizione.getNomeDellaBenedizione());
-		}
-		return Testi.formatta("missioni", "LaBenedizione.t2", Lingue.corrente().inizialeMaiuscola(benedizione.getMandante()), benedizione.getNomeDellaBenedizione(), getMissioniAffidate(FAVORE).stream().findFirst().map(Missione::getNome)
-				.orElse(benedizione.getFavore().getNome()));
+		return new Object[] {"PARAM_MANDANTE", benedizione.getMandante(), "PARAM_MANDANTE_MAIUSC", Lingue.corrente().inizialeMaiuscola(benedizione.getMandante()),
+				"PARAM_BENEDIZIONE", benedizione.getNomeDellaBenedizione()};
+	}
+
+	private Object[] conTempio() {
+		Object[] valori = valori();
+		Object[] tutti = java.util.Arrays.copyOf(valori, valori.length + 2);
+		tutti[valori.length] = "PARAM_IN_TEMPIO";
+		tutti[valori.length + 1] = Lingue.corrente().conPreposizione(Preposizione.IN, TestiDeiLuoghi.nome(getTempio()));
+		return tutti;
 	}
 
 	@Override
@@ -218,7 +248,7 @@ public class LaBenedizione extends MissioneAPassi {
 				return cercaLocazione(MomentoControllo.POST_LOCAZIONE, TipoLocazione.TEMPIO)
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getTempio());
-							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LaBenedizione.s3", Lingue.corrente().inizialeMaiuscola(benedizione.getMandante()), Lingue.corrente().conPreposizione(Preposizione.IN, TestiDeiLuoghi.nome(getTempio())))));
+							BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_BENEDIZIONE_TEMPIO_SEGNATO", conTempio())));
 						})
 						.poi(ARRIVO);
 			case ARRIVO:
@@ -245,7 +275,7 @@ public class LaBenedizione extends MissioneAPassi {
 						.poi(() -> OffertaDelSacerdote.puoProporsi() ? COMPAGNO : Passo.FINE);
 			case COMPAGNO:
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> true)
-						.chiediConferma(Testi.formatta("missioni", "LaBenedizione.s4", Lingue.corrente().inizialeMaiuscola(benedizione.getMandante())))
+						.chiediConferma(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_BENEDIZIONE_COMPAGNO", valori()))
 						.esegui(() -> {
 							if (Passo.SI.equals(getRisposta(COMPAGNO))) {
 								OffertaDelSacerdote.accogli(benedizione.getClasse());

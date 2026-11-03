@@ -14,6 +14,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
@@ -82,18 +83,38 @@ public class IlCampione extends MissioneAPassi {
 	}
 
 	@Override
-	public String getNome() {
-		return Testi.formatta("missioni", "IlCampione.t1", getCampione());
+	protected String creaIlNome() {
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("IL_CAMPIONE_TITOLO", valori());
 	}
 
 	@Override
 	public String getDescrizione() {
-		return Testi.formatta("missioni", "IlCampione.t2", ilCampione(), TestiDeiLuoghi.dentro(getLuogo()));
+		return descrizioneDalModello();
+	}
+
+	@Override
+	protected String produzioneDellaDescrizione(String passo) {
+		return "IL_CAMPIONE_DESCRIZIONE";
+	}
+
+	@Override
+	protected Object[] valoriStabiliDellaDescrizione() {
+		return valori();
+	}
+
+	/**
+	 * Tutti i segnaposto dei testi della storia: il campione, con la sua classe, e il luogo. Senza "private" per i test.
+	 */
+	Object[] valori() {
+		if (getParametro(CLASSE) == null) { // una storia ancora senza campione
+			return new Object[] {"PARAM_CAMPIONE", "", "PARAM_CAMPIONE_E_CLASSE", "", "PARAM_DENTRO_LUOGO", ""};
+		}
+		return new Object[] {"PARAM_CAMPIONE", getCampione(), "PARAM_CAMPIONE_E_CLASSE", ilCampione(), "PARAM_DENTRO_LUOGO", TestiDeiLuoghi.dentro(getLuogo())};
 	}
 
 	@Override
 	public String getRicordoDellaLocazione() {
-		return isFallita() ? null : Testi.formatta("missioni", "IlCampione.s1", getCampione());
+		return isFallita() ? null : ProduttoreDiMissioniCasuale.testoDellaMissione("IL_CAMPIONE_RICORDO", valori());
 	}
 
 	@Override
@@ -108,7 +129,7 @@ public class IlCampione extends MissioneAPassi {
 				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, getLuogo())
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getPosto());
-							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlCampione.s2", ilCampione(), TestiDeiLuoghi.dentro(getLuogo()))));
+							BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_CAMPIONE_POSTO_SEGNATO", valori())));
 						})
 						.poi(SFIDA);
 			case SFIDA:
@@ -116,7 +137,7 @@ public class IlCampione extends MissioneAPassi {
 						.affronta(this::getPosto, getIncontro())
 						.esegui(() -> {
 							RegistroPersonaggi.segnaCampioneSconfitto(getCampione());
-							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "IlCampione.s3", getCampione())));
+							BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("IL_CAMPIONE_BATTUTO", valori())));
 						})
 						.poi(Passo.FINE);
 			default:

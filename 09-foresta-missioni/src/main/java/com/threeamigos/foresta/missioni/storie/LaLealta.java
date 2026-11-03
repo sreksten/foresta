@@ -125,7 +125,7 @@ public class LaLealta extends MissioneAPassi {
 
 	private List<PaginaIntermezzo> getPagineDellaConfidenza() {
 		LealtaRichiesta lealta = getLealta();
-		return ScenaFraCompagni.allAccampamento(Testi.formatta("missioni", "LaLealta.1", getNomeDelCompagno()), inScena())
+		return ScenaFraCompagni.allAccampamento(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_LEALTA_CONFIDENZA", "PARAM_COMPAGNO", getNomeDelCompagno()), inScena())
 				.parlaIlPrimo(testo(lealta.getConfidenza()))
 				.parlaIlSecondo(testo(lealta.getBattutaDelCapo()))
 				.parlaIlPrimo(testo(lealta.getRisposta()))
@@ -134,7 +134,7 @@ public class LaLealta extends MissioneAPassi {
 
 	private List<PaginaIntermezzo> getPagineDelRingraziamento() {
 		return ScenaFraCompagni.in(Foresta.getLocazioneDelGruppo(),
-						Testi.formatta("missioni", "LaLealta.2", getNomeDelCompagno()), inScena())
+						ProduttoreDiMissioniCasuale.testoDellaMissione("LA_LEALTA_RINGRAZIAMENTO", "PARAM_COMPAGNO", getNomeDelCompagno()), inScena())
 				.parlaIlPrimo(testo(getLealta().getRingraziamento()))
 				.getPagine();
 	}
@@ -164,22 +164,53 @@ public class LaLealta extends MissioneAPassi {
 	}
 
 	private String testoSeIlCompagnoEPerso() {
-		return Testi.formatta("missioni", "LaLealta.t1", getNomeDelCompagno());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("LA_LEALTA_COMPAGNO_PERSO", "PARAM_COMPAGNO", getNomeDelCompagno());
+	}
+
+	/**
+	 * Il titolo si conserva nei dati solo quando il compagno è scelto: prima è quello generico.
+	 */
+	@Override
+	public String getNome() {
+		return getNomeDelCompagno() == null ? ProduttoreDiMissioniCasuale.testoDellaMissione("LA_LEALTA_TITOLO_GENERICO") : super.getNome();
 	}
 
 	@Override
-	public String getNome() {
-		String compagno = getNomeDelCompagno();
-		return compagno == null ? Testi.formatta("missioni", "LaLealta.s1") : Testi.formatta("missioni", "LaLealta.s2", compagno);
+	protected String creaIlNome() {
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("LA_LEALTA_TITOLO", "PARAM_COMPAGNO", getNomeDelCompagno());
 	}
 
 	@Override
 	public String getDescrizione() {
+		return descrizioneDalModello();
+	}
+
+	@Override
+	protected String produzioneDellaDescrizione(String passo) {
+		return getNomeDelCompagno() == null ? "LA_LEALTA_DESCRIZIONE_ATTESA" : "LA_LEALTA_DESCRIZIONE";
+	}
+
+	@Override
+	protected Object[] valoriStabiliDellaDescrizione() {
+		return valori();
+	}
+
+	/**
+	 * Il nome del favore chiesto: l'unico valore che cambia (la missione affidata, quando c'è, ha il suo nome).
+	 */
+	@Override
+	protected Object[] valoriDellaDescrizione() {
 		if (getNomeDelCompagno() == null) {
-			return Testi.formatta("missioni", "LaLealta.t2");
+			return new Object[0];
 		}
-		return Testi.formatta("missioni", "LaLealta.t3", getNomeDelCompagno(), getMissioniAffidate(FAVORE).stream().findFirst()
-				.map(Missione::getNome).orElse(getLealta().getFavore().getNome()));
+		return new Object[] {"PARAM_FAVORE", getMissioniAffidate(FAVORE).stream().findFirst().map(Missione::getNome).orElse(getLealta().getFavore().getNome())};
+	}
+
+	/**
+	 * Tutti i segnaposto dei testi della storia che non cambiano mentre dura: il compagno (vuoto finché non è scelto). Senza "private" per i test.
+	 */
+	Object[] valori() {
+		return new Object[] {"PARAM_COMPAGNO", getNomeDelCompagno() == null ? "" : getNomeDelCompagno()};
 	}
 
 	@Override

@@ -2973,4 +2973,229 @@ IL_NEGOZIO_RINGRAZIAMENTO_2
 IL_NEGOZIO_RICOMPENSA
     %PARAM_MANDANTE_MAIUSC% pays the %PARAM_MONETE% promised coins.
 
+// ---------------------------------------------------------------------------------------------
+// Frasi condivise da più missioni (vedi Incarico, Nemici, IncaricoInCitta, MissioneAPassi, OffertaDelSacerdote). I segnaposto %PARAM_CHIAVE% li riempie il codice.
+// Restano nei .properties i nomi dei ruoli (Ruolo.*, IncaricoInCitta.s1...s8): servono nei costruttori, dove la grammatica non si può chiamare
+// (pesca da Dado e sposterebbe le partite con seme)
+// ---------------------------------------------------------------------------------------------
+
+// Dopo la vittoria o la scoperta: il mandante aspetta
+INCARICO_ASPETTA
+    %PARAM_MANDANTE_MAIUSC% is waiting in %PARAM_CITTA%.
+
+// Nemici con un capo
+NEMICI_GUIDATI_DA
+    %PARAM_NEMICI% led by %PARAM_CAPO%
+
+// La città del ritorno è distrutta
+INCARICO_IN_CITTA_CITTA_DISTRUTTA
+    %PARAM_CITTA% has been destroyed: no one can pay for the assignment any more.
+
+// Un viandante segna un posto dove trovare gli oggetti che mancano
+MISSIONE_A_PASSI_VIANDANTE_SEGNA
+    A wayfarer marks on your map a place where you can find %PARAM_OGGETTI_ADP%%PARAM_OGGETTI% that you are missing.
+
+// Il sacerdote non può unirsi al gruppo
+OFFERTA_DEL_SACERDOTE_GRUPPO_PIENO
+    You are already in %PARAM_NUMERO%: I don't think you need the help of %PARAM_DEL_SACERDOTE% as well.
+
+// ---------------------------------------------------------------------------------------------
+// Il campione (vedi IlCampione, storia della sfida dei campioni), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: il campione
+// (%PARAM_CAMPIONE%, %PARAM_CAMPIONE_E_CLASSE% con la sua classe) e il luogo (%PARAM_DENTRO_LUOGO%)
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+IL_CAMPIONE_TITOLO
+    The champion %PARAM_CAMPIONE%
+
+// Il passo della sfida: la descrizione nel diario
+IL_CAMPIONE_DESCRIZIONE
+    Challenge %PARAM_CAMPIONE_E_CLASSE%, to a game of rock, paper, scissors, best of three: you'll find them %PARAM_DENTRO_LUOGO%, at the place marked on the map. If you lose you can come back and try again.
+
+// Il posto compare sulla mappa
+IL_CAMPIONE_POSTO_SEGNATO
+    %PARAM_CAMPIONE_E_CLASSE%, awaits %PARAM_DENTRO_LUOGO%: the place is marked on the map.
+
+// Il ricordo del posto
+IL_CAMPIONE_RICORDO
+    Here %PARAM_CAMPIONE% challenged the party to rock, paper, scissors.
+
+// Il campione è battuto
+IL_CAMPIONE_BATTUTO
+    %PARAM_CAMPIONE% is beaten.
+
+// ---------------------------------------------------------------------------------------------
+// La benedizione (vedi LaBenedizione, storia del sacerdote), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: il mandante (%PARAM_MANDANTE%,
+// %PARAM_MANDANTE_MAIUSC%), la benedizione (%PARAM_BENEDIZIONE%) e il favore chiesto in cambio (%PARAM_FAVORE%: cambia, è il nome della missione affidata). Il titolo
+// (il nome della benedizione), la richiesta, la battuta del capo, la risposta e il testo di chi è benedetto sono della riga di BENEDIZIONE
+// ---------------------------------------------------------------------------------------------
+
+// La scena dell'incontro nella locanda
+LA_BENEDIZIONE_INCONTRO_1
+    Do this for me, and I'll wait for you in a temple to give you %PARAM_BENEDIZIONE%.
+
+// Il passo del favore e dell'attesa: la descrizione nel diario
+LA_BENEDIZIONE_DESCRIZIONE_FAVORE
+    %PARAM_MANDANTE_MAIUSC% will give you %PARAM_BENEDIZIONE% in exchange for a favour: %PARAM_FAVORE%.
+
+// Il tempio compare sulla mappa
+LA_BENEDIZIONE_TEMPIO_SEGNATO
+    %PARAM_MANDANTE_MAIUSC% awaits you %PARAM_IN_TEMPIO%, marked on the map.
+
+// I passi del tempio e della scelta: la descrizione nel diario
+LA_BENEDIZIONE_DESCRIZIONE_TEMPIO
+    The favour is done: %PARAM_MANDANTE% awaits you in the temple marked on the map, for %PARAM_BENEDIZIONE%.
+
+// Chi riceve la benedizione (dopo il testo di chi è benedetto)
+LA_BENEDIZIONE_BENEDETTO
+    %PARAM_BENEDETTO% %PARAM_BENEDIZIONE_MAIUSC% will stay with %PARAM_PERSONAGGIO% forever.
+
+// Il premio
+LA_BENEDIZIONE_PREMIO
+    %PARAM_MANDANTE_MAIUSC% also hands you a small luminous vial: a Level Up Potion.
+
+// Il sacerdote chiede di unirsi al gruppo
+LA_BENEDIZIONE_COMPAGNO
+    %PARAM_MANDANTE_MAIUSC% asks whether you would like them to join you permanently. Do you accept?
+
+// ---------------------------------------------------------------------------------------------
+// La lealtà (vedi LaLealta, storia di un compagno), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: il compagno (%PARAM_COMPAGNO%) e il
+// favore che chiede (%PARAM_FAVORE%: cambia, è il nome della missione affidata). La confidenza, la battuta del capo, la risposta, il ringraziamento e il testo
+// del premio sono della riga di LEALTA
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo, finché non si è scelto il compagno, e poi
+LA_LEALTA_TITOLO_GENERICO
+    Loyalty
+
+LA_LEALTA_TITOLO
+    %PARAM_COMPAGNO%'s loyalty
+
+// Prima che il compagno parli: la descrizione nel diario
+LA_LEALTA_DESCRIZIONE_ATTESA
+    Sooner or later, around the fire, someone in the party will have something to ask.
+
+// La scena della confidenza, all'accampamento
+LA_LEALTA_CONFIDENZA
+    %PARAM_COMPAGNO% stares at the fire for a long time, then decides to speak.
+
+// Il passo del favore: la descrizione nel diario
+LA_LEALTA_DESCRIZIONE
+    %PARAM_COMPAGNO% has asked you for a favour: %PARAM_FAVORE%.
+
+// Il compagno lascia il gruppo
+LA_LEALTA_COMPAGNO_PERSO
+    %PARAM_COMPAGNO% is no longer with the party: the favour is no longer needed.
+
+// La scena del ringraziamento
+LA_LEALTA_RINGRAZIAMENTO
+    %PARAM_COMPAGNO% has something to say.
+
+// ---------------------------------------------------------------------------------------------
+// Il favore (vedi IlFavore, missione figlia di una benedizione o di una lealtà), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: chi lo chiede
+// (%PARAM_MANDANTE%), cosa si raccoglie (%PARAM_QUANTI%, %PARAM_DA_DOVE_VIENE%), la veglia (%PARAM_VISITE%, %PARAM_ORE%), i nemici (%PARAM_NEMICI%) e quel che cambia
+// (%PARAM_RACCOLTI%, %PARAM_FATTE%). Il nome, il testo della veglia e il resto sono della riga di FAVORE
+// ---------------------------------------------------------------------------------------------
+
+// Il passo della raccolta: la descrizione nel diario
+IL_FAVORE_DESCRIZIONE_RACCOLTA
+    For %PARAM_MANDANTE%: collect %PARAM_QUANTI%, which %PARAM_DA_DOVE_VIENE%. So far: %PARAM_RACCOLTI%.
+
+// Il passo della veglia: la descrizione nel diario
+IL_FAVORE_DESCRIZIONE_VEGLIA
+    For %PARAM_MANDANTE%: watch over the place marked on the map, passing through it %PARAM_VISITE% times and letting at least %PARAM_ORE% hours pass between one visit and the next. So far: %PARAM_FATTE%.
+
+// Il passo del combattimento: la descrizione nel diario
+IL_FAVORE_DESCRIZIONE_COMBATTIMENTO
+    For %PARAM_MANDANTE%: defeat %PARAM_NEMICI% at the place marked on the map.
+
+// Il posto compare sulla mappa
+IL_FAVORE_POSTO_SEGNATO
+    The place of the favour is marked on the map.
+
+// A ogni visita della veglia che conta, tranne l'ultima: dopo il testo della veglia (una sola visita mancante, o di più)
+IL_FAVORE_VEGLIA_UNA
+    %PARAM_VEGLIA% You must come back here one more time, letting at least %PARAM_ORE% hours pass between one visit and the next.
+
+IL_FAVORE_VEGLIA_PIU
+    %PARAM_VEGLIA% You must come back here %PARAM_VOLTE% more times, letting at least %PARAM_ORE% hours pass between one visit and the next.
+
+// ---------------------------------------------------------------------------------------------
+// La sfida dei campioni (vedi LaSfidaDeiCampioni, storia finale di carta, forbici e sasso), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: i campioni battuti
+// e il loro numero, le monete e il premio. La riga dell'anello leggendario (LaSfidaDeiCampioni.s1) resta nei .properties: ha nove campi e fa da modello
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+LA_SFIDA_DEI_CAMPIONI_TITOLO
+    The challenge of the champions
+
+// Il premio, finché non è scelto
+LA_SFIDA_DEI_CAMPIONI_UN_LEGGENDARIO
+    a legendary item
+
+// La descrizione nel diario
+LA_SFIDA_DEI_CAMPIONI_DESCRIZIONE
+    Beat the four champions of the Forest at rock, paper, scissors, best of three, at the places marked on the map: %PARAM_BATTUTI% beaten out of %PARAM_CAMPIONI%. The prize is %PARAM_MONETE% coins and %PARAM_PREMIO%.
+
+// L'inizio: i campioni compaiono sulla mappa
+LA_SFIDA_DEI_CAMPIONI_INIZIO
+    Now that you've made a name for yourself at rock, paper, scissors, the four champions of the Forest await you: their places are marked on the map. The prize is %PARAM_MONETE% coins and %PARAM_PREMIO%.
+
+// La vittoria
+LA_SFIDA_DEI_CAMPIONI_VITTORIA
+    The fourth champion surrenders: you are the king of rock, paper, scissors. You receive %PARAM_MONETE% coins and %PARAM_PREMIO%.
+
+// ---------------------------------------------------------------------------------------------
+// Il viandante (vedi IlViandante, storia del bosco), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: la città (%PARAM_CITTA%), i mostri
+// (%PARAM_QUANTI%, %PARAM_PLURALE%, %PARAM_MOSTRI%), le monete e quanti ne sono stati sconfitti (%PARAM_SCONFITTI%: l'unico che cambia). La richiesta, la risposta, la battuta
+// del capo, l'arrivo e il ritorno sono della riga di VIANDANTE
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+IL_VIANDANTE_TITOLO
+    The wayfarer in the woods
+
+// Prima di accettare: la descrizione nel diario
+IL_VIANDANTE_DESCRIZIONE_ATTESA
+    Sooner or later, in the woods, you meet someone who needs help.
+
+// L'incontro nel bosco
+IL_VIANDANTE_INCONTRO
+    A wayfarer in the woods.
+
+// Il giocatore accetta
+IL_VIANDANTE_ACCETTATO
+    The wayfarer asks you to go to %PARAM_CITTA%, defeat %PARAM_QUANTI% %PARAM_PLURALE% and come back to him. He will pay you %PARAM_MONETE% coins.
+
+// Il passo dell'andata: la descrizione nel diario
+IL_VIANDANTE_DESCRIZIONE_ANDATA
+    A wayfarer met in the woods asked you to go to %PARAM_CITTA%, defeat %PARAM_MOSTRI% and come back to him, where you met him.
+
+// La città è distrutta
+IL_VIANDANTE_CITTA_DISTRUTTA
+    %PARAM_CITTA% has been destroyed: the wayfarer will never see anyone from down there again.
+
+// Il passo della caccia: la descrizione nel diario
+IL_VIANDANTE_DESCRIZIONE_CACCIA
+    You are at %PARAM_CITTA%: defeat %PARAM_MOSTRI%, wherever they are. So far: %PARAM_SCONFITTI%.
+
+// Sconfitti i mostri
+IL_VIANDANTE_CACCIA_FINITA
+    Done: now the wayfarer waits, in the woods where he stopped you.
+
+// Il passo del ritorno: la descrizione nel diario
+IL_VIANDANTE_DESCRIZIONE_RITORNO
+    The monsters are defeated: go back to the wayfarer, in the woods where you met him.
+
+// La scena del ritorno
+IL_VIANDANTE_RITORNO
+    The wayfarer was waiting.
+
+IL_VIANDANTE_SALUTO
+    Everything is fine. Safe travels.
+
+// La ricompensa
+IL_VIANDANTE_RICOMPENSA
+    The wayfarer pays you the %PARAM_MONETE% promised coins.
+
 #include_static <nomi_en_GB.txt>

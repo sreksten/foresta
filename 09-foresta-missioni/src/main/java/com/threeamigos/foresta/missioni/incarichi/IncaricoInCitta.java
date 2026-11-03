@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
@@ -172,7 +173,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	 * Il testo che si legge se la città in cui si riscuote viene distrutta, e l'incarico fallisce.
 	 */
 	protected String testoCittaDistrutta() {
-		return Testi.formatta("missioni", "IncaricoInCitta.t1", nomeDellaCitta(getCittaDelRitorno()));
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("INCARICO_IN_CITTA_CITTA_DISTRUTTA", "PARAM_CITTA", nomeDellaCitta(getCittaDelRitorno()));
 	}
 
 	/**

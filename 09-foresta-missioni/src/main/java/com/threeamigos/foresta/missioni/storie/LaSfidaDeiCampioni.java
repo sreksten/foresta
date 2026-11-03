@@ -129,16 +129,28 @@ public class LaSfidaDeiCampioni extends MissioneAPassi implements ConLeggendario
 	}
 
 	@Override
-	public String getNome() {
-		return Testi.formatta("missioni", "LaSfidaDeiCampioni.t1");
+	protected String creaIlNome() {
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("LA_SFIDA_DEI_CAMPIONI_TITOLO");
 	}
 
 	@Override
 	public String getDescrizione() {
-		List<Missione> campioni = getCampioni();
-		long battuti = campioni.stream().filter(Missione::isCompleta).count();
-		return Testi.formatta("missioni", "LaSfidaDeiCampioni.descrizione", battuti, CAMPIONI, getMonete(),
-				getLeggendario() != null ? getLeggendario().getNomeBreve() : Testi.formatta("missioni", "LaSfidaDeiCampioni.unLeggendario"));
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("LA_SFIDA_DEI_CAMPIONI_DESCRIZIONE", con(valori(),
+				"PARAM_BATTUTI", getCampioni().stream().filter(Missione::isCompleta).count(), "PARAM_CAMPIONI", CAMPIONI));
+	}
+
+	/**
+	 * I segnaposto dei testi della storia: le monete e il premio (un oggetto leggendario, finché non è scelto).
+	 */
+	private static Object[] con(Object[] valori, Object... altri) {
+		Object[] tutti = java.util.Arrays.copyOf(valori, valori.length + altri.length);
+		System.arraycopy(altri, 0, tutti, valori.length, altri.length);
+		return tutti;
+	}
+
+	Object[] valori() {
+		return new Object[] {"PARAM_MONETE", getMonete(),
+				"PARAM_PREMIO", getLeggendario() != null ? getLeggendario().getNomeBreve() : ProduttoreDiMissioniCasuale.testoDellaMissione("LA_SFIDA_DEI_CAMPIONI_UN_LEGGENDARIO")};
 	}
 
 	@Override
@@ -151,14 +163,14 @@ public class LaSfidaDeiCampioni extends MissioneAPassi implements ConLeggendario
 		switch (id) {
 			case AFFIDATI:
 				return affida(AFFIDATI, MomentoControllo.POST_LOCAZIONE, () -> true, this::creaICampioni)
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LaSfidaDeiCampioni.s2", getMonete(), getLeggendario().getNomeBreve()))))
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_SFIDA_DEI_CAMPIONI_INIZIO", valori()))))
 						.poi(ATTESA);
 			case ATTESA:
 				return attendiLeAffidate(AFFIDATI, MomentoControllo.POST_LOCAZIONE).poi(RICOMPENSA);
 			case RICOMPENSA:
 				return ricompensa(MomentoControllo.POST_LOCAZIONE,
 								Ricompensa.inMonete(getMonete()).conArtefatto(() -> getLeggendario().costruisci(Statistiche.getLivello())),
-								() -> Testi.formatta("missioni", "LaSfidaDeiCampioni.s3", getMonete(), getLeggendario().getNomeBreve()))
+								() -> ProduttoreDiMissioniCasuale.testoDellaMissione("LA_SFIDA_DEI_CAMPIONI_VITTORIA", valori()))
 						.poi(Passo.FINE);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
