@@ -24,6 +24,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.testi.Testi;
@@ -186,8 +187,8 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 	@Override
 	public String getNome() {
 		OggettoLeggendario leggendario = getLeggendario();
-		return leggendario == null ? Testi.formatta("missioni", "LaLeggenda.nomeSenzaOggetto")
-				: Testi.formatta("missioni", "LaLeggenda.nomeRecupera", leggendario.getNomeBreve());
+		return leggendario == null ? ProduttoreDiMissioniCasuale.testoDellaMissione("LA_LEGGENDA_NOME_SENZA_OGGETTO")
+				: ProduttoreDiMissioniCasuale.testoDellaMissione("LA_LEGGENDA_NOME_RECUPERA", "PARAM_OGGETTO", leggendario.getNomeBreve());
 	}
 
 	@Override
@@ -196,14 +197,14 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 		if (leggendario == null) {
 			return "";
 		}
-		String tempio = getTempio() == null ? Testi.formatta("missioni", "LaLeggenda.s1") : Lingue.corrente().conPreposizione(Preposizione.IN, Foresta.nomeDelTempio(getTempio()));
-		return Testi.formatta("missioni", "LaLeggenda.t1", Lingue.corrente().conPreposizione(Preposizione.DA, getNarratore()), getNomeDeiGuardiani(), leggendario.getNomeBreve(), tempio);
+		String tempio = getTempio() == null ? ProduttoreDiMissioniCasuale.testoDellaMissione("LA_LEGGENDA_UN_TEMPIO") : Lingue.corrente().conPreposizione(Preposizione.IN, Foresta.nomeDelTempio(getTempio()));
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("LA_LEGGENDA_DESCRIZIONE", "PARAM_DA_NARRATORE", Lingue.corrente().conPreposizione(Preposizione.DA, getNarratore()), "PARAM_GUARDIANI", getNomeDeiGuardiani(), "PARAM_OGGETTO", leggendario.getNomeBreve(), "PARAM_TEMPIO", tempio);
 	}
 
 	@Override
 	public String getRicordoDellaLocazione() {
 		OggettoLeggendario leggendario = getLeggendario();
-		return leggendario == null ? null : Testi.formatta("missioni", "LaLeggenda.qui", getNomeDeiGuardiani(), leggendario.getNomeBreve());
+		return leggendario == null ? null : ProduttoreDiMissioniCasuale.testoDellaMissione("LA_LEGGENDA_RICORDO", "PARAM_GUARDIANI", getNomeDeiGuardiani(), "PARAM_OGGETTO", leggendario.getNomeBreve());
 	}
 
 	@Override
@@ -226,9 +227,7 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 								() -> nelPosto() && RegistroMissioni.cercaOCostruisci(TipoLocazione.BOSCO, this).isPresent())
 						.esegui(() -> {
 							RegistroArtefatti.custodisciInUnTempioNuovo(getLeggendario().costruisci(Statistiche.getLivello()), getTempio());
-							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LaLeggenda.segna",
-									Lingue.corrente().inizialeMaiuscola(getNarratoreConNome()), Foresta.nomeDelTempio(getTempio()), getNomeDeiGuardiani(),
-									getLeggendario().getNomeBreve())));
+							BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_LEGGENDA_SEGNA", "PARAM_NARRATORE", Lingue.corrente().inizialeMaiuscola(getNarratoreConNome()), "PARAM_TEMPIO", Foresta.nomeDelTempio(getTempio()), "PARAM_GUARDIANI", getNomeDeiGuardiani(), "PARAM_OGGETTO", getLeggendario().getNomeBreve())));
 							attivaMissione();
 						})
 						.poi(RECUPERO);
@@ -237,7 +236,7 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 								() -> getTempio().equals(Foresta.getPosizioneDelGruppo())
 										&& RegistroArtefatti.getArtefattoInLocazione(getTempio()) == null)
 						.affronta(this::getTempio, getGuardiani())
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LaLeggenda.s2", getLeggendario().getNomeBreve()))))
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_LEGGENDA_VERA", "PARAM_OGGETTO", getLeggendario().getNomeBreve()))))
 						.poi(Passo.FINE);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
@@ -277,10 +276,10 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 		String breve = leggendario.getNomeBreve();
 		boolean plurale = leggendario.isPlurale();
 		return racconto
-				.narra(Testi.formatta("missioni", "LaLeggenda.s3", Testi.formatta("missioni", plurale ? "LaLeggenda.verboRiposano" : "LaLeggenda.verboRiposa"), getNomeDeiGuardiani()))
-				.parlaIlCapo(Testi.formatta("missioni", "LaLeggenda.1", breve))
-				.narra(Testi.formatta("missioni", "LaLeggenda.s4"))
-				.parlaIlCapo(Testi.formatta("missioni", "LaLeggenda.2"))
+				.narra(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_LEGGENDA_RACCONTO_1", "PARAM_VERBO", ProduttoreDiMissioniCasuale.testoDellaMissione(plurale ? "LA_LEGGENDA_RIPOSANO" : "LA_LEGGENDA_RIPOSA"), "PARAM_GUARDIANI", getNomeDeiGuardiani()))
+				.parlaIlCapo(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_LEGGENDA_RACCONTO_CAPO_1", "PARAM_OGGETTO", breve))
+				.narra(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_LEGGENDA_RACCONTO_2"))
+				.parlaIlCapo(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_LEGGENDA_RACCONTO_CAPO_2"))
 				.getPagine();
 	}
 

@@ -315,19 +315,19 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 				return nomeDellaCitta(cittaDelPosto(indice));
 			case LOCANDA:
 				String nomeDellaLocanda = Foresta.getLocazioneMD(coordinate).getNome();
-				return nomeDellaLocanda == null ? Testi.formatta("missioni", "MissioneATappe.s1") : Testi.formatta("missioni", "MissioneATappe.laLocanda", nomeDellaLocanda);
+				return nomeDellaLocanda == null ? ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_LOCANDA_SEGNATA") : ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_LA_LOCANDA", "PARAM_NOME", nomeDellaLocanda);
 			case ROVINE:
 				return Foresta.nomeDelleRovine(Foresta.getLocazioneMD(coordinate));
 			case TEMPIO:
 				return Foresta.nomeDelTempio(coordinate);
 			case GROTTA:
-				return Testi.formatta("missioni", "MissioneATappe.t1");
+				return ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_LA_GROTTA");
 			case BOSCO:
-				return Testi.formatta("missioni", "MissioneATappe.t2");
+				return ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_IL_BOSCO");
 			case PALUDE:
-				return Testi.formatta("missioni", "MissioneATappe.t3");
+				return ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_LA_PALUDE");
 			default:
-				return Testi.formatta("missioni", "MissioneATappe.t4");
+				return ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_LA_RADURA");
 		}
 	}
 
@@ -386,17 +386,17 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 
 	@Override
 	public String getNome() {
-		return isRichiestaPescata() ? getRichiesta().getTitolo() : Testi.formatta("missioni", "MissioneATappe.s2");
+		return isRichiestaPescata() ? getRichiesta().getTitolo() : ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_TITOLO_GENERICO");
 	}
 
 	private String testoDelRitorno(TappeRichieste richiesta) {
-		return Testi.formatta("missioni", "MissioneATappe.t5", Lingue.corrente().conPreposizione(Preposizione.PRESSO, mandante(richiesta.getMandante())), getNomeCitta());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_DESCRIZIONE_RITORNO", "PARAM_PRESSO_MANDANTE", Lingue.corrente().conPreposizione(Preposizione.PRESSO, mandante(richiesta.getMandante())), "PARAM_CITTA", getNomeCitta());
 	}
 
 	@Override
 	public String getDescrizione() {
 		if (!isRichiestaPescata() || !isAttiva()) {
-			return Testi.formatta("missioni", "MissioneATappe.t6");
+			return ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_DESCRIZIONE_ATTESA");
 		}
 		TappeRichieste richiesta = getRichiesta();
 		String passo = getPassoCorrente();
@@ -405,7 +405,7 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 		}
 		// Una missione finita si legge ancora fra le completate
 		if (Passo.FINE.equals(passo)) {
-			return Testi.formatta("missioni", "MissioneATappe.t7", mandanteEChiesto(richiesta));
+			return ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_DESCRIZIONE_FINITA", "PARAM_MANDANTE_E_CHIESTO", mandanteEChiesto(richiesta));
 		}
 		int tappe = richiesta.getTappe().size();
 		int corrente;
@@ -415,7 +415,7 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 			corrente = tappe + 1;
 		} else if (CHIAVI.equals(passo) || ATTESA_DELLE_CHIAVI.equals(passo)) {
 			long prese = getMissioniAffidate(CHIAVI).stream().filter(Missione::isCompleta).count();
-			return Testi.formatta("missioni", "MissioneATappe.t8", mandanteEChiesto(richiesta), TappeRichieste.CUSTODI, prese);
+			return ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_DESCRIZIONE_CHIAVI", "PARAM_MANDANTE_E_CHIESTO", mandanteEChiesto(richiesta), "PARAM_CUSTODI", TappeRichieste.CUSTODI, "PARAM_PRESE", prese);
 		} else if (passo.startsWith(TAPPA)) {
 			corrente = Integer.parseInt(passo.substring(TAPPA.length()));
 		} else {
@@ -424,26 +424,26 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 		}
 		StringBuilder descrizione = new StringBuilder(mandanteEChiesto(richiesta));
 		for (int tappa = 1; tappa < corrente && tappa <= richiesta.getTappe().size(); tappa++) {
-			descrizione.append(' ').append(Testi.formatta("missioni", "MissioneATappe.informazione", tappa)).append(' ')
+			descrizione.append(' ').append(ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_INFORMAZIONE", "PARAM_NUMERO", tappa)).append(' ')
 					.append(testo(richiesta.getTappe().get(tappa - 1).getInformazione(), tappa + 1));
 		}
 		if (richiesta.getBivio().isPresent() && corrente == tappe + 1 && coordinateDelPosto(tappe + 2) != null) {
 			int giusto = indiceDellaPistaGiusta();
-			descrizione.append(Testi.formatta("missioni", "MissioneATappe.s3"));
+			descrizione.append(" ").append(ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_DUE_PISTE")).append(" ");
 			if (isPistaFalsaVista()) {
 				descrizione.append(nomeDelPosto(giusto));
 			} else {
 				descrizione.append(Lingue.corrente().elenco(java.util.Arrays.asList(nomeDelPosto(tappe + 1), nomeDelPosto(tappe + 2))));
 			}
-			descrizione.append(Testi.formatta("missioni", "MissioneATappe.s4"));
+			descrizione.append(ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_PISTE_SEGNATE"));
 		} else if (coordinateDelPosto(corrente) != null) {
-			descrizione.append(Testi.formatta("missioni", "MissioneATappe.s5")).append(nomeDelPosto(corrente)).append(Testi.formatta("missioni", "MissioneATappe.s6"));
+			descrizione.append(" ").append(ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_PROSSIMO_POSTO")).append(" ").append(nomeDelPosto(corrente)).append(ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_POSTO_SEGNATO"));
 		}
 		return descrizione.toString();
 	}
 
 	private String mandanteEChiesto(TappeRichieste richiesta) {
-		return Testi.formatta("missioni", "MissioneATappe.t9", Lingue.corrente().inizialeMaiuscola(mandanteDiCitta(richiesta.getMandante())), richiesta.getTitolo());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_DESCRIZIONE_MANDANTE", "PARAM_MANDANTE_MAIUSC", Lingue.corrente().inizialeMaiuscola(mandanteDiCitta(richiesta.getMandante())), "PARAM_TITOLO", richiesta.getTitolo());
 	}
 
 	@Override
@@ -495,17 +495,17 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 		TappeRichieste richiesta = getRichiesta();
 		return richiesta.getAspetto().nuovaScena()
 				.parlaIlMandante(testo(richiesta.getRingraziamento(), 0))
-				.parlaIlMandante(Testi.formatta("missioni", "MissioneATappe.1", getRicompensa()));
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_RINGRAZIAMENTO_2", "PARAM_MONETE", getRicompensa()));
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return Testi.formatta("missioni", "MissioneATappe.t10", Lingue.corrente().inizialeMaiuscola(mandanteDiCitta(getRichiesta().getMandante())), getRicompensa());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_ACCETTAZIONE", "PARAM_MANDANTE_MAIUSC", Lingue.corrente().inizialeMaiuscola(mandanteDiCitta(getRichiesta().getMandante())), "PARAM_MONETE", getRicompensa());
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return Testi.formatta("missioni", "MissioneATappe.t11", Lingue.corrente().inizialeMaiuscola(mandante(getRichiesta().getMandante())), getRicompensa());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_RICOMPENSA", "PARAM_MANDANTE_MAIUSC", Lingue.corrente().inizialeMaiuscola(mandante(getRichiesta().getMandante())), "PARAM_MONETE", getRicompensa());
 	}
 
 	// --- I passi
@@ -565,11 +565,11 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 	 */
 	private void apriLUltimoPosto() {
 		if (!sonoRiusciteLeAffidate(CHIAVI) || !rivendicaIlPosto(numeroDiPosti())) {
-			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "MissioneATappe.s7")));
+			BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_SENZA_CHIAVI")));
 			fallisciMissione();
 			return;
 		}
-		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "MissioneATappe.s8", nomeDelPosto(numeroDiPosti()))));
+		BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_ULTIMO_POSTO", "PARAM_POSTO", nomeDelPosto(numeroDiPosti()))));
 	}
 
 	private boolean isPistaFalsaVista() {
@@ -618,7 +618,7 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 		}
 		int arrivo = numeroDiPosti();
 		if (!rivendicaIlPosto(arrivo)) {
-			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "MissioneATappe.s9")));
+			BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_PISTA_PERSA_1")));
 			fallisciMissione();
 			return;
 		}
@@ -656,7 +656,7 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 		}
 		if (classe.isCitta()) {
 			passo = passo.falliscoSe(() -> Foresta.isCittaDistrutta(cittaDelPosto(indice)),
-					() ->Testi.formatta("missioni", "MissioneATappe.s10", nomeDellaCitta(cittaDelPosto(indice))));
+					() ->ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_CITTA_DISTRUTTA", "PARAM_CITTA", nomeDellaCitta(cittaDelPosto(indice))));
 		}
 		if (!ultimo && indice == getRichiesta().getTappe().size() && (getRichiesta().getBivio().isPresent() || getRichiesta().hasChiavi())) {
 			return passo.poi(getRichiesta().hasChiavi() ? CHIAVI : BIVIO);
@@ -693,7 +693,7 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 			// I posti dei custodi, e quello dell'oggetto che uno di loro vuole
 			for (int posto = prossimo; posto < numeroDiPosti(); posto++) {
 				if (!rivendicaIlPosto(posto)) {
-					BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "MissioneATappe.s11")));
+					BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_PISTA_PERSA_2")));
 					fallisciMissione();
 					return;
 				}
@@ -703,7 +703,7 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 		}
 		if (getRichiesta().getBivio().isPresent() && indice == richiesta.getTappe().size()) {
 			if (!rivendicaIlPosto(prossimo) || !rivendicaIlPosto(prossimo + 1)) {
-				BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "MissioneATappe.s12")));
+				BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_PISTA_PERSA_3")));
 				fallisciMissione();
 				return;
 			}
@@ -711,7 +711,7 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 			return;
 		}
 		if (!rivendicaIlPosto(prossimo)) {
-			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "MissioneATappe.s13")));
+			BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_PISTA_PERSA_4")));
 			fallisciMissione();
 			return;
 		}
@@ -722,7 +722,7 @@ public class MissioneATappe extends IncaricoInCitta implements ConLeggendario {
 		OggettoLeggendario leggendario = getLeggendario();
 		Artefatto artefatto = leggendario.costruisci(Statistiche.getLivello());
 		GruppoGiocatore.getIstanza().addArtefatto(artefatto);
-		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "MissioneATappe.s14", leggendario.getNomeBreve())));
+		BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("MISSIONE_A_TAPPE_CUSTODI_SCONFITTI", "PARAM_OGGETTO", leggendario.getNomeBreve())));
 		BusEventi.pubblica(new NotificaArtefattoTrovato(artefatto, Statistiche.getLivello()));
 	}
 

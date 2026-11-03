@@ -11,6 +11,7 @@ import com.threeamigos.foresta.strumenti.dado.Dado;
 import java.util.*;
 import java.util.function.IntUnaryOperator;
 import java.util.stream.Collectors;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Genere;
 import com.threeamigos.foresta.testi.Testi;
@@ -133,9 +134,10 @@ public final class PescaLeggendaria {
 				return Optional.empty();
 			}
 			long mancano = pezzi.size() - usciti - 1;
-			String quantiMancano = mancano == 0 ? Testi.formatta("missioni", "PescaLeggendaria.s1")
-					: mancano == 1 ? Testi.formatta("missioni", "PescaLeggendaria.s2") : Testi.formatta("missioni", "PescaLeggendaria.s3", Lingue.corrente().cardinale((int) mancano, Genere.MASCHILE));
-			return Optional.of(Testi.formatta("missioni", "PescaLeggendaria.s4", set.getNome(), quantiMancano));
+			String quantiMancano = mancano == 0 ? ProduttoreDiMissioniCasuale.testoDellaMissione("PESCA_LEGGENDARIA_ULTIMO")
+					: mancano == 1 ? ProduttoreDiMissioniCasuale.testoDellaMissione("PESCA_LEGGENDARIA_MANCA_UNO")
+					: ProduttoreDiMissioniCasuale.testoDellaMissione("PESCA_LEGGENDARIA_MANCANO", "PARAM_QUANTI", Lingue.corrente().cardinale((int) mancano, Genere.MASCHILE));
+			return Optional.of(ProduttoreDiMissioniCasuale.testoDellaMissione("PESCA_LEGGENDARIA_BATTUTA", "PARAM_SET", set.getNome(), "PARAM_MANCANO", quantiMancano));
 		});
 	}
 

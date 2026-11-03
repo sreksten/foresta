@@ -3647,4 +3647,283 @@ VISITA_LOCANDA_DISTRUTTA
 VISITA_LOCANDA_FATTA
     One stage down: %PARAM_NOME% is done.
 
+// ---------------------------------------------------------------------------------------------
+// La leggenda (vedi LaLeggenda e le sue sottoclassi, una per narratore), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: il narratore
+// (%PARAM_DA_NARRATORE%), i guardiani (%PARAM_GUARDIANI%), l'oggetto leggendario (%PARAM_OGGETTO%), il tempio. Il racconto della leggenda è delle righe di
+// leggendari.txt
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo, finché non c'è l'oggetto, e poi
+LA_LEGGENDA_NOME_SENZA_OGGETTO
+    A legend
+
+LA_LEGGENDA_NOME_RECUPERA
+    Recover %PARAM_OGGETTO%
+
+// Il tempio, finché non è segnato
+LA_LEGGENDA_UN_TEMPIO
+    in a temple
+
+// La descrizione nel diario
+LA_LEGGENDA_DESCRIZIONE
+    According to the legend heard %PARAM_DA_NARRATORE%, %PARAM_GUARDIANI% guard %PARAM_OGGETTO% %PARAM_TEMPIO%, marked on the map.
+
+// Il ricordo del tempio
+LA_LEGGENDA_RICORDO
+    Here %PARAM_GUARDIANI% guarded %PARAM_OGGETTO%.
+
+// Il verbo, secondo il numero dell'oggetto
+LA_LEGGENDA_RIPOSA
+    it rests
+
+LA_LEGGENDA_RIPOSANO
+    they rest
+
+// La scena del racconto, dopo la leggenda
+LA_LEGGENDA_RACCONTO_1
+    Today %PARAM_VERBO% in a temple in the forest. But beware: it's guarded by %PARAM_GUARDIANI%.
+
+LA_LEGGENDA_RACCONTO_CAPO_1
+    With %PARAM_OGGETTO% the Dragon would have something to worry about.
+
+LA_LEGGENDA_RACCONTO_2
+    Then go. I'll mark the temple on your map.
+
+LA_LEGGENDA_RACCONTO_CAPO_2
+    Let's leave at once.
+
+// Il tempio compare sulla mappa
+LA_LEGGENDA_SEGNA
+    %PARAM_NARRATORE% marks %PARAM_TEMPIO% on the map, where %PARAM_GUARDIANI% guard %PARAM_OGGETTO%.
+
+// La leggenda era vera
+LA_LEGGENDA_VERA
+    The legend was true: %PARAM_OGGETTO% is in your hands.
+
+// Il narratore della leggenda del locandiere
+LA_LEGGENDA_DEL_LOCANDIERE_NARRATORE
+    the innkeeper
+
+// ---------------------------------------------------------------------------------------------
+// La pesca leggendaria (vedi PescaLeggendaria): quel che il narratore dice di un altro pezzo di un set già cominciato
+// ---------------------------------------------------------------------------------------------
+
+// Quanti ne mancano
+PESCA_LEGGENDARIA_ULTIMO
+    and it's the last one missing.
+
+PESCA_LEGGENDARIA_MANCA_UNO
+    and one is still missing.
+
+PESCA_LEGGENDARIA_MANCANO
+    and %PARAM_QUANTI% are still missing.
+
+// La battuta
+PESCA_LEGGENDARIA_BATTUTA
+    Are you interested in %PARAM_SET%? Then listen: this is another of its pieces, %PARAM_MANCANO%
+
+// ---------------------------------------------------------------------------------------------
+// La falce del Tristo Mietitore (vedi LaFalceDelTristoMietitore, leggenda del necromante), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: il narratore
+// (%PARAM_NARRATORE%, scelto dall'aspetto; il ruolo di armaiolo e alchimista sta ancora in Ruolo.* dei .properties) e il necromante (%PARAM_NECROMANTE%)
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+LA_FALCE_DEL_TRISTO_MIETITORE_TITOLO
+    The Scythe of the Grim Reaper
+
+// Il narratore, secondo l'aspetto
+LA_FALCE_DEL_TRISTO_MIETITORE_NARRATORE_DONNA
+    a woman
+
+LA_FALCE_DEL_TRISTO_MIETITORE_NARRATORE_LOCANDIERE
+    the innkeeper
+
+LA_FALCE_DEL_TRISTO_MIETITORE_NARRATORE_VENDITORE
+    the scroll seller
+
+LA_FALCE_DEL_TRISTO_MIETITORE_NARRATORE_INCANTATORE
+    the enchanter
+
+LA_FALCE_DEL_TRISTO_MIETITORE_NARRATORE_UOMO
+    a man
+
+// La scena dell'incontro, in città
+LA_FALCE_DEL_TRISTO_MIETITORE_SCENA_1
+    Help! I'm still trembling... I saw Death! Death in person, in the forest, from afar!
+
+LA_FALCE_DEL_TRISTO_MIETITORE_SCENA_2
+    Death? Calm down. What exactly did you see?
+
+LA_FALCE_DEL_TRISTO_MIETITORE_SCENA_3
+    He held his scythe, and he was surrounded by skeletons. A row of skeletons, like a guard of honor.
+
+LA_FALCE_DEL_TRISTO_MIETITORE_SCENA_4
+    And where did you see him?
+
+LA_FALCE_DEL_TRISTO_MIETITORE_SCENA_5
+    In the ruins nearby. I'll mark them on your map... but I wouldn't go back there, in your place.
+
+LA_FALCE_DEL_TRISTO_MIETITORE_SCENA_6
+    Let's go and see.
+
+// La descrizione nel diario
+LA_FALCE_DEL_TRISTO_MIETITORE_DESCRIZIONE
+    %PARAM_NARRATORE% swears to have seen Death in person, with his scythe and surrounded by skeletons, in the ruins marked on the map.
+
+// Le rovine compaiono sulla mappa
+LA_FALCE_DEL_TRISTO_MIETITORE_ROVINE_SEGNATE
+    %PARAM_NARRATORE% marks on the map the ruins where Death was last seen.
+
+// Il necromante è sconfitto
+LA_FALCE_DEL_TRISTO_MIETITORE_SCONFITTO
+    %PARAM_NECROMANTE% is defeated: Death was nothing but a necromancer. Among the bones of his skeletons lies %PARAM_FALCE%, and the party takes it.
+
+// Il ricordo delle rovine
+LA_FALCE_DEL_TRISTO_MIETITORE_RICORDO
+    Here the necromancer %PARAM_NECROMANTE% pretended to be Death, with his scythe and his skeletons.
+
+// ---------------------------------------------------------------------------------------------
+// La missione a tappe (vedi MissioneATappe), nell'ordine in cui la descrizione la compone. I segnaposto %PARAM_CHIAVE% li riempie il codice. Le frasi che si
+// attaccano alla descrizione (INFORMAZIONE, DUE_PISTE, PROSSIMO_POSTO...) le separa il codice con gli spazi
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo, finché la richiesta non è pescata
+MISSIONE_A_TAPPE_TITOLO_GENERICO
+    A multi-stage quest
+
+// Prima di accettare: la descrizione nel diario
+MISSIONE_A_TAPPE_DESCRIZIONE_ATTESA
+    Sooner or later someone, in a city, will ask you to find a person or an object, from place to place.
+
+// L'inizio di ogni descrizione: chi ha affidato la missione
+MISSIONE_A_TAPPE_DESCRIZIONE_MANDANTE
+    %PARAM_MANDANTE_MAIUSC% has entrusted you with a quest: “%PARAM_TITOLO%”.
+
+// La descrizione di una missione finita
+MISSIONE_A_TAPPE_DESCRIZIONE_FINITA
+    %PARAM_MANDANTE_E_CHIESTO% Quest complete.
+
+// Il passo delle chiavi
+MISSIONE_A_TAPPE_DESCRIZIONE_CHIAVI
+    %PARAM_MANDANTE_E_CHIESTO% The keys to collect are %PARAM_CUSTODI% (you have %PARAM_PRESE%), at the places marked on the map, in any order.
+
+// Un'informazione già ottenuta, nella descrizione (dopo uno spazio)
+MISSIONE_A_TAPPE_INFORMAZIONE
+    Clue %PARAM_NUMERO%:
+
+// Il bivio: le due piste, o la sola pista giusta (dopo il nome dei posti: la frase che segue)
+MISSIONE_A_TAPPE_DUE_PISTE
+    There are two trails:
+
+MISSIONE_A_TAPPE_PISTE_SEGNATE
+    , marked on the map.
+
+// Il prossimo posto
+MISSIONE_A_TAPPE_PROSSIMO_POSTO
+    The next place is
+
+MISSIONE_A_TAPPE_POSTO_SEGNATO
+    , marked on the map.
+
+// Il passo del ritorno: la descrizione nel diario
+MISSIONE_A_TAPPE_DESCRIZIONE_RITORNO
+    Done: go back %PARAM_PRESSO_MANDANTE% in %PARAM_CITTA% to collect.
+
+// I nomi dei posti, secondo il loro tipo
+MISSIONE_A_TAPPE_LOCANDA_SEGNATA
+    the inn marked on the map
+
+MISSIONE_A_TAPPE_LA_LOCANDA
+    %PARAM_NOME%
+
+MISSIONE_A_TAPPE_LA_GROTTA
+    the cave marked on the map
+
+MISSIONE_A_TAPPE_IL_BOSCO
+    the wood marked on the map
+
+MISSIONE_A_TAPPE_LA_PALUDE
+    the swamp marked on the map
+
+MISSIONE_A_TAPPE_LA_RADURA
+    the clearing marked on the map
+
+// Le chiavi
+MISSIONE_A_TAPPE_SENZA_CHIAVI
+    Without the keys there's no way to go on.
+
+MISSIONE_A_TAPPE_ULTIMO_POSTO
+    With all the keys in hand the last place can be opened: %PARAM_POSTO%, marked on the map.
+
+// La pista si interrompe
+MISSIONE_A_TAPPE_PISTA_PERSA_1
+    The trail ends here: there's no place left to search.
+
+MISSIONE_A_TAPPE_PISTA_PERSA_2
+    The trail ends here: there's no place left to search.
+
+MISSIONE_A_TAPPE_PISTA_PERSA_3
+    The trail ends here: there's no place left to search.
+
+MISSIONE_A_TAPPE_PISTA_PERSA_4
+    The trail ends here: there's no place left to search.
+
+// Una città è distrutta
+MISSIONE_A_TAPPE_CITTA_DISTRUTTA
+    %PARAM_CITTA% has been destroyed: the trail is lost.
+
+// I custodi sono sconfitti
+MISSIONE_A_TAPPE_CUSTODI_SCONFITTI
+    The guardians are defeated: %PARAM_OGGETTO% is in your hands.
+
+// La scena del ringraziamento (la prima battuta è della riga)
+MISSIONE_A_TAPPE_RINGRAZIAMENTO_2
+    Here are the %PARAM_MONETE% promised coins.
+
+// Il giocatore accetta
+MISSIONE_A_TAPPE_ACCETTAZIONE
+    %PARAM_MANDANTE_MAIUSC% will pay %PARAM_MONETE% coins.
+
+// La ricompensa
+MISSIONE_A_TAPPE_RICOMPENSA
+    %PARAM_MANDANTE_MAIUSC% pays the %PARAM_MONETE% promised coins.
+
+// ---------------------------------------------------------------------------------------------
+// L'epilogo del viaggio della moglie (vedi IntermezzoUrloDellaBanshee), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: la moglie e dove è arrivata
+// ---------------------------------------------------------------------------------------------
+
+// La scena del bardo, dopo il viaggio della moglie
+INTERMEZZO_URLO_DELLA_BANSHEE_1
+    You're back! My wife %PARAM_MOGLIE% wrote to me: she arrived safe and sound %PARAM_DOVE%, thanks to you.
+
+INTERMEZZO_URLO_DELLA_BANSHEE_2
+    It was the least we could do, after you brought us home.
+
+INTERMEZZO_URLO_DELLA_BANSHEE_3
+    I owe you more than a thank you. I'll teach you my most secret song, which I've never taught anyone.
+
+INTERMEZZO_URLO_DELLA_BANSHEE_4
+    It's called the Banshee's Wail: a song that chills the blood. Whoever hears it becomes frightened and loses their head.
+
+INTERMEZZO_URLO_DELLA_BANSHEE_5
+    It will be useful.
+
+INTERMEZZO_URLO_DELLA_BANSHEE_6
+    Whoever among you can sing will learn it in a moment. Use it well, and don't let my wife hear it.
+
+// Dove, se l'arrivo non c'è
+INTERMEZZO_URLO_DELLA_BANSHEE_DALL_ALTRA_PARTE
+    on the other side of the forest
+
+// ---------------------------------------------------------------------------------------------
+// L'epilogo degli eremiti (vedi IntermezzoEremitaRompiscatole), in ordine di copione
+// ---------------------------------------------------------------------------------------------
+
+// La scena degli eremiti
+INTERMEZZO_EREMITA_ROMPISCATOLE_1
+    Ten distressed hermits.
+
+INTERMEZZO_EREMITA_ROMPISCATOLE_2
+    This forest was a peaceful place before you damned pests arrived!
+
 #include_static <nomi_en.txt>

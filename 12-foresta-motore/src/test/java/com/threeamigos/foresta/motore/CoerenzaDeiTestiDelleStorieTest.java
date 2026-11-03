@@ -3,6 +3,8 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.missioni.incarichi.TestiDiUnIncarico;
 import com.threeamigos.foresta.missioni.principali.CronacheDiUnFegatoEroico;
 import com.threeamigos.foresta.missioni.principali.DisturbatoreDellaQuietePubblica;
+import com.threeamigos.foresta.missioni.leggende.LaFalceDelTristoMietitore;
+import com.threeamigos.foresta.missioni.leggende.LaLeggendaDelLocandiere;
 import com.threeamigos.foresta.missioni.principali.IlGiroDelleSetteChiese;
 import com.threeamigos.foresta.missioni.principali.NessunBoccaleLasciatoIndietro;
 import com.threeamigos.foresta.missioni.principali.SconfiggiIlDrago;
@@ -115,6 +117,12 @@ class CoerenzaDeiTestiDelleStorieTest {
         controlla(CronacheDiUnFegatoEroico::new, new String[0], "CRONACHE_DI_UN_FEGATO_EROICO_INCOMPIUTE", "CRONACHE_DI_UN_FEGATO_EROICO_COMPLETE");
     }
 
+    @Test
+    void LeLeggende() {
+        controlla(LaFalceDelTristoMietitore::new, new String[0], "LA_FALCE_DEL_TRISTO_MIETITORE_SCENA_1", "LA_FALCE_DEL_TRISTO_MIETITORE_SCENA_3", "LA_FALCE_DEL_TRISTO_MIETITORE_SCENA_5");
+        controlla(LaLeggendaDelLocandiere::new, new String[0], "LA_LEGGENDA_RACCONTO_2", "LA_LEGGENDA_RACCONTO_CAPO_2");
+    }
+
     /** Controlla una storia in tutte le lingue: nome, descrizione, ricordo, descrizione di ogni passo e le produzioni date. */
     private static void controlla(Supplier<? extends com.threeamigos.foresta.missioni.Missione> fabbrica, String[] passi, String... produzioni) {
         for (String lingua : LINGUE) {
@@ -128,7 +136,9 @@ class CoerenzaDeiTestiDelleStorieTest {
                 assertFalse(titolo.isEmpty() || titolo.matches("(?s).*%[A-Z_0-9]+%.*") || titolo.contains("null"), dove + titolo);
                 assertEquals(storia.getNome(), storia.getNome(), dove + "il titolo non cambia");
                 String descrizione = storia.getDescrizione(); // una descrizione può essere un'etichetta senza punto finale
-                controllaFrase(dove, descrizione, false);
+                if (!descrizione.isEmpty()) { // una leggenda senza il suo oggetto non ha ancora una descrizione
+                    controllaFrase(dove, descrizione, false);
+                }
                 String ricordo = storia.getRicordoDellaLocazione();
                 if (ricordo != null) {
                     frasi.add(ricordo);

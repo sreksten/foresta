@@ -3924,4 +3924,283 @@ VISITA_LOCANDA_DISTRUTTA
 VISITA_LOCANDA_FATTA
     Una tappa in meno: %PARAM_NOME% è cosa fatta.
 
+// ---------------------------------------------------------------------------------------------
+// La leggenda (vedi LaLeggenda e le sue sottoclassi, una per narratore), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: il narratore
+// (%PARAM_DA_NARRATORE%), i guardiani (%PARAM_GUARDIANI%), l'oggetto leggendario (%PARAM_OGGETTO%), il tempio. Il racconto della leggenda è delle righe di
+// leggendari.txt
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo, finché non c'è l'oggetto, e poi
+LA_LEGGENDA_NOME_SENZA_OGGETTO
+    Una leggenda
+
+LA_LEGGENDA_NOME_RECUPERA
+    Recupera %PARAM_OGGETTO%
+
+// Il tempio, finché non è segnato
+LA_LEGGENDA_UN_TEMPIO
+    in un tempio
+
+// La descrizione nel diario
+LA_LEGGENDA_DESCRIZIONE
+    Secondo la leggenda raccontata %PARAM_DA_NARRATORE%, %PARAM_GUARDIANI% custodiscono %PARAM_OGGETTO% %PARAM_TEMPIO%, segnato sulla mappa.
+
+// Il ricordo del tempio
+LA_LEGGENDA_RICORDO
+    Qui %PARAM_GUARDIANI% custodivano %PARAM_OGGETTO%.
+
+// Il verbo, secondo il numero dell'oggetto
+LA_LEGGENDA_RIPOSA
+    riposa
+
+LA_LEGGENDA_RIPOSANO
+    riposano
+
+// La scena del racconto, dopo la leggenda
+LA_LEGGENDA_RACCONTO_1
+    Oggi %PARAM_VERBO% in un tempio nella foresta. Ma attenti: a fare la guardia ci sono %PARAM_GUARDIANI%.
+
+LA_LEGGENDA_RACCONTO_CAPO_1
+    Con %PARAM_OGGETTO% il Drago avrebbe di che preoccuparsi.
+
+LA_LEGGENDA_RACCONTO_2
+    Allora andate. Vi segno il tempio sulla mappa.
+
+LA_LEGGENDA_RACCONTO_CAPO_2
+    Partiamo subito.
+
+// Il tempio compare sulla mappa
+LA_LEGGENDA_SEGNA
+    %PARAM_NARRATORE% segna sulla mappa %PARAM_TEMPIO%, dove %PARAM_GUARDIANI% custodiscono %PARAM_OGGETTO%.
+
+// La leggenda era vera
+LA_LEGGENDA_VERA
+    La leggenda era vera: %PARAM_OGGETTO% è nelle vostre mani.
+
+// Il narratore della leggenda del locandiere
+LA_LEGGENDA_DEL_LOCANDIERE_NARRATORE
+    il locandiere
+
+// ---------------------------------------------------------------------------------------------
+// La pesca leggendaria (vedi PescaLeggendaria): quel che il narratore dice di un altro pezzo di un set già cominciato
+// ---------------------------------------------------------------------------------------------
+
+// Quanti ne mancano
+PESCA_LEGGENDARIA_ULTIMO
+    ed è l'ultimo che manca.
+
+PESCA_LEGGENDARIA_MANCA_UNO
+    e ne manca ancora uno.
+
+PESCA_LEGGENDARIA_MANCANO
+    e ne mancano ancora %PARAM_QUANTI%.
+
+// La battuta
+PESCA_LEGGENDARIA_BATTUTA
+    Vi interessa %PARAM_SET%? Allora ascoltate: questo è un altro dei suoi pezzi, %PARAM_MANCANO%
+
+// ---------------------------------------------------------------------------------------------
+// La falce del Tristo Mietitore (vedi LaFalceDelTristoMietitore, leggenda del necromante), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: il narratore
+// (%PARAM_NARRATORE%, scelto dall'aspetto; il ruolo di armaiolo e alchimista sta ancora in Ruolo.* dei .properties) e il necromante (%PARAM_NECROMANTE%)
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo
+LA_FALCE_DEL_TRISTO_MIETITORE_TITOLO
+    La falce del Tristo Mietitore
+
+// Il narratore, secondo l'aspetto
+LA_FALCE_DEL_TRISTO_MIETITORE_NARRATORE_DONNA
+    una donna
+
+LA_FALCE_DEL_TRISTO_MIETITORE_NARRATORE_LOCANDIERE
+    il locandiere
+
+LA_FALCE_DEL_TRISTO_MIETITORE_NARRATORE_VENDITORE
+    il venditore di pergamene
+
+LA_FALCE_DEL_TRISTO_MIETITORE_NARRATORE_INCANTATORE
+    l'incantatore
+
+LA_FALCE_DEL_TRISTO_MIETITORE_NARRATORE_UOMO
+    un uomo
+
+// La scena dell'incontro, in città
+LA_FALCE_DEL_TRISTO_MIETITORE_SCENA_1
+    Aiuto! Sono ancora tutto un tremito... Ho visto la Morte! La Morte in persona, nella foresta, da lontano!
+
+LA_FALCE_DEL_TRISTO_MIETITORE_SCENA_2
+    La Morte? Calmatevi. Che cosa avete visto, esattamente?
+
+LA_FALCE_DEL_TRISTO_MIETITORE_SCENA_3
+    Impugnava la sua falce, ed era circondata da scheletri. Una fila di scheletri, come una guardia d'onore.
+
+LA_FALCE_DEL_TRISTO_MIETITORE_SCENA_4
+    E dove l'avete vista?
+
+LA_FALCE_DEL_TRISTO_MIETITORE_SCENA_5
+    Nelle rovine, qui vicino. Ve le segno sulla mappa... ma io non ci tornerei, al vostro posto.
+
+LA_FALCE_DEL_TRISTO_MIETITORE_SCENA_6
+    Andiamo a vedere.
+
+// La descrizione nel diario
+LA_FALCE_DEL_TRISTO_MIETITORE_DESCRIZIONE
+    %PARAM_NARRATORE% giura di aver visto la Morte in persona, con la sua falce e circondata da scheletri, nelle rovine segnate sulla mappa.
+
+// Le rovine compaiono sulla mappa
+LA_FALCE_DEL_TRISTO_MIETITORE_ROVINE_SEGNATE
+    %PARAM_NARRATORE% segna sulla mappa le rovine dove ha visto la Morte.
+
+// Il necromante è sconfitto
+LA_FALCE_DEL_TRISTO_MIETITORE_SCONFITTO
+    %PARAM_NECROMANTE% è sconfitto: la Morte non era che un necromante. Fra le ossa dei suoi scheletri resta %PARAM_FALCE%, e il gruppo la prende.
+
+// Il ricordo delle rovine
+LA_FALCE_DEL_TRISTO_MIETITORE_RICORDO
+    Qui il necromante %PARAM_NECROMANTE% si finse la Morte, con la sua falce e i suoi scheletri.
+
+// ---------------------------------------------------------------------------------------------
+// La missione a tappe (vedi MissioneATappe), nell'ordine in cui la descrizione la compone. I segnaposto %PARAM_CHIAVE% li riempie il codice. Le frasi che si
+// attaccano alla descrizione (INFORMAZIONE, DUE_PISTE, PROSSIMO_POSTO...) le separa il codice con gli spazi
+// ---------------------------------------------------------------------------------------------
+
+// Il titolo, finché la richiesta non è pescata
+MISSIONE_A_TAPPE_TITOLO_GENERICO
+    Una missione a tappe
+
+// Prima di accettare: la descrizione nel diario
+MISSIONE_A_TAPPE_DESCRIZIONE_ATTESA
+    Prima o poi qualcuno, in una città, chiederà di ritrovare una persona o un oggetto, di posto in posto.
+
+// L'inizio di ogni descrizione: chi ha affidato la missione
+MISSIONE_A_TAPPE_DESCRIZIONE_MANDANTE
+    %PARAM_MANDANTE_MAIUSC% ti ha affidato una missione: “%PARAM_TITOLO%”.
+
+// La descrizione di una missione finita
+MISSIONE_A_TAPPE_DESCRIZIONE_FINITA
+    %PARAM_MANDANTE_E_CHIESTO% Missione compiuta.
+
+// Il passo delle chiavi
+MISSIONE_A_TAPPE_DESCRIZIONE_CHIAVI
+    %PARAM_MANDANTE_E_CHIESTO% Le chiavi da prendere sono %PARAM_CUSTODI% (ne hai %PARAM_PRESE%), nei posti segnati sulla mappa, in qualunque ordine.
+
+// Un'informazione già ottenuta, nella descrizione (dopo uno spazio)
+MISSIONE_A_TAPPE_INFORMAZIONE
+    Informazione %PARAM_NUMERO%:
+
+// Il bivio: le due piste, o la sola pista giusta (dopo il nome dei posti: la frase che segue)
+MISSIONE_A_TAPPE_DUE_PISTE
+    Le piste sono due:
+
+MISSIONE_A_TAPPE_PISTE_SEGNATE
+    , segnate sulla mappa.
+
+// Il prossimo posto
+MISSIONE_A_TAPPE_PROSSIMO_POSTO
+    Il prossimo posto è
+
+MISSIONE_A_TAPPE_POSTO_SEGNATO
+    , segnato sulla mappa.
+
+// Il passo del ritorno: la descrizione nel diario
+MISSIONE_A_TAPPE_DESCRIZIONE_RITORNO
+    Fatto: torna %PARAM_PRESSO_MANDANTE% a %PARAM_CITTA% a riscuotere.
+
+// I nomi dei posti, secondo il loro tipo
+MISSIONE_A_TAPPE_LOCANDA_SEGNATA
+    la locanda segnata sulla mappa
+
+MISSIONE_A_TAPPE_LA_LOCANDA
+    la locanda %PARAM_NOME%
+
+MISSIONE_A_TAPPE_LA_GROTTA
+    la grotta segnata sulla mappa
+
+MISSIONE_A_TAPPE_IL_BOSCO
+    il bosco segnato sulla mappa
+
+MISSIONE_A_TAPPE_LA_PALUDE
+    la palude segnata sulla mappa
+
+MISSIONE_A_TAPPE_LA_RADURA
+    la radura segnata sulla mappa
+
+// Le chiavi
+MISSIONE_A_TAPPE_SENZA_CHIAVI
+    Senza le chiavi non c'è modo di andare avanti.
+
+MISSIONE_A_TAPPE_ULTIMO_POSTO
+    Con tutte le chiavi in mano si può aprire l'ultimo posto: %PARAM_POSTO%, segnato sulla mappa.
+
+// La pista si interrompe
+MISSIONE_A_TAPPE_PISTA_PERSA_1
+    La pista si interrompe qui: non c'è più nessun posto dove cercare.
+
+MISSIONE_A_TAPPE_PISTA_PERSA_2
+    La pista si interrompe qui: non c'è più nessun posto dove cercare.
+
+MISSIONE_A_TAPPE_PISTA_PERSA_3
+    La pista si interrompe qui: non c'è più nessun posto dove cercare.
+
+MISSIONE_A_TAPPE_PISTA_PERSA_4
+    La pista si interrompe qui: non c'è più nessun posto dove cercare.
+
+// Una città è distrutta
+MISSIONE_A_TAPPE_CITTA_DISTRUTTA
+    %PARAM_CITTA% è stata distrutta: la pista si perde.
+
+// I custodi sono sconfitti
+MISSIONE_A_TAPPE_CUSTODI_SCONFITTI
+    I custodi sono sconfitti: %PARAM_OGGETTO% è nelle vostre mani.
+
+// La scena del ringraziamento (la prima battuta è della riga)
+MISSIONE_A_TAPPE_RINGRAZIAMENTO_2
+    Ecco le %PARAM_MONETE% monete promesse.
+
+// Il giocatore accetta
+MISSIONE_A_TAPPE_ACCETTAZIONE
+    %PARAM_MANDANTE_MAIUSC% pagherà %PARAM_MONETE% monete.
+
+// La ricompensa
+MISSIONE_A_TAPPE_RICOMPENSA
+    %PARAM_MANDANTE_MAIUSC% paga le %PARAM_MONETE% monete promesse.
+
+// ---------------------------------------------------------------------------------------------
+// L'epilogo del viaggio della moglie (vedi IntermezzoUrloDellaBanshee), in ordine di copione. I segnaposto %PARAM_CHIAVE% li riempie il codice: la moglie e dove è arrivata
+// ---------------------------------------------------------------------------------------------
+
+// La scena del bardo, dopo il viaggio della moglie
+INTERMEZZO_URLO_DELLA_BANSHEE_1
+    Siete tornati! Mia moglie %PARAM_MOGLIE% mi ha scritto: è arrivata sana e salva %PARAM_DOVE%, grazie a voi.
+
+INTERMEZZO_URLO_DELLA_BANSHEE_2
+    Era il minimo, dopo avervi riportato a casa.
+
+INTERMEZZO_URLO_DELLA_BANSHEE_3
+    Vi devo più di un grazie. Vi insegno il mio canto più segreto, che non ho mai insegnato a nessuno.
+
+INTERMEZZO_URLO_DELLA_BANSHEE_4
+    Si chiama l'Urlo della Banshee: un canto da far gelare il sangue. Chi lo ascolta si spaventa e perde la testa.
+
+INTERMEZZO_URLO_DELLA_BANSHEE_5
+    Ci sarà utile.
+
+INTERMEZZO_URLO_DELLA_BANSHEE_6
+    Chi di voi sa cantare lo imparerà in un attimo. Usatelo bene, e non fatelo sentire a mia moglie.
+
+// Dove, se l'arrivo non c'è
+INTERMEZZO_URLO_DELLA_BANSHEE_DALL_ALTRA_PARTE
+    dall'altra parte della foresta
+
+// ---------------------------------------------------------------------------------------------
+// L'epilogo degli eremiti (vedi IntermezzoEremitaRompiscatole), in ordine di copione
+// ---------------------------------------------------------------------------------------------
+
+// La scena degli eremiti
+INTERMEZZO_EREMITA_ROMPISCATOLE_1
+    Dieci eremiti angustiati.
+
+INTERMEZZO_EREMITA_ROMPISCATOLE_2
+    Questa foresta era un luogo tranquillo prima che voi maledetti rompiscatole arrivaste!
+
 #include_static <nomi.txt>

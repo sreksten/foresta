@@ -9,6 +9,7 @@ import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.List;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
@@ -36,7 +37,7 @@ public class LaLeggendaDelLocandiere extends LaLeggenda {
 
 	@Override
 	protected String getNarratore() {
-		return Testi.formatta("missioni", "LaLeggendaDelLocandiere.t1");
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("LA_LEGGENDA_DEL_LOCANDIERE_NARRATORE");
 	}
 
 	@Override

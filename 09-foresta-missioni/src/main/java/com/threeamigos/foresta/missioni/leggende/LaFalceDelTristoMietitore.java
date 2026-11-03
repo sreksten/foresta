@@ -75,18 +75,18 @@ public class LaFalceDelTristoMietitore extends MissioneAPassi {
 	}
 
 	@Override
-	public String getNome() {
-		return Testi.formatta("missioni", "LaFalceDelTristoMietitore.t1");
+	protected String creaIlNome() {
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("LA_FALCE_DEL_TRISTO_MIETITORE_TITOLO");
 	}
 
 	@Override
 	public String getDescrizione() {
-		return Testi.formatta("missioni", "LaFalceDelTristoMietitore.t2", Lingue.corrente().inizialeMaiuscola(getNarratore()));
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("LA_FALCE_DEL_TRISTO_MIETITORE_DESCRIZIONE", "PARAM_NARRATORE", Lingue.corrente().inizialeMaiuscola(getNarratore()));
 	}
 
 	@Override
 	public String getRicordoDellaLocazione() {
-		return Testi.formatta("missioni", "LaFalceDelTristoMietitore.t3", getNomeDelNecromante());
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("LA_FALCE_DEL_TRISTO_MIETITORE_RICORDO", "PARAM_NECROMANTE", getNomeDelNecromante());
 	}
 
 	/**
@@ -113,19 +113,19 @@ public class LaFalceDelTristoMietitore extends MissioneAPassi {
 	private String getNarratore() {
 		switch (getAspetto()) {
 			case DONNA:
-				return Testi.formatta("missioni", "LaFalceDelTristoMietitore.t4");
+				return ProduttoreDiMissioniCasuale.testoDellaMissione("LA_FALCE_DEL_TRISTO_MIETITORE_NARRATORE_DONNA");
 			case ARMAIOLO:
 				return Testi.formatta("missioni", "Ruolo.armaiolo");
 			case ALCHIMISTA:
 				return Testi.formatta("missioni", "Ruolo.alchimista");
 			case LOCANDIERE:
-				return Testi.formatta("missioni", "LaFalceDelTristoMietitore.t5");
+				return ProduttoreDiMissioniCasuale.testoDellaMissione("LA_FALCE_DEL_TRISTO_MIETITORE_NARRATORE_LOCANDIERE");
 			case VENDITORE_DI_PERGAMENE:
-				return Testi.formatta("missioni", "LaFalceDelTristoMietitore.t6");
+				return ProduttoreDiMissioniCasuale.testoDellaMissione("LA_FALCE_DEL_TRISTO_MIETITORE_NARRATORE_VENDITORE");
 			case INCANTATORE:
-				return Testi.formatta("missioni", "LaFalceDelTristoMietitore.t7");
+				return ProduttoreDiMissioniCasuale.testoDellaMissione("LA_FALCE_DEL_TRISTO_MIETITORE_NARRATORE_INCANTATORE");
 			default:
-				return Testi.formatta("missioni", "LaFalceDelTristoMietitore.t8");
+				return ProduttoreDiMissioniCasuale.testoDellaMissione("LA_FALCE_DEL_TRISTO_MIETITORE_NARRATORE_UOMO");
 		}
 	}
 
@@ -167,7 +167,7 @@ public class LaFalceDelTristoMietitore extends MissioneAPassi {
 								() -> nelPosto() && RegistroMissioni.cercaOCostruisci(TipoLocazione.ROVINE, this).isPresent())
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getCovo());
-							BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LaFalceDelTristoMietitore.s1", Lingue.corrente().inizialeMaiuscola(getNarratore()))));
+							BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_FALCE_DEL_TRISTO_MIETITORE_ROVINE_SEGNATE", "PARAM_NARRATORE", Lingue.corrente().inizialeMaiuscola(getNarratore()))));
 							attivaMissione();
 						})
 						.poi(SCONTRO);
@@ -184,7 +184,7 @@ public class LaFalceDelTristoMietitore extends MissioneAPassi {
 		OggettoLeggendario falce = CatalogoLeggendari.getLeggendario(CHIAVE_DELLA_FALCE).orElseThrow(IllegalStateException::new);
 		Artefatto artefatto = falce.costruisci(Statistiche.getLivello());
 		GruppoGiocatore.getIstanza().addArtefatto(artefatto);
-		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("missioni", "LaFalceDelTristoMietitore.s2", getNomeDelNecromante(), falce.getNomeBreve())));
+		BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_FALCE_DEL_TRISTO_MIETITORE_SCONFITTO", "PARAM_NECROMANTE", getNomeDelNecromante(), "PARAM_FALCE", falce.getNomeBreve())));
 		BusEventi.pubblica(new NotificaArtefattoTrovato(artefatto, Statistiche.getLivello()));
 	}
 
@@ -194,16 +194,16 @@ public class LaFalceDelTristoMietitore extends MissioneAPassi {
 	private List<PaginaIntermezzo> getPagineDelRacconto() {
 		OggettoLeggendario falce = CatalogoLeggendari.getLeggendario(CHIAVE_DELLA_FALCE).orElseThrow(IllegalStateException::new);
 		ScenaInCitta scena = getAspetto().nuovaScena()
-				.parlaIlMandante(Testi.formatta("missioni", "LaFalceDelTristoMietitore.1"))
-				.parlaIlCapo(Testi.formatta("missioni", "LaFalceDelTristoMietitore.2"))
-				.parlaIlMandante(Testi.formatta("missioni", "LaFalceDelTristoMietitore.3"));
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_FALCE_DEL_TRISTO_MIETITORE_SCENA_1"))
+				.parlaIlCapo(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_FALCE_DEL_TRISTO_MIETITORE_SCENA_2"))
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_FALCE_DEL_TRISTO_MIETITORE_SCENA_3"));
 		for (String battuta : falce.getLeggenda()) {
 			scena.parlaIlMandante(battuta);
 		}
 		return scena
-				.parlaIlCapo(Testi.formatta("missioni", "LaFalceDelTristoMietitore.4"))
-				.parlaIlMandante(Testi.formatta("missioni", "LaFalceDelTristoMietitore.5"))
-				.parlaIlCapo(Testi.formatta("missioni", "LaFalceDelTristoMietitore.6"))
+				.parlaIlCapo(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_FALCE_DEL_TRISTO_MIETITORE_SCENA_4"))
+				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_FALCE_DEL_TRISTO_MIETITORE_SCENA_5"))
+				.parlaIlCapo(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_FALCE_DEL_TRISTO_MIETITORE_SCENA_6"))
 				.getPagine();
 	}
 
