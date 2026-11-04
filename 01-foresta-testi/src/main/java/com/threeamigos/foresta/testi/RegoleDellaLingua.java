@@ -40,6 +40,12 @@ public interface RegoleDellaLingua {
 	String conPreposizione(Preposizione preposizione, String nomeConArticolo);
 
 	/**
+	 * Il nome senza l'articolo con cui comincia, se ce l'ha ("lo Scudo Fiscale" dà "Scudo Fiscale", "the Fiscal Shield" dà "Fiscal Shield",
+	 * "l'Anello" dà "Anello"); un nome che non comincia con un articolo resta com'è.
+	 */
+	String senzaArticolo(String nomeConArticolo);
+
+	/**
 	 * Il testo con la prima lettera maiuscola.
 	 */
 	String inizialeMaiuscola(String testo);

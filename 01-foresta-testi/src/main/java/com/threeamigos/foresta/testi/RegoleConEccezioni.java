@@ -44,6 +44,11 @@ final class RegoleConEccezioni implements RegoleDellaLingua {
 	}
 
 	@Override
+	public String senzaArticolo(String nomeConArticolo) {
+		return lingua.senzaArticolo(nomeConArticolo);
+	}
+
+	@Override
 	public String inizialeMaiuscola(String testo) {
 		return lingua.inizialeMaiuscola(testo);
 	}

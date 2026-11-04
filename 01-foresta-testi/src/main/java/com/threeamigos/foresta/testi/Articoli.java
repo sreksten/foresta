@@ -3,7 +3,8 @@ package com.threeamigos.foresta.testi;
 /**
  * Gli articoli e le preposizioni articolate italiane, già con lo spazio finale (o l'apostrofo) per attaccarli al nome che
  * seguono, e le due funzioni che li usano: fondere una preposizione con l'articolo di un nome e mettere la maiuscola
- * iniziale. Sono testi italiani: la localizzazione completa verrà dopo.
+ * iniziale. Sono i dati dell'italiano, usati solo da {@link LinguaItaliana}: il resto del gioco chiede gli articoli alle regole della lingua in
+ * uso ({@link Lingue#corrente()}).
  *
  * @author Stefano Reksten
  */

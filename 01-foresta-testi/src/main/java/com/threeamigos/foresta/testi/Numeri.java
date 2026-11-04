@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.testi;
 
 /**
- * I numeri in lettere: i cardinali fino a dieci e gli ordinali fino a 41, al maschile e al femminile. Sono testi italiani:
- * la localizzazione completa verrà dopo.
+ * I numeri in lettere: i cardinali fino a dieci e gli ordinali fino a 41, al maschile e al femminile. Sono i dati dell'italiano, usati solo
+ * da {@link LinguaItaliana}: il resto del gioco chiede i numeri alle regole della lingua in uso ({@link Lingue#corrente()}).
  *
  * @author Stefano Reksten
  */

@@ -74,6 +74,11 @@ public final class LinguaItaliana implements RegoleDellaLingua {
 	}
 
 	@Override
+	public String senzaArticolo(String nomeConArticolo) {
+		return nomeConArticolo.replaceFirst("^(il|lo|la|gli|le|i) |^l'", "");
+	}
+
+	@Override
 	public String inizialeMaiuscola(String testo) {
 		return Articoli.inizialeMaiuscola(testo);
 	}

@@ -80,6 +80,11 @@ public final class LinguaInglese implements RegoleDellaLingua {
 	}
 
 	@Override
+	public String senzaArticolo(String nomeConArticolo) {
+		return nomeConArticolo.replaceFirst("(?i)^(the|an|a) ", "");
+	}
+
+	@Override
 	public String inizialeMaiuscola(String testo) {
 		return testo.isEmpty() ? testo : Character.toUpperCase(testo.charAt(0)) + testo.substring(1);
 	}

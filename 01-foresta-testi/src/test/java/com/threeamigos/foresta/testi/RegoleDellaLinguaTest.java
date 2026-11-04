@@ -30,6 +30,21 @@ class RegoleDellaLinguaTest {
 	}
 
 	@Test
+	void senzaArticoloTogliesoloL_articoloDellaLingua() {
+		assertEquals("Scudo Fiscale", IT.senzaArticolo("lo Scudo Fiscale"));
+		assertEquals("Anello", IT.senzaArticolo("l'Anello"));
+		assertEquals("Stivali Chiodati", IT.senzaArticolo("gli Stivali Chiodati"));
+		assertEquals("Spada", IT.senzaArticolo("Spada"));
+		assertEquals("Fiscal Shield", EN.senzaArticolo("the Fiscal Shield"));
+		assertEquals("Fiscal Shield", EN.senzaArticolo("The Fiscal Shield"));
+		assertEquals("Boots", EN.senzaArticolo("a Boots"));
+		assertEquals("Sword", EN.senzaArticolo("Sword"));
+		// L'articolo italiano non è un articolo inglese, e viceversa
+		assertEquals("la Spada", EN.senzaArticolo("la Spada"));
+		assertEquals("the Fiscal Shield", IT.senzaArticolo("the Fiscal Shield"));
+	}
+
+	@Test
 	void ilGenereELaScelta() {
 		assertSame(IT, Lingue.corrente());
 		Testi.impostaLingua("en-GB");

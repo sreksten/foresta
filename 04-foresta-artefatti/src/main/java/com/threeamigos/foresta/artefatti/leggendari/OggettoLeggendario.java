@@ -3,6 +3,7 @@ package com.threeamigos.foresta.artefatti.leggendari;
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.CostruttoreArtefatto;
 import com.threeamigos.foresta.artefatti.ModificatoreDelTesto;
+import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.tipi.CategoriaArtefatto;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
@@ -173,10 +174,10 @@ public final class OggettoLeggendario {
 
 	/**
 	 * Se la prima battuta della leggenda nomina già l'oggetto ("Conoscete la storia dello Scudo Fiscale?"), e quindi non
-	 * serve un'introduzione.
+	 * serve un'introduzione. L'articolo del nome si toglie con le regole della lingua in uso (vedi Lingue).
 	 */
 	public boolean laLeggendaNominaLOggetto() {
-		String nomeSenzaArticolo = nomeBreve.replaceFirst("^(il|lo|la|gli|le|i) |^l'", "");
+		String nomeSenzaArticolo = Lingue.corrente().senzaArticolo(nomeBreve);
 		return leggenda.get(0).toLowerCase(Locale.ROOT).contains(nomeSenzaArticolo.toLowerCase(Locale.ROOT));
 	}
 
