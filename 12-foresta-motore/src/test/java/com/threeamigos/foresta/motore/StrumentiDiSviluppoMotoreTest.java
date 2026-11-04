@@ -132,10 +132,10 @@ class StrumentiDiSviluppoMotoreTest {
             assertTrue(citta.contains(MissionePredefinita.CACCIA_AI_GOBLIN));
             assertTrue(citta.contains(MissionePredefinita.IL_NEGOZIO_DELL_ARMAIOLO));
             assertTrue(locanda.stream().noneMatch(citta::contains));
-            // La forgia è un incarico in città, il viandante si incontra in un bosco
+            // La forgia è un incarico in città, il viandante e Olaf si incontrano in un bosco
             assertTrue(citta.contains(MissionePredefinita.LA_FORGIA));
             List<MissionePredefinita> boschi = classi(strumenti.getMissioni(DovePartono.BOSCO));
-            assertEquals(java.util.Collections.singletonList(MissionePredefinita.IL_VIANDANTE), boschi);
+            assertEquals(java.util.Arrays.asList(MissionePredefinita.IL_VIANDANTE, MissionePredefinita.IL_VIAGGIO_DI_OLAF), boschi);
             assertTrue(locanda.stream().noneMatch(boschi::contains));
             assertTrue(citta.stream().noneMatch(boschi::contains));
         }
@@ -189,6 +189,31 @@ class StrumentiDiSviluppoMotoreTest {
             viandante.controllaInLocazione();
             assertEquals("in corso", voce(DovePartono.BOSCO, MissionePredefinita.IL_VIANDANTE).getStato());
             assertEquals("ANDATA", viandante.getPassoCorrente());
+        }
+    }
+
+    @Test
+    void ilViaggioDiOlafSiForzaPrimaDelSestoGiorno() {
+        try (PartitaDiTest partita = partitaInCitta()) {
+            MissioneAPassi olaf = missione(MissionePredefinita.IL_VIAGGIO_DI_OLAF);
+            partita.rimandaLeMissioniCheSiOffrono();
+            assertTrue(voce(DovePartono.BOSCO, MissionePredefinita.IL_VIAGGIO_DI_OLAF).isForzabile());
+            strumenti.forzaPartenza(MissionePredefinita.IL_VIAGGIO_DI_OLAF);
+
+            // In città Olaf non c'è: la missione fissa il giorno e aspetta un bosco
+            olaf.controllaPreLocazione();
+            assertEquals("INCONTRO", olaf.getPassoCorrente());
+            assertEquals("partenza forzata", voce(DovePartono.BOSCO, MissionePredefinita.IL_VIAGGIO_DI_OLAF).getStato());
+
+            // Al primo giorno, in un bosco, senza aspettare il giorno dell'incontro
+            assertEquals(1, LineaTemporale.getGiorno());
+            Foresta.setPosizioneDelGruppo(primaCasellaDi(TipoLocazione.BOSCO));
+            olaf.controllaPreLocazione();
+            assertEquals("ACCETTAZIONE", olaf.getPassoCorrente());
+            olaf.segnaIntermezzoPassoMostrato("INCONTRO");
+            olaf.controllaInLocazione();
+            assertEquals("in corso", voce(DovePartono.BOSCO, MissionePredefinita.IL_VIAGGIO_DI_OLAF).getStato());
+            assertEquals("CACCIA", olaf.getPassoCorrente());
         }
     }
 

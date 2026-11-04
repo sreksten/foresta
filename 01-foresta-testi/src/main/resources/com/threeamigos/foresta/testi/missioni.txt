@@ -4459,4 +4459,94 @@ LA_SFIDA_DEI_CAMPIONI_RIGA_ANELLO
 FORGIA_RICHIESTA_RIGA_ARMA
     TIPO=%PARAM_TIPO%;NOME=%PARAM_NOME%;CHIAVE=%PARAM_CHIAVE%;BREVE=%PARAM_BREVE%;DESCRIZIONE=%PARAM_DESCRIZIONE%;LIVELLO=%PARAM_LIVELLO%;DANNI=%PARAM_DANNI%;COSTO=%PARAM_COSTO%;PESO=%PARAM_PESO%;MOD=%PARAM_ATTRIBUTO% +%PARAM_PERCENTUALE%%;MOD=CRITICO +%PARAM_CRITICO%;INCANTAMENTO=%PARAM_INCANTAMENTO_1% %PARAM_INCANTAMENTO_2% %PARAM_INCANTAMENTO_3% %PARAM_INCANTAMENTO_4%;LEGGENDA=Avete mai sentito parlare di %PARAM_LEGGENDA%?;LEGGENDA=L'ha forgiata un armaiolo con quello che i suoi clienti gli hanno portato, e un pizzico di cattivo carattere.
 
+// ---------------------------------------------------------------------------------------------
+// Due frasi che stavano scritte nel codice (vedi ForgiaRichiesta e LaBenedizione)
+// ---------------------------------------------------------------------------------------------
+
+// Il nome dell'incantamento dell'arma forgiata, secondo l'elemento (%PARAM_ELEMENTO%: il nome dell'elemento, in minuscolo)
+FORGIA_RICHIESTA_TEMPRA
+    Tempra di %PARAM_ELEMENTO%
+
+// La domanda: a chi dare la benedizione
+LA_BENEDIZIONE_CHI_RICEVE
+    Chi riceve %PARAM_BENEDIZIONE%?
+
+// ---------------------------------------------------------------------------------------------
+// Il viaggio di Olaf (vedi IlViaggioDiOlaf, storia del bosco), in ordine di copione. Il segnaposto %PARAM_VICHINGO% (il nome di Olaf) e %PARAM_PREMIO% (il leggendario
+// che lascia) li riempie il codice. «Sglord» è un nome inventato e resta com'è in ogni lingua.
+//
+// ATTENZIONE, TRADUTTORI: le battute di Olaf (le produzioni con _VICHINGO nel nome, e il titolo) sono scritte di proposito in modo buffo, a tono con lo
+// scherzo: ogni «o» in fondo a una parola diventa «ø» (o barrata norvegese) e ogni «d» diventa «ð» (la lettera eth). Non sono errori di battitura:
+// in inglese, dove le parole finiscono in «o» molto più di rado, la regola è un'altra: l'ultima «o» di ogni parola diventa «ø» e l'ultima «d» diventa «ð» (e «mug» è «müg»).
+// Per ogni altra lingua (francese, spagnolo...) si sceglie la variante che cambia più o meno quante lettere l'inglese. Il nome di Olaf non si cambia mai.
+// Lo controlla CoerenzaDeiTestiDelleStorieTest.
+// ---------------------------------------------------------------------------------------------
+
+// Il nome di Olaf
+IL_VIAGGIO_DI_OLAF_NOME
+    Olaf
+
+// Il titolo
+IL_VIAGGIO_DI_OLAF_TITOLO
+    Il viaggiø ði %PARAM_VICHINGO%
+
+// Prima di accettare: la descrizione nel diario
+IL_VIAGGIO_DI_OLAF_DESCRIZIONE_ATTESA
+    Nei boschi, prima o poi, si incontra qualcuno che si è perso.
+
+// L'incontro nel bosco
+IL_VIAGGIO_DI_OLAF_CAPO_1
+    E... tu chi saresti?
+
+IL_VIAGGIO_DI_OLAF_VICHINGO_1
+    Iø sonø %PARAM_VICHINGO%. Sonø in viaggiø esplorativø. Ma stamani mi sonø svegliatø qui, e stø ora cercanðø la straða per la città più vicina.
+
+IL_VIAGGIO_DI_OLAF_CAPO_2
+    E... vesti sempre così?
+
+IL_VIAGGIO_DI_OLAF_VICHINGO_2
+    Nø, nø. Ma ieri sonø entratø in una locanða ðove un barðø squinternatø aveva organizzatø una festa in maschera pazzesca, hø esageratø con la bevanða locale... e ora hø ricorði parecchiø offuscati.
+
+// Solo se il bardo delle locande è nel gruppo
+IL_VIAGGIO_DI_OLAF_VICHINGO_BARDO
+    Ehi, ma sei tu! Complimenti amicø, era un pezzø che non festeggiavø in quel moðø!
+
+// Di un compagno del capo, se il gruppo ha più di un personaggio, altrimenti del capo
+IL_VIAGGIO_DI_OLAF_SGLORD
+    Sglord. Fa questo effetto se ne bevi più di un boccale.
+
+IL_VIAGGIO_DI_OLAF_VICHINGO_3
+    Un boccale? Amicø, assieme al barðø ce ne siamø fatti fuori mezzø barile! Quella roba è fantastica! Ti spezza propriø le gambe! Stø cercanðø la città più vicina per comprarne qualche barile e farmelø speðire a casa. Ma prima vogliø far fuori qualche rettile e ðimostrare agli ðei il miø valore in combattimentø!
+
+IL_VIAGGIO_DI_OLAF_CAPO_3
+    Beh... una mano potrebbe farci comodo. Puoi venire con noi se vuoi.
+
+// Il giocatore accetta
+IL_VIAGGIO_DI_OLAF_ACCETTATO
+    %PARAM_VICHINGO% si unisce al gruppo: uccidete una viverna o una chimera drago assieme a lui, poi portatelo in una città a comprare i suoi barili di Sglord.
+
+// Il passo della caccia: la descrizione nel diario
+IL_VIAGGIO_DI_OLAF_DESCRIZIONE_CACCIA
+    Uccidi una viverna o una chimera drago assieme a %PARAM_VICHINGO%.
+
+// Sconfitto il mostro
+IL_VIAGGIO_DI_OLAF_CACCIA_FINITA
+    Fatto: %PARAM_VICHINGO% ha dimostrato il suo valore agli dei e ora reclama a gran voce i suoi barili di Sglord.
+
+// Il passo della città: la descrizione nel diario
+IL_VIAGGIO_DI_OLAF_DESCRIZIONE_CITTA
+    Porta %PARAM_VICHINGO% a comprare un paio di barili di Sglord in città.
+
+// Il commiato, in città
+IL_VIAGGIO_DI_OLAF_VICHINGO_COMMIATO
+    Beh, che ðire, è statø bellø. Vi ringraziø ði avermi tenutø compagnia. Ucciðere mostri ða solø non è ðivertente quantø farlø in gruppø! Tenete, vi lasciø questø come ringraziamentø.
+
+// La ricompensa
+IL_VIAGGIO_DI_OLAF_RICOMPENSA
+    %PARAM_VICHINGO% se ne va con i suoi barili di Sglord e vi lascia in dono %PARAM_PREMIO%.
+
+// Il premio, finché il leggendario non è scelto
+IL_VIAGGIO_DI_OLAF_UN_LEGGENDARIO
+    un oggetto leggendario
+
 #include_static <nomi.txt>

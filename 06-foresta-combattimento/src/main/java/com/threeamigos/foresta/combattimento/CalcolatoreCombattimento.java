@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.combattimento;
 
+import com.threeamigos.foresta.personaggi.Berserk;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 
@@ -493,7 +494,7 @@ public class CalcolatoreCombattimento {
         if (!dannoNonFisico && attaccante.hasEffettoDiStato(TipoEffettoDiStato.BERSERK)) {
             // Il danno fisico scala con la salute persa: più è ferito, più forte colpisce
             double percentualeSalutePerduta = 1.0d - ((double) attaccante.getSalute() / (double) attaccante.getSaluteMassima());
-            dannoOffensivoGrezzo = dannoOffensivoGrezzo * (1.0d + percentualeSalutePerduta * 0.5d);
+            dannoOffensivoGrezzo = dannoOffensivoGrezzo * (1.0d + percentualeSalutePerduta * Berserk.bonus(attaccante.getClasse()));
             if (Logger.isAttivo()) {
             	Logger.log("dannoOffensivoGrezzo dopo BERSERK = " + dannoOffensivoGrezzo);
             }

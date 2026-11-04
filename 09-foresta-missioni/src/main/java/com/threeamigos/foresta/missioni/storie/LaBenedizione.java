@@ -261,7 +261,7 @@ public class LaBenedizione extends MissioneAPassi {
 						.poi(() -> candidati().size() > 1 ? SCELTA : DIRETTA);
 			case SCELTA:
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> true)
-						.chiediScelta("Chi riceve " + benedizione.getNomeDellaBenedizione() + "?",
+						.chiediScelta(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_BENEDIZIONE_CHI_RICEVE", "PARAM_BENEDIZIONE", benedizione.getNomeDellaBenedizione()),
 								candidati().stream().map(Personaggio::getNome).collect(Collectors.toList()))
 						.esegui(() -> benedici(candidati().get(Integer.parseInt(getRisposta(SCELTA)) - 1)))
 						.poi(this::dopoLaBenedizione);

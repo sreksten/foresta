@@ -3,7 +3,7 @@ package com.threeamigos.foresta.missioni;
 import com.threeamigos.foresta.missioni.incarichi.*;
 import com.threeamigos.foresta.missioni.leggende.LaFalceDelTristoMietitore;
 import com.threeamigos.foresta.missioni.leggende.LaLeggendaDelLocandiere;
-import com.threeamigos.foresta.missioni.leggende.LaLeggendaDellArmaiolo;
+import com.threeamigos.foresta.missioni.leggende.LaLeggendaDelNegoziante;
 import com.threeamigos.foresta.missioni.principali.*;
 import com.threeamigos.foresta.missioni.storie.*;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
@@ -26,7 +26,7 @@ public final class FabbricaMissioni {
 		COSTRUTTORI.put(MissionePredefinita.SCONFIGGI_L_IDRA, SconfiggiLIdra::new);
 		COSTRUTTORI.put(MissionePredefinita.SCONFIGGI_IL_LICH, SconfiggiIlLich::new);
 		COSTRUTTORI.put(MissionePredefinita.SCONFIGGI_LA_STREGA, SconfiggiLaStrega::new);
-		COSTRUTTORI.put(MissionePredefinita.LA_LEGGENDA_DELL_ARMAIOLO, LaLeggendaDellArmaiolo::new);
+		COSTRUTTORI.put(MissionePredefinita.LA_LEGGENDA_DEL_NEGOZIANTE, LaLeggendaDelNegoziante::new);
 		COSTRUTTORI.put(MissionePredefinita.LA_LEGGENDA_DEL_LOCANDIERE, LaLeggendaDelLocandiere::new);
 		COSTRUTTORI.put(MissionePredefinita.LA_FALCE_DEL_TRISTO_MIETITORE, LaFalceDelTristoMietitore::new);
 		COSTRUTTORI.put(MissionePredefinita.CRONACHE_DI_UN_FEGATO_EROICO, CronacheDiUnFegatoEroico::new);
@@ -34,6 +34,7 @@ public final class FabbricaMissioni {
 		COSTRUTTORI.put(MissionePredefinita.DISTURBATORE_DELLA_QUIETE_PUBBLICA, DisturbatoreDellaQuietePubblica::new);
 		COSTRUTTORI.put(MissionePredefinita.IL_GIRO_DELLE_SETTE_CHIESE, IlGiroDelleSetteChiese::new);
 		COSTRUTTORI.put(MissionePredefinita.IL_VIANDANTE, IlViandante::new);
+		COSTRUTTORI.put(MissionePredefinita.IL_VIAGGIO_DI_OLAF, IlViaggioDiOlaf::new);
 		COSTRUTTORI.put(MissionePredefinita.CACCIA_AI_GOBLIN, CacciaAiGoblin::new);
 		COSTRUTTORI.put(MissionePredefinita.RICHIESTA_ALCHIMISTA, RichiestaDiMateriali::dellAlchimista);
 		COSTRUTTORI.put(MissionePredefinita.RICHIESTA_ARMAIOLO, RichiestaDiMateriali::dellArmaiolo);

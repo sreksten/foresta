@@ -57,6 +57,8 @@ public enum TipoPersonaggio {
 	CHIERICO(CategoriaPersonaggio.UMANOIDE),
 	DRUIDA(CategoriaPersonaggio.UMANOIDE),
 	DRUIDO(CategoriaPersonaggio.UMANOIDE),
+	// Come il guerriero, ma solo maschio e con il berserk più precoce e più forte; non si sceglie, non si recluta
+	VICHINGO(CategoriaPersonaggio.UMANOIDE),
 
 	// Non combattenti: compaiono nelle scene e come ospiti delle missioni di scorta; non si incontrano e non si reclutano
 	LOCANDIERE(CategoriaPersonaggio.UMANOIDE),

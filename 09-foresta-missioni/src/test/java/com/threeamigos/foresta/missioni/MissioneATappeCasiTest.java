@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.missioni.incarichi.SceltaDegliIncarichi;
 import com.threeamigos.foresta.artefatti.leggendari.CatalogoLeggendari;
 import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.mappa.Foresta;
@@ -8,7 +9,7 @@ import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.incarichi.MissioneATappe;
 import com.threeamigos.foresta.missioni.leggende.ConLeggendario;
 import com.threeamigos.foresta.missioni.leggende.LaLeggendaDelLocandiere;
-import com.threeamigos.foresta.missioni.leggende.LaLeggendaDellArmaiolo;
+import com.threeamigos.foresta.missioni.leggende.LaLeggendaDelNegoziante;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -62,6 +63,7 @@ class MissioneATappeCasiTest {
 
     @AfterEach
     void ripulisce() {
+        SceltaDegliIncarichi.setSorteggioAttivo(true);
         MondoDiProva.finito();
     }
 
@@ -256,7 +258,8 @@ class MissioneATappeCasiTest {
 
     @Test
     void laLeggendaSiRaccontaSoloQuandoTuttoLoPermette() {
-        LaLeggendaDellArmaiolo armaiolo = registra(new LaLeggendaDellArmaiolo(), "ARMAIOLO");
+        SceltaDegliIncarichi.setSorteggioAttivo(false); // qui si guardano le condizioni della leggenda, non la scelta fra le missioni pronte
+        LaLeggendaDelNegoziante armaiolo = registra(new LaLeggendaDelNegoziante(), "ARMAIOLO");
         Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
         assertTrue(AccessoAiPassi.isConcluso(armaiolo, "INCARICO"));
         armaiolo.aggiungiProprieta("DISPONIBILE_DALLE", "99999999");
@@ -295,6 +298,7 @@ class MissioneATappeCasiTest {
 
     @Test
     void ilMietitoreSiRaccontaSoloInUnaCittaALuiDisponibile() {
+        SceltaDegliIncarichi.setSorteggioAttivo(false); // qui si guardano le condizioni della storia, non la scelta fra le missioni pronte
         com.threeamigos.foresta.missioni.leggende.LaFalceDelTristoMietitore falce =
                 registra(new com.threeamigos.foresta.missioni.leggende.LaFalceDelTristoMietitore(), "FALCE");
         Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));

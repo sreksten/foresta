@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.missioni.leggende.LaLeggendaDelNegoziante;
 import com.threeamigos.foresta.strumenti.ModalitaDiProva;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.mappa.Foresta;
@@ -253,6 +254,9 @@ final class PartitaDiTest implements AutoCloseable {
 		testo(nome);
 		assertStato(Stato.PRE_GAME_ATTESA_SESSO_PERSONAGGIO);
 		primaDiIniziare.run();
+		// Chi racconta la leggenda del negoziante è a caso: scegliere sposterebbe i tiri su cui contano i test con seme
+		RegistroMissioni.getTutteLeMissioni().stream().filter(m -> m instanceof LaLeggendaDelNegoziante)
+				.forEach(m -> m.aggiungiProprieta("PARAMETRO_ASPETTO", "ARMAIOLO"));
 		comando(sesso);
 		comando(classe);
 		return this;

@@ -31,6 +31,8 @@ public final class ScenaNegozio {
 	private final boolean haOspiti;
 	private final String idNegoziante;
 	private final String idCapo;
+	// Il primo del gruppo che non è il capo, se c'è: parla lui al posto del capo (vedi parlaUnCompagno)
+	private final String idCompagno;
 	private final double secondoFineIngresso;
 	private boolean primaBattuta = true;
 
@@ -43,6 +45,15 @@ public final class ScenaNegozio {
 	 */
 	public ScenaNegozio(String sfondo, String primoPiano, String idNegoziante, ElementoIntermezzo negoziante,
 				 double yPersonaggi, double xArrivoCapo, double ritardoFraPartenze) {
+		this(ImmagineIntermezzo.risorsa(sfondo), true, primoPiano, idNegoziante, negoziante, yPersonaggi, xArrivoCapo, ritardoFraPartenze);
+	}
+
+	/**
+	 * Come l'altro costruttore, con lo sfondo dato (per esempio quello di una locazione, all'aperto) e, se {@code ritaglio}, le
+	 * figure che restano sempre visibili per intero anche se sporgono dallo sfondo (vedi PaginaIntermezzo.conRitaglioSuSfondo).
+	 */
+	public ScenaNegozio(ImmagineIntermezzo sfondo, boolean ritaglio, String primoPiano, String idNegoziante, ElementoIntermezzo negoziante,
+				 double yPersonaggi, double xArrivoCapo, double ritardoFraPartenze) {
 		this.idNegoziante = idNegoziante;
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		List<Personaggio> personaggiVivi = gruppo.getPersonaggiVivi();
@@ -50,11 +61,14 @@ public final class ScenaNegozio {
 		haOspiti = !ospiti.isEmpty();
 
 		pagina = new PaginaIntermezzo()
-				.conSfondo(ImmagineIntermezzo.risorsa(sfondo))
-				.conRitaglioSuSfondo()
+				.conSfondo(sfondo)
 				.conElemento(negoziante.conBocca(0.5, -0.15));
+		if (ritaglio) {
+			pagina.conRitaglioSuSfondo();
+		}
 
 		String capo = null;
+		String compagno = null;
 		// Chi entra, nell'ordine: i personaggi, con l'ospite subito dopo il capo. Il posto in fila decide quando parte
 		// e dove si ferma.
 		int posto = 0;
@@ -64,6 +78,9 @@ public final class ScenaNegozio {
 			ElementoIntermezzo elemento = cammina(idElemento, personaggio.getClasse(), posto++, xArrivoCapo, yPersonaggi, ritardoFraPartenze);
 			if (personaggio == gruppo.getCapo()) {
 				capo = idElemento;
+				elemento.conBocca(0.5, -0.15);
+			} else if (compagno == null) {
+				compagno = idElemento;
 				elemento.conBocca(0.5, -0.15);
 			}
 			pagina.conElemento(elemento);
@@ -76,6 +93,7 @@ public final class ScenaNegozio {
 			}
 		}
 		idCapo = capo;
+		idCompagno = compagno;
 		secondoFineIngresso = (posto - 1) * ritardoFraPartenze + SECONDI_CAMMINATA + MARGINE_DOPO_CAMMINATA;
 
 		// Aggiunto per ultimo così resta sopra a tutto il resto della scena
@@ -104,6 +122,13 @@ public final class ScenaNegozio {
 
 	public ScenaNegozio parlaIlCapo(String testo) {
 		return battuta(idCapo, testo);
+	}
+
+	/**
+	 * Una battuta di un compagno del capo (il primo del gruppo che non è il capo); se il capo è solo, la dice lui.
+	 */
+	public ScenaNegozio parlaUnCompagno(String testo) {
+		return battuta(idCompagno != null ? idCompagno : idCapo, testo);
 	}
 
 	/**

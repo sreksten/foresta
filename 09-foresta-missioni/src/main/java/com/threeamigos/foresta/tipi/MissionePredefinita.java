@@ -75,10 +75,16 @@ public enum MissionePredefinita {
 	// mostri e tornare da lui.
 	IL_VIANDANTE(true),
 
-	// Le leggende: l'armaiolo racconta in una città qualsiasi, il locandiere dalla terza visita alla stessa locanda nel
-	// bosco. Entrambe a una visita tranquilla, se resta un leggendario da pescare e se nessuna leggenda è stata
-	// raccontata nelle ultime 36 ore; sono ripetibili.
-	LA_LEGGENDA_DELL_ARMAIOLO(true),
+	// Dal sesto o settimo giorno, entrando in un bosco a una visita tranquilla: un vichingo smarrito, che ha bevuto troppo Sglord, si unisce
+	// al gruppo per uccidere una viverna o una chimera drago e poi farsi portare in una città a comprare dei barili; poi se ne va e lascia
+	// un leggendario. Una volta sola per partita.
+	IL_VIAGGIO_DI_OLAF(true),
+
+	// Le leggende: un negoziante (armaiolo, alchimista, venditore di pergamene o incantatore, a caso) racconta in una città qualsiasi, il
+	// locandiere dalla terza visita alla stessa locanda nel bosco. Entrambe a una visita tranquilla, se resta un leggendario da
+	// pescare e se nessuna leggenda è stata raccontata nelle ultime 36 ore; sono ripetibili. Entrano nello stesso sorteggio degli
+	// incarichi in città, come la falce del Tristo Mietitore (InSorteggio, SceltaDegliIncarichi).
+	LA_LEGGENDA_DEL_NEGOZIANTE(true),
 	LA_LEGGENDA_DEL_LOCANDIERE(true),
 	// Un personaggio a caso, in una città, giura di aver visto la Morte con la sua falce nelle rovine; è un necromante, e la sua falce è il premio.
 	// A una visita tranquilla; si offre una volta sola.

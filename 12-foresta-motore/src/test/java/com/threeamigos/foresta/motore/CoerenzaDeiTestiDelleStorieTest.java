@@ -18,6 +18,7 @@ import com.threeamigos.foresta.missioni.storie.LaBenedizione;
 import com.threeamigos.foresta.missioni.storie.LaLealta;
 import com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni;
 import com.threeamigos.foresta.missioni.storie.NonSparateSulPianista;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -81,6 +82,50 @@ class CoerenzaDeiTestiDelleStorieTest {
     void IlViandante() {
         controlla(FabbricheDiProvaDelleStorie::ilViandante, new String[] {"ANDATA", "CACCIA", "RITORNO"},
                 "IL_VIANDANTE_ACCETTATO", "IL_VIANDANTE_CITTA_DISTRUTTA", "IL_VIANDANTE_RICOMPENSA");
+    }
+
+    @Test
+    void IlViaggioDiOlaf() {
+        controlla(FabbricheDiProvaDelleStorie::ilViaggioDiOlaf, new String[] {"CACCIA", "CITTA"},
+                "IL_VIAGGIO_DI_OLAF_VICHINGO_1", "IL_VIAGGIO_DI_OLAF_VICHINGO_BARDO", "IL_VIAGGIO_DI_OLAF_SGLORD", "IL_VIAGGIO_DI_OLAF_VICHINGO_COMMIATO",
+                "IL_VIAGGIO_DI_OLAF_ACCETTATO", "IL_VIAGGIO_DI_OLAF_CACCIA_FINITA", "IL_VIAGGIO_DI_OLAF_RICOMPENSA");
+    }
+
+    /**
+     * Le battute di Olaf sono buffe di proposito, in ogni lingua. In italiano nessuna d (ogni d è una ð) e nessuna o in fondo a una parola
+     * (ogni o in fondo a una parola è una ø); in inglese, in ogni parola, l'ultima o è una ø e l'ultima d una ð. Le produzioni sono quelle
+     * con _VICHINGO nel nome, più il titolo; il nome di Olaf non si cambia.
+     */
+    @Test
+    void LeBattuteDiOlafHannoLaOBarrataELaEth() {
+        String[] battute = {"TITOLO", "VICHINGO_1", "VICHINGO_2", "VICHINGO_BARDO", "VICHINGO_3", "VICHINGO_COMMIATO"};
+        for (String lingua : LINGUE) {
+            Testi.impostaLingua(lingua);
+            try {
+                String nome = ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIAGGIO_DI_OLAF_NOME");
+                for (String battuta : battute) {
+                    String testo = ProduttoreDiMissioniCasuale.testoDellaMissione("IL_VIAGGIO_DI_OLAF_" + battuta, "PARAM_VICHINGO", nome);
+                    String dove = lingua + " " + battuta + ": «" + testo + "»";
+                    assertTrue(testo.matches("(?s).*[øØðÐ].*"), dove + " non ha né ø né ð");
+                    String senzaNome = testo.replace(nome, "");
+                    if (lingua.equals("it")) {
+                        assertFalse(senzaNome.matches("(?s).*[dD].*"), dove + " ha una d");
+                        assertFalse(senzaNome.matches("(?s).*[oO](?![\\p{L}]).*"), dove + " ha una o in fondo a una parola");
+                        continue;
+                    }
+                    java.util.regex.Matcher parola = java.util.regex.Pattern.compile("[\\p{L}]+").matcher(senzaNome);
+                    while (parola.find()) {
+                        String p = parola.group();
+                        int o = Math.max(Math.max(p.lastIndexOf('o'), p.lastIndexOf('O')), Math.max(p.lastIndexOf('ø'), p.lastIndexOf('Ø')));
+                        assertTrue(o < 0 || "øØ".indexOf(p.charAt(o)) >= 0, dove + ": l'ultima o di «" + p + "» non è una ø");
+                        int d = Math.max(Math.max(p.lastIndexOf('d'), p.lastIndexOf('D')), Math.max(p.lastIndexOf('ð'), p.lastIndexOf('Ð')));
+                        assertTrue(d < 0 || "ðÐ".indexOf(p.charAt(d)) >= 0, dove + ": l'ultima d di «" + p + "» non è una ð");
+                    }
+                }
+            } finally {
+                Testi.impostaLingua("it");
+            }
+        }
     }
 
     @Test

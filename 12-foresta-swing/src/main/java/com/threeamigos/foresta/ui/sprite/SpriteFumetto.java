@@ -83,7 +83,10 @@ public class SpriteFumetto extends SpriteBase {
         // Costruzione del rettangolo
         final int larghezzaInterna = larghezza - 2 * DIMENSIONE_SMUSSAMENTO_BORDO;
         List<String> parti = FontTool.split(font, testo, larghezzaInterna);
-        final int interlinea = 1;
+        // Ogni riga ha già in cima e in fondo le righe in più per accenti e cediglie: fra due righe basta la più alta delle due fasce, e se un
+        // accento tocca una cediglia pazienza
+        final int righeInFondo = font.getHeight() - font.getAltezzaDelCorpo() - font.getRigheInCima();
+        final int passo = font.getAltezzaDelCorpo() + Math.max(font.getRigheInCima(), righeInFondo);
 
         List<Image> testiDisegnati = new ArrayList<>();
         int maxLarghezzaEffettiva = 0;
@@ -94,8 +97,8 @@ public class SpriteFumetto extends SpriteBase {
         }
         maxLarghezzaEffettiva += 2 * DIMENSIONE_SMUSSAMENTO_BORDO;
 
-        // Spaziature, testo, interlinee
-        int altezzaCostruita = 2 * DIMENSIONE_SMUSSAMENTO_BORDO + parti.size() * font.getHeight() + interlinea * (parti.size() - 1);
+        // Spaziature e testo: l'ultima riga è intera, le altre avanzano di un passo
+        int altezzaCostruita = 2 * DIMENSIONE_SMUSSAMENTO_BORDO + (parti.size() - 1) * passo + font.getHeight();
         BufferedImage immagineRisultante = new BufferedImage(maxLarghezzaEffettiva, altezzaCostruita, BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics = immagineRisultante.createGraphics();
         graphics.setColor(Color.WHITE);
@@ -103,7 +106,7 @@ public class SpriteFumetto extends SpriteBase {
         int testoY = DIMENSIONE_SMUSSAMENTO_BORDO;
         for (Image testoDisegnato : testiDisegnati) {
             graphics.drawImage(testoDisegnato, DIMENSIONE_SMUSSAMENTO_BORDO, testoY, null);
-            testoY += font.getHeight() + interlinea;
+            testoY += passo;
         }
         graphics.dispose();
 

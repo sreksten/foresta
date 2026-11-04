@@ -21,7 +21,7 @@ import com.threeamigos.foresta.locazioni.Tempio;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.leggende.LaLeggenda;
 import com.threeamigos.foresta.missioni.leggende.LaLeggendaDelLocandiere;
-import com.threeamigos.foresta.missioni.leggende.LaLeggendaDellArmaiolo;
+import com.threeamigos.foresta.missioni.leggende.LaLeggendaDelNegoziante;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -123,11 +123,11 @@ class ScenarioLeggendeTest {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> {
                 // Entrando in città si offre solo la leggenda (non gli incarichi, qualunque sia l'ordine del registro)
                 partita.rimandaLeMissioniCheSiOffrono();
-                partita.rendiDisponibile(trova(LaLeggendaDellArmaiolo.class));
+                partita.rendiDisponibile(trova(LaLeggendaDelNegoziante.class));
                 partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA);
                 partita.eventi().ascolta(NotificaPaginaIntermezzo.class, NotificaAggiornamentoStatoMissione.class);
             });
-            LaLeggenda leggenda = trova(LaLeggendaDellArmaiolo.class);
+            LaLeggenda leggenda = trova(LaLeggendaDelNegoziante.class);
             OggettoLeggendario leggendario = leggenda.getLeggendario();
             assertNotNull(leggendario);
             assertTrue(leggenda.isAttiva());
@@ -174,7 +174,7 @@ class ScenarioLeggendeTest {
             leggenda.controllaPostLocazione();
             assertTrue(leggenda.isCompleta());
             assertTrue(RegistroMissioni.getRicordo(tempio).orElse("").endsWith(" custodivano " + leggendario.getNomeBreve() + "."));
-            assertEquals(2, RegistroMissioni.getTutteLeMissioni().stream().filter(LaLeggendaDellArmaiolo.class::isInstance).count());
+            assertEquals(2, RegistroMissioni.getTutteLeMissioni().stream().filter(LaLeggendaDelNegoziante.class::isInstance).count());
         }
     }
 
@@ -182,7 +182,7 @@ class ScenarioLeggendeTest {
     void ilLocandiereRaccontaDallaTerzaVisitaEDopoTrentaseiOreUnAltroLeggendario() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(42)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
-            LaLeggenda armaiolo = trova(LaLeggendaDellArmaiolo.class);
+            LaLeggenda armaiolo = trova(LaLeggendaDelNegoziante.class);
             armaiolo.controllaPreLocazione();
             armaiolo.segnaIntermezzoPassoMostrato("INCARICO");
             armaiolo.controllaInLocazione();

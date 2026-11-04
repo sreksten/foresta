@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.missioni.storie;
 
+import com.threeamigos.foresta.intermezzi.GruppoInScena;
+import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Verso;
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -68,6 +70,8 @@ public class IlViandante extends MissioneAPassi {
 
 	private static final String ID_EROE = "eroe";
 	private static final String ID_VIANDANTE = "viandante";
+	// Il capo sta qui e gli altri alla sua sinistra, come nelle scene in città
+	private static final double X_CAPO = 0.38;
 
 	public IlViandante() {
 		super(MissionePredefinita.IL_VIANDANTE);
@@ -251,16 +255,18 @@ public class IlViandante extends MissioneAPassi {
 	 * La scena nel bosco: l'eroe a sinistra, il viandante che arriva da destra e si ferma davanti a lui. Il testo in alto usa
 	 * l'alfabeto grande, senza accenti.
 	 */
+	/**
+	 * La scena nel bosco: il viandante arriva da destra e tutto il gruppo lo guarda, nello stesso ordine delle scene in città
+	 * (vedi ScenaNegozio): da destra verso sinistra il capo, gli ospiti e il resto del gruppo.
+	 */
 	private PaginaIntermezzo scenaNelBosco(String testo) {
-		return new PaginaIntermezzo(testo)
+		PaginaIntermezzo pagina = new PaginaIntermezzo(testo)
 				.conSfondo(ImmagineIntermezzo.locazione(TipoLocazione.BOSCO))
 				.conElemento(ElementoIntermezzo.personaggio(ID_VIANDANTE, TipoPersonaggio.VIANDANTE, 1.1, 0.61)
 						.conBocca(0.5, -0.15)
 						.guarda(Verso.SINISTRA)
-						.poi(Tappa.inSecondi(2).verso(0.62, 0.61)))
-				.conElemento(ElementoIntermezzo.personaggio(ID_EROE, GruppoGiocatore.getIstanza().getCapo().getClasse(), 0.38, 0.61)
-						.conBocca(0.5, -0.15)
-						.guarda(Verso.DESTRA));
+						.poi(Tappa.inSecondi(2).verso(0.62, 0.61)));
+		return GruppoInScena.aggiungi(pagina, ID_EROE, GruppoGiocatore.getIstanza().getCapo().getClasse(), X_CAPO, 0.61);
 	}
 
 	private List<PaginaIntermezzo> getPagineDellIncontro() {

@@ -151,7 +151,7 @@ public final class ForgiaRichiesta {
 		int critico = 1 + livello / 3;
 		int fisso = INCANTAMENTO_FISSO_BASE + INCANTAMENTO_FISSO_PER_LIVELLO * livello;
 		double coefficiente = INCANTAMENTO_COEFFICIENTE_BASE + INCANTAMENTO_COEFFICIENTE_PER_LIVELLO * livello;
-		String nomeDellIncantamento = "Tempra di " + elemento.getNome().toLowerCase(Locale.ROOT);
+		String nomeDellIncantamento = ProduttoreDiMissioniCasuale.testoDellaMissione("FORGIA_RICHIESTA_TEMPRA", "PARAM_ELEMENTO", elemento.getNome().toLowerCase(Locale.ROOT));
 		String rigaDellOggetto = ProduttoreDiMissioniCasuale.testoDellaMissione("FORGIA_RICHIESTA_RIGA_ARMA", "PARAM_TIPO", tipo.name(), "PARAM_NOME", nome, "PARAM_CHIAVE", chiaveDellOggetto, "PARAM_BREVE", nomeBreve, "PARAM_DESCRIZIONE", descrizione, "PARAM_LIVELLO", livello, "PARAM_DANNI", getDanni(livello), "PARAM_COSTO", (COSTO_PER_LIVELLO * livello), "PARAM_PESO", peso, "PARAM_ATTRIBUTO", attributo.name(), "PARAM_PERCENTUALE", percentuale, "PARAM_CRITICO", critico, "PARAM_INCANTAMENTO_1", elemento.name(), "PARAM_INCANTAMENTO_2", fisso, "PARAM_INCANTAMENTO_3", String.format(Locale.ROOT, "%.2f", coefficiente), "PARAM_INCANTAMENTO_4", nomeDellIncantamento, "PARAM_LEGGENDA", nome);
 		return OggettoLeggendario.da(rigaDellOggetto);
 	}

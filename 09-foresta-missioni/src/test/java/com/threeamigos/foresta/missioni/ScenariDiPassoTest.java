@@ -201,7 +201,7 @@ class ScenariDiPassoTest {
         negozio.aggiungiProprieta("LOCAZIONE_OCCUPATA", "5,5,1");
         Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
         SceltaDegliIncarichi.dimentica();
-        Method tocca = SceltaDegliIncarichi.class.getDeclaredMethod("tocca", IncaricoInCitta.class);
+        Method tocca = SceltaDegliIncarichi.class.getDeclaredMethod("tocca", com.threeamigos.foresta.missioni.InSorteggio.class);
         tocca.setAccessible(true);
         tocca.invoke(null, negozio);
         Field scelto = SceltaDegliIncarichi.class.getDeclaredField("scelto");
@@ -230,8 +230,9 @@ class ScenariDiPassoTest {
 
     @Test
     void leLeggendeEIlMietitoreSiRaccontanoSoloAUnaVisitaTranquilla() {
-        com.threeamigos.foresta.missioni.leggende.LaLeggendaDellArmaiolo armaiolo =
-                registra(new com.threeamigos.foresta.missioni.leggende.LaLeggendaDellArmaiolo(), "ARMAIOLO");
+        SceltaDegliIncarichi.setSorteggioAttivo(false); // qui si guarda la visita tranquilla, non la scelta fra le missioni pronte
+        com.threeamigos.foresta.missioni.leggende.LaLeggendaDelNegoziante armaiolo =
+                registra(new com.threeamigos.foresta.missioni.leggende.LaLeggendaDelNegoziante(), "ARMAIOLO");
         com.threeamigos.foresta.missioni.leggende.LaFalceDelTristoMietitore falce =
                 registra(new com.threeamigos.foresta.missioni.leggende.LaFalceDelTristoMietitore(), "FALCE");
         Foresta.setPosizioneDelGruppo(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
@@ -244,8 +245,8 @@ class ScenariDiPassoTest {
 
     @Test
     void ilLeggendarioDelTempioSiRecuperaSoloSeNessunAltroLHaPreso() {
-        com.threeamigos.foresta.missioni.leggende.LaLeggendaDellArmaiolo leggenda =
-                registra(new com.threeamigos.foresta.missioni.leggende.LaLeggendaDellArmaiolo(), "ARMAIOLO");
+        com.threeamigos.foresta.missioni.leggende.LaLeggendaDelNegoziante leggenda =
+                registra(new com.threeamigos.foresta.missioni.leggende.LaLeggendaDelNegoziante(), "ARMAIOLO");
         leggenda.aggiungiProprieta("LEGGENDARIO", LaSfidaDeiCampioni.costruisciUnLeggendario(2).getRiga());
         CoordinateMD tempio = new CoordinateMD(4, 12);
         RegistroMissioni.occupaLocazione(tempio, leggenda);

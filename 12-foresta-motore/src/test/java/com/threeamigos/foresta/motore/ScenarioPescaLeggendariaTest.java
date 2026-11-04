@@ -8,7 +8,7 @@ import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.artefatti.leggendari.SetLeggendario;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.missioni.leggende.LaLeggenda;
-import com.threeamigos.foresta.missioni.leggende.LaLeggendaDellArmaiolo;
+import com.threeamigos.foresta.missioni.leggende.LaLeggendaDelNegoziante;
 import com.threeamigos.foresta.missioni.leggende.PescaLeggendaria;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -93,7 +93,7 @@ class ScenarioPescaLeggendariaTest {
     void laLeggendaContaLeLeggendeSenzaPezziGiaRaccontateEDopoTreRaccontaUnPezzoMancante() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(211)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
-            LaLeggenda leggenda = trova(LaLeggendaDellArmaiolo.class);
+            LaLeggenda leggenda = trova(LaLeggendaDelNegoziante.class);
             assertNull(leggenda.getLeggendario(), "la leggenda non deve essere già stata raccontata");
             long adesso = LineaTemporale.getGiorno() * 24L + LineaTemporale.getOra();
 
@@ -157,7 +157,7 @@ class ScenarioPescaLeggendariaTest {
      * Una leggenda già raccontata in un'altra città, di quel leggendario, a quell'ora.
      */
     private static void raccontata(String leggendario, long alle, boolean senzaPezzi) {
-        LaLeggenda leggenda = new LaLeggendaDellArmaiolo();
+        LaLeggenda leggenda = new LaLeggendaDelNegoziante();
         leggenda.aggiungiProprieta(LaLeggenda.LEGGENDARIO, Leggendari.con(leggendario).getRiga());
         leggenda.aggiungiProprieta("RACCONTATA_ALLE", String.valueOf(alle));
         if (senzaPezzi) {

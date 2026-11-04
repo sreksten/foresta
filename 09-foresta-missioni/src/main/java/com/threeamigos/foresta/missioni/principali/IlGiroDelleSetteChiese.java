@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.principali;
 
+import com.threeamigos.foresta.intermezzi.GruppoInScena;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.tipi.Verso;
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
@@ -190,15 +191,13 @@ public class IlGiroDelleSetteChiese extends MissioneAPassi {
 	 * alto usa l'alfabeto grande, senza accenti.
 	 */
 	private PaginaIntermezzo scenaNelTempio(String testo) {
-		return new PaginaIntermezzo(testo)
+		PaginaIntermezzo pagina = new PaginaIntermezzo(testo)
 				.conSfondo(ImmagineIntermezzo.locazione(TipoLocazione.TEMPIO))
 				.conElemento(ElementoIntermezzo.personaggio(ID_SACERDOTE, getSacerdote(), 1.1, 0.61)
 						.conBocca(0.5, -0.15)
 						.guarda(Verso.SINISTRA)
-						.poi(Tappa.inSecondi(2).verso(0.62, 0.61)))
-				.conElemento(ElementoIntermezzo.personaggio(ID_EROE, GruppoGiocatore.getIstanza().getCapo().getClasse(), 0.38, 0.61)
-						.conBocca(0.5, -0.15)
-						.guarda(Verso.DESTRA));
+						.poi(Tappa.inSecondi(2).verso(0.62, 0.61)));
+		return GruppoInScena.aggiungi(pagina, ID_EROE, GruppoGiocatore.getIstanza().getCapo().getClasse(), 0.38, 0.61);
 	}
 
 	private List<PaginaIntermezzo> getPagineDellaPresentazione() {

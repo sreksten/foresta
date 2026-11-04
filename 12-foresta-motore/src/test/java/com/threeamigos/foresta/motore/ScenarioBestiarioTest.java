@@ -121,14 +121,12 @@ class ScenarioBestiarioTest {
             missione.controllaPostLocazione();
             missione.getCampioni().forEach(Missione::controllaInLocazione);
             partita.comando(Comando.ESCI_DA_CITTA);
-            IlCampione campione = (IlCampione) missione.getCampioni().get(0);
+            // Un campione di una classe che ha una voce nel bestiario e non è ancora sbloccata (quella del giocatore è il Guerriero)
+            IlCampione campione = (IlCampione) missione.getCampioni().stream().filter(c -> {
+                TipoPersonaggio classe = ((IlCampione) c).getClasseDelCampione();
+                return classe.hasVoceNelBestiario() && !classe.stessoRuoloDi(TipoPersonaggio.GUERRIERO);
+            }).findFirst().orElseThrow(AssertionError::new);
             TipoPersonaggio classeDelCampione = campione.getClasseDelCampione();
-            // Il campione è di una classe che non è ancora sbloccata: quella del giocatore è il Guerriero
-            if (classeDelCampione.stessoRuoloDi(TipoPersonaggio.GUERRIERO)) {
-                campione = (IlCampione) missione.getCampioni().stream().filter(c -> !((IlCampione) c).getClasseDelCampione()
-                        .stessoRuoloDi(TipoPersonaggio.GUERRIERO)).findFirst().orElseThrow(AssertionError::new);
-                classeDelCampione = campione.getClasseDelCampione();
-            }
             assertFalse(RegistroBestiario.isSbloccata(classeDelCampione));
             vaiDa(partita, campione.getPosto());
 

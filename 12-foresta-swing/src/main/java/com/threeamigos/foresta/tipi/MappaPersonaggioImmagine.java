@@ -65,6 +65,7 @@ public enum MappaPersonaggioImmagine {
     MOGLIE_DEL_BARDO(TipoPersonaggio.MOGLIE_DEL_BARDO, "personaggi/MoglieDelBardo.gif", "icone/MoglieDelBardo.gif"),
     VIANDANTE(TipoPersonaggio.VIANDANTE, "personaggi/Viandante.gif", "icone/Viandante.gif"),
     BARDO_LOCANDA(TipoPersonaggio.BARDO_DELLE_LOCANDE, "personaggi/BardoLocanda.gif", "icone/BardoLocanda.gif"),
+    VICHINGO(TipoPersonaggio.VICHINGO, "personaggi/Vichingo.gif", "icone/Vichingo.gif"),
     CAPITANO_DELLE_GUARDIE(TipoPersonaggio.CAPITANO_DELLE_GUARDIE, "personaggi/CapitanoDelleGuardie.gif", "icone/CapitanoDelleGuardie.gif"),
     BORGOMASTRO(TipoPersonaggio.BORGOMASTRO, "personaggi/Borgomastro.gif"),
     UOMO(TipoPersonaggio.UOMO, "personaggi/Uomo.gif", "icone/Uomo.gif"),

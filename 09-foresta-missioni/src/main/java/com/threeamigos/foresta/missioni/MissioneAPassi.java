@@ -959,7 +959,11 @@ public abstract class MissioneAPassi extends MissioneBase {
 				.findFirst();
 	}
 
-	private void congedaScortato() {
+	/**
+	 * Chi la missione stava scortando si separa dal gruppo subito (di solito lo fa già il passo di scorta): per una scena di commiato
+	 * che lo mostra tra chi saluta, invece che tra chi viaggia.
+	 */
+	protected final void congedaScortato() {
 		getScortato().ifPresent(GruppoGiocatore.getIstanza()::rimuoviOspite);
 		rimuoviProprieta(SCORTATO);
 	}

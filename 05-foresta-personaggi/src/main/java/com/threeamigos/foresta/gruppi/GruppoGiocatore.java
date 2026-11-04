@@ -280,6 +280,24 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	}
 
 	/**
+	 * Fa posto a un personaggio a tempo che sta per entrare: in tutto non si superano {@link CostantiPersonaggi#MAX_PERSONAGGI_GRUPPO_TOTALE}
+	 * personaggi, quindi a gruppo pieno se ne va quello a tempo (un aiuto, uno Scheletro risvegliato, chi è nel gruppo per una missione)
+	 * il cui tempo è più vicino alla scadenza, anche se è caduto.
+	 *
+	 * @return se ora c'è posto: falso solo se il gruppo è pieno e nessuno è a tempo
+	 */
+	public final boolean faiPostoAUnoATempo() {
+		if (getNumeroPersonaggi() < CostantiPersonaggi.MAX_PERSONAGGI_GRUPPO_TOTALE) {
+			return true;
+		}
+		Optional<Personaggio> inScadenza = personaggi.stream()
+				.filter(Personaggio::isATempo)
+				.min(Comparator.comparingDouble(p -> p.getModelloDati().getOptional(TipoAttributo.TEMPO).orElse(0.0d)));
+		inScadenza.ifPresent(this::rimuoviPersonaggio);
+		return inScadenza.isPresent();
+	}
+
+	/**
 	 * Congeda chi è morto e non può essere risuscitato (vedi TipoMotivoNelGruppo.isLasciaSeMuore): lo Scheletro della
 	 * Mietitura che cade torna polvere, e nessun incantesimo di Resurrezione lo riporta indietro. Non lo si toglie
 	 * nell'istante in cui muore perché la morte può arrivare nel mezzo di un ciclo sui personaggi del gruppo (un

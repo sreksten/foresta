@@ -213,6 +213,37 @@ class SaluteEMorteTest {
     }
 
     @Test
+    void ilVichingoDiventaFuriosoPrimaDelGuerriero() {
+        Personaggio vichingo = FabbricaPersonaggi.crea(TipoPersonaggio.VICHINGO, 10);
+        Personaggio guerriero = new Guerriero("Sigfrido", 10);
+        for (Personaggio p : new Personaggio[] {vichingo, guerriero}) {
+            p.addSalute(100000);
+            assertTrue(p.get(TipoAttributo.FURIA) > 0, p.getClasse().name());
+            // Resta il 55% della salute: nessuno dei due è ancora furioso
+            p.subSalute((int) (p.getSaluteMassima() * 0.45d), null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
+            assertFalse(p.hasEffettoDiStato(TipoEffettoDiStato.BERSERK), p.getClasse().name());
+            // Resta il 45%: sotto la metà, sopra un terzo
+            p.subSalute((int) (p.getSaluteMassima() * 0.10d), null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
+        }
+        assertTrue(vichingo.hasEffettoDiStato(TipoEffettoDiStato.BERSERK));
+        assertFalse(guerriero.hasEffettoDiStato(TipoEffettoDiStato.BERSERK));
+        // Resta il 25%: sotto un terzo, ora lo è anche il guerriero
+        guerriero.subSalute((int) (guerriero.getSaluteMassima() * 0.20d), null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
+        assertTrue(guerriero.hasEffettoDiStato(TipoEffettoDiStato.BERSERK));
+    }
+
+    @Test
+    void ilBonusDelBerserkDelVichingoEIlDoppioDiQuelloDelGuerriero() {
+        assertEquals(2 * Berserk.bonus(TipoPersonaggio.GUERRIERO), Berserk.bonus(TipoPersonaggio.VICHINGO), 1e-9);
+        assertTrue(Berserk.soglia(TipoPersonaggio.VICHINGO) > Berserk.soglia(TipoPersonaggio.GUERRIERO));
+        for (TipoPersonaggio classe : new TipoPersonaggio[] {TipoPersonaggio.GUERRIERA, TipoPersonaggio.CAPITANO_DELLE_GUARDIE}) {
+            assertEquals(Berserk.bonus(TipoPersonaggio.GUERRIERO), Berserk.bonus(classe), 1e-9, classe.name());
+            assertEquals(Berserk.soglia(TipoPersonaggio.GUERRIERO), Berserk.soglia(classe), 1e-9, classe.name());
+        }
+        assertFalse(Berserk.haIlBerserk(TipoPersonaggio.MAGO));
+    }
+
+    @Test
     void unAlleatoSenzaNomeMuoreComeUnAvversarioNelProprioGruppo() {
         Personaggio ospite = goblin();
         ospite.setMotivoNelGruppo(TipoMotivoNelGruppo.AIUTO_MERCENARIO);

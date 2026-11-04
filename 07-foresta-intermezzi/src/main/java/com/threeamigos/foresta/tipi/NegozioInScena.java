@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.tipi;
 
+import com.threeamigos.foresta.intermezzi.GruppoInScena;
 import com.threeamigos.foresta.testi.Nome;
 import java.util.Locale;
 import com.threeamigos.foresta.intermezzi.ScenaNegozio;
@@ -83,7 +84,7 @@ public enum NegozioInScena {
 	}
 
 	/**
-	 * Una pagina ferma in questo locale, a gruppo già entrato: il negoziante al suo posto e il capo di fronte a lui. Chi la usa
+	 * Una pagina ferma in questo locale, a gruppo già entrato: il negoziante al suo posto e tutto il gruppo di fronte a lui, capo in testa. Chi la usa
 	 * aggiunge le battute (quelle del negoziante hanno l'identificativo {@link #getIdNegoziante}) e gli elementi che servono, che
 	 * restano sopra al primo piano.
 	 */
@@ -91,10 +92,8 @@ public enum NegozioInScena {
 		PaginaIntermezzo pagina = new PaginaIntermezzo()
 				.conSfondo(ImmagineIntermezzo.risorsa(sfondo))
 				.conRitaglioSuSfondo()
-				.conElemento(ElementoIntermezzo.personaggio(idNegoziante, negoziante, xNegoziante, yNegoziante).conBocca(0.5, -0.15))
-				.conElemento(ElementoIntermezzo.personaggio(idCapo, classeCapo, xArrivoCapo, yNegoziante)
-						.conBocca(0.5, -0.15)
-						.guarda(Verso.DESTRA));
+				.conElemento(ElementoIntermezzo.personaggio(idNegoziante, negoziante, xNegoziante, yNegoziante).conBocca(0.5, -0.15));
+		GruppoInScena.aggiungi(pagina, idCapo, classeCapo, xArrivoCapo, yNegoziante);
 		pagina.conElemento(ElementoIntermezzo.di("foreground", ImmagineIntermezzo.risorsa(primoPiano), 0.5, 0.5));
 		return pagina;
 	}

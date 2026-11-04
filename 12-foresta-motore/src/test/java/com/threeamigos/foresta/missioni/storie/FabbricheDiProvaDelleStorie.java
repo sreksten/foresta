@@ -42,4 +42,11 @@ public final class FabbricheDiProvaDelleStorie {
         viandante.attivaMissione();
         return viandante;
     }
+
+    /** Il viaggio di Olaf già accettato: Olaf è con il gruppo, il leggendario non ancora scelto. */
+    public static MissioneAPassi ilViaggioDiOlaf() {
+        IlViaggioDiOlaf olaf = new IlViaggioDiOlaf();
+        olaf.attivaMissione();
+        return olaf;
+    }
 }

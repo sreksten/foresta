@@ -48,10 +48,11 @@ public class StrumentiDiSviluppoMotore implements StrumentiDiSviluppo {
 
     // Le missioni che si offrono entrando in un bosco (un incontro fortuito)
     private static final Set<MissionePredefinita> NEL_BOSCO = EnumSet.of(
-            MissionePredefinita.IL_VIANDANTE);
+            MissionePredefinita.IL_VIANDANTE,
+            MissionePredefinita.IL_VIAGGIO_DI_OLAF);
 
     private static final Set<MissionePredefinita> IN_CITTA_SENZA_INCARICO = EnumSet.of(
-            MissionePredefinita.LA_LEGGENDA_DELL_ARMAIOLO,
+            MissionePredefinita.LA_LEGGENDA_DEL_NEGOZIANTE,
             MissionePredefinita.LA_FALCE_DEL_TRISTO_MIETITORE,
             MissionePredefinita.LA_LEALTA);
 

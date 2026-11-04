@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.missioni.incarichi;
 
 import com.threeamigos.foresta.mappa.Foresta;
+import com.threeamigos.foresta.missioni.InSorteggio;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
@@ -20,7 +21,7 @@ import java.util.Set;
  * Le classi di incarico si dividono in due gruppi: quelle non ancora affidate nel giro corrente, che escono con una
  * probabilità di {@link #PROBABILITA_DI_UN_INCARICO_NUOVO}, e quelle già affidate, che escono con la probabilità che resta.
  * Se fra i pronti c'è solo uno dei due gruppi, si sceglie da quello. Quando nessuna classe che aspetta di offrirsi è più
- * da affidare nel giro (contano solo quelle che possono ancora offrirsi: vedi IncaricoInCitta.puoAncoraOffrirsi), il giro
+ * da affidare nel giro (contano solo quelle che possono ancora offrirsi: vedi InSorteggio.puoAncoraOffrirsi), il giro
  * ricomincia e tutte tornano nuove.
  * <p>
  * Il giro in cui un incarico è stato affidato si scrive nella sua proprietà {@link #GIRO}, così si salva con la missione:
@@ -40,12 +41,12 @@ public final class SceltaDegliIncarichi {
 	/**
 	 * La proprietà dell'incarico con il giro in cui è stato affidato.
 	 */
-	static final String GIRO = "GIRO_DI_AFFIDAMENTO";
+	public static final String GIRO = "GIRO_DI_AFFIDAMENTO";
 
 	// La scelta vale per una visita (ora di gioco e casella): tutti gli incarichi pronti chiedono se tocca a loro, e la
 	// risposta deve essere la stessa per tutti. Non si salva: dopo una rilettura si sceglie di nuovo
 	private static String visitaDellaScelta;
-	private static IncaricoInCitta scelto;
+	private static InSorteggio scelto;
 	private static boolean sorteggioAttivo = true;
 
 	private SceltaDegliIncarichi() {
@@ -54,7 +55,7 @@ public final class SceltaDegliIncarichi {
 	/**
 	 * Se tocca a quell'incarico, pronto a offrirsi, partire in questa visita.
 	 */
-	static boolean tocca(IncaricoInCitta incarico) {
+	public static boolean tocca(InSorteggio incarico) {
 		if (!sorteggioAttivo) {
 			return true;
 		}
@@ -72,7 +73,7 @@ public final class SceltaDegliIncarichi {
 	/**
 	 * L'incarico si è offerto: lo si segna nel giro corrente.
 	 */
-	static void affidato(IncaricoInCitta incarico) {
+	public static void affidato(InSorteggio incarico) {
 		incarico.aggiungiProprieta(GIRO, String.valueOf(giroCorrente()));
 	}
 
@@ -101,7 +102,7 @@ public final class SceltaDegliIncarichi {
 		return (LineaTemporale.getGiorno() * 24L + LineaTemporale.getOra()) + "@" + (qui == null ? "" : qui.getX() + "," + qui.getY());
 	}
 
-	private static IncaricoInCitta scegli(List<IncaricoInCitta> pronti) {
+	private static InSorteggio scegli(List<InSorteggio> pronti) {
 		if (pronti.isEmpty()) {
 			return null;
 		}
@@ -109,12 +110,12 @@ public final class SceltaDegliIncarichi {
 			return pronti.get(0);
 		}
 		Set<MissionePredefinita> affidate = classiAffidateNelGiro(giroCorrente());
-		List<IncaricoInCitta> nuovi = new ArrayList<>();
-		List<IncaricoInCitta> giaAffidati = new ArrayList<>();
-		for (IncaricoInCitta incarico : pronti) {
+		List<InSorteggio> nuovi = new ArrayList<>();
+		List<InSorteggio> giaAffidati = new ArrayList<>();
+		for (InSorteggio incarico : pronti) {
 			(affidate.contains(incarico.getClasse()) ? giaAffidati : nuovi).add(incarico);
 		}
-		List<IncaricoInCitta> gruppo;
+		List<InSorteggio> gruppo;
 		if (giaAffidati.isEmpty()) {
 			gruppo = nuovi;
 		} else if (nuovi.isEmpty()) {
@@ -128,9 +129,9 @@ public final class SceltaDegliIncarichi {
 	/**
 	 * Gli incarichi del sorteggio pronti a offrirsi in questa visita.
 	 */
-	private static List<IncaricoInCitta> pronti() {
-		List<IncaricoInCitta> pronti = new ArrayList<>();
-		for (IncaricoInCitta incarico : incarichiDelSorteggio()) {
+	private static List<InSorteggio> pronti() {
+		List<InSorteggio> pronti = new ArrayList<>();
+		for (InSorteggio incarico : incarichiDelSorteggio()) {
 			if (incarico.isInAttesaDiOffrirsi() && incarico.isProntoPerOffrirsi()) {
 				pronti.add(incarico);
 			}
@@ -143,13 +144,13 @@ public final class SceltaDegliIncarichi {
 	 * affidare fra gli incarichi che aspettano di offrirsi e possono ancora farlo.
 	 */
 	static int giroCorrente() {
-		List<IncaricoInCitta> incarichi = incarichiDelSorteggio();
+		List<InSorteggio> incarichi = incarichiDelSorteggio();
 		int giro = 0;
-		for (IncaricoInCitta incarico : incarichi) {
+		for (InSorteggio incarico : incarichi) {
 			giro = Math.max(giro, incarico.getGiro());
 		}
 		Set<MissionePredefinita> affidate = classiAffidateNelGiro(giro);
-		for (IncaricoInCitta incarico : incarichi) {
+		for (InSorteggio incarico : incarichi) {
 			if (incarico.isInAttesaDiOffrirsi() && incarico.puoAncoraOffrirsi() && !affidate.contains(incarico.getClasse())) {
 				return giro;
 			}
@@ -159,7 +160,7 @@ public final class SceltaDegliIncarichi {
 
 	private static Set<MissionePredefinita> classiAffidateNelGiro(int giro) {
 		Set<MissionePredefinita> affidate = EnumSet.noneOf(MissionePredefinita.class);
-		for (IncaricoInCitta incarico : incarichiDelSorteggio()) {
+		for (InSorteggio incarico : incarichiDelSorteggio()) {
 			if (incarico.getGiro() == giro) {
 				affidate.add(incarico.getClasse());
 			}
@@ -167,11 +168,11 @@ public final class SceltaDegliIncarichi {
 		return affidate;
 	}
 
-	private static List<IncaricoInCitta> incarichiDelSorteggio() {
-		List<IncaricoInCitta> incarichi = new ArrayList<>();
+	private static List<InSorteggio> incarichiDelSorteggio() {
+		List<InSorteggio> incarichi = new ArrayList<>();
 		for (Missione missione : RegistroMissioni.getTutteLeMissioni()) {
-			if (missione instanceof IncaricoInCitta) {
-				incarichi.add((IncaricoInCitta) missione);
+			if (missione instanceof InSorteggio) {
+				incarichi.add((InSorteggio) missione);
 			}
 		}
 		return incarichi;

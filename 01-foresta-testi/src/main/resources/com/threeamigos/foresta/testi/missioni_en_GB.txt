@@ -4182,4 +4182,93 @@ LA_SFIDA_DEI_CAMPIONI_RIGA_ANELLO
 FORGIA_RICHIESTA_RIGA_ARMA
     TIPO=%PARAM_TIPO%;NOME=%PARAM_NOME%;CHIAVE=%PARAM_CHIAVE%;BREVE=%PARAM_BREVE%;DESCRIZIONE=%PARAM_DESCRIZIONE%;LIVELLO=%PARAM_LIVELLO%;DANNI=%PARAM_DANNI%;COSTO=%PARAM_COSTO%;PESO=%PARAM_PESO%;MOD=%PARAM_ATTRIBUTO% +%PARAM_PERCENTUALE%%;MOD=CRITICO +%PARAM_CRITICO%;INCANTAMENTO=%PARAM_INCANTAMENTO_1% %PARAM_INCANTAMENTO_2% %PARAM_INCANTAMENTO_3% %PARAM_INCANTAMENTO_4%;LEGGENDA=Have you ever heard of %PARAM_LEGGENDA%?;LEGGENDA=It was forged by an armourer from whatever his customers brought him, and a pinch of bad temper.
 
+// ---------------------------------------------------------------------------------------------
+// Due frasi che stavano scritte nel codice (vedi ForgiaRichiesta e LaBenedizione)
+// ---------------------------------------------------------------------------------------------
+
+// Il nome dell'incantamento dell'arma forgiata, secondo l'elemento (%PARAM_ELEMENTO%: il nome dell'elemento, in minuscolo)
+FORGIA_RICHIESTA_TEMPRA
+    Temper of %PARAM_ELEMENTO%
+
+// La domanda: a chi dare la benedizione
+LA_BENEDIZIONE_CHI_RICEVE
+    Who receives %PARAM_BENEDIZIONE%?
+
+// ---------------------------------------------------------------------------------------------
+// Olaf's journey (see IlViaggioDiOlaf), in script order. %PARAM_VICHINGO% (Olaf's name) and %PARAM_PREMIO% (the legendary item he leaves) are filled in by the code.
+// «Sglord» is an invented name and stays as it is in every language.
+//
+// TRANSLATORS, PLEASE NOTE: Olaf's lines (the productions with _VICHINGO in the name, and the title) are written in a deliberately funny way. They are not typos.
+// In English the rule is: the last «o» of every word becomes «ø» (the Norwegian slashed o) and the last «d» becomes «ð» (the letter eth); «mug» is «müg». The
+// Italian version, where words end in «o» much more often, changes every «o» at the end of a word and every «d». For every other language (French, Spanish...)
+// pick the variant that leaves about as many changed letters as the English one. Olaf's name is never changed. CoerenzaDeiTestiDelleStorieTest checks the rule.
+// ---------------------------------------------------------------------------------------------
+
+// Il nome di Olaf
+IL_VIAGGIO_DI_OLAF_NOME
+    Olaf
+
+// Il titolo. Voluto: la «o» di «journey» è «ø», come nelle battute di Olaf
+IL_VIAGGIO_DI_OLAF_TITOLO
+    %PARAM_VICHINGO%'s jøurney
+
+// Prima di accettare: la descrizione nel diario
+IL_VIAGGIO_DI_OLAF_DESCRIZIONE_ATTESA
+    Sooner or later, in the woods, you meet someone who is lost.
+
+// L'incontro nel bosco
+IL_VIAGGIO_DI_OLAF_CAPO_1
+    And... who might you be?
+
+IL_VIAGGIO_DI_OLAF_VICHINGO_1
+    I am %PARAM_VICHINGO%. I am øn an expløring jøurney. But this mørning I wøke up here, anð nøw I am loøking før the røað tø the nearest tøwn.
+
+IL_VIAGGIO_DI_OLAF_CAPO_2
+    And... do you always dress like that?
+
+IL_VIAGGIO_DI_OLAF_VICHINGO_2
+    Nø, nø. But yesterðay I walkeð intø an inn where a crazy barð hað thrøwn a wilð fancy-ðress party, I øverdið it with the løcal ðrink... anð nøw my memøries are rather føggy.
+
+// Solo se il bardo delle locande è nel gruppo
+IL_VIAGGIO_DI_OLAF_VICHINGO_BARDO
+    Hey, it's yøu! Well ðøne, frienð, it's been ages since I partieð like that!
+
+// Di un compagno del capo, se il gruppo ha più di un personaggio, altrimenti del capo
+IL_VIAGGIO_DI_OLAF_SGLORD
+    Sglord. It does that to you if you have more than one mug.
+
+IL_VIAGGIO_DI_OLAF_VICHINGO_3
+    Øne müg? Frienð, the barð anð I døwneð half a barrel between us! That stuff is fantastic! It really breaks yøur legs! I am loøking før the nearest tøwn tø buy a few barrels anð have them shippeð høme. But first I want tø slay a few reptiles anð shøw the gøðs my valøur in battle!
+
+IL_VIAGGIO_DI_OLAF_CAPO_3
+    Well... a hand would come in handy. You can come with us if you like.
+
+// Il giocatore accetta
+IL_VIAGGIO_DI_OLAF_ACCETTATO
+    %PARAM_VICHINGO% joins the group: slay a wyvern or a dragon chimera together with him, then take him to a town to buy his barrels of Sglord.
+
+// Il passo della caccia: la descrizione nel diario
+IL_VIAGGIO_DI_OLAF_DESCRIZIONE_CACCIA
+    Slay a wyvern or a dragon chimera together with %PARAM_VICHINGO%.
+
+// Sconfitto il mostro
+IL_VIAGGIO_DI_OLAF_CACCIA_FINITA
+    Done: %PARAM_VICHINGO% has proven his worth to the gods and now loudly demands his barrels of Sglord.
+
+// Il passo della città: la descrizione nel diario
+IL_VIAGGIO_DI_OLAF_DESCRIZIONE_CITTA
+    Take %PARAM_VICHINGO% to a town to buy a couple of barrels of Sglord.
+
+// Il commiato, in città
+IL_VIAGGIO_DI_OLAF_VICHINGO_COMMIATO
+    Well, what can I say, it was fun. Thank yøu før keeping me cømpany. Slaying mønsters aløne isn't as much fun as ðøing it in a grøup! Here, I leave yøu this as a thank yøu.
+
+// La ricompensa
+IL_VIAGGIO_DI_OLAF_RICOMPENSA
+    %PARAM_VICHINGO% leaves with his barrels of Sglord and gives you %PARAM_PREMIO% as a gift.
+
+// Il premio, finché il leggendario non è scelto
+IL_VIAGGIO_DI_OLAF_UN_LEGGENDARIO
+    a legendary item
+
 #include_static <nomi_en_GB.txt>

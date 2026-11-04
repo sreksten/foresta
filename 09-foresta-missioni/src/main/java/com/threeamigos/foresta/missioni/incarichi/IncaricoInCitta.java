@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.incarichi;
 
+import com.threeamigos.foresta.missioni.InSorteggio;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.mappa.Foresta;
 
@@ -52,7 +53,7 @@ import com.threeamigos.foresta.testi.Testi;
  * Gli incarichi sono ripetibili (vedi MissioneAPassi.isRipetibile): finiti, bene o male, ne lasciano uno nuovo uguale,
  * che si può prendere dopo una pausa.
  */
-public abstract class IncaricoInCitta extends MissioneAPassi {
+public abstract class IncaricoInCitta extends MissioneAPassi implements InSorteggio {
 
 	private static final String INCARICO = "INCARICO";
 	private static final String ACCETTAZIONE = "ACCETTAZIONE";
@@ -375,21 +376,24 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	 * Se il gruppo è dove l'incarico si offre: in una città qualsiasi a una visita tranquilla, e passata la pausa dopo
 	 * l'incarico precedente.
 	 */
-	final boolean isProntoPerOffrirsi() {
+	@Override
+	public final boolean isProntoPerOffrirsi() {
 		return isDisponibile() && inUnaCitta() && isPossibileQui() && isVisitaTranquilla();
 	}
 
 	/**
 	 * Se l'incarico non si è ancora offerto: è al primo passo e non è finito.
 	 */
-	final boolean isInAttesaDiOffrirsi() {
+	@Override
+	public final boolean isInAttesaDiOffrirsi() {
 		return !isAttiva() && !isCompleta() && !isFallita() && INCARICO.equals(getPassoCorrente());
 	}
 
 	/**
 	 * Il giro in cui l'incarico è stato affidato (vedi SceltaDegliIncarichi), o -1 se non si è ancora offerto.
 	 */
-	final int getGiro() {
+	@Override
+	public final int getGiro() {
 		String giro = ottieniProprieta(SceltaDegliIncarichi.GIRO);
 		return giro == null ? -1 : Integer.parseInt(giro);
 	}
@@ -398,7 +402,8 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	 * Se l'incarico potrà ancora offrirsi in questa partita, in qualche città e prima o poi: un incarico che non potrà
 	 * più farlo non tiene aperto il giro del sorteggio (vedi SceltaDegliIncarichi).
 	 */
-	protected boolean puoAncoraOffrirsi() {
+	@Override
+	public boolean puoAncoraOffrirsi() {
 		return true;
 	}
 

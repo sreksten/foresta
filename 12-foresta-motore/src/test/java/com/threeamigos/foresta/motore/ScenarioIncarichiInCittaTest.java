@@ -17,7 +17,7 @@ import com.threeamigos.foresta.missioni.incarichi.CacciaAiGoblin;
 import com.threeamigos.foresta.missioni.incarichi.IncaricoDiCombattimento;
 import com.threeamigos.foresta.missioni.incarichi.IncaricoInCitta;
 import com.threeamigos.foresta.missioni.incarichi.RichiestaDiMateriali;
-import com.threeamigos.foresta.missioni.leggende.LaLeggendaDellArmaiolo;
+import com.threeamigos.foresta.missioni.leggende.LaLeggendaDelNegoziante;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.Bottino;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
@@ -44,7 +44,7 @@ class ScenarioIncarichiInCittaTest {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
                     () -> partita.spostaGruppoIn(TipoLocazione.CITTA_FLEENA));
             // L'armaiolo racconterebbe la sua leggenda prima di ogni incarico: qui non è ancora il momento
-            trova(LaLeggendaDellArmaiolo.class).aggiungiProprieta("DISPONIBILE_DALLE", String.valueOf(Long.MAX_VALUE));
+            trova(LaLeggendaDelNegoziante.class).aggiungiProprieta("DISPONIBILE_DALLE", String.valueOf(Long.MAX_VALUE));
             List<IncaricoInCitta> incarichi = Arrays.asList(trova(CacciaAiGoblin.class), Alchimie.alchimista(),
                     trova(IncaricoDiCombattimento.class));
 

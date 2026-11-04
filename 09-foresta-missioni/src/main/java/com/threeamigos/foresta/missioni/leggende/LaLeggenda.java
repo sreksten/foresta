@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.missioni.leggende;
 
+import com.threeamigos.foresta.missioni.incarichi.SceltaDegliIncarichi;
+import com.threeamigos.foresta.missioni.InSorteggio;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.artefatti.ProduttoreDiArtefattiCasuale;
@@ -44,7 +46,7 @@ import com.threeamigos.foresta.testi.Testi;
  * PescaLeggendaria); fra il racconto di una leggenda e quello della successiva, di chiunque, passano almeno
  * {@link #ORE_FRA_DUE_LEGGENDE} ore di gioco.
  */
-public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendario {
+public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendario, InSorteggio {
 
 	/**
 	 * Quante ore di gioco passano almeno fra due leggende, chiunque le racconti.
@@ -216,9 +218,11 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 	protected Passo costruisciPasso(String id) {
 		switch (id) {
 			case INCARICO:
-				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> isDisponibile() && isPostoDelRacconto()
-								&& nessunaLeggendaRecente() && isVisitaTranquilla() && (getLeggendario() != null || restaUnLeggendario()))
-						.esegui(this::raccontaLaLeggenda)
+				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> isProntoPerOffrirsi() && SceltaDegliIncarichi.tocca(this))
+						.esegui(() -> {
+							SceltaDegliIncarichi.affidato(this);
+							raccontaLaLeggenda();
+						})
 						.conIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, this::getPagineDelRacconto)
 						.poi(ACCETTAZIONE);
 			case ACCETTAZIONE:
@@ -312,6 +316,32 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 	 */
 	private Set<String> giaPescati() {
 		return PescaLeggendaria.giaPescati(this);
+	}
+
+	@Override
+	public boolean isInAttesaDiOffrirsi() {
+		return !isAttiva() && !isCompleta() && !isFallita() && INCARICO.equals(getPassoCorrente());
+	}
+
+	/**
+	 * Se la leggenda si può raccontare adesso: dove la racconta il narratore, a una visita tranquilla, passate le ore dall'ultima
+	 * leggenda e se resta un leggendario da pescare. Se ne sono pronte più d'una (o un incarico) il sorteggio ne sceglie una sola.
+	 */
+	@Override
+	public boolean isProntoPerOffrirsi() {
+		return isDisponibile() && isPostoDelRacconto() && nessunaLeggendaRecente() && isVisitaTranquilla()
+				&& (getLeggendario() != null || restaUnLeggendario());
+	}
+
+	@Override
+	public boolean puoAncoraOffrirsi() {
+		return getLeggendario() != null || restaUnLeggendario();
+	}
+
+	@Override
+	public int getGiro() {
+		String giro = ottieniProprieta(SceltaDegliIncarichi.GIRO);
+		return giro == null ? -1 : Integer.parseInt(giro);
 	}
 
 	private boolean restaUnLeggendario() {

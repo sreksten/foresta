@@ -80,11 +80,10 @@ public class IntermezzoLibroTecnico implements Intermezzo {
 		daLeggere.remove(libro);
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		List<String> battute = libro.getBattute();
-		return Collections.singletonList(new PaginaIntermezzo(Testi.formatta("intermezzi", "IntermezzoLibroTecnico.1"))
-				.conSfondo(ImmagineIntermezzo.locazione(Foresta.getLocazioneDelGruppo()))
-				.conElemento(ElementoIntermezzo.personaggio(CAPO, gruppo.getCapo().getClasse(), 0.45, 0.61)
-						.conBocca(0.5, -0.15)
-						.guarda(Verso.DESTRA))
+		PaginaIntermezzo pagina = new PaginaIntermezzo(Testi.formatta("intermezzi", "IntermezzoLibroTecnico.1"))
+				.conSfondo(ImmagineIntermezzo.locazione(Foresta.getLocazioneDelGruppo()));
+		GruppoInScena.aggiungi(pagina, CAPO, gruppo.getCapo().getClasse(), 0.45, 0.61);
+		return Collections.singletonList(pagina
 				.conElemento(ElementoIntermezzo.di(LIBRO, ImmagineIntermezzo.risorsa(IMMAGINE_LIBRO), 0.55, 0.66))
 				.conBattuta(BattutaIntermezzo.di(CAPO, ProduttoreDiArtefattiCasuale.letturaDelLibroTecnico(libro.getTitoloDaLeggere())))
 				.conBattuta(BattutaIntermezzo.di(CAPO, battute.get(Dado.tiraAncheAUnaFaccia(battute.size()) - 1)))

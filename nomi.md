@@ -92,7 +92,7 @@ nome di un residente: è accettato.
   venditore di pergamene, l'incantatore, il borgomastro, la levatrice) si scrive con il nome fra virgole: "l'armaiolo di
   Nyena, Mastro Ferruccio, ti ha chiesto…". Lo fanno `IncaricoInCitta.mandante`, `mandanteDiCitta` e le varianti senza la
   virgola finale (per quando segue un segno di punteggiatura), in tutte le missioni che lo estendono; `IlCorriere` lo fa per
-  mittente e destinatario, `Mandante.getApertura(nome)` per la presentazione del capitano, `LaLeggendaDellArmaiolo` per il
+  mittente e destinatario, `Mandante.getApertura(nome)` per la presentazione del capitano, `LaLeggendaDelNegoziante` per il
   narratore. Nei testi basta il nome proprio, perché la città è già nella frase. Restano senza nome i mandanti che non sono
   nel registro (il locandiere, il sacerdote, il mugnaio…).
 - **Schermate dei negozi** (armaiolo, venditore di pergamene, alchimista, incantatore): in cima alla colonna centrale c'è il

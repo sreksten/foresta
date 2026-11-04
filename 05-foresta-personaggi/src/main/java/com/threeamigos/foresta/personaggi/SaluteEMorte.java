@@ -173,10 +173,9 @@ final class SaluteEMorte {
 		md().setSalute(salute);
 		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(p, TipoAttributo.SALUTE, saluteOriginale, salute));
 
-		if ((md().getClasse() == TipoPersonaggio.GUERRIERO || md().getClasse() == TipoPersonaggio.GUERRIERA
-				|| md().getClasse() == TipoPersonaggio.CAPITANO_DELLE_GUARDIE) &&
+		if (Berserk.haIlBerserk(md().getClasse()) &&
 				p.get(TipoAttributo.FURIA) > 0 && !p.hasEffettoDiStato(TipoEffettoDiStato.BERSERK)) {
-			double sogliaBerserk = p.calcolaSaluteMassima() / 3.0d;
+			double sogliaBerserk = p.calcolaSaluteMassima() * Berserk.soglia(md().getClasse());
 			if (salute > 0 && salute <= sogliaBerserk) {
 				p.addEffettoDiStato(TipoEffettoDiStato.BERSERK, 1, 0);
 			}

@@ -433,7 +433,8 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	public int decrementaTempo() {
 		double tempo = md.getOptional(TipoAttributo.TEMPO).orElse(0.0d);
-		if (!md.isVivo() || !isATempo()) {
+		// Chi è nel gruppo per una missione ci resta finché è la missione a congedarlo
+		if (!md.isVivo() || !isATempo() || md.getMotivoNelGruppo() == TipoMotivoNelGruppo.MISSIONE) {
 			return (int)tempo;
 		}
 		double quantitaPrecedente = tempo;
@@ -658,6 +659,10 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	@Override
 	public void addPuntiEsperienza(int esperienza) {
+		// Chi è nel gruppo per una missione non cresce: com'è arrivato, se ne va
+		if (md.getMotivoNelGruppo() == TipoMotivoNelGruppo.MISSIONE) {
+			return;
+		}
 		progressione.addPuntiEsperienza(esperienza);
 	}
 

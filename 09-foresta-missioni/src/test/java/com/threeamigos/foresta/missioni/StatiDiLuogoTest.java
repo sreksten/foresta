@@ -9,7 +9,7 @@ import com.threeamigos.foresta.missioni.incarichi.LIndagine;
 import com.threeamigos.foresta.missioni.incarichi.LOggettoSmarrito;
 import com.threeamigos.foresta.missioni.incarichi.SceltaDegliIncarichi;
 import com.threeamigos.foresta.missioni.leggende.LaFalceDelTristoMietitore;
-import com.threeamigos.foresta.missioni.leggende.LaLeggendaDellArmaiolo;
+import com.threeamigos.foresta.missioni.leggende.LaLeggendaDelNegoziante;
 import com.threeamigos.foresta.missioni.leggende.LaLeggendaDelLocandiere;
 import com.threeamigos.foresta.missioni.richieste.ColpoRichiesto;
 import com.threeamigos.foresta.missioni.richieste.RitualeRichiesto;
@@ -92,7 +92,8 @@ class StatiDiLuogoTest {
 
     @Test
     void inUnaCittaDistrutta() throws Exception {
-        LaLeggendaDellArmaiolo armaiolo = registra(new LaLeggendaDellArmaiolo(), "ARMAIOLO");
+        LaLeggendaDelNegoziante armaiolo = registra(new LaLeggendaDelNegoziante(), "ARMAIOLO");
+        armaiolo.aggiungiProprieta("PARAMETRO_ASPETTO", "ARMAIOLO"); // il negoziante è a caso: qui è l'armaiolo
         LaFalceDelTristoMietitore falce = registra(new LaFalceDelTristoMietitore(), "FALCE");
         IlNegozioDellAlchimista negozio = registra(new IlNegozioDellAlchimista(), "NEGOZIO");
         TipoLocazione citta = TipoLocazione.CITTA_RUUNA;
@@ -115,7 +116,8 @@ class StatiDiLuogoTest {
 
     @Test
     void suUnaCasellaSenzaLocazioneNonSiEInUnaCitta() throws Exception {
-        LaLeggendaDellArmaiolo armaiolo = registra(new LaLeggendaDellArmaiolo(), "ARMAIOLO");
+        LaLeggendaDelNegoziante armaiolo = registra(new LaLeggendaDelNegoziante(), "ARMAIOLO");
+        armaiolo.aggiungiProprieta("PARAMETRO_ASPETTO", "ARMAIOLO"); // il negoziante è a caso: qui è l'armaiolo
         LaFalceDelTristoMietitore falce = registra(new LaFalceDelTristoMietitore(), "FALCE");
         IlNegozioDellAlchimista negozio = registra(new IlNegozioDellAlchimista(), "NEGOZIO");
         Foresta.azzera(MondoDiProva.LATO, MondoDiProva.LATO);
@@ -151,7 +153,7 @@ class StatiDiLuogoTest {
         SceltaDegliIncarichi.setSorteggioAttivo(false);
         assertFalse(SceltaDegliIncarichi.isSorteggioAttivo());
         IlNegozioDellAlchimista negozio = registra(new IlNegozioDellAlchimista(), "NEGOZIO");
-        Method tocca = SceltaDegliIncarichi.class.getDeclaredMethod("tocca", IncaricoInCitta.class);
+        Method tocca = SceltaDegliIncarichi.class.getDeclaredMethod("tocca", com.threeamigos.foresta.missioni.InSorteggio.class);
         tocca.setAccessible(true);
         assertTrue((Boolean) tocca.invoke(null, negozio), "spento il sorteggio tocca sempre al primo pronto");
         SceltaDegliIncarichi.setSorteggioAttivo(true);

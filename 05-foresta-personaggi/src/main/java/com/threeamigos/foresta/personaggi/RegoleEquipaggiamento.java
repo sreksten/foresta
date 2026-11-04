@@ -260,6 +260,7 @@ public final class RegoleEquipaggiamento {
 			case GUERRIERO:
 			case GUERRIERA:
 			case CAPITANO_DELLE_GUARDIE:
+			case VICHINGO:
 				return GUERRIERO;
 			case LADRO:
 			case LADRA:

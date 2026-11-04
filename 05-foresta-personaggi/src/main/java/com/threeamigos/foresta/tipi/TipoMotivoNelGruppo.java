@@ -23,7 +23,12 @@ public enum TipoMotivoNelGruppo {
 	 * Lo Scheletro nato dalla MIETITURA di un minion: accompagna il gruppo per qualche turno come un aiuto, ma se muore
 	 * se ne va subito, senza aspettare di essere risuscitato.
 	 */
-	MIETITURA(true, true, false);
+	MIETITURA(true, true, false),
+	/**
+	 * Chi si è unito al gruppo per il tempo di una missione, e combatte con lui (vedi IlViaggioDiOlaf): il suo tempo non scorre con i
+	 * turni, è la missione a farlo scadere quando si completa (o fallisce), e allora se ne va.
+	 */
+	MISSIONE(true, false, true);
 
 	private final boolean aTempo;
 	private final boolean lasciaSeMuore;

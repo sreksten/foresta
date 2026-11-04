@@ -39,15 +39,14 @@ public class IntermezzoEremitaRompiscatole implements Intermezzo {
 	@Override
 	public List<PaginaIntermezzo> getPagine() {
 		TipoLocazione sfondo = Foresta.getLocazioneDelGruppo();
-		return Collections.singletonList(new PaginaIntermezzo(ProduttoreDiMissioniCasuale.testoDellaMissione("INTERMEZZO_EREMITA_ROMPISCATOLE_1"))
+		PaginaIntermezzo pagina = new PaginaIntermezzo(ProduttoreDiMissioniCasuale.testoDellaMissione("INTERMEZZO_EREMITA_ROMPISCATOLE_1"))
 				.conSfondo(ImmagineIntermezzo.locazione(sfondo))
 				.conElemento(ElementoIntermezzo.personaggio(EREMITA, TipoPersonaggio.EREMITA, 1.1, 0.61)
 						.conBocca(0.5, -0.15)
 						.guarda(Verso.SINISTRA)
-						.poi(Tappa.inSecondi(2).verso(0.62, 0.61)))
-				.conElemento(ElementoIntermezzo.personaggio(EROE, GruppoGiocatore.getIstanza().getCapo().getClasse(), 0.38, 0.61)
-						.conBocca(0.5, -0.15)
-						.guarda(Verso.DESTRA))
+						.poi(Tappa.inSecondi(2).verso(0.62, 0.61)));
+		GruppoInScena.aggiungi(pagina, EROE, GruppoGiocatore.getIstanza().getCapo().getClasse(), 0.38, 0.61);
+		return Collections.singletonList(pagina
 				.conBattuta(BattutaIntermezzo.di(EREMITA, ProduttoreDiMissioniCasuale.testoDellaMissione("INTERMEZZO_EREMITA_ROMPISCATOLE_2"))
 						.daSecondo(2)));
 	}

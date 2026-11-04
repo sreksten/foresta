@@ -168,6 +168,7 @@ final class AttributiSecondari {
 			case CHIERICO:
 			case CHIERICA:
 			case CAPITANO_DELLE_GUARDIE:
+			case VICHINGO:
 			case MINOTAURO:
 			case MINOTAURO_GIGANTE:
 			case GIGANTE:

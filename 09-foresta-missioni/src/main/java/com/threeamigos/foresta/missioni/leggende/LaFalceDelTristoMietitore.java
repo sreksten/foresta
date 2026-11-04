@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.missioni.leggende;
 
+import com.threeamigos.foresta.missioni.incarichi.SceltaDegliIncarichi;
+import com.threeamigos.foresta.missioni.InSorteggio;
 import com.threeamigos.foresta.tipi.AspettoDelMandante;
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.leggendari.CatalogoLeggendari;
@@ -41,7 +43,7 @@ import com.threeamigos.foresta.testi.Testi;
  * <li>SCONTRO, a fine locazione, nelle rovine, quando il necromante è sconfitto: la falce passa al gruppo.</li>
  * </ol>
  */
-public class LaFalceDelTristoMietitore extends MissioneAPassi {
+public class LaFalceDelTristoMietitore extends MissioneAPassi implements InSorteggio {
 
 	/**
 	 * La chiave della Falce in leggendari.txt
@@ -153,8 +155,9 @@ public class LaFalceDelTristoMietitore extends MissioneAPassi {
 	protected Passo costruisciPasso(String id) {
 		switch (id) {
 			case INCARICO:
-				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> isDisponibile() && isInUnaCitta() && isVisitaTranquilla())
+				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> isProntoPerOffrirsi() && SceltaDegliIncarichi.tocca(this))
 						.esegui(() -> {
+							SceltaDegliIncarichi.affidato(this);
 							getAspetto();
 							getNomeDelNecromante();
 							CoordinateMD qui = Foresta.getPosizioneDelGruppo();
@@ -205,6 +208,30 @@ public class LaFalceDelTristoMietitore extends MissioneAPassi {
 				.parlaIlMandante(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_FALCE_DEL_TRISTO_MIETITORE_SCENA_5"))
 				.parlaIlCapo(ProduttoreDiMissioniCasuale.testoDellaMissione("LA_FALCE_DEL_TRISTO_MIETITORE_SCENA_6"))
 				.getPagine();
+	}
+
+	@Override
+	public boolean isInAttesaDiOffrirsi() {
+		return !isAttiva() && !isCompleta() && !isFallita() && INCARICO.equals(getPassoCorrente());
+	}
+
+	/**
+	 * Se la storia si può raccontare adesso: in una città, a una visita tranquilla. Se è pronto anche altro il sorteggio sceglie una sola missione.
+	 */
+	@Override
+	public boolean isProntoPerOffrirsi() {
+		return isDisponibile() && isInUnaCitta() && isVisitaTranquilla();
+	}
+
+	@Override
+	public boolean puoAncoraOffrirsi() {
+		return true;
+	}
+
+	@Override
+	public int getGiro() {
+		String giro = ottieniProprieta(SceltaDegliIncarichi.GIRO);
+		return giro == null ? -1 : Integer.parseInt(giro);
 	}
 
 	private boolean isInUnaCitta() {

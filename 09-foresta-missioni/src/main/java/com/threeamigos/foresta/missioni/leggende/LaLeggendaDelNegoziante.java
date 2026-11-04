@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.missioni.leggende;
 
+import java.util.Arrays;
+import com.threeamigos.foresta.strumenti.dado.Dado;
+import com.threeamigos.foresta.tipi.AspettoDelMandante;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.mappa.Foresta;
@@ -14,12 +17,24 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 import java.util.List;
 
 /**
- * L'armaiolo di una città qualsiasi racconta la leggenda di un oggetto leggendario (vedi LaLeggenda).
+ * Un negoziante di una città qualsiasi (l'armaiolo, l'alchimista, il venditore di pergamene o l'incantatore, scelto a caso quando la
+ * leggenda si offre) racconta la leggenda di un oggetto leggendario (vedi LaLeggenda).
  */
-public class LaLeggendaDellArmaiolo extends LaLeggenda {
+public class LaLeggendaDelNegoziante extends LaLeggenda {
 
-	public LaLeggendaDellArmaiolo() {
-		super(MissionePredefinita.LA_LEGGENDA_DELL_ARMAIOLO);
+	private static final String ASPETTO = "ASPETTO";
+	private static final List<AspettoDelMandante> NEGOZIANTI = Arrays.asList(AspettoDelMandante.ARMAIOLO, AspettoDelMandante.ALCHIMISTA,
+			AspettoDelMandante.VENDITORE_DI_PERGAMENE, AspettoDelMandante.INCANTATORE);
+
+	public LaLeggendaDelNegoziante() {
+		super(MissionePredefinita.LA_LEGGENDA_DEL_NEGOZIANTE);
+	}
+
+	/**
+	 * Chi racconta, scelto a caso la prima volta che serve e poi sempre lo stesso.
+	 */
+	private AspettoDelMandante getAspetto() {
+		return AspettoDelMandante.valueOf(parametro(ASPETTO, () -> NEGOZIANTI.get(Dado.tira(0, NEGOZIANTI.size() - 1)).name()));
 	}
 
 	@Override
@@ -31,7 +46,7 @@ public class LaLeggendaDellArmaiolo extends LaLeggenda {
 
 	@Override
 	protected String getNarratore() {
-		return ProduttoreDiMissioniCasuale.testoDellaMissione("RUOLO_ARMAIOLO");
+		return ProduttoreDiMissioniCasuale.testoDellaMissione("RUOLO_" + getAspetto().name());
 	}
 
 	@Override
@@ -40,12 +55,12 @@ public class LaLeggendaDellArmaiolo extends LaLeggenda {
 		if (citta == null || citta.getCategoriaLocazione() != CategoriaLocazione.CITTA) {
 			return getNarratore();
 		}
-		return getNarratore() + ", " + RegistroPersonaggi.getResidente(PersonaggioNoto.ARMAIOLO, citta).getNome() + ",";
+		return getNarratore() + ", " + RegistroPersonaggi.getResidente(PersonaggioNoto.valueOf(getAspetto().name()), citta).getNome() + ",";
 	}
 
 	@Override
 	protected Racconto nuovoRacconto() {
-		ScenaInCitta scena = ScenaInCitta.conArmaiolo();
+		ScenaInCitta scena = getAspetto().nuovaScena();
 		return new Racconto() {
 			@Override
 			public Racconto narra(String testo) {

@@ -66,6 +66,7 @@ public enum TipoIcona {
 	MOGLIE_DEL_BARDO(TipoPersonaggio.MOGLIE_DEL_BARDO, "icone/MoglieDelBardo.gif", Sfondo.VERDE),
 	VIANDANTE(TipoPersonaggio.VIANDANTE, "icone/Viandante.gif", Sfondo.VERDE),
 	BARDO_LOCANDA(TipoPersonaggio.BARDO_DELLE_LOCANDE, "icone/BardoLocanda.gif", Sfondo.VERDE),
+	VICHINGO(TipoPersonaggio.VICHINGO, "icone/Vichingo.gif", Sfondo.VERDE),
 	CAPITANO_DELLE_GUARDIE(TipoPersonaggio.CAPITANO_DELLE_GUARDIE, "icone/CapitanoDelleGuardie.gif", Sfondo.VERDE),
 	UOMO(TipoPersonaggio.UOMO, "icone/Uomo.gif", Sfondo.VERDE),
 	DONNA(TipoPersonaggio.DONNA, "icone/Donna.gif", Sfondo.VERDE),

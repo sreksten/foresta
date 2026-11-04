@@ -163,7 +163,7 @@ public abstract class IlNegozio extends IncaricoInCitta {
 	 * Se la città del negozio è distrutta non si offrirà mai più.
 	 */
 	@Override
-	protected boolean puoAncoraOffrirsi() {
+	public boolean puoAncoraOffrirsi() {
 		TipoLocazione citta = getCittaAssegnata();
 		return citta != null && !Foresta.isCittaDistrutta(citta);
 	}

@@ -97,7 +97,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 	 * Finiti i leggendari, i tornei non si bandiscono più.
 	 */
 	@Override
-	protected boolean puoAncoraOffrirsi() {
+	public boolean puoAncoraOffrirsi() {
 		return isPossibileQui();
 	}
 

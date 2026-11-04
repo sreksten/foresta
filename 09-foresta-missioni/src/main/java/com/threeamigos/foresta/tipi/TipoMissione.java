@@ -48,7 +48,7 @@ public enum TipoMissione {
     TRASPORTO(CategoriaMissione.ACQUISIZIONE),
     /**
      * Esempio: esplorare un dungeon alla ricerca di un tesoro.
-     * Coperto da: LaLeggendaDellArmaiolo, LaLeggendaDelLocandiere (la leggenda è l'indizio, i guardiani del tempio,
+     * Coperto da: LaLeggendaDelNegoziante, LaLeggendaDelLocandiere (la leggenda è l'indizio, i guardiani del tempio,
      * il leggendario il tesoro), LaFalceDelTristoMietitore (la voce di una Morte con la falce è l'indizio, un necromante
      * con i suoi scheletri la guardia, la Falce il tesoro)
      */

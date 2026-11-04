@@ -35,6 +35,7 @@ Si descrive con un piccolo linguaggio a catena, tutto immutabile:
 Per non riscrivere ogni volta ingressi e dialoghi ci sono gli strumenti di scena:
 
 - `ScenaNegozio`: il negoziante è al suo posto, il gruppo entra camminando (capo in testa, gli altri in fila) e, appena arrivato, parlano negoziante e capo. Si usa con `NegozioInScena.X.entraIlGruppo().parlaIlNegoziante(..).parlaIlCapo(..).getPagine()`.
+- `ScenaNelBosco`: un bosco, con chi il gruppo incontra già sul posto (a destra) e il gruppo che arriva in fila come in un negozio (`ScenaNegozio` con lo sfondo di una locazione); la battuta `parlaUnCompagno` è di un compagno del capo, o del capo se è solo. La usa `IlViaggioDiOlaf`.
 - `ScenaInCitta`: una strada di città, con il mandante di una missione (un uomo, una donna, il locandiere, l'armaiolo, l'alchimista o il capitano delle guardie). Se la missione ha portato fin qui qualcuno che è ancora ospite del gruppo, la scena lo mostra.
 - `ScenaInLocanda` e `ScenaFraCompagni` (il gruppo che parla fra sé, fuori dalle città). `Locande` dice se il gruppo sta davvero entrando in una locanda e quale (le chiavi `LOCANDA_*` delle caselle).
 

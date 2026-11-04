@@ -292,6 +292,13 @@ public final class CostantiPersonaggi {
     public static final int GUERRIERO_MAX_SAGGEZZA = 20;
     public static final int GUERRIERO_MAX_FORTUNA = 10;
     public static final int GUERRIERO_MAX_NUMERO = 1;
+
+    // Il berserk: la parte della salute massima sotto la quale scatta, e di quanto cresce il danno fisico per ogni parte di salute persa.
+    // Il vichingo scatta prima (a metà) e con il bonus doppio.
+    public static final double BERSERK_SOGLIA = 1.0d / 3.0d;
+    public static final double BERSERK_BONUS = 0.5d;
+    public static final double VICHINGO_BERSERK_SOGLIA = 1.0d / 2.0d;
+    public static final double VICHINGO_BERSERK_BONUS = 2 * BERSERK_BONUS;
     public static final int GUERRIERO_PUNTI_ESPERIENZA = 25;
 
     public static final int GUERRIERO_SALUTE_BASE = 150;

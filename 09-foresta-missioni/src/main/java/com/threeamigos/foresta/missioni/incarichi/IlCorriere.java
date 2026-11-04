@@ -160,7 +160,7 @@ public class IlCorriere extends IncaricoInCitta {
 	 * Con una sola città in piedi non c'è più niente da portare altrove.
 	 */
 	@Override
-	protected boolean puoAncoraOffrirsi() {
+	public boolean puoAncoraOffrirsi() {
 		long inPiedi = Arrays.stream(TipoLocazione.values())
 				.filter(citta -> citta.getCategoriaLocazione() == CategoriaLocazione.CITTA && !Foresta.isCittaDistrutta(citta)
 						&& Foresta.getCoordinateLocazioneUnica(citta) != null)
