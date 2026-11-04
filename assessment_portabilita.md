@@ -14,28 +14,13 @@ Il gioco è scritto in italiano e ora si vuole una **versione inglese** (prima p
 
 #### Com'è oggi
 
-- **Già localizzabile.** `Testi` (in `01-foresta-testi`) legge file `<nome>_<lingua>.properties` in UTF-8 con ripiego sull'italiano. Sono già così 29 file `_it.properties` (circa 2.000 righe): i nomi e le descrizioni delle enum dei vari moduli (`Testi.testo(costante, voce)`), le descrizioni dei comandi, le note dei moltiplicatori di classe, i motivi di rifiuto dell'equipaggiamento, le parole della tattica (`testo_tattica`) e una parte delle scritte della UI (`ui_it`, 25 righe, lette da `TestiDellaUI`).
-- **La lingua non si sceglie da nessuna parte.** `Testi.impostaLingua` lo chiamano solo i test: `Main` non ha un argomento e la piattaforma mobile dovrà passare la lingua del dispositivo.
-- **Il motore dei testi casuali è neutro, i dati no.** `GrammarBean` non conosce l'italiano (non usa `Articoli`, `Numeri` né `Locale`); sono italiane le sue grammatiche `.txt` (596 KB) e il file delle sostituzioni finali `preposizioni_articolate_pp.txt` ("a il" → "al").
-- **Il resto è italiano nel codice.** Scansione dei sorgenti `src/main` (stringhe con almeno due parole italiane o con lettere accentate; esclusi commenti e log), al 2026-11-01: **1.844 stringhe in 311 file**. È una stima per difetto (le frasi spezzate in più pezzi e le parole sole non si contano).
+- **Localizzabile.** `Testi` (in `01-foresta-testi`) legge file `<nome>_<lingua>.properties` in UTF-8, cercando dal più specifico al più generico (`en-GB`, `en`, `it`). Sono 49 i file `_it.properties` (circa 3.100 righe), tutti con il loro `_en`: i nomi e le descrizioni delle enum, le descrizioni dei comandi, le note dei moltiplicatori di classe, i motivi di rifiuto dell'equipaggiamento, la narrazione dei moduli, le parole della tattica, la storia e le scritte della UI.
+- **La lingua si sceglie** con l'argomento `LINGUA=` di `Main` e, a partita nuova, con la fase `FaseDiGioco.LINGUA`; si salva nel `ModelloDati` (vedi i passi).
+- **Il motore dei testi casuali è neutro, i dati no.** `GrammarBean` non conosce l'italiano; sono per lingua le sue grammatiche `.txt` (`missioni_en.txt`, `locande_en_GB.txt`…) e il file delle sostituzioni finali (`preposizioni_articolate_pp.txt`: "a il" → "al").
+- **La grammatica è dietro `RegoleDellaLingua`** (articoli, preposizioni, cardinali e ordinali, elenchi, `senzaArticolo`), con `LinguaItaliana` e `LinguaInglese` scelte da `Lingue.corrente()`. `Articoli` e `Numeri` sono i dati dell'italiano e non li chiama più nessuno fuori da `LinguaItaliana`; le classi dei personaggi non hanno più gli articoli scritti a mano.
+- **Italiano nel codice, quasi finito.** Il contatore di `ConvenzioniDiLocalizzazioneTest` (baseline in `localizzazione_baseline.properties`) trova 47 stringhe in `src/main`, contro le 1.844 del 2026-11-01. Quasi tutte sono messaggi per chi sviluppa (eccezioni su più righe, la dotazione di prova di `Automa`) o falsi positivi (chiavi e segnaposto fatti di parole italiane): è una scelta tenerli in italiano, come i log. Le note dei modificatori (`la lealtà`, `Pelle di corteccia`…) si salvano in italiano per riconoscerle e si traducono per mostrarle (`TestoDeiModificatori.nota`, `note_modificatori_<lingua>`).
 
-| Modulo | Stringhe | Dove, e di che tipo |
-| :--- | ---: | :--- |
-| `09-foresta-missioni` | 808 | nomi, descrizioni e dialoghi di ogni missione e passo (`LaForgia` 32, `TappeRichieste` 30, `MissioneATappe` 30, `IlRapimento` 29, …) |
-| `12-foresta-motore` | 209 | messaggi di narrazione: `LocazioneBase` 38, `Automa` 36, `Locanda` 19, `RaccoltaBottino` 18, `Pernottamento` 14 |
-| `12-foresta-swing` | 207 | `DisplayableCanvasTattiche` 69, `TestoAzioneInCombattimento` 24, `FinestraDiProva` 17 (strumento di sviluppo) |
-| `08-foresta-tattiche` | 129 | `Requisiti` 57 (motivi per cui una tattica non vale), `TatticheBase` 34 (nomi delle tattiche) |
-| `05-foresta-personaggi` | 101 | `NomeEDescrizione` 17 e gli articoli/nomi nelle classi dei personaggi |
-| `04-foresta-artefatti` | 71 | `GeneratoreArtefattiTabelle` 38 (nomi con articolo: "la spada", "lo spadone") |
-| `07-foresta-intermezzi` | 59 | battute dei fumetti (`parlaIlCapo`, `BattutaIntermezzo.di`, 72 chiamate in 35 file) |
-| `07-foresta-poteri`, `08-foresta-economia`, `06-foresta-statistiche` | 49, 48, 33 | messaggi di incantesimi e canti, offerte, `LineaTemporale` (le ore a parole, 32) |
-| altri moduli | circa 130 | `Anello`, `RegistroArtefatti`, `Racconto`, eccezioni di `00-foresta-serializzazione` |
-
-Una parte di queste stringhe sono messaggi per lo sviluppatore (eccezioni, "Stato non gestito", `FinestraDiProva`): è una scelta tenerli in italiano, come i log.
-
-**Risorse.** Le grammatiche `.txt` pesano 596 KB: `missioni.txt` 224, `artefatti2.txt` 123, `locande.txt` 69, `tappe.txt` 61, `fiabe.txt` 43, `leggendari.txt` 29, `oroscopo.txt` 16, `nomi.txt` 13 (quasi neutro), `ingredienti.txt` 9, poi `templi`, `rovine` e `sfide`. Sono la maggior parte del testo del gioco, e in italiano scherzoso: tradurle vuol dire riscriverle.
-
-**Quanto la grammatica italiana è sparsa nel codice.** `Articoli.` si usa in 97 file (582 punti), `Numeri.` in 25, `inizialeMaiuscola` in 26; gli accessori di genere e articolo del personaggio (`getADS`, `getAIS`, `getDeS`, `getPronome`, `getNomeSingolare`, `getNomePlurale`…) in 112 file (446 punti), e **52 classi di personaggi** li hanno scritti a mano (`Goblin`: `getADS() { return Articoli.IL; }`, `getNomeSingolare() { return "Goblin"; }`). La narrazione passa dal bus come stringhe già pronte (`NotificaTestoFrase` e `NotificaTestoParagrafo`: 258 punti in 93 file).
+**Risorse.** Le grammatiche `.txt` italiane pesano circa 680 KB: `missioni.txt` 321, `artefatti2.txt` 120, `locande.txt` 67, `tappe.txt` 59, `fiabe.txt` 42, `leggendari.txt` 28, `oroscopo.txt` 16, `nomi.txt` 12 (quasi neutro), `ingredienti.txt` 8, poi `mondo`, `templi` e `rovine`. Sono la maggior parte del testo del gioco, e in italiano scherzoso: tradurle vuol dire riscriverle, ed è fatto per inglese americano e britannico.
 
 #### Dove la sola traduzione non basta
 
