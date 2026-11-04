@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Le notizie delle locande per ogni classe che le può nominare, con il personaggio dell'altro genere o senza nessuno, e la scelta di una
  * notizia quando tutte quelle di una locanda sono tra le ultime già raccontate.
  */
-class NotizieDelleLocandeCasiRimastiTest {
+class RegistroNotizieCasiRimastiTest {
 
     @BeforeEach
     @AfterEach
@@ -52,15 +52,15 @@ class NotizieDelleLocandeCasiRimastiTest {
     @Test
     void ilBardoSiRiconoscePerCantastorieEViceversa() {
         gruppoDi(new Guerriero("Arsenio", 1), new Cantastorie("Dora", 1));
-        assertEquals("Dora canta.", NotizieDelleLocande.validaNotizia("BARDO canta."));
-        assertEquals("Dora canta.", NotizieDelleLocande.validaNotizia("CANTASTORIE canta."));
+        assertEquals("Dora canta.", RegistroNotizie.validaNotizia("BARDO canta."));
+        assertEquals("Dora canta.", RegistroNotizie.validaNotizia("CANTASTORIE canta."));
     }
 
     @Test
     void l_articoloDelNomeDellaLocandaVaInMinuscolaAMetaFrase() {
         assertEquals("The Plucked Dragon is closed: nobody goes near the Plucked Dragon. At the Plucked Dragon, dinner. The Plucked Dragon!",
-                NotizieDelleLocande.conIlNomeDellaLocanda("NOME_LOCANDA is closed: nobody goes near NOME_LOCANDA. At NOME_LOCANDA, dinner. NOME_LOCANDA!", "The Plucked Dragon"));
-        assertEquals("Near Bread and Sword, Bread and Sword.", NotizieDelleLocande.conIlNomeDellaLocanda("Near NOME_LOCANDA, NOME_LOCANDA.", "Bread and Sword"));
+                RegistroNotizie.conIlNomeDellaLocanda("NOME_LOCANDA is closed: nobody goes near NOME_LOCANDA. At NOME_LOCANDA, dinner. NOME_LOCANDA!", "The Plucked Dragon"));
+        assertEquals("Near Bread and Sword, Bread and Sword.", RegistroNotizie.conIlNomeDellaLocanda("Near NOME_LOCANDA, NOME_LOCANDA.", "Bread and Sword"));
     }
 
     @Test
@@ -68,76 +68,76 @@ class NotizieDelleLocandeCasiRimastiTest {
         // Il capo è il primo del gruppo; i segnaposto con i pronomi sono per le lingue che li hanno diversi per sesso
         gruppoDi(new Guerriero("Arsenio", 1), new Maga("Morgana", 1), new Ladro("Gualtiero", 1));
         assertEquals("Arsenio loses his armour and Morgana casts a spell in her sleep, so Gualtiero scares himself: he runs from him.",
-                NotizieDelleLocande.validaNotizia("EROE loses EROE_SUO armour and MAGO casts a spell in MAGO_SUO sleep, so LADRO scares LADRO_SE: LADRO_LUI runs from LADRO_LO."));
+                RegistroNotizie.validaNotizia("EROE loses EROE_SUO armour and MAGO casts a spell in MAGO_SUO sleep, so LADRO scares LADRO_SE: LADRO_LUI runs from LADRO_LO."));
         assertEquals("Morgana sees her own shadow and she is afraid.",
-                NotizieDelleLocande.validaNotizia("MAGO sees MAGO_SUO own shadow and MAGO_LUI is afraid."));
+                RegistroNotizie.validaNotizia("MAGO sees MAGO_SUO own shadow and MAGO_LUI is afraid."));
     }
 
     @Test
     void senzaBardoNeCantastorieLaNotiziaNonSiApplica() {
         gruppoDi(new Guerriero("Arsenio", 1));
-        assertNull(NotizieDelleLocande.validaNotizia("BARDO canta."));
+        assertNull(RegistroNotizie.validaNotizia("BARDO canta."));
     }
 
     @Test
     void laLadraBastaPerUnaNotiziaSulLadro() {
         gruppoDi(new Guerriero("Arsenio", 1), new Ladra("Gualtiera", 1));
-        assertEquals("Gualtiera ruba.", NotizieDelleLocande.validaNotizia("LADRO ruba."));
-        assertEquals("Gualtiera ruba.", NotizieDelleLocande.validaNotizia("LADRA ruba."));
+        assertEquals("Gualtiera ruba.", RegistroNotizie.validaNotizia("LADRO ruba."));
+        assertEquals("Gualtiera ruba.", RegistroNotizie.validaNotizia("LADRA ruba."));
     }
 
     @Test
     void ilLadroBastaPerUnaNotiziaSullaLadra() {
         gruppoDi(new Guerriero("Arsenio", 1), new Ladro("Gualtiero", 1));
-        assertEquals("Gualtiero ruba.", NotizieDelleLocande.validaNotizia("LADRA ruba."));
+        assertEquals("Gualtiero ruba.", RegistroNotizie.validaNotizia("LADRA ruba."));
     }
 
     @Test
     void ilGuerrieroELaGuerrieraSiSostituisconoFraLoro() {
         gruppoDi(new Guerriera("Brunilde", 1));
-        assertEquals("Brunilde combatte.", NotizieDelleLocande.validaNotizia("GUERRIERO combatte."));
-        assertEquals("Brunilde combatte.", NotizieDelleLocande.validaNotizia("GUERRIERA combatte."));
+        assertEquals("Brunilde combatte.", RegistroNotizie.validaNotizia("GUERRIERO combatte."));
+        assertEquals("Brunilde combatte.", RegistroNotizie.validaNotizia("GUERRIERA combatte."));
         GruppoGiocatore.azzeraIstanza();
         gruppoDi(new Guerriero("Arsenio", 1));
-        assertEquals("Arsenio combatte.", NotizieDelleLocande.validaNotizia("GUERRIERA combatte."));
+        assertEquals("Arsenio combatte.", RegistroNotizie.validaNotizia("GUERRIERA combatte."));
     }
 
     @Test
     void senzaGuerrieriLaNotiziaNonSiApplica() {
         gruppoDi(new Ladro("Gualtiero", 1));
-        assertNull(NotizieDelleLocande.validaNotizia("GUERRIERO combatte."));
+        assertNull(RegistroNotizie.validaNotizia("GUERRIERO combatte."));
     }
 
     @Test
     void ilMagoELaMagaSiSostituisconoFraLoro() {
         gruppoDi(new Guerriero("Arsenio", 1), new Maga("Merlina", 1));
-        assertEquals("Merlina incanta.", NotizieDelleLocande.validaNotizia("MAGO incanta."));
-        assertEquals("Merlina incanta.", NotizieDelleLocande.validaNotizia("MAGA incanta."));
+        assertEquals("Merlina incanta.", RegistroNotizie.validaNotizia("MAGO incanta."));
+        assertEquals("Merlina incanta.", RegistroNotizie.validaNotizia("MAGA incanta."));
         GruppoGiocatore.azzeraIstanza();
         gruppoDi(new Guerriero("Arsenio", 1), new Mago("Merlino", 1));
-        assertEquals("Merlino incanta.", NotizieDelleLocande.validaNotizia("MAGA incanta."));
+        assertEquals("Merlino incanta.", RegistroNotizie.validaNotizia("MAGA incanta."));
     }
 
     @Test
     void senzaMaghiLaNotiziaNonSiApplica() {
         gruppoDi(new Guerriero("Arsenio", 1));
-        assertNull(NotizieDelleLocande.validaNotizia("MAGO incanta."));
+        assertNull(RegistroNotizie.validaNotizia("MAGO incanta."));
     }
 
     @Test
     void l_elfoEL_elfaSiSostituisconoFraLoro() {
         gruppoDi(new Guerriero("Arsenio", 1), new Elfa("Elinor", 1));
-        assertEquals("Elinor tira.", NotizieDelleLocande.validaNotizia("ELFO tira."));
-        assertEquals("Elinor tira.", NotizieDelleLocande.validaNotizia("ELFA tira."));
+        assertEquals("Elinor tira.", RegistroNotizie.validaNotizia("ELFO tira."));
+        assertEquals("Elinor tira.", RegistroNotizie.validaNotizia("ELFA tira."));
         GruppoGiocatore.azzeraIstanza();
         gruppoDi(new Guerriero("Arsenio", 1), new Elfo("Elrond", 1));
-        assertEquals("Elrond tira.", NotizieDelleLocande.validaNotizia("ELFA tira."));
+        assertEquals("Elrond tira.", RegistroNotizie.validaNotizia("ELFA tira."));
     }
 
     @Test
     void senzaElfiLaNotiziaNonSiApplica() {
         gruppoDi(new Guerriero("Arsenio", 1));
-        assertNull(NotizieDelleLocande.validaNotizia("ELFO tira."));
+        assertNull(RegistroNotizie.validaNotizia("ELFO tira."));
     }
 
     @Test
@@ -155,7 +155,7 @@ class NotizieDelleLocandeCasiRimastiTest {
         }
         recenti.forEach(Notizie::aggiungiNotizia);
 
-        NotiziaMD notizia = NotizieDelleLocande.getNotiziaLocanda("CINGHIALE_VEGANO", "il Cinghiale Vegano", "Gino");
+        NotiziaMD notizia = RegistroNotizie.getNotizia("CINGHIALE_VEGANO", "il Cinghiale Vegano", "Gino");
 
         assertNotNull(notizia);
         assertTrue(recenti.stream().anyMatch(n -> n.getId().equals(notizia.getId())));

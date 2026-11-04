@@ -34,9 +34,9 @@ Stanno nel pacchetto `modellodati`, come quelli di ogni parte:
 
 ### Chi produce le notizie
 
-Non questo modulo. `NotizieDelleLocande` sta nel motore (usa il gruppo, i personaggi e la locanda): sceglie la notizia dalla grammatica `NOTIZIE_<identificativo della locanda>`, evita le ultime ricordate e la consegna a `Notizie`. Il quadro è in [`motore_di_gioco.md`](motore_di_gioco.md) («Notizie delle locande»).
+Non questo modulo. `RegistroNotizie` sta nel motore (usa il gruppo, i personaggi e la locanda): sceglie la notizia dalla grammatica `NOTIZIE_<identificativo della locanda>` (o `NOTIZIE_CITTA`, uscendo da una città), evita le ultime ricordate e la consegna a `Notizie`. Il quadro è in [`motore_di_gioco.md`](motore_di_gioco.md) («Notizie delle locande»).
 
 ## Osservazioni
 
 - Il test della facciata (`NotizieTest`) non ha bisogno di una partita: installa un fornitore con un `NotizieMD` suo e un bus a consegna immediata.
-- Il codice di `NotizieDelleLocande` presuppone che ogni alternativa di `NOTIZIE_*` abbia la forma `ID-Titolo - Corpo` senza verificarlo (vedi `motore_di_gioco.md`).
+- Il codice di `RegistroNotizie` presuppone che ogni alternativa di `NOTIZIE_*` abbia la forma `ID-Titolo - Corpo` (una senza `-` si salta); `TutteLeNotizieSonoValideTest` le controlla tutte (vedi `motore_di_gioco.md`).

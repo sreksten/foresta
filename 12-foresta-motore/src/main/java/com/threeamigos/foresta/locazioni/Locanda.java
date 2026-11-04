@@ -24,7 +24,7 @@ import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.offerte.Informazioni;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.testi.NotizieDelleLocande;
+import com.threeamigos.foresta.testi.RegistroNotizie;
 import com.threeamigos.foresta.testi.ProduttoreDiLocandeCasuale;
 import com.threeamigos.foresta.tipi.*;
 
@@ -77,6 +77,8 @@ public class Locanda extends LocazioneBase {
 	 * In città e nelle locande il gruppo puo' incontrare altri personaggi.
 	 */
 	private Personaggio personaggioDisponibile;
+	// Se uscendo ha raccontato una notizia: la città, se ne ha già avuta una dalla locanda, non ne aggiunge una sua (vedi Citta)
+	private boolean notiziaRaccontata;
 
 
 	@Override
@@ -336,13 +338,21 @@ public class Locanda extends LocazioneBase {
 	 * fatto sosta (non quando viene respinto sulla porta per mancanza di monete).
 	 */
 	private void generaNotizia() {
-		NotiziaMD notizia = NotizieDelleLocande.getNotiziaLocanda(getIdentificativo(), getNome(), getNomeLocandiere());
+		NotiziaMD notizia = RegistroNotizie.getNotizia(getIdentificativo(), getNome(), getNomeLocandiere());
 		if (notizia == null) {
 			// Niente di applicabile al gruppo nel repertorio della locanda: stavolta non c'è niente da raccontare
 			return;
 		}
 		BusEventi.pubblica(new NotificaTestoParagrafo(notizia.getCorpo()));
 		Notizie.aggiungiNotizia(notizia);
+		notiziaRaccontata = true;
+	}
+
+	/**
+	 * Se questa locanda, uscendo, ha raccontato una notizia.
+	 */
+	boolean haRaccontatoUnaNotizia() {
+		return notiziaRaccontata;
 	}
 
 	private Stato richiediSePernottare(GruppoGiocatore gruppo) {

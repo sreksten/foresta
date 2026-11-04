@@ -507,10 +507,10 @@ NOTIZIE_FORZIERE_VUOTO
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_PANE_E_SPADA
-    PS1-Pane Raffermo - GUERRIERO rompe lo scudo tentando di tagliare il pane raffermo di Pane e Spada, chiedendo all'oste NOME_LOCANDIERE un risarcimento in monete d'oro del regno.
-    PS2-Lama del Servizio - Tensione al Pane e Spada: EROE si lamenta della birra calda e l'oste NOME_LOCANDIERE risponde estraendo una scimitarra arrugginita dal bancone per aggiornare il livello di gradimento del cliente.
-    PS3-Niente Fronzoli - BARDO viene cacciatLETTERA_FINALE_BARDO a calci da Pane e Spada dopo aver chiesto un tovagliolo di seta pulito per asciugarsi la schiuma della birra calda dalla bocca.
-    PS4-Mangia e Combatti - EROE viene scaraventatLETTERA_FINALE fuori da Pane e Spada direttamente sul timer del round, con l'ordine tassativo di andare a fare rissa con i Goblin nella foresta vicina.
+    PES1-Pane Raffermo - GUERRIERO rompe lo scudo tentando di tagliare il pane raffermo di Pane e Spada, chiedendo all'oste NOME_LOCANDIERE un risarcimento in monete d'oro del regno.
+    PES2-Lama del Servizio - Tensione al Pane e Spada: EROE si lamenta della birra calda e l'oste NOME_LOCANDIERE risponde estraendo una scimitarra arrugginita dal bancone per aggiornare il livello di gradimento del cliente.
+    PES3-Niente Fronzoli - BARDO viene cacciatLETTERA_FINALE_BARDO a calci da Pane e Spada dopo aver chiesto un tovagliolo di seta pulito per asciugarsi la schiuma della birra calda dalla bocca.
+    PES4-Mangia e Combatti - EROE viene scaraventatLETTERA_FINALE fuori da Pane e Spada direttamente sul timer del round, con l'ordine tassativo di andare a fare rissa con i Goblin nella foresta vicina.
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_ORCO_SENSIBILE

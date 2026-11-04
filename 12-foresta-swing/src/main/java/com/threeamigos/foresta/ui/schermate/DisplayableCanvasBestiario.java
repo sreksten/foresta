@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.schermate;
 
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -11,6 +12,7 @@ import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.TestoGrande;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,6 +33,11 @@ public class DisplayableCanvasBestiario implements Finestra {
 	private static final int MARGINE = 30;
 	private static final int QUOTA_TITOLO = 20;
 	private static final int SPAZIO_SOTTO_IL_TITOLO = 20;
+	/**
+	 * Quanti sottotitoli scherzosi ci sono nei testi della UI (BESTIARIO_SOTTOTITOLO_1...): a ogni apertura se ne sceglie uno a caso.
+	 */
+	public static final int NUMERO_SOTTOTITOLI = 6;
+	private static final int SPAZIO_SOPRA_IL_SOTTOTITOLO = 2;
 	private static final int SPAZIO_FRA_I_PANNELLI = 30;
 	// Lascia libere le frecce a destra di un pannello
 	private static final int SPAZIO_PER_LE_FRECCE = 24;
@@ -45,6 +52,7 @@ public class DisplayableCanvasBestiario implements Finestra {
 	private final List<TipoPersonaggio> voci = TipoPersonaggio.getVociDelBestiario();
 
 	private int scelta;
+	private List<String> sottotitolo = new ArrayList<>();
 	private ScorrimentoVerticale elenco;
 	private ScorrimentoVerticale scheda;
 	// Quello dei due che si sta trascinando: l'ultimo su cui è stato premuto il tasto
@@ -54,7 +62,7 @@ public class DisplayableCanvasBestiario implements Finestra {
 		this.vistaPartita = vistaPartita;
 		this.width = width;
 		this.height = height;
-		int cima = QUOTA_TITOLO + TestoGrande.ALTEZZA_RIGA + SPAZIO_SOTTO_IL_TITOLO;
+		int cima = cimaDelleColonne();
 		int larghezzaElenco = (width - 2 * MARGINE - SPAZIO_FRA_I_PANNELLI) * 3 / 10;
 		areaElenco = new Rectangle(MARGINE, cima, larghezzaElenco, height - cima - MARGINE);
 		int xScheda = MARGINE + larghezzaElenco + SPAZIO_FRA_I_PANNELLI;
@@ -62,9 +70,57 @@ public class DisplayableCanvasBestiario implements Finestra {
 	}
 
 	/**
-	 * Prepara il bestiario com'è adesso, con la prima voce scelta e le due colonne dalla cima.
+	 * Dove cominciano le colonne se il sottotitolo sta su una riga sola: sotto il titolo e il sottotitolo.
+	 */
+	public static int cimaDelleColonne() {
+		return cimaDelleColonne(1);
+	}
+
+	private static int cimaDelleColonne(int righeDelSottotitolo) {
+		return QUOTA_TITOLO + TestoGrande.ALTEZZA_RIGA + SPAZIO_SOPRA_IL_SOTTOTITOLO + righeDelSottotitolo * DoomdarkFont.medio().getHeight()
+				+ SPAZIO_SOTTO_IL_TITOLO;
+	}
+
+	/**
+	 * Il sottotitolo a capo dove non sta nella larghezza, parola per parola (una parola da sola più larga di una riga resta intera).
+	 */
+	static List<String> righeDelSottotitolo(String testo, int larghezzaMassima) {
+		List<String> righe = new ArrayList<>();
+		String corrente = "";
+		for (String parola : testo.split(" ")) {
+			String prova = corrente.isEmpty() ? parola : corrente + " " + parola;
+			if (!corrente.isEmpty() && larghezza(prova) > larghezzaMassima) {
+				righe.add(corrente);
+				corrente = parola;
+			} else {
+				corrente = prova;
+			}
+		}
+		if (!corrente.isEmpty()) {
+			righe.add(corrente);
+		}
+		return righe;
+	}
+
+	private static int larghezza(String riga) {
+		return ImageCache.get(riga, DoomdarkFont.medio(), DoomdarkColorModel.Color.MEDIUM_GRAY).getWidth(null);
+	}
+
+	/**
+	 * Mette il sottotitolo e, se va a capo, abbassa le due colonne quanto serve.
+	 */
+	private void impostaIlSottotitolo(String testo) {
+		sottotitolo = righeDelSottotitolo(testo, width - 2 * MARGINE);
+		int cima = cimaDelleColonne(Math.max(1, sottotitolo.size()));
+		areaElenco.setBounds(areaElenco.x, cima, areaElenco.width, height - cima - MARGINE);
+		areaScheda.setBounds(areaScheda.x, cima, areaScheda.width, height - cima - MARGINE);
+	}
+
+	/**
+	 * Prepara il bestiario com'è adesso, con la prima voce scelta, le due colonne dalla cima e un sottotitolo a caso.
 	 */
 	public void apri() {
+		impostaIlSottotitolo(TestiDellaUI.get("BESTIARIO_SOTTOTITOLO_" + Dado.tiraAncheAUnaFaccia(NUMERO_SOTTOTITOLI)));
 		scelta = 0;
 		costruisciElenco(0);
 		costruisciScheda();
@@ -91,6 +147,12 @@ public class DisplayableCanvasBestiario implements Finestra {
 		graphics.setComposite(normale);
 		String titolo = TestiDellaUI.get("TITOLO_BESTIARIO");
 		TestoGrande.disegnaRiga(graphics, titolo, (width - TestoGrande.larghezza(titolo)) >> 1, QUOTA_TITOLO);
+		int yRiga = QUOTA_TITOLO + TestoGrande.ALTEZZA_RIGA + SPAZIO_SOPRA_IL_SOTTOTITOLO;
+		for (String riga : sottotitolo) {
+			Image sotto = ImageCache.get(riga, DoomdarkFont.medio(), DoomdarkColorModel.Color.MEDIUM_GRAY);
+			graphics.drawImage(sotto, (width - sotto.getWidth(null)) >> 1, yRiga, null);
+			yRiga += DoomdarkFont.medio().getHeight();
+		}
 		long sbloccate = voci.stream().filter(vistaPartita::isVoceDelBestiarioSbloccata).count();
 		Image quante = ImageCache.get(sbloccate + "/" + voci.size(), DoomdarkFont.medio(), DoomdarkColorModel.Color.MEDIUM_GRAY);
 		graphics.drawImage(quante, width - MARGINE - quante.getWidth(null), QUOTA_TITOLO + 6, null);

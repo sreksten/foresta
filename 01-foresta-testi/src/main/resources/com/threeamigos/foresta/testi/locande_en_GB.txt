@@ -507,10 +507,10 @@ NOTIZIE_FORZIERE_VUOTO
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_PANE_E_SPADA
-    PS1-Stale Bread - GUERRIERO breaks GUERRIERO_SUO shield trying to cut the stale bread of Bread and Sword, asking the innkeeper NOME_LOCANDIERE for compensation in gold coins of the realm.
-    PS2-Service Blade - Tension at Bread and Sword: EROE complains about the warm beer and the innkeeper NOME_LOCANDIERE answers by drawing a rusty scimitar from under the counter to update the customer's satisfaction level.
-    PS3-No Frills - BARDO is kicked out of Bread and Sword after asking for a clean silk napkin to wipe the warm beer foam from BARDO_SUO mouth.
-    PS4-Eat and Fight - EROE is thrown out of Bread and Sword straight onto the round timer, with the strict order to go and brawl with the Goblins in the nearby forest.
+    PES1-Stale Bread - GUERRIERO breaks GUERRIERO_SUO shield trying to cut the stale bread of Bread and Sword, asking the innkeeper NOME_LOCANDIERE for compensation in gold coins of the realm.
+    PES2-Service Blade - Tension at Bread and Sword: EROE complains about the warm beer and the innkeeper NOME_LOCANDIERE answers by drawing a rusty scimitar from under the counter to update the customer's satisfaction level.
+    PES3-No Frills - BARDO is kicked out of Bread and Sword after asking for a clean silk napkin to wipe the warm beer foam from BARDO_SUO mouth.
+    PES4-Eat and Fight - EROE is thrown out of Bread and Sword straight onto the round timer, with the strict order to go and brawl with the Goblins in the nearby forest.
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_ORCO_SENSIBILE

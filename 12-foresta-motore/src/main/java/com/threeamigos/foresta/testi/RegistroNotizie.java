@@ -14,19 +14,20 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Le notizie che il locandiere racconta al gruppo: sceglie fra quelle del repertorio della locanda ({@link ProduttoreDiLocandeCasuale})
- * che si applicano ai personaggi vivi e che non sono fra le ultime già pubblicate, e le adatta al gruppo (i nomi e il genere dei
- * personaggi). Vedi nomi.md.
+ * Le notizie satiriche sulle malefatte del gruppo, che racconta un locandiere uscendo dalla sua locanda o che si lasciano dietro uscendo da una
+ * città: sceglie fra quelle del repertorio ({@code NOTIZIE_<identificativo>} in locande.txt, vedi {@link ProduttoreDiLocandeCasuale}; per le
+ * città {@code NOTIZIE_CITTA}) che si applicano ai personaggi vivi e che non sono fra le ultime già pubblicate, e le adatta al gruppo (i nomi
+ * e il genere dei personaggi). Vedi nomi.md.
  */
-public final class NotizieDelleLocande {
+public final class RegistroNotizie {
 
 	private static final int MASSIMO_TENTATIVI_NOTIZIA_LOCANDA = 20;
 
-	private NotizieDelleLocande() {
+	private RegistroNotizie() {
 	}
 
 	/**
-	 * Una notizia della locanda, fra quelle del suo repertorio (NOTIZIE_ + identificativo, in locande.txt) che si applicano al gruppo
+	 * Una notizia, fra quelle di un repertorio (NOTIZIE_ + identificativo, in locande.txt: quello di una locanda o CITTA) che si applicano al gruppo
 	 * (vedi {@link #validaNotizia}) e che non sono fra le ultime già pubblicate (MASSIMO_NOTIZIE_RICORDATE, in tutto il mondo).
 	 * <p>
 	 * Le notizie non sono monouso, la grammatica non si esaurisce: si pesca a caso fino a {@value #MASSIMO_TENTATIVI_NOTIZIA_LOCANDA}
@@ -37,7 +38,7 @@ public final class NotizieDelleLocande {
 	 *
 	 * @return la notizia, o null se la locanda non ne ha una applicabile
 	 */
-	public static NotiziaMD getNotiziaLocanda(String identificativoLocanda, String nomeLocanda, String nomeLocandiere) {
+	public static NotiziaMD getNotizia(String identificativoLocanda, String nomeLocanda, String nomeLocandiere) {
 		NotiziaMD notizia = cercaNotiziaLocanda(identificativoLocanda, nomeLocanda, nomeLocandiere, true);
 		if (notizia == null) {
 			notizia = cercaNotiziaLocanda(identificativoLocanda, nomeLocanda, nomeLocandiere, false);

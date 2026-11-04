@@ -77,6 +77,39 @@ class DisplayableCanvasBestiarioTest {
 	}
 
 	@Test
+	void iSottotitoliStannoInUnaRigaSuUnaFinestraLargaEVannoACapoSuUnaStretta() {
+		for (String lingua : new String[] {"it", "en", "en-GB"}) {
+			com.threeamigos.foresta.testi.Testi.impostaLingua(lingua);
+			try {
+				for (int i = 1; i <= DisplayableCanvasBestiario.NUMERO_SOTTOTITOLI; i++) {
+					String sottotitolo = com.threeamigos.foresta.ui.testo.TestiDellaUI.get("BESTIARIO_SOTTOTITOLO_" + i);
+					assertTrue(!sottotitolo.startsWith("BESTIARIO_SOTTOTITOLO"), lingua + " " + i + ": manca nei testi");
+					assertEquals(1, DisplayableCanvasBestiario.righeDelSottotitolo(sottotitolo, LARGHEZZA - 60).size(), lingua + " " + i + ": a 1024 px");
+					// Su una finestra stretta va a capo, e nessuna riga è più larga dello spazio (a meno di una parola sola)
+					List<String> righe = DisplayableCanvasBestiario.righeDelSottotitolo(sottotitolo, 300);
+					assertTrue(righe.size() > 1, lingua + " " + i);
+					assertEquals(sottotitolo, String.join(" ", righe));
+					for (String riga : righe) {
+						int larghezza = com.threeamigos.foresta.ui.immagini.ImageCache
+								.get(riga, DoomdarkFont.medio(), com.threeamigos.foresta.ui.testo.DoomdarkColorModel.Color.MEDIUM_GRAY).getWidth(null);
+						assertTrue(larghezza <= 300 || !riga.contains(" "), lingua + " " + i + ": «" + riga + "» è largo " + larghezza);
+					}
+				}
+			} finally {
+				com.threeamigos.foresta.testi.Testi.impostaLingua("it");
+			}
+		}
+	}
+
+	@Test
+	void suUnaFinestraStrettaIlBestiarioSiApreESiDisegna() {
+		DisplayableCanvasBestiario bestiario = new DisplayableCanvasBestiario(400, 600, new VistaPartitaMotore());
+
+		bestiario.apri();
+		bestiario.disegna(new BufferedImage(400, 600, BufferedImage.TYPE_INT_ARGB).createGraphics());
+	}
+
+	@Test
 	void conTutteLeVociApertePerOgniVoceLaSchedaSiCostruisceESiDisegna() {
 		for (TipoPersonaggio voce : TipoPersonaggio.getVociDelBestiario()) {
 			BusEventi.pubblica(new InternoAvversarioSconfitto(voce));
@@ -87,7 +120,7 @@ class DisplayableCanvasBestiarioTest {
 
 		for (int riga = 0; riga < TipoPersonaggio.getVociDelBestiario().size(); riga++) {
 			// Un clic nella colonna di sinistra, sulla riga: la sceglie (la prima riga sta sotto il titolo)
-			bestiario.processaClick(60, 100 + riga * ImmagineBestiario.ALTEZZA_RIGA_ELENCO, Finestra.Tasto.SINISTRO);
+			bestiario.processaClick(60, DisplayableCanvasBestiario.cimaDelleColonne() + 24 + riga * ImmagineBestiario.ALTEZZA_RIGA_ELENCO, Finestra.Tasto.SINISTRO);
 			bestiario.disegna(tela());
 		}
 	}
@@ -98,8 +131,8 @@ class DisplayableCanvasBestiarioTest {
 		bestiario.apri();
 		List<TipoPersonaggio> voci = TipoPersonaggio.getVociDelBestiario();
 
-		// L'area dell'elenco comincia a 30 pixel dal bordo e sotto il titolo: 20 + 36 + 20
-		bestiario.processaClick(60, 76 + 2 * ImmagineBestiario.ALTEZZA_RIGA_ELENCO + 5, Finestra.Tasto.SINISTRO);
+		// L'area dell'elenco comincia a 30 pixel dal bordo e sotto il titolo e il sottotitolo
+		bestiario.processaClick(60, DisplayableCanvasBestiario.cimaDelleColonne() + 2 * ImmagineBestiario.ALTEZZA_RIGA_ELENCO + 5, Finestra.Tasto.SINISTRO);
 
 		assertEquals(voci.get(2), bestiario.getVoceScelta());
 

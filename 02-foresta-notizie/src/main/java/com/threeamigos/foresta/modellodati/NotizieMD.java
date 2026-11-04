@@ -15,7 +15,7 @@ import java.util.List;
  * ultime notizie destinate alla schermata della mappa, salvati con la partita.
  * <p>
  * La logica di aggiunta (testa della lista, scarto delle più vecchie oltre il limite) vive in
- * {@code motore.Notizie}, non qui: questa classe tiene solo i dati.
+ * {@code notizie.Notizie}, non qui: questa classe tiene solo i dati.
  *
  * @author Stefano Reksten
  */
@@ -28,7 +28,7 @@ public class NotizieMD implements Serializzabile {
 	public static final int MASSIMO_MESSAGGI_RICORDATI = 100;
 
 	/**
-	 * Quante notizie delle locande si ricordano (e quante ne mostra il notiziario della mappa)
+	 * Quante notizie delle locande e delle città si ricordano (e quante ne mostra il notiziario della mappa)
 	 */
 	public static final int MASSIMO_NOTIZIE_RICORDATE = 10;
 

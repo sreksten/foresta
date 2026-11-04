@@ -59,7 +59,7 @@ public class Notizie {
 	}
 
 	/**
-	 * Una notizia nuova per la schermata della mappa (la produce la locanda, vedi Locanda.generaNotizia): va in
+	 * Una notizia nuova per la schermata della mappa (la produce la locanda, vedi Locanda.generaNotizia, o la città, vedi Citta.generaNotizia): va in
 	 * testa, e le più vecchie oltre il limite si scartano. La UI la legge da VistaPartita.getUltimeNotizie.
 	 */
 	public static void aggiungiNotizia(NotiziaMD notizia) {

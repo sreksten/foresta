@@ -6,7 +6,7 @@
  * I produttori dei testi (fiabe, oroscopi, luoghi, sfide, missioni, locande) stanno in 01-foresta-testi con le loro grammatiche e non
  * conoscono il bus: una grammatica che manca solleva una {@link com.threeamigos.foresta.testi.GrammaticaNonValidaException}. Qui nel motore
  * restano quello che dipende dal gioco: {@link com.threeamigos.foresta.artefatti.ProduttoreDiArtefattiCasuale} (leggendari, libri tecnici,
- * aggiornamenti, con le grammatiche degli artefatti), {@link com.threeamigos.foresta.testi.NotizieDelleLocande} (sceglie le notizie
+ * aggiornamenti, con le grammatiche degli artefatti), {@link com.threeamigos.foresta.testi.RegistroNotizie} (sceglie le notizie
  * della locanda adatte al gruppo) e {@link com.threeamigos.foresta.testi.PrecaricatoreDeiTesti}, che precarica tutte le grammatiche
  * all'avvio e traduce un errore in una richiesta di uscita sul bus.
  */

@@ -68,7 +68,7 @@ Le scoperte valgono anche per una voce ancora chiusa: la scheda le mostra solo d
 (`entraInStatoBestiario`), che pubblica `RichiestaAperturaBestiario`; l'unico comando è `ANNULLA`, che torna all'inventario. La UI legge tutto da `VistaPartita`
 (`isVoceDelBestiarioSbloccata`, `getCaratteristicheScoperte`, `getMoltiplicatoriDiClasse`, `getAbilitaInnate`), mai dai singoli del motore.
 
-`DisplayableCanvasBestiario` (`ui/schermate`) ha a sinistra l'elenco (un `ScorrimentoVerticale`, una riga per voce con l'icona e il nome, "???" e l'icona in
+`DisplayableCanvasBestiario` (`ui/schermate`) mostra sotto il titolo un sottotitolo scherzoso, scelto a caso a ogni apertura fra i sei di `BESTIARIO_SOTTOTITOLO_1…6` in `ui_<lingua>` (`NUMERO_SOTTOTITOLI`; tradotti in inglese, e il test controlla che stiano in una riga), e ha a sinistra l'elenco (un `ScorrimentoVerticale`, una riga per voce con l'icona e il nome, "???" e l'icona in
 silhouette se chiusa; l'icona è per tutte l'immagine della classe ridotta a 32 px, anche per chi ha un'icona disegnata a mano, che per ora qui non si usa) e a destra la scheda della voce scelta con un clic; in alto "n/33". L'ombra del drago è
 dietro, più tenue che nei trofei. La rotella scorre il pannello sotto il mouse (a passi piccoli e consegnati a uno o due per fotogramma, vedi
 `Finestra.passiPerScattoDellaRotella`). Le due immagini (`ImmagineBestiario`) sono composte come quella dei trofei.

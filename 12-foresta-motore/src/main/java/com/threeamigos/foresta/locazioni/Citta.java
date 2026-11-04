@@ -6,6 +6,9 @@ import com.threeamigos.foresta.eventi.interni.InternoAggiornamentoComandiDisponi
 import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStatistiche;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
+import com.threeamigos.foresta.modellodati.NotiziaMD;
+import com.threeamigos.foresta.notizie.Notizie;
+import com.threeamigos.foresta.testi.RegistroNotizie;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.economia.CommercioDelGruppo;
@@ -23,6 +26,11 @@ import com.threeamigos.foresta.testi.Testi;
  */
 public abstract class Citta extends LocazioneUnica {
 
+	/**
+	 * Le notizie delle città sono NOTIZIE_CITTA in locande.txt (vedi RegistroNotizie).
+	 */
+	private static final String IDENTIFICATIVO_DELLE_NOTIZIE = "CITTA";
+
 	private enum StatoInCitta {
 		IN_PIAZZA,
 		IN_LOCANDA,
@@ -30,6 +38,8 @@ public abstract class Citta extends LocazioneUnica {
 	}
 
 	private StatoInCitta stato;
+	// Se in questa visita la locanda ha già raccontato una notizia: uscendo dalla città non se ne aggiunge un'altra
+	private boolean notiziaDellaLocanda;
 	// La locanda sta sulla casella della città: ne condivide il modello dati, così quel che vi segna resta lì.
 	private Locanda locanda;
 	// Le botteghe: l'alchimista, l'armaiolo, il venditore di pergamene e l'incantatore (vedi GestoreBotteghe)
@@ -64,8 +74,24 @@ public abstract class Citta extends LocazioneUnica {
 
 	@Override
 	public void crea(GruppoGiocatore g, GruppoAvversario gng) {
+		notiziaDellaLocanda = false;
 		nuovaLocanda().crea(g, gng);
 		setCompleta(true);
+	}
+
+	/**
+	 * Uscendo dalla città il gruppo si lascia dietro una notizia: una di NOTIZIE_CITTA (locande.txt, valide per tutte le città), scelta a caso
+	 * fra quelle che si applicano ai suoi personaggi e che non sono fra le ultime già pubblicate (vedi RegistroNotizie). Va nel
+	 * notiziario come quelle delle locande. Se in quella visita la locanda ha già raccontato la sua, la città non ne aggiunge un'altra.
+	 */
+	private void generaNotizia() {
+		NotiziaMD notizia = RegistroNotizie.getNotizia(IDENTIFICATIVO_DELLE_NOTIZIE, getNome(), "");
+		if (notizia == null) {
+			// Niente di applicabile al gruppo: stavolta non c'è niente da raccontare
+			return;
+		}
+		BusEventi.pubblica(new NotificaTestoParagrafo(notizia.getCorpo()));
+		Notizie.aggiungiNotizia(notizia);
 	}
 
 	private void impostaAzioniCitta() {
@@ -85,6 +111,7 @@ public abstract class Citta extends LocazioneUnica {
 				nuovaLocanda();
 				locanda.descrivi(g, gng);
 				statoRitorno = locanda.impostaAzioni(g, gng, null);
+				notiziaDellaLocanda |= locanda.haRaccontatoUnaNotizia();
 				if (statoRitorno == Stato.IN_LOCAZIONE) {
 					stato = StatoInCitta.IN_LOCANDA;
 				} else {
@@ -97,11 +124,15 @@ public abstract class Citta extends LocazioneUnica {
 				botteghe.apri(g, azione);
 
 			} else if (azione == Comando.ESCI_DA_CITTA) {
+				if (!notiziaDellaLocanda) {
+					generaNotizia();
+				}
 				return Stato.FINE_LOCAZIONE;
 			}
 
 		} else if (stato == StatoInCitta.IN_LOCANDA) {
 			statoRitorno = locanda.impostaAzioni(g, gng, azione);
+			notiziaDellaLocanda |= locanda.haRaccontatoUnaNotizia();
 			if (statoRitorno == Stato.FINE_LOCAZIONE) {
 				impostaAzioniCitta();
 				stato = StatoInCitta.IN_PIAZZA;

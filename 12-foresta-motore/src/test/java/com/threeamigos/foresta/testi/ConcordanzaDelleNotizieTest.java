@@ -40,9 +40,9 @@ class ConcordanzaDelleNotizieTest {
         gruppo.aggiungiPersonaggio(new Ladra("Gualtiera", 1));
 
         assertEquals("Gualtiera è stata vista contare monete.",
-                NotizieDelleLocande.validaNotizia("LADRO è statLETTERA_FINALE_LADRO vistLETTERA_FINALE_LADRO contare monete."));
+                RegistroNotizie.validaNotizia("LADRO è statLETTERA_FINALE_LADRO vistLETTERA_FINALE_LADRO contare monete."));
         assertEquals("Arsenio è stato visto contare monete.",
-                NotizieDelleLocande.validaNotizia("EROE è statLETTERA_FINALE vistLETTERA_FINALE contare monete."));
+                RegistroNotizie.validaNotizia("EROE è statLETTERA_FINALE vistLETTERA_FINALE contare monete."));
     }
 
     @Test
@@ -52,16 +52,16 @@ class ConcordanzaDelleNotizieTest {
         gruppo.aggiungiPersonaggio(new Bardo("Dante", 1));
 
         assertEquals("Dante viene cacciato a calci.",
-                NotizieDelleLocande.validaNotizia("BARDO viene cacciatLETTERA_FINALE_BARDO a calci."));
+                RegistroNotizie.validaNotizia("BARDO viene cacciatLETTERA_FINALE_BARDO a calci."));
         assertEquals("Brunilde viene cacciata a calci.",
-                NotizieDelleLocande.validaNotizia("EROE viene cacciatLETTERA_FINALE a calci."));
+                RegistroNotizie.validaNotizia("EROE viene cacciatLETTERA_FINALE a calci."));
     }
 
     @Test
     void senzaLadroLaNotiziaNonSiApplica() {
         GruppoGiocatore.getIstanza().aggiungiPersonaggio(new Guerriero("Arsenio", 1));
 
-        assertNull(NotizieDelleLocande.validaNotizia("LADRO è statLETTERA_FINALE_LADRO vistLETTERA_FINALE_LADRO."));
+        assertNull(RegistroNotizie.validaNotizia("LADRO è statLETTERA_FINALE_LADRO vistLETTERA_FINALE_LADRO."));
     }
 
     @Test
