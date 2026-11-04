@@ -14,7 +14,7 @@ import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.Ricompensa;
 import com.threeamigos.foresta.missioni.leggende.ConLeggendario;
 import com.threeamigos.foresta.missioni.leggende.PescaLeggendaria;
-import com.threeamigos.foresta.mondo.RegistroPersonaggi;
+import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Vichingo;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
@@ -230,7 +230,11 @@ public class IlViaggioDiOlaf extends MissioneAPassi implements ConLeggendario {
 	private void accetta() {
 		aggiungiProprieta(LEGGENDARIO, scegliIlLeggendario().getRiga());
 		GruppoGiocatore.getIstanza().faiPostoAUnoATempo();
-		Personaggio olaf = RegistroPersonaggi.preparaCompagno(new Vichingo(getNomeDelVichingo(), 1));
+		// Olaf arriva al livello del mondo, con l'equipaggiamento di quel livello: un compagno qualsiasi arriva anche due livelli sotto, ma lui è a
+		// tempo e non cresce, quindi sarebbe carne da macello (vedi RegistroPersonaggi.preparaCompagno)
+		Personaggio olaf = new Vichingo(getNomeDelVichingo(), 1);
+		olaf.impostaLivelloDopoReclutamento(Statistiche.getLivello());
+		EquipaggiamentoIniziale.equipaggia(olaf, Statistiche.getLivello());
 		olaf.setMotivoNelGruppo(TipoMotivoNelGruppo.MISSIONE);
 		// Il tempo non scorre: lo fa scadere la missione. Non guadagna esperienza e non sale di livello
 		olaf.setTempo(1);

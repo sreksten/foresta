@@ -13,6 +13,7 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
+import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
@@ -85,6 +86,8 @@ class ScenarioIlViaggioDiOlafTest {
             assertEquals("Olaf", vichingo.getNome());
             assertEquals(TipoMotivoNelGruppo.MISSIONE, vichingo.getMotivoNelGruppo());
             assertTrue(vichingo.isATempo());
+            assertEquals(Statistiche.getLivello(), vichingo.getLivello(), "Olaf arriva al livello del mondo");
+            assertNotNull(vichingo.getArmaEquipaggiata(), "e con la sua arma");
             assertTrue(vichingo.isVivo());
             assertTrue(olaf.getDescrizione().contains("Olaf"), olaf.getDescrizione());
 
