@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.testi;
 
-import com.threeamigos.foresta.tipi.TipoModalitaProduzioneTesti;
 
 /**
  * I testi a caso delle missioni e dei personaggi del mondo: gli incarichi, i materiali richiesti, le spedizioni, gli oggetti
@@ -15,7 +14,6 @@ public final class ProduttoreDiMissioniCasuale {
 	// sistemare: i nomi dei posti, che nascono con la mappa, li scrive la missione con i segnaposto
 	private static final GrammaticaPigra TAPPE = GrammaticaPigra.deiTesti("tappe.txt", false);
 	private static final Object SERRATURA_DELLE_TAPPE = new Object();
-	private static final Object SERRATURA_DEI_TESTI = new Object();
 
 	/**
 	 * Come cominciano i nomi dei segnaposto dei testi delle missioni: "%PARAM_CITTA%" in missioni.txt, "PARAM_CITTA" nel codice.
@@ -65,18 +63,7 @@ public final class ProduttoreDiMissioniCasuale {
 	 * missione conserva nei suoi dati.
 	 */
 	public static String modelloDellaMissione(String produzione) {
-		// Una foglia ha una sola alternativa: sceglierla non deve consumare il caso (anche con una sola alternativa la scelta a caso
-		// estrae un numero da Dado e sposterebbe tutto ciò che viene dopo, cioè ogni partita con seme). Per questo si chiede la prima.
-		synchronized (SERRATURA_DEI_TESTI) {
-			GrammarBean grammatica = MISSIONI.get();
-			TipoModalitaProduzioneTesti modalita = grammatica.getProductionMode();
-			grammatica.setProductionMode(TipoModalitaProduzioneTesti.PRIMO);
-			try {
-				return grammatica.produce(produzione).get(0).trim();
-			} finally {
-				grammatica.setProductionMode(modalita);
-			}
-		}
+		return MISSIONI.get().produce(produzione).get(0).trim();
 	}
 
 	/**
