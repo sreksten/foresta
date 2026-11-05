@@ -638,6 +638,9 @@ Non ha senso importare: posizione e distanza, mischia contro distanza, linea di 
     sopportabile, in combattimento fuggire sopra 0,3) sono state cercate con una griglia di partite.
   - **Partite intere (30 per classe, giocatore tarato).** Il Guerriero arriva al limite di passi in 28 partite su 30 (livello 7), Ladro e Elfo in più di metà; il Mago muore
     quasi sempre (27 su 30, livello 4-5), il Sacerdote in 21. Il capo muore soprattutto per l'Eremita (livello 1-3) e, per Mago e Sacerdote, per Chimere e Chimere Drago.
+  - **Il Silenzio dei boss (novembre 2026).** Con le tattiche vere e un gruppo di partenza (`AnalisiAzioniDeiBossTest`) il Drago spendeva in Silenzio il 62-85% delle azioni, il Lich e la Strega quasi il 100%: la voce `STRATEGA_SILENZIO_SULL_INCANTATORE` di `TatticheBase` non aveva condizioni. Ora scatta una volta su due e solo se nessun avversario è già silenziato (`SilenzioDeiBossTest`): il Silenzio scende al 21-29% (Drago) e 26-42% (Lich, Strega), e i boss diventano molto più pericolosi (livello 8, cinque personaggi: Drago 96% → 48%, Lich 100% → 90%). Vedi `todo.md`.
+  - **Idra e Minotauro Gigante fisici (novembre 2026).** Il Minotauro Gigante non sa magie e l'Idra due (Veleno e Acqua, rare); per restare boss la loro salute, precisione e danni fisici sono stati alzati (Idra 850/1,2/2,8, Minotauro Gigante 950/1,2/2,8): a livello 8 contro cinque personaggi vincono il 94% e il 91% dei gruppi, contro quattro il 65% e l'86%.
+  - **Danno ripartito (novembre 2026).** `TestScontriDiGruppo` non applicava la ripartizione per posizione delle pergamene a più bersagli; ora sì. Contro i boss (bersagli singoli) non cambia niente; contro Troll e Goblin con 3 pergamene di Fuoco i round passano da 1,0–1,5 a 1,7–3,6 e la vittoria resta al 100%.
   - **Da bilanciare.** Mago e Sacerdote sono i bersagli preferiti dei mostri e muoiono presto; l'Eremita resta il killer dei livelli bassi.
 
 ## 10. Da fare / idee aperte

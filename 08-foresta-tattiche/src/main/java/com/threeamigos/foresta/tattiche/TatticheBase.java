@@ -34,7 +34,7 @@ import com.threeamigos.foresta.testi.Testi;
  * dell'attacco con le armi. L'Hobgoblin, soldato disciplinato, tiene il fuoco sullo stesso bersaglio.</li>
  * <li><b>Esperto</b> (da 20): finisce chi è sotto il 35% con l'incantesimo più economico che basta; zittisce gli incantatori (dove ha il Silenzio); sceglie l'incantesimo più
  * adatto al bersaglio, con le sue debolezze. I giganti (non magici) colpiscono invece il più forte, che sono quelli che rovinano il loro assalto.</li>
- * <li><b>Stratega</b> (da 31): il Colpo di Morte sul quasi caduto (sotto il 25%, dove funziona e non si ritorce), il Silenzio sull'incantatore con più magia, il colpo
+ * <li><b>Stratega</b> (da 31): il Colpo di Morte sul quasi caduto (sotto il 25%, dove funziona e non si ritorce), il Silenzio sull'incantatore con più magia (uno alla volta, una volta su due), il colpo
  * finale, poi gli incantesimi più adatti conoscendo l'equipaggiamento.</li>
  * </ul>
  * <b>I personaggi giocabili</b> hanno un ruolo: il guerriero e il ladro curano se stessi quando stanno male e colpiscono i feriti; i maghi e gli elfi zittiscono, usano
@@ -59,9 +59,9 @@ public final class TatticheBase {
 			TipoPersonaggio.SPETTRO, TipoPersonaggio.SPIRITO, TipoPersonaggio.STREGA, TipoPersonaggio.VIVERNA);
 	/** Quelle che hanno il Silenzio nel repertorio */
 	private static final Set<TipoPersonaggio> CON_SILENZIO = EnumSet.of(TipoPersonaggio.CENTAURO, TipoPersonaggio.DRAGO, TipoPersonaggio.EREMITA,
-			TipoPersonaggio.GARGOYLE, TipoPersonaggio.IDRA, TipoPersonaggio.LICH, TipoPersonaggio.NECROMANTE, TipoPersonaggio.OMBRAFIAMMA, TipoPersonaggio.STREGA);
+			TipoPersonaggio.GARGOYLE, TipoPersonaggio.LICH, TipoPersonaggio.NECROMANTE, TipoPersonaggio.OMBRAFIAMMA, TipoPersonaggio.STREGA);
 	/** Quelle che hanno la Morte nel repertorio (i boss) */
-	private static final Set<TipoPersonaggio> CON_MORTE = EnumSet.of(TipoPersonaggio.DRAGO, TipoPersonaggio.IDRA, TipoPersonaggio.LICH,
+	private static final Set<TipoPersonaggio> CON_MORTE = EnumSet.of(TipoPersonaggio.DRAGO, TipoPersonaggio.LICH,
 			TipoPersonaggio.OMBRAFIAMMA, TipoPersonaggio.STREGA);
 	/** I giganti: non hanno magia e vanno dritti sul più forte */
 	private static final Set<TipoPersonaggio> CACCIATORI_DEL_PIU_FORTE = EnumSet.of(TipoPersonaggio.GIGANTE, TipoPersonaggio.TITANO,
@@ -150,6 +150,12 @@ public final class TatticheBase {
 		return PredicatoMD.conConfrontoENumero(TipoPredicato.ROUND_DALL_ULTIMO_USO, TipoConfronto.MINORE, round).negato();
 	}
 
+	/** Nessun avversario è silenziato in questo momento: un Silenzio alla volta, finché dura non se ne lancia un altro */
+	private static PredicatoMD nessunAvversarioSilenziato() {
+		return PredicatoMD.quanti(TipoRosa.AVVERSARI, Collections.singletonList(FiltroMD.conStato(TipoFiltro.STATO, TipoEffettoDiStato.SILENZIATO)),
+				TipoConfronto.MINORE, 1);
+	}
+
 	/** La fascia di astuzia: l'astuzia non è sotto la soglia */
 	private static PredicatoMD daAstuzia(int soglia) {
 		return PredicatoMD.conConfrontoENumero(TipoPredicato.ASTUZIA, TipoConfronto.MINORE, soglia).negato();
@@ -208,8 +214,9 @@ public final class TatticheBase {
 		boolean magico = MAGICI.contains(classe);
 		boolean cacciatoreDelPiuForte = CACCIATORI_DEL_PIU_FORTE.contains(classe);
 		boolean vendicativo = VENDICATIVI.contains(classe) || classe.isDellaCategoria(CategoriaPersonaggio.BESTIA);
-		// Quanto spesso lancia una magia invece di colpire, per fascia; i folletti ne fanno un uso sfrenato
-		int[] incantesimo = classe == TipoPersonaggio.FOLLETTO ? new int[]{80, 80, 80, 90} : new int[]{50, 60, 75, 90};
+		// Quanto spesso lancia una magia invece di colpire, per fascia; i folletti ne fanno un uso sfrenato, l'idra (che sa due magie) combatte soprattutto con le armi
+		int[] incantesimo = classe == TipoPersonaggio.FOLLETTO ? new int[]{80, 80, 80, 90}
+				: classe == TipoPersonaggio.IDRA ? new int[]{10, 10, 12, 12} : new int[]{50, 60, 75, 90};
 
 		// Le fasce si aggiungono dalla più alta alla più bassa. Ogni fascia, tranne la bruta, comincia con una condizione sull'astuzia: la rampa del livello
 		// (Astuzia.di) porta il mostro in una fascia più alta col salire del mondo, e se nessuna voce di quella si può eseguire il mostro scende a quella sotto.
@@ -303,7 +310,7 @@ public final class TatticheBase {
 
 	/**
 	 * Da 31: il Colpo di Morte sul quasi caduto (sotto la soglia di Morte, {@link com.threeamigos.foresta.incantesimi.Morte#puoUccidere}, dove uccide: altrimenti si ritorce contro chi lo lancia), il Silenzio
-	 * sull'incantatore con più magia, il colpo finale e gli incantesimi più adatti conoscendo l'equipaggiamento.
+	 * sull'incantatore con più magia (uno alla volta, e una volta su due: altrimenti non farebbe altro), il colpo finale e gli incantesimi più adatti conoscendo l'equipaggiamento.
 	 */
 	private static List<VoceMD> fasciaStratega(TipoPersonaggio classe, boolean magico, int incantesimo) {
 		List<VoceMD> voci = new ArrayList<>();
@@ -318,7 +325,9 @@ public final class TatticheBase {
 			voci.add(voce("VOCE.STRATEGA_COLPO_DI_MORTE_SUL_QUASI_CADUTO", quasiCaduto, condizioni(fascia), AzioneMD.di(TipoAzione.MORTE)));
 		}
 		if (CON_SILENZIO.contains(classe)) {
-			voci.add(voce("VOCE.STRATEGA_SILENZIO_SULL_INCANTATORE", incantatore, condizioni(fascia), AzioneMD.di(TipoAzione.SILENZIO)));
+			// Un Silenzio alla volta e non sempre: senza queste due condizioni il boss lo lanciava a ogni turno (vedi todo.md), senza fare danno
+			voci.add(voce("VOCE.STRATEGA_SILENZIO_SULL_INCANTATORE", incantatore, condizioni(fascia, probabilita(50), nessunAvversarioSilenziato()),
+					AzioneMD.di(TipoAzione.SILENZIO)));
 		}
 		if (magico) {
 			voci.add(voce("VOCE.STRATEGA_COLPO_ECONOMICO_SUI_FERITI", ferito, condizioni(fascia), danno(CriterioIncantesimo.PIU_ECONOMICO_CHE_BASTA, false), attacco()));

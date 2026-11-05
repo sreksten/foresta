@@ -65,6 +65,8 @@ final class RoundASimulato {
         }
     };
     private final EsecutoreTattiche esecutore;
+    /** Per le diagnosi: chi vuole vedere che cosa decide un avversario (la decisione è null se non c'era niente da fare) */
+    java.util.function.BiConsumer<Personaggio, Decisione> osservatoreDegliAvversari;
     private Personaggio ultimoMio;
     private Personaggio ultimoAvversario;
     private int round = 0;
@@ -195,7 +197,10 @@ final class RoundASimulato {
         ultimoAvversario = chi;
         if (!isIncapaceDiAgire(chi) && !mieiVivi().isEmpty()) {
             azioni++;
-            esecutore.agisci(chi, TatticheDeiPersonaggi.di(chi) != null ? TatticheDeiPersonaggi.di(chi) : RegistroTattiche.perClasse(chi.getClasse()));
+            Decisione decisione = esecutore.agisci(chi, TatticheDeiPersonaggi.di(chi) != null ? TatticheDeiPersonaggi.di(chi) : RegistroTattiche.perClasse(chi.getClasse()));
+            if (osservatoreDegliAvversari != null) {
+                osservatoreDegliAvversari.accept(chi, decisione);
+            }
             decisore.dopoOgniAzione(this);
         }
         return esito();

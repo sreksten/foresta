@@ -3,10 +3,15 @@ package com.threeamigos.foresta.personaggi;
 import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 
 import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
+import java.util.EnumSet;
+import java.util.Set;
+
 /**
- * Il minotauro gigante: creatura umanoide, ibrida e gigantesca, boss del suo castello. Parte con salute e magia piene.
+ * Il minotauro gigante: creatura umanoide, ibrida e gigantesca, boss del suo castello. Parte con salute piena. Combatte solo con le
+ * armi: non ha Magia e non sa nessun incantesimo.
  */
 public class MinotauroGigante extends PersonaggioBase implements Personaggio {
 
@@ -26,6 +31,11 @@ public class MinotauroGigante extends PersonaggioBase implements Personaggio {
 	protected void impostaValoriDiPartenza() {
 
 		setQuantitaMassima(CostantiPersonaggi.MINOTAUROGIGANTE_MAX_NUMERO);
+	}
+
+	@Override
+	public Set<TipoIncantesimo> getRepertorioIncantesimi() {
+		return EnumSet.noneOf(TipoIncantesimo.class);
 	}
 
 	@Override

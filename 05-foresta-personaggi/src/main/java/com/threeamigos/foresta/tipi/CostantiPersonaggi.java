@@ -1380,12 +1380,12 @@ public final class CostantiPersonaggi {
     public static final int IDRA_MAX_NUMERO = 1;
     public static final int IDRA_PUNTI_ESPERIENZA = 70;
 
-    public static final int IDRA_SALUTE_BASE = 180;
+    public static final int IDRA_SALUTE_BASE = 850;
     public static final int IDRA_MAGIA_BASE = 10;
     public static final int IDRA_LIVELLAMENTO_MAGIA = 4;
     public static final double IDRA_MOLTIPLICATORE_CARICO = 5.0;
     public static final double IDRA_MOLTIPLICATORE_CRITICO = 0.6;
-    public static final double IDRA_MOLTIPLICATORE_PRECISIONE = 0.8;
+    public static final double IDRA_MOLTIPLICATORE_PRECISIONE = 1.2;
     public static final double IDRA_MOLTIPLICATORE_VELOCITA = 0.8;
     public static final double IDRA_MOLTIPLICATORE_FURTIVITA = 0.4;
     public static final double IDRA_MOLTIPLICATORE_PARATA = 1.0;
@@ -1398,7 +1398,7 @@ public final class CostantiPersonaggi {
     public static final double IDRA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.9;
     public static final double IDRA_MOLTIPLICATORE_STANCHEZZA = 0.9;
     public static final double IDRA_MOLTIPLICATORE_DANNI_MAGICI = 0.9;
-    public static final double IDRA_MOLTIPLICATORE_DANNI_FISICI = 1.4;
+    public static final double IDRA_MOLTIPLICATORE_DANNI_FISICI = 2.8;
     public static final double IDRA_MOLTIPLICATORE_RECUPERO_FISICO = 1.5;
     public static final double IDRA_MOLTIPLICATORE_RECUPERO_MAGICO = 0.8;
 
@@ -1478,12 +1478,12 @@ public final class CostantiPersonaggi {
     public static final int MINOTAUROGIGANTE_MAX_NUMERO = 1;
     public static final int MINOTAUROGIGANTE_PUNTI_ESPERIENZA = 70;
 
-    public static final int MINOTAUROGIGANTE_SALUTE_BASE = 230;
+    public static final int MINOTAUROGIGANTE_SALUTE_BASE = 950;
     public static final int MINOTAUROGIGANTE_MAGIA_BASE = 0;
     public static final int MINOTAUROGIGANTE_LIVELLAMENTO_MAGIA = 0;
     public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_CARICO = 4.0;
     public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_CRITICO = 0.5;
-    public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_PRECISIONE = 0.6;
+    public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_PRECISIONE = 1.2;
     public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_VELOCITA = 0.5;
     public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_FURTIVITA = 0.2;
     public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_PARATA = 1.4;
@@ -1496,7 +1496,7 @@ public final class CostantiPersonaggi {
     public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.6;
     public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_STANCHEZZA = 1.4;
     public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_DANNI_MAGICI = 0.4;
-    public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_DANNI_FISICI = 1.7;
+    public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_DANNI_FISICI = 2.8;
     public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_RECUPERO_FISICO = 1.4;
     public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_RECUPERO_MAGICO = 0.4;
 

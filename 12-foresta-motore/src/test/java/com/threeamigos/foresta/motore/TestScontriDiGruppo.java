@@ -250,12 +250,23 @@ public class TestScontriDiGruppo {
 
     private static void lanciaPergamena(Personaggio formulante, List<Personaggio> avversari) {
         IncantesimoMalefico incantesimo = pergamena(formulante);
-        for (Personaggio bersaglio : bersagliDellaPergamena(formulante, incantesimo, avversari)) {
+        List<Personaggio> bersagli = bersagliDellaPergamena(formulante, incantesimo, avversari);
+        for (int posizione = 0; posizione < bersagli.size(); posizione++) {
+            Personaggio bersaglio = bersagli.get(posizione);
             if (!bersaglio.isImmuneAIncantesimo(incantesimo.getClasse())) {
-                colpisci(formulante, bersaglio, incantesimo, 1.0d);
+                colpisci(formulante, bersaglio, incantesimo, quotaDellaPosizione(incantesimo, posizione));
             }
         }
         formulante.subMagia(incantesimo.getCostoLancio());
+    }
+
+    /**
+     * Come nel gioco (IncantesimoMaleficoImpl.formula): con più bersagli il danno si ripartisce per posizione, il principale lo subisce intero;
+     * un incantesimo di gruppo (o a un bersaglio solo) dà a tutti il danno pieno.
+     */
+    private static double quotaDellaPosizione(IncantesimoMalefico incantesimo, int posizione) {
+        return incantesimo.getClasse().getPortata() == PortataIncantesimo.MULTIPLO
+                ? CalcolatoreCombattimento.quotaDelDannoPerPosizione(posizione) : 1.0d;
     }
 
     private static IncantesimoMalefico pergamena(Personaggio formulante) {
@@ -295,9 +306,11 @@ public class TestScontriDiGruppo {
     private static double attesePergamena(Personaggio formulante, List<Personaggio> avversari) {
         IncantesimoMalefico incantesimo = pergamena(formulante);
         double totale = 0;
-        for (Personaggio bersaglio : bersagliDellaPergamena(formulante, incantesimo, avversari)) {
+        List<Personaggio> bersagli = bersagliDellaPergamena(formulante, incantesimo, avversari);
+        for (int posizione = 0; posizione < bersagli.size(); posizione++) {
+            Personaggio bersaglio = bersagli.get(posizione);
             if (!bersaglio.isImmuneAIncantesimo(incantesimo.getClasse())) {
-                totale += attesa(formulante, bersaglio, incantesimo, 1.0d);
+                totale += attesa(formulante, bersaglio, incantesimo, quotaDellaPosizione(incantesimo, posizione));
             }
         }
         return totale;
