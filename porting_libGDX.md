@@ -159,7 +159,6 @@ Da estrarre **componente per componente, quando lo si porta** (si separa il mode
 
 | Classe | Logica che si può portare in comune | Resta nel toolkit |
 | :--- | :--- | :--- |
-| `JoystickVirtuale` | tutto: zona, attivazione, intensità, velocità | il disegno (`Graphics2D`, gradiente) |
 | `ScorrimentoVerticale`, `ComponenteScorrevole` | il modello dello scorrimento e dell'albero di nodi (altezze, offset, hit-test, stato aperto/chiuso) | disegno dei nodi e delle freccine |
 | `DisplayableCanvasBarraIcone` e `…Dock` | elenco delle icone, rettangoli, scorrimento e tocco, profilo di ingrandimento del Dock, posizione del cartiglio | disegno delle icone e dei bordi |
 | `Cartiglio` | calcolo della posizione e del testo | disegno |

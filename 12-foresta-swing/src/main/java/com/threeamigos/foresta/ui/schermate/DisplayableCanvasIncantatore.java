@@ -9,13 +9,10 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoIncantatura;
 import com.threeamigos.foresta.artefatti.VistaBancoDiLavoro;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.Optional;
 import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 import com.threeamigos.foresta.testi.Lingue;
 
@@ -78,77 +75,27 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
         return TestiDellaUI.get("MESTIERE_INCANTATORE");
     }
 
+    private final DisegnoDiContenutoAwt disegno = new DisegnoDiContenutoAwt();
+
     /**
-     * Disegna la colonna centrale con il personaggio scelto.
+     * Disegna la colonna centrale: l'incantatore, le monete e le righe della fusione (vedi RigheDellIncantatore, nel modulo comune).
      */
     public void disegnaColonnaPersonaggio(Graphics2D graphics) {
-
-        int y = SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
-        DoomdarkColorModel.Color coloreTestata = DoomdarkColorModel.Color.LIGHT_GRAY;
-
-        // Nome dell'incantatore (e sotto il mestiere)
-        y = disegnaIntestazioneCentrale(graphics, y, coloreTestata) + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
-
-        BufferedImage immaginePersonaggio = MappaPersonaggioImmagine.getImmagine(TipoPersonaggio.INCANTATORE);
-
-        // Come per l'armaiolo, il ladro fa da altezza di riferimento per non far sfarfallare l'immagine
-        y += ALTEZZA_LADRO;
-        graphics.drawImage(immaginePersonaggio, (width - immaginePersonaggio.getWidth()) / 2, y - immaginePersonaggio.getHeight(), null);
-        y += SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
-
-        y = disegnaValore(graphics, TestiDellaUI.get("MONETE"), String.valueOf(vistaPartita.getCassa().getMonete()), y, coloreTestata);
-
-        boolean conIngredienti = banco.getInventarioParteRemota().stream().anyMatch(a -> a.getTipo().isIngrediente());
-        if (conIngredienti) {
-            y = disegnaValore(graphics, TestiDellaUI.get("COSTO_FUSIONE"), String.valueOf(banco.getCostoFusione()), y, coloreTestata);
-        }
-        Optional<? extends VistaArtefatto> artefatto = banco.getArtefattoSulBanco();
-        if (artefatto.isPresent()) {
-            if (banco.getLivelloDopoLaFusione() != artefatto.get().getLivello()) {
-                y = disegnaValore(graphics, TestiDellaUI.get("NUOVO_LIVELLO"), String.valueOf(banco.getLivelloDopoLaFusione()), y, coloreTestata);
-            }
-            y = disegnaValore(graphics, TestiDellaUI.get("EFFETTI"), banco.getEffettiDopoLaFusione() + "/" + banco.getEffettiMassimiDopoLaFusione(), y, coloreTestata);
-        }
-
-        BufferedImage separatore = ImageCache.separatore;
-        graphics.drawImage(separatore, (width - separatore.getWidth()) / 2, y, null);
+        disegno.disegna(graphics, colonnaDelNegoziante(getMestiereAlCentro(), RigheDellIncantatore.righe(banco)), 0, 0);
     }
 
-    private int disegnaValore(Graphics2D graphics, String etichetta, String valore, int y, DoomdarkColorModel.Color colore) {
-        Image i = ImageCache.get(etichetta, colore);
-        graphics.drawImage(i, xMinimaZonaCentrale, y, null);
-        i = ImageCache.get(valore, font, colore);
-        graphics.drawImage(i, xMassimaZonaCentrale - i.getWidth(null), y, null);
-        return y + fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
-    }
+    // I colori della fusione (effetti che escono e che entrano, posti liberi), nel modulo comune
+    private final ColoriDellIncantatore colori = new ColoriDellIncantatore(() -> banco);
 
-    /**
-     * Nel banco di lavoro gli effetti dell'artefatto che la fusione scalzerebbe sono rossi, quelli degli ingredienti
-     * che entrerebbero verdi.
-     */
     @Override
     protected DoomdarkColorModel.Color coloreEffetto(VistaArtefatto artefatto, Object effetto, boolean parteAttiva,
                                                      DoomdarkColorModel.Color predefinito) {
-        if (parteAttiva || banco == null) {
-            return predefinito;
-        }
-        if (banco.isEffettoInUscita(effetto)) {
-            return DoomdarkColorModel.Color.RED;
-        }
-        return banco.isEffettoInEntrata(effetto) ? DoomdarkColorModel.Color.GREEN : predefinito;
+        return colori.coloreEffetto(artefatto, effetto, parteAttiva, predefinito);
     }
 
-    /**
-     * Negli artefatti incantabili il livello dice se hanno tutti i posti presi (verde) o se ne hanno ancora di
-     * liberi (arancione: non sono sfruttati appieno); gli altri (accessori, ingredienti) restano grigi.
-     */
     @Override
     protected DoomdarkColorModel.Color coloreLivello(VistaArtefatto artefatto, boolean parteAttiva) {
-        if (!artefatto.isIncantabile()) {
-            return super.coloreLivello(artefatto, parteAttiva);
-        }
-        return artefatto.getNumeroEffetti() < artefatto.getEffettiMassimi()
-                ? DoomdarkColorModel.Color.ORANGE : DoomdarkColorModel.Color.GREEN;
+        return colori.coloreLivello(artefatto, parteAttiva);
     }
 
     @Override

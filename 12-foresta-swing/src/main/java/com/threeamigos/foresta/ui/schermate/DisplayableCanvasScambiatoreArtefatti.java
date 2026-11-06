@@ -167,7 +167,7 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
     /**
      * Le immagini degli oggetti opachi dell'elenco: il nome di una risorsa (un separatore) o un valore di due testi (livello e prezzo)
      */
-    private static Image immagineDelNodo(Object oggetto) {
+    static Image immagineDelNodo(Object oggetto) {
         if (oggetto instanceof String) {
             String risorsa = (String) oggetto;
             return ImageCache.getComposta(Arrays.asList("immagineDelNodo", risorsa),

@@ -31,3 +31,7 @@ SpriteDellaLocazioneTest
 ComposizioneDelleIconeTest
 SfondoARiempimentoTest
 ColonnaScorrevoleTest
+MappaATuttoSchermoTest
+ScambioDeiConsumabiliTest
+ScenaDellIntermezzoTest
+RivelazioneDellArtefattoTest

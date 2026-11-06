@@ -150,6 +150,8 @@ public final class NomiDelleImmagini {
 	public static final String POZIONE_MAGIA_GRANDE = "icone/PozioneMagiaGrande.png";
 	public static final String POZIONE_PANACEA = "icone/PozionePanacea.png";
 	public static final String POZIONE_AUMENTO_LIVELLO = "icone/AumentoLivello.png";
+	/** L'icona della pergamena, che fa da immagine agli ingredienti magici senza una loro */
+	public static final String ICONA_PERGAMENA = "icone/Pergamena.png";
 	public static final String FRECCIA_SU = "icone/ComponenteScorrevole-FrecciaSu.png";
 	public static final String FRECCIA_GIU = "icone/ComponenteScorrevole-FrecciaGiu.png";
 	public static final String FRECCIA_SINISTRA = "icone/ComponenteScorrevole-FrecciaSinistra.png";
@@ -177,6 +179,7 @@ public final class NomiDelleImmagini {
 	public static final String SPRITE_AMICIZIA = "icone/Amicizia.png";
 	public static final String SPRITE_COMBATTIMENTO = "icone/Combattimento.png";
 	public static final String SPRITE_MAGIA = "icone/Incantesimo.png";
+	public static final String SPRITE_GRUPPO = "icone/Gruppo.png";
 	public static final String SPRITE_MAPPA = "icone/Mappa.png";
 	public static final String SPRITE_MONETA = "icone/Moneta.png";
 	public static final String SPRITE_PIETRA_PREZIOSA = "icone/PietraPreziosa.png";
@@ -193,6 +196,10 @@ public final class NomiDelleImmagini {
 			"mappa/Foresta.png", "mappa/Foresta2.png", "mappa/Foresta3.png", "mappa/Foresta4.png"
 	};
 	public static final String SEGNALINO = "mappa/Segnalino.png";
+	/** La mano-puntatore del joystick virtuale sulla mappa a tutto schermo */
+	public static final String MANO_PUNTATORE = "icone/ManoPuntatore.png";
+	/** La sfera magica in basso a sinistra, che copre metà del notiziario */
+	public static final String SFERA_MAGICA = "fondinon2x2/SferaMagica.png";
 	public static final String INDICATORE = "mappa/Indicatore.png";
 
 	/**

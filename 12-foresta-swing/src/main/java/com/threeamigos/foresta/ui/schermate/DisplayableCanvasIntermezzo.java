@@ -1,22 +1,25 @@
 package com.threeamigos.foresta.ui.schermate;
 
-import com.threeamigos.foresta.tipi.TipoStiramento;
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.interni.InternoCreazioneFumetto;
 import com.threeamigos.foresta.eventi.interni.InternoErrore;
-import com.threeamigos.foresta.intermezzi.*;
-import com.threeamigos.foresta.ui.Finestra;
+import com.threeamigos.foresta.intermezzi.ImmagineIntermezzo;
+import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
+import com.threeamigos.foresta.intermezzi.StatoElemento;
+import com.threeamigos.foresta.ui.Area;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
+import com.threeamigos.foresta.ui.Misura;
 import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
 import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
-import com.threeamigos.foresta.ui.immagini.VersiDeiPersonaggi;
+import com.threeamigos.foresta.ui.schermate.ScenaDellIntermezzo.Disegno;
+import com.threeamigos.foresta.ui.schermate.ScenaDellIntermezzo.Fumetto;
+import com.threeamigos.foresta.ui.schermate.ScenaDellIntermezzo.Quadro;
+import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.sprite.AnimazioneImmagine;
+import com.threeamigos.foresta.ui.sprite.DescrizioneFumetto;
 import com.threeamigos.foresta.ui.sprite.SpriteFumetto;
 import com.threeamigos.foresta.ui.sprite.SpriteRivelazioneArtefatto;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
-import com.threeamigos.foresta.ui.testo.DoomdarkFont;
-import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -25,46 +28,28 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 
 /**
- * La schermata a tutto schermo degli intermezzi. Disegna una {@link PaginaIntermezzo} a
- * strati: lo sfondo (stirato sugli assi indicati dal suo {@link TipoStiramento}, o l'ombra
- * del drago se manca), gli elementi nell'ordine della pagina con il loro stato al secondo
- * corrente, il testo in alto e i fumetti delle battute visibili, con la punta verso la
- * bocca di chi parla.
+ * La schermata a tutto schermo degli intermezzi in Swing. Dove sta ogni cosa a ogni istante (lo sfondo, gli elementi con il loro stato, il testo in alto, i
+ * fumetti con la punta verso la bocca di chi parla) lo dice {@link ScenaDellIntermezzo}, nel modulo comune, a strati; qui c'è il disegno, e la rivelazione
+ * dell'artefatto.
  * <p>
- * Il tempo è quello reale trascorso da quando la pagina è comparsa: è lo stesso metro del
- * timer con cui il motore fa avanzare le pagine, quindi animazioni e dialoghi restano
- * allineati alla durata della pagina anche se qualche frame va perso.
- * <p>
- * Le immagini di tipo RISORSA e gli sprite sheet sono caricati al primo uso e tenuti
- * finché dura l'intermezzo (vedi {@link #svuota()}), senza passare da ImageCache; gli
- * sprite sheet sono ritagliati in fotogrammi una volta sola. Ogni immagine di tipo
- * ANIMAZIONE ha una sua istanza di {@link AnimazioneImmagine}, anch'essa tenuta per
- * tutto l'intermezzo.
+ * Le immagini di tipo RISORSA e gli sprite sheet sono caricati al primo uso e tenuti finché dura l'intermezzo (vedi {@link #svuota()}), senza passare da
+ * ImageCache; gli sprite sheet sono ritagliati in fotogrammi una volta sola. Ogni immagine di tipo ANIMAZIONE ha una sua istanza di
+ * {@link AnimazioneImmagine}, anch'essa tenuta per tutto l'intermezzo.
  */
 public class DisplayableCanvasIntermezzo implements Finestra {
-
-	// Distanza fra la bocca di chi parla e il bordo del fumetto collocato automaticamente
-	private static final int DISTANZA_FUMETTO_VERTICALE = 24;
-	private static final int MARGINE_SCHERMO = 4;
 
 	private final int width;
 	private final int height;
 	private final DisplayableCanvasIntroOutro testo;
-
-	private PaginaIntermezzo pagina;
-	private long inizioPaginaNanosecondi;
+	private final ScenaDellIntermezzo scena;
 
 	private final Map<String, BufferedImage> immaginiRisorse = new HashMap<>();
 	// I fotogrammi degli sprite sheet, per percorso e griglia; null se lo sheet manca
 	private final Map<String, BufferedImage[]> fotogrammiSpriteSheet = new HashMap<>();
 	// Un'animazione per ogni riferimento che la chiede (cioè per ogni elemento o sfondo)
 	private final Map<ImmagineIntermezzo, AnimazioneImmagine> animazioni = new IdentityHashMap<>();
-	// Le nuvole delle battute della pagina corrente, costruite alla prima comparsa; null
-	// se il testo non si può disegnare
-	private final Map<BattutaIntermezzo, BufferedImage> nuvole = new IdentityHashMap<>();
-	// Dove sono stati disegnati gli elementi in questo frame, e in che verso, per puntare i fumetti
-	private final Map<String, Rectangle> posizioni = new HashMap<>();
-	private final Map<String, Boolean> versi = new HashMap<>();
+	// Le nuvole delle battute della pagina corrente come immagini, costruite alla prima comparsa; null se il testo non si può disegnare
+	private final Map<DescrizioneFumetto, BufferedImage> nuvole = new IdentityHashMap<>();
 	// La rivelazione dell'artefatto della pagina (vedi PaginaIntermezzo.conRivelazioneDiArtefatto), una volta sola per pagina
 	private SpriteRivelazioneArtefatto rivelazione;
 	private boolean rivelazioneConclusa;
@@ -73,16 +58,16 @@ public class DisplayableCanvasIntermezzo implements Finestra {
 		this.width = width;
 		this.height = height;
 		this.testo = testo;
+		this.scena = new ScenaDellIntermezzo(width, height, this::misuraDi);
 	}
 
 	/**
 	 * Mostra la pagina, facendo ripartire da zero il suo tempo.
 	 */
 	public void mostra(PaginaIntermezzo pagina) {
-		this.pagina = pagina;
+		scena.mostra(pagina);
 		rivelazione = null;
 		rivelazioneConclusa = false;
-		inizioPaginaNanosecondi = System.nanoTime();
 		nuvole.clear();
 	}
 
@@ -94,35 +79,34 @@ public class DisplayableCanvasIntermezzo implements Finestra {
 		if (rivelazione != null) {
 			rivelazione.concludi();
 		}
-		inizioPaginaNanosecondi = System.nanoTime() - (long) (secondi * 1_000_000_000L);
+		scena.saltaA(secondi);
 	}
 
 	/**
 	 * Dimentica la pagina e le immagini caricate per l'intermezzo, alla sua fine.
 	 */
 	public void svuota() {
-		pagina = null;
+		scena.svuota();
 		rivelazione = null;
 		nuvole.clear();
 		immaginiRisorse.clear();
 		fotogrammiSpriteSheet.clear();
 		animazioni.clear();
-		posizioni.clear();
-		versi.clear();
 	}
 
 	/**
 	 * Disegna la pagina com'è al tempo trascorso dalla sua comparsa.
 	 */
 	public void disegna(Graphics2D graphics) {
-		disegnaAl(graphics, (System.nanoTime() - inizioPaginaNanosecondi) / 1_000_000_000.0);
+		disegnaAl(graphics, scena.secondiTrascorsi());
 	}
 
 	/**
 	 * La pagina come appare a un certo numero di secondi da quando è comparsa.
 	 */
 	public void disegnaAl(Graphics2D graphics, double secondi) {
-		if (pagina == null) {
+		Quadro quadro = scena.quadroAl(secondi);
+		if (quadro == null) {
 			return;
 		}
 
@@ -131,14 +115,13 @@ public class DisplayableCanvasIntermezzo implements Finestra {
 		Graphics2D graphicsImmagini = (Graphics2D) graphics.create();
 		try {
 			graphicsImmagini.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-			Rectangle areaSfondo = disegnaSfondo(graphicsImmagini, secondi);
-			if (pagina.isRitaglioSuSfondo() && areaSfondo != null) {
-				graphicsImmagini.setClip(areaSfondo);
+			disegnaSfondo(graphicsImmagini, quadro);
+			Area ritaglio = quadro.getRitaglio();
+			if (ritaglio != null) {
+				graphicsImmagini.setClip(ritaglio.getX(), ritaglio.getY(), ritaglio.getLarghezza(), ritaglio.getAltezza());
 			}
-			posizioni.clear();
-			versi.clear();
-			for (ElementoIntermezzo elemento : pagina.getElementi()) {
-				disegnaElemento(graphicsImmagini, elemento, elemento.getStatoAl(secondi), secondi);
+			for (Disegno elemento : quadro.getElementi()) {
+				disegnaElemento(graphicsImmagini, elemento);
 			}
 		} finally {
 			graphicsImmagini.dispose();
@@ -146,12 +129,10 @@ public class DisplayableCanvasIntermezzo implements Finestra {
 
 		disegnaRivelazione(graphics);
 
-		testo.scriviTestoCentrato(graphics, pagina.getTesto());
+		testo.scriviTestoCentrato(graphics, quadro.getTesto());
 
-		for (BattutaProgrammata battutaProgrammata : pagina.getBattuteProgrammate()) {
-			if (battutaProgrammata.isVisibileAl(secondi)) {
-				disegnaFumetto(graphics, battutaProgrammata.getBattuta());
-			}
+		for (Fumetto fumetto : quadro.getFumetti()) {
+			disegnaFumetto(graphics, fumetto);
 		}
 	}
 
@@ -160,16 +141,18 @@ public class DisplayableCanvasIntermezzo implements Finestra {
 	 * stato disegnato e quindi se ne conosce il posto, e al termine vola verso di lui.
 	 */
 	private void disegnaRivelazione(Graphics2D graphics) {
+		PaginaIntermezzo pagina = scena.getPagina();
 		if (pagina.getRivelazioneArtefatto() == null || rivelazioneConclusa) {
 			return;
 		}
 		if (rivelazione == null) {
-			Rectangle destinazione = posizioni.get(pagina.getIdDestinazioneRivelazione());
+			Area destinazione = scena.getPosizione(pagina.getIdDestinazioneRivelazione());
 			if (destinazione == null) {
 				return;
 			}
 			rivelazione = new SpriteRivelazioneArtefatto(pagina.getRivelazioneArtefatto(), pagina.getLivelloMondoRivelazione(),
-					new Rectangle(0, 0, width, height), new Point((int) destinazione.getCenterX(), (int) destinazione.getCenterY()));
+					new Rectangle(0, 0, width, height),
+					new Point(destinazione.getX() + destinazione.getLarghezza() / 2, destinazione.getY() + destinazione.getAltezza() / 2));
 		}
 		rivelazione.anima(graphics);
 		if (!rivelazione.isAttivo()) {
@@ -177,129 +160,45 @@ public class DisplayableCanvasIntermezzo implements Finestra {
 		}
 	}
 
-	/**
-	 * Disegna lo sfondo e restituisce l'area dello schermo che ha effettivamente occupato
-	 * (per l'eventuale ritaglio degli elementi, vedi {@link PaginaIntermezzo#conRitaglioSuSfondo()});
-	 * null se non c'è sfondo, nel qual caso si vede solo l'ombra del drago.
-	 */
-	private Rectangle disegnaSfondo(Graphics2D graphics, double secondi) {
-		BufferedImage sfondo = pagina.getSfondo() == null ? null : immagine(pagina.getSfondo(), secondi, null);
-		if (sfondo == null) {
+	private void disegnaSfondo(Graphics2D graphics, Quadro quadro) {
+		Disegno sfondo = quadro.getSfondo();
+		BufferedImage immagine = sfondo == null ? null : immagine(sfondo.getImmagine());
+		if (immagine == null) {
 			testo.disegnaOmbraDelDrago(graphics);
-			return null;
+			return;
 		}
-		// Stirato solo sugli assi richiesti da TipoStiramento per riempire esattamente l'area
-		// (anche distorcendo le proporzioni); gli assi non stirati restano a dimensione
-		// nativa, centrati.
-		TipoStiramento tipoStiramento = pagina.getTipoStiramentoSfondo();
-		boolean stiraOrizzontale = tipoStiramento == TipoStiramento.ORIZZONTALE || tipoStiramento == TipoStiramento.ORIZZONTALE_E_VERTICALE;
-		boolean stiraVerticale = tipoStiramento == TipoStiramento.VERTICALE || tipoStiramento == TipoStiramento.ORIZZONTALE_E_VERTICALE;
-		int larghezzaSfondo = stiraOrizzontale ? width : sfondo.getWidth();
-		int altezzaSfondo = stiraVerticale ? height : sfondo.getHeight();
-		int x = (width - larghezzaSfondo) / 2;
-		int y = (height - altezzaSfondo) / 2;
-		graphics.drawImage(sfondo, x, y, larghezzaSfondo, altezzaSfondo, null);
-		return new Rectangle(x, y, larghezzaSfondo, altezzaSfondo);
+		graphics.drawImage(immagine, sfondo.getX(), sfondo.getY(), sfondo.getLarghezza(), sfondo.getAltezza(), null);
 	}
 
-	/**
-	 * Se l'immagine va rovesciata per far guardare l'elemento dalla parte voluta. Lo sa solo per i personaggi (vedi
-	 * VersiDeiPersonaggi): le altre immagini sono disegnate così come sono.
-	 */
-	private static boolean serveSpecchiare(ImmagineIntermezzo immagine, StatoElemento stato) {
-		return stato.getVerso() != null && immagine.getTipo() == ImmagineIntermezzo.Tipo.PERSONAGGIO
-				&& VersiDeiPersonaggi.serveSpecchiare(immagine.getClassePersonaggio(), stato.getVerso());
-	}
-
-	private void disegnaElemento(Graphics2D graphics, ElementoIntermezzo elemento, StatoElemento stato, double secondi) {
-		BufferedImage immagine = immagine(elemento.getImmagine(), secondi, stato);
+	private void disegnaElemento(Graphics2D graphics, Disegno elemento) {
+		BufferedImage immagine = immagine(elemento.getImmagine());
 		if (immagine == null) {
 			return;
 		}
-		int larghezza = (int) Math.round(immagine.getWidth() * stato.getScala());
-		int altezza = (int) Math.round(immagine.getHeight() * stato.getScala());
-		int x = (int) Math.round(stato.getX() * width) - larghezza / 2;
-		int y = (int) Math.round(stato.getY() * height) - altezza / 2;
-		posizioni.put(elemento.getId(), new Rectangle(x, y, larghezza, altezza));
-		boolean specchiato = serveSpecchiare(elemento.getImmagine(), stato);
-		versi.put(elemento.getId(), specchiato);
-
-		float opacita = (float) Math.max(0, Math.min(1, stato.getOpacita()));
-		if (opacita == 0 || larghezza <= 0 || altezza <= 0) {
-			return;
-		}
-		graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacita));
-		if (specchiato) {
-			graphics.drawImage(immagine, x + larghezza, y, -larghezza, altezza, null);
+		graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, elemento.getOpacita()));
+		if (elemento.isSpecchiata()) {
+			graphics.drawImage(immagine, elemento.getX() + elemento.getLarghezza(), elemento.getY(), -elemento.getLarghezza(), elemento.getAltezza(), null);
 		} else {
-			graphics.drawImage(immagine, x, y, larghezza, altezza, null);
+			graphics.drawImage(immagine, elemento.getX(), elemento.getY(), elemento.getLarghezza(), elemento.getAltezza(), null);
 		}
 	}
 
-	private void disegnaFumetto(Graphics2D graphics, BattutaIntermezzo battuta) {
-		Point punta = puntaDellaBattuta(battuta);
-		if (punta == null) {
-			return;
-		}
-		BufferedImage nuvola = nuvola(battuta);
-		if (nuvola == null) {
-			return;
-		}
-		int larghezza = nuvola.getWidth();
-		int altezza = nuvola.getHeight();
-		// (x, y) è l'angolo in basso a sinistra, come per SpriteFumetto
-		int x;
-		int y;
-		if (battuta.hasPosizioneNuvola()) {
-			x = (int) Math.round(battuta.getNuvolaX() * width) - larghezza / 2;
-			y = (int) Math.round(battuta.getNuvolaY() * height) + altezza / 2;
-		} else {
-			y = punta.y - DISTANZA_FUMETTO_VERTICALE;
-			if (battuta.isCentrataOrizzontalmente()) {
-				x = (width - larghezza) / 2;
-			} else {
-				// Sopra chi parla
-				x = punta.x - larghezza / 2;
-			}
-		}
-		x = Math.max(MARGINE_SCHERMO, Math.min(x, width - larghezza - MARGINE_SCHERMO));
-		y = Math.max(altezza + MARGINE_SCHERMO, Math.min(y, height - MARGINE_SCHERMO));
-
-		graphics.drawImage(nuvola, x, y - altezza, null);
-		SpriteFumetto.disegnaPunta(graphics, x, y, larghezza, altezza, punta.x, punta.y);
+	private void disegnaFumetto(Graphics2D graphics, Fumetto fumetto) {
+		BufferedImage nuvola = nuvole.computeIfAbsent(fumetto.getDescrizione(), d -> SpriteFumetto.costruisciNuvola(d, DoomdarkColorModel.Color.BLACK));
+		graphics.drawImage(nuvola, fumetto.getX(), fumetto.getY() - nuvola.getHeight(), null);
+		SpriteFumetto.disegnaPunta(graphics, fumetto.getX(), fumetto.getY(), nuvola.getWidth(), nuvola.getHeight(), fumetto.getPuntaVersoX(), fumetto.getPuntaVersoY());
 	}
 
 	/**
-	 * La bocca di chi parla nella posizione che ha in questo frame, o il punto fisso.
+	 * Quanto è grande un'immagine com'è caricata (già con lo zoom); null se non c'è.
 	 */
-	private Point puntaDellaBattuta(BattutaIntermezzo battuta) {
-		if (battuta.getIdElemento() == null) {
-			return new Point((int) Math.round(battuta.getPuntoX() * width), (int) Math.round(battuta.getPuntoY() * height));
-		}
-		Rectangle rettangolo = posizioni.get(battuta.getIdElemento());
-		if (rettangolo == null) {
-			return null;
-		}
-		ElementoIntermezzo elemento = pagina.getElemento(battuta.getIdElemento());
-		double boccaX = Boolean.TRUE.equals(versi.get(battuta.getIdElemento())) ? 1 - elemento.getBoccaX() : elemento.getBoccaX();
-		return new Point(rettangolo.x + (int) Math.round(boccaX * rettangolo.width),
-				rettangolo.y + (int) Math.round(elemento.getBoccaY() * rettangolo.height));
+	private Misura misuraDi(ImmagineIntermezzo origine) {
+		BufferedImage immagine = immagine(origine, 0, null);
+		return immagine == null ? null : new Misura(immagine.getWidth(), immagine.getHeight());
 	}
 
-	private BufferedImage nuvola(BattutaIntermezzo battuta) {
-		if (!nuvole.containsKey(battuta)) {
-			BusEventi.pubblica(new InternoCreazioneFumetto(battuta.getTesto()));
-			BufferedImage nuvola = null;
-			int larghezzaNuvola = battuta.hasLarghezza() ? (int) Math.round(battuta.getLarghezza() * width) : width / 3;
-			try {
-				nuvola = SpriteFumetto.costruisciNuvola(battuta.getTesto(), larghezzaNuvola,
-						DoomdarkFont.medio(), DoomdarkColorModel.Color.BLACK);
-			} catch (DoomdarkFont.UnsupportedCharacterException e) {
-				BusEventi.pubblica(new InternoErrore("Battuta non disegnabile: \"" + battuta.getTesto() + "\" - " + e.getMessage()));
-			}
-			nuvole.put(battuta, nuvola);
-		}
-		return nuvole.get(battuta);
+	private BufferedImage immagine(ScenaDellIntermezzo.Immagine immagine) {
+		return immagine(immagine.getOrigine(), immagine.getSecondi(), immagine.getStato());
 	}
 
 	/**
@@ -328,9 +227,7 @@ public class DisplayableCanvasIntermezzo implements Finestra {
 	private BufferedImage risorsa(String percorso) {
 		if (!immaginiRisorse.containsKey(percorso)) {
 			// Le locazioni, i personaggi e gli oggetti stanno nei file a metà risoluzione, come in ImageCache
-			boolean mezzaRisoluzione = percorso.startsWith("locazioni/") || percorso.startsWith("personaggi/")
-					|| percorso.startsWith("oggetti/");
-			BufferedImage caricata = BufferedImageBuilder.provaACaricare(percorso, mezzaRisoluzione ? LivelloDiZoom.valore() : 1.0);
+			BufferedImage caricata = BufferedImageBuilder.provaACaricare(percorso, ScenaDellIntermezzo.mezzaRisoluzione(percorso) ? LivelloDiZoom.valore() : 1.0);
 			if (caricata == null) {
 				BusEventi.pubblica(new InternoErrore("Immagine di intermezzo non trovata: " + percorso));
 			}

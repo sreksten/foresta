@@ -40,7 +40,7 @@ public class RiquadroMappa implements Finestra {
 		private final int variante;
 		private final boolean visitata;
 
-		private Tessera(int x, int y, TipoLocazione tipo, int variante, boolean visitata) {
+		public Tessera(int x, int y, TipoLocazione tipo, int variante, boolean visitata) {
 			this.x = x;
 			this.y = y;
 			this.tipo = tipo;

@@ -111,6 +111,16 @@ public final class SchermataIntroOutroGdx {
 		disegno.disegna(batch, schermata.getContenuto(), 0, 0, 1f);
 	}
 
+	/** L'ombra del drago, a tutto schermo: lo sfondo delle pagine degli intermezzi senza sfondo */
+	public void ombraDelDrago(Batch batch) {
+		disegnaOmbraDelDrago(batch, 1f);
+	}
+
+	/** Testo centrato in alto, con a capo automatico, nell'alfabeto grande: per chi compone una schermata attorno al testo (gli intermezzi) */
+	public void testoCentrato(Batch batch, String testo) {
+		disegna(batch, schermate.testo(testo));
+	}
+
 	public void scrivi(Batch batch, boolean conOmbraDelDrago) {
 		disegna(batch, schermate.scrivi(conOmbraDelDrago));
 	}

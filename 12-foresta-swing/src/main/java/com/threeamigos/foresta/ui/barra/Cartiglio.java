@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.ui.barra;
 
+import com.threeamigos.foresta.ui.Misura;
+import com.threeamigos.foresta.ui.Punto;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
@@ -25,7 +27,6 @@ public final class Cartiglio {
 	private static final int ABBASSAMENTO_CAPI = 1;
 	private static final Color SFONDO = new Color(0xFF, 0xAD, 0x00);
 	private static final Color BORDO = new Color(0x8C, 0x42, 0x10);
-	private static final int DISTANZA_DAL_MOUSE = 16;
 
 	/**
 	 * Il testo dell'aiuto per gli elenchi che si scorrono con la rotella
@@ -93,22 +94,17 @@ public final class Cartiglio {
 			return;
 		}
 		List<Image> testi = new ArrayList<>();
-		int larghezza = 0;
+		List<DisposizioneDelCartiglio> disposizioni = new ArrayList<>();
 		for (String riga : righe) {
-			Image testo = testo(riga);
-			testi.add(testo);
-			larghezza = Math.max(larghezza, larghezza(testo));
+			testi.add(testo(riga));
+			disposizioni.add(new DisposizioneDelCartiglio(riga, DoomdarkFont.medio(),
+					new Misura(ImageCache.cartiglioSinistro.getWidth(), ImageCache.cartiglioSinistro.getHeight()),
+					new Misura(ImageCache.cartiglioDestro.getWidth(), ImageCache.cartiglioDestro.getHeight())));
 		}
-		int altezzaSingola = altezza();
-		int altezzaTotale = altezzaSingola * testi.size();
-		int x = Math.max(0, Math.min(xMouse + DISTANZA_DAL_MOUSE, larghezzaArea - larghezza));
-		int y = yMouse + DISTANZA_DAL_MOUSE;
-		if (y + altezzaTotale > altezzaArea) {
-			y = Math.max(0, yMouse - DISTANZA_DAL_MOUSE - altezzaTotale);
-		}
-		for (Image testo : testi) {
-			disegna(graphics, testo, x + (larghezza - larghezza(testo)) / 2, y);
-			y += altezzaSingola;
+		// Dove stanno lo dice il modulo comune
+		List<Punto> posizioni = DisposizioneDelCartiglio.accantoAlMouse(disposizioni, xMouse, yMouse, larghezzaArea, altezzaArea);
+		for (int i = 0; i < testi.size(); i++) {
+			disegna(graphics, testi.get(i), posizioni.get(i).x, posizioni.get(i).y);
 		}
 	}
 }

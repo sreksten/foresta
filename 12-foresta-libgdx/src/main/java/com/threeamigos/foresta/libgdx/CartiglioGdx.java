@@ -3,9 +3,13 @@ package com.threeamigos.foresta.libgdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.threeamigos.foresta.ui.Misura;
+import com.threeamigos.foresta.ui.Punto;
 import com.threeamigos.foresta.ui.barra.DisposizioneDelCartiglio;
 import com.threeamigos.foresta.ui.immagini.NomiDelleImmagini;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Il cartiglio in libGDX: il nastro arancione con il bordo marrone, il testo e i due capi arrotolati. Com'è fatto lo dice
@@ -49,5 +53,20 @@ public final class CartiglioGdx {
 		testo.disegna(batch, scritta, x + d.getXDelTesto(), y + d.getYDelTesto(), DoomdarkColorModel.Color.BROWN);
 		immagini.disegna(batch, NomiDelleImmagini.CARTIGLIO_SINISTRO, x, y + d.getYDeiCapi(), 1f);
 		immagini.disegna(batch, NomiDelleImmagini.CARTIGLIO_DESTRO, x + d.getXDelCapoDestro(), y + d.getYDeiCapi(), 1f);
+	}
+
+	/**
+	 * Uno o più cartigli, uno sotto l'altro e centrati fra loro, accanto al puntatore e dentro l'area larga e alta così (dove stanno lo dice
+	 * {@link DisposizioneDelCartiglio#accantoAlMouse}).
+	 */
+	public void disegnaAccantoAlMouse(Batch batch, List<String> righe, int xMouse, int yMouse, int larghezzaArea, int altezzaArea) {
+		List<DisposizioneDelCartiglio> disposizioni = new ArrayList<>();
+		for (String riga : righe) {
+			disposizioni.add(disposizione(riga));
+		}
+		List<Punto> posizioni = DisposizioneDelCartiglio.accantoAlMouse(disposizioni, xMouse, yMouse, larghezzaArea, altezzaArea);
+		for (int i = 0; i < righe.size(); i++) {
+			disegna(batch, righe.get(i), posizioni.get(i).x, posizioni.get(i).y);
+		}
 	}
 }

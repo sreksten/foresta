@@ -43,7 +43,7 @@ public class ForestaGdx extends ApplicationAdapter {
 	private static final String[] ATLANTI = {"icone", "mappa", "oggetti", "locazioni", "fondi", "fondinon2x2", "personaggi"};
 	private static final int MARGINE = 20;
 	// La pagina di prova del testo e i riquadri provati (testo, gruppo, locazione, sfida)
-	private static final int PAGINE_DI_PROVA = 11;
+	private static final int PAGINE_DI_PROVA = 15;
 
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
@@ -68,6 +68,10 @@ public class ForestaGdx extends ApplicationAdapter {
 	private SchermataBestiarioGdx schermataBestiario;
 	private SchermataIntroOutroGdx schermataIntro;
 	private SchermataDiScambioArtefattiGdx schermataDiScambio;
+	private SchermataDiScambioArtefattiGdx schermataIncantatore;
+	private SchermataMappaGdx schermataMappa;
+	private SchermataDiScambioConsumabiliGdx schermataAlchimista;
+	private SchermataIntermezzoGdx schermataIntermezzo;
 	private PianificatoreGdx pianificatore;
 	/** 0 è la pagina di prova, 1 il riquadro del testo, 2 i riquadri del gruppo, delle statistiche, di incantesimi e pozioni e della mappa, 3 la locazione con il combattimento, 4 la sfida, 5 gli sprite, 6 la barra delle icone, 7 la pagina dei trofei, 8 il bestiario, 9 l'intro, 10 lo scambio di artefatti, poi un atlante per pagina */
 	private int corrente;
@@ -116,6 +120,17 @@ public class ForestaGdx extends ApplicationAdapter {
 		schermataDiScambio = new SchermataDiScambioArtefattiGdx(LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE, partita, immagini, piccolo, medio, "Inventario", "Armaiolo",
 				com.threeamigos.foresta.tipi.TipoPersonaggio.ARMAIOLO, "Armaiolo");
 		schermataDiScambio.impostaScambio(DatiDiProva.scambio());
+		schermataDiScambio.impostaPersonaggio(partita.getGruppoGiocatore().getPersonaggio(0));
+		schermataIncantatore = new SchermataDiScambioArtefattiGdx(LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE, partita, immagini, piccolo, medio, "Inventario del gruppo",
+				"Banco di lavoro", com.threeamigos.foresta.tipi.TipoPersonaggio.INCANTATORE, "Incantatore");
+		schermataIncantatore.impostaBanco(DatiDiProva.banco());
+		schermataAlchimista = new SchermataDiScambioConsumabiliGdx(LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE, partita, immagini, piccolo, medio);
+		schermataAlchimista.impostaOfferte(DatiDiProva.offerteDelAlchimista());
+		schermataIntermezzo = new SchermataIntermezzoGdx(LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE, immagini, medio, schermataIntro);
+		schermataIntermezzo.mostra(DatiDiProva.paginaDiIntermezzo(true));
+		schermataMappa = new SchermataMappaGdx(LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE, partita, immagini, medio, nuvole);
+		schermataMappa.abilitaJoystickVirtuale();
+		schermataMappa.getModello().centraSuGiocatore();
 		barraIcone = new BarraIconeGdx(Orientamento.ORIZZONTALE, true, 0, ALTEZZA_VIRTUALE - 76, LARGHEZZA_VIRTUALE, 76, partita, immagini, piccolo, medio);
 		barraIcone.getModello().impostaAzioni();
 		paginaDegliSprite = new PaginaDegliSprite(immagini, piccolo, medio, LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE);
@@ -145,7 +160,7 @@ public class ForestaGdx extends ApplicationAdapter {
 
 			@Override
 			public Finestra getFinestraATuttoSchermo() {
-				return corrente == 7 ? schermataTrofei : corrente == 8 ? schermataBestiario : corrente == 10 ? schermataDiScambio : null;
+				return corrente == 7 ? schermataTrofei : corrente == 8 ? schermataBestiario : corrente == 10 ? schermataDiScambio : corrente == 11 ? schermataIncantatore : corrente == 12 ? schermataMappa : corrente == 13 ? schermataAlchimista : null;
 			}
 
 			@Override
@@ -155,7 +170,7 @@ public class ForestaGdx extends ApplicationAdapter {
 
 			@Override
 			public Area getArea(Finestra finestra) {
-				if (finestra == schermataTrofei || finestra == schermataBestiario || finestra == schermataDiScambio) {
+				if (finestra == schermataTrofei || finestra == schermataBestiario || finestra == schermataDiScambio || finestra == schermataIncantatore || finestra == schermataMappa || finestra == schermataAlchimista) {
 					return new Area(0, 0, LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE);
 				}
 				if (finestra == barraIcone.getModello()) {
@@ -224,6 +239,16 @@ public class ForestaGdx extends ApplicationAdapter {
 		pianificatore.aggiorna();
 		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.justTouched()) {
 			corrente = (corrente + 1) % (ATLANTI.length + PAGINE_DI_PROVA);
+			if (corrente == 14) {
+				schermataIntermezzo.mostra(DatiDiProva.paginaDiIntermezzo(true));
+			}
+		}
+		// Sulle schermate di scambio, M fa comparire le monete spese e N quelle ricavate
+		SchermataDiScambioArtefattiGdx scambio = corrente == 10 ? schermataDiScambio : corrente == 11 ? schermataIncantatore : null;
+		if (scambio != null && Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+			scambio.mostraVariazioneDelleMonete(-120);
+		} else if (scambio != null && Gdx.input.isKeyJustPressed(Input.Keys.N)) {
+			scambio.mostraVariazioneDelleMonete(45);
 		}
 		Gdx.gl.glClearColor(0.16f, 0.16f, 0.16f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -258,6 +283,14 @@ public class ForestaGdx extends ApplicationAdapter {
 			schermataIntro.intro(batch);
 		} else if (corrente == 10) {
 			schermataDiScambio.disegna(batch, camera, viewport);
+		} else if (corrente == 11) {
+			schermataIncantatore.disegna(batch, camera, viewport);
+		} else if (corrente == 12) {
+			schermataMappa.disegna(batch, camera, viewport);
+		} else if (corrente == 13) {
+			schermataAlchimista.disegna(batch, camera, viewport);
+		} else if (corrente == 14) {
+			schermataIntermezzo.disegna(batch, camera, viewport);
 		} else {
 			disegnaUnAtlante(ATLANTI[corrente - PAGINE_DI_PROVA]);
 		}

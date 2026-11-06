@@ -175,6 +175,9 @@ public final class DatiDiProva {
 				.con("getOrdineDiCombattimento", a -> inCombattimento)
 				.con("getGruppoAvversario", a -> avversari)
 				.con("getMappa", a -> mappa)
+				.con("getUltimeNotizie", a -> java.util.Arrays.asList(
+						new com.threeamigos.foresta.modellodati.NotiziaMD("n1", "Il Drago - ha distrutto la città di Nyena e nessuno è sopravvissuto"),
+						new com.threeamigos.foresta.modellodati.NotiziaMD("n2", "Locanda del Cinghiale - il locandiere offre birra gratis a chi porta notizie del Drago")))
 				.con("getTipoBottinoInLocazione", a -> TipoBottino.COFANO)
 				.con("isTrofeoVinto", a -> ((com.threeamigos.foresta.tipi.TipoTrofeo) a[0]).ordinal() % 3 == 0)
 				.con("getObiettivoTrofeo", a -> 10)
@@ -264,11 +267,105 @@ public final class DatiDiProva {
 			sinistra.add(generatore.generaArtefatto(tipi[i], 2 + i));
 			destra.add(generatore.generaArtefatto(tipi[(i + 3) % tipi.length], 3 + i));
 		}
-		return finto(com.threeamigos.foresta.artefatti.VistaScambio.class, null, new Risposte()
+		return finto(com.threeamigos.foresta.artefatti.VistaScambio.class, null, risposteDelloScambio(sinistra, destra).mappa);
+	}
+
+	private static Risposte risposteDelloScambio(List<com.threeamigos.foresta.artefatti.VistaArtefatto> sinistra,
+												 List<com.threeamigos.foresta.artefatti.VistaArtefatto> destra) {
+		return new Risposte()
 				.con("getId", a -> "prova")
 				.con("getInventarioParteAttiva", a -> sinistra)
 				.con("getInventarioParteRemota", a -> destra)
 				.con("mostraCostoSuParteAttiva", a -> true)
-				.con("mostraCostoSuParteRemota", a -> true).mappa);
+				.con("mostraCostoSuParteRemota", a -> true);
+	}
+
+	/**
+	 * Un banco di lavoro finto: l'inventario del gruppo a sinistra, sul banco una spada e un ingrediente, e una fusione che porta la spada al livello
+	 * 7 con due effetti su quattro.
+	 */
+	public static com.threeamigos.foresta.artefatti.VistaBancoDiLavoro banco() {
+		com.threeamigos.foresta.artefatti.GeneratoreArtefattiTabelle generatore =
+				new com.threeamigos.foresta.artefatti.GeneratoreArtefattiTabelle(new java.util.Random(11));
+		List<com.threeamigos.foresta.artefatti.VistaArtefatto> sinistra = new ArrayList<>();
+		for (com.threeamigos.foresta.tipi.TipoArtefatto tipo : new com.threeamigos.foresta.tipi.TipoArtefatto[]{com.threeamigos.foresta.tipi.TipoArtefatto.SPADA,
+				com.threeamigos.foresta.tipi.TipoArtefatto.ELMO, com.threeamigos.foresta.tipi.TipoArtefatto.SCUDO, com.threeamigos.foresta.tipi.TipoArtefatto.ARMATURA}) {
+			sinistra.add(generatore.generaArtefatto(tipo, 4));
+		}
+		com.threeamigos.foresta.artefatti.VistaArtefatto sulBanco = generatore.generaArtefatto(com.threeamigos.foresta.tipi.TipoArtefatto.SPADA, 5);
+		List<com.threeamigos.foresta.artefatti.VistaArtefatto> destra = new ArrayList<>();
+		destra.add(sulBanco);
+		destra.add(generatore.generaArtefatto(com.threeamigos.foresta.tipi.TipoArtefatto.AGGIORNAMENTO, 3));
+		return finto(com.threeamigos.foresta.artefatti.VistaBancoDiLavoro.class, null, risposteDelloScambio(sinistra, destra)
+				.con("getArtefattoSulBanco", a -> Optional.of(sulBanco))
+				.con("getLivelloDopoLaFusione", a -> 7)
+				.con("getEffettiDopoLaFusione", a -> 2)
+				.con("getEffettiMassimiDopoLaFusione", a -> 4)
+				.con("getCostoFusione", a -> 120)
+				// Per vedere i colori: il primo effetto della spada sul banco esce, il secondo entra
+				.con("isEffettoInUscita", a -> a[0] == effettoNumero(sulBanco, 0))
+				.con("isEffettoInEntrata", a -> a[0] == effettoNumero(sulBanco, 1)).mappa);
+	}
+
+	/** L'effetto di quel numero di un artefatto, o null se non ne ha tanti. */
+	private static Object effettoNumero(com.threeamigos.foresta.artefatti.VistaArtefatto artefatto, int numero) {
+		return new ArrayList<Object>(artefatto.getModificatori()).stream().skip(numero).findFirst().orElse(null);
+	}
+
+	/**
+	 * Il listino di un alchimista finto: due incantesimi e le pozioni, con nome, descrizione e costo
+	 */
+	public static List<com.threeamigos.foresta.interfacce.VistaOffertaConsumabile> offerteDelAlchimista() {
+		List<com.threeamigos.foresta.interfacce.VistaOffertaConsumabile> offerte = new ArrayList<>();
+		offerte.add(offerta(com.threeamigos.foresta.tipi.TipoConsumabile.INCANTESIMO, TipoIncantesimo.FUOCO, "Fuoco",
+				"Una palla di fuoco colpisce il nemico e lo brucia.", 150));
+		offerte.add(offerta(com.threeamigos.foresta.tipi.TipoConsumabile.INCANTESIMO, TipoIncantesimo.GELO, "Gelo",
+				"Il bersaglio si ghiaccia e rallenta.", 120));
+		offerte.add(offerta(com.threeamigos.foresta.tipi.TipoConsumabile.POZIONE_SALUTE, null, "Pozione di salute", "Cura un personaggio.", 40));
+		offerte.add(offerta(com.threeamigos.foresta.tipi.TipoConsumabile.POZIONE_MAGIA, null, "Pozione di magia", "Restituisce punti magia.", 55));
+		offerte.add(offerta(com.threeamigos.foresta.tipi.TipoConsumabile.POZIONE_PANACEA, null, "Panacea", "Toglie gli effetti negativi.", 80));
+		return offerte;
+	}
+
+	private static com.threeamigos.foresta.interfacce.VistaOffertaConsumabile offerta(com.threeamigos.foresta.tipi.TipoConsumabile tipo,
+			TipoIncantesimo incantesimo, String nome, String descrizione, int costo) {
+		return finto(com.threeamigos.foresta.interfacce.VistaOffertaConsumabile.class, null, new Risposte()
+				.con("getTipo", a -> tipo)
+				.con("getClasseIncantesimo", a -> incantesimo)
+				.con("getNome", a -> nome)
+				.con("getDescrizione", a -> descrizione)
+				.con("getCosto", a -> costo).mappa);
+	}
+
+	/**
+	 * Una pagina di intermezzo di prova: lo sfondo della locanda, un guerriero e un mago che si guardano, il fuoco da campo e due battute una dopo l'altra
+	 */
+	public static com.threeamigos.foresta.intermezzi.PaginaIntermezzo paginaDiIntermezzo() {
+		return paginaDiIntermezzo(false);
+	}
+
+	/**
+	 * La stessa pagina, e con <code>conRivelazione</code> all'inizio rivela un artefatto raro che poi vola verso il guerriero: le battute cominciano dopo
+	 */
+	public static com.threeamigos.foresta.intermezzi.PaginaIntermezzo paginaDiIntermezzo(boolean conRivelazione) {
+		double ritardo = conRivelazione ? com.threeamigos.foresta.intermezzi.PaginaIntermezzo.SECONDI_RIVELAZIONE_ARTEFATTO : 0;
+		com.threeamigos.foresta.intermezzi.ImmagineIntermezzo sfondo =
+				com.threeamigos.foresta.intermezzi.ImmagineIntermezzo.risorsa("fondinon2x2/InternoLocanda.png");
+		com.threeamigos.foresta.intermezzi.PaginaIntermezzo pagina = new com.threeamigos.foresta.intermezzi.PaginaIntermezzo("Una sera alla locanda")
+				.conSfondo(sfondo, com.threeamigos.foresta.tipi.TipoStiramento.ORIZZONTALE_E_VERTICALE)
+				.conElemento(com.threeamigos.foresta.intermezzi.ElementoIntermezzo.personaggio("guerriero", TipoPersonaggio.GUERRIERO, 0.3, 0.7)
+						.guarda(com.threeamigos.foresta.tipi.Verso.DESTRA))
+				.conElemento(com.threeamigos.foresta.intermezzi.ElementoIntermezzo.personaggio("mago", TipoPersonaggio.MAGO, 0.7, 0.7)
+						.guarda(com.threeamigos.foresta.tipi.Verso.SINISTRA))
+				.conElemento(com.threeamigos.foresta.intermezzi.ElementoIntermezzo.di("fuoco",
+						com.threeamigos.foresta.intermezzi.ImmagineIntermezzo.animazione(com.threeamigos.foresta.tipi.Animazione.FUOCO_DA_CAMPO), 0.5, 0.8))
+				.conBattuta(com.threeamigos.foresta.intermezzi.BattutaIntermezzo.di("guerriero", "Che serata, amico mio!").daSecondo(0.5 + ritardo).perSecondi(4))
+				.conBattuta(com.threeamigos.foresta.intermezzi.BattutaIntermezzo.di("mago", "Il Drago non ci troverà qui, spero.").daSecondo(5 + ritardo).perSecondi(4));
+		if (conRivelazione) {
+			com.threeamigos.foresta.artefatti.VistaArtefatto spada = new com.threeamigos.foresta.artefatti.GeneratoreArtefattiTabelle(new java.util.Random(5))
+					.generaArtefatto(com.threeamigos.foresta.tipi.TipoArtefatto.SPADA, 6);
+			pagina.conRivelazioneDiArtefatto(spada, 3, "guerriero");
+		}
+		return pagina;
 	}
 }

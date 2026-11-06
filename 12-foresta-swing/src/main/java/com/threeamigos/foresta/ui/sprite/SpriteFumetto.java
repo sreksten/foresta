@@ -67,7 +67,7 @@ public class SpriteFumetto extends SpriteBase {
         return costruisciNuvola(new DescrizioneFumetto(testo, larghezza, font), colore);
     }
 
-    private static BufferedImage costruisciNuvola(DescrizioneFumetto dati, DoomdarkColorModel.Color colore) {
+    public static BufferedImage costruisciNuvola(DescrizioneFumetto dati, DoomdarkColorModel.Color colore) {
         final int smussamento = DescrizioneFumetto.SMUSSAMENTO_BORDO;
         BufferedImage immagineRisultante = new BufferedImage(dati.getLarghezza(), dati.getAltezza(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics = immagineRisultante.createGraphics();

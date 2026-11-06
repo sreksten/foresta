@@ -138,9 +138,33 @@ public final class ImmaginiGdx implements Disposable {
 	}
 
 	/**
-	 * Riempie un rettangolo di un colore (con la sua alfa), con l'angolo in alto a sinistra in (x, y)
+	 * Riempie un triangolo (coordinate dello schermo, angolo in alto a sinistra) con il colore di ogni vertice, che sfuma da uno all'altro: ogni colore è
+	 * ARGB non premoltiplicato. Il colore del batch non c'entra.
 	 */
-	public void riempi(Batch batch, float x, float y, float larghezza, float altezza, Color colore) {
+	public void riempiTriangolo(Batch batch, float x1, float y1, int argb1, float x2, float y2, int argb2, float x3, float y3, int argb3) {
+		riempiQuadrilatero(batch, x1, y1, argb1, x2, y2, argb2, x3, y3, argb3, x3, y3, argb3);
+	}
+
+	/**
+	 * Riempie un quadrilatero con il colore di ogni vertice (in ordine attorno al bordo), come {@link #riempiTriangolo}
+	 */
+	public void riempiQuadrilatero(Batch batch, float x1, float y1, int argb1, float x2, float y2, int argb2, float x3, float y3, int argb3, float x4, float y4,
+								   int argb4) {
+		Texture bianco = pixelBianco();
+		float u = 0.5f;
+		float[] vertici = {
+				x1, y1, bitsDelColore(argb1), u, u,
+				x2, y2, bitsDelColore(argb2), u, u,
+				x3, y3, bitsDelColore(argb3), u, u,
+				x4, y4, bitsDelColore(argb4), u, u};
+		batch.draw(bianco, vertici, 0, vertici.length);
+	}
+
+	private static float bitsDelColore(int argb) {
+		return Color.toFloatBits(((argb >> 16) & 0xFF) / 255f, ((argb >> 8) & 0xFF) / 255f, (argb & 0xFF) / 255f, ((argb >>> 24) & 0xFF) / 255f);
+	}
+
+	private Texture pixelBianco() {
 		if (pixelBianco == null) {
 			Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
 			pixmap.setColor(Color.WHITE);
@@ -148,6 +172,14 @@ public final class ImmaginiGdx implements Disposable {
 			pixelBianco = new Texture(pixmap);
 			pixmap.dispose();
 		}
+		return pixelBianco;
+	}
+
+	/**
+	 * Riempie un rettangolo di un colore (con la sua alfa), con l'angolo in alto a sinistra in (x, y)
+	 */
+	public void riempi(Batch batch, float x, float y, float larghezza, float altezza, Color colore) {
+		Texture pixelBianco = pixelBianco();
 		Color precedente = new Color(batch.getColor());
 		batch.setColor(colore);
 		batch.draw(pixelBianco, x, y, larghezza, altezza);

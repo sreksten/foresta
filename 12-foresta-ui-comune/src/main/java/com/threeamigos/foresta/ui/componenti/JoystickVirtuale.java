@@ -1,8 +1,5 @@
 package com.threeamigos.foresta.ui.componenti;
 
-import java.awt.*;
-import java.awt.geom.Ellipse2D;
-
 /**
  * Un joystick analogico a schermo, per muovere un puntatore col dito (o col mouse) quando non c'è altro modo di
  * arrivare ovunque: un disco luminoso in basso a destra, con una zona centrale piena e una periferica che sfuma verso
@@ -10,7 +7,7 @@ import java.awt.geom.Ellipse2D;
  * zona centrale dà la velocità: nessuna dentro la zona centrale (la zona morta), poi sempre di più fino al massimo al
  * bordo del disco, oltre il quale non cresce. La direzione è quella del puntatore rispetto al centro.
  * <p>
- * La classe non muove niente: dice con che velocità, e chi la usa sposta il suo puntatore.
+ * La classe non muove niente né disegna: dice con che velocità, e chi la usa sposta il suo puntatore e disegna il disco.
  */
 public final class JoystickVirtuale {
 
@@ -28,12 +25,10 @@ public final class JoystickVirtuale {
 	public static final double VELOCITA_MASSIMA = 600;
 	private static final int MARGINE = 20;
 
-	private static final int ALFA_ZONA_CENTRALE = 200;
-	private static final Color BLU = new Color(40, 110, 255);
-	private static final Color BLU_PIENO = new Color(BLU.getRed(), BLU.getGreen(), BLU.getBlue(), ALFA_ZONA_CENTRALE);
-	private static final Color BLU_TRASPARENTE = new Color(BLU.getRed(), BLU.getGreen(), BLU.getBlue(), 0);
-	private static final Color BLU_CHIARO = new Color(170, 210, 255, 220);
-	private static final int RAGGIO_INDICATORE = 7;
+	/**
+	 * Il raggio dell'indicatore che mostra dove sta il puntatore, in pixel.
+	 */
+	public static final int RAGGIO_INDICATORE = 7;
 
 	private final int centroX;
 	private final int centroY;
@@ -92,6 +87,20 @@ public final class JoystickVirtuale {
 	}
 
 	/**
+	 * Dove sta il puntatore rispetto al centro del disco, tenuto dentro il disco, come {dx, dy}: serve a chi disegna l'indicatore.
+	 */
+	public double[] getScostamentoDellIndicatore() {
+		double dx = xPuntatore - centroX;
+		double dy = yPuntatore - centroY;
+		double distanza = Math.hypot(dx, dy);
+		if (distanza > RAGGIO) {
+			dx = dx * RAGGIO / distanza;
+			dy = dy * RAGGIO / distanza;
+		}
+		return new double[]{dx, dy};
+	}
+
+	/**
 	 * Quanto va forte il joystick, da 0 (puntatore nella zona centrale, o joystick non attivo) a 1 (al bordo del disco
 	 * o oltre), crescendo in modo lineare in mezzo.
 	 */
@@ -129,48 +138,11 @@ public final class JoystickVirtuale {
 		return intensita * VELOCITA_MASSIMA * scostamento / distanza;
 	}
 
-	/**
-	 * Disegna il disco: pieno e blu nella zona centrale, dello stesso blu che sfuma fino alla trasparenza all'esterno;
-	 * da attivo mostra anche dove sta il puntatore, tenuto dentro il disco.
-	 */
-	public void disegna(Graphics2D graphics) {
-		Paint paintOriginale = graphics.getPaint();
-		Object antialiasing = graphics.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
-		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-		float frazioneZonaCentrale = (float) RAGGIO_ZONA_CENTRALE / RAGGIO;
-		graphics.setPaint(new RadialGradientPaint(centroX, centroY, RAGGIO, new float[] {0f, frazioneZonaCentrale, 1f},
-				new Color[] {BLU_PIENO, BLU_PIENO, BLU_TRASPARENTE}));
-		graphics.fill(new Ellipse2D.Double(centroX - RAGGIO, centroY - RAGGIO, 2 * RAGGIO, 2 * RAGGIO));
-
-		// Il bordo della zona centrale, appena più chiaro: dice dove finisce la zona morta
-		graphics.setPaint(BLU_CHIARO);
-		graphics.draw(new Ellipse2D.Double(centroX - RAGGIO_ZONA_CENTRALE, centroY - RAGGIO_ZONA_CENTRALE,
-				2 * RAGGIO_ZONA_CENTRALE, 2 * RAGGIO_ZONA_CENTRALE));
-
-		if (attivo) {
-			double dx = xPuntatore - centroX;
-			double dy = yPuntatore - centroY;
-			double distanza = Math.hypot(dx, dy);
-			if (distanza > RAGGIO) {
-				dx = dx * RAGGIO / distanza;
-				dy = dy * RAGGIO / distanza;
-			}
-			graphics.setPaint(BLU_CHIARO);
-			graphics.fill(new Ellipse2D.Double(centroX + dx - RAGGIO_INDICATORE, centroY + dy - RAGGIO_INDICATORE,
-					2 * RAGGIO_INDICATORE, 2 * RAGGIO_INDICATORE));
-		}
-
-		graphics.setPaint(paintOriginale);
-		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				antialiasing != null ? antialiasing : RenderingHints.VALUE_ANTIALIAS_DEFAULT);
-	}
-
-	int getCentroX() {
+	public int getCentroX() {
 		return centroX;
 	}
 
-	int getCentroY() {
+	public int getCentroY() {
 		return centroY;
 	}
 }

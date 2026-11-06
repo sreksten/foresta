@@ -298,6 +298,8 @@ Qualche regola:
 
 `ui/sprite/AnimazioneFuocoDaCampo.java` è un esempio completo, senza nessuna risorsa grafica.
 
+**Per libGDX** i fotogrammi non possono essere `BufferedImage`: `AnimazioneFuocoDaCampo` li prende da `immagini/FotogrammiDelFuocoDaCampo` (modulo `12-foresta-ui-comune`), che li calcola pixel per pixel senza toolkit, e libGDX li usa da lì. Una animazione nuova, per vedersi in entrambe le interfacce, va fatta allo stesso modo: i fotogrammi come `ImmagineDiPixel` nel modulo comune, e la sua misura e il suo fotogramma in `ScenaDellIntermezzo` e `SchermataIntermezzoGdx` (oggi conoscono solo il fuoco da campo).
+
 ---
 
 ## 9. Provare un intermezzo: l'anteprima

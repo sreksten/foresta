@@ -1,6 +1,8 @@
 package com.threeamigos.foresta.ui.schermate;
 
 import com.threeamigos.foresta.interfacce.VistaPartita;
+import com.threeamigos.foresta.interfacce.VistaPersonaggio;
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.Misura;
@@ -80,7 +82,7 @@ public abstract class SchermataDiScambio implements Finestra {
 	 */
 	public final DoomdarkFont fontSmall = DoomdarkFont.piccolo();
 
-	private final int larghezzaCornice;
+	final int larghezzaCornice;
 	private final int altezzaCornice;
 	private final MisureDelleImmagini misure;
 	/**
@@ -241,6 +243,14 @@ public abstract class SchermataDiScambio implements Finestra {
 	 * mestiere in piccolo, o solo il mestiere), il personaggio (sul pavimento comune a tutti, dato dal ladro), la riga delle monete del gruppo e il separatore.
 	 */
 	public ContenutoDiColonna colonnaDelNegoziante(TipoPersonaggio personaggio) {
+		return colonnaDelNegoziante(personaggio, Collections.emptyList());
+	}
+
+	/**
+	 * Come sopra, con sotto le monete altre righe (etichetta a sinistra, valore a destra, una per elemento: {etichetta, valore}), come il costo e gli effetti della
+	 * fusione dell'incantatore.
+	 */
+	public ContenutoDiColonna colonnaDelNegoziante(TipoPersonaggio personaggio, List<String[]> righeInPiu) {
 		List<Elemento> elementi = new ArrayList<>();
 		DoomdarkColorModel.Color colore = DoomdarkColorModel.Color.LIGHT_GRAY;
 		int y = SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
@@ -272,9 +282,63 @@ public abstract class SchermataDiScambio implements Finestra {
 		elementi.add(Elemento.testo(Collections.singletonList(TestiDellaUI.get("MONETE")), font, colore, xMinimaZonaCentrale, y));
 		elementi.add(Elemento.testo(Collections.singletonList(monete), font, colore, xMassimaZonaCentrale - Math.max(1, FontTool.getWidth(font, monete)), y));
 		y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
+		for (String[] riga : righeInPiu) {
+			coppia(elementi, riga[0], riga[1], y, colore);
+			y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
+		}
 		Misura separatore = misure.immagine(NomiDelleImmagini.SEPARATORE);
 		elementi.add(Elemento.immagine(NomiDelleImmagini.SEPARATORE, separatore.larghezza, separatore.altezza, false, null, (width - separatore.larghezza) / 2, y));
 		return new ContenutoDiColonna(width, y + separatore.altezza, elementi);
+	}
+
+	/**
+	 * La testata della colonna centrale dell'inventario, come elementi nelle coordinate dello schermo: il nome del personaggio, la sua immagine (sul
+	 * pavimento comune a tutti, dato dal ladro), i set leggendari completi, livello, esperienza, quanta ne manca, i punti abilità (arancioni se ce ne sono da
+	 * spendere) e il separatore. L'altezza del contenuto è dove comincia l'elenco degli attributi.
+	 */
+	public ContenutoDiColonna testataDelPersonaggio(VistaPersonaggio personaggio) {
+		List<Elemento> elementi = new ArrayList<>();
+		DoomdarkColorModel.Color coloreTestata = DoomdarkColorModel.Color.LIGHT_GRAY;
+		int y = SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
+		String nome = personaggio.getNome(VistaPersonaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
+		elementi.add(Elemento.testo(Collections.singletonList(nome), font, coloreTestata, (width - Math.max(1, FontTool.getWidth(font, nome))) / 2, y));
+		y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
+		Misura immagine = misure.personaggio(personaggio.getClasse());
+		y += altezzaLadro;
+		elementi.add(Elemento.immagine(NomiDelleImmagini.personaggio(personaggio.getClasse()), immagine.larghezza, immagine.altezza, false, null,
+				(width - immagine.larghezza) / 2, y - immagine.altezza));
+		y += SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
+		// I set leggendari completi, sotto l'immagine: quello che segue scende di quanto serve
+		for (String setCompleto : personaggio.getDescrizioniSetCompleti()) {
+			elementi.add(Elemento.testo(Collections.singletonList(setCompleto), font, DoomdarkColorModel.Color.YELLOW,
+					(width - Math.max(1, FontTool.getWidth(font, setCompleto))) / 2, y));
+			y += fontHeight + SPACING;
+		}
+		coppia(elementi, TipoAttributo.LIVELLO.getNome(), String.valueOf(personaggio.getLivello()), y, coloreTestata);
+		y += fontHeight + SPACING;
+		coppia(elementi, TipoAttributo.PUNTI_ESPERIENZA.getNome(), String.valueOf(personaggio.getEsperienza()), y, coloreTestata);
+		y += fontHeight + SPACING;
+		if (!personaggio.isAlLivelloMassimo()) {
+			coppia(elementi, TestiDellaUI.get("PROSSIMO_LIVELLO"), String.valueOf(personaggio.getEsperienzaPerProssimoLivello()), y, coloreTestata);
+		} else {
+			coppia(elementi, TestiDellaUI.get("LIVELLO_MASSIMO"), "", y, coloreTestata);
+		}
+		y += fontHeight + SPACING;
+		int puntiAbilita = personaggio.getPuntiAbilitaDisponibili();
+		coppia(elementi, TipoAttributo.PUNTI_ABILITA.getNome(), String.valueOf(puntiAbilita), y,
+				puntiAbilita > 0 ? DoomdarkColorModel.Color.ORANGE : coloreTestata);
+		y += fontHeight;
+		Misura separatore = misure.immagine(NomiDelleImmagini.SEPARATORE);
+		elementi.add(Elemento.immagine(NomiDelleImmagini.SEPARATORE, separatore.larghezza, separatore.altezza, false, null, (width - separatore.larghezza) / 2, y));
+		return new ContenutoDiColonna(width, y + separatore.altezza, elementi);
+	}
+
+	/** Un'etichetta a sinistra e il suo valore a destra, sulla stessa riga della zona centrale. */
+	private void coppia(List<Elemento> elementi, String etichetta, String valore, int y, DoomdarkColorModel.Color colore) {
+		elementi.add(Elemento.testo(Collections.singletonList(etichetta), font, colore, xMinimaZonaCentrale, y));
+		if (!valore.isEmpty()) {
+			elementi.add(Elemento.testo(Collections.singletonList(valore), font, colore, xMassimaZonaCentrale - FontTool.getWidth(font, valore), y));
+		}
 	}
 
 	/**

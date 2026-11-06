@@ -170,7 +170,7 @@ public final class ElencoDegliArtefatti {
 		return new TestoDelNodo(testo, font, colore);
 	}
 
-	private static ImmagineDelNodo immagine(String risorsa, MisureDelleImmagini misure) {
+	static ImmagineDelNodo immagine(String risorsa, MisureDelleImmagini misure) {
 		Misura m = misure.immagine(risorsa);
 		double zoom = NomiDelleImmagini.conZoom(risorsa) ? LivelloDiZoom.valore() : 1.0;
 		return new ImmagineDelNodo(risorsa, new Misura((int) Math.round(m.larghezza * zoom), (int) Math.round(m.altezza * zoom)));

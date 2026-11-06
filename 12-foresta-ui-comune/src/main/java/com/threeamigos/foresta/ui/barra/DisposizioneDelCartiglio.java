@@ -1,8 +1,12 @@
 package com.threeamigos.foresta.ui.barra;
 
 import com.threeamigos.foresta.ui.Misura;
+import com.threeamigos.foresta.ui.Punto;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.FontTool;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Com'è fatto un cartiglio, senza disegno: un nastro alto 24 pixel (un bordo marrone sopra e uno sotto, 22 pixel arancioni in mezzo) con il testo, e ai
@@ -16,6 +20,7 @@ public final class DisposizioneDelCartiglio {
 	public static final int ALTEZZA_NASTRO = 24;
 	private static final int SOVRAPPOSIZIONE_CAPI = 1;
 	private static final int ABBASSAMENTO_CAPI = 1;
+	private static final int DISTANZA_DAL_MOUSE = 16;
 	/**
 	 * Il colore del nastro (RGB) e del suo bordo sopra e sotto
 	 */
@@ -78,5 +83,33 @@ public final class DisposizioneDelCartiglio {
 	 */
 	public int getYDeiCapi() {
 		return ABBASSAMENTO_CAPI;
+	}
+
+	/**
+	 * Dove mettere più cartigli, uno sotto l'altro e centrati fra loro, accanto al puntatore: in basso a destra del mouse, oppure sopra se sotto non c'è
+	 * posto, e comunque dentro l'area larga e alta così (al peggio allineati a un suo bordo). Restituisce l'angolo in alto a sinistra di ciascuno, nello
+	 * stesso ordine.
+	 */
+	public static List<Punto> accantoAlMouse(List<DisposizioneDelCartiglio> cartigli, int xMouse, int yMouse, int larghezzaArea, int altezzaArea) {
+		List<Punto> posizioni = new ArrayList<>();
+		if (cartigli.isEmpty()) {
+			return posizioni;
+		}
+		int larghezza = 0;
+		for (DisposizioneDelCartiglio c : cartigli) {
+			larghezza = Math.max(larghezza, c.getLarghezza());
+		}
+		int altezzaSingola = cartigli.get(0).getAltezza();
+		int altezzaTotale = altezzaSingola * cartigli.size();
+		int x = Math.max(0, Math.min(xMouse + DISTANZA_DAL_MOUSE, larghezzaArea - larghezza));
+		int y = yMouse + DISTANZA_DAL_MOUSE;
+		if (y + altezzaTotale > altezzaArea) {
+			y = Math.max(0, yMouse - DISTANZA_DAL_MOUSE - altezzaTotale);
+		}
+		for (DisposizioneDelCartiglio c : cartigli) {
+			posizioni.add(new Punto(x + (larghezza - c.getLarghezza()) / 2, y));
+			y += altezzaSingola;
+		}
+		return posizioni;
 	}
 }
