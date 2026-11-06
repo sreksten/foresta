@@ -81,37 +81,13 @@ public class DisplayableCanvasCommerciante extends DisplayableCanvasScambiatoreA
                 TestiDellaUI.get(negozio == TipoNegozio.VENDITORE_DI_PERGAMENE ? "INVENTARIO_VENDITORE" : "INVENTARIO_ARMAIOLO"));
     }
 
+    private final DisegnoDiContenutoAwt disegno = new DisegnoDiContenutoAwt();
+
     /**
-     * Disegna la colonna centrale con il personaggio scelto.
+     * Disegna la colonna centrale con il personaggio scelto (vedi SchermataDiScambio.colonnaDelNegoziante, nel modulo comune).
      */
     public void disegnaColonnaPersonaggio(Graphics2D graphics) {
-
-        int y = SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
-        DoomdarkColorModel.Color coloreTestata = DoomdarkColorModel.Color.LIGHT_GRAY;
-
-        // Nome del negoziante (e sotto il mestiere)
-        y = disegnaIntestazioneCentrale(graphics, y, coloreTestata) + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
-
-        // Immagine personaggio
-        BufferedImage immaginePersonaggio = negozio == TipoNegozio.VENDITORE_DI_PERGAMENE
-                ? MappaPersonaggioImmagine.getImmagine(TipoPersonaggio.VENDITORE_DI_PERGAMENE)
-                : MappaPersonaggioImmagine.getImmagine(TipoPersonaggio.ARMAIOLO);
-
-        // Per tenere i personaggi sullo stesso livello (se si passa da un personaggio all'altro)
-        // ed evitare sfarfallamenti, scegliamo il ladro come personaggio "base" per calcolare l'altezza a cui disegnare.
-        y += ALTEZZA_LADRO;
-        graphics.drawImage(immaginePersonaggio, (width - immaginePersonaggio.getWidth()) / 2, y - immaginePersonaggio.getHeight(), null);
-        y += SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
-
-        Image i = ImageCache.get(TestiDellaUI.get("MONETE"), coloreTestata);
-        graphics.drawImage(i, xMinimaZonaCentrale, y, null);
-        i = ImageCache.get(vistaPartita.getCassa().getMonete(), font, coloreTestata);
-        graphics.drawImage(i, xMassimaZonaCentrale - i.getWidth(null), y, null);
-
-        y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
-
-        BufferedImage separatore = ImageCache.separatore;
-        graphics.drawImage(separatore, (width - separatore.getWidth()) / 2, y, null);
+        disegno.disegna(graphics, colonnaDelNegoziante(getMestiereAlCentro()), 0, 0);
     }
 
     @Override

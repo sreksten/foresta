@@ -4,12 +4,18 @@ import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.Misura;
+import com.threeamigos.foresta.ui.componenti.ContenutoDiColonna;
+import com.threeamigos.foresta.ui.componenti.ContenutoDiColonna.Elemento;
 import com.threeamigos.foresta.ui.componenti.ScorrimentoSuUnAsse;
+import com.threeamigos.foresta.ui.immagini.NomiDelleImmagini;
 import com.threeamigos.foresta.ui.sprite.CoordinateFumetto;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
+import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.FontTool;
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -228,6 +234,47 @@ public abstract class SchermataDiScambio implements Finestra {
 			return fontHeight;
 		}
 		return righe.size() * (fontHeight + INTERLINEA_DEL_NOME) - INTERLINEA_DEL_NOME + SPAZIO_FRA_NOME_E_MESTIERE + fontSmall.getHeight();
+	}
+
+	/**
+	 * La colonna centrale di una bottega, come elementi nelle coordinate dello schermo: l'intestazione (il nome del negoziante su una o più righe e sotto il
+	 * mestiere in piccolo, o solo il mestiere), il personaggio (sul pavimento comune a tutti, dato dal ladro), la riga delle monete del gruppo e il separatore.
+	 */
+	public ContenutoDiColonna colonnaDelNegoziante(TipoPersonaggio personaggio) {
+		List<Elemento> elementi = new ArrayList<>();
+		DoomdarkColorModel.Color colore = DoomdarkColorModel.Color.LIGHT_GRAY;
+		int y = SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
+		// Il nome del negoziante (e sotto il mestiere)
+		List<String> righe = getRigheDelNomeAlCentro();
+		if (righe.isEmpty()) {
+			String mestiere = getEtichettaMestiere();
+			elementi.add(Elemento.testo(Collections.singletonList(mestiere), font, colore, (width - Math.max(1, FontTool.getWidth(font, mestiere))) / 2, y));
+			y += fontHeight;
+		} else {
+			for (String riga : righe) {
+				elementi.add(Elemento.testo(Collections.singletonList(riga), font, colore, (width - Math.max(1, FontTool.getWidth(font, riga))) / 2, y));
+				y += fontHeight + INTERLINEA_DEL_NOME;
+			}
+			y += SPAZIO_FRA_NOME_E_MESTIERE - INTERLINEA_DEL_NOME;
+			String mestiere = getEtichettaMestiere();
+			elementi.add(Elemento.testo(Collections.singletonList(mestiere), fontSmall, colore, (width - Math.max(1, FontTool.getWidth(fontSmall, mestiere))) / 2, y));
+			y += fontSmall.getHeight();
+		}
+		y += SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
+		// Per tenere i personaggi sullo stesso livello (se si passa da un personaggio all'altro) ed evitare sfarfallamenti, il ladro è il personaggio
+		// "base" per calcolare l'altezza a cui disegnare
+		Misura immagine = misure.personaggio(personaggio);
+		y += altezzaLadro;
+		elementi.add(Elemento.immagine(NomiDelleImmagini.personaggio(personaggio), immagine.larghezza, immagine.altezza, false, null,
+				(width - immagine.larghezza) / 2, y - immagine.altezza));
+		y += SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
+		String monete = String.valueOf(vistaPartita.getCassa().getMonete());
+		elementi.add(Elemento.testo(Collections.singletonList(TestiDellaUI.get("MONETE")), font, colore, xMinimaZonaCentrale, y));
+		elementi.add(Elemento.testo(Collections.singletonList(monete), font, colore, xMassimaZonaCentrale - Math.max(1, FontTool.getWidth(font, monete)), y));
+		y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
+		Misura separatore = misure.immagine(NomiDelleImmagini.SEPARATORE);
+		elementi.add(Elemento.immagine(NomiDelleImmagini.SEPARATORE, separatore.larghezza, separatore.altezza, false, null, (width - separatore.larghezza) / 2, y));
+		return new ContenutoDiColonna(width, y + separatore.altezza, elementi);
 	}
 
 	/**

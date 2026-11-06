@@ -114,7 +114,7 @@ public class ForestaGdx extends ApplicationAdapter {
 		schermataIntro = new SchermataIntroOutroGdx(LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE, DatiDiProva.punteggi(), partita, immagini, piccolo, medio);
 		schermataIntro.resettaSequenza();
 		schermataDiScambio = new SchermataDiScambioArtefattiGdx(LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE, partita, immagini, piccolo, medio, "Inventario", "Armaiolo",
-				"Armaiolo");
+				com.threeamigos.foresta.tipi.TipoPersonaggio.ARMAIOLO, "Armaiolo");
 		schermataDiScambio.impostaScambio(DatiDiProva.scambio());
 		barraIcone = new BarraIconeGdx(Orientamento.ORIZZONTALE, true, 0, ALTEZZA_VIRTUALE - 76, LARGHEZZA_VIRTUALE, 76, partita, immagini, piccolo, medio);
 		barraIcone.getModello().impostaAzioni();

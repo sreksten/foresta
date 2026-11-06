@@ -39,9 +39,11 @@ public final class SchermataDiScambioArtefattiGdx extends SchermataDiScambio {
 	private final String intestazioneSinistra;
 	private final String intestazioneDestra;
 	private final String etichettaDelCentro;
+	private final TipoPersonaggio mestiereAlCentro;
+	private final DisegnoDiContenutoGdx disegno;
 
 	public SchermataDiScambioArtefattiGdx(int width, int height, VistaPartita vistaPartita, ImmaginiGdx immagini, TestoGdx piccolo, TestoGdx medio,
-										  String intestazioneSinistra, String intestazioneDestra, String etichettaDelCentro) {
+										  String intestazioneSinistra, String intestazioneDestra, TipoPersonaggio mestiereAlCentro, String etichettaDelCentro) {
 		super(width, height, vistaPartita, immagini.larghezza(CORNICE, (float) LivelloDiZoom.valore()), immagini.altezza(CORNICE, (float) LivelloDiZoom.valore()),
 				misure(immagini));
 		this.immagini = immagini;
@@ -50,6 +52,8 @@ public final class SchermataDiScambioArtefattiGdx extends SchermataDiScambio {
 		this.intestazioneSinistra = intestazioneSinistra;
 		this.intestazioneDestra = intestazioneDestra;
 		this.etichettaDelCentro = etichettaDelCentro;
+		this.mestiereAlCentro = mestiereAlCentro;
+		this.disegno = new DisegnoDiContenutoGdx(immagini, piccolo, medio);
 		this.elencoGdx = new ElencoScorrevoleGdx(immagini, piccolo, medio);
 		this.scambioDegliArtefatti = new ScambioDegliArtefatti(this, vistaPartita, misure(immagini), new ScambioDegliArtefatti.Personalizzazioni() {
 			@Override
@@ -94,6 +98,16 @@ public final class SchermataDiScambioArtefattiGdx extends SchermataDiScambio {
 		};
 	}
 
+	@Override
+	public TipoPersonaggio getMestiereAlCentro() {
+		return mestiereAlCentro;
+	}
+
+	@Override
+	public String getEtichettaMestiere() {
+		return etichettaDelCentro;
+	}
+
 	public void impostaScambio(VistaScambio scambio) {
 		scambioDegliArtefatti.impostaScambio(scambio);
 	}
@@ -123,8 +137,7 @@ public final class SchermataDiScambioArtefattiGdx extends SchermataDiScambio {
 		disegnaElenco(batch, camera, viewport, scambioDegliArtefatti.getArtefattiDellaParteRemota(), xMinimaZonaDestra, scorrimentoDestra, false);
 		intestazione(batch, intestazioneSinistra, SPACING + larghezzaCornice / 2);
 		intestazione(batch, intestazioneDestra, width - SPACING - larghezzaCornice / 2);
-		medio.disegna(batch, etichettaDelCentro, (width - medio.larghezza(etichettaDelCentro)) / 2, SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI,
-				DoomdarkColorModel.Color.LIGHT_GRAY);
+		disegno.disegna(batch, colonnaDelNegoziante(mestiereAlCentro), 0, 0, 1f);
 	}
 
 	private void intestazione(Batch batch, String testo, int xCentro) {
