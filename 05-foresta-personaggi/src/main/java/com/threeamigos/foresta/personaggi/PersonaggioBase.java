@@ -796,6 +796,10 @@ public abstract class PersonaggioBase implements Personaggio {
 		// Cresce con la radice quadrata del livello (100, 141, 173, 200...), per tutti: come il danno
 		// (vedi CalcolatoreCombattimento.livelloDiCombattimento), così uno scontro alla pari dura uguale a ogni livello
 		double saluteMassima = getSaluteBase() * Math.sqrt(getLivello());
+		if (getClasse().isMostroComune()) {
+			// I mostri comuni crescono un po' più dei giocanti, che hanno le armi e le armature di livello via via più alto
+			saluteMassima *= 1.0d + CostantiPersonaggi.MOSTRI_COMUNI_CRESCITA_SALUTE_PER_LIVELLO * (getLivello() - 1);
+		}
 		saluteMassima = getQuantitaModificata(md, saluteMassima, TipoAttributo.SALUTE);
 		return saluteMassima;
 	}

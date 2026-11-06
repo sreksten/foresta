@@ -104,6 +104,34 @@ public final class TatticheBase {
 	}
 
 	/**
+	 * Quanto spesso un mostro lancia una magia invece di colpire, per fascia di astuzia (ogni voce con una magia la lancia con questa probabilità, e le voci
+	 * sono più d'una per fascia, quindi la quota vera è più alta). I folletti ne fanno un uso sfrenato; chi combatte soprattutto con le armi (l'idra, che
+	 * sa due magie, la viverna e la chimera drago, che hanno le zanne) la lancia di rado.
+	 */
+	private static int[] frequenzaDegliIncantesimi(TipoPersonaggio classe) {
+		switch (classe) {
+			case FOLLETTO:
+				return new int[]{80, 80, 80, 90};
+			case IDRA:
+				return new int[]{10, 10, 12, 12};
+			case VIVERNA:
+				return new int[]{20, 20, 22, 22};
+			case CHIMERA_DRAGO:
+				return new int[]{25, 25, 30, 30};
+			default:
+				return new int[]{50, 60, 75, 90};
+		}
+	}
+
+	/**
+	 * Il criterio con cui un mostro sceglie la magia: la chimera drago, che ha Fuoco e Veleno, li alterna a caso (altrimenti lancerebbe sempre il più forte),
+	 * gli altri seguono il criterio della fascia.
+	 */
+	private static CriterioIncantesimo criterio(TipoPersonaggio classe, CriterioIncantesimo dellaFascia) {
+		return classe == TipoPersonaggio.CHIMERA_DRAGO ? CriterioIncantesimo.A_CASO : dellaFascia;
+	}
+
+	/**
 	 * Le classi di mostri che hanno una tattica base
 	 */
 	public static Set<TipoPersonaggio> classiDeiMostri() {
@@ -214,9 +242,7 @@ public final class TatticheBase {
 		boolean magico = MAGICI.contains(classe);
 		boolean cacciatoreDelPiuForte = CACCIATORI_DEL_PIU_FORTE.contains(classe);
 		boolean vendicativo = VENDICATIVI.contains(classe) || classe.isDellaCategoria(CategoriaPersonaggio.BESTIA);
-		// Quanto spesso lancia una magia invece di colpire, per fascia; i folletti ne fanno un uso sfrenato, l'idra (che sa due magie) combatte soprattutto con le armi
-		int[] incantesimo = classe == TipoPersonaggio.FOLLETTO ? new int[]{80, 80, 80, 90}
-				: classe == TipoPersonaggio.IDRA ? new int[]{10, 10, 12, 12} : new int[]{50, 60, 75, 90};
+		int[] incantesimo = frequenzaDegliIncantesimi(classe);
 
 		// Le fasce si aggiungono dalla più alta alla più bassa. Ogni fascia, tranne la bruta, comincia con una condizione sull'astuzia: la rampa del livello
 		// (Astuzia.di) porta il mostro in una fascia più alta col salire del mondo, e se nessuna voce di quella si può eseguire il mostro scende a quella sotto.
@@ -261,7 +287,7 @@ public final class TatticheBase {
 		PredicatoMD fascia = daAstuzia(SOGLIA_ASTUTO);
 		SelettoreMD ferito = su(TipoRosa.AVVERSARI_E_OSPITI, TipoOrdinamento.MENO_SALUTE, sotto(30));
 		SelettoreMD piuFerito = su(TipoRosa.AVVERSARI_E_OSPITI, TipoOrdinamento.MENO_SALUTE);
-		AzioneMD magia = repertorio(CriterioIncantesimo.PIU_POTENTE, true);
+		AzioneMD magia = repertorio(criterio(classe, CriterioIncantesimo.PIU_POTENTE), true);
 
 		voci.add(magico ? voce("VOCE.ASTUTO_FINISCE_I_FERITI", ferito, condizioni(fascia), magia, attacco()) : voce("VOCE.ASTUTO_FINISCE_I_FERITI", ferito, condizioni(fascia), attacco()));
 		if (classe == TipoPersonaggio.HOBGOBLIN) {
@@ -289,12 +315,14 @@ public final class TatticheBase {
 		SelettoreMD ferito = su(TipoRosa.AVVERSARI_E_OSPITI, TipoOrdinamento.MENO_SALUTE, sotto(35));
 		SelettoreMD piuFerito = su(TipoRosa.AVVERSARI_E_OSPITI, TipoOrdinamento.MENO_SALUTE);
 		SelettoreMD incantatore = su(TipoRosa.AVVERSARI, TipoOrdinamento.PIU_MAGIA, magico());
-		AzioneMD adatto = danno(CriterioIncantesimo.PIU_ADATTO, false);
+		AzioneMD adatto = danno(criterio(classe, CriterioIncantesimo.PIU_ADATTO), false);
 
 		if (magico) {
 			voci.add(voce("VOCE.ESPERTO_COLPO_ECONOMICO_SUI_FERITI", ferito, condizioni(fascia), danno(CriterioIncantesimo.PIU_ECONOMICO_CHE_BASTA, false), attacco()));
 			if (CON_SILENZIO.contains(classe)) {
-				voci.add(voce("VOCE.ESPERTO_SILENZIO_SULL_INCANTATORE", incantatore, condizioni(fascia, probabilita(50)), AzioneMD.di(TipoAzione.SILENZIO)));
+				// Un Silenzio alla volta, come nella fascia stratega (vedi todo.md)
+				voci.add(voce("VOCE.ESPERTO_SILENZIO_SULL_INCANTATORE", incantatore, condizioni(fascia, probabilita(50), nessunAvversarioSilenziato()),
+						AzioneMD.di(TipoAzione.SILENZIO)));
 			}
 			voci.add(voce("VOCE.ESPERTO_INCANTESIMO_SULL_INCANTATORE", incantatore, condizioni(fascia, probabilita(incantesimo)), adatto, attacco()));
 			voci.add(voce("VOCE.ESPERTO_INCANTESIMO_SUL_PIU_FERITO", piuFerito, condizioni(fascia, probabilita(incantesimo)), adatto, attacco()));

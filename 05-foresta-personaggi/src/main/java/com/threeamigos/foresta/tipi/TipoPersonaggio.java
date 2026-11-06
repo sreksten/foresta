@@ -86,6 +86,11 @@ public enum TipoPersonaggio {
 	static {
 		AVVERSARI.addAll(EnumSet.of(GUERRIERO, GUERRIERA, LADRO, MAGO, MAGA, ELFO, ELFA));
 	}
+	// I mostri di ogni giorno: tutti gli avversari tranne i boss e i due maghi oscuri
+	private static final Set<TipoPersonaggio> MOSTRI_COMUNI = EnumSet.range(ARPIA, VIVERNA);
+	static {
+		MOSTRI_COMUNI.removeAll(EnumSet.of(DRAGO, IDRA, LICH, MINOTAURO_GIGANTE, NECROMANTE, OMBRA_NERA, STREGA));
+	}
 	// Chi si sceglie a inizio partita o si recluta in locanda (l'OmbraFiamma per ora sta fuori)
 	private static final Set<TipoPersonaggio> COMPAGNI = EnumSet.of(BARDO, CANTASTORIE, ELFA, ELFO, GUERRIERA, GUERRIERO, LADRA, LADRO,
 			MAGA, MAGO, SACERDOTE, SACERDOTESSA, CHIERICA, CHIERICO, DRUIDA, DRUIDO);
@@ -325,6 +330,14 @@ public enum TipoPersonaggio {
 	 */
 	public boolean stessoRuoloDi(TipoPersonaggio altra) {
 		return getRuolo() == altra.getRuolo();
+	}
+
+	/**
+	 * Se è un mostro comune, cioè non un boss né uno dei maghi oscuri (Necromante, Ombra Nera): la sua salute cresce con il livello più di
+	 * quella dei giocanti (vedi CostantiPersonaggi.MOSTRI_COMUNI_CRESCITA_SALUTE_PER_LIVELLO)
+	 */
+	public boolean isMostroComune() {
+		return MOSTRI_COMUNI.contains(this);
 	}
 
 	/**

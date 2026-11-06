@@ -55,6 +55,73 @@ class AnalisiAzioniDeiBossTest {
         }
     }
 
+    /**
+     * Una riga per ogni mostro con una tattica base e per ogni livello: la quota delle sue azioni che sono attacchi con le armi, Silenzio,
+     * Morte, altri incantesimi, altro. Serve a vedere se qualcuno ripete sempre la stessa mossa o non attacca quasi mai.
+     */
+    @Disabled("Da eseguire manualmente per vedere che cosa fanno tutti i mostri")
+    @Test
+    void stampaLeAzioniDiTuttiIMostri() {
+        PrintStream out = System.out;
+        System.setOut(new PrintStream(new OutputStream() {
+            @Override
+            public void write(int b) {
+            }
+        }));
+        BusEventi.azzera();
+        BusEventi.impostaConsegna(Runnable::run);
+        StringBuilder tabella = new StringBuilder(String.format("%-18s %4s %6s | %7s %7s %7s %7s %7s%n", "mostro", "liv", "azioni", "armi", "Silenz.", "Morte", "magie", "altro"));
+        try {
+            for (TipoPersonaggio mostro : new java.util.TreeSet<>(com.threeamigos.foresta.tattiche.TatticheBase.classiDeiMostri())) {
+                for (int livello : new int[] {3, 6, 10}) {
+                    tabella.append(riga(mostro, livello));
+                }
+            }
+        } finally {
+            System.setOut(out);
+            BusEventi.azzera();
+        }
+        out.print(tabella);
+    }
+
+    private static String riga(TipoPersonaggio classeMostro, int livello) {
+        List<TipoPersonaggio> classi = Arrays.asList(TipoPersonaggio.GUERRIERO, TipoPersonaggio.LADRO, TipoPersonaggio.MAGO, TipoPersonaggio.SACERDOTE);
+        int[] conteggi = new int[5];
+        int totale = 0;
+        for (int scontro = 0; scontro < SCONTRI; scontro++) {
+            ModelloDati.installa();
+            ModelloDati.setIstanza(new ModelloDati());
+            List<Personaggio> miei = new ArrayList<>();
+            for (TipoPersonaggio classe : classi) {
+                Personaggio personaggio = FabbricaPersonaggi.crea(classe, livello);
+                Equipaggiamento.tipiciPer(classe).get(0).equipaggia(personaggio);
+                miei.add(personaggio);
+            }
+            // Un solo mostro e dei miei che reggono: così si vedono molti turni del mostro
+            List<Personaggio> avversari = new ArrayList<>(Arrays.asList(FabbricaPersonaggi.crea(classeMostro, livello)));
+            RoundASimulato round = new RoundASimulato(miei, avversari);
+            round.osservatoreDegliAvversari = (chi, decisione) -> {
+                if (decisione == null) {
+                    return;
+                }
+                TipoAzione azione = decisione.getTipoEseguito();
+                int indice = azione == TipoAzione.ATTACCO_FISICO ? 0 : azione == TipoAzione.SILENZIO ? 1 : azione == TipoAzione.MORTE ? 2
+                        : decisione.getIncantesimo() != null ? 3 : 4;
+                conteggi[indice]++;
+            };
+            RoundASimulato.Decisore decisore = (chi, r) -> r.agisciConLaTattica(chi, TatticheBase.deiGiocabili(chi.getClasse()));
+            for (int turno = 0; turno < ROUND_MASSIMI && round.esito() == RoundASimulato.Esito.IN_CORSO; turno++) {
+                round.eseguiRound(decisore);
+            }
+        }
+        for (int n : conteggi) {
+            totale += n;
+        }
+        int t = Math.max(1, totale);
+        return String.format("%-18s %4d %6d | %6d%% %6d%% %6d%% %6d%% %6d%%%n", classeMostro, livello, totale, 100 * conteggi[0] / t, 100 * conteggi[1] / t,
+                100 * conteggi[2] / t, 100 * conteggi[3] / t, 100 * conteggi[4] / t);
+    }
+
     private static void stampa(PrintStream out, TipoPersonaggio classeBoss, int livello) {
         List<TipoPersonaggio> classi = Arrays.asList(TipoPersonaggio.GUERRIERO, TipoPersonaggio.LADRO, TipoPersonaggio.MAGO, TipoPersonaggio.SACERDOTE);
         Map<String, Integer> azioni = new LinkedHashMap<>();

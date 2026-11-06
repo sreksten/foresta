@@ -59,6 +59,11 @@ public final class CostantiPersonaggi {
     // dell'eroe cala in proporzione (vedi CalcolatoreCombattimento.calcolaDannoRisultante)
     public static final int TOLLERANZA_LIVELLO_ARMA = 2;
 
+    // Un'arma e un'armatura di livello crescente fanno rendere al gruppo molto più di quanto cresca la salute (che segue la radice del
+    // livello): i mostri comuni (TipoPersonaggio.isMostroComune) hanno quindi per ogni livello oltre il primo questa quota di salute in più,
+    // perché chi non rinnova l'equipaggiamento se ne accorga (vedi PersonaggioBase.calcolaSaluteMassima)
+    public static final double MOSTRI_COMUNI_CRESCITA_SALUTE_PER_LIVELLO = 0.09;
+
     // L'ignominia della fuga (vedi PersonaggioBase.fugge): coraggio, valore e carisma calano di questa percentuale
     // per questo numero di locazioni dopo quella della fuga
     // Fuggire costa a ognuno una quota della sua salute massima, tirata fra queste due percentuali: la fuga non uccide, lascia almeno un punto
@@ -862,7 +867,7 @@ public final class CostantiPersonaggi {
     public static final int CHIMERADRAGO_MAX_FORTUNA = 18;
     public static final int CHIMERADRAGO_PUNTI_ESPERIENZA = 70;
 
-    public static final int CHIMERADRAGO_SALUTE_BASE = 240;
+    public static final int CHIMERADRAGO_SALUTE_BASE = 300;
     public static final int CHIMERADRAGO_MAGIA_BASE = 60;
     public static final int CHIMERADRAGO_LIVELLAMENTO_MAGIA = 16;
     public static final double CHIMERADRAGO_MOLTIPLICATORE_CARICO = 6.0;
@@ -880,7 +885,7 @@ public final class CostantiPersonaggi {
     public static final double CHIMERADRAGO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.6;
     public static final double CHIMERADRAGO_MOLTIPLICATORE_STANCHEZZA = 1.1;
     public static final double CHIMERADRAGO_MOLTIPLICATORE_DANNI_MAGICI = 1.2;
-    public static final double CHIMERADRAGO_MOLTIPLICATORE_DANNI_FISICI = 1.6;
+    public static final double CHIMERADRAGO_MOLTIPLICATORE_DANNI_FISICI = 2.0;
     public static final double CHIMERADRAGO_MOLTIPLICATORE_RECUPERO_FISICO = 1.3;
     public static final double CHIMERADRAGO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.2;
 
@@ -894,7 +899,7 @@ public final class CostantiPersonaggi {
     public static final int EREMITA_MAX_NUMERO = 1;
     public static final int EREMITA_PUNTI_ESPERIENZA = 15;
 
-    public static final int EREMITA_SALUTE_BASE = 90;
+    public static final int EREMITA_SALUTE_BASE = 200;
     public static final int EREMITA_MAGIA_BASE = 20;
     public static final int EREMITA_LIVELLAMENTO_MAGIA = 10;
     public static final double EREMITA_MOLTIPLICATORE_CARICO = 0.8;
@@ -912,7 +917,7 @@ public final class CostantiPersonaggi {
     public static final double EREMITA_MOLTIPLICATORE_CONTRATTAZIONE = 0.8;
     public static final double EREMITA_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.9;
     public static final double EREMITA_MOLTIPLICATORE_STANCHEZZA = 1.2;
-    public static final double EREMITA_MOLTIPLICATORE_DANNI_MAGICI = 1.2;
+    public static final double EREMITA_MOLTIPLICATORE_DANNI_MAGICI = 1.3;
     public static final double EREMITA_MOLTIPLICATORE_DANNI_FISICI = 0.7;
     public static final double EREMITA_MOLTIPLICATORE_RECUPERO_FISICO = 0.9;
     public static final double EREMITA_MOLTIPLICATORE_RECUPERO_MAGICO = 1.4;
@@ -927,7 +932,7 @@ public final class CostantiPersonaggi {
     public static final int FANTASMA_MAX_FORTUNA = 10;
     public static final int FANTASMA_PUNTI_ESPERIENZA = 15;
 
-    public static final int FANTASMA_SALUTE_BASE = 65;
+    public static final int FANTASMA_SALUTE_BASE = 100;
     public static final int FANTASMA_MAGIA_BASE = 30;
     public static final int FANTASMA_LIVELLAMENTO_MAGIA = 15;
     public static final double FANTASMA_MOLTIPLICATORE_CARICO = 0.0;
@@ -944,7 +949,7 @@ public final class CostantiPersonaggi {
     public static final double FANTASMA_MOLTIPLICATORE_VALORE = 0.4;
     public static final double FANTASMA_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.9;
     public static final double FANTASMA_MOLTIPLICATORE_STANCHEZZA = 0.0;
-    public static final double FANTASMA_MOLTIPLICATORE_DANNI_MAGICI = 1.1;
+    public static final double FANTASMA_MOLTIPLICATORE_DANNI_MAGICI = 1.3;
     public static final double FANTASMA_MOLTIPLICATORE_DANNI_FISICI = 0.2;
     public static final double FANTASMA_MOLTIPLICATORE_RECUPERO_FISICO = 0.0;
     public static final double FANTASMA_MOLTIPLICATORE_RECUPERO_MAGICO = 1.2;
@@ -1056,7 +1061,7 @@ public final class CostantiPersonaggi {
     public static final int GOBLIN_MAX_FORTUNA = 5;
     public static final int GOBLIN_PUNTI_ESPERIENZA = 15;
 
-    public static final int GOBLIN_SALUTE_BASE = 60;
+    public static final int GOBLIN_SALUTE_BASE = 90;
     public static final int GOBLIN_MAGIA_BASE = 0;
     public static final int GOBLIN_LIVELLAMENTO_MAGIA = 0;
     public static final double GOBLIN_MOLTIPLICATORE_CARICO = 0.6;
@@ -1075,7 +1080,7 @@ public final class CostantiPersonaggi {
     public static final double GOBLIN_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.8;
     public static final double GOBLIN_MOLTIPLICATORE_STANCHEZZA = 1.1;
     public static final double GOBLIN_MOLTIPLICATORE_DANNI_MAGICI = 0.8;
-    public static final double GOBLIN_MOLTIPLICATORE_DANNI_FISICI = 0.8;
+    public static final double GOBLIN_MOLTIPLICATORE_DANNI_FISICI = 1.4;
     public static final double GOBLIN_MOLTIPLICATORE_RECUPERO_FISICO = 0.9;
     public static final double GOBLIN_MOLTIPLICATORE_RECUPERO_MAGICO = 0.9;
 
@@ -1089,7 +1094,7 @@ public final class CostantiPersonaggi {
     public static final int HOBGOBLIN_MAX_FORTUNA = 10;
     public static final int HOBGOBLIN_PUNTI_ESPERIENZA = 15;
 
-    public static final int HOBGOBLIN_SALUTE_BASE = 85;
+    public static final int HOBGOBLIN_SALUTE_BASE = 130;
     public static final int HOBGOBLIN_MAGIA_BASE = 0;
     public static final int HOBGOBLIN_LIVELLAMENTO_MAGIA = 0;
     public static final double HOBGOBLIN_MOLTIPLICATORE_CARICO = 1.1;
@@ -1108,7 +1113,7 @@ public final class CostantiPersonaggi {
     public static final double HOBGOBLIN_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
     public static final double HOBGOBLIN_MOLTIPLICATORE_STANCHEZZA = 1.0;
     public static final double HOBGOBLIN_MOLTIPLICATORE_DANNI_MAGICI = 0.7;
-    public static final double HOBGOBLIN_MOLTIPLICATORE_DANNI_FISICI = 1.2;
+    public static final double HOBGOBLIN_MOLTIPLICATORE_DANNI_FISICI = 1.8;
     public static final double HOBGOBLIN_MOLTIPLICATORE_RECUPERO_FISICO = 1.2;
     public static final double HOBGOBLIN_MOLTIPLICATORE_RECUPERO_MAGICO = 0.7;
 
@@ -1122,12 +1127,12 @@ public final class CostantiPersonaggi {
     public static final int MINOTAURO_MAX_FORTUNA = 10;
     public static final int MINOTAURO_PUNTI_ESPERIENZA = 40;
 
-    public static final int MINOTAURO_SALUTE_BASE = 160;
+    public static final int MINOTAURO_SALUTE_BASE = 180;
     public static final int MINOTAURO_MAGIA_BASE = 0;
     public static final int MINOTAURO_LIVELLAMENTO_MAGIA = 0;
     public static final double MINOTAURO_MOLTIPLICATORE_CARICO = 2.2;
     public static final double MINOTAURO_MOLTIPLICATORE_CRITICO = 0.7;
-    public static final double MINOTAURO_MOLTIPLICATORE_PRECISIONE = 0.7;
+    public static final double MINOTAURO_MOLTIPLICATORE_PRECISIONE = 0.9;
     public static final double MINOTAURO_MOLTIPLICATORE_VELOCITA = 0.8;
     public static final double MINOTAURO_MOLTIPLICATORE_FURTIVITA = 0.5;
     public static final double MINOTAURO_MOLTIPLICATORE_PARATA = 1.2;
@@ -1141,7 +1146,7 @@ public final class CostantiPersonaggi {
     public static final double MINOTAURO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.3;
     public static final double MINOTAURO_MOLTIPLICATORE_STANCHEZZA = 1.2;
     public static final double MINOTAURO_MOLTIPLICATORE_DANNI_MAGICI = 0.5;
-    public static final double MINOTAURO_MOLTIPLICATORE_DANNI_FISICI = 1.4;
+    public static final double MINOTAURO_MOLTIPLICATORE_DANNI_FISICI = 2.0;
     public static final double MINOTAURO_MOLTIPLICATORE_RECUPERO_FISICO = 1.3;
     public static final double MINOTAURO_MOLTIPLICATORE_RECUPERO_MAGICO = 0.5;
 
@@ -1155,7 +1160,7 @@ public final class CostantiPersonaggi {
     public static final int OMBRANERA_MAX_FORTUNA = 20;
     public static final int OMBRANERA_PUNTI_ESPERIENZA = 40;
 
-    public static final int OMBRANERA_SALUTE_BASE = 90;
+    public static final int OMBRANERA_SALUTE_BASE = 750;
     public static final int OMBRANERA_MAGIA_BASE = 40;
     public static final int OMBRANERA_LIVELLAMENTO_MAGIA = 20;
     public static final double OMBRANERA_MOLTIPLICATORE_CARICO = 0.0;
@@ -1163,7 +1168,7 @@ public final class CostantiPersonaggi {
     public static final double OMBRANERA_MOLTIPLICATORE_PRECISIONE = 1.2;
     public static final double OMBRANERA_MOLTIPLICATORE_VELOCITA = 1.3;
     public static final double OMBRANERA_MOLTIPLICATORE_FURTIVITA = 1.5;
-    public static final double OMBRANERA_MOLTIPLICATORE_PARATA = 0.5;
+    public static final double OMBRANERA_MOLTIPLICATORE_PARATA = 1.4;
     public static final double OMBRANERA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.2;
     public static final double OMBRANERA_MOLTIPLICATORE_PERCEZIONE = 1.2;
     public static final double OMBRANERA_MOLTIPLICATORE_SOGGEZIONE = 1.4;
@@ -1172,7 +1177,7 @@ public final class CostantiPersonaggi {
     public static final double OMBRANERA_MOLTIPLICATORE_VALORE = 0.3;
     public static final double OMBRANERA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
     public static final double OMBRANERA_MOLTIPLICATORE_STANCHEZZA = 0.0;
-    public static final double OMBRANERA_MOLTIPLICATORE_DANNI_MAGICI = 1.3;
+    public static final double OMBRANERA_MOLTIPLICATORE_DANNI_MAGICI = 2.6;
     public static final double OMBRANERA_MOLTIPLICATORE_DANNI_FISICI = 1.0;
     public static final double OMBRANERA_MOLTIPLICATORE_RECUPERO_FISICO = 0.0;
     public static final double OMBRANERA_MOLTIPLICATORE_RECUPERO_MAGICO = 1.8;
@@ -1187,7 +1192,7 @@ public final class CostantiPersonaggi {
     public static final int SCHELETRO_MAX_FORTUNA = 6;
     public static final int SCHELETRO_PUNTI_ESPERIENZA = 15;
 
-    public static final int SCHELETRO_SALUTE_BASE = 70;
+    public static final int SCHELETRO_SALUTE_BASE = 100;
     public static final int SCHELETRO_MAGIA_BASE = 0;
     public static final int SCHELETRO_LIVELLAMENTO_MAGIA = 0;
     public static final double SCHELETRO_MOLTIPLICATORE_CARICO = 1.1;
@@ -1205,7 +1210,7 @@ public final class CostantiPersonaggi {
     public static final double SCHELETRO_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.9;
     public static final double SCHELETRO_MOLTIPLICATORE_STANCHEZZA = 0.0;
     public static final double SCHELETRO_MOLTIPLICATORE_DANNI_MAGICI = 0.5;
-    public static final double SCHELETRO_MOLTIPLICATORE_DANNI_FISICI = 0.9;
+    public static final double SCHELETRO_MOLTIPLICATORE_DANNI_FISICI = 1.4;
     public static final double SCHELETRO_MOLTIPLICATORE_RECUPERO_FISICO = 0.0;
     public static final double SCHELETRO_MOLTIPLICATORE_RECUPERO_MAGICO = 0.6;
 
@@ -1219,7 +1224,7 @@ public final class CostantiPersonaggi {
     public static final int SPETTRO_MAX_FORTUNA = 12;
     public static final int SPETTRO_PUNTI_ESPERIENZA = 15;
 
-    public static final int SPETTRO_SALUTE_BASE = 70;
+    public static final int SPETTRO_SALUTE_BASE = 130;
     public static final int SPETTRO_MAGIA_BASE = 50;
     public static final int SPETTRO_LIVELLAMENTO_MAGIA = 25;
     public static final double SPETTRO_MOLTIPLICATORE_CARICO = 0.0;
@@ -1236,7 +1241,7 @@ public final class CostantiPersonaggi {
     public static final double SPETTRO_MOLTIPLICATORE_VALORE = 0.2;
     public static final double SPETTRO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
     public static final double SPETTRO_MOLTIPLICATORE_STANCHEZZA = 0.0;
-    public static final double SPETTRO_MOLTIPLICATORE_DANNI_MAGICI = 1.3;
+    public static final double SPETTRO_MOLTIPLICATORE_DANNI_MAGICI = 1.4;
     public static final double SPETTRO_MOLTIPLICATORE_DANNI_FISICI = 0.3;
     public static final double SPETTRO_MOLTIPLICATORE_RECUPERO_FISICO = 0.0;
     public static final double SPETTRO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.4;
@@ -1251,7 +1256,7 @@ public final class CostantiPersonaggi {
     public static final int SPIRITO_MAX_FORTUNA = 10;
     public static final int SPIRITO_PUNTI_ESPERIENZA = 15;
 
-    public static final int SPIRITO_SALUTE_BASE = 50;
+    public static final int SPIRITO_SALUTE_BASE = 110;
     public static final int SPIRITO_MAGIA_BASE = 45;
     public static final int SPIRITO_LIVELLAMENTO_MAGIA = 20;
     public static final double SPIRITO_MOLTIPLICATORE_CARICO = 0.0;
@@ -1316,12 +1321,12 @@ public final class CostantiPersonaggi {
     public static final int TROLL_MAX_FORTUNA = 8;
     public static final int TROLL_PUNTI_ESPERIENZA = 40;
 
-    public static final int TROLL_SALUTE_BASE = 170;
+    public static final int TROLL_SALUTE_BASE = 180;
     public static final int TROLL_MAGIA_BASE = 0;
     public static final int TROLL_LIVELLAMENTO_MAGIA = 0;
     public static final double TROLL_MOLTIPLICATORE_CARICO = 2.8;
     public static final double TROLL_MOLTIPLICATORE_CRITICO = 0.7;
-    public static final double TROLL_MOLTIPLICATORE_PRECISIONE = 0.7;
+    public static final double TROLL_MOLTIPLICATORE_PRECISIONE = 0.9;
     public static final double TROLL_MOLTIPLICATORE_VELOCITA = 0.7;
     public static final double TROLL_MOLTIPLICATORE_FURTIVITA = 0.5;
     public static final double TROLL_MOLTIPLICATORE_PARATA = 1.2;
@@ -1334,7 +1339,7 @@ public final class CostantiPersonaggi {
     public static final double TROLL_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.2;
     public static final double TROLL_MOLTIPLICATORE_STANCHEZZA = 0.8;
     public static final double TROLL_MOLTIPLICATORE_DANNI_MAGICI = 0.5;
-    public static final double TROLL_MOLTIPLICATORE_DANNI_FISICI = 1.4;
+    public static final double TROLL_MOLTIPLICATORE_DANNI_FISICI = 2.0;
     public static final double TROLL_MOLTIPLICATORE_RECUPERO_FISICO = 1.5;
     public static final double TROLL_MOLTIPLICATORE_RECUPERO_MAGICO = 0.5;
 
@@ -1348,7 +1353,7 @@ public final class CostantiPersonaggi {
     public static final int VIVERNA_MAX_FORTUNA = 15;
     public static final int VIVERNA_PUNTI_ESPERIENZA = 40;
 
-    public static final int VIVERNA_SALUTE_BASE = 130;
+    public static final int VIVERNA_SALUTE_BASE = 170;
     public static final int VIVERNA_MAGIA_BASE = 30;
     public static final int VIVERNA_LIVELLAMENTO_MAGIA = 10;
     public static final double VIVERNA_MOLTIPLICATORE_CARICO = 3.5;
@@ -1366,7 +1371,7 @@ public final class CostantiPersonaggi {
     public static final double VIVERNA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.2;
     public static final double VIVERNA_MOLTIPLICATORE_STANCHEZZA = 1.0;
     public static final double VIVERNA_MOLTIPLICATORE_DANNI_MAGICI = 0.8;
-    public static final double VIVERNA_MOLTIPLICATORE_DANNI_FISICI = 1.2;
+    public static final double VIVERNA_MOLTIPLICATORE_DANNI_FISICI = 1.7;
     public static final double VIVERNA_MOLTIPLICATORE_RECUPERO_FISICO = 1.1;
     public static final double VIVERNA_MOLTIPLICATORE_RECUPERO_MAGICO = 0.8;
 
@@ -1445,7 +1450,7 @@ public final class CostantiPersonaggi {
     public static final int NECROMANTE_MAX_NUMERO = 1;
     public static final int NECROMANTE_PUNTI_ESPERIENZA = 40;
 
-    public static final int NECROMANTE_SALUTE_BASE = 80;
+    public static final int NECROMANTE_SALUTE_BASE = 300;
     public static final int NECROMANTE_MAGIA_BASE = 60;
     public static final int NECROMANTE_LIVELLAMENTO_MAGIA = 34;
     public static final double NECROMANTE_MOLTIPLICATORE_CARICO = 0.8;
@@ -1453,7 +1458,7 @@ public final class CostantiPersonaggi {
     public static final double NECROMANTE_MOLTIPLICATORE_PRECISIONE = 1.0;
     public static final double NECROMANTE_MOLTIPLICATORE_VELOCITA = 0.9;
     public static final double NECROMANTE_MOLTIPLICATORE_FURTIVITA = 0.9;
-    public static final double NECROMANTE_MOLTIPLICATORE_PARATA = 0.6;
+    public static final double NECROMANTE_MOLTIPLICATORE_PARATA = 1.4;
     public static final double NECROMANTE_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
     public static final double NECROMANTE_MOLTIPLICATORE_PERCEZIONE = 1.1;
     public static final double NECROMANTE_MOLTIPLICATORE_SOGGEZIONE = 1.3;
@@ -1463,7 +1468,7 @@ public final class CostantiPersonaggi {
     public static final double NECROMANTE_MOLTIPLICATORE_CONTRATTAZIONE = 1.0;
     public static final double NECROMANTE_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.3;
     public static final double NECROMANTE_MOLTIPLICATORE_STANCHEZZA = 1.4;
-    public static final double NECROMANTE_MOLTIPLICATORE_DANNI_MAGICI = 2.0;
+    public static final double NECROMANTE_MOLTIPLICATORE_DANNI_MAGICI = 2.6;
     public static final double NECROMANTE_MOLTIPLICATORE_DANNI_FISICI = 0.5;
     public static final double NECROMANTE_MOLTIPLICATORE_RECUPERO_FISICO = 0.7;
     public static final double NECROMANTE_MOLTIPLICATORE_RECUPERO_MAGICO = 1.5;

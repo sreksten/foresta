@@ -154,6 +154,18 @@ public class TestScontriDiGruppo {
 
     Esito scontro(List<TipoPersonaggio> classi, TipoPersonaggio classeAvversari, int quantita, int livello,
                   int pergamene, int pozioni) {
+        List<TipoPersonaggio> classiDegliAvversari = new ArrayList<>();
+        for (int i = 0; i < quantita; i++) {
+            classiDegliAvversari.add(classeAvversari);
+        }
+        return scontro(classi, classiDegliAvversari, livello, pergamene, pozioni);
+    }
+
+    /**
+     * Come sopra, con un gruppo di avversari qualunque (per esempio un Necromante con i suoi scheletri).
+     */
+    Esito scontro(List<TipoPersonaggio> classi, List<TipoPersonaggio> classiDegliAvversari, int livello,
+                  int pergamene, int pozioni) {
         ModelloDati.installa();
         ModelloDati.setIstanza(new ModelloDati());
         List<Personaggio> gruppo = new ArrayList<>();
@@ -164,8 +176,8 @@ public class TestScontriDiGruppo {
             gruppo.add(pg);
         }
         List<Personaggio> avversari = new ArrayList<>();
-        for (int i = 0; i < quantita; i++) {
-            avversari.add(FabbricaPersonaggi.crea(classeAvversari, livello));
+        for (TipoPersonaggio classeAvversario : classiDegliAvversari) {
+            avversari.add(FabbricaPersonaggi.crea(classeAvversario, livello));
         }
         int[] scorta = {pergamene, pozioni};
         Esito esito = new Esito();

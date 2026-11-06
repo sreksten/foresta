@@ -18,8 +18,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * I boss più astuti (Drago, Lich, Strega) non lanciano Silenzio a ogni turno: uno alla volta, e una volta su due (vedi
- * TatticheBase.fasciaStratega). Senza queste due condizioni passavano quasi tutti i turni a silenziare, senza fare danno.
+ * I mostri più astuti (Drago, Lich, Strega, e Necromante, Eremita...) non lanciano Silenzio a ogni turno: uno alla volta, e una volta su due (vedi
+ * TatticheBase.fasciaStratega e fasciaEsperto). Senza queste due condizioni passavano quasi tutti i turni a silenziare, senza fare danno.
  */
 class SilenzioDeiBossTest {
 
@@ -62,7 +62,9 @@ class SilenzioDeiBossTest {
 
     @Test
     void conUnoGiaSilenziatoIlBossNonLanciaUnAltroSilenzio() {
-        for (TipoPersonaggio boss : new TipoPersonaggio[] {TipoPersonaggio.DRAGO, TipoPersonaggio.LICH, TipoPersonaggio.STREGA}) {
+        // Le fasce stratega (Drago, Lich, Strega) ed esperta (Necromante, Eremita)
+        for (TipoPersonaggio boss : new TipoPersonaggio[] {TipoPersonaggio.DRAGO, TipoPersonaggio.LICH, TipoPersonaggio.STREGA,
+                TipoPersonaggio.NECROMANTE, TipoPersonaggio.EREMITA}) {
             List<TipoAzione> azioni = azioniDelBoss(boss, 60, true);
             assertFalse(azioni.isEmpty(), boss.name());
             assertFalse(azioni.contains(TipoAzione.SILENZIO), boss + " ha lanciato Silenzio con un avversario già silenziato: " + azioni);

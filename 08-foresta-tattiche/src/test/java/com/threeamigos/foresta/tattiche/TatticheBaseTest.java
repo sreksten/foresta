@@ -139,13 +139,21 @@ class TatticheBaseTest {
     }
 
     @Test
-    void ilDragoStrategaZittisceIlMagoENonTiraIlDadoPrima() {
+    void ilDragoStrategaZittisceIlMagoUnaVoltaSuDueENonZittisceMaiIlGuerriero() {
         Personaggio drago = crea(TipoPersonaggio.DRAGO, 1);
         Personaggio mago = crea(TipoPersonaggio.MAGO, 1);
         Personaggio guerriero = crea(TipoPersonaggio.GUERRIERO, 1);
-        Decisione decisione = Valutatore.decidi(TatticheBase.deiMostri(TipoPersonaggio.DRAGO), perIMostri(drago, guerriero, mago));
-        assertEquals(TipoAzione.SILENZIO, decisione.getTipoEseguito());
-        assertSame(mago, decisione.getBersaglio());
+        int zittito = 0;
+        // Il Silenzio ha la sua probabilità: con semi diversi scatta in parte dei casi, e solo sul mago
+        for (long seme = 0; seme < 40; seme++) {
+            Dado.impostaSeme(seme);
+            Decisione decisione = Valutatore.decidi(TatticheBase.deiMostri(TipoPersonaggio.DRAGO), perIMostri(drago, guerriero, mago));
+            if (decisione.getTipoEseguito() == TipoAzione.SILENZIO) {
+                assertSame(mago, decisione.getBersaglio());
+                zittito++;
+            }
+        }
+        assertTrue(zittito > 5 && zittito < 35, "il Silenzio scatta circa una volta su due: " + zittito);
     }
 
     @Test

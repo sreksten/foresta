@@ -235,8 +235,7 @@ public final class EsecutoreTattiche {
 	}
 
 	/**
-	 * Un incantesimo di danno, la Morte o il Silenzio contro il bersaglio scelto; con più bersagli (MULTIPLO) il principale e i successivi vivi (per un mostro solo
-	 * il principale). Il lancio, costo in Magia compreso, lo fa l'incantesimo; la pergamena si consuma se il gruppo ne ha una (altrimenti è il repertorio di un mostro).
+	 * Un incantesimo di danno, la Morte o il Silenzio contro il bersaglio scelto; con più bersagli (MULTIPLO) il principale e i successivi vivi (anche per un mostro). Il lancio, costo in Magia compreso, lo fa l'incantesimo; la pergamena si consuma se il gruppo ne ha una (altrimenti è il repertorio di un mostro).
 	 */
 	private void lanciaUnIncantesimoDiDanno(Personaggio attore, Decisione decisione, Gruppo gruppoDellAttore) {
 		TipoIncantesimo classe = decisione.getIncantesimo();
