@@ -193,6 +193,8 @@ public final class DatiDiProva {
 				.con("getNomePlurale", a -> ((TipoPersonaggio) a[0]).name().toLowerCase(java.util.Locale.ROOT) + "i")
 				.con("getFinaleDellaSconfitta", a -> java.util.Arrays.asList("Il gruppo è caduto.", "La Foresta resta senza eroi."))
 				.con("getFinaleDellaVittoria", a -> java.util.Arrays.asList("Il Drago è stato sconfitto!", "La Foresta è salva."))
+				.con("prezzoVendita", a -> (Integer) a[0] / 2)
+				.con("prezzoAcquisto", a -> (Integer) a[0])
 				.con("isAiutoAbilitato", a -> true).mappa);
 	}
 
@@ -245,5 +247,28 @@ public final class DatiDiProva {
 				return true;
 			}
 		};
+	}
+
+	/**
+	 * Uno scambio finto con due elenchi di artefatti veri: a sinistra quelli del gruppo, a destra quelli di un armaiolo
+	 */
+	public static com.threeamigos.foresta.artefatti.VistaScambio scambio() {
+		com.threeamigos.foresta.artefatti.GeneratoreArtefattiTabelle generatore =
+				new com.threeamigos.foresta.artefatti.GeneratoreArtefattiTabelle(new java.util.Random(7));
+		com.threeamigos.foresta.tipi.TipoArtefatto[] tipi = {com.threeamigos.foresta.tipi.TipoArtefatto.SPADA, com.threeamigos.foresta.tipi.TipoArtefatto.ELMO,
+				com.threeamigos.foresta.tipi.TipoArtefatto.SCUDO, com.threeamigos.foresta.tipi.TipoArtefatto.SPADA, com.threeamigos.foresta.tipi.TipoArtefatto.ARMATURA,
+				com.threeamigos.foresta.tipi.TipoArtefatto.MAZZA, com.threeamigos.foresta.tipi.TipoArtefatto.ELMO, com.threeamigos.foresta.tipi.TipoArtefatto.SPADA};
+		List<com.threeamigos.foresta.artefatti.VistaArtefatto> sinistra = new ArrayList<>();
+		List<com.threeamigos.foresta.artefatti.VistaArtefatto> destra = new ArrayList<>();
+		for (int i = 0; i < tipi.length; i++) {
+			sinistra.add(generatore.generaArtefatto(tipi[i], 2 + i));
+			destra.add(generatore.generaArtefatto(tipi[(i + 3) % tipi.length], 3 + i));
+		}
+		return finto(com.threeamigos.foresta.artefatti.VistaScambio.class, null, new Risposte()
+				.con("getId", a -> "prova")
+				.con("getInventarioParteAttiva", a -> sinistra)
+				.con("getInventarioParteRemota", a -> destra)
+				.con("mostraCostoSuParteAttiva", a -> true)
+				.con("mostraCostoSuParteRemota", a -> true).mappa);
 	}
 }
