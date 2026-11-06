@@ -11,6 +11,7 @@ import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.tipi.TipoIcona;
 import com.threeamigos.foresta.ui.testo.*;
@@ -32,7 +33,7 @@ import java.util.function.Supplier;
  */
 public class ImageCache {
 
-	public static final int SPACING = 4;
+	public static final int SPACING = Finestra.SPACING;
 
 	private static final int MASSIMO_COMPOSTE = 1024;
 	private static final int MASSIMO_PORZIONI = 24;
@@ -44,13 +45,13 @@ public class ImageCache {
 	public static final String RISORSA_LOGO_3AM = "Logo3AM.png";
 	// Il logo iniziale: quello completo, con la pergamena e gli uccelli, si mostra; da quello senza ombra, con la sola scritta nera
 	// esattamente nello stesso posto, si traccia il contorno (vedi TracciatoreLogo.Costruttore.immagineDaMostrare). Si usano senza zoom
-	public static final String RISORSA_LOGO_3AM_COMPLETO = "3AM_logo_completo.gif";
-	public static final String RISORSA_LOGO_3AM_SENZA_OMBRA = "3AM_logo_senza_ombra.gif";
-	public static final String RISORSA_CORNICE_GRANDE = "fondi/CorniceGrande.gif";
-	public static final String RISORSA_CORNICE_MAPPA = "fondi/CorniceMappa.gif";
+	public static final String RISORSA_LOGO_3AM_COMPLETO = "3AM_logo_completo.png";
+	public static final String RISORSA_LOGO_3AM_SENZA_OMBRA = "3AM_logo_senza_ombra.png";
+	public static final String RISORSA_CORNICE_GRANDE = "fondi/CorniceGrande.png";
+	public static final String RISORSA_CORNICE_MAPPA = "fondi/CorniceMappa.png";
 	// Non si disegna più: serve solo a ForestaUI per le dimensioni della finestra
-	public static final String RISORSA_CORNICE_INCANTESIMI = "fondi/CorniceIncantesimi.gif";
-	public static final String RISORSA_BOSCO = "locazioni/Foresta.gif";
+	public static final String RISORSA_CORNICE_INCANTESIMI = "fondi/CorniceIncantesimi.png";
+	public static final String RISORSA_BOSCO = "locazioni/Foresta.png";
 
 	public static BufferedImage logo3AM;
 	public static BufferedImage logoForesta;
@@ -84,14 +85,14 @@ public class ImageCache {
 	public static BufferedImage indicatore;
 	public static Map<TipoLocazione, BufferedImage> locazioni;
 	public static Map<TipoLocazione, BufferedImage> mappa;
-	// Le immagini alternative del bosco sulla mappa (indice 0 = Foresta.gif), vedi
+	// Le immagini alternative del bosco sulla mappa (indice 0 = Foresta.png), vedi
 	// Foresta.VARIANTE_BOSCO e getImmagineMappaBosco: devono essere Foresta.NUMERO_VARIANTI_BOSCO (lo controlla un test)
 	static final String[] RISORSE_VARIANTI_BOSCO = {
-			"mappa/Foresta.gif", "mappa/Foresta2.gif", "mappa/Foresta3.gif", "mappa/Foresta4.gif"
+			"mappa/Foresta.png", "mappa/Foresta2.png", "mappa/Foresta3.png", "mappa/Foresta4.png"
 	};
 	static BufferedImage[] mappaVariantiBosco;
 	/**
-	 * I glifi dell'alfabeto grande (maiuscole, cifre e ' , . ?), già ingranditi, presi dall'atlante {@code img/font/alfabeto_grande.gif}
+	 * I glifi dell'alfabeto grande (maiuscole, cifre e ' , . ?), già ingranditi, presi dall'atlante {@code img/font/alfabeto_grande.png}
 	 */
 	private static Map<Character, BufferedImage> alfabetoGrande;
 
@@ -154,57 +155,57 @@ public class ImageCache {
 
 		corniceGrande = BufferedImageBuilder.buildBufferedImage(RISORSA_CORNICE_GRANDE, zoom);
 		corniceMappa = BufferedImageBuilder.buildBufferedImage(RISORSA_CORNICE_MAPPA, zoom);
-		cornicePiccola = BufferedImageBuilder.buildBufferedImage("fondi/CornicePiccola.gif", zoom);
-		corniceCombattimento = BufferedImageBuilder.buildBufferedImage("fondi/CorniceCombattimento.gif", zoom);
-		corniceLarga = BufferedImageBuilder.buildBufferedImage("fondi/CorniceLarga.gif", zoom);
-		corniceInventario = BufferedImageBuilder.buildBufferedImage("fondi/CorniceInventario.gif", zoom);
-		sferaMagica = BufferedImageBuilder.buildBufferedImage("fondinon2x2/SferaMagica.gif");
-		ombraDelDrago = BufferedImageBuilder.buildBufferedImage("fondi/OmbraDelDrago.gif", zoom);
-		sfondoStoria = BufferedImageBuilder.buildBufferedImage("fondinon2x2/SfondoStoria.gif");
-		trionfo = BufferedImageBuilder.buildBufferedImage("fondi/Trionfo.gif", zoom);
-		separatore = BufferedImageBuilder.buildBufferedImage("fondinon2x2/Separatore.gif");
-		separatoreArmi = BufferedImageBuilder.buildBufferedImage("fondinon2x2/Separatore-Armi.gif");
-		separatoreElmi = BufferedImageBuilder.buildBufferedImage("fondinon2x2/Separatore-Elmi.gif");
+		cornicePiccola = BufferedImageBuilder.buildBufferedImage("fondi/CornicePiccola.png", zoom);
+		corniceCombattimento = BufferedImageBuilder.buildBufferedImage("fondi/CorniceCombattimento.png", zoom);
+		corniceLarga = BufferedImageBuilder.buildBufferedImage("fondi/CorniceLarga.png", zoom);
+		corniceInventario = BufferedImageBuilder.buildBufferedImage("fondi/CorniceInventario.png", zoom);
+		sferaMagica = BufferedImageBuilder.buildBufferedImage("fondinon2x2/SferaMagica.png");
+		ombraDelDrago = BufferedImageBuilder.buildBufferedImage("fondi/OmbraDelDrago.png", zoom);
+		sfondoStoria = BufferedImageBuilder.buildBufferedImage("fondinon2x2/SfondoStoria.png");
+		trionfo = BufferedImageBuilder.buildBufferedImage("fondi/Trionfo.png", zoom);
+		separatore = BufferedImageBuilder.buildBufferedImage("fondinon2x2/Separatore.png");
+		separatoreArmi = BufferedImageBuilder.buildBufferedImage("fondinon2x2/Separatore-Armi.png");
+		separatoreElmi = BufferedImageBuilder.buildBufferedImage("fondinon2x2/Separatore-Elmi.png");
 		// Per ora una copia di quello degli elmi, da ridisegnare
-		separatoreMaschere = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Maschere.gif", zoom);
-		cartiglioSinistro = BufferedImageBuilder.buildBufferedImage("fondinon2x2/Cartiglio-sinistro.gif");
-		cartiglioDestro = BufferedImageBuilder.buildBufferedImage("fondinon2x2/Cartiglio-destro.gif");
-		separatoreArmature = BufferedImageBuilder.buildBufferedImage("fondinon2x2/Separatore-Armature.gif");
-		separatoreSchinieri = BufferedImageBuilder.buildBufferedImage("fondinon2x2/Separatore-Schinieri.gif");
-		separatoreScudi = BufferedImageBuilder.buildBufferedImage("fondinon2x2/Separatore-Scudi.gif");
-		separatoreIncantesimi = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Incantesimi.gif", zoom);
-		separatorePozioni = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Pozioni.gif", zoom);
-		separatoreLibriMagici = BufferedImageBuilder.buildBufferedImage("fondinon2x2/Separatore-LibriMagici.gif");
-		separatoreIncantamenti = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Incantamenti.gif", zoom);
-		separatoreNinnoli = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Ninnoli.gif", zoom);
+		separatoreMaschere = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Maschere.png", zoom);
+		cartiglioSinistro = BufferedImageBuilder.buildBufferedImage("fondinon2x2/Cartiglio-sinistro.png");
+		cartiglioDestro = BufferedImageBuilder.buildBufferedImage("fondinon2x2/Cartiglio-destro.png");
+		separatoreArmature = BufferedImageBuilder.buildBufferedImage("fondinon2x2/Separatore-Armature.png");
+		separatoreSchinieri = BufferedImageBuilder.buildBufferedImage("fondinon2x2/Separatore-Schinieri.png");
+		separatoreScudi = BufferedImageBuilder.buildBufferedImage("fondinon2x2/Separatore-Scudi.png");
+		separatoreIncantesimi = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Incantesimi.png", zoom);
+		separatorePozioni = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Pozioni.png", zoom);
+		separatoreLibriMagici = BufferedImageBuilder.buildBufferedImage("fondinon2x2/Separatore-LibriMagici.png");
+		separatoreIncantamenti = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Incantamenti.png", zoom);
+		separatoreNinnoli = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Ninnoli.png", zoom);
 
 		locazioni = new EnumMap<>(TipoLocazione.class);
 		BufferedImage d;
 		locazioni.put(TipoLocazione.BOSCO, BufferedImageBuilder.buildBufferedImage(RISORSA_BOSCO, zoom));
-		d = BufferedImageBuilder.buildBufferedImage("locazioni/Castello.gif", zoom);
+		d = BufferedImageBuilder.buildBufferedImage("locazioni/Castello.png", zoom);
 		for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
 			if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CASTELLO) {
 				locazioni.put(tipoLocazione, d);
 			}
 		}
-		d = BufferedImageBuilder.buildBufferedImage("locazioni/Citta.gif", zoom);
+		d = BufferedImageBuilder.buildBufferedImage("locazioni/Citta.png", zoom);
 		for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
 			if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CITTA) {
 				locazioni.put(tipoLocazione, d);
 			}
 		}
-		d = BufferedImageBuilder.buildBufferedImage("locazioni/Grotta.gif", zoom);
+		d = BufferedImageBuilder.buildBufferedImage("locazioni/Grotta.png", zoom);
 		locazioni.put(TipoLocazione.GROTTA, d);
-		locazioni.put(TipoLocazione.LOCANDA, BufferedImageBuilder.buildBufferedImage("locazioni/Locanda.gif", zoom));
-		locazioni.put(TipoLocazione.PALUDE, BufferedImageBuilder.buildBufferedImage("locazioni/Palude.gif", zoom));
-		locazioni.put(TipoLocazione.RADURA, BufferedImageBuilder.buildBufferedImage("locazioni/Radura.gif", zoom));
-		d = BufferedImageBuilder.buildBufferedImage("locazioni/Rovine.gif", zoom);
+		locazioni.put(TipoLocazione.LOCANDA, BufferedImageBuilder.buildBufferedImage("locazioni/Locanda.png", zoom));
+		locazioni.put(TipoLocazione.PALUDE, BufferedImageBuilder.buildBufferedImage("locazioni/Palude.png", zoom));
+		locazioni.put(TipoLocazione.RADURA, BufferedImageBuilder.buildBufferedImage("locazioni/Radura.png", zoom));
+		d = BufferedImageBuilder.buildBufferedImage("locazioni/Rovine.png", zoom);
 		locazioni.put(TipoLocazione.ROVINE, d);
-		locazioni.put(TipoLocazione.TEMPIO, BufferedImageBuilder.buildBufferedImage("locazioni/Tempio.gif", zoom));
-		locazioni.put(TipoLocazione.ALCHIMISTA, BufferedImageBuilder.buildBufferedImage("locazioni/Alchimista.gif", zoom));
-		locazioni.put(TipoLocazione.ARMAIOLO, BufferedImageBuilder.buildBufferedImage("locazioni/Armaiolo.gif", zoom));
-		locazioni.put(TipoLocazione.VENDITORE_DI_PERGAMENE, BufferedImageBuilder.buildBufferedImage("locazioni/VenditoreDiPergamene.gif", zoom));
-		locazioni.put(TipoLocazione.INCANTATORE, BufferedImageBuilder.buildBufferedImage("locazioni/Incantatore.gif", zoom));
+		locazioni.put(TipoLocazione.TEMPIO, BufferedImageBuilder.buildBufferedImage("locazioni/Tempio.png", zoom));
+		locazioni.put(TipoLocazione.ALCHIMISTA, BufferedImageBuilder.buildBufferedImage("locazioni/Alchimista.png", zoom));
+		locazioni.put(TipoLocazione.ARMAIOLO, BufferedImageBuilder.buildBufferedImage("locazioni/Armaiolo.png", zoom));
+		locazioni.put(TipoLocazione.VENDITORE_DI_PERGAMENE, BufferedImageBuilder.buildBufferedImage("locazioni/VenditoreDiPergamene.png", zoom));
+		locazioni.put(TipoLocazione.INCANTATORE, BufferedImageBuilder.buildBufferedImage("locazioni/Incantatore.png", zoom));
 
 		mappa = new EnumMap<>(TipoLocazione.class);
 		mappaVariantiBosco = new BufferedImage[RISORSE_VARIANTI_BOSCO.length];
@@ -212,85 +213,85 @@ public class ImageCache {
 			mappaVariantiBosco[i] = BufferedImageBuilder.buildBufferedImage(RISORSE_VARIANTI_BOSCO[i], zoom);
 		}
 		mappa.put(TipoLocazione.BOSCO, mappaVariantiBosco[0]);
-		d = BufferedImageBuilder.buildBufferedImage("mappa/Castello.gif", zoom);
+		d = BufferedImageBuilder.buildBufferedImage("mappa/Castello.png", zoom);
 		for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
 			if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CASTELLO) {
 				mappa.put(tipoLocazione, d);
 			}
 		}
-		d = BufferedImageBuilder.buildBufferedImage("mappa/Citta.gif", zoom);
+		d = BufferedImageBuilder.buildBufferedImage("mappa/Citta.png", zoom);
 		for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
 			if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CITTA) {
 				mappa.put(tipoLocazione, d);
 			}
 		}
-		d = BufferedImageBuilder.buildBufferedImage("mappa/Grotta.gif", zoom);
+		d = BufferedImageBuilder.buildBufferedImage("mappa/Grotta.png", zoom);
 		mappa.put(TipoLocazione.GROTTA, d);
-		mappa.put(TipoLocazione.LOCANDA, BufferedImageBuilder.buildBufferedImage("mappa/Locanda.gif", zoom));
-		mappa.put(TipoLocazione.PALUDE, BufferedImageBuilder.buildBufferedImage("mappa/Palude.gif", zoom));
-		mappa.put(TipoLocazione.RADURA, BufferedImageBuilder.buildBufferedImage("mappa/Radura.gif", zoom));
-		d = BufferedImageBuilder.buildBufferedImage("mappa/Rovine.gif", zoom);
+		mappa.put(TipoLocazione.LOCANDA, BufferedImageBuilder.buildBufferedImage("mappa/Locanda.png", zoom));
+		mappa.put(TipoLocazione.PALUDE, BufferedImageBuilder.buildBufferedImage("mappa/Palude.png", zoom));
+		mappa.put(TipoLocazione.RADURA, BufferedImageBuilder.buildBufferedImage("mappa/Radura.png", zoom));
+		d = BufferedImageBuilder.buildBufferedImage("mappa/Rovine.png", zoom);
 		mappa.put(TipoLocazione.ROVINE, d);
-		mappa.put(TipoLocazione.TEMPIO, BufferedImageBuilder.buildBufferedImage("mappa/Tempio.gif", zoom));
-		mappa.put(TipoLocazione.ALCHIMISTA, BufferedImageBuilder.buildBufferedImage("mappa/Alchimista.gif", zoom));
-		mappa.put(TipoLocazione.ARMAIOLO, BufferedImageBuilder.buildBufferedImage("mappa/Armaiolo.gif", zoom));
-		mappa.put(TipoLocazione.VENDITORE_DI_PERGAMENE, BufferedImageBuilder.buildBufferedImage("mappa/VenditoreDiPergamene.gif", zoom));
-		mappa.put(TipoLocazione.INCANTATORE, BufferedImageBuilder.buildBufferedImage("mappa/Incantatore.gif", zoom));
-		segnalino = BufferedImageBuilder.buildBufferedImage("mappa/Segnalino.gif", zoom);
-		indicatore = BufferedImageBuilder.buildBufferedImage("mappa/Indicatore.gif", zoom);
+		mappa.put(TipoLocazione.TEMPIO, BufferedImageBuilder.buildBufferedImage("mappa/Tempio.png", zoom));
+		mappa.put(TipoLocazione.ALCHIMISTA, BufferedImageBuilder.buildBufferedImage("mappa/Alchimista.png", zoom));
+		mappa.put(TipoLocazione.ARMAIOLO, BufferedImageBuilder.buildBufferedImage("mappa/Armaiolo.png", zoom));
+		mappa.put(TipoLocazione.VENDITORE_DI_PERGAMENE, BufferedImageBuilder.buildBufferedImage("mappa/VenditoreDiPergamene.png", zoom));
+		mappa.put(TipoLocazione.INCANTATORE, BufferedImageBuilder.buildBufferedImage("mappa/Incantatore.png", zoom));
+		segnalino = BufferedImageBuilder.buildBufferedImage("mappa/Segnalino.png", zoom);
+		indicatore = BufferedImageBuilder.buildBufferedImage("mappa/Indicatore.png", zoom);
 
 		alfabetoGrande = costruisciAlfabetoGrande(zoom);
 		
 		spriteIncantesimi = new BufferedImage[TipoIncantesimo.values().length];
-		spriteIncantesimi[TipoIncantesimo.ARIA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Aria.gif");
-		spriteIncantesimi[TipoIncantesimo.ACQUA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Acqua.gif");
-		spriteIncantesimi[TipoIncantesimo.TERRA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Terra.gif");
-		spriteIncantesimi[TipoIncantesimo.FUOCO.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Fuoco.gif");
-		spriteIncantesimi[TipoIncantesimo.FULMINE.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Fulmine.gif");
-		spriteIncantesimi[TipoIncantesimo.GELO.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Gelo.gif");
-		spriteIncantesimi[TipoIncantesimo.VELENO.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Veleno.gif");
-		spriteIncantesimi[TipoIncantesimo.MORTE.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Morte.gif");
-		spriteIncantesimi[TipoIncantesimo.RESURREZIONE.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Resurrezione.gif");
-		spriteIncantesimi[TipoIncantesimo.SILENZIO.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Silenzio.gif");
-		spriteIncantesimi[TipoIncantesimo.NEBBIA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Nebbia.gif");
-		spriteIncantesimi[TipoIncantesimo.NEGA_MAGIA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/NegaMagia.gif");
-		spriteIncantesimi[TipoIncantesimo.GRIDO_DI_BATTAGLIA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/GridoDiBattaglia.gif");
-		spriteIncantesimi[TipoIncantesimo.TERREMOTO.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Terremoto.gif");
-		spriteIncantesimi[TipoIncantesimo.TEMPESTA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Tempesta.gif");
-		spriteIncantesimi[TipoIncantesimo.TERRORE.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Terrore.gif");
+		spriteIncantesimi[TipoIncantesimo.ARIA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Aria.png");
+		spriteIncantesimi[TipoIncantesimo.ACQUA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Acqua.png");
+		spriteIncantesimi[TipoIncantesimo.TERRA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Terra.png");
+		spriteIncantesimi[TipoIncantesimo.FUOCO.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Fuoco.png");
+		spriteIncantesimi[TipoIncantesimo.FULMINE.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Fulmine.png");
+		spriteIncantesimi[TipoIncantesimo.GELO.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Gelo.png");
+		spriteIncantesimi[TipoIncantesimo.VELENO.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Veleno.png");
+		spriteIncantesimi[TipoIncantesimo.MORTE.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Morte.png");
+		spriteIncantesimi[TipoIncantesimo.RESURREZIONE.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Resurrezione.png");
+		spriteIncantesimi[TipoIncantesimo.SILENZIO.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Silenzio.png");
+		spriteIncantesimi[TipoIncantesimo.NEBBIA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Nebbia.png");
+		spriteIncantesimi[TipoIncantesimo.NEGA_MAGIA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/NegaMagia.png");
+		spriteIncantesimi[TipoIncantesimo.GRIDO_DI_BATTAGLIA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/GridoDiBattaglia.png");
+		spriteIncantesimi[TipoIncantesimo.TERREMOTO.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Terremoto.png");
+		spriteIncantesimi[TipoIncantesimo.TEMPESTA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Tempesta.png");
+		spriteIncantesimi[TipoIncantesimo.TERRORE.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Terrore.png");
 
-		spriteAmicizia = BufferedImageBuilder.buildBufferedImage("icone/Amicizia.gif");
-		spriteCombattimento = BufferedImageBuilder.buildBufferedImage("icone/Combattimento.gif");
-		spriteMagia = BufferedImageBuilder.buildBufferedImage("icone/Incantesimo.gif");
-		spritePozioneSalute = BufferedImageBuilder.buildBufferedImage("icone/PozioneSalute.gif");
-		spritePozioneSaluteGrande = BufferedImageBuilder.buildBufferedImage("icone/PozioneSaluteGrande.gif");
-		spritePozioneMagia = BufferedImageBuilder.buildBufferedImage("icone/PozioneMagia.gif");
-		spritePozioneMagiaGrande = BufferedImageBuilder.buildBufferedImage("icone/PozioneMagiaGrande.gif");
-		spritePozionePanacea = BufferedImageBuilder.buildBufferedImage("icone/PozionePanacea.gif");
-		spritePozioneAumentoLivello = BufferedImageBuilder.buildBufferedImage("icone/AumentoLivello.gif");
-		spriteMappa = BufferedImageBuilder.buildBufferedImage("icone/Mappa.gif");
-		spriteMoneta = BufferedImageBuilder.buildBufferedImage("icone/Moneta.gif");
-		spritePietraPreziosa = BufferedImageBuilder.buildBufferedImage("icone/PietraPreziosa.gif");
-		spriteTempo = BufferedImageBuilder.buildBufferedImage("icone/Tempo.gif");
+		spriteAmicizia = BufferedImageBuilder.buildBufferedImage("icone/Amicizia.png");
+		spriteCombattimento = BufferedImageBuilder.buildBufferedImage("icone/Combattimento.png");
+		spriteMagia = BufferedImageBuilder.buildBufferedImage("icone/Incantesimo.png");
+		spritePozioneSalute = BufferedImageBuilder.buildBufferedImage("icone/PozioneSalute.png");
+		spritePozioneSaluteGrande = BufferedImageBuilder.buildBufferedImage("icone/PozioneSaluteGrande.png");
+		spritePozioneMagia = BufferedImageBuilder.buildBufferedImage("icone/PozioneMagia.png");
+		spritePozioneMagiaGrande = BufferedImageBuilder.buildBufferedImage("icone/PozioneMagiaGrande.png");
+		spritePozionePanacea = BufferedImageBuilder.buildBufferedImage("icone/PozionePanacea.png");
+		spritePozioneAumentoLivello = BufferedImageBuilder.buildBufferedImage("icone/AumentoLivello.png");
+		spriteMappa = BufferedImageBuilder.buildBufferedImage("icone/Mappa.png");
+		spriteMoneta = BufferedImageBuilder.buildBufferedImage("icone/Moneta.png");
+		spritePietraPreziosa = BufferedImageBuilder.buildBufferedImage("icone/PietraPreziosa.png");
+		spriteTempo = BufferedImageBuilder.buildBufferedImage("icone/Tempo.png");
 		// Lo stesso disegno della pozione: un solo caricamento, due nomi per due usi (la pozione e il livello guadagnato)
 		spriteAumentoLivello = spritePozioneAumentoLivello;
-		spriteGruppo = BufferedImageBuilder.buildBufferedImage("icone/Gruppo.gif");
-		manoPuntatore = BufferedImageBuilder.buildBufferedImage("icone/ManoPuntatore.gif");
+		spriteGruppo = BufferedImageBuilder.buildBufferedImage("icone/Gruppo.png");
+		manoPuntatore = BufferedImageBuilder.buildBufferedImage("icone/ManoPuntatore.png");
 
-		missioneBirra = BufferedImageBuilder.buildBufferedImage("icone/Missione-birra-grande.gif", zoom);
-		missioneGallo = BufferedImageBuilder.buildBufferedImage("icone/Missione-gallo.gif");
+		missioneBirra = BufferedImageBuilder.buildBufferedImage("icone/Missione-birra-grande.png", zoom);
+		missioneGallo = BufferedImageBuilder.buildBufferedImage("icone/Missione-gallo.png");
 
-		componenteScorrevoleFrecciaSu = BufferedImageBuilder.buildBufferedImage("icone/ComponenteScorrevole-FrecciaSu.gif");
-		componenteScorrevoleFrecciaGiu = BufferedImageBuilder.buildBufferedImage("icone/ComponenteScorrevole-FrecciaGiu.gif");
-		componenteScorrevoleFrecciaSinistra = BufferedImageBuilder.buildBufferedImage("icone/ComponenteScorrevole-FrecciaSinistra.gif");
-		componenteScorrevoleFrecciaDestra = BufferedImageBuilder.buildBufferedImage("icone/ComponenteScorrevole-FrecciaDestra.gif");
-		frecciaGiuPersonaggioAttivo = BufferedImageBuilder.buildBufferedImage("icone/Giu.gif");
+		componenteScorrevoleFrecciaSu = BufferedImageBuilder.buildBufferedImage("icone/ComponenteScorrevole-FrecciaSu.png");
+		componenteScorrevoleFrecciaGiu = BufferedImageBuilder.buildBufferedImage("icone/ComponenteScorrevole-FrecciaGiu.png");
+		componenteScorrevoleFrecciaSinistra = BufferedImageBuilder.buildBufferedImage("icone/ComponenteScorrevole-FrecciaSinistra.png");
+		componenteScorrevoleFrecciaDestra = BufferedImageBuilder.buildBufferedImage("icone/ComponenteScorrevole-FrecciaDestra.png");
+		frecciaGiuPersonaggioAttivo = BufferedImageBuilder.buildBufferedImage("icone/Giu.png");
 
 		// Avvia il reaper in background ogni minuto: è un thread daemon, finisce da solo con la JVM
 		avviaReaper(1, TimeUnit.MINUTES);
 	}
 
-	private static final String RISORSA_ALFABETO_GRANDE = "/com/threeamigos/foresta/img/font/alfabeto_grande.gif";
+	private static final String RISORSA_ALFABETO_GRANDE = "/com/threeamigos/foresta/img/font/alfabeto_grande.png";
 	private static final int ALFABETO_GRANDE_LARGHEZZA_DELLO_SPAZIO = 5;
 
 	/**

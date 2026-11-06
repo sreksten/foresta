@@ -83,7 +83,7 @@ class DoomdarkTextProducerTest {
 
     @Test
     void iPixelOpachiDelTestoSonoDelColoreDelTestoNonDiUnGrigio() {
-        int colore = DoomdarkColorModel.getColorModel(DoomdarkColorModel.Color.YELLOW).getRGB(1);
+        int colore = ModelliDiColoreAwt.getColorModel(DoomdarkColorModel.Color.YELLOW).getRGB(1);
         BufferedImage immagine = (BufferedImage) DoomdarkTextProducer.getImage("A", FONT[0], DoomdarkColorModel.Color.YELLOW);
         boolean pieno = false;
         for (int y = 0; y < immagine.getHeight(); y++) {

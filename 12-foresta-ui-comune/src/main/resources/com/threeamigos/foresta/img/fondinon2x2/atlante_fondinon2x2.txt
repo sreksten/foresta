@@ -1,0 +1,21 @@
+# L'atlante di img/fondinon2x2 (atlante_fondinon2x2.png): impaginazione libera, ogni immagine col suo riquadro rosso attorno.
+# Una riga per immagine: nome x y larghezza altezza (x e y sono l'angolo in alto a sinistra dell'immagine). Fra due immagini
+# basta la linea rossa di 1 pixel. Per ricostruire l'immagine: python3 risorse_e_documenti_vari/atlanti/costruisci_atlante.py fondinon2x2
+# Questo elenco l'ha proposto impagina_atlante.py; da qui si può spostare a mano qualunque immagine.
+LIBERO
+LARGHEZZA 338
+ALTEZZA 558
+FUORI ForegroundAlchimista ForegroundArmaiolo ForegroundIncantatore ForegroundLocanda ForegroundVenditoreDiPergamene InternoAlchimista InternoArmaiolo InternoIncantatore InternoLocanda InternoVenditoreDiPergamene SfondoStoria
+Separatore 1 1 336 32
+Separatore-Armature 1 34 328 42
+Separatore-Armi 1 77 328 42
+Separatore-Elmi 1 120 328 42
+Separatore-LibriMagici 1 163 328 42
+Separatore-Schinieri 1 206 328 42
+Separatore-Scudi 1 249 328 42
+LunaHHGTTG 1 292 180 137
+Luna 182 292 133 132
+Cartiglio-destro 316 292 10 36
+Cartiglio-sinistro 327 292 10 36
+SferaMagica 182 425 128 128
+Mimas 1 430 133 127

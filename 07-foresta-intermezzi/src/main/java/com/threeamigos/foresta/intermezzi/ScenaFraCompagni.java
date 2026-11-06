@@ -74,7 +74,7 @@ public final class ScenaFraCompagni {
 	}
 
 	/**
-	 * La luna che sale nel cielo, da quella risorsa (per esempio "fondinon2x2/Luna.gif").
+	 * La luna che sale nel cielo, da quella risorsa (per esempio "fondinon2x2/Luna.png").
 	 */
 	public ScenaFraCompagni conLuna(String risorsa) {
 		luna = risorsa;

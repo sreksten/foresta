@@ -1,0 +1,29 @@
+# L'atlante delle icone (atlante_icone.png): una riga di questo file è una riga di celle dell'immagine, nell'ordine in cui compaiono.
+# Le righe che cominciano con # sono commenti; "# Titolo" prima di una riga ne è il titolo.
+# Ogni cella è 32x32 con la linea rossa a destra e in basso (e la prima riga e la prima colonna dell'immagine sono rosse), come l'immagine
+# dei font Doomdark: la griglia si calcola. Un'icona più piccola sta nell'angolo in alto a sinistra della sua cella, e la sua misura si scrive
+# dopo la @ (nome@LxA); senza, è 32x32. Un - lascia la cella vuota; le celle in fondo alla riga che non si scrivono restano a disposizione.
+# Per ricostruire l'immagine dai file singoli: python3 risorse_e_documenti_vari/atlanti/costruisci_atlante.py icone
+CELLA 32
+COLONNE 22
+FUORI ManoPuntatore
+# Segnaposto uguali a un'altra icona: usano la sua cella finché non si disegna quella vera
+ALIAS Amicizia Carta
+ALIAS MoglieDelBardo Donna
+ALIAS Locandiere Uomo
+# Personaggi giocanti e comparse umane
+Guerriero Guerriera Ladro Ladra Mago Maga Elfo Elfa Bardo Cantastorie Sacerdote Sacerdotessa Chierico Chierica Druido Druida Vichingo OmbraFiamma CapitanoDelleGuardie Viandante Uomo Donna
+# Mostri e chi sta nelle scene
+Goblin Hobgoblin Scheletro Minotauro Centauro Gigante Titano Eremita Necromante BardoLocanda VenditoreDiPergamene Incantatore Armaiolo Alchimista
+# Incantesimi
+Acqua Aria Terra Fuoco Fulmine Gelo Veleno Morte Silenzio Nebbia Tempesta Terremoto Terrore Corruzione NegaMagia DardoArcano Incantesimo Resurrezione
+# Abilità innate e canti
+AlbaSacra LuceDivina ImposizioneDelleMani MartelloSacro PelleDiCorteccia Radici Sciame Rigenerazione ScacciareINonMorti UrloDellaBanshee AttaccoAlleSpalle GridoDiBattaglia CantoCurativo CantoDiValore CantoIpnotico
+# Direzioni, frecce e azioni di gioco
+Nord Est Sud Ovest Su Giu Sinistra Destra ComponenteScorrevole-FrecciaSu@16x16 ComponenteScorrevole-FrecciaGiu@16x16 ComponenteScorrevole-FrecciaSinistra@16x16 ComponenteScorrevole-FrecciaDestra@16x16 Combattimento Fuga PassaInosservato Accampamento EsciDaCitta Singolo SingoloAttacco Carta Forbice Sasso
+# Scelte e conferme
+Si No Annulla Aggiungi Rimuovi Aiuto 1 2 3 4 5 Maschio Femmina LinguaItaliano LinguaIngleseGb LinguaIngleseUsa
+# Negozi, luoghi e schermate di contorno (a destra due icone scherzose)
+NegozioAlchimista NegozioArmaiolo NegozioIncantatore NegozioVenditoreDiPergamene Locanda Fusione Mappa Inventario Gruppo Trofei Bestiario TatticheAttacco Floppy - - - - - - - Ruttolomeo Storpsgorblin
+# Consumabili, valori e missioni (a destra gli sfondi delle icone)
+Pergamena PozioneSalute PozioneSaluteGrande PozioneMagia PozioneMagiaGrande PozionePanacea Moneta@27x28 PietraPreziosa@27x28 Tempo@27x28 AumentoLivello Missione-gallo Missione-birra-grande@16x16 - - - - - Sfondo-icona-trasparente Sfondo-icona-grigio Sfondo-icona-marrone Sfondo-icona-rosso Sfondo-icona-verde

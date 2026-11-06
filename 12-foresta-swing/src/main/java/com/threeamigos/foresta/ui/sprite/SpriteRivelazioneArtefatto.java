@@ -58,14 +58,14 @@ public class SpriteRivelazioneArtefatto implements SpriteInterface {
 	private static final Map<TipoDanno, Color> COLORI_ELEMENTI = new EnumMap<>(TipoDanno.class);
 	// La veste, gli ingredienti magici, il talismano e il ninnolo non si trovano nelle locazioni, quindi non sono in MappaBottinoImmagine
 	// Per ora la veste è quella del mago, anche per il ladro e il sacerdote
-	private static final BufferedImage VESTE = BufferedImageBuilder.buildBufferedImage("oggetti/Veste.gif", LivelloDiZoom.valore());
-	private static final BufferedImage TALISMANO = BufferedImageBuilder.buildBufferedImage("oggetti/Talismano.gif", LivelloDiZoom.valore());
-	private static final BufferedImage NINNOLO = BufferedImageBuilder.buildBufferedImage("oggetti/Ninnolo.gif", LivelloDiZoom.valore());
-	private static final BufferedImage PERGAMENA = BufferedImageBuilder.buildBufferedImage("oggetti/Pergamena.gif", LivelloDiZoom.valore());
-	private static final BufferedImage GEMMA = BufferedImageBuilder.buildBufferedImage("oggetti/Gemma.gif", LivelloDiZoom.valore());
-	private static final BufferedImage MONILE = BufferedImageBuilder.buildBufferedImage("oggetti/Monile.gif", LivelloDiZoom.valore());
-	private static final BufferedImage GINGILLO = BufferedImageBuilder.buildBufferedImage("oggetti/Gingillo.gif", LivelloDiZoom.valore());
-	private static final BufferedImage SIGILLO = BufferedImageBuilder.buildBufferedImage("oggetti/Sigillo.gif", LivelloDiZoom.valore());
+	private static final BufferedImage VESTE = BufferedImageBuilder.buildBufferedImage("oggetti/Veste.png", LivelloDiZoom.valore());
+	private static final BufferedImage TALISMANO = BufferedImageBuilder.buildBufferedImage("oggetti/Talismano.png", LivelloDiZoom.valore());
+	private static final BufferedImage NINNOLO = BufferedImageBuilder.buildBufferedImage("oggetti/Ninnolo.png", LivelloDiZoom.valore());
+	private static final BufferedImage PERGAMENA = BufferedImageBuilder.buildBufferedImage("oggetti/Pergamena.png", LivelloDiZoom.valore());
+	private static final BufferedImage GEMMA = BufferedImageBuilder.buildBufferedImage("oggetti/Gemma.png", LivelloDiZoom.valore());
+	private static final BufferedImage MONILE = BufferedImageBuilder.buildBufferedImage("oggetti/Monile.png", LivelloDiZoom.valore());
+	private static final BufferedImage GINGILLO = BufferedImageBuilder.buildBufferedImage("oggetti/Gingillo.png", LivelloDiZoom.valore());
+	private static final BufferedImage SIGILLO = BufferedImageBuilder.buildBufferedImage("oggetti/Sigillo.png", LivelloDiZoom.valore());
 
 	static {
 		COLORI_ELEMENTI.put(TipoDanno.ARIA, new Color(200, 235, 255));

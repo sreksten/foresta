@@ -17,20 +17,20 @@ import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 public enum NegozioInScena {
 
 	ARMAIOLO(MomentoIntermezzo.INGRESSO_ARMAIOLO, "armaiolo",
-			"fondinon2x2/InternoArmaiolo.gif", "fondinon2x2/ForegroundArmaiolo.gif", TipoPersonaggio.ARMAIOLO,
+			"fondinon2x2/InternoArmaiolo.png", "fondinon2x2/ForegroundArmaiolo.png", TipoPersonaggio.ARMAIOLO,
 			0.65, 0.6, 0.55, 0.8, 20),
 	ALCHIMISTA(MomentoIntermezzo.INGRESSO_ALCHIMISTA, "alchimista",
-			"fondinon2x2/InternoAlchimista.gif", "fondinon2x2/ForegroundAlchimista.gif", TipoPersonaggio.ALCHIMISTA,
+			"fondinon2x2/InternoAlchimista.png", "fondinon2x2/ForegroundAlchimista.png", TipoPersonaggio.ALCHIMISTA,
 			0.60, 0.55, 0.51, 0.8, 20),
 	VENDITORE_DI_PERGAMENE(MomentoIntermezzo.INGRESSO_VENDITORE_DI_PERGAMENE, "venditore",
-			"fondinon2x2/InternoVenditoreDiPergamene.gif", "fondinon2x2/ForegroundVenditoreDiPergamene.gif", TipoPersonaggio.VENDITORE_DI_PERGAMENE,
+			"fondinon2x2/InternoVenditoreDiPergamene.png", "fondinon2x2/ForegroundVenditoreDiPergamene.png", TipoPersonaggio.VENDITORE_DI_PERGAMENE,
 			0.65, 0.6, 0.55, 0.8, 20),
 	INCANTATORE(MomentoIntermezzo.INGRESSO_INCANTATORE, "incantatore",
-			"fondinon2x2/InternoIncantatore.gif", "fondinon2x2/ForegroundIncantatore.gif", TipoPersonaggio.INCANTATORE,
+			"fondinon2x2/InternoIncantatore.png", "fondinon2x2/ForegroundIncantatore.png", TipoPersonaggio.INCANTATORE,
 			0.65, 0.6, 0.55, 0.8, 20),
 	// Nel bosco o in città: il momento d'ingresso dipende da dove si trova la locanda (vedi isIngresso)
 	LOCANDA(null, "locandiere",
-			"fondinon2x2/InternoLocanda.gif", "fondinon2x2/ForegroundLocanda.gif", TipoPersonaggio.LOCANDIERE,
+			"fondinon2x2/InternoLocanda.png", "fondinon2x2/ForegroundLocanda.png", TipoPersonaggio.LOCANDIERE,
 			0.65, 0.6, 0.5, 0.6, 23);
 
 	private final MomentoIntermezzo ingresso;

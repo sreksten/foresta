@@ -56,10 +56,10 @@ public final class SorgentiDelProgetto {
 	}
 
 	/**
-	 * La cartella delle immagini del gioco, nel modulo dell'interfaccia grafica.
+	 * La cartella delle immagini del gioco, nel modulo che le interfacce grafiche hanno in comune.
 	 */
 	public static Path immagini() {
-		return radice().resolve(MODULO_UI + "/src/main/resources/com/threeamigos/foresta/img");
+		return radice().resolve("12-foresta-ui-comune/src/main/resources/com/threeamigos/foresta/img");
 	}
 
 	/**

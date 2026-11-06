@@ -110,7 +110,7 @@ I collegamenti nel disegno sono indicativi: il livello dice «dipende al più da
 | 09 | missioni | [`09-foresta-missioni.md`](09-foresta-missioni.md) |
 | 10 | modellodati, trofei | [`10-foresta-modellodati.md`](10-foresta-modellodati.md), [`10-foresta-trofei.md`](10-foresta-trofei.md) |
 | 11 | motore-api | [`11-foresta-motore-api.md`](11-foresta-motore-api.md) |
-| 12 | motore, swing | [`12-foresta-motore.md`](12-foresta-motore.md), [`12-foresta-swing.md`](12-foresta-swing.md) |
+| 12 | motore, ui-comune, swing | [`12-foresta-motore.md`](12-foresta-motore.md), [`12-foresta-ui-comune.md`](12-foresta-ui-comune.md), [`12-foresta-swing.md`](12-foresta-swing.md) |
 | 13 | app-swing | [`13-foresta-app-swing.md`](13-foresta-app-swing.md) |
 
 Il motore e la UI dipendono entrambi da `11-foresta-motore-api` e mai l'uno dall'altro: è lì che stanno le «lingue comuni» (eventi e viste). Solo `13-foresta-app-swing` li mette insieme. Un test (`DipendenzeDalToolkitGraficoTest`) controlla che nessuno fuori da `12-foresta-swing` usi `java.awt` o Swing.

@@ -40,7 +40,7 @@ class ImmagineDelFontAColoriTest {
         BufferedImage immagine = griglia();
         punto(immagine, 0, 0, 0, 0, 0x008C00);
         punto(immagine, 0, 0, 2, 1, 0x737373);
-        ImmagineDelFontAColori font = ImmagineDelFontAColori.daImmagine(immagine, LARGHEZZA_DELLO_SPAZIO);
+        ImmagineDelFontAColori font = daImmagine(immagine, LARGHEZZA_DELLO_SPAZIO);
         GlifoAColori a = font.getGlifo('A');
         assertEquals(3, a.getLarghezza());
         assertEquals(ALTEZZA_RIQUADRO, a.getAltezza());
@@ -63,7 +63,7 @@ class ImmagineDelFontAColoriTest {
         }
         immagine.setRGB(1, 1, 0x80008C00);
         immagine.setRGB(4, 1, 0x00FF0000);
-        GlifoAColori a = ImmagineDelFontAColori.daImmagine(immagine, LARGHEZZA_DELLO_SPAZIO).getGlifo('A');
+        GlifoAColori a = daImmagine(immagine, LARGHEZZA_DELLO_SPAZIO).getGlifo('A');
         assertEquals(1, a.getLarghezza(), "un rosso trasparente non è un segnaposto e non allarga il glifo");
         assertEquals(0x80008C00, a.getPixel(0, 0));
     }
@@ -73,7 +73,7 @@ class ImmagineDelFontAColoriTest {
         BufferedImage immagine = griglia();
         punto(immagine, 0, 1, 0, 0, 0xFFFFFF);
         punto(immagine, 0, 1, 1, 1, ROSSO);
-        ImmagineDelFontAColori font = ImmagineDelFontAColori.daImmagine(immagine, LARGHEZZA_DELLO_SPAZIO);
+        ImmagineDelFontAColori font = daImmagine(immagine, LARGHEZZA_DELLO_SPAZIO);
         assertFalse(font.supportaIlCarattere('B'));
         assertTrue(font.getCaratteriMancanti().contains('B'));
         assertThrows(DoomdarkFont.UnsupportedCharacterException.class, () -> font.getGlifo('B'));
@@ -85,6 +85,10 @@ class ImmagineDelFontAColoriTest {
     @Test
     void unaImmagineCheNonEUnaGrigliaDaErrore() {
         assertThrows(IllegalStateException.class,
-                () -> ImmagineDelFontAColori.daImmagine(new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB), 3));
+                () -> daImmagine(new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB), 3));
+    }
+
+    private static ImmagineDelFontAColori daImmagine(java.awt.image.BufferedImage immagine, int larghezzaDelloSpazio) {
+        return ImmagineDelFontAColori.daImmagine(com.threeamigos.foresta.ui.immagini.ImmaginiAwt.pixel(immagine), larghezzaDelloSpazio);
     }
 }

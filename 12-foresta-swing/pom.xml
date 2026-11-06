@@ -14,12 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>com.threeamigos</groupId>
-            <artifactId>11-foresta-motore-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.threeamigos</groupId>
-            <artifactId>08-foresta-tattiche</artifactId>
+            <artifactId>12-foresta-ui-comune</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

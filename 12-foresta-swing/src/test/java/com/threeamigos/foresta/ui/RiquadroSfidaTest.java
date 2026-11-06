@@ -14,7 +14,7 @@ class RiquadroSfidaTest {
         assertEquals("Forbici", DisplayableCanvasRiquadroSfida.nomeDellaMano(MossaCartaForbiciSasso.FORBICE));
         assertEquals("Sasso", DisplayableCanvasRiquadroSfida.nomeDellaMano(MossaCartaForbiciSasso.SASSO));
         for (MossaCartaForbiciSasso mossa : MossaCartaForbiciSasso.values()) {
-            for (String lato : new String[]{"-sx.gif", "-dx.gif"}) {
+            for (String lato : new String[]{"-sx.png", "-dx.png"}) {
                 String risorsa = "/com/threeamigos/foresta/img/fondi/" + DisplayableCanvasRiquadroSfida.nomeDellaMano(mossa) + lato;
                 assertNotNull(DisplayableCanvasRiquadroSfida.class.getResource(risorsa), "manca " + risorsa);
             }

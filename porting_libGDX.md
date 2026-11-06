@@ -1,4 +1,4 @@
-# Piano di porting su libGDX (Android, iPhone, iPad)
+# Piano di porting su libGDX (Android e famiglia Apple: iMac, iPhone, iPad)
 
 Stato al 2026-10-31. È un piano, non una decisione presa: dice in che ordine fare le cose se si porta la Foresta su Android e iOS. Il «cosa manca» e i numeri sul codice Swing stanno in [`assessment_portabilita.md`](assessment_portabilita.md); qui c'è solo l'ordine dei lavori.
 
@@ -7,7 +7,7 @@ Stato al 2026-10-31. È un piano, non una decisione presa: dice in che ordine fa
 - **La riscrittura della UI è inevitabile.** Swing e AWT non esistono né su Android né su iOS. Qualunque strada porti la Foresta su un telefono passa dal riscrivere `12-foresta-swing` (disegno, input, immagini, testo) e `13-foresta-app-swing` (punto d'ingresso). Motore e moduli di dominio non si toccano: pubblicano eventi e viste senza sapere che UI c'è sopra.
 - **libGDX è il mezzo consigliato, non l'unico.** Un'UI nativa solo per Android (`Canvas`/`View`) esiste, ma coprirebbe Android e basta, e per iOS andrebbe riscritta ancora. libGDX dà un solo codice di UI per desktop, Android e iOS (tramite MobiVM) e usa direttamente i jar del progetto.
 - **Il disegno si presta.** È quasi tutto `drawImage` (208 chiamate su circa 450) e rettangoli colorati, che con uno `SpriteBatch` hanno un corrispondente quasi uno a uno.
-- **Che cosa si riusa**: logica (`BozzaTattica`, `TestoTattica`), immagini dei font Doomdark (`doomdark_small.gif` e `doomdark_medium.gif`) con la loro lettura in `ImmagineDelFont`, tabelle di immagini (`MappaBottinoImmagine`, `MappaPersonaggioImmagine`, `TipoIcona`), eventi, struttura di `ImageCache`, contenuto di ogni riquadro e schermata. Si riscrivono disegno, input e collegamento con la piattaforma.
+- **Che cosa si riusa**: logica (`BozzaTattica`, `TestoTattica`), immagini dei font Doomdark (`doomdark_small.png` e `doomdark_medium.png`) con la loro lettura in `ImmagineDelFont`, tabelle di immagini (`MappaBottinoImmagine`, `MappaPersonaggioImmagine`, `TipoIcona`), eventi, struttura di `ImageCache`, contenuto di ogni riquadro e schermata. Si riscrivono disegno, input e collegamento con la piattaforma.
 
 ## 2. Decisioni prese e da prendere
 
@@ -15,7 +15,7 @@ Prese (dall'utente, 2026-10-31):
 
 1. **Build**: si resta con Maven. Quando servirà, la versione Gradle (per i moduli Android e iOS) si costruirà **in più**, partendo da quella Maven, che resta la principale.
 2. **Moduli**: `12-foresta-libgdx` per il front-end, `13-foresta-app-libgdx` per il punto d'ingresso desktop. I moduli Android e iOS, se stanno fuori da Maven, non entrano nella numerazione.
-3. **Classi Swing**: restano dove sono (`12-foresta-swing`); il modulo libGDX non dipende da lui e quel che gli serve (dati dei font, tabelle di immagini) lo copia, senza spostare nulla. Swing resta come riferimento.
+3. **Codice comune (cambiata il 2026-11-06)**: niente copie. Quel che non dipende dal toolkit sta in `12-foresta-ui-comune` (le immagini, e man mano la logica d'interfaccia che non disegna), usato da `12-foresta-swing` e da `12-foresta-libgdx`. Swing resta come alternativa e ogni pezzo di UI si porta anche in libGDX.
 4. **Orientamento**: il gioco resta **orizzontale**. Niente layout verticale vero.
 5. **Layout per il telefono**: prima prova, la sola barra icone piazzata in verticale sul lato destro, per stringere l'altezza e allargare la lunghezza (vedi la sezione 9). **Fatta in Swing** (2026-10-31): la modalità `VERTICALE` funziona, con la barra che scorre in pixel fra due frecce fisse, col trascinamento e l'inerzia.
 6. **Android**: `minSdk` 24 (Android 7.0), dove lambda e stream di Java 8 funzionano senza desugaring particolare.
@@ -23,7 +23,9 @@ Prese (dall'utente, 2026-10-31):
 8. **Due front-end**: finché vivono entrambi, ogni novità di UI si fa in **tutti e due** (Swing resta alla pari).
 9. **Cartigli sul tocco**: la descrizione dei comandi compare con la **pressione prolungata**; il tocco normale esegue il comando.
 
-Da prendere: l'altezza target del layout (dopo la Fase 3), e lo spostamento in un modulo comune delle classi non-Swing solo se la duplicazione diventa un peso.
+Da prendere: l'altezza target del layout (dopo la Fase 3).
+
+Preso il 2026-11-06: le piattaforme sono **Android e tutta la famiglia Apple** (macOS su iMac e Mac, iOS su iPhone e iPad); le immagini sono tutte PNG (convertite dalle GIF, nessuna era animata) e si raggruppano in **atlanti** (icone, mappa, oggetti fatti; poi personaggi, locazioni e fondi) usati da entrambe le interfacce, e gli originali **non si buttano via**: stanno in `12-foresta-ui-comune/sorgenti-immagini/` e non entrano nei jar; la `FinestraDiProva` si porta anche (solo desktop); durante il porting si lanciano solo i test di `risorse_e_documenti_vari/test_porting_ui.txt`.
 
 ## 3. Fase 0: prototipo (non la migrazione)
 
@@ -68,7 +70,7 @@ Prima di disegnare schermate serve il punto d'ingresso, perché il motore parta 
    - **Una texture per scritta** costa un cambio di texture nello `SpriteBatch` per ogni scritta e un caricamento sulla GPU, possibile solo sul thread grafico (oggi `ImageCache` costruisce anche da altri thread).
    - Le scritte sono tante e quasi tutte usa e getta (narrazione, nomi, numeri dei danni).
 
-   Si fa invece come un `BitmapFont`: all'avvio si costruisce **un atlante dei glifi** (uno per font, e per colore se serve) e ogni scritta si disegna come una sequenza di sprite, uno per lettera, nello stesso lotto dello `SpriteBatch`. Niente cache dinamica, riferimenti deboli o reaper per i testi, niente da liberare. Si riusano la divisione in righe (`FontTool.split`) e le larghezze dei glifi, che sono logica pura. I glifi li dà già l'**immagine del font**: `img/font/doomdark_small.gif` e `doomdark_medium.gif`, con ogni glifo in un riquadro di una griglia fissa (i bordi rossi, che servono solo a chi disegna e a chi legge, e l'elenco dei caratteri nell'ordine in `CaratteriDelFont`). Il livello di grigio di ogni pixel è l'alfa del colore del testo (nero puro trasparente, bianco il colore pieno), e la larghezza di ogni glifo è misurata sui pixel quando si apre l'immagine (`ImmagineDelFont`). In libGDX la lettura della griglia si riscrive sul `Pixmap` (è pochissima logica: il calcolo dei riquadri e delle larghezze) oppure si fa in fase di build, scrivendo l'atlante e un file con le larghezze. `DoomdarkTextProducer` e `DoomdarkTextRectangle` (che usano `BufferedImage`, `IndexColorModel`, `MemoryImageSource`) non si portano: li sostituisce il disegno per glifi.
+   Si fa invece come un `BitmapFont`: all'avvio si costruisce **un atlante dei glifi** (uno per font, e per colore se serve) e ogni scritta si disegna come una sequenza di sprite, uno per lettera, nello stesso lotto dello `SpriteBatch`. Niente cache dinamica, riferimenti deboli o reaper per i testi, niente da liberare. Si riusano la divisione in righe (`FontTool.split`) e le larghezze dei glifi, che sono logica pura. I glifi li dà già l'**immagine del font**: `img/font/doomdark_small.png` e `doomdark_medium.png`, con ogni glifo in un riquadro di una griglia fissa (i bordi rossi, che servono solo a chi disegna e a chi legge, e l'elenco dei caratteri nell'ordine in `CaratteriDelFont`). Il livello di grigio di ogni pixel è l'alfa del colore del testo (nero puro trasparente, bianco il colore pieno), e la larghezza di ogni glifo è misurata sui pixel quando si apre l'immagine (`ImmagineDelFont`). In libGDX la lettura della griglia si riscrive sul `Pixmap` (è pochissima logica: il calcolo dei riquadri e delle larghezze) oppure si fa in fase di build, scrivendo l'atlante e un file con le larghezze. `DoomdarkTextProducer` e `DoomdarkTextRectangle` (che usano `BufferedImage`, `IndexColorModel`, `MemoryImageSource`) non si portano: li sostituisce il disegno per glifi.
    - **Colori**: il glifo è bianco con alfa, e il colore del testo (`DoomdarkColorModel`) si applica come tinta: basta un solo atlante per font con `batch.setColor(...)`, perché l'alfa dei pixel sfumati si moltiplica con quella del colore, come fa oggi `DoomdarkTextProducer.pixel`. Le scritte con ombra sono due passaggi (nero spostato di 2 pixel e colore sopra), uguali a oggi.
    - **Righe in più**: la riga di testo è alta quanto l'immagine intera (corpo più le righe per accenti e cediglie: 13 nel piccolo, 24 nel medio); chi posiziona un testo in un punto fisso toglie `getRigheInCima()` dalla quota. Valgono le stesse regole di impaginazione di Swing.
 4. **Testo grande**: `TestoGrande` usa `ConvolveOp` (alone) e `RescaleOp` (scurire): si precalcola in un `Pixmap` o si fa con uno shader. Sono pochi testi, quasi sempre gli stessi. Dove una scritta composta è troppo pesante da ridisegnare a ogni fotogramma resta una piccola cache con un limite di voci e `dispose()` esplicito quando una voce esce (mai riferimenti deboli).
@@ -148,6 +150,30 @@ Il rapporto 2,06 è vicino a quello dei telefoni (circa 2,2), quindi le bande ne
 - **Dipendenze fra moduli**: se una dipendenza cambia il livello di un modulo, si rinominano cartella, `artifactId` e documento.
 - **Due front-end insieme**: finché Swing e libGDX vivono entrambi, ogni novità di UI va fatta due volte (decisione: tutto in entrambi, Swing resta alla pari).
 - **Commit**: a passi che compilano, solo su richiesta.
+
+## 12bis. La logica che si può estrarre da Swing (controllo del 2026-11-06)
+
+Già nel modulo comune (`12-foresta-ui-comune`): le finestre e l'input (`Finestra`, `TipoFinestra`, `Orientamento`), `ScorrimentoSuUnAsse`, `LivelloDiZoom`, `ComandiPossibili`, i testi della UI, il segnalatore degli errori, il font Doomdark come dati (`DoomdarkFont`, `AtlanteDiGlifi`, `ImmagineDelFont`, `ImmagineDelFontAColori`, i glifi, `DoomdarkColorModel.Color`) e la lettura dei PNG senza toolkit (`LetturaPng`).
+
+Da estrarre **componente per componente, quando lo si porta** (si separa il modello dal disegno, e Swing usa il modello comune; farlo tutto prima, a freddo, rischierebbe di rompere Swing senza vedere il risultato in libGDX):
+
+| Classe | Logica che si può portare in comune | Resta nel toolkit |
+| :--- | :--- | :--- |
+| `JoystickVirtuale` | tutto: zona, attivazione, intensità, velocità | il disegno (`Graphics2D`, gradiente) |
+| `ScorrimentoVerticale`, `ComponenteScorrevole` | il modello dello scorrimento e dell'albero di nodi (altezze, offset, hit-test, stato aperto/chiuso) | disegno dei nodi e delle freccine |
+| `DisplayableCanvasBarraIcone` e `…Dock` | elenco delle icone, rettangoli, scorrimento e tocco, profilo di ingrandimento del Dock, posizione del cartiglio | disegno delle icone e dei bordi |
+| `Cartiglio` | calcolo della posizione e del testo | disegno |
+| `TipoIcona`, `MappaBottinoImmagine`, `MappaPersonaggioImmagine`, `VersiDeiPersonaggi` | le tabelle comando/classe/oggetto → nome della risorsa e il verso (`serveSpecchiare`) | caricamento dell'immagine nel toolkit e lo specchio |
+| `SfondoARiempimento` | la maschera dell'interno della cornice e l'interpolazione dei colori, su `ImmagineDiPixel` | la composizione dell'immagine finale |
+| `ImageCache` | l'elenco dei file, le chiavi, le regole della cache e delle composizioni | il tipo dell'immagine e la cache viva (libGDX libera le texture a mano) |
+| `DoomdarkTextProducer`, `TestoGrande` | la divisione in righe e l'impaginazione (già in `FontTool`) | la produzione dell'immagine (`IndexColorModel`, `ConvolveOp`) |
+| `DisplayableCanvas` | pila dei riquadri e coordinate, instradamento del mouse, doppio click, stati delle schermate | `JPanel`, disegno, eventi di Swing |
+| `ForestaUI` | la traduzione di una quarantina di eventi del bus in chiamate (la parte da tenere, vedi la Fase 3), il calcolo delle dimensioni della finestra | `JFrame`, il thread di Swing |
+| Riquadri e schermate | il contenuto da mostrare (testi, elenchi, ordinamenti, stato del mouse), le coordinate | `Graphics2D` |
+| `DisplayableCanvasTattiche`, `CasellaADiscesa` | stato della modifica, elenchi, selezione | disegno e input |
+| Sprite (`SpriteBase`, `SpriteATempo`, fumetti, annunci…) | tempi, traiettorie, dissolvenza, `CoordinateFumetto` | disegno e filtri (`SrcIn`, sfocatura) |
+| `TracciatoreLogo`, `CloudGenerator` | geometria e animazione del tracciato (una parte grande delle 1466 righe è calcolo) | i tratti disegnati |
+| `Prompt` | il testo e le regole (annulla, invio) | il campo di testo |
 
 ## Osservazioni
 

@@ -159,7 +159,7 @@ public class CostruttoreDellaForesta {
 	}
 
 	/**
-	 * Le locazioni da segnalare sulla mappa con Indicatore.gif: quelle di un artefatto di cui
+	 * Le locazioni da segnalare sulla mappa con Indicatore.png: quelle di un artefatto di cui
 	 * si è saputo tramite Informazioni, più le caselle rivendicate dalle missioni a passi attive che il gruppo conosce.
 	 */
 	public static List<CoordinateMD> getCoordinateDaSegnalare() {

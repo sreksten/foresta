@@ -1,0 +1,27 @@
+# L'atlante di img/fondi (atlante_fondi.png): impaginazione libera, ogni immagine col suo riquadro rosso attorno.
+# Una riga per immagine: nome x y larghezza altezza (x e y sono l'angolo in alto a sinistra dell'immagine). Fra due immagini
+# basta la linea rossa di 1 pixel. Per ricostruire l'immagine: python3 risorse_e_documenti_vari/atlanti/costruisci_atlante.py fondi
+# Questo elenco l'ha proposto impagina_atlante.py; da qui si può spostare a mano qualunque immagine.
+LIBERO
+LARGHEZZA 452
+ALTEZZA 1353
+CorniceInventario 1 1 184 364
+OmbraDelDrago 186 1 227 135
+Carta-dx 186 137 224 224
+CorniceMappa 290 362 124 124
+CorniceLarga 1 366 288 144
+Carta-sx 1 511 224 224
+Forbici-dx 226 511 224 224
+Forbici-sx 1 736 224 224
+Sasso-dx 226 736 224 224
+Sasso-sx 1 961 224 224
+CorniceCombattimento 226 961 192 35
+CorniceIncantesimi 226 997 184 72
+Separatore-Maschere 226 1070 164 21
+Separatore-Ninnoli 226 1092 164 21
+Separatore-Pozioni 226 1114 164 21
+CornicePiccola 226 1136 124 35
+Trionfo 1 1186 192 140
+CorniceGrande 194 1186 184 144
+Separatore-Incantamenti 1 1331 164 21
+Separatore-Incantesimi 166 1331 164 21

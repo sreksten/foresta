@@ -14,8 +14,8 @@ import java.util.List;
  */
 public final class ScenaInLocanda {
 
-	private static final String SFONDO = "fondinon2x2/InternoLocanda.gif";
-	private static final String PRIMO_PIANO = "fondinon2x2/ForegroundLocanda.gif";
+	private static final String SFONDO = "fondinon2x2/InternoLocanda.png";
+	private static final String PRIMO_PIANO = "fondinon2x2/ForegroundLocanda.png";
 	private static final String ID_LOCANDIERE = "locandiere";
 	// Come la scenetta d'ingresso nella locanda (vedi NegozioInScena.LOCANDA)
 	private static final double X_LOCANDIERE = 0.65;

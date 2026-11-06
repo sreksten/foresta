@@ -106,9 +106,9 @@ class ScenePagineEDatiTest {
         assertEquals(TipoLocazione.BOSCO, locazione.getTipoLocazione());
         assertEquals("locazione BOSCO", locazione.toString());
         assertThrows(NullPointerException.class, () -> ImmagineIntermezzo.locazione(null));
-        ImmagineIntermezzo risorsa = ImmagineIntermezzo.risorsa("img/x.gif");
-        assertEquals("img/x.gif", risorsa.getRisorsa());
-        assertEquals("risorsa img/x.gif", risorsa.toString());
+        ImmagineIntermezzo risorsa = ImmagineIntermezzo.risorsa("img/x.png");
+        assertEquals("img/x.png", risorsa.getRisorsa());
+        assertEquals("risorsa img/x.png", risorsa.toString());
         assertThrows(IllegalArgumentException.class, () -> ImmagineIntermezzo.risorsa(null));
         assertThrows(IllegalArgumentException.class, () -> ImmagineIntermezzo.risorsa(""));
         ImmagineIntermezzo animazione = ImmagineIntermezzo.animazione(Animazione.FUOCO_DA_CAMPO);
@@ -119,24 +119,24 @@ class ScenePagineEDatiTest {
 
     @Test
     void unoSpriteSheetSiAnimaConOSenzaSequenza() {
-        ImmagineIntermezzo senza = ImmagineIntermezzo.spriteSheet("s.gif", 2, 2, 4.0);
+        ImmagineIntermezzo senza = ImmagineIntermezzo.spriteSheet("s.png", 2, 2, 4.0);
         assertEquals(2, senza.getColonne());
         assertEquals(2, senza.getRighe());
         assertEquals(0, senza.getFotogrammaAl(0));
         assertEquals(1, senza.getFotogrammaAl(0.3));
         assertEquals(0, senza.getFotogrammaAl(1.0), "ricomincia dopo quattro fotogrammi");
         assertEquals(0, senza.getFotogrammaAl(-5));
-        assertEquals("sprite sheet s.gif 2x2", senza.toString());
-        ImmagineIntermezzo con = ImmagineIntermezzo.spriteSheet("s.gif", 2, 2, 2.0, 3, 1);
+        assertEquals("sprite sheet s.png 2x2", senza.toString());
+        ImmagineIntermezzo con = ImmagineIntermezzo.spriteSheet("s.png", 2, 2, 2.0, 3, 1);
         assertEquals(3, con.getFotogrammaAl(0));
         assertEquals(1, con.getFotogrammaAl(0.5));
         assertEquals(3, con.getFotogrammaAl(1.0));
-        assertEquals("sprite sheet s.gif 2x2 [3, 1]", con.toString());
-        assertThrows(IllegalArgumentException.class, () -> ImmagineIntermezzo.spriteSheet("s.gif", 0, 2, 1.0));
-        assertThrows(IllegalArgumentException.class, () -> ImmagineIntermezzo.spriteSheet("s.gif", 2, 0, 1.0));
-        assertThrows(IllegalArgumentException.class, () -> ImmagineIntermezzo.spriteSheet("s.gif", 2, 2, 0.0));
-        assertThrows(IllegalArgumentException.class, () -> ImmagineIntermezzo.spriteSheet("s.gif", 2, 2, 1.0, 4));
-        assertThrows(IllegalArgumentException.class, () -> ImmagineIntermezzo.spriteSheet("s.gif", 2, 2, 1.0, -1));
+        assertEquals("sprite sheet s.png 2x2 [3, 1]", con.toString());
+        assertThrows(IllegalArgumentException.class, () -> ImmagineIntermezzo.spriteSheet("s.png", 0, 2, 1.0));
+        assertThrows(IllegalArgumentException.class, () -> ImmagineIntermezzo.spriteSheet("s.png", 2, 0, 1.0));
+        assertThrows(IllegalArgumentException.class, () -> ImmagineIntermezzo.spriteSheet("s.png", 2, 2, 0.0));
+        assertThrows(IllegalArgumentException.class, () -> ImmagineIntermezzo.spriteSheet("s.png", 2, 2, 1.0, 4));
+        assertThrows(IllegalArgumentException.class, () -> ImmagineIntermezzo.spriteSheet("s.png", 2, 2, 1.0, -1));
     }
 
     // --- Elementi e tappe
@@ -157,7 +157,7 @@ class ScenePagineEDatiTest {
         assertEquals(Verso.SINISTRA, stato.getVerso());
         assertEquals(0, elemento.getDurata(), DELTA);
         // Una tappa con scala e opacità
-        ElementoIntermezzo che = ElementoIntermezzo.di("b", ImmagineIntermezzo.risorsa("x.gif"), 0.0, 0.0)
+        ElementoIntermezzo che = ElementoIntermezzo.di("b", ImmagineIntermezzo.risorsa("x.png"), 0.0, 0.0)
                 .poi(Tappa.inSecondi(2).verso(1.0, 1.0).conScala(3).conOpacita(0).guarda(Verso.DESTRA));
         StatoElemento metà = che.getStatoAl(1);
         assertEquals(0.5, metà.getX(), DELTA);
@@ -170,12 +170,12 @@ class ScenePagineEDatiTest {
         che.ripeti(TipoRipetizione.CICLICA);
         assertTrue(Double.isInfinite(che.getDurata()));
         // Senza durata una tappa istantanea dà lo stato finale
-        ElementoIntermezzo istantaneo = ElementoIntermezzo.di("c", ImmagineIntermezzo.risorsa("x.gif"), 0.0, 0.0).poi(Tappa.inSecondi(0).verso(0.9, 0.9));
+        ElementoIntermezzo istantaneo = ElementoIntermezzo.di("c", ImmagineIntermezzo.risorsa("x.png"), 0.0, 0.0).poi(Tappa.inSecondi(0).verso(0.9, 0.9));
         assertEquals(0.9, istantaneo.getStatoAl(0).getX(), DELTA);
         istantaneo.ripeti(TipoRipetizione.AVANTI_E_INDIETRO);
         assertEquals(0, istantaneo.getDurata(), DELTA);
         // Una tappa lunga zero fra due altre
-        ElementoIntermezzo con = ElementoIntermezzo.di("d", ImmagineIntermezzo.risorsa("x.gif"), 0.0, 0.0)
+        ElementoIntermezzo con = ElementoIntermezzo.di("d", ImmagineIntermezzo.risorsa("x.png"), 0.0, 0.0)
                 .poi(Tappa.inSecondi(0).verso(0.5, 0.5)).poi(Tappa.inSecondi(1).verso(1, 1));
         assertEquals(0.75, con.getStatoAl(0.5).getX(), DELTA);
         assertEquals(0.5, con.getStatoAl(0).getX(), DELTA);
@@ -277,7 +277,7 @@ class ScenePagineEDatiTest {
             for (int i = 0; i < quanti; i++) {
                 personaggi.add(new Guerriero("Eroe" + i, 1));
             }
-            ScenaFraCompagni accampamento = ScenaFraCompagni.allAccampamento("Si accampano", personaggi).conLuna("luna.gif").parlaIlPrimo("Uno");
+            ScenaFraCompagni accampamento = ScenaFraCompagni.allAccampamento("Si accampano", personaggi).conLuna("luna.png").parlaIlPrimo("Uno");
             ScenaFraCompagni locale = ScenaFraCompagni.in(TipoLocazione.BOSCO, "Nel bosco", personaggi).parlaIlPrimo("Due");
             if (quanti > 1) {
                 accampamento.parlaIlSecondo("Tre");

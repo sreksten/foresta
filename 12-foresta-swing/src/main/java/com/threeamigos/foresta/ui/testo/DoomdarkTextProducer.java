@@ -83,7 +83,7 @@ public class DoomdarkTextProducer {
 	 * grafica non sa tenerla in memoria video, e ogni disegno la riconverte.
 	 */
 	private static BufferedImage creaImmagine(int larghezza, int altezza, DoomdarkColorModel.Color colore, int[] valori) {
-		IndexColorModel modello = DoomdarkColorModel.getColorModel(colore);
+		IndexColorModel modello = ModelliDiColoreAwt.getColorModel(colore);
 		int primoPiano = modello.getRGB(1);
 		int[] pixel = new int[larghezza * altezza];
 		for (int i = 0; i < pixel.length && i < valori.length; i++) {

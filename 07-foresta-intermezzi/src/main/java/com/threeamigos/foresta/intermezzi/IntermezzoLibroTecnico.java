@@ -27,7 +27,7 @@ public class IntermezzoLibroTecnico implements Intermezzo {
 
 	private static final String CAPO = "capo";
 	private static final String LIBRO = "libro";
-	private static final String IMMAGINE_LIBRO = "oggetti/LibroTecnico.gif";
+	private static final String IMMAGINE_LIBRO = "oggetti/LibroTecnico.png";
 
 	// I libri trovati e non ancora letti, nell'ordine in cui sono stati trovati: di solito uno, ma un cofano doppio ne può dare due
 	// Non si salva: fra la raccolta e la scena non può cadere nessun salvataggio, perché il gioco salva solo fra una locazione e l'altra

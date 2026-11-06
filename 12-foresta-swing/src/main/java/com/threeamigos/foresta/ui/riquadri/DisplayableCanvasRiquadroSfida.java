@@ -266,8 +266,8 @@ public class DisplayableCanvasRiquadroSfida implements Finestra {
 		int destra = 0;
 		int alto = 0;
 		for (MossaCartaForbiciSasso mossa : MossaCartaForbiciSasso.values()) {
-			BufferedImage sx = BufferedImageBuilder.buildBufferedImage("fondi/" + nomeDellaMano(mossa) + "-sx.gif", LivelloDiZoom.valore());
-			BufferedImage dx = BufferedImageBuilder.buildBufferedImage("fondi/" + nomeDellaMano(mossa) + "-dx.gif", LivelloDiZoom.valore());
+			BufferedImage sx = BufferedImageBuilder.buildBufferedImage("fondi/" + nomeDellaMano(mossa) + "-sx.png", LivelloDiZoom.valore());
+			BufferedImage dx = BufferedImageBuilder.buildBufferedImage("fondi/" + nomeDellaMano(mossa) + "-dx.png", LivelloDiZoom.valore());
 			maniSinistre.put(mossa, sx);
 			maniDestre.put(mossa, dx);
 			sinistra = Math.max(sinistra, sx.getWidth());

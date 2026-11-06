@@ -49,14 +49,14 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 	private static final int SPAZIO_FRA_PEZZI = 5;
 	private static final int MARGINE_RIGA = 2;
 
-	private static final BufferedImage ICONA_SU = BufferedImageBuilder.buildBufferedImage("icone/Su.gif");
-	private static final BufferedImage ICONA_GIU = BufferedImageBuilder.buildBufferedImage("icone/Giu.gif");
-	private static final BufferedImage ICONA_ELIMINA = BufferedImageBuilder.buildBufferedImage("icone/Rimuovi.gif");
-	private static final BufferedImage ICONA_AGGIUNGI = BufferedImageBuilder.buildBufferedImage("icone/Aggiungi.gif");
-	private static final BufferedImage ICONA_SINISTRA = BufferedImageBuilder.buildBufferedImage("icone/Sinistra.gif");
-	private static final BufferedImage ICONA_DESTRA = BufferedImageBuilder.buildBufferedImage("icone/Destra.gif");
-	private static final BufferedImage ICONA_SI = BufferedImageBuilder.buildBufferedImage("icone/Si.gif");
-	private static final BufferedImage ICONA_NO = BufferedImageBuilder.buildBufferedImage("icone/No.gif");
+	private static final BufferedImage ICONA_SU = BufferedImageBuilder.buildBufferedImage("icone/Su.png");
+	private static final BufferedImage ICONA_GIU = BufferedImageBuilder.buildBufferedImage("icone/Giu.png");
+	private static final BufferedImage ICONA_ELIMINA = BufferedImageBuilder.buildBufferedImage("icone/Rimuovi.png");
+	private static final BufferedImage ICONA_AGGIUNGI = BufferedImageBuilder.buildBufferedImage("icone/Aggiungi.png");
+	private static final BufferedImage ICONA_SINISTRA = BufferedImageBuilder.buildBufferedImage("icone/Sinistra.png");
+	private static final BufferedImage ICONA_DESTRA = BufferedImageBuilder.buildBufferedImage("icone/Destra.png");
+	private static final BufferedImage ICONA_SI = BufferedImageBuilder.buildBufferedImage("icone/Si.png");
+	private static final BufferedImage ICONA_NO = BufferedImageBuilder.buildBufferedImage("icone/No.png");
 
 	/**
 	 * Dove si apre un menu: sotto la riga che lo ha aperto, o sopra se sotto non c'è posto

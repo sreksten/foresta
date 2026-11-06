@@ -22,7 +22,7 @@ import java.util.List;
  */
 public final class ScenaInCitta {
 
-	private static final String SFONDO = "locazioni/Citta.gif";
+	private static final String SFONDO = "locazioni/Citta.png";
 	private static final String ID_MANDANTE = "mandante";
 	// Le coordinate sono dello schermo e lo sfondo della città (390 × 320) è più piccolo di quelli dei negozi:
 	// mandante e gruppo stanno sul selciato nelle stesse proporzioni dello sfondo, il mandante a destra

@@ -1,0 +1,17 @@
+# L'atlante degli sfondi delle locazioni (atlante_locazioni.png): una riga di questo file è una riga di celle dell'immagine.
+# Celle da 195x160 con la linea rossa a destra e in basso, la prima riga e la prima colonna rosse.
+# Gli originali (anche quelli che si faranno pezzo per pezzo) stanno in sorgenti-immagini/locazioni/ e non vanno nei jar.
+# Per ricostruire l'immagine dai file singoli: python3 risorse_e_documenti_vari/atlanti/costruisci_atlante.py locazioni
+CELLA 195x160
+COLONNE 3
+# Le botteghe per ora hanno tutte lo stesso disegno della locanda: usano la sua cella finché non si disegna quella vera
+ALIAS Alchimista Locanda
+ALIAS Armaiolo Locanda
+ALIAS Incantatore Locanda
+ALIAS VenditoreDiPergamene Locanda
+# Natura
+Foresta Radura Palude
+# Natura e luoghi antichi
+Grotta Rovine Tempio
+# Luoghi costruiti (la locanda vale anche per le botteghe)
+Castello Citta Locanda

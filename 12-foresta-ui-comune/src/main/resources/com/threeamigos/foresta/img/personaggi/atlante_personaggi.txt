@@ -1,0 +1,63 @@
+# L'atlante di img/personaggi (atlante_personaggi.png): impaginazione libera, ogni immagine col suo riquadro rosso attorno.
+# Una riga per immagine: nome x y larghezza altezza (x e y sono l'angolo in alto a sinistra dell'immagine). Fra due immagini
+# basta la linea rossa di 1 pixel. Per ricostruire l'immagine: python3 risorse_e_documenti_vari/atlanti/costruisci_atlante.py personaggi
+# Questo elenco l'ha proposto impagina_atlante.py; da qui si può spostare a mano qualunque immagine.
+# In cima: Guerriero Guerriera Ladro Ladra Mago Maga Elfo Elfa Bardo Cantastorie Sacerdote Sacerdotessa Chierico Chierica Druido Druida Vichingo OmbraFiamma
+LIBERO
+LARGHEZZA 327
+ALTEZZA 786
+ALIAS MoglieDelBardo Donna
+ALIAS Locandiere Uomo
+Vichingo 1 1 61 77
+Druido 63 1 58 75
+Ladro 122 1 35 71
+Bardo 158 1 33 71
+Sacerdotessa 192 1 52 70
+Ladra 245 1 43 69
+Elfo 289 1 30 69
+Elfa 292 71 28 69
+Chierica 236 72 55 69
+Maga 176 73 59 70
+Guerriero 119 77 56 71
+Mago 1 79 58 77
+Sacerdote 60 79 58 77
+Minotauro 272 142 36 77
+Cantastorie 182 144 32 70
+Guerriera 215 144 56 69
+OmbraFiamma 119 149 62 70
+Druida 1 157 56 68
+Chierico 58 157 54 68
+Drago 1 226 227 135
+MinotauroGigante 229 226 53 113
+Gigante 283 226 39 106
+Strega 229 340 79 112
+ChimeraDrago 1 362 98 107
+Titano 100 362 63 107
+Troll 164 362 49 86
+Viverna 164 453 103 96
+Chimera 268 453 55 73
+Centauro 1 470 63 99
+Idra 65 470 98 97
+Lich 164 550 68 97
+Arpia 233 550 75 86
+Necromante 65 568 65 79
+Alchimista 131 568 31 74
+BardoLocanda 1 570 33 71
+Spirito 35 570 27 68
+OmbraNera 233 637 62 81
+Hobgoblin 296 637 29 78
+Goblin 35 639 29 62
+Viandante 1 642 33 71
+Borgomastro 131 643 32 73
+Donna 76 648 34 70
+Folletto 111 648 18 30
+Incantatore 164 648 31 70
+VenditoreDiPergamene 196 648 31 70
+CapitanoDelleGuardie 1 714 31 71
+Uomo 33 714 42 70
+Armaiolo 296 716 30 69
+Eremita 111 717 41 68
+Fantasma 76 719 33 66
+Scheletro 153 719 42 66
+Spettro 196 719 27 60
+Gargoyle 224 719 46 44

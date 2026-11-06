@@ -75,12 +75,15 @@ public class BufferedImageBuilder {
 			throw new IllegalArgumentException("Zoom non valido: " + zoom);
 		}
 		if (resource != null && !resource.isEmpty()) {
+			// Le immagini raggruppate in un atlante (icone, mappa, oggetti) si ritagliano da lì: gli originali non stanno nei jar
+			ImmagineDiPixel dallAtlante = AtlanteDiImmagini.cerca(resource);
 			// ImageIO.read(InputStream) non chiude lo stream: lo chiude il try
-			try (InputStream in = BufferedImageBuilder.class.getResourceAsStream("/com/threeamigos/foresta/img/" + resource)) {
-				if (in == null) {
+			try (InputStream in = dallAtlante != null ? null
+					: BufferedImageBuilder.class.getResourceAsStream("/com/threeamigos/foresta/img/" + resource)) {
+				if (in == null && dallAtlante == null) {
 					throw new IllegalArgumentException("Non trovo il file " + resource);
 				}
-				BufferedImage img = ImageIO.read(in);
+				BufferedImage img = dallAtlante != null ? ImmaginiAwt.buffered(dallAtlante) : ImageIO.read(in);
 				if (img == null) {
 					throw new IllegalArgumentException("Formato non riconosciuto per il file " + resource);
 				}

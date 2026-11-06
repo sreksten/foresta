@@ -32,6 +32,10 @@ public final class DimensioniRisorsa {
 	 * @throws IllegalArgumentException se la risorsa non c'è o il suo formato non è riconosciuto
 	 */
 	public static Dimension di(String risorsa) {
+		int[] dallAtlante = AtlanteDiImmagini.misura(risorsa);
+		if (dallAtlante != null) {
+			return new Dimension(dallAtlante[0], dallAtlante[1]);
+		}
 		String percorso = "/com/threeamigos/foresta/img/" + risorsa;
 		try (InputStream in = DimensioniRisorsa.class.getResourceAsStream(percorso)) {
 			if (in == null) {

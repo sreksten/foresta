@@ -36,6 +36,7 @@
         <module>10-foresta-trofei</module>
         <module>11-foresta-motore-api</module>
         <module>12-foresta-motore</module>
+        <module>12-foresta-ui-comune</module>
         <module>12-foresta-swing</module>
         <module>13-foresta-app-swing</module>
     </modules>

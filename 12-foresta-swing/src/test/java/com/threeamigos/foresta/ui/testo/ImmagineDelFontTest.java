@@ -50,7 +50,7 @@ class ImmagineDelFontTest {
         punto(immagine, 0, 0, 0, 0, grigio(255));
         punto(immagine, 0, 0, 2, 1, grigio(128));
         // When
-        ImmagineDelFont font = ImmagineDelFont.daImmagine(immagine, LARGHEZZA_DELLO_SPAZIO);
+        ImmagineDelFont font = daImmagine(immagine, LARGHEZZA_DELLO_SPAZIO);
         // Then
         GlifoDelFont a = font.getGlifo('A');
         assertEquals(3, a.getLarghezza());
@@ -79,7 +79,7 @@ class ImmagineDelFontTest {
         immagine.setRGB(2, 1, 0x80FFFFFF);
         immagine.setRGB(3, 1, 0x000000FF);
         // When
-        GlifoDelFont a = ImmagineDelFont.daImmagine(immagine, LARGHEZZA_DELLO_SPAZIO).getGlifo('A');
+        GlifoDelFont a = daImmagine(immagine, LARGHEZZA_DELLO_SPAZIO).getGlifo('A');
         // Then
         assertEquals(255, a.getLivello(0, 0));
         assertEquals(128, a.getLivello(1, 0));
@@ -94,7 +94,7 @@ class ImmagineDelFontTest {
         punto(immagine, 0, 1, 0, 0, grigio(255));
         punto(immagine, 0, 1, 1, 1, ROSSO);
         // When
-        ImmagineDelFont font = ImmagineDelFont.daImmagine(immagine, LARGHEZZA_DELLO_SPAZIO);
+        ImmagineDelFont font = daImmagine(immagine, LARGHEZZA_DELLO_SPAZIO);
         // Then
         assertFalse(font.supportaIlCarattere('B'));
         assertTrue(font.getCaratteriMancanti().contains('B'));
@@ -105,7 +105,7 @@ class ImmagineDelFontTest {
 
     @Test
     void unRiquadroTuttoNeroENonSpazioEUnGlifoCheManca() {
-        ImmagineDelFont font = ImmagineDelFont.daImmagine(griglia(), LARGHEZZA_DELLO_SPAZIO);
+        ImmagineDelFont font = daImmagine(griglia(), LARGHEZZA_DELLO_SPAZIO);
         assertFalse(font.supportaIlCarattere('a'));
         assertTrue(font.getCaratteriMancanti().contains('a'));
     }
@@ -115,7 +115,7 @@ class ImmagineDelFontTest {
         // Given: lo spazio nella riga dei segni è un riquadro tutto nero
         BufferedImage immagine = griglia();
         // When
-        GlifoDelFont spazio = ImmagineDelFont.daImmagine(immagine, LARGHEZZA_DELLO_SPAZIO).getGlifo(' ');
+        GlifoDelFont spazio = daImmagine(immagine, LARGHEZZA_DELLO_SPAZIO).getGlifo(' ');
         // Then
         assertEquals(LARGHEZZA_DELLO_SPAZIO, spazio.getLarghezza());
         assertEquals(ALTEZZA_RIQUADRO, spazio.getAltezza());
@@ -131,14 +131,14 @@ class ImmagineDelFontTest {
         BufferedImage immagine = griglia();
         punto(immagine, 0, 2, 1, 1, 0x0000FF);
         IllegalStateException eccezione = assertThrows(IllegalStateException.class,
-                () -> ImmagineDelFont.daImmagine(immagine, LARGHEZZA_DELLO_SPAZIO));
+                () -> daImmagine(immagine, LARGHEZZA_DELLO_SPAZIO));
         assertTrue(eccezione.getMessage().contains("'C'"), eccezione.getMessage());
     }
 
     @Test
     void unaImmagineCheNonEUnaGrigliaDiColonneERigheEUnErrore() {
         BufferedImage storta = new BufferedImage(1 + CaratteriDelFont.colonne() * PASSO_X + 1, 1 + 3 * PASSO_Y, BufferedImage.TYPE_INT_RGB);
-        assertThrows(IllegalStateException.class, () -> ImmagineDelFont.daImmagine(storta, LARGHEZZA_DELLO_SPAZIO));
+        assertThrows(IllegalStateException.class, () -> daImmagine(storta, LARGHEZZA_DELLO_SPAZIO));
     }
 
     @Test
@@ -169,6 +169,10 @@ class ImmagineDelFontTest {
 
     @Test
     void unaRisorsaCheNonEsisteDaUnErrore() {
-        assertThrows(IllegalStateException.class, () -> ImmagineDelFont.carica("/non/esiste.gif", 4));
+        assertThrows(IllegalStateException.class, () -> ImmagineDelFont.carica("/non/esiste.png", 4));
+    }
+
+    private static ImmagineDelFont daImmagine(java.awt.image.BufferedImage immagine, int larghezzaDelloSpazio) {
+        return ImmagineDelFont.daImmagine(com.threeamigos.foresta.ui.immagini.ImmaginiAwt.pixel(immagine), larghezzaDelloSpazio);
     }
 }

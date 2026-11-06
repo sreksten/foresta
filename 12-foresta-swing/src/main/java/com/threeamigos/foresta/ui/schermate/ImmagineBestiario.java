@@ -41,7 +41,7 @@ final class ImmagineBestiario {
 	private static final DoomdarkFont PICCOLO = DoomdarkFont.piccolo();
 
 	// Lo svolazzo che separa i mostri dai personaggi giocanti nell'elenco. È fra i file non a blocchi 2x2 (fondinon2x2): si legge senza zoom
-	private static final String RISORSA_SEPARATORE = "fondinon2x2/Separatore.gif";
+	private static final String RISORSA_SEPARATORE = "fondinon2x2/Separatore.png";
 
 	private ImmagineBestiario() {
 	}

@@ -1,0 +1,22 @@
+# I test che servono mentre si porta la UI (uno per riga, modelli di surefire; le righe con # sono commenti).
+# Si lanciano con risorse_e_documenti_vari/test_porting_ui.sh. La suite completa (mvn -o test) si fa a fine fase, non a ogni passo.
+# Tutti i test della UI (Swing e app Swing): barra, riquadri, schermate, sprite, componenti, testo, logo, tattiche
+**/ui/**/*Test
+# Regole dell'architettura: niente AWT fuori dai moduli UI, nomi delle immagini, localizzazione, eventi, portabilità
+ConvenzioniDiLocalizzazioneTest
+ConvenzioniDiPortabilitaTest
+CostantiDegliEventiTest
+# La logica delle tattiche che la UI mostra
+BozzaTatticaTest
+ScansioneDeiTestiDellaBozzaTest
+ScansioneDellaBozzaTest
+TestiDiTestoTatticaTest
+TestoTatticaTest
+# Gli intermezzi (pagine, immagini, scene) e il collegamento fra motore e UI
+ScenePagineEDatiTest
+ImmagineIntermezzoTest
+IntermezziInScenaTest
+PaginaIntermezzoTest
+SnifferBusEventiTest
+FinestraDiProvaTest
+BugCacheMappaGeneraleTest

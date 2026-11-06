@@ -11,31 +11,31 @@ import java.awt.image.BufferedImage;
  */
 public enum MappaBottinoImmagine {
 
-    ANELLO(TipoBottino.ANELLO, "oggetti/Anello.gif"),
-    COFANO(TipoBottino.COFANO, "oggetti/Cofano.gif"),
-    CORONA(TipoBottino.CORONA, "oggetti/Corona.gif"),
-    PIETRA_PREZIOSA(TipoBottino.PIETRA_PREZIOSA, "oggetti/PietraPreziosa.gif"),
-    MONETA(TipoBottino.MONETA, "oggetti/Moneta.gif"),
-    SCUDO(TipoBottino.SCUDO, "oggetti/Scudo.gif"),
-    SPADA(TipoBottino.SPADA, "oggetti/Spada.gif"),
-    SPADONE(TipoBottino.SPADONE, "oggetti/Spadone.gif"),
-    FALCE(TipoBottino.FALCE, "oggetti/FalceDelTristoMietitore.gif"),
-    MAZZA(TipoBottino.MAZZA, "oggetti/Mazza.gif"),
-    ASCIA(TipoBottino.ASCIA, "oggetti/Ascia.gif"),
-    LANCIA(TipoBottino.LANCIA, "oggetti/Lancia.gif"),
-    BASTONE_MAGICO(TipoBottino.BASTONE_MAGICO, "oggetti/BastoneMagico.gif"),
-    LIBRO_MAGICO(TipoBottino.LIBRO_MAGICO, "oggetti/LibroMagico.gif"),
-    ELMO(TipoBottino.ELMO, "oggetti/Elmo.gif"),
+    ANELLO(TipoBottino.ANELLO, "oggetti/Anello.png"),
+    COFANO(TipoBottino.COFANO, "oggetti/Cofano.png"),
+    CORONA(TipoBottino.CORONA, "oggetti/Corona.png"),
+    PIETRA_PREZIOSA(TipoBottino.PIETRA_PREZIOSA, "oggetti/PietraPreziosa.png"),
+    MONETA(TipoBottino.MONETA, "oggetti/Moneta.png"),
+    SCUDO(TipoBottino.SCUDO, "oggetti/Scudo.png"),
+    SPADA(TipoBottino.SPADA, "oggetti/Spada.png"),
+    SPADONE(TipoBottino.SPADONE, "oggetti/Spadone.png"),
+    FALCE(TipoBottino.FALCE, "oggetti/FalceDelTristoMietitore.png"),
+    MAZZA(TipoBottino.MAZZA, "oggetti/Mazza.png"),
+    ASCIA(TipoBottino.ASCIA, "oggetti/Ascia.png"),
+    LANCIA(TipoBottino.LANCIA, "oggetti/Lancia.png"),
+    BASTONE_MAGICO(TipoBottino.BASTONE_MAGICO, "oggetti/BastoneMagico.png"),
+    LIBRO_MAGICO(TipoBottino.LIBRO_MAGICO, "oggetti/LibroMagico.png"),
+    ELMO(TipoBottino.ELMO, "oggetti/Elmo.png"),
     // Per ora una copia dell'elmo, da ridisegnare
-    MASCHERA(TipoBottino.MASCHERA, "oggetti/Maschera.gif"),
-    ARMATURA(TipoBottino.ARMATURA, "oggetti/Armatura.gif"),
-    SCHINIERI(TipoBottino.SCHINIERI, "oggetti/Schinieri.gif"),
+    MASCHERA(TipoBottino.MASCHERA, "oggetti/Maschera.png"),
+    ARMATURA(TipoBottino.ARMATURA, "oggetti/Armatura.png"),
+    SCHINIERI(TipoBottino.SCHINIERI, "oggetti/Schinieri.png"),
     // Non si trova per terra: è l'aspetto dei libri tecnici (vedi ArtefattoMD.getAspetto)
-    LIBRO_TECNICO(null, "oggetti/LibroTecnico.gif"),
+    LIBRO_TECNICO(null, "oggetti/LibroTecnico.png"),
     // Non si trova per terra: è l'aspetto della spada normalmente nascosta (vedi ArtefattoMD.getAspetto)
-    SPADA_NORMALMENTE_NASCOSTA(null, "oggetti/LaSpadaNormalmenteNascosta.gif"),
+    SPADA_NORMALMENTE_NASCOSTA(null, "oggetti/LaSpadaNormalmenteNascosta.png"),
     // Per ora un sacchetto generico per tutti gli oggetti delle missioni
-    OGGETTO_MISSIONE(TipoBottino.OGGETTO_MISSIONE, "oggetti/OggettoMissione.gif"),
+    OGGETTO_MISSIONE(TipoBottino.OGGETTO_MISSIONE, "oggetti/OggettoMissione.png"),
     // Gli artefatti non si mostrano nelle locazioni
     ARTEFATTO(TipoBottino.ARTEFATTO, null);
 

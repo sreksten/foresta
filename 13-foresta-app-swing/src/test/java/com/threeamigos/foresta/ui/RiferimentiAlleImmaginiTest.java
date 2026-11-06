@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.SorgentiDelProgetto;
+import com.threeamigos.foresta.ui.immagini.AtlanteDiImmagini;
 
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +19,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Le immagini citate nel codice per nome ("icone/Aiuto.gif") esistono con quel nome esatto, maiuscole comprese.
+ * Le immagini citate nel codice per nome ("icone/Aiuto.png") esistono con quel nome esatto, maiuscole comprese.
  * Su macOS e Windows il file system non distingue le maiuscole e il gioco funziona anche con un nome sbagliato, ma
  * dentro il JAR (e su Linux) no, e una risorsa di base mancante fa uscire il gioco: per questo si confronta con i nomi
  * veri dei file e non con {@code getResource} o {@code File.exists}.
@@ -36,6 +37,16 @@ class RiferimentiAlleImmaginiTest {
 			esistenti = file.filter(Files::isRegularFile)
 					.map(p -> IMMAGINI.relativize(p).toString().replace('\\', '/'))
 					.collect(Collectors.toSet());
+		}
+		// Le immagini degli atlanti (gli originali non stanno nei jar) si citano per nome come se fossero file
+		try (Stream<Path> file = Files.walk(IMMAGINI)) {
+			for (Path descrittore : file.filter(p -> p.getFileName().toString().startsWith("atlante_") && p.toString().endsWith(".txt"))
+					.collect(Collectors.toList())) {
+				String cartella = descrittore.getParent().getFileName().toString();
+				for (String nome : AtlanteDiImmagini.di(cartella).getNomi()) {
+					esistenti.add(cartella + "/" + nome + ".png");
+				}
+			}
 		}
 		Set<String> mancanti = new TreeSet<>();
 		for (Path sorgente : SorgentiDelProgetto.sorgenti(false)) {

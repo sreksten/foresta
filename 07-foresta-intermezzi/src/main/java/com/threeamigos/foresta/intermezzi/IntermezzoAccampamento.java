@@ -34,7 +34,7 @@ public class IntermezzoAccampamento implements Intermezzo {
 	 * Le scene, una per occorrenza: l'immagine della luna e le battute, alternate fra il primo e il secondo
 	 * personaggio.
 	 */
-	private static final String[] LUNE = {"fondinon2x2/Luna.gif", "fondinon2x2/Mimas.gif" /* Una luna di Saturno */, "fondinon2x2/LunaHHGTTG.gif"};
+	private static final String[] LUNE = {"fondinon2x2/Luna.png", "fondinon2x2/Mimas.png" /* Una luna di Saturno */, "fondinon2x2/LunaHHGTTG.png"};
 	// Quante battute ha ogni scena (nei testi: ACCAMPAMENTO.<scena>.<battuta>)
 	private static final int[] BATTUTE = {2, 3, 2};
 

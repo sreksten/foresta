@@ -97,7 +97,7 @@ La scheda di una voce aperta, dall'alto:
 - Il trofeo **Enciclopedista** (`TipoTrofeo.ENCICLOPEDISTA`, `TrofeoEnciclopedista`) si vince con tutte le 33 voci sbloccate. Il progresso non è quello del registro dei
   trofei (che si perde se il gruppo muore nella locazione) ma quanto sa il bestiario; si controlla a fine locazione, come gli altri. Il Perdigiorno, che chiede tutti gli
   altri trofei, ora chiede anche questo.
-- L'icona del bottone è per ora la copia di quella del goblin (`img/icone/Bestiario.gif`).
+- L'icona del bottone è per ora la copia di quella del goblin (`img/icone/Bestiario.png`).
 
 ## 6. Test
 

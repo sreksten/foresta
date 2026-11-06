@@ -1,0 +1,9 @@
+# L'atlante delle tessere della mappa (atlante_mappa.png): una riga di questo file è una riga di celle dell'immagine.
+# Come atlante_icone.txt: celle con la linea rossa a destra e in basso, la prima riga e la prima colonna rosse; un - lascia la cella vuota.
+# Per ricostruire l'immagine dai file singoli: python3 risorse_e_documenti_vari/atlanti/costruisci_atlante.py mappa
+CELLA 16
+COLONNE 9
+# Terreni (le quattro foreste sono le varianti del bosco, vedi Foresta.VARIANTE_BOSCO) e il castello
+Foresta Foresta2 Foresta3 Foresta4 Radura Palude Grotta Rovine Castello
+# Luoghi, botteghe e segni sulla mappa
+Citta Tempio Locanda Alchimista Armaiolo Incantatore VenditoreDiPergamene Indicatore Segnalino

@@ -224,8 +224,8 @@ class TracciatoreLogoTest {
 
     @Test
     void nelLogoSenzaOmbraTrovaLeStesseQuattroFormeEIlLogoCompletoSiMostraAlSuoPosto() throws IOException {
-        BufferedImage scritta = leggi("3AM_logo_senza_ombra.gif");
-        BufferedImage completo = leggi("3AM_logo_completo.gif");
+        BufferedImage scritta = leggi("3AM_logo_senza_ombra.png");
+        BufferedImage completo = leggi("3AM_logo_completo.png");
         TracciatoreLogo effetto = TracciatoreLogo.costruttore(scritta).immagineDaMostrare(completo).costruisci();
         assertTrue(effetto.getDiagnostica().get(0).startsWith("4 forma/e rilevate (3 contorni esterni, 1 buchi interni)"),
                 effetto.getDiagnostica().get(0));
@@ -235,8 +235,8 @@ class TracciatoreLogoTest {
 
     @Test
     void laScrittaDelLogoSenzaOmbraStaEsattamenteSopraQuellaDelLogoCompleto() throws IOException {
-        BufferedImage scritta = leggi("3AM_logo_senza_ombra.gif");
-        BufferedImage completo = leggi("3AM_logo_completo.gif");
+        BufferedImage scritta = leggi("3AM_logo_senza_ombra.png");
+        BufferedImage completo = leggi("3AM_logo_completo.png");
         assertEquals(completo.getWidth(), scritta.getWidth());
         assertEquals(completo.getHeight(), scritta.getHeight());
         int neri = 0;
