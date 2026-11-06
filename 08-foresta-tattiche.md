@@ -54,4 +54,4 @@ Le enum (nel pacchetto `tipi`): `TipoRosa` (se stesso, alleati, alleati caduti, 
 
 - Il manuale d'uso e di progetto è in [`tattiche_di_combattimento_automatiche.md`](tattiche_di_combattimento_automatiche.md) (§11 per il linguaggio), il codice è descritto in [`tattiche_internals.md`](tattiche_internals.md).
 - Le costanti sono pochissime (`CostantiTattiche`): la parte di bilanciamento sta nelle voci di `TatticheBase`.
-- La schermata che il giocatore usa per modificare le tattiche sta in `12-foresta-swing` (`DisplayableCanvasTattiche`); questo modulo non sa che esiste.
+- La schermata che il giocatore usa per modificare le tattiche ha la logica in `12-foresta-ui-comune` (`EditorDelleTattiche`, `MenuADiscesa`) e il disegno in `12-foresta-swing` (`DisplayableCanvasTattiche`) e in `12-foresta-libgdx` (`SchermataTatticheGdx`); questo modulo non sa che esistono.

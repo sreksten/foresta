@@ -57,6 +57,7 @@ public final class ContenutoDiColonna {
 		private Integer sagomaRgb;
 		private int argb;
 		private int raggioDellAlone;
+		private float opacita = 1f;
 
 		private Elemento(Tipo tipo, int x, int y) {
 			this.tipo = tipo;
@@ -110,6 +111,15 @@ public final class ContenutoDiColonna {
 		public static Elemento immagineConAlone(String risorsa, int larghezza, int altezza, int raggioDellAlone, int x, int y) {
 			Elemento e = immagine(risorsa, larghezza, altezza, false, null, x, y);
 			e.raggioDellAlone = raggioDellAlone;
+			return e;
+		}
+
+		/**
+		 * Un'immagine per nome, alla misura data, opaca solo in parte (da 0 a 1): per le icone che non si possono usare
+		 */
+		public static Elemento immagineConOpacita(String risorsa, int larghezza, int altezza, float opacita, int x, int y) {
+			Elemento e = immagine(risorsa, larghezza, altezza, false, null, x, y);
+			e.opacita = opacita;
 			return e;
 		}
 
@@ -191,6 +201,13 @@ public final class ContenutoDiColonna {
 
 		public int getArgb() {
 			return argb;
+		}
+
+		/**
+		 * Quanto è opaco l'elemento (1 se non si è detto altro), per chi lo disegna
+		 */
+		public float getOpacita() {
+			return opacita;
 		}
 	}
 

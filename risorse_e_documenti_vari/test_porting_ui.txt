@@ -35,3 +35,4 @@ MappaATuttoSchermoTest
 ScambioDeiConsumabiliTest
 ScenaDellIntermezzoTest
 RivelazioneDellArtefattoTest
+EditorDelleTatticheTest

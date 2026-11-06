@@ -373,7 +373,7 @@ Il prototipo dà i dati per scegliere: quando libGDX mostra la schermata di gioc
 
 Fatto: `BozzaTattica` e `TestoTattica` (che non toccavano il toolkit grafico) sono passate da `12-foresta-swing/…/ui/tattiche` a `08-foresta-tattiche/…/tattiche/modifica`, rese pubbliche (la schermata le usa in circa 66 punti), insieme ai loro test (`BozzaTatticaTest`, `TestoTatticaTest`); `RinominaDellaVoceTest` è rimasto in `13-foresta-app-swing` e importa la bozza dal nuovo posto. Le parole di `TestoTattica`, che prima erano nel codice («minore di», «a caso», «il più potente», le spiegazioni del riquadro destro) e il nome predefinito di una voce con il motivo per cui una bozza non si conferma (`BozzaTattica`) sono ora in `08-foresta-tattiche/src/main/resources/…/testi/testo_tattica_it.properties`, letti con `Testi.get` (ripiego sull'italiano, `{0}`, `{1}`… al posto dei valori); `TestiDiTestoTatticaTest` controlla che ogni valore spiegato abbia la sua chiave. Dettagli in `08-foresta-tattiche.md`.
 
-`CasellaADiscesa` **resta nella UI**: usa `java.awt`, `ComponenteScorrevole`, `ImageCache` e i font Doomdark, quindi è un pezzo di disegno e va riscritta per ogni front-end.
+`CasellaADiscesa` resta nella UI di Swing solo come disegno: dove si apre, le scelte, lo scorrimento e i click sono `MenuADiscesa`, nel modulo `12-foresta-ui-comune`, e libGDX lo disegna da sé (`SchermataTatticheGdx`).
 
 ## Osservazioni
 

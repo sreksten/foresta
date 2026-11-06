@@ -21,7 +21,9 @@ Le tattiche attraversano più moduli (la separazione la garantisce il compilator
 | | `tattiche.valutazione` | `Selettori`, `Filtri`, `Ordinamenti`, `Predicati`, `Requisiti`, `SceltaIncantesimo`, `Astuzia` |
 | | `combattimento` | `StatoDelCombattimento` (la memoria dello scontro) e `CalcolatoreCombattimento` (i danni attesi) |
 | | `tattiche.modifica` | `BozzaTattica` (la tattica in modifica), `TestoTattica` (i testi, da `testo_tattica_it.properties`) |
-| `12-foresta-swing` | `ui.tattiche` | `DisplayableCanvasTattiche` (la schermata), `CasellaADiscesa` (i menu) |
+| `12-foresta-ui-comune` | `ui.schermate` | `EditorDelleTattiche` (la schermata senza disegno: righe, click, colonna centrale, spiegazione), `MenuADiscesa` (i menu) |
+| `12-foresta-swing` | `ui.tattiche` | `DisplayableCanvasTattiche` (il disegno della schermata), `CasellaADiscesa` (il disegno dei menu) |
+| `12-foresta-libgdx` | — | `SchermataTatticheGdx` (il disegno in libGDX) |
 
 La regola che ne discende: **i dati non sanno niente del motore** (`VoceMD` non può chiedere se un'azione si può fare) e **la UI non vede il motore** (lavora sui dati
 `*MD` e sugli enumerati, e parla per eventi). Chi valuta è sempre una classe di `12-foresta-motore`.
@@ -517,7 +519,8 @@ Tre classi, con una divisione netta (le prime due non toccano il toolkit grafico
 | :--- | :--- |
 | `BozzaTattica` | **lo stato** della modifica: le voci come liste modificabili (`Voce` con campi pubblici) e le regole di che cosa è ammesso |
 | `TestoTattica` | **i testi**: etichette dei menu, la frase di una riga e le spiegazioni del riquadro destro; costruiti solo dai dati e dagli enumerati |
-| `DisplayableCanvasTattiche` | **il disegno e i click**: costruisce le righe dalla bozza e le disegna; i menu sono `CasellaADiscesa` |
+| `EditorDelleTattiche` (modulo UI comune) | **le righe e i click**: costruisce le righe dalla bozza (ognuna come un contenuto di testi e icone con il loro posto), la colonna centrale e la spiegazione, e gestisce i click; i menu sono `MenuADiscesa` |
+| `DisplayableCanvasTattiche`, `SchermataTatticheGdx` | **il disegno**: mostrano quel che dice l'editor |
 
 ### 16.1 Perché esiste la bozza
 
@@ -536,9 +539,11 @@ ricostruisce una `TatticaMD` da mandare al motore. Una voce della bozza può non
 - **I valori predefiniti** (`azionePredefinita`, `filtroPredefinito`, `predicatoPredefinito`…) garantiscono che ogni elemento nuovo sia già valido: i dati verificano i parametri alla costruzione.
 - **Le modifiche** (`conNumero`, `conConfronto`, `conParametro`, `conRosa`…) ricostruiscono un elemento con un campo cambiato; i numeri sono tenuti fra 0 e il massimo del tipo.
 
-### 16.3 `DisplayableCanvasTattiche`
+### 16.3 `EditorDelleTattiche` (e le schermate che lo disegnano)
 
-L'elenco di sinistra è un `ComponenteScorrevole<Riga>` che si **ricostruisce a ogni disegno e a ogni click** (`costruisciRighe`). Una `Riga` è fatta di `Token` (testo fisso, testo che apre un menu o
+La logica sta in `EditorDelleTattiche` (modulo `12-foresta-ui-comune`), che non disegna: `quadro()` dà l'elenco, la spiegazione, il menu aperto e il testo dell'aiuto, `colonnaCentrale()` la colonna del personaggio, e ogni riga è un `ContenutoDiColonna`. `DisplayableCanvasTattiche` (Swing) e `SchermataTatticheGdx` (libGDX) li mostrano.
+
+L'elenco di sinistra è un albero `ElencoScorrevole<Riga>` che si **ricostruisce a ogni disegno e a ogni click** (`costruisciRighe`). Una `Riga` è fatta di `Token` (testo fisso, testo che apre un menu o
 cambia un valore, icona), con un'`Ancora` per sapere dove aprire un menu. `disponi` mette le icone a destra sulla prima linea e gli altri pezzi a capo; `spezzaIPezziTroppoLarghi` divide in parole un pezzo più
 largo di una riga.
 
@@ -565,7 +570,7 @@ Quando si aggiunge un valore a un enumerato bisogna toccare più punti; dove un 
 
 **Un nuovo filtro (`TipoFiltro`)**: il valore con il suo `TipoParametro`; la risposta in `Filtri` (il test `SelezioneTest` fallisce se manca); `TestoTattica.spiega(TipoFiltro)`; se non ha senso
 come criterio di ricerca, `BozzaTattica.SOLO_PER_SCEGLIERE` o `SOLO_SU_ALTRI`. Se ha un parametro nuovo: `FiltroMD`, `TipoParametro`, `BozzaTattica.filtro`/`parametroDi`/`parametroPredefinito`
-e l'editor in `DisplayableCanvasTattiche.aggiungiParametriFiltro`.
+e l'editor in `EditorDelleTattiche.aggiungiParametriFiltro`.
 
 **Un nuovo predicato (`TipoPredicato`)**: il valore; la risposta in `Predicati` (test `PredicatiTest`); `TestoTattica.predicato` e `spiega`; `BozzaTattica.predicatoPredefinito`/`passo`/`massimo`;
 se non va offerto al giocatore, toglierlo da `predicatiAmmessi`.

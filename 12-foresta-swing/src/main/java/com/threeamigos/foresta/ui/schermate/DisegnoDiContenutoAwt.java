@@ -10,6 +10,7 @@ import com.threeamigos.foresta.ui.testo.LayoutDelTestoGrande;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
@@ -17,15 +18,17 @@ import java.util.Map;
  * Il disegno con Graphics2D degli elementi di un {@link ContenutoDiColonna} (le schermate a tutto schermo: bestiario, intro, messaggi…). Le immagini che non
  * sono testo (testi grandi, sagome, specchi, alone) si preparano una volta per elemento: finché il contenuto è lo stesso, gli elementi sono gli stessi.
  */
-final class DisegnoDiContenutoAwt {
+public final class DisegnoDiContenutoAwt {
 
 	// Le immagini degli elementi che non sono testo, preparate una volta per elemento (le sagome, gli specchi e gli aloni costano a ogni fotogramma)
 	private final Map<Elemento, Image> pronte = new IdentityHashMap<>();
+	// Le immagini per risorsa: sono poche, e le stesse a ogni fotogramma anche se gli elementi che le chiedono sono nuovi
+	private final Map<String, Image> immaginiPerChiave = new HashMap<>();
 
 	/**
 	 * Disegna gli elementi del contenuto con il suo angolo in alto a sinistra in (x0, y0)
 	 */
-	void disegna(Graphics2D graphics, ContenutoDiColonna contenuto, int x0, int y0) {
+	public void disegna(Graphics2D graphics, ContenutoDiColonna contenuto, int x0, int y0) {
 		Graphics2D g = (Graphics2D) graphics.create();
 		try {
 			g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
@@ -84,7 +87,12 @@ final class DisegnoDiContenutoAwt {
 				g.drawImage(pronte.computeIfAbsent(e, el -> ImmaginiAwt.buffered(el.getPixel())), x, y, null);
 				break;
 			default:
-				Image immagine = pronte.computeIfAbsent(e, DisegnoDiContenutoAwt::preparaLImmagine);
+				// Gli elementi si ricostruiscono a ogni fotogramma: l'immagine si riconosce da cosa è, non da quale elemento la chiede
+				Image immagine = immaginiPerChiave.computeIfAbsent(chiaveDellImmagine(e), k -> preparaLImmagine(e));
+				Composite composito = g.getComposite();
+				if (e.getOpacita() < 1f) {
+					g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, e.getOpacita()));
+				}
 				int raggio = e.getRaggioDellAlone();
 				if (raggio > 0) {
 					// Con l'alone l'immagine è più grande di raggio pixel per lato: la si sposta, e il disegno resta al suo posto
@@ -92,8 +100,13 @@ final class DisegnoDiContenutoAwt {
 				} else {
 					g.drawImage(immagine, x, y, e.getLarghezza(), e.getAltezza(), null);
 				}
+				g.setComposite(composito);
 				break;
 		}
+	}
+
+	private static String chiaveDellImmagine(Elemento e) {
+		return e.getRisorsa() + '|' + e.isSpecchiata() + '|' + e.getSagomaRgb() + '|' + e.getRaggioDellAlone();
 	}
 
 	/**

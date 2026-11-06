@@ -152,6 +152,15 @@ public final class NomiDelleImmagini {
 	public static final String POZIONE_AUMENTO_LIVELLO = "icone/AumentoLivello.png";
 	/** L'icona della pergamena, che fa da immagine agli ingredienti magici senza una loro */
 	public static final String ICONA_PERGAMENA = "icone/Pergamena.png";
+	/** Le icone della schermata delle tattiche: su, giù, togli, aggiungi, sposta a sinistra e a destra, conferma e annulla */
+	public static final String ICONA_SU = "icone/Su.png";
+	public static final String ICONA_GIU = "icone/Giu.png";
+	public static final String ICONA_ELIMINA = "icone/Rimuovi.png";
+	public static final String ICONA_AGGIUNGI = "icone/Aggiungi.png";
+	public static final String ICONA_SINISTRA = "icone/Sinistra.png";
+	public static final String ICONA_DESTRA = "icone/Destra.png";
+	public static final String ICONA_SI = "icone/Si.png";
+	public static final String ICONA_NO = "icone/No.png";
 	public static final String FRECCIA_SU = "icone/ComponenteScorrevole-FrecciaSu.png";
 	public static final String FRECCIA_GIU = "icone/ComponenteScorrevole-FrecciaGiu.png";
 	public static final String FRECCIA_SINISTRA = "icone/ComponenteScorrevole-FrecciaSinistra.png";

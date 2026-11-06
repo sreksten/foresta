@@ -154,9 +154,9 @@ class DisplayableCanvasTatticheTest {
             schermata.attivaPezzo("Nuova voce");
             schermata.attivaPezzo("Nuova voce");
             schermata.getBozza().getVoci().get(1).nome = nome;
-            java.lang.reflect.Method costruisci = DisplayableCanvasTattiche.class.getDeclaredMethod("costruisciRighe");
+            java.lang.reflect.Method costruisci = com.threeamigos.foresta.ui.schermate.EditorDelleTattiche.class.getDeclaredMethod("costruisciRighe");
             costruisci.setAccessible(true);
-            for (Object riga : (java.util.List<?>) costruisci.invoke(schermata)) {
+            for (Object riga : (java.util.List<?>) costruisci.invoke(schermata.getEditor())) {
                 java.lang.reflect.Field fPezzi = riga.getClass().getDeclaredField("pezzi");
                 fPezzi.setAccessible(true);
                 java.util.List<?> pezzi = (java.util.List<?>) fPezzi.get(riga);

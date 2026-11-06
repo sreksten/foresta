@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 /**
  * Quanto sono grandi le immagini in Swing: i personaggi come li tiene {@link MappaPersonaggioImmagine} (già con lo zoom) e le altre dall'intestazione del file
  */
-final class MisureDelleImmaginiAwt implements MisureDelleImmagini {
+public final class MisureDelleImmaginiAwt implements MisureDelleImmagini {
 
 	@Override
 	public Misura personaggio(TipoPersonaggio classe) {

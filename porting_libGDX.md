@@ -106,7 +106,7 @@ Nell'ordine, dalla più semplice alla più pesante:
 2. Mappa a tutto schermo e Notiziario.
 3. Intermezzo (fumetti e animazioni).
 4. Inventario, Commerciante, Incantatore, Scambiatore consumabili (famiglia `DisplayableCanvasScambiatore`: un comportamento comune va nella classe base).
-5. **Tattiche** (`DisplayableCanvasTattiche`, 1.203 righe) per ultime: menu a discesa (`CasellaADiscesa`, da riscrivere), liste scorrevoli, modifiche multiple. La logica sta già in `08-foresta-tattiche` (`BozzaTattica`, `TestoTattica`).
+5. **Tattiche** (`DisplayableCanvasTattiche`, 1.203 righe) per ultime: menu a discesa (`CasellaADiscesa`: la logica è ora `MenuADiscesa` nel comune, il disegno resta per toolkit), liste scorrevoli, modifiche multiple. La logica sta già in `08-foresta-tattiche` (`BozzaTattica`, `TestoTattica`).
 6. **Logo** (`TracciatoreLogo`, 1.443 righe): decisione presa, si riscrive con `ShapeRenderer` (poligoni, tratti sovrapposti, scia animata, gradienti radiali delle nuvole in `CloudGenerator`, da precalcolare in una texture). Isolato dal resto: si fa per ultimo.
 
 La finestra di prova (`FinestraDiProva`) non si porta: resta del desktop.
@@ -169,7 +169,7 @@ Da estrarre **componente per componente, quando lo si porta** (si separa il mode
 | `DisplayableCanvas` | pila dei riquadri e coordinate, instradamento del mouse, doppio click, stati delle schermate | `JPanel`, disegno, eventi di Swing |
 | `ForestaUI` | la traduzione di una quarantina di eventi del bus in chiamate (la parte da tenere, vedi la Fase 3), il calcolo delle dimensioni della finestra | `JFrame`, il thread di Swing |
 | Riquadri e schermate | il contenuto da mostrare (testi, elenchi, ordinamenti, stato del mouse), le coordinate | `Graphics2D` |
-| `DisplayableCanvasTattiche`, `CasellaADiscesa` | stato della modifica, elenchi, selezione | disegno e input |
+| `DisplayableCanvasTattiche`, `CasellaADiscesa` | **fatto**: `EditorDelleTattiche` e `MenuADiscesa` (stato della modifica, righe, selezione, click) | il disegno |
 | Sprite (`SpriteBase`, `SpriteATempo`, fumetti, annunci…) | tempi, traiettorie, dissolvenza, `CoordinateFumetto` | disegno e filtri (`SrcIn`, sfocatura) |
 | `TracciatoreLogo`, `CloudGenerator` | geometria e animazione del tracciato (una parte grande delle 1466 righe è calcolo) | i tratti disegnati |
 | `Prompt` | il testo e le regole (annulla, invio) | il campo di testo |

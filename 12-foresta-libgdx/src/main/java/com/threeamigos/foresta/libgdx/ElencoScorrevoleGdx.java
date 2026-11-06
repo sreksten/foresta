@@ -7,6 +7,7 @@ import com.threeamigos.foresta.ui.Area;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.componenti.ElementoDelElenco;
+import com.threeamigos.foresta.ui.componenti.ContenutoDiColonna;
 import com.threeamigos.foresta.ui.componenti.ElencoScorrevole;
 import com.threeamigos.foresta.ui.componenti.ValoreDiDueTesti;
 import com.threeamigos.foresta.ui.immagini.NomiDelleImmagini;
@@ -24,11 +25,14 @@ public final class ElencoScorrevoleGdx {
 	private final TestoGdx piccolo;
 	private final TestoGdx medio;
 	private final float zoom = (float) LivelloDiZoom.valore();
+	// Le righe che sono un contenuto (testi e icone con il loro posto: la schermata delle tattiche) si disegnano così
+	private final DisegnoDiContenutoGdx disegnoDelContenuto;
 
 	public ElencoScorrevoleGdx(ImmaginiGdx immagini, TestoGdx piccolo, TestoGdx medio) {
 		this.immagini = immagini;
 		this.piccolo = piccolo;
 		this.medio = medio;
+		this.disegnoDelContenuto = new DisegnoDiContenutoGdx(immagini, piccolo, medio);
 	}
 
 	private TestoGdx testoDi(com.threeamigos.foresta.ui.testo.DoomdarkFont font) {
@@ -79,6 +83,10 @@ public final class ElencoScorrevoleGdx {
 	}
 
 	private void disegnaImmagine(Batch batch, Object oggetto, int x, int y) {
+		if (oggetto instanceof ContenutoDiColonna) {
+			disegnoDelContenuto.disegna(batch, (ContenutoDiColonna) oggetto, x, y, 1f);
+			return;
+		}
 		if (oggetto instanceof ValoreDiDueTesti) {
 			ValoreDiDueTesti v = (ValoreDiDueTesti) oggetto;
 			TestoGdx testo = testoDi(v.getFont());

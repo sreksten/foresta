@@ -80,7 +80,7 @@ public final class DisegnoDiContenutoGdx {
 					batch.draw(testoGrande(e), x, y);
 					break;
 				default:
-					batch.setColor(1f, 1f, 1f, opacita);
+					batch.setColor(1f, 1f, 1f, opacita * e.getOpacita());
 					int raggio = e.getRaggioDellAlone();
 					if (raggio > 0) {
 						// Con l'alone l'immagine è più grande di raggio pixel per lato: la si sposta, e il disegno resta al suo posto
