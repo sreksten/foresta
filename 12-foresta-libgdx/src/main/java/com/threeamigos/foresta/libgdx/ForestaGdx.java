@@ -89,7 +89,7 @@ public class ForestaGdx extends ApplicationAdapter {
 		// L'asse y verso il basso, come Swing: le coordinate di riquadri e schermate si riusano tali e quali
 		camera.setToOrtho(true, LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE);
 		viewport = new FitViewport(LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE, camera);
-		batch = new SpriteBatch();
+		batch = new SpriteBatchDiPrecisioneAltaGdx();
 		immagini = new ImmaginiGdx();
 		piccolo = new TestoGdx(DoomdarkFont.piccolo());
 		medio = new TestoGdx(DoomdarkFont.medio());

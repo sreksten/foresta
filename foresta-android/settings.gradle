@@ -1,0 +1,24 @@
+// Il prototipo Android della Foresta: fuori da Maven (vedi porting_libGDX.md, Fase 7 e foresta-android.md).
+// I moduli del gioco si prendono dal repository Maven locale: prima `mvn install -DskipTests` dalla radice del progetto.
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        // Solo i moduli del gioco: per il resto (libGDX e le sue librerie native) il repository locale ha i pom di Maven ma non i jar
+        mavenLocal {
+            content {
+                includeGroup 'com.threeamigos'
+            }
+        }
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = 'foresta-android'
+include ':app'

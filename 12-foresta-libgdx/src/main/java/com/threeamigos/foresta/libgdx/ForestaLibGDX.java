@@ -105,7 +105,7 @@ public final class ForestaLibGDX extends ForestaUI implements ApplicationListene
 		// L'asse y verso il basso, come Swing: le coordinate di riquadri e schermate si riusano tali e quali
 		camera.setToOrtho(true, dimensioni.larghezza, dimensioni.altezza);
 		viewport = new FitViewport(dimensioni.larghezza, dimensioni.altezza, camera);
-		batch = new SpriteBatch();
+		batch = new SpriteBatchDiPrecisioneAltaGdx();
 		immagini = new ImmaginiGdx();
 		piccolo = new TestoGdx(DoomdarkFont.piccolo());
 		medio = new TestoGdx(DoomdarkFont.medio());

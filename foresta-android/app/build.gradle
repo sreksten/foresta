@@ -1,0 +1,84 @@
+plugins {
+    id 'com.android.application'
+}
+
+// La stessa versione di libGDX del pom padre (libgdx.version)
+def gdxVersion = '1.14.2'
+def foresta = '0.0.1-SNAPSHOT'
+
+android {
+    namespace 'com.threeamigos.foresta.android'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId 'com.threeamigos.foresta'
+        // 26 e non 24 (come dice il piano) per il prototipo: java.util.stream e le interfacce funzionali ci sono dalla 24, ma String.join e simili
+        // dalla 26. Si torna a 24 quando si verifica con lint cosa serve davvero.
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName '0.0.1'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    packaging {
+        resources {
+            // I jar dei moduli e di libGDX portano tutti i loro META-INF
+            excludes += ['META-INF/LICENSE*', 'META-INF/NOTICE*', 'META-INF/INDEX.LIST', 'META-INF/*.kotlin_module']
+            pickFirsts += ['META-INF/services/*']
+        }
+        jniLibs {
+            useLegacyPackaging = false
+        }
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+        }
+    }
+}
+
+configurations {
+    natives
+}
+
+dependencies {
+    // Il motore e l'interfaccia libGDX: le altre parti (tutto il resto del gioco) arrivano come dipendenze transitive dai loro pom
+    implementation "com.threeamigos:12-foresta-motore:${foresta}"
+    implementation "com.threeamigos:12-foresta-libgdx:${foresta}"
+
+    implementation "com.badlogicgames.gdx:gdx-backend-android:${gdxVersion}"
+    natives "com.badlogicgames.gdx:gdx-platform:${gdxVersion}:natives-armeabi-v7a"
+    natives "com.badlogicgames.gdx:gdx-platform:${gdxVersion}:natives-arm64-v8a"
+    natives "com.badlogicgames.gdx:gdx-platform:${gdxVersion}:natives-x86"
+    natives "com.badlogicgames.gdx:gdx-platform:${gdxVersion}:natives-x86_64"
+}
+
+// Le librerie native di libGDX (.so) vanno in jniLibs, una cartella per architettura: si estraggono dai jar `natives-*` prima della compilazione
+tasks.register('copiaLeLibrerieNative') {
+    doLast {
+        def cartelle = ['armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64']
+        configurations.natives.files.each { jar ->
+            def arch = cartelle.find { jar.name.endsWith("natives-${it}.jar") }
+            if (arch == null) {
+                return
+            }
+            def destinazione = file("src/main/jniLibs/${arch}")
+            destinazione.mkdirs()
+            copy {
+                from zipTree(jar)
+                into destinazione
+                include '*.so'
+            }
+        }
+    }
+}
+
+tasks.matching { it.name.startsWith('merge') && it.name.endsWith('JniLibFolders') }.configureEach {
+    dependsOn 'copiaLeLibrerieNative'
+}
