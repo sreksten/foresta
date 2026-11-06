@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -32,12 +33,27 @@ public class ComponenteScorrevole<T> {
     private final int interlinea;
     private final int larghezzaIndentazione;
     private final ElencoScorrevole<T> elenco;
+    // Come si ricava l'immagine di un'icona o di un valore che il modello dà come oggetto opaco (di solito il nome di una risorsa)
+    private final Function<Object, Image> risolviImmagine;
 
     public ComponenteScorrevole(int larghezza, int larghezzaIndentazione, int interlinea) {
         this.larghezza = larghezza;
         this.larghezzaIndentazione = larghezzaIndentazione;
         this.interlinea = interlinea;
         this.elenco = new ElencoScorrevole<>(larghezza, larghezzaIndentazione, interlinea);
+        this.risolviImmagine = oggetto -> (Image) oggetto;
+    }
+
+    /**
+     * Il disegno di un elenco già fatto (di solito dal modulo comune, come {@link com.threeamigos.foresta.ui.schermate.ElencoDegliArtefatti}), le cui
+     * immagini sono oggetti opachi che questo componente sa trasformare in immagini con <code>risolviImmagine</code>.
+     */
+    public ComponenteScorrevole(ElencoScorrevole<T> elenco, int larghezza, int larghezzaIndentazione, int interlinea, Function<Object, Image> risolviImmagine) {
+        this.larghezza = larghezza;
+        this.larghezzaIndentazione = larghezzaIndentazione;
+        this.interlinea = interlinea;
+        this.elenco = elenco;
+        this.risolviImmagine = risolviImmagine;
     }
 
     private static TestoDelNodo testo(String testo, DoomdarkFont font, DoomdarkColorModel.Color colore) {
@@ -188,7 +204,7 @@ public class ComponenteScorrevole<T> {
             switch (e.getTipo()) {
                 case ICONA:
                 case VALORE_IMMAGINE:
-                    immagine = (Image) e.getImmagine();
+                    immagine = risolviImmagine.apply(e.getImmagine());
                     break;
                 default:
                     // Titolo, descrizione o valore scritto: il testo a capo, già in cache come immagine

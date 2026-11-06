@@ -160,6 +160,17 @@ public final class NomiDelleImmagini {
 	public static final String MISSIONE_BIRRA = "icone/Missione-birra-grande.png";
 	public static final String MISSIONE_GALLO = "icone/Missione-gallo.png";
 	public static final String SEPARATORE = "fondinon2x2/Separatore.png";
+	public static final String SEPARATORE_ARMI = "fondinon2x2/Separatore-Armi.png";
+	public static final String SEPARATORE_ELMI = "fondinon2x2/Separatore-Elmi.png";
+	public static final String SEPARATORE_MASCHERE = "fondi/Separatore-Maschere.png";
+	public static final String SEPARATORE_ARMATURE = "fondinon2x2/Separatore-Armature.png";
+	public static final String SEPARATORE_SCHINIERI = "fondinon2x2/Separatore-Schinieri.png";
+	public static final String SEPARATORE_SCUDI = "fondinon2x2/Separatore-Scudi.png";
+	public static final String SEPARATORE_INCANTESIMI = "fondi/Separatore-Incantesimi.png";
+	public static final String SEPARATORE_POZIONI = "fondi/Separatore-Pozioni.png";
+	public static final String SEPARATORE_LIBRI_MAGICI = "fondinon2x2/Separatore-LibriMagici.png";
+	public static final String SEPARATORE_INCANTAMENTI = "fondi/Separatore-Incantamenti.png";
+	public static final String SEPARATORE_NINNOLI = "fondi/Separatore-Ninnoli.png";
 	/**
 	 * Le icone degli sprite a tempo (le variazioni di statistiche, monete, tempo…)
 	 */
@@ -370,5 +381,13 @@ public final class NomiDelleImmagini {
 			default:
 				return null;
 		}
+	}
+
+	/**
+	 * Se l'immagine è a metà risoluzione e va ingrandita dello zoom: lo sono quelle di <code>personaggi/</code>, di <code>fondi/</code> e dei file nella radice
+	 * (i loghi); le altre (<code>fondinon2x2/</code>, le icone, le mappe) si usano com'è
+	 */
+	public static boolean conZoom(String risorsa) {
+		return risorsa.startsWith("personaggi/") || risorsa.startsWith("fondi/") || !risorsa.contains("/");
 	}
 }
