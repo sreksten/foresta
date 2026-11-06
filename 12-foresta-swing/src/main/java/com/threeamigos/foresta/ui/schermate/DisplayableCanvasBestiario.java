@@ -1,138 +1,72 @@
 package com.threeamigos.foresta.ui.schermate;
 
-import com.threeamigos.foresta.strumenti.dado.Dado;
-import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 import com.threeamigos.foresta.interfacce.VistaPartita;
+import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.ui.Finestra;
-import com.threeamigos.foresta.ui.componenti.ScorrimentoVerticale;
+import com.threeamigos.foresta.ui.Area;
+import com.threeamigos.foresta.ui.Misura;
+import com.threeamigos.foresta.ui.componenti.ColonnaScorrevole;
+import com.threeamigos.foresta.ui.componenti.ContenutoDiColonna;
+import com.threeamigos.foresta.ui.componenti.ContenutoDiColonna.Elemento;
+import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
+import com.threeamigos.foresta.ui.immagini.DimensioniRisorsa;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
+import com.threeamigos.foresta.ui.immagini.ImmaginiAwt;
+import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.TestoGrande;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.image.BufferedImage;
+import java.util.IdentityHashMap;
+import java.util.Map;
 
 /**
- * Il bestiario, che si apre dall'inventario (comando MOSTRA_BESTIARIO) e si chiude con ANNULLA: a sinistra l'elenco delle voci, ognuna con la sua icona e il
- * suo nome (o "???" finché non si è sbloccata), a destra la scheda della voce scelta con un clic (vedi ImmagineBestiario). L'elenco e la scheda scorrono
- * a parte, con la rotella sul pannello su cui si trova il mouse o con le frecce.
+ * Il bestiario disegnato con Swing, che si apre dall'inventario (comando MOSTRA_BESTIARIO) e si chiude con ANNULLA: a sinistra l'elenco delle voci, ognuna con
+ * la sua icona e il suo nome (o "???" finché non si è sbloccata), a destra la scheda della voce scelta con un clic. Le colonne, lo scorrimento, i gesti e la
+ * scelta sono di {@link SchermataBestiario} e i contenuti di {@link ContenutiDelBestiario}, nel modulo comune; qui si disegna.
  */
-public class DisplayableCanvasBestiario implements Finestra {
+public class DisplayableCanvasBestiario extends SchermataBestiario {
 
-	/**
-	 * Di quanti pixel scorre un pannello a ogni passo della rotella (vedi {@link Finestra#PASSI_PER_SCATTO_DELLE_LISTE}).
-	 */
-	private static final int PASSO_SCORRIMENTO = 4;
-	/**
-	 * Quanti passi vale un clic su una freccia.
-	 */
-	private static final int SCATTI_PER_CLIC = 10;
-	private static final int MARGINE = 30;
-	private static final int QUOTA_TITOLO = 20;
-	private static final int SPAZIO_SOTTO_IL_TITOLO = 20;
-	/**
-	 * Quanti sottotitoli scherzosi ci sono nei testi della UI (BESTIARIO_SOTTOTITOLO_1...): a ogni apertura se ne sceglie uno a caso.
-	 */
-	public static final int NUMERO_SOTTOTITOLI = 6;
-	private static final int SPAZIO_SOPRA_IL_SOTTOTITOLO = 2;
-	private static final int SPAZIO_FRA_I_PANNELLI = 30;
-	// Lascia libere le frecce a destra di un pannello
-	private static final int SPAZIO_PER_LE_FRECCE = 24;
 	private static final float OPACITA_OMBRA = 0.4f;
 	private static final Color COLORE_SEPARATORE = new Color(90, 90, 90);
 
-	private final int width;
-	private final int height;
-	private final VistaPartita vistaPartita;
-	private final Rectangle areaElenco;
-	private final Rectangle areaScheda;
-	private final List<TipoPersonaggio> voci = TipoPersonaggio.getVociDelBestiario();
+	// Le immagini degli elementi che non sono testo, preparate una volta per contenuto (le sagome e gli specchi costano a ogni fotogramma)
+	private final Map<Elemento, Image> immaginiPronte = new IdentityHashMap<>();
 
-	private int scelta;
-	private List<String> sottotitolo = new ArrayList<>();
-	private ScorrimentoVerticale elenco;
-	private ScorrimentoVerticale scheda;
-	// Quello dei due che si sta trascinando: l'ultimo su cui è stato premuto il tasto
-	private ScorrimentoVerticale premuto;
+	private final ContenutiDelBestiario.Misure misure = new ContenutiDelBestiario.Misure() {
+		@Override
+		public Misura personaggio(TipoPersonaggio classe) {
+			BufferedImage immagine = MappaPersonaggioImmagine.getImmagine(classe);
+			return new Misura(immagine.getWidth(), immagine.getHeight());
+		}
+
+		@Override
+		public Misura immagine(String risorsa) {
+			java.awt.Dimension d = DimensioniRisorsa.di(risorsa);
+			return new Misura(d.width, d.height);
+		}
+	};
 
 	public DisplayableCanvasBestiario(int width, int height, VistaPartita vistaPartita) {
-		this.vistaPartita = vistaPartita;
-		this.width = width;
-		this.height = height;
-		int cima = cimaDelleColonne();
-		int larghezzaElenco = (width - 2 * MARGINE - SPAZIO_FRA_I_PANNELLI) * 3 / 10;
-		areaElenco = new Rectangle(MARGINE, cima, larghezzaElenco, height - cima - MARGINE);
-		int xScheda = MARGINE + larghezzaElenco + SPAZIO_FRA_I_PANNELLI;
-		areaScheda = new Rectangle(xScheda, cima, width - MARGINE - xScheda, height - cima - MARGINE);
+		super(width, height, vistaPartita);
 	}
 
-	/**
-	 * Dove cominciano le colonne se il sottotitolo sta su una riga sola: sotto il titolo e il sottotitolo.
-	 */
-	public static int cimaDelleColonne() {
-		return cimaDelleColonne(1);
+	@Override
+	protected ContenutiDelBestiario.Misure getMisure() {
+		return misure;
 	}
 
-	private static int cimaDelleColonne(int righeDelSottotitolo) {
-		return QUOTA_TITOLO + TestoGrande.ALTEZZA_RIGA + SPAZIO_SOPRA_IL_SOTTOTITOLO + righeDelSottotitolo * DoomdarkFont.medio().getHeight()
-				+ SPAZIO_SOTTO_IL_TITOLO;
+	@Override
+	protected Misura misuraDellImmagine(String risorsa) {
+		java.awt.Dimension d = DimensioniRisorsa.di(risorsa);
+		return new Misura(d.width, d.height);
 	}
 
-	/**
-	 * Il sottotitolo a capo dove non sta nella larghezza, parola per parola (una parola da sola più larga di una riga resta intera).
-	 */
-	static List<String> righeDelSottotitolo(String testo, int larghezzaMassima) {
-		List<String> righe = new ArrayList<>();
-		String corrente = "";
-		for (String parola : testo.split(" ")) {
-			String prova = corrente.isEmpty() ? parola : corrente + " " + parola;
-			if (!corrente.isEmpty() && larghezza(prova) > larghezzaMassima) {
-				righe.add(corrente);
-				corrente = parola;
-			} else {
-				corrente = prova;
-			}
-		}
-		if (!corrente.isEmpty()) {
-			righe.add(corrente);
-		}
-		return righe;
-	}
-
-	private static int larghezza(String riga) {
-		return ImageCache.get(riga, DoomdarkFont.medio(), DoomdarkColorModel.Color.MEDIUM_GRAY).getWidth(null);
-	}
-
-	/**
-	 * Mette il sottotitolo e, se va a capo, abbassa le due colonne quanto serve.
-	 */
-	private void impostaIlSottotitolo(String testo) {
-		sottotitolo = righeDelSottotitolo(testo, width - 2 * MARGINE);
-		int cima = cimaDelleColonne(Math.max(1, sottotitolo.size()));
-		areaElenco.setBounds(areaElenco.x, cima, areaElenco.width, height - cima - MARGINE);
-		areaScheda.setBounds(areaScheda.x, cima, areaScheda.width, height - cima - MARGINE);
-	}
-
-	/**
-	 * Prepara il bestiario com'è adesso, con la prima voce scelta, le due colonne dalla cima e un sottotitolo a caso.
-	 */
-	public void apri() {
-		impostaIlSottotitolo(TestiDellaUI.get("BESTIARIO_SOTTOTITOLO_" + Dado.tiraAncheAUnaFaccia(NUMERO_SOTTOTITOLI)));
-		scelta = 0;
-		costruisciElenco(0);
-		costruisciScheda();
-	}
-
-	private void costruisciElenco(int scorrimentoMantenuto) {
-		elenco = new ScorrimentoVerticale(ImmagineBestiario.elenco(vistaPartita, voci, scelta, areaElenco.width - SPAZIO_PER_LE_FRECCE), areaElenco);
-		elenco.scorri(scorrimentoMantenuto);
-	}
-
-	private void costruisciScheda() {
-		scheda = new ScorrimentoVerticale(ImmagineBestiario.scheda(vistaPartita, voci.get(scelta), areaScheda.width - SPAZIO_PER_LE_FRECCE), areaScheda);
+	@Override
+	protected void contenutiAggiornati() {
+		immaginiPronte.clear();
 	}
 
 	/**
@@ -145,135 +79,90 @@ public class DisplayableCanvasBestiario implements Finestra {
 		graphics.drawImage(ImageCache.ombraDelDrago, (width - ImageCache.ombraDelDrago.getWidth()) >> 1,
 				(height - ImageCache.ombraDelDrago.getHeight()) >> 1, null);
 		graphics.setComposite(normale);
-		String titolo = TestiDellaUI.get("TITOLO_BESTIARIO");
-		TestoGrande.disegnaRiga(graphics, titolo, (width - TestoGrande.larghezza(titolo)) >> 1, QUOTA_TITOLO);
-		int yRiga = QUOTA_TITOLO + TestoGrande.ALTEZZA_RIGA + SPAZIO_SOPRA_IL_SOTTOTITOLO;
-		for (String riga : sottotitolo) {
+		TestoGrande.disegnaRiga(graphics, getTitolo(), getXDelTitolo(), QUOTA_TITOLO);
+		int yRiga = getQuotaDelSottotitolo();
+		for (String riga : getSottotitolo()) {
 			Image sotto = ImageCache.get(riga, DoomdarkFont.medio(), DoomdarkColorModel.Color.MEDIUM_GRAY);
 			graphics.drawImage(sotto, (width - sotto.getWidth(null)) >> 1, yRiga, null);
 			yRiga += DoomdarkFont.medio().getHeight();
 		}
-		long sbloccate = voci.stream().filter(vistaPartita::isVoceDelBestiarioSbloccata).count();
-		Image quante = ImageCache.get(sbloccate + "/" + voci.size(), DoomdarkFont.medio(), DoomdarkColorModel.Color.MEDIUM_GRAY);
+		Image quante = ImageCache.get(getQuanteSbloccate(), DoomdarkFont.medio(), DoomdarkColorModel.Color.MEDIUM_GRAY);
 		graphics.drawImage(quante, width - MARGINE - quante.getWidth(null), QUOTA_TITOLO + 6, null);
 		graphics.setColor(COLORE_SEPARATORE);
-		int xSeparatore = areaElenco.x + areaElenco.width + SPAZIO_FRA_I_PANNELLI / 2;
-		graphics.drawLine(xSeparatore, areaElenco.y, xSeparatore, areaElenco.y + areaElenco.height);
-		if (elenco != null) {
-			elenco.disegna(graphics, 1);
-			elenco.disegnaFrecce(graphics);
+		Area areaElenco = getAreaElenco();
+		int xSeparatore = areaElenco.getX() + areaElenco.getLarghezza() + SPAZIO_FRA_I_PANNELLI / 2;
+		graphics.drawLine(xSeparatore, areaElenco.getY(), xSeparatore, areaElenco.getY() + areaElenco.getAltezza());
+		if (getElenco() != null) {
+			disegnaColonna(graphics, getElenco(), getContenutoElenco());
 		}
-		if (scheda != null) {
-			scheda.disegna(graphics, 1);
-			scheda.disegnaFrecce(graphics);
-		}
-	}
-
-	@Override
-	public int passiPerScattoDellaRotella() {
-		return PASSI_PER_SCATTO_DELLE_LISTE;
-	}
-
-	@Override
-	public void processaRotella(int x, int y, int numeroRotazioni, MovimentoRotella movimentoRotella) {
-		ScorrimentoVerticale daScorrere = x < areaScheda.x - SPAZIO_FRA_I_PANNELLI / 2 ? elenco : scheda;
-		if (daScorrere != null) {
-			daScorrere.scorri((movimentoRotella == MovimentoRotella.SU ? -1 : 1) * numeroRotazioni * PASSO_SCORRIMENTO);
+		if (getScheda() != null) {
+			disegnaColonna(graphics, getScheda(), getContenutoScheda());
 		}
 	}
 
-	/**
-	 * Se una delle due colonne si muove da sola (l'inerzia dopo un trascinamento): va ridisegnato a ogni fotogramma
-	 */
-	public boolean inTransizione() {
-		return (elenco != null && elenco.isInMovimento()) || (scheda != null && scheda.isInMovimento());
-	}
-
-	/**
-	 * Il gesto che comincia sul bestiario prosegue finché non si lascia il tasto, anche fuori da esso
-	 */
-	@Override
-	public boolean catturaIlTrascinamento() {
-		return true;
-	}
-
-	@Override
-	public void processaPressione(int x, int y, Tasto tasto) {
-		if (tasto != Tasto.SINISTRO) {
-			return;
+	private void disegnaColonna(Graphics2D graphics, ColonnaScorrevole colonna, ContenutoDiColonna contenuto) {
+		colonna.aggiorna();
+		Area area = colonna.getArea();
+		Graphics2D g = (Graphics2D) graphics.create();
+		try {
+			g.clipRect(area.getX(), area.getY(), area.getLarghezza(), area.getAltezza());
+			g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+			// Il contenuto sta centrato in orizzontale nell'area
+			int x0 = area.getX() + (area.getLarghezza() - contenuto.getLarghezza()) / 2;
+			int y0 = area.getY() + (int) Math.round(colonna.getY());
+			for (Elemento e : contenuto.getElementi()) {
+				disegnaElemento(g, e, x0 + e.getX(), y0 + e.getY());
+			}
+		} finally {
+			g.dispose();
 		}
-		premuto = x < areaScheda.x - SPAZIO_FRA_I_PANNELLI / 2 ? elenco : scheda;
-		if (premuto != null) {
-			premuto.premi(y);
+		if (colonna.haAltroSopra()) {
+			Image freccia = ImageCache.componenteScorrevoleFrecciaSu;
+			Area a = colonna.areaDellaFrecciaSu(new Misura(freccia.getWidth(null), freccia.getHeight(null)));
+			graphics.drawImage(freccia, a.getX(), a.getY(), null);
 		}
-	}
-
-	@Override
-	public void processaTrascinamento(int x, int y) {
-		if (premuto != null) {
-			premuto.trascina(y);
+		if (colonna.haAltroSotto()) {
+			Image freccia = ImageCache.componenteScorrevoleFrecciaGiu;
+			Area a = colonna.areaDellaFrecciaGiu(new Misura(freccia.getWidth(null), freccia.getHeight(null)));
+			graphics.drawImage(freccia, a.getX(), a.getY(), null);
 		}
 	}
 
-	@Override
-	public void processaRilascio(int x, int y, Tasto tasto) {
-		if (tasto == Tasto.SINISTRO && premuto != null) {
-			premuto.rilascia();
-		}
-	}
-
-	@Override
-	public void processaClick(int x, int y, Tasto tasto) {
-		// Il rilascio di un trascinamento non è un click
-		if (elenco == null || scheda == null || (premuto != null && premuto.isGestoTrascinato())) {
-			return;
-		}
-		if (elenco.isSullaFrecciaSu(x, y)) {
-			elenco.scorri(-SCATTI_PER_CLIC * PASSO_SCORRIMENTO);
-		} else if (elenco.isSullaFrecciaGiu(x, y)) {
-			elenco.scorri(SCATTI_PER_CLIC * PASSO_SCORRIMENTO);
-		} else if (scheda.isSullaFrecciaSu(x, y)) {
-			scheda.scorri(-SCATTI_PER_CLIC * PASSO_SCORRIMENTO);
-		} else if (scheda.isSullaFrecciaGiu(x, y)) {
-			scheda.scorri(SCATTI_PER_CLIC * PASSO_SCORRIMENTO);
-		} else if (elenco.contiene(x, y)) {
-			scegli(ImmagineBestiario.voceDellaRiga(voci, (y - elenco.getCima() + elenco.getScorrimento()) / ImmagineBestiario.ALTEZZA_RIGA_ELENCO));
-		}
-	}
-
-	private void scegli(int riga) {
-		if (riga < 0 || riga >= voci.size() || riga == scelta) {
-			return;
-		}
-		scelta = riga;
-		// L'elenco resta dov'è (cambia solo l'evidenziazione) e la scheda riparte dalla cima
-		costruisciElenco(elenco.getScorrimento());
-		costruisciScheda();
-	}
-
-	/**
-	 * Sceglie la voce di quella classe e porta l'elenco in modo che si veda, come un clic sulla sua riga; per i test.
-	 */
-	void selezionaVoce(TipoPersonaggio classe) {
-		int riga = voci.indexOf(classe.getRuolo());
-		if (riga < 0) {
-			return;
-		}
-		scegli(riga);
-		int sopra = ImmagineBestiario.rigaDellaVoce(voci, riga) * ImmagineBestiario.ALTEZZA_RIGA_ELENCO;
-		int sotto = sopra + ImmagineBestiario.ALTEZZA_RIGA_ELENCO;
-		int scorrimento = elenco.getScorrimento();
-		if (sopra < scorrimento) {
-			elenco.scorri(sopra - scorrimento);
-		} else if (sotto > scorrimento + areaElenco.height) {
-			elenco.scorri(sotto - scorrimento - areaElenco.height);
+	private void disegnaElemento(Graphics2D g, Elemento e, int x, int y) {
+		switch (e.getTipo()) {
+			case RETTANGOLO:
+				g.setColor(new Color(e.getArgb(), true));
+				g.fillRect(x, y, e.getLarghezza(), e.getAltezza());
+				break;
+			case TESTO:
+				int yRiga = y;
+				for (String riga : e.getRighe()) {
+					g.drawImage(ImageCache.get(riga, e.getFont(), e.getColore()), x, yRiga, null);
+					yRiga += e.getFont().getHeight();
+				}
+				break;
+			case TESTO_GRANDE:
+				g.drawImage(immaginiPronte.computeIfAbsent(e, el -> ImmaginiAwt.buffered(el.getPixel())), x, y, null);
+				break;
+			default:
+				Image immagine = immaginiPronte.computeIfAbsent(e, DisplayableCanvasBestiario::preparaLImmagine);
+				g.drawImage(immagine, x, y, e.getLarghezza(), e.getAltezza(), null);
+				break;
 		}
 	}
 
 	/**
-	 * La voce scelta, per i test
+	 * L'immagine di un elemento: quella della risorsa (con lo zoom, per i personaggi), specchiata o ridotta a una sagoma se serve
 	 */
-	TipoPersonaggio getVoceScelta() {
-		return voci.get(scelta);
+	private static Image preparaLImmagine(Elemento e) {
+		double zoom = e.getRisorsa().startsWith("personaggi/") ? LivelloDiZoom.valore() : 1.0;
+		BufferedImage immagine = BufferedImageBuilder.buildBufferedImage(e.getRisorsa(), zoom);
+		if (e.isSpecchiata()) {
+			immagine = ImmaginiAwt.specchia(immagine);
+		}
+		if (e.getSagomaRgb() != null) {
+			immagine = ImageCache.sagomaScura(immagine, new Color(e.getSagomaRgb()));
+		}
+		return immagine;
 	}
 }

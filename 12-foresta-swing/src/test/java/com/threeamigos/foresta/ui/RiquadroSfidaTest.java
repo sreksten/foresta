@@ -2,6 +2,7 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.tipi.MossaCartaForbiciSasso;
 import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroSfida;
+import com.threeamigos.foresta.ui.immagini.AtlanteDiImmagini;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,8 +16,9 @@ class RiquadroSfidaTest {
         assertEquals("Sasso", DisplayableCanvasRiquadroSfida.nomeDellaMano(MossaCartaForbiciSasso.SASSO));
         for (MossaCartaForbiciSasso mossa : MossaCartaForbiciSasso.values()) {
             for (String lato : new String[]{"-sx.png", "-dx.png"}) {
-                String risorsa = "/com/threeamigos/foresta/img/fondi/" + DisplayableCanvasRiquadroSfida.nomeDellaMano(mossa) + lato;
-                assertNotNull(DisplayableCanvasRiquadroSfida.class.getResource(risorsa), "manca " + risorsa);
+                // Le immagini stanno negli atlanti (gli originali non sono nei jar)
+                String risorsa = "fondi/" + DisplayableCanvasRiquadroSfida.nomeDellaMano(mossa) + lato;
+                assertNotNull(AtlanteDiImmagini.misura(risorsa), "manca " + risorsa);
             }
         }
     }

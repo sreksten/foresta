@@ -1,9 +1,8 @@
 package com.threeamigos.foresta.ui.componenti;
 
+import com.threeamigos.foresta.ui.Area;
 import org.junit.jupiter.api.Test;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,13 +10,13 @@ import static org.junit.jupiter.api.Assertions.*;
  * Lo scorrimento verticale, senza disegnare: dove sta l'immagine, quando arriva, quando esce, e i limiti dello
  * scorrimento a mano.
  */
-class ScorrimentoVerticaleTest {
+class ColonnaScorrevoleTest {
 
-    private static final Rectangle AREA = new Rectangle(0, 100, 200, 300);
+    private static final Area AREA = new Area(0, 100, 200, 300);
 
     @Test
     void dalBassoSaleFinoAUscireInAlto() {
-        ScorrimentoVerticale scorrimento = ScorrimentoVerticale.dalBasso(immagine(50), AREA, 40);
+        ColonnaScorrevole scorrimento = ColonnaScorrevole.dalBasso(AREA, 50, 40);
         // Parte appena sotto l'area: il fondo è sotto il fondo dell'area
         assertEquals(100 + 300 + 50, scorrimento.getFondo());
         scorrimento.avanza(10, 30);
@@ -29,7 +28,7 @@ class ScorrimentoVerticaleTest {
 
     @Test
     void conUnaQuotaSiFermaLi() {
-        ScorrimentoVerticale scorrimento = ScorrimentoVerticale.dalBasso(immagine(50), AREA, 40).fermaA(20);
+        ColonnaScorrevole scorrimento = ColonnaScorrevole.dalBasso(AREA, 50, 40).fermaA(20);
         scorrimento.avanza(5, 30);
         assertFalse(scorrimento.isArrivato());
         scorrimento.avanza(100, 30);
@@ -40,7 +39,7 @@ class ScorrimentoVerticaleTest {
 
     @Test
     void aManoNonSiStaccaDallaCimaNeDalFondo() {
-        ScorrimentoVerticale scorrimento = new ScorrimentoVerticale(immagine(1000), AREA);
+        ColonnaScorrevole scorrimento = new ColonnaScorrevole(AREA, 1000);
         assertFalse(scorrimento.haAltroSopra());
         assertTrue(scorrimento.haAltroSotto());
         scorrimento.scorri(-50);
@@ -51,19 +50,16 @@ class ScorrimentoVerticaleTest {
         assertEquals(100 + 300, scorrimento.getFondo());
 
         // Un'immagine più bassa dell'area non si sposta
-        ScorrimentoVerticale corta = new ScorrimentoVerticale(immagine(100), AREA);
+        ColonnaScorrevole corta = new ColonnaScorrevole(AREA, 100);
         corta.scorri(50);
         assertEquals(100 + 100, corta.getFondo());
         assertFalse(corta.haAltroSopra() || corta.haAltroSotto());
     }
 
-    private static BufferedImage immagine(int altezza) {
-        return new BufferedImage(200, altezza, BufferedImage.TYPE_INT_ARGB);
-    }
 
     @Test
     void trascinandoLImmagineSegueIlPuntatoreEIlClickCheSegueNonVale() {
-        ScorrimentoVerticale scorrimento = new ScorrimentoVerticale(immagine(1000), AREA);
+        ColonnaScorrevole scorrimento = new ColonnaScorrevole(AREA, 1000);
         scorrimento.scorri(0);
         scorrimento.premi(300);
         // Sotto la soglia è un tocco
@@ -85,7 +81,7 @@ class ScorrimentoVerticaleTest {
 
     @Test
     void trascinandoOltreLaCimaSiTiraEPoiTorna() {
-        ScorrimentoVerticale scorrimento = new ScorrimentoVerticale(immagine(1000), AREA);
+        ColonnaScorrevole scorrimento = new ColonnaScorrevole(AREA, 1000);
         scorrimento.premi(300);
         scorrimento.trascina(310);
         scorrimento.trascina(380);
@@ -98,7 +94,7 @@ class ScorrimentoVerticaleTest {
 
     @Test
     void lAutomaticoNonSiTrascina() {
-        ScorrimentoVerticale scorrimento = ScorrimentoVerticale.dalBasso(immagine(1000), AREA, 40);
+        ColonnaScorrevole scorrimento = ColonnaScorrevole.dalBasso(AREA, 1000, 40);
         scorrimento.premi(300);
         scorrimento.trascina(100);
         scorrimento.rilascia();

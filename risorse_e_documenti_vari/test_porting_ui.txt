@@ -30,3 +30,4 @@ SpriteDeiRiquadriTest
 SpriteDellaLocazioneTest
 ComposizioneDelleIconeTest
 SfondoARiempimentoTest
+ColonnaScorrevoleTest

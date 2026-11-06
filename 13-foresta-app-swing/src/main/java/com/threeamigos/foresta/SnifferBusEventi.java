@@ -337,7 +337,7 @@ public class SnifferBusEventi {
     }
 
     private void onEventoCreazioneSpriteATempo(InternoCreazioneSpriteATempo evento) {
-        Logger.log(() -> headerEvento(evento) + "Descrizione: " + evento.getSprite().getDescrizione());
+        Logger.log(() -> headerEvento(evento) + "Descrizione: " + evento.getDescrizione().getDescrizione());
     }
 
     private void onEventoCreazioneSpriteEffetto(InternoCreazioneSpriteEffettoDiStato evento) {

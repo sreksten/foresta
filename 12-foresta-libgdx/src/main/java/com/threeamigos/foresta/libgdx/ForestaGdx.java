@@ -43,7 +43,7 @@ public class ForestaGdx extends ApplicationAdapter {
 	private static final String[] ATLANTI = {"icone", "mappa", "oggetti", "locazioni", "fondi", "fondinon2x2", "personaggi"};
 	private static final int MARGINE = 20;
 	// La pagina di prova del testo e i riquadri provati (testo, gruppo, locazione, sfida)
-	private static final int PAGINE_DI_PROVA = 7;
+	private static final int PAGINE_DI_PROVA = 9;
 
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
@@ -64,8 +64,10 @@ public class ForestaGdx extends ApplicationAdapter {
 	private RiquadroMissioniGdx riquadroMissioni;
 	private PaginaDegliSprite paginaDegliSprite;
 	private BarraIconeGdx barraIcone;
+	private SchermataTrofeiGdx schermataTrofei;
+	private SchermataBestiarioGdx schermataBestiario;
 	private PianificatoreGdx pianificatore;
-	/** 0 è la pagina di prova, 1 il riquadro del testo, 2 i riquadri del gruppo, delle statistiche, di incantesimi e pozioni e della mappa, 3 la locazione con il combattimento, 4 la sfida, 5 gli sprite, 6 la barra delle icone, poi un atlante per pagina */
+	/** 0 è la pagina di prova, 1 il riquadro del testo, 2 i riquadri del gruppo, delle statistiche, di incantesimi e pozioni e della mappa, 3 la locazione con il combattimento, 4 la sfida, 5 gli sprite, 6 la barra delle icone, 7 la pagina dei trofei, 8 il bestiario, poi un atlante per pagina */
 	private int corrente;
 
 	@Override
@@ -103,6 +105,10 @@ public class ForestaGdx extends ApplicationAdapter {
 				Comando.OVEST, Comando.MAPPA, Comando.INVENTARIO, Comando.FUOCO, Comando.GELO, Comando.POZIONE_SALUTE, Comando.POZIONE_MAGIA,
 				Comando.FUGA, Comando.SI, Comando.NO, Comando.NUMERO_1, Comando.NUMERO_2, Comando.NUMERO_3, Comando.NUMERO_4, Comando.NUMERO_5,
 				Comando.CARTA, Comando.FORBICE, Comando.SASSO));
+		schermataTrofei = new SchermataTrofeiGdx(LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE, partita, immagini, medio, testoGrande);
+		schermataTrofei.apri();
+		schermataBestiario = new SchermataBestiarioGdx(LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE, partita, immagini, piccolo, medio);
+		schermataBestiario.apri();
 		barraIcone = new BarraIconeGdx(Orientamento.ORIZZONTALE, true, 0, ALTEZZA_VIRTUALE - 76, LARGHEZZA_VIRTUALE, 76, partita, immagini, piccolo, medio);
 		barraIcone.getModello().impostaAzioni();
 		paginaDegliSprite = new PaginaDegliSprite(immagini, piccolo, medio, LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE);
@@ -132,7 +138,7 @@ public class ForestaGdx extends ApplicationAdapter {
 
 			@Override
 			public Finestra getFinestraATuttoSchermo() {
-				return null;
+				return corrente == 7 ? schermataTrofei : corrente == 8 ? schermataBestiario : null;
 			}
 
 			@Override
@@ -142,6 +148,9 @@ public class ForestaGdx extends ApplicationAdapter {
 
 			@Override
 			public Area getArea(Finestra finestra) {
+				if (finestra == schermataTrofei || finestra == schermataBestiario) {
+					return new Area(0, 0, LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE);
+				}
 				if (finestra == barraIcone.getModello()) {
 					return new Area(barraIcone.getModello().getOffsetX(), barraIcone.getModello().getOffsetY(), barraIcone.getModello().getLarghezza(),
 							barraIcone.getModello().getAltezza());
@@ -234,6 +243,10 @@ public class ForestaGdx extends ApplicationAdapter {
 		} else if (corrente == 6) {
 			barraIcone.disegna(batch, camera, viewport);
 			barraIcone.disegnaAiuto(batch, LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE);
+		} else if (corrente == 7) {
+			schermataTrofei.disegna(batch, camera, viewport);
+		} else if (corrente == 8) {
+			schermataBestiario.disegna(batch, camera, viewport, testoGrande);
 		} else {
 			disegnaUnAtlante(ATLANTI[corrente - PAGINE_DI_PROVA]);
 		}

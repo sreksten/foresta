@@ -176,6 +176,11 @@ public final class DatiDiProva {
 				.con("getGruppoAvversario", a -> avversari)
 				.con("getMappa", a -> mappa)
 				.con("getTipoBottinoInLocazione", a -> TipoBottino.COFANO)
+				.con("isTrofeoVinto", a -> ((com.threeamigos.foresta.tipi.TipoTrofeo) a[0]).ordinal() % 3 == 0)
+				.con("getObiettivoTrofeo", a -> 10)
+				.con("getProgressoTrofeo", a -> ((com.threeamigos.foresta.tipi.TipoTrofeo) a[0]).ordinal() % 10)
+				.con("isVoceDelBestiarioSbloccata", a -> ((TipoPersonaggio) a[0]).ordinal() % 2 == 0)
+				.con("getCaratteristicheScoperte", a -> Collections.emptySet())
 				.con("isAiutoAbilitato", a -> true).mappa);
 	}
 }
