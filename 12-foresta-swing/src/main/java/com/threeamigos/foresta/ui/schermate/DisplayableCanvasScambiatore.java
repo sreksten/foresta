@@ -30,25 +30,12 @@ import java.util.List;
  *
  * @author Stefano Reksten
  */
-public abstract class DisplayableCanvasScambiatore implements Finestra {
-
-    protected static final int SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI = 20;
-
-    /**
-     * Fra una riga e l'altra del nome del negoziante, e fra il nome e il mestiere scritto in piccolo sotto
-     */
-    public static final int INTERLINEA_DEL_NOME = 1;
-    public static final int SPAZIO_FRA_NOME_E_MESTIERE = 4;
+public abstract class DisplayableCanvasScambiatore extends SchermataDiScambio {
 
     /**
      * Larghezza della cornice inventario
      */
     protected static final int corniceInventarioWidth = ImageCache.corniceInventario.getWidth(null);
-
-    /**
-     * La dimensione interna del bordo della cornice inventario
-     */
-    protected static final int DIMENSIONE_BORDO_INTERNO = 16;
 
     protected static final int ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO = ImageCache.corniceInventario.getHeight()
             - 2 * (DIMENSIONE_BORDO_INTERNO + ImageCache.SPACING);
@@ -57,96 +44,9 @@ public abstract class DisplayableCanvasScambiatore implements Finestra {
             - 2 * (DIMENSIONE_BORDO_INTERNO + ImageCache.SPACING);
 
     /**
-     * Pixel di scorrimento per ogni scatto della rotella
-     */
-    protected static final int PASSO_SCORRIMENTO = 2;
-
-    /**
      * Usiamo l'immagine del Ladro come riferimento per disegnare il personaggio centrale della finestra di scambio
      */
     protected static final int ALTEZZA_LADRO = MappaPersonaggioImmagine.getImmagine(TipoPersonaggio.LADRO).getHeight(null);
-
-    /**
-     * Lo stato della partita, in sola lettura: monete, prezzi, personaggi e inventario del gruppo
-     */
-    protected final VistaPartita vistaPartita;
-
-    /**
-     * Larghezza globale della finestra di scambio
-     */
-    protected final int width;
-    /**
-     * Altezza globale della finestra di scambio
-     */
-    protected final int height;
-
-    /**
-     * Il font usato per disegnare il testo nella finestra di scambio
-     */
-    public final DoomdarkFont font = DoomdarkFont.medio();
-    /**
-     * L'altezza del font usato per disegnare il testo nella finestra di scambio
-     */
-    public final int fontHeight = font.getHeight();
-    /**
-     * Il font piccolo usato per disegnare le descrizioni dei nodi nell'albero degli oggetti
-     */
-    public final DoomdarkFont fontSmall = DoomdarkFont.piccolo();
-
-    /**
-     * Coordinata X iniziale della parte sinistra
-     */
-    protected final int xMinimaZonaSinistra;
-    /**
-     * Coordinata X finale della parte sinistra
-     */
-    protected final int xMassimaZonaSinistra;
-    /**
-     * Coordinata X iniziale della parte centrale
-     */
-    public final int xMinimaZonaCentrale;
-    /**
-     * Coordinata X finale della parte centrale
-     */
-    public final int xMassimaZonaCentrale;
-    /**
-     * Coordinata X iniziale della parte destra
-     */
-    protected final int xMinimaZonaDestra;
-    /**
-     * Coordinata X finale della parte destra
-     */
-    protected final int xMassimaZonaDestra;
-
-    /**
-     * Scroll verso l'alto o il basso per ciascuna zona
-     */
-    protected final ScorrimentoSuUnAsse scorrimentoSinistra = new ScorrimentoSuUnAsse(System::nanoTime);
-    protected final ScorrimentoSuUnAsse scorrimentoCentrale = new ScorrimentoSuUnAsse(System::nanoTime);
-    protected final ScorrimentoSuUnAsse scorrimentoDestra = new ScorrimentoSuUnAsse(System::nanoTime);
-    /**
-     * Lo scorrimento della zona su cui è stato premuto il tasto, per il trascinamento (null se la pressione è caduta fuori)
-     */
-    private ScorrimentoSuUnAsse scorrimentoPremuto;
-
-    protected int offsetYZonaSinistra() {
-        return (int) Math.round(scorrimentoSinistra.getScorrimento());
-    }
-
-    protected int offsetYZonaCentrale() {
-        return (int) Math.round(scorrimentoCentrale.getScorrimento());
-    }
-
-    protected int offsetYZonaDestra() {
-        return (int) Math.round(scorrimentoDestra.getScorrimento());
-    }
-
-    /**
-     * Posizione del mouse, per evidenziare in bianco l'artefatto sotto il cursore.
-     * -1 significa "cursore fuori dalla finestra".
-     */
-    protected int mouseX = -1;
-    protected int mouseY = -1;
 
     /**
      * Sprite temporanei (es. monete spese/acquisite, incantesimo acquistato) disegnati
@@ -159,11 +59,9 @@ public abstract class DisplayableCanvasScambiatore implements Finestra {
     /**
      * Chiamato quando la schermata si apre: le liste ripartono dall'alto e gli sprite della volta scorsa, anche se non finiti, non ricompaiono.
      */
+    @Override
     public void apri() {
-        scorrimentoSinistra.reimposta();
-        scorrimentoCentrale.reimposta();
-        scorrimentoDestra.reimposta();
-        scorrimentoPremuto = null;
+        super.apri();
         spriteLocali.clear();
     }
 
@@ -188,60 +86,13 @@ public abstract class DisplayableCanvasScambiatore implements Finestra {
     }
 
     /**
-     * Quota (in coordinate della finestra) a cui le sottoclassi disegnano la riga "Monete"
-     * in disegnaColonnaPersonaggio, usata per ancorare gli sprite locali a quella riga.
-     */
-    public int yRigaMonete() {
-        return 3 * SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + altezzaIntestazioneCentrale() + ALTEZZA_LADRO;
-    }
-
-    /**
-     * Il mestiere del negoziante al centro della schermata (armaiolo, alchimista...): serve a cercarne il nome. Null se
-     * al centro c'è un altro personaggio, che si intitola come prima.
-     */
-    public TipoPersonaggio getMestiereAlCentro() {
-        return null;
-    }
-
-    /**
-     * Il mestiere come si scrive sotto il nome del negoziante ("Armaiolo"), o al posto del nome se non c'è.
-     */
-    public String getEtichettaMestiere() {
-        return null;
-    }
-
-    /**
-     * Il nome del negoziante spezzato in righe che stiano fra le due cornici; vuota se non c'è un negoziante o un nome.
-     */
-    private List<String> righeDelNomeAlCentro() {
-        TipoPersonaggio mestiere = getMestiereAlCentro();
-        String nome = mestiere == null ? null : vistaPartita.getNomeDelPersonaggioDiCitta(mestiere);
-        if (nome == null) {
-            return new ArrayList<>();
-        }
-        return FontTool.split(font, nome, xMassimaZonaCentrale - xMinimaZonaCentrale);
-    }
-
-    /**
-     * L'altezza dell'intestazione della colonna centrale: una riga per chi non è un negoziante, per il negoziante il nome
-     * su una o più righe e sotto il mestiere in carattere piccolo.
-     */
-    public int altezzaIntestazioneCentrale() {
-        List<String> righe = righeDelNomeAlCentro();
-        if (righe.isEmpty()) {
-            return fontHeight;
-        }
-        return righe.size() * (fontHeight + INTERLINEA_DEL_NOME) - INTERLINEA_DEL_NOME + SPAZIO_FRA_NOME_E_MESTIERE + fontSmall.getHeight();
-    }
-
-    /**
      * Disegna in alto nella colonna centrale l'intestazione del negoziante: il nome, centrato e spezzato su più righe se
      * non sta fra le cornici, e sotto il mestiere in carattere piccolo. Senza nome c'è solo il mestiere, come prima.
      *
      * @return la quota sotto l'intestazione
      */
     public int disegnaIntestazioneCentrale(Graphics2D graphics, int y, DoomdarkColorModel.Color colore) {
-        List<String> righe = righeDelNomeAlCentro();
+        List<String> righe = getRigheDelNomeAlCentro();
         if (righe.isEmpty()) {
             Image mestiere = ImageCache.get(getEtichettaMestiere(), colore);
             graphics.drawImage(mestiere, (width - mestiere.getWidth(null)) / 2, y, null);
@@ -259,37 +110,7 @@ public abstract class DisplayableCanvasScambiatore implements Finestra {
     }
 
     protected DisplayableCanvasScambiatore(int width, int height, VistaPartita vistaPartita) {
-        this.vistaPartita = vistaPartita;
-        // Imposta la dimensione della finestra e calcola l'ampiezza delle tre colonne sinistra, centrale, destra
-        this.width = width;
-        this.height = height;
-
-        xMinimaZonaSinistra = SPACING + DIMENSIONE_BORDO_INTERNO;
-        xMassimaZonaSinistra = xMinimaZonaSinistra + corniceInventarioWidth - DIMENSIONE_BORDO_INTERNO;
-
-        xMinimaZonaCentrale = SPACING + corniceInventarioWidth + SPACING;
-        xMassimaZonaCentrale = width - SPACING - corniceInventarioWidth - SPACING;
-
-        xMinimaZonaDestra = width - SPACING - corniceInventarioWidth + DIMENSIONE_BORDO_INTERNO;
-        xMassimaZonaDestra = width - SPACING - DIMENSIONE_BORDO_INTERNO;
-    }
-
-    /**
-     * Restituisce le coordinate alle quali disegnare il fumetto
-     */
-    public CoordinateFumetto getCoordinateFumetto() {
-        // L'intestazione cambia con il nome del negoziante (più righe se è lungo), quindi le coordinate non si ricordano
-        Image ladro = MappaPersonaggioImmagine.getImmagine(TipoPersonaggio.LADRO);
-        int larghezzaImmagine = ladro.getWidth(null);
-        int altezzaImmagine = ladro.getHeight(null);
-        int yIntestazione = SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + altezzaIntestazioneCentrale() + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
-
-        return new CoordinateFumetto(
-                width / 2 + larghezzaImmagine + SPACING,
-                yIntestazione + altezzaImmagine / 2,
-                width / 2 + MappaPersonaggioImmagine.getImmagine(TipoPersonaggio.ARMAIOLO).getWidth() / 3,
-                yIntestazione + altezzaImmagine / 3
-        );
+        super(width, height, vistaPartita, corniceInventarioWidth, ImageCache.corniceInventario.getHeight(), new MisureDelleImmaginiAwt());
     }
 
     /**
@@ -329,16 +150,6 @@ public abstract class DisplayableCanvasScambiatore implements Finestra {
     }
 
     /**
-     * Se il punto (x, y) della finestra cade dentro l'elenco che comincia in boxX (la parte sinistra o la destra)
-     */
-    protected boolean dentroElenco(int boxX, int x, int y) {
-        int xInterno = x - (boxX + SPACING);
-        int yInterno = y - (DIMENSIONE_BORDO_INTERNO + 2 * SPACING);
-        return xInterno >= 0 && xInterno < LARGHEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO
-                && yInterno >= 0 && yInterno < ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO;
-    }
-
-    /**
      * Ad aiuto acceso (vedi ModelloDati.isAiutoAbilitato), i cartigli con quelle righe accanto al mouse, dentro la
      * finestra: va chiamato per ultimo, sopra il resto della schermata
      */
@@ -352,99 +163,5 @@ public abstract class DisplayableCanvasScambiatore implements Finestra {
      * Il metodo che disegna la colonna centrale con il personaggio adatto (Personaggio, armaiolo, alchimista)
      */
     public abstract void disegnaColonnaPersonaggio(Graphics2D graphics);
-
-    @Override
-    public boolean gestisceDoppioClick() {
-        return true;
-    }
-
-    @Override
-    public void processaMovimento(int x, int y) {
-        mouseX = x;
-        mouseY = y;
-    }
-
-    @Override
-    public void processaUscita(int x, int y) {
-        mouseX = -1;
-        mouseY = -1;
-    }
-
-    @Override
-    public int passiPerScattoDellaRotella() {
-    	return PASSI_PER_SCATTO_DELLE_LISTE;
-    }
-
-    /**
-     * Lo scorrimento della zona che contiene quella x, o null se non cade in nessuna
-     */
-    private ScorrimentoSuUnAsse scorrimentoDellaZona(int x) {
-        if (x >= xMinimaZonaSinistra && x < xMassimaZonaSinistra) {
-            return scorrimentoSinistra;
-        } else if (x >= xMinimaZonaCentrale && x < xMassimaZonaCentrale) {
-            return scorrimentoCentrale;
-        } else if (x >= xMinimaZonaDestra && x < xMassimaZonaDestra) {
-            return scorrimentoDestra;
-        }
-        return null;
-    }
-
-    @Override
-    public void processaRotella(int x, int y, int numeroRotazioni, MovimentoRotella movimentoRotella) {
-        ScorrimentoSuUnAsse scorrimento = scorrimentoDellaZona(x);
-        if (scorrimento != null) {
-            int pixel = numeroRotazioni * PASSO_SCORRIMENTO;
-            scorrimento.scorriDi(movimentoRotella == MovimentoRotella.SU ? -pixel : pixel);
-        }
-    }
-
-    /**
-     * Se, ora, premendo su una zona la si può trascinare. Le sottoclassi con qualcosa sopra le liste (un menu aperto)
-     * dicono di no.
-     */
-    protected boolean puoScorrere() {
-        return true;
-    }
-
-    /**
-     * Il gesto che comincia sulla schermata prosegue finché non si lascia il tasto, anche fuori da essa
-     */
-    @Override
-    public boolean catturaIlTrascinamento() {
-        return true;
-    }
-
-    @Override
-    public void processaPressione(int x, int y, Tasto tasto) {
-        if (tasto != Tasto.SINISTRO) {
-            return;
-        }
-        scorrimentoPremuto = puoScorrere() ? scorrimentoDellaZona(x) : null;
-        if (scorrimentoPremuto != null) {
-            scorrimentoPremuto.premi(y, true);
-        }
-    }
-
-    @Override
-    public void processaTrascinamento(int x, int y) {
-        if (scorrimentoPremuto != null) {
-            scorrimentoPremuto.trascina(y);
-        }
-    }
-
-    @Override
-    public void processaRilascio(int x, int y, Tasto tasto) {
-        if (tasto == Tasto.SINISTRO && scorrimentoPremuto != null) {
-            scorrimentoPremuto.rilascia();
-        }
-    }
-
-    /**
-     * Se l'ultimo gesto è stato un trascinamento di una lista: il click che segue il rilascio non vale, perché non
-     * era un tocco
-     */
-    protected boolean isGestoTrascinato() {
-        return scorrimentoPremuto != null && scorrimentoPremuto.isGestoTrascinato();
-    }
 
 }
