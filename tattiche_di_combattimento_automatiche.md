@@ -599,8 +599,8 @@ Ogni volta che un personaggio sceglie che cosa fare scorrendo la sua tattica, il
 Che cosa dice la spiegazione (la costruisce il `Valutatore`, i selettori e `SceltaIncantesimo`):
 
 - **le voci saltate** con il motivo ("voce 1: disattivata", "voce 2: le condizioni non sono tutte vere [...]", "voce 3: nessun bersaglio", "FULMINE scartata: manca la pergamena...");
-- **il percorso del selettore** con i candidati che restano dopo ogni passo, con i nomi: "AVVERSARI: 3 [Goblin 1, Goblin 2, Goblin 3]", "azione applicabile: 1 [Goblin 2]", "STATO BAGNATO: 1 [Goblin 2]";
-- **le misure dell'ordinamento**: "MENO_SALUTE (Goblin 1 60, Goblin 2 14): Goblin 2";
+- **il percorso del selettore** con i candidati che restano dopo ogni passo, con i nomi: "AVVERSARI: 3 [primo Goblin, secondo Goblin, terzo Goblin]", "azione applicabile: 1 [secondo Goblin]", "STATO BAGNATO: 1 [Goblin 2]";
+- **le misure dell'ordinamento**: "MENO_SALUTE (primo Goblin 60, secondo Goblin 14): secondo Goblin";
 - **il criterio dell'incantesimo di danno** con i danni attesi confrontati: "PIU_ADATTO: FUOCO 4.2, FULMINE 9.8", con il danno delle armi se l'azione lo confronta; per `PIU_ECONOMICO_CHE_BASTA` se ognuno basta a uccidere;
 - **il ripiego**: "nessuna voce eseguibile: attacco fisico al primo avversario".
 

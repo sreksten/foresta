@@ -10,6 +10,10 @@ Il prototipo Android della Foresta (Fase 7 di `porting_libGDX.md`): un progetto 
 
 Non sono moduli Maven: i moduli del gioco (`12-foresta-motore`, `12-foresta-libgdx`, e da loro tutto il resto) si prendono dal repository Maven locale (`~/.m2`, gruppo `com.threeamigos`), e libGDX (`gdx-backend-android` con le librerie native per le quattro architetture) da Maven Central. Quindi **prima di compilare** si installano i moduli: `mvn install -DskipTests -pl 12-foresta-motore,12-foresta-libgdx -am` dalla radice. `mavenLocal()` è limitato al gruppo `com.threeamigos`: il repository locale ha i pom di libGDX (per il desktop) ma non i jar delle librerie native Android, e Gradle si fermerebbe lì.
 
+## Pagine di prova su Android
+
+Per vedere un pezzo dell'interfaccia senza il motore (e fare screenshot con `adb exec-out screencap -p`): `adb shell am start -n com.threeamigos.foresta/.android.AndroidLauncher --es pagina 12` apre la pagina di prova numero 12 (la mappa), la stessa di `MainLibgdx PAGINE_DI_PROVA -Dforesta.pagina=12` sul desktop (i numeri sono in `ForestaGdx`). Le pagine di prova sono 1142×656: le misure dello schermo di gioco vero (area di 1022×732) sono diverse.
+
 ## Come si compila e si prova
 
 Servono un JDK 17 (l'Android Gradle Plugin non vuole il 22), l'SDK Android (piattaforma 36, build-tools) e `adb`; come si sono installati e come si tolgono sta in `risorse_e_documenti_vari/android_disinstalla.sh`.
@@ -23,6 +27,10 @@ adb logcat --pid=$(adb shell pidof com.threeamigos.foresta)
 ```
 
 Versioni: Gradle 8.13, AGP 8.13.0, `compileSdk` 36 (libGDX 1.14 usa AndroidX e `androidx.core` 1.17 lo richiede), `targetSdk` 34, `minSdk` 26 (il piano diceva 24: per il prototipo si evitano i problemi con le API Java 8 di libreria come `String.join`; si torna a 24 dopo una verifica con lint). `AndroidX` è abilitato in `gradle.properties`.
+
+## L'icona
+
+È la «F» del titolo (`LogoForesta.png`, pixel art 39×62, in `foresta-android/icone-android/` insieme allo script che la trasforma) su fondo pergamena (#DEBD94), come icona adattiva (`mipmap-anydpi-v26`: sfondo a tinta unita e primo piano trasparente). `icone-android/genera_icone.py` ingrandisce la bitmap **senza interpolare** con un fattore intero (×1 mdpi, ×2 xhdpi, ×3 xxhdpi, ×4 xxxhdpi), sempre dentro l'area di sicurezza di 66 su 108 punti, e scrive i PNG in `app/src/main/res`. Per cambiarla: si sostituisce la bitmap (o il colore nello script) e si rilancia `python3 icone-android/genera_icone.py` (serve Pillow). Niente SVG: la pixel art con retinatura non si vettorializza senza perdere l'aspetto.
 
 ## Stato (2026-11-06)
 

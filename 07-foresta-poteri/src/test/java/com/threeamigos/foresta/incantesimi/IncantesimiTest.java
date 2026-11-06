@@ -188,7 +188,7 @@ class IncantesimiTest {
         }
         debole.addMagia(100000);
         FabbricaIncantesimi.crea(TipoIncantesimo.FUOCO, 1).formula(debole, null, avversari);
-        assertTrue(frasi.get(0).contains(" contro il Titano 1."), frasi.toString());
+        assertTrue(frasi.get(0).contains(" contro il primo Titano."), frasi.toString());
     }
 
     // --- Silenzio

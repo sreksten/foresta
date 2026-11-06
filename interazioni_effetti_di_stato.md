@@ -63,7 +63,7 @@ Tre reazioni investono anche i vicini del bersaglio (`TipoInterazioneConEffettiD
 - **Chi è vicino.** Il gioco non ha uno spazio: i vicini sono quelli accanto al bersaglio nella fila del suo gruppo (`Gruppo.getPersonaggi`, l'ordine in cui sono entrati), contando solo chi è in campo; un caduto o chi si è arreso non separa. Lo decide `CalcolatoreCombattimento.viciniInvestiti`.
 - **Quanto.** Il calcolo del colpo mette in `DannoRisultante.getDanniAdArea` la reazione e metà del danno grezzo del colpo (`CostantiPersonaggi.DANNO_AD_AREA_QUOTA`, prima della difesa, degli incantamenti e del critico). `ApplicazioneDelRisultato.applica`, dopo aver subito il colpo, lo porta a ogni vicino con `CalcolatoreCombattimento.calcolaDannoAdArea`: niente tiro per colpire né critico; la difesa del vicino contro quel tipo di danno, la sua classe (un immune non subisce niente) e le reazioni con i suoi stati, di cui contano il danno e gli stati tolti e messi (il fulmine su un vicino BAGNATO fa ×1,5). Gli stati nativi del tipo di danno non si tirano.
 - **Niente catene.** Il colpo ai vicini (`DannoRisultante.isColpoAdArea`) non porta altre reazioni ad area, e non cambia l'avversario scelto da chi attacca (`StatoDelCombattimento.registraColpo`).
-- **A video.** Per ogni vicino una frase, dal file dei testi dell'enum (voce `AREA`: "L'esplosione investe anche il goblin 2."); i danni e le reazioni del vicino si vedono come per un colpo normale.
+- **A video.** Per ogni vicino una frase, dal file dei testi dell'enum (voce `AREA`: "L'esplosione investe anche il secondo goblin."); i danni e le reazioni del vicino si vedono come per un colpo normale.
 
 ## 0. Prerequisito: da `TipoInterazioneElementale` a `TipoInterazioneConEffettiDiStato` — ✅ fatto
 

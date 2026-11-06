@@ -156,26 +156,30 @@ class CombattimentoARoundTest {
     }
 
     @Test
-    void gliAvversariDellaStessaSpecieSiDistinguonoConUnNumero() {
+    void gliAvversariDellaStessaSpecieSiDistinguonoConUnOrdinale() {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(405)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             GruppoAvversario avversari = GruppoAvversario.getIstanza();
             avversari.reimposta();
             Personaggio g1 = FabbricaPersonaggi.crea(TipoPersonaggio.GOBLIN, 1);
             avversari.aggiungiPersonaggio(g1);
-            String senzaNumero = g1.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
-            assertFalse(senzaNumero.matches(".*\\d$"), senzaNumero);
+            String senzaOrdinale = g1.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
+            assertFalse(senzaOrdinale.matches(".*\\d$"), senzaOrdinale);
+            assertFalse(senzaOrdinale.contains("primo"), "uno solo della specie: niente ordinale: " + senzaOrdinale);
             Personaggio g2 = FabbricaPersonaggi.crea(TipoPersonaggio.GOBLIN, 1);
             avversari.aggiungiPersonaggio(g2);
-            assertEquals(senzaNumero + " 1", g1.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
-            assertEquals(Character.toUpperCase(senzaNumero.charAt(0)) + senzaNumero.substring(1) + " 2",
+            // «il primo Goblin», «Il secondo Goblin»: l'articolo si sceglie sull'ordinale, e non ci sono numeri in cifre
+            String nomeDelPrimo = g1.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
+            assertEquals(senzaOrdinale.replaceFirst(" ", " primo "), nomeDelPrimo);
+            assertEquals("Il secondo Goblin",
                     g2.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA));
-            // Un gruppo misto: il numero è la posizione fra quelli della stessa specie, e solo chi ha un simile lo porta
+            // Un gruppo misto: l'ordinale è la posizione fra quelli della stessa specie, e solo chi ha un simile lo porta
             Personaggio troll = FabbricaPersonaggi.crea(TipoPersonaggio.TROLL, 1);
             avversari.aggiungiPersonaggio(troll);
-            assertFalse(troll.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE).matches(".*\\d$"));
+            String nomeDelTroll = troll.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
+            assertFalse(nomeDelTroll.contains("primo") || nomeDelTroll.contains("secondo"), nomeDelTroll);
             assertEquals(1, troll.getOrdinale());
-            assertEquals(senzaNumero + " 2", g2.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
+            assertEquals("il secondo Goblin", g2.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
         }
     }
 

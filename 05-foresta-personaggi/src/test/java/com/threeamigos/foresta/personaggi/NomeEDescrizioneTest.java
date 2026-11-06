@@ -59,23 +59,85 @@ class NomeEDescrizioneTest {
     }
 
     @Test
-    void ilNumeroDistingueGliAvversariDellaStessaSpecieSoloNelLoroGruppo() {
+    void l_ordinaleDistingueGliAvversariDellaStessaSpecieSoloNelLoroGruppo() {
         GruppoAvversario gruppo = GruppoAvversario.getIstanza();
         Personaggio primo = FabbricaPersonaggi.crea(TipoPersonaggio.GOBLIN, 1);
         Personaggio fuori = FabbricaPersonaggi.crea(TipoPersonaggio.GOBLIN, 1);
         Personaggio secondo = FabbricaPersonaggi.crea(TipoPersonaggio.GOBLIN, 1);
         assertEquals("Goblin", primo.getNome());
         gruppo.aggiungiPersonaggio(primo);
-        assertEquals("Goblin", primo.getNome(), "uno solo della specie: niente numero");
+        assertEquals("Goblin", primo.getNome(), "uno solo della specie: niente ordinale");
         gruppo.aggiungiPersonaggio(secondo);
-        assertEquals("Goblin 1", primo.getNome());
-        assertEquals("Goblin 2", secondo.getNome());
-        // Chi non è nel gruppo non ha numero, e chi ha ordinale zero nemmeno
+        assertEquals("primo Goblin", primo.getNome());
+        assertEquals("secondo Goblin", secondo.getNome());
+        // Chi non è nel gruppo non ha ordinale, e chi ha ordinale zero nemmeno
         assertEquals("Goblin", fuori.getNome());
         fuori.setOrdinale(3);
-        assertEquals("Goblin", fuori.getNome(), "ha un numero ma non è nel gruppo");
+        assertEquals("Goblin", fuori.getNome(), "ha un ordinale ma non è nel gruppo");
         primo.setOrdinale(0);
         assertEquals("Goblin", primo.getNome());
+    }
+
+    private static Personaggio[] dueGoblin() {
+        GruppoAvversario gruppo = GruppoAvversario.getIstanza();
+        Personaggio primo = FabbricaPersonaggi.crea(TipoPersonaggio.GOBLIN, 1);
+        Personaggio secondo = FabbricaPersonaggi.crea(TipoPersonaggio.GOBLIN, 1);
+        gruppo.aggiungiPersonaggio(primo);
+        gruppo.aggiungiPersonaggio(secondo);
+        return new Personaggio[]{primo, secondo};
+    }
+
+    @Test
+    void conLOrdinaleGliArticoliSiScelgonoSullaParolaOrdinale() {
+        Personaggio[] goblin = dueGoblin();
+        assertEquals("il primo Goblin", goblin[0].getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
+        assertEquals("il secondo Goblin", goblin[1].getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
+        assertEquals("un secondo Goblin", goblin[1].getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_INDETERMINATIVO_SINGOLARE));
+        assertEquals("del secondo Goblin", goblin[1].getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA));
+        assertEquals("Il secondo Goblin", goblin[1].getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+                Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA));
+        assertEquals("Secondo Goblin", goblin[1].getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA));
+    }
+
+    @Test
+    void l_articoloSegueLOrdinaleAncheDavantiAUnaVocale() {
+        // Otto goblin: l'ottavo comincia per vocale, e vuole l'apostrofo («l'ottavo»), non «il ottavo»
+        GruppoAvversario gruppo = GruppoAvversario.getIstanza();
+        Personaggio ultimo = null;
+        for (int i = 0; i < 8; i++) {
+            ultimo = FabbricaPersonaggi.crea(TipoPersonaggio.GOBLIN, 1);
+            gruppo.aggiungiPersonaggio(ultimo);
+        }
+        assertEquals("l'ottavo Goblin", ultimo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
+        assertEquals("un ottavo Goblin", ultimo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_INDETERMINATIVO_SINGOLARE));
+        assertEquals("dell'ottavo Goblin", ultimo.getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA));
+    }
+
+    @Test
+    void l_ordinaleSiConcordaNelGenereDelMostro() {
+        GruppoAvversario gruppo = GruppoAvversario.getIstanza();
+        Personaggio prima = FabbricaPersonaggi.crea(TipoPersonaggio.STREGA, 1);
+        Personaggio seconda = FabbricaPersonaggi.crea(TipoPersonaggio.STREGA, 1);
+        gruppo.aggiungiPersonaggio(prima);
+        gruppo.aggiungiPersonaggio(seconda);
+        assertEquals("la seconda Strega", seconda.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
+        assertEquals("la prima Strega", prima.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
+    }
+
+    @Test
+    void l_ordinaleInInglese() {
+        Testi.impostaLingua("en");
+        try {
+            Personaggio[] goblin = dueGoblin();
+            assertEquals("the first Goblin", goblin[0].getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
+            assertEquals("the second Goblin", goblin[1].getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
+            assertEquals("a second Goblin", goblin[1].getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_INDETERMINATIVO_SINGOLARE));
+            assertEquals("of the second Goblin", goblin[1].getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA));
+            assertEquals("The second Goblin", goblin[1].getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+                    Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA));
+        } finally {
+            Testi.impostaLingua(null);
+        }
     }
 
     private static Personaggio conSalute(int salute) {

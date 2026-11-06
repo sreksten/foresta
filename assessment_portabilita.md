@@ -26,7 +26,7 @@ Il gioco è scritto in italiano e ora si vuole una **versione inglese** (prima p
 
 1. **Frasi montate a pezzi.** `"Il livello di magia " + x + " non permette di formulare questo incantesimo."`, `LaForgia`, `Pernottamento`: l'ordine delle parole è quello italiano, e una traduzione dei pezzi sciolti non dà inglese corretto. Serve una chiave per frase, con i valori al posto di `{0}`, `{1}`.
 2. **Grammatica che dipende dal nome.** Articolo ("il/lo/l'/la/i/gli/le", "un/uno/una/un'"), preposizione articolata ("del/dello/dell'/della…"), plurale, pronome e accordo ("sano/sana come un pesce"). In inglese le regole sono altre ("the", "a/an" secondo il suono, "of the"), e vanno dette per lingua, non per messaggio.
-3. **Numeri e ordinali, elenchi, maiuscole** ("A, B e C" contro "A, B, and C"; "Viverna 2").
+3. **Numeri e ordinali, elenchi, maiuscole** ("A, B e C" contro "A, B, and C"; «la seconda Viverna», «the second Wyvern»).
 4. **Testo che finisce nel salvataggio.** `MessaggioMD`, `NotiziaMD`, `ArtefattoMD` (nome, nome proprio, descrizione, generati dalle grammatiche), parametri delle missioni: una partita salvata in italiano resta italiana. Non si traduce a caldo.
 5. **Il nome di una missione è testo montato** (`LaForgia.getNome()`: "Armaiolo e la forgia"), non una costante.
 6. **Test.** 288 file di test aspettano frasi italiane: devono girare con la lingua bloccata sull'italiano.

@@ -153,6 +153,47 @@ class GruppoTest {
         assertTrue(frasi.get(0).contains("già al livello massimo"), frasi.toString());
     }
 
+    @Test
+    void leDuePozioniPiccoleServonoSoloSeQualcunoHaPersoSaluteOMagia() {
+        Gruppo gruppo = GruppoGiocatore.getIstanza();
+        Personaggio mago = new Mago("Merlin", 3);
+        mago.getModelloDati().setPng(false);
+        gruppo.aggiungiPersonaggio(mago);
+        gruppo.addPozioniSalute(1);
+        gruppo.addPozioniMagia(1);
+        mago.addSalute(mago.getSaluteMassima());
+        mago.addMagia(mago.getMagiaMassima());
+        assertFalse(gruppo.isPozioneSaluteUtilizzabile(), "nessuno e' ferito: la pozione si sprecherebbe");
+        assertFalse(gruppo.isPozioneMagiaUtilizzabile(), "nessuno ha perso magia: la pozione si sprecherebbe");
+        // Ognuna dipende dalla sua risorsa
+        mago.subSalute(10, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
+        assertTrue(gruppo.isPozioneSaluteUtilizzabile());
+        assertFalse(gruppo.isPozioneMagiaUtilizzabile());
+        mago.subMagia(10);
+        assertTrue(gruppo.isPozioneMagiaUtilizzabile());
+        // Senza pozioni non c'e' niente da bere, anche se sono tutti feriti
+        gruppo.subPozioniSalute(1);
+        gruppo.subPozioniMagia(1);
+        assertFalse(gruppo.isPozioneSaluteUtilizzabile());
+        assertFalse(gruppo.isPozioneMagiaUtilizzabile());
+    }
+
+    @Test
+    void unPersonaggioMortoNonContaPerLePozioniPiccole() {
+        Gruppo gruppo = GruppoGiocatore.getIstanza();
+        Personaggio sano = new Guerriero("Arsenio", 3);
+        sano.getModelloDati().setPng(false);
+        Personaggio morto = new Guerriero("Bruno", 3);
+        morto.getModelloDati().setPng(false);
+        gruppo.aggiungiPersonaggio(sano);
+        gruppo.aggiungiPersonaggio(morto);
+        gruppo.addPozioniSalute(1);
+        sano.addSalute(sano.getSaluteMassima());
+        morto.getModelloDati().setSalute(0);
+        morto.getModelloDati().setVivo(false);
+        assertFalse(gruppo.isPozioneSaluteUtilizzabile(), "il morto ha la salute a zero ma una pozione non lo cura");
+    }
+
     // --- I personaggi
 
     @Test

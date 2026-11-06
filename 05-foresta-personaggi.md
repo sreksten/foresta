@@ -29,7 +29,7 @@ Le dipendenze sono transitive: un modulo vede anche quello che vedono i moduli d
 | `ModificatoriTemporanei` | i modificatori di attributo: aggiunta (lo stesso non si somma, rinfresca la durata), riduzione a turni e a ore, rimozione, `getVariazioneDaTemporanei`, `getFissaggio`; quando cambiano ricalcola salute e magia massime e i secondari |
 | `EffettiDiStato` | gli stati alterati (rinforzo, danni nel tempo, rigenerazione, decadimento, rimozione) e le **ricariche** delle abilità e dei canti |
 | `SaluteEMorte` | `addSalute`, `subSalute` (la resa, il berserk e il racconto della morte), `muore`, `resuscita`, `addMagia`, `subMagia`, e il recupero e il prezzo della fatica: `riposa`, la rigenerazione di salute e magia a fine locazione, `fugge` |
-| `NomeEDescrizione` | il nome (proprio, o della specie con l'articolo, la preposizione e il numero che distingue dagli altri dello stesso gruppo) e la descrizione della scheda |
+| `NomeEDescrizione` | il nome (proprio, o della specie con l'articolo, la preposizione e l'ordinale che lo distingue dagli altri dello stesso gruppo: «il secondo scheletro», «l'ottavo goblin», «la seconda strega», in inglese «the second Skeleton»; l'articolo si sceglie sull'ordinale e non sul nome) e la descrizione della scheda |
 | `Progressione` | i punti esperienza, il salto di livello, il livello di chi si unisce al gruppo e la spesa dei punti abilità |
 | `CaricoEInventario` | carico e carico massimo, cosa si può prendere o equipaggiare (`RegoleEquipaggiamento`), i set leggendari completi, `addArtefatto` e `removeArtefatto` |
 

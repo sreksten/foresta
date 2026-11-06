@@ -89,6 +89,33 @@ class EsecutoreTatticheAzioniTest {
         personaggio.subSalute(personaggio.getSalute() / 2, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
     }
 
+    private List<String> righeDiTestoDi(Runnable azione) {
+        List<String> righe = new ArrayList<>();
+        BusEventi.iscriviti(com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase.class, e -> righe.add(e.getMessaggio()));
+        azione.run();
+        return righe;
+    }
+
+    @Test
+    void l_attaccoDiUnMioPersonaggioScriveLaRigaDiTestoCome_quelloDeiMostri() {
+        Personaggio guerriero = new com.threeamigos.foresta.personaggi.Guerriero("Arsenio", 5);
+        Gruppo miei = gruppo(true, guerriero);
+        Decisione attacco = decisione(TipoAzione.ATTACCO_FISICO, null, goblin);
+        List<String> righe = righeDiTestoDi(() -> esecutoreDi(miei).esegui(guerriero, attacco));
+        assertFalse(righe.isEmpty(), "l'attacco dei miei personaggi deve scrivere la riga di testo");
+        assertEquals("Arsenio attacca il Goblin.", righe.get(0));
+    }
+
+    @Test
+    void l_attaccoDiUnMostroScriveLaStessaRiga() {
+        Personaggio guerriero = pronto(TipoPersonaggio.GUERRIERO);
+        Gruppo miei = gruppo(true, guerriero);
+        Decisione attacco = decisione(TipoAzione.ATTACCO_FISICO, null, guerriero);
+        List<String> righe = righeDiTestoDi(() -> esecutoreDi(miei).esegui(goblin, attacco));
+        assertFalse(righe.isEmpty());
+        assertTrue(righe.get(0).startsWith("Il Goblin attacca "), righe.get(0));
+    }
+
     @Test
     void leAbilitaInnateDelMagoEDelSacerdoteSiUsanoSuiNemici() {
         Personaggio mago = pronto(TipoPersonaggio.MAGO);

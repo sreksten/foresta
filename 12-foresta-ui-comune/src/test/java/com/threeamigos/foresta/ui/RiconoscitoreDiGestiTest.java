@@ -13,6 +13,7 @@ class RiconoscitoreDiGestiTest {
 	private static final class Registro implements EventiDelPuntatore {
 		final List<String> eventi = new ArrayList<>();
 		int intervallo = RouterDegliInput.INTERVALLO_DOPPIO_TOCCO;
+		boolean pressioneSubito;
 
 		@Override
 		public void mosso(int x, int y) {
@@ -47,6 +48,11 @@ class RiconoscitoreDiGestiTest {
 		@Override
 		public void rotella(int x, int y, int rotazioni) {
 			eventi.add("rotella " + rotazioni);
+		}
+
+		@Override
+		public boolean vuoleLaPressioneSubito(int x, int y) {
+			return pressioneSubito;
 		}
 
 		@Override
@@ -260,5 +266,28 @@ class RiconoscitoreDiGestiTest {
 		gesti.premuto(10, 10, Finestra.Tasto.DESTRO);
 		assertEquals(java.util.Arrays.asList("premuto 10,10"), registro.eventi);
 		assertTrue(pianificatore.azioni.isEmpty());
+	}
+
+	@Test
+	void unaFinestraCheVuoleLaPressioneSubitoLaRiceveColDitoSenzaAspettareNeLaPressioneProlungata() {
+		registro.pressioneSubito = true;
+		RiconoscitoreDiGesti gesti = dito();
+		gesti.premuto(10, 10, Finestra.Tasto.SINISTRO);
+		assertEquals(java.util.Arrays.asList("premuto 10,10"), registro.eventi);
+		assertTrue(pianificatore.azioni.isEmpty(), "niente pressione prolungata: il dito fermo e' il joystick");
+		pianificatore.passaIlTempo();
+		assertFalse(gesti.isPressioneProlungata());
+	}
+
+	@Test
+	void conLaPressioneSubitoOgniMovimentoArrivaAncheSottoLaSogliaDiTrascinamento() {
+		// Il joystick segue il dito anche di un pixel: la zona morta e la velocita' dipendono da dove sta
+		registro.pressioneSubito = true;
+		RiconoscitoreDiGesti gesti = dito();
+		gesti.premuto(10, 10, Finestra.Tasto.SINISTRO);
+		gesti.trascinato(12, 10);
+		gesti.trascinato(13, 11);
+		gesti.rilasciato(13, 11, Finestra.Tasto.SINISTRO);
+		assertEquals(java.util.Arrays.asList("premuto 10,10", "trascinato 12,10", "trascinato 13,11", "rilasciato 13,11", "clic1 13,11"), registro.eventi);
 	}
 }

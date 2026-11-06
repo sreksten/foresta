@@ -11,7 +11,8 @@ import java.util.function.LongSupplier;
  * (entro {@link #DISTANZA_FRA_I_CLICK}) nell'intervallo del router ({@link EventiDelPuntatore#getIntervalloDoppioClick()}) è il secondo di un doppio
  * click: lo stesso intervallo con cui il router rimanda il click singolo, così singolo e doppio non scattano mai insieme.</li>
  * <li><b>Col dito</b> ({@code tocco} vero) la pressione si consegna al router solo quando si sa che non è una pressione prolungata, cioè al rilascio
- * o al primo movimento oltre la soglia. Sono i gesti del dito che il mouse non ha:
+ * o al primo movimento oltre la soglia, a meno che la finestra sotto il dito la voglia subito ({@link Finestra#vuoleLaPressioneSubito}: il joystick
+ * virtuale, che vive del dito fermo). Sono i gesti del dito che il mouse non ha:
  * <ul>
  * <li>la <b>pressione prolungata</b> ({@link #PRESSIONE_PROLUNGATA_MS} senza muoversi) fa comparire le descrizioni come se il cursore passasse sul punto
  * ({@code mosso}), e non esegue niente: il rilascio la chiude (il cursore «esce») senza nessun click e senza che le finestre abbiano mai visto la
@@ -85,7 +86,7 @@ public final class RiconoscitoreDiGesti {
 		prolungata = false;
 		pressioneConsegnata = false;
 		annullaLAttesa();
-		if (tocco && tasto == Finestra.Tasto.SINISTRO) {
+		if (tocco && tasto == Finestra.Tasto.SINISTRO && !destinazione.vuoleLaPressioneSubito(x, y)) {
 			attesaDellaPressioneProlungata = pianificatore.dopo(PRESSIONE_PROLUNGATA_MS, this::scattaLaPressioneProlungata);
 		} else {
 			consegnaLaPressione();
@@ -104,7 +105,8 @@ public final class RiconoscitoreDiGesti {
 			// Il trascinamento parte dal punto in cui il dito si è posato
 			consegnaLaPressione();
 		}
-		if (!tocco || spostato) {
+		// Col dito, finché la pressione non e' arrivata (tremolio sotto la soglia) il movimento non e' un trascinamento
+		if (pressioneConsegnata) {
 			destinazione.trascinato(x, y);
 		}
 	}

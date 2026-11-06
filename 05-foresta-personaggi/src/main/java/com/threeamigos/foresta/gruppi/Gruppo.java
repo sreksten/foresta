@@ -273,6 +273,24 @@ public abstract class Gruppo implements VistaGruppo {
 	}
 
 	/**
+	 * Se c'è una pozione della salute da bere e almeno un personaggio vivo con la salute sotto il massimo: se nessuno è ferito la pozione andrebbe sprecata.
+	 * Quella grande invece alza anche il massimo, e serve sempre.
+	 */
+	public final boolean isPozioneSaluteUtilizzabile() {
+		return getPozioniSalute() > 0
+				&& getPersonaggiVivi().stream().anyMatch(p -> p.getSalute() < p.getSaluteMassima());
+	}
+
+	/**
+	 * Se c'è una pozione della magia da bere e almeno un personaggio vivo con la magia sotto il massimo: se nessuno ne ha perduta la pozione andrebbe
+	 * sprecata. Quella grande invece alza anche il massimo, e serve sempre.
+	 */
+	public final boolean isPozioneMagiaUtilizzabile() {
+		return getPozioniMagia() > 0
+				&& getPersonaggiVivi().stream().anyMatch(p -> p.getMagia() < p.getMagiaMassima());
+	}
+
+	/**
 	 * Se c'è una pozione dell'aumento di livello da bere e almeno un personaggio vivo che non sia già al livello massimo.
 	 */
 	public final boolean isPozioneAumentoLivelloUtilizzabile() {

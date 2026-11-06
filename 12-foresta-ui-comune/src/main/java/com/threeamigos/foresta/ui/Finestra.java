@@ -68,6 +68,16 @@ public interface Finestra {
         return false;
     }
 
+    /**
+     * Se in quel punto (relativo alla finestra) la finestra vuole la pressione subito, anche col dito. Di norma col dito la pressione arriva solo al
+     * rilascio o al primo movimento, per distinguerla da una pressione prolungata (vedi {@link RiconoscitoreDiGesti}); chi vive del dito premuto e
+     * fermo, come il joystick virtuale, che muove la mano anche con il dito immobile sul bordo del disco, la vuole subito. Col mouse non conta: la
+     * pressione arriva sempre subito.
+     */
+    default boolean vuoleLaPressioneSubito(int x, int y) {
+        return false;
+    }
+
     default void processaEntrata(int x, int y) {
 //        System.out.println(getNome() + ": processaEntrata(" + x + ", " + y + ")");
     }

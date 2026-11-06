@@ -29,6 +29,11 @@ public interface EventiDelPuntatore {
 	void rotella(int x, int y, int rotazioni);
 
 	/**
+	 * Se la finestra sotto quel punto vuole la pressione subito, anche col dito ({@link Finestra#vuoleLaPressioneSubito})
+	 */
+	boolean vuoleLaPressioneSubito(int x, int y);
+
+	/**
 	 * Quanto tempo passa fra un click e il secondo perché formino un doppio click (il click singolo si rimanda di tanto, per poterlo scartare)
 	 */
 	int getIntervalloDoppioClick();

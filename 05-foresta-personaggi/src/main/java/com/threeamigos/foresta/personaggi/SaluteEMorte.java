@@ -22,8 +22,6 @@ import com.threeamigos.foresta.tipi.TipoRiposo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import com.threeamigos.foresta.testi.Lingue;
-import com.threeamigos.foresta.testi.Genere;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
@@ -135,21 +133,8 @@ final class SaluteEMorte {
 				if (notificaMorte == Personaggio.NotificaMorte.SI && !p.getMotivoNelGruppo().isLasciaSeMuore()) {
 					sb = new StringBuilder();
 					if (md().getNome() == null) {
-						boolean isGruppoAvversario = !p.appartieneAlGruppoDelGiocatore();
-						if (isGruppoAvversario && GruppoAvversario.getIstanza().contaDellaStessaSpecie(p) > 1) {
-							if (p.getSesso() == Personaggio.Sesso.MASCHIO) {
-								sb.append(Lingue.corrente().ordinale(p.getOrdinale(), Genere.MASCHILE, true));
-							} else {
-								sb.append(Lingue.corrente().ordinale(p.getOrdinale(), Genere.FEMMINILE, true));
-							}
-							sb.append(" ");
-							sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
-						} else {
-							String ads = p.getADS();
-							sb.append(Character.toUpperCase(ads.charAt(0)));
-							sb.append(ads.substring(1));
-						}
-						sb.append(p.getNomeSingolare());
+						// «Il secondo scheletro» se ce n'e' piu' d'uno nel gruppo avversario, «Lo scheletro» altrimenti: lo dice getNome, come per ogni altro messaggio
+						sb.append(p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA));
 					} else {
 						sb.append(md().getNome());
 					}

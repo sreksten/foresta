@@ -41,13 +41,21 @@ public final class AttaccoConLeArmi {
 		}
 	}
 
-	private static void annunciaEAttacca(Personaggio attaccante, Personaggio bersaglio) {
-		Logger.log(() -> attaccante.getNome() + " attacca " + bersaglio.getNome());
-		// Gli avversari della stessa specie si distinguono per il numero ("La viverna 2"), quindi sempre l'articolo determinativo
+	/**
+	 * La riga di testo dell'attacco («Il primo Scheletro attacca Arsenio.», «Arsenio attacca il secondo Scheletro.»): la scrivono tutti, i mostri e i miei
+	 * personaggi, perche' chi legge sappia chi colpisce chi. Gli avversari della stessa specie si distinguono per l'ordinale, quindi sempre l'articolo
+	 * determinativo.
+	 */
+	public static void scriviLAttacco(Personaggio attaccante, Personaggio bersaglio) {
 		String messaggio = Testi.formatta("messaggi_combattimento", "ATTACCO",
 				attaccante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA),
 				bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
 		BusEventi.pubblica(new NotificaTestoFrase(messaggio));
+	}
+
+	private static void annunciaEAttacca(Personaggio attaccante, Personaggio bersaglio) {
+		Logger.log(() -> attaccante.getNome() + " attacca " + bersaglio.getNome());
+		scriviLAttacco(attaccante, bersaglio);
 		for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(attaccante, bersaglio)) {
 			if (bersaglio.isFuoriCombattimento()) {
 				return;

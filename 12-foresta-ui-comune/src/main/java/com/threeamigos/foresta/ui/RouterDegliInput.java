@@ -131,6 +131,12 @@ public final class RouterDegliInput implements EventiDelPuntatore {
 	}
 
 	@Override
+	public boolean vuoleLaPressioneSubito(int x, int y) {
+		Risultato risultato = trova(x, y);
+		return risultato != null && risultato.finestra.vuoleLaPressioneSubito(risultato.x, risultato.y);
+	}
+
+	@Override
 	public int getIntervalloDoppioClick() {
 		return intervalloDoppioClick;
 	}

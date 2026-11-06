@@ -406,4 +406,41 @@ class AutomaCasiRimastiTest {
             }
         }
     }
+
+    @Test
+    void aFineLocazioneLePozioniPiccoleCompaionoSoloSeServonoELeGrandiSempre() {
+        try (PartitaDiTest partita = partitaFuoriDallaCitta(107)) {
+            GruppoGiocatore gruppo = partita.gruppo();
+            gruppo.addPozioniSalute(1);
+            gruppo.addPozioniSaluteGrande(1);
+            gruppo.addPozioniMagia(1);
+            gruppo.addPozioniMagiaGrande(1);
+            for (com.threeamigos.foresta.personaggi.Personaggio p : gruppo.getPersonaggiVivi()) {
+                p.addSalute(p.getSaluteMassima());
+                p.addMagia(p.getMagiaMassima());
+            }
+            riapriLaSceltaDellaDirezione(partita);
+            assertFalse(partita.comandiDisponibili().contains(Comando.POZIONE_SALUTE), "nessuno e' ferito: la pozione si sprecherebbe");
+            assertFalse(partita.comandiDisponibili().contains(Comando.POZIONE_MAGIA), "nessuno ha perso magia: la pozione si sprecherebbe");
+            assertTrue(partita.comandiDisponibili().contains(Comando.POZIONE_SALUTE_GRANDE), "quella grande alza anche il massimo");
+            assertTrue(partita.comandiDisponibili().contains(Comando.POZIONE_MAGIA_GRANDE), "quella grande alza anche il massimo");
+
+            gruppo.getPersonaggiVivi().get(0).subSalute(10, null, com.threeamigos.foresta.personaggi.Personaggio.NotificaFerite.NO,
+                    com.threeamigos.foresta.personaggi.Personaggio.NotificaMorte.NO);
+            riapriLaSceltaDellaDirezione(partita);
+            assertTrue(partita.comandiDisponibili().contains(Comando.POZIONE_SALUTE), "ora c'e' un ferito");
+            assertFalse(partita.comandiDisponibili().contains(Comando.POZIONE_MAGIA), "la magia e' ancora al massimo");
+
+            gruppo.getPersonaggiVivi().get(0).subMagia(10);
+            riapriLaSceltaDellaDirezione(partita);
+            assertTrue(partita.comandiDisponibili().contains(Comando.POZIONE_MAGIA));
+        }
+    }
+
+    /** Si guarda la mappa e si torna: la scelta della direzione ricalcola i comandi */
+    private static void riapriLaSceltaDellaDirezione(PartitaDiTest partita) {
+        partita.comando(Comando.MAPPA);
+        partita.comando(Comando.SI);
+        partita.assertStato(Stato.SCELTA_DIREZIONE);
+    }
 }

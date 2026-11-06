@@ -3,7 +3,9 @@ package com.threeamigos.foresta.personaggi;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
+import com.threeamigos.foresta.testi.Genere;
 import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Nome;
 import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.testi.RegoleDellaLingua;
 import com.threeamigos.foresta.testi.Testi;
@@ -14,8 +16,8 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
- * Come un personaggio si presenta a parole: il nome (proprio, o quello della specie con l'articolo, la preposizione e il numero che lo distingue
- * dagli altri dello stesso gruppo) e la descrizione che ne dà la scheda. Lo tiene {@link PersonaggioBase}, che ne inoltra i metodi di
+ * Come un personaggio si presenta a parole: il nome (proprio, o quello della specie con l'articolo, la preposizione e l'ordinale che lo distingue
+ * dagli altri dello stesso gruppo: «il secondo scheletro») e la descrizione che ne dà la scheda. Lo tiene {@link PersonaggioBase}, che ne inoltra i metodi di
  * {@link Personaggio}; gli articoli e i nomi della specie vengono dai file dei testi della classe e dalle regole della lingua, le frasi da
  * {@code descrizione_personaggio_<lingua>.properties}.
  */
@@ -101,15 +103,30 @@ final class NomeEDescrizione {
 			throw new IllegalStateException("Personaggio giocante senza nome!");
 		}
 		StringBuilder sb = new StringBuilder();
-		if (includiArticoloDeterminativoSingolare) {
-			sb.append(p.getADS());
-		} else if (includiArticoloIndeterminativoSingolare) {
-			sb.append(p.getAIS());
-		} else if (includiPreposizioneArticolata) {
-			sb.append(p.getDeS());
+		if (serveLOrdinale()) {
+			// Fra più mostri della stessa specie: «il secondo scheletro», e non «Scheletro 2». L'articolo (e la preposizione) si sceglie sulla parola che
+			// viene dopo, cioè l'ordinale: «il secondo», «l'ottavo», «un secondo», «del secondo», «the second», «an eighth»
+			String chi = nomeConOrdinale();
+			Nome nomeConLOrdinale = new Nome(chi, chi, genereDelMostro(), null, null);
+			RegoleDellaLingua lingua = Lingue.corrente();
+			if (includiArticoloDeterminativoSingolare) {
+				sb.append(lingua.articoloDeterminativo(nomeConLOrdinale, false));
+			} else if (includiArticoloIndeterminativoSingolare) {
+				sb.append(lingua.articoloIndeterminativo(nomeConLOrdinale, false));
+			} else if (includiPreposizioneArticolata) {
+				sb.append(lingua.preposizioneArticolata(Preposizione.DI, nomeConLOrdinale, false));
+			}
+			sb.append(chi);
+		} else {
+			if (includiArticoloDeterminativoSingolare) {
+				sb.append(p.getADS());
+			} else if (includiArticoloIndeterminativoSingolare) {
+				sb.append(p.getAIS());
+			} else if (includiPreposizioneArticolata) {
+				sb.append(p.getDeS());
+			}
+			sb.append(p.getNomeSingolare());
 		}
-		sb.append(p.getNomeSingolare());
-		sb.append(suffissoOrdinale());
 		if (inizialeMaiuscola) {
 			sb.replace(0, 1, sb.substring(0, 1).toUpperCase(Locale.ROOT));
 		}
@@ -117,18 +134,27 @@ final class NomeEDescrizione {
 	}
 
 	/**
-	 * Il numero che distingue un avversario dagli altri della stessa specie nel suo gruppo ("Viverna 2"): la sua posizione nel gruppo
-	 * (vedi GruppoAvversario.aggiungiPersonaggio; conta per specie), e solo se ce n'è più d'uno con lo stesso nome; altrimenti niente. Non cambia quando
+	 * Se questo avversario va distinto dagli altri della stessa specie nel suo gruppo con un ordinale («il secondo scheletro»): ha una posizione nel gruppo
+	 * (vedi GruppoAvversario.aggiungiPersonaggio; conta per specie) e ce n'è più d'uno con lo stesso nome. Altrimenti no. La posizione non cambia quando
 	 * qualcuno cade, così un mostro si riconosce per tutto lo scontro.
 	 */
-	String suffissoOrdinale() {
+	boolean serveLOrdinale() {
 		if (p.getOrdinale() <= 0) {
-			return "";
+			return false;
 		}
 		GruppoAvversario avversari = GruppoAvversario.getIstanza();
-		if (!avversari.contiene(p)) {
-			return "";
-		}
-		return avversari.contaDellaStessaSpecie(p) > 1 ? " " + p.getOrdinale() : "";
+		return avversari.contiene(p) && avversari.contaDellaStessaSpecie(p) > 1;
+	}
+
+	/**
+	 * L'ordinale con il nome della specie, senza articolo: «secondo Scheletro» (concordato nel genere del mostro: «seconda Viverna»; in inglese «second
+	 * Skeleton»).
+	 */
+	private String nomeConOrdinale() {
+		return Lingue.corrente().ordinale(p.getOrdinale(), genereDelMostro(), false) + " " + p.getNomeSingolare();
+	}
+
+	private Genere genereDelMostro() {
+		return p.getSesso() == Personaggio.Sesso.MASCHIO ? Genere.MASCHILE : Genere.FEMMINILE;
 	}
 }

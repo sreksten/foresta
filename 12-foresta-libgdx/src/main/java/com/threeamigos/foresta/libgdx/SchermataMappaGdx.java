@@ -42,7 +42,10 @@ public final class SchermataMappaGdx implements SchermataMappa {
 	private final StrisciaDelleNotizie striscia;
 	private final CartiglioGdx cartiglio;
 	private final int larghezzaSferaCoperta;
+	private final int altezzaDellaSfera;
 	private final Color sfondoDelNotiziario = new Color((StrisciaDelleNotizie.SFONDO << 8) | 0xFF);
+	// Dove sta il centro della palla di vetro nello sprite della sfera, dall'alto (il vetro va dalla riga 13 alla 71, il piedistallo dalla 72)
+	private static final int CENTRO_DEL_VETRO = 42;
 	private TextureRegion disco;
 	private TextureRegion indicatore;
 
@@ -57,6 +60,7 @@ public final class SchermataMappaGdx implements SchermataMappa {
 		this.nuvole = nuvole;
 		this.cartiglio = new CartiglioGdx(immagini, medio);
 		this.larghezzaSferaCoperta = immagini.larghezza(NomiDelleImmagini.SFERA_MAGICA, 1f) / 2;
+		this.altezzaDellaSfera = immagini.altezza(NomiDelleImmagini.SFERA_MAGICA, 1f);
 		this.modello = new MappaATuttoSchermo(width, height, vistaPartita, immagini.larghezza(bosco, zoom), immagini.altezza(bosco, zoom));
 		this.striscia = new StrisciaDelleNotizie(width - larghezzaSferaCoperta, vistaPartita);
 	}
@@ -107,11 +111,17 @@ public final class SchermataMappaGdx implements SchermataMappa {
 		}
 
 		if (modello.isNotiziarioVisibile()) {
-			immagini.disegna(batch, NomiDelleImmagini.SFERA_MAGICA, 0, height - immagini.altezza(NomiDelleImmagini.SFERA_MAGICA, 1f), 1f);
-			disegnaIlNotiziario(batch, camera, viewport, altezzaMappa);
+			// La fascia si alza verso la palla di vetro della sfera, quanto basta ad averne il centro all'altezza del centro del vetro, ma senza toccare
+			// la mappa: si ferma al suo bordo inferiore piu' il gap (se sotto la mappa non c'e' spazio resta in fondo)
+			int sollevamentoMassimo = altezzaDellaSfera - CENTRO_DEL_VETRO - modello.getAltezzaIcona() / 2;
+			disegnaIlNotiziario(batch, camera, viewport, modello.yDelNotiziario(sollevamentoMassimo));
 		}
 		disegnaIlJoystick(batch);
 		cartiglio.disegnaAccantoAlMouse(batch, modello.righeDelCartiglio(), modello.getXMouse(), modello.getYMouse(), width, altezzaMappa);
+		if (modello.isNotiziarioVisibile()) {
+			// La sfera per ultima, in primo piano come in Swing: il notiziario comincia dal centro della palla e le notizie si vedono dentro il vetro
+			immagini.disegna(batch, NomiDelleImmagini.SFERA_MAGICA, 0, height - altezzaDellaSfera, 1f);
+		}
 	}
 
 	private void disegnaLeNuvole(Batch batch, Camera camera, Viewport viewport, int xOffset, int yOffset, int larghezzaIcona, int altezzaIcona) {
@@ -208,6 +218,15 @@ public final class SchermataMappaGdx implements SchermataMappa {
 	@Override
 	public boolean catturaIlTrascinamento() {
 		return modello.catturaIlTrascinamento();
+	}
+
+	/**
+	 * Nel disco del joystick la pressione serve subito (vedi {@link MappaATuttoSchermo#vuoleLaPressioneSubito}): senza questo inoltro il router, che parla
+	 * con questa classe e non con il modello, avrebbe il valore predefinito (falso) e col dito il joystick non si attiverebbe.
+	 */
+	@Override
+	public boolean vuoleLaPressioneSubito(int x, int y) {
+		return modello.vuoleLaPressioneSubito(x, y);
 	}
 
 	@Override

@@ -105,6 +105,21 @@ public final class MappaATuttoSchermo implements Finestra {
 	}
 
 	/**
+	 * Dove comincia, dall'alto, la fascia del notiziario. Di norma sta in fondo ({@link #altezzaMappa()}); chi la vuole piu' in alto (per metterla dentro
+	 * la palla di vetro della sfera magica) dice di quanto al massimo. Si alza solo se sotto la mappa c'e' spazio libero, e si ferma al bordo inferiore
+	 * della mappa piu' il solito gap ({@link Finestra#SPACING}): la mappa non cambia ne' dimensioni ne' posizione, e la fascia non la copre mai. Se la mappa
+	 * e' piu' grande dell'area (non c'e' spazio sotto) resta in fondo. Da chiamare dopo {@link #rivalidaLOffset()}.
+	 *
+	 * @param sollevamentoMassimo di quanti pixel, al massimo, la fascia puo' stare sopra la sua posizione di sempre
+	 */
+	public int yDelNotiziario(int sollevamentoMassimo) {
+		int inFondo = altezzaMappa();
+		int fineDellaMappa = mappaYOffset + dimensioneMappaY();
+		int piuInAlto = Math.max(inFondo - Math.max(0, sollevamentoMassimo), fineDellaMappa + Finestra.SPACING);
+		return Math.min(inFondo, piuInAlto);
+	}
+
+	/**
 	 * Se la fascia del notiziario si vede.
 	 */
 	public boolean isNotiziarioVisibile() {
@@ -399,6 +414,14 @@ public final class MappaATuttoSchermo implements Finestra {
 	@Override
 	public boolean catturaIlTrascinamento() {
 		return joystick != null;
+	}
+
+	/**
+	 * Nel disco del joystick virtuale la pressione serve subito: il joystick muove la mano anche col dito fermo sul bordo del disco.
+	 */
+	@Override
+	public boolean vuoleLaPressioneSubito(int x, int y) {
+		return joystick != null && joystick.contiene(x, y);
 	}
 
 	@Override

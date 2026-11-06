@@ -209,6 +209,8 @@ public final class EsecutoreTattiche {
 		// Prima si apre il riquadro del combattimento sul bersaglio (ForestaUI), poi si annuncia chi agisce e si scrive la riga di testo dell'attacco
 		BusEventi.pubblica(new InternoRichiestaAperturaFinestraCombattimento(attore, bersaglio));
 		annuncia(attore, bersaglio);
+		// La riga di testo, come per i mostri (AttaccoConLeArmi): sia l'attacco deciso dalla tattica sia il singolo attacco scelto dal giocatore
+		AttaccoConLeArmi.scriviLAttacco(attore, bersaglio);
 
 		if (Logger.isAttivo()) {
 			Logger.log(attore.getNome() + " attacca " + bersaglio.getNome());

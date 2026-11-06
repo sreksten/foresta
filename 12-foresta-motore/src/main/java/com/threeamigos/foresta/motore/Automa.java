@@ -2397,13 +2397,15 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		if (isAccampamentoPossibile()) {
 			comandiPossibili.add(Comando.ACCAMPAMENTO);
 		}
-		if (gruppo.getPozioniSalute() > 0) {
+		// A fine locazione le pozioni piccole compaiono solo se servono: se nessuno e' ferito (o ha perso magia) berne una la sprecherebbe. Quelle grandi
+		// alzano anche il massimo, quindi compaiono sempre
+		if (gruppo.isPozioneSaluteUtilizzabile()) {
 			comandiPossibili.add(Comando.POZIONE_SALUTE);
 		}
 		if (gruppo.getPozioniSaluteGrande() > 0) {
 			comandiPossibili.add(Comando.POZIONE_SALUTE_GRANDE);
 		}
-		if (gruppo.getPozioniMagia() > 0) {
+		if (gruppo.isPozioneMagiaUtilizzabile()) {
 			comandiPossibili.add(Comando.POZIONE_MAGIA);
 		}
 		if (gruppo.getPozioniMagiaGrande() > 0) {
