@@ -43,7 +43,7 @@ public class ForestaGdx extends ApplicationAdapter {
 	private static final String[] ATLANTI = {"icone", "mappa", "oggetti", "locazioni", "fondi", "fondinon2x2", "personaggi"};
 	private static final int MARGINE = 20;
 	// La pagina di prova del testo e i riquadri provati (testo, gruppo, locazione, sfida)
-	private static final int PAGINE_DI_PROVA = 9;
+	private static final int PAGINE_DI_PROVA = 10;
 
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
@@ -66,8 +66,9 @@ public class ForestaGdx extends ApplicationAdapter {
 	private BarraIconeGdx barraIcone;
 	private SchermataTrofeiGdx schermataTrofei;
 	private SchermataBestiarioGdx schermataBestiario;
+	private SchermataIntroOutroGdx schermataIntro;
 	private PianificatoreGdx pianificatore;
-	/** 0 è la pagina di prova, 1 il riquadro del testo, 2 i riquadri del gruppo, delle statistiche, di incantesimi e pozioni e della mappa, 3 la locazione con il combattimento, 4 la sfida, 5 gli sprite, 6 la barra delle icone, 7 la pagina dei trofei, 8 il bestiario, poi un atlante per pagina */
+	/** 0 è la pagina di prova, 1 il riquadro del testo, 2 i riquadri del gruppo, delle statistiche, di incantesimi e pozioni e della mappa, 3 la locazione con il combattimento, 4 la sfida, 5 gli sprite, 6 la barra delle icone, 7 la pagina dei trofei, 8 il bestiario, 9 l'intro, poi un atlante per pagina */
 	private int corrente;
 
 	@Override
@@ -109,6 +110,8 @@ public class ForestaGdx extends ApplicationAdapter {
 		schermataTrofei.apri();
 		schermataBestiario = new SchermataBestiarioGdx(LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE, partita, immagini, piccolo, medio);
 		schermataBestiario.apri();
+		schermataIntro = new SchermataIntroOutroGdx(LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE, DatiDiProva.punteggi(), partita, immagini, piccolo, medio);
+		schermataIntro.resettaSequenza();
 		barraIcone = new BarraIconeGdx(Orientamento.ORIZZONTALE, true, 0, ALTEZZA_VIRTUALE - 76, LARGHEZZA_VIRTUALE, 76, partita, immagini, piccolo, medio);
 		barraIcone.getModello().impostaAzioni();
 		paginaDegliSprite = new PaginaDegliSprite(immagini, piccolo, medio, LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE);
@@ -247,6 +250,8 @@ public class ForestaGdx extends ApplicationAdapter {
 			schermataTrofei.disegna(batch, camera, viewport);
 		} else if (corrente == 8) {
 			schermataBestiario.disegna(batch, camera, viewport, testoGrande);
+		} else if (corrente == 9) {
+			schermataIntro.intro(batch);
 		} else {
 			disegnaUnAtlante(ATLANTI[corrente - PAGINE_DI_PROVA]);
 		}

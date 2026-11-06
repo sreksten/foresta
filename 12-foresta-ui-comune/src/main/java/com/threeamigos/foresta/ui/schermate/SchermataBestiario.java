@@ -79,7 +79,7 @@ public abstract class SchermataBestiario implements Finestra {
 	/**
 	 * Quanto sono grandi le immagini dei personaggi e degli svolazzi, come le tiene chi disegna
 	 */
-	protected abstract ContenutiDelBestiario.Misure getMisure();
+	protected abstract MisureDelleImmagini getMisure();
 
 	/**
 	 * Quanto è grande l'immagine (le frecce <code>icone/ComponenteScorrevole-FrecciaSu.png</code>…), come la disegna chi disegna

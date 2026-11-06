@@ -37,21 +37,6 @@ import java.util.Set;
  */
 public final class ContenutiDelBestiario {
 
-	/**
-	 * Quanto sono grandi le immagini, come le tiene chi disegna
-	 */
-	public interface Misure {
-		/**
-		 * L'immagine del personaggio di quella classe, già con lo zoom (specchiata ha la stessa misura)
-		 */
-		Misura personaggio(TipoPersonaggio classe);
-
-		/**
-		 * Un'immagine per nome, alla sua dimensione originale (senza zoom)
-		 */
-		Misura immagine(String risorsa);
-	}
-
 	public static final int ALTEZZA_RIGA_ELENCO = 40;
 	private static final int MARGINE_RIGA = 6;
 	private static final int LATO_ICONA = 32;
@@ -130,7 +115,7 @@ public final class ContenutiDelBestiario {
 	/**
 	 * L'elenco delle voci, una per riga alta {@link #ALTEZZA_RIGA_ELENCO}, con quella scelta in evidenza
 	 */
-	public static ContenutoDiColonna elenco(VistaPartita vista, List<TipoPersonaggio> voci, int scelta, int larghezza, Misure misure) {
+	public static ContenutoDiColonna elenco(VistaPartita vista, List<TipoPersonaggio> voci, int scelta, int larghezza, MisureDelleImmagini misure) {
 		List<Elemento> elementi = new ArrayList<>();
 		for (int i = 0; i < voci.size(); i++) {
 			TipoPersonaggio voce = voci.get(i);
@@ -163,7 +148,7 @@ public final class ContenutiDelBestiario {
 	/**
 	 * La scheda della voce, larga quanto chiesto
 	 */
-	public static ContenutoDiColonna scheda(VistaPartita vista, TipoPersonaggio voce, int larghezza, Misure misure) {
+	public static ContenutoDiColonna scheda(VistaPartita vista, TipoPersonaggio voce, int larghezza, MisureDelleImmagini misure) {
 		boolean aperta = vista.isVoceDelBestiarioSbloccata(voce);
 		Colonna colonna = new Colonna(larghezza);
 		com.threeamigos.foresta.ui.immagini.ImmagineDiPixel nome = LayoutDelTestoGrande.immagine(aperta ? voce.getNomeDellaVoce() : CHIUSA, larghezza, true);
@@ -228,7 +213,7 @@ public final class ContenutiDelBestiario {
 	 * Le immagini della voce, una accanto all'altra: la femmina a sinistra rivolta a destra e il maschio a destra rivolto a sinistra, così che si guardino;
 	 * per chi ha una sola forma, l'immagine com'è. Chiusa è la silhouette.
 	 */
-	private static void aggiungiLeImmagini(TipoPersonaggio voce, boolean aperta, int larghezza, Colonna colonna, Misure misure) {
+	private static void aggiungiLeImmagini(TipoPersonaggio voce, boolean aperta, int larghezza, Colonna colonna, MisureDelleImmagini misure) {
 		TipoPersonaggio femminile = voce.getFormaFemminile();
 		List<TipoPersonaggio> classi = new ArrayList<>();
 		List<Verso> versi = new ArrayList<>();

@@ -1,167 +1,118 @@
 package com.threeamigos.foresta.ui.schermate;
 
-import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.interni.InternoErrore;
-import com.threeamigos.foresta.eventi.interni.InternoException;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
-import com.threeamigos.foresta.interfacce.GestoreSalvataggi;
 import com.threeamigos.foresta.interfacce.VistaPartita;
-import com.threeamigos.foresta.interfacce.VistaPersonaggio;
-import com.threeamigos.foresta.strumenti.Punteggio;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
-import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.Finestra;
+import com.threeamigos.foresta.ui.Misura;
+import com.threeamigos.foresta.ui.componenti.ColonnaScorrevole;
+import com.threeamigos.foresta.ui.componenti.ContenutoDiColonna.Elemento;
 import com.threeamigos.foresta.ui.componenti.ScorrimentoVerticale;
-import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
+import com.threeamigos.foresta.ui.immagini.DimensioniRisorsa;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
-import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
-import com.threeamigos.foresta.ui.testo.DoomdarkFont;
-import com.threeamigos.foresta.ui.testo.DoomdarkFont;
-import com.threeamigos.foresta.ui.testo.TestoGrande;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-import com.threeamigos.foresta.ui.testo.TestiDellaUI;
-import com.threeamigos.foresta.testi.Lingue;
-import com.threeamigos.foresta.testi.Genere;
 
 /**
- * La finestra delle schermate senza partita in corso: l'introduzione (storia che scorre, loghi, classifica, trofei), i messaggi su sfondo con l'ombra del drago,
- * le statistiche di fine partita e la scelta dello slot di salvataggio da caricare.
+ * La finestra delle schermate senza partita in corso, disegnata con Swing: l'introduzione (storia che scorre, loghi, classifica, trofei), i messaggi su
+ * sfondo con l'ombra del drago, le statistiche di fine partita e la scelta dello slot di salvataggio da caricare. Che cosa mostrano lo dicono
+ * {@link SchermateSenzaPartita} (le schermate ferme) e {@link IntroDelGioco} (l'intro, che dipende dal tempo), nel modulo comune; qui si disegna.
  */
 public class DisplayableCanvasIntroOutro implements Finestra {
 
-	// Lo scorrimento dell'intro (vedi ScorrimentoVerticale): pixel al secondo, e quanto è alta la fascia di
-	// dissolvenza ai bordi
-	private static final double VELOCITA = 30;
-	private static final int FASCIA = 40;
-	// Il logo della Foresta compare quando la storia è salita almeno tanto sopra di lui
-	private static final int MARGINE_LOGHI = 20;
-	// Il logo 3AM sta in basso a destra, a questa distanza dai due bordi
-	private static final int MARGINE_LOGO_3AM = 20;
-	// Fra una riga e l'altra della storia, oltre all'altezza di riga normale: un terzo dell'altezza delle lettere
-	private static final int INTERLINEA_STORIA = TestoGrande.ALTEZZA_GLIFO / 3;
-	// L'alone nero attorno alle lettere della storia e ai loghi, perché si vedano sullo sfondo
-	private static final int RAGGIO_ALONE = 6;
-	private static final double SECONDI_DISSOLVENZA = 1;
-	private static final double SECONDI_LOGHI = 3;
-	private static final double SECONDI_CLASSIFICA = 5;
-	// Il secondo fotogramma più lento che si accetta: dopo una pausa lunga lo scorrimento non salta
-	private static final double SECONDI_FOTOGRAMMA_MASSIMI = 0.1;
-	// La classifica: dove si ferma la prima riga e quanto distano le righe
-	private static final int QUOTA_CLASSIFICA = 100;
-	private static final int RIGA_CLASSIFICA = 50;
-	// A sinistra e a destra della classifica e dei trofei
-	private static final int MARGINE = 50;
-
-	/**
-	 * Le parti dell'intro: la storia che scorre (poi i loghi), la classifica che sale e si ferma, i trofei che scorrono.
-	 */
-	private enum Fase {
-		STORIA, CLASSIFICA, TROFEI
-	}
-
 	private final int width;
 	private final int height;
-	private int sequenza;
-	private final int xOffset;
-	private final int yOffset;
-	private String messaggio;
-	private Fase fase = Fase.STORIA;
-	private ScorrimentoVerticale scorrimento;
-	private BufferedImage immagineStoria;
-	// I loghi con l'alone scuro, perché si vedano sullo sfondo della storia: si fanno una volta sola
-	private BufferedImage logo3AMConAlone;
-	private BufferedImage logoForestaConAlone;
-	// La scritta "seleziona lo slot da caricare" con l'alone scuro, perché si legga sullo sfondo del drago
-	private BufferedImage immagineSelezionaSlotDaCaricare;
-	// Il tempo della fase: dall'ultimo fotogramma, da quando i loghi compaiono, da quando si sta fermi
-	private long ultimoFotogramma;
-	private double secondiLoghi = -1;
-	private double secondiFermo;
-	private double secondiFase;
-
-	private Collection<TestataSalvataggio> salvataggiDisponibili;
-
+	private final SchermateSenzaPartita schermate;
+	private final IntroDelGioco intro;
 	private final GestorePunteggi gestorePunteggi;
+	private final DisegnoDiContenutoAwt disegno = new DisegnoDiContenutoAwt();
 
-	private final VistaPartita vistaPartita;
+	// La colonna che scorre adesso nell'intro e il suo disegno (si rifà quando la colonna cambia)
+	private ColonnaScorrevole colonnaDisegnata;
+	private ScorrimentoVerticale scorrimento;
 
 	/**
 	 * @param gestorePunteggi la classifica, che l'intro mostra fra le sue pagine
 	 * @param vistaPartita la partita appena finita, per le statistiche e i trofei
 	 */
 	public DisplayableCanvasIntroOutro(int width, int height, GestorePunteggi gestorePunteggi, VistaPartita vistaPartita) {
-		this.vistaPartita = vistaPartita;
 		this.gestorePunteggi = gestorePunteggi;
 		this.width = width;
 		this.height = height;
+		MisureDelleImmagini misure = new MisureDelleImmagini() {
+			@Override
+			public Misura personaggio(TipoPersonaggio classe) {
+				BufferedImage immagine = MappaPersonaggioImmagine.getImmagine(classe);
+				return new Misura(immagine.getWidth(), immagine.getHeight());
+			}
 
-		if (width > 320) /* Mappa + spazio + locazione (bassa risoluzione Commodore Amiga 😄) */
-			xOffset = (width - 320) >> 1;
-		else
-			xOffset = 0;
-		if (height > 256)
-			yOffset = (height - 256) >> 1;
-		else
-			yOffset = 0;
+			@Override
+			public Misura immagine(String risorsa) {
+				Dimension d = DimensioniRisorsa.di(risorsa);
+				return new Misura(d.width, d.height);
+			}
+		};
+		this.schermate = new SchermateSenzaPartita(width, height, vistaPartita, misure);
+		this.intro = new IntroDelGioco(width, height, gestorePunteggi, vistaPartita, misure);
 	}
-	
+
 	/**
 	 * Fa ripartire l'intro dalla storia (e le schermate di fine partita dal primo messaggio).
 	 */
 	public void resettaSequenza() {
-		sequenza = 0;
-		passaA(Fase.STORIA);
+		schermate.resettaSequenza();
+		intro.resettaSequenza();
 	}
 
 	/**
 	 * Porta l'intro alla classifica: da lì si passa ai trofei, poi si riparte dalla storia.
 	 */
 	public void posizionaSuPunteggi() {
-		passaA(Fase.CLASSIFICA);
-	}
-
-	private void passaA(Fase nuovaFase) {
-		fase = nuovaFase;
-		scorrimento = null;
-		secondiLoghi = -1;
-		secondiFermo = 0;
-		secondiFase = 0;
-		ultimoFotogramma = 0;
+		intro.posizionaSuPunteggi();
 	}
 
 	/**
 	 * Passa al passo successivo della sequenza, ripartendo da zero oltre la lunghezza massima.
 	 */
 	public void incrementaSequenza(int lunghezzaMassima) {
-		sequenza++;
-		if (sequenza >= lunghezzaMassima) {
-			sequenza = 0;
-		}
+		schermate.incrementaSequenza(lunghezzaMassima);
 	}
-	
+
 	/**
 	 * Imposta il messaggio che {@link #scrivi} mostra.
 	 */
 	public void impostaMessaggio(String messaggio) {
-		this.messaggio = messaggio;
+		schermate.impostaMessaggio(messaggio);
+	}
+
+	public void setSalvataggiDisponibili(Collection<TestataSalvataggio> salvataggiDisponibili) {
+		schermate.setSalvataggiDisponibili(salvataggiDisponibili);
+	}
+
+	private void disegnaSchermata(Graphics2D graphics, DisposizioneDiSchermata schermata) {
+		switch (schermata.getSfondo()) {
+			case OMBRA_DEL_DRAGO:
+				disegnaOmbraDelDrago(graphics);
+				break;
+			case TRIONFO:
+				Image d = ImageCache.trionfo;
+				graphics.drawImage(d, (width - d.getWidth(null)) / 2, (height - d.getHeight(null)) / 2, null);
+				break;
+			default:
+				break;
+		}
+		disegno.disegna(graphics, schermata.getContenuto(), 0, 0);
 	}
 
 	/**
 	 * Disegna il messaggio corrente, centrato e con a capo automatico, sopra l'ombra del drago se richiesta.
 	 */
 	public void scrivi(Graphics2D graphics, boolean disegnaOmbraDelDrago) {
-		if (disegnaOmbraDelDrago) {
-			disegnaOmbraDelDrago(graphics);
-		}
-		if (messaggio != null && !messaggio.isEmpty())
-			disegnaStringaCentrataConACapoAutomatico(graphics, messaggio.toLowerCase(Locale.ROOT), 20);
+		disegnaSchermata(graphics, schermate.scrivi(disegnaOmbraDelDrago));
 	}
 
 	/**
@@ -170,130 +121,56 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 	 * Non tocca il messaggio corrente di questo riquadro.
 	 */
 	void scriviTestoCentrato(Graphics2D graphics, String testo) {
-		if (testo != null && !testo.isEmpty()) {
-			disegnaStringaCentrataConACapoAutomatico(graphics, testo.toLowerCase(Locale.ROOT), 20);
-		}
+		disegnaSchermata(graphics, schermate.testo(testo));
 	}
 
 	/**
 	 * Disegna i mostri uccisi per classe, uno per riga.
 	 */
 	public void statistiche(Graphics2D graphics) {
-		disegnaOmbraDelDrago(graphics);
-		int locXOffset = xOffset;
-		int locYOffset = yOffset + 20;
-		DoomdarkColorModel.Color color = DoomdarkColorModel.Color.MEDIUM_GRAY;
-		Image doomdark;
-		int giorni = vistaPartita.getGiorno();
-		DoomdarkFont fontMedium = DoomdarkFont.medio();
-		doomdark = ImageCache.get(giorni > 1 ? TestiDellaUI.get("MOSTRI_UCCISI_IN_GIORNI", Lingue.corrente().cardinale(giorni, Genere.MASCHILE)) : TestiDellaUI.get("MOSTRI_UCCISI_IN_UN_GIORNO"), fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY);
-		graphics.drawImage(doomdark, locXOffset + 9, locYOffset, null);
-		locYOffset += fontMedium.getHeight();
-		for (TipoPersonaggio classePersonaggio : TipoPersonaggio.values()) {
-			int m = vistaPartita.getMostriUccisi(classePersonaggio);
-			if (m > 0) {
-				color = (color == DoomdarkColorModel.Color.MEDIUM_GRAY ? DoomdarkColorModel.Color.LIGHT_GRAY : DoomdarkColorModel.Color.MEDIUM_GRAY); 
-				doomdark = ImageCache.get(m + " " + (m == 1 ? vistaPartita.getNomeSingolare(classePersonaggio) : vistaPartita.getNomePlurale(classePersonaggio)), fontMedium, color);
-				graphics.drawImage(doomdark, locXOffset + 9, locYOffset, null);
-				locYOffset += fontMedium.getHeight();
-			}
-		}
-	}
-
-	public void setSalvataggiDisponibili(Collection<TestataSalvataggio> salvataggiDisponibili) {
-		this.salvataggiDisponibili = salvataggiDisponibili;
+		disegnaSchermata(graphics, schermate.statistiche());
 	}
 
 	/**
 	 * Disegna l'elenco dei salvataggi disponibili, con il gruppo di ciascuno.
 	 */
 	public void selezioneSlotDaCaricare(Graphics2D graphics) {
-		disegnaOmbraDelDrago(graphics);
-		graphics.drawImage(immagineSelezionaSlotDaCaricare(), 0, 50 - RAGGIO_ALONE, null);
-		for (TestataSalvataggio testata : salvataggiDisponibili) {
-			try {
-				disegnaElencoPersonaggiDaElencoClassi(graphics, testata);
-			} catch (Exception e) {
-				BusEventi.pubblica(new InternoException("Durante lettura intestazione del file di salvataggio " + testata.getId(), e));
-			}
-		}
-	}
-
-	private int numeroDaComando(Comando comando) {
-		if (comando == Comando.NUMERO_1) {
-			return 1;
-		} else if (comando == Comando.NUMERO_2) {
-			return 2;
-		} else if (comando == Comando.NUMERO_3) {
-			return 3;
-		} else if (comando == Comando.NUMERO_4) {
-			return 4;
-		} else if (comando == Comando.NUMERO_5) {
-			return 5;
-		} else {
-			BusEventi.pubblica(new InternoErrore("Comando non valido: " + comando));
-			throw new IllegalStateException("Comando non valido: " + comando);
-		}
-	}
-
-	private void disegnaElencoPersonaggiDaElencoClassi(Graphics2D graphics, TestataSalvataggio testata) {
-		int id = numeroDaComando(testata.getId());
-		int coordinataY = getCoordinataY(id);
-		String descrizione = testata.getDescrizione();
-        Collection<? extends VistaPersonaggio> personaggi = testata.getGruppoGiocatore().getPersonaggi();
-		disegnaPersonaggi(graphics, id, personaggi, coordinataY);
-		BufferedImage immagineConAlone = TestoGrande.conAlone(
-				TestoGrande.immagine(id + " - " + descrizione.toLowerCase(Locale.ROOT), width - 2 * RAGGIO_ALONE, true), RAGGIO_ALONE);
-		graphics.drawImage(immagineConAlone, 0, coordinataY - RAGGIO_ALONE, null);
+		disegnaSchermata(graphics, schermate.selezioneSlotDaCaricare());
 	}
 
 	/**
 	 * Disegna gli slot di salvataggio fra cui scegliere dove salvare, con il gruppo di quelli occupati.
 	 */
 	public void selezioneSlotDaSalvare(Graphics2D graphics) {
-		disegnaOmbraDelDrago(graphics);
-		disegnaStringaCentrataConACapoAutomatico(graphics, TestiDellaUI.get("SELEZIONA_SLOT_SALVATAGGIO"), 50);
-		// Si salva solo negli slot del giocatore: la quinta riga è il salvataggio automatico in memoria, che compare solo fra quelli da caricare
-		List<Comando> comandi = new ArrayList<>(GestoreSalvataggi.SLOT_MANUALI);
-		for (TestataSalvataggio testata : salvataggiDisponibili) {
-			comandi.remove(testata.getId());
-			try {
-				disegnaElencoPersonaggiDaElencoClassi(graphics, testata);
-			} catch (Exception e) {
-				BusEventi.pubblica(new InternoException("Durante lettura intestazione del file di salvataggio " + testata.getId(), e));
-			}
-		}
-		for (Comando slotDisponibile : comandi) {
-			int numero = numeroDaComando(slotDisponibile);
-			disegnaStringaCentrataConACapoAutomatico(graphics, TestiDellaUI.get("SLOT_DISPONIBILE", numero), getCoordinataY(numero));
-		}
+		disegnaSchermata(graphics, schermate.selezioneSlotDaSalvare());
 	}
 
 	/**
 	 * Disegna la richiesta di conferma per uscire dal gioco.
 	 */
 	public void confermaUscita(Graphics2D graphics) {
-		disegnaOmbraDelDrago(graphics);
-		disegnaStringaCentrataConACapoAutomatico(graphics, TestiDellaUI.get("USCIRE_DAL_GIOCO"), 100);
+		disegnaSchermata(graphics, schermate.confermaUscita());
 	}
 
 	/**
 	 * Disegna la schermata della sconfitta.
 	 */
 	public void perso(Graphics2D graphics) {
-		disegnaOmbraDelDrago(graphics);
-		messaggio = vistaPartita.getFinaleDellaSconfitta().get(sequenza);
-		scrivi(graphics, true);
+		disegnaSchermata(graphics, schermate.perso());
 	}
 
 	/**
 	 * Disegna la schermata della vittoria.
 	 */
 	public void vinto(Graphics2D graphics) {
-		Image d = ImageCache.trionfo;
-		graphics.drawImage(d, (width - d.getWidth(null)) / 2, (height - d.getHeight(null)) / 2, null);
-		messaggio = vistaPartita.getFinaleDellaVittoria().get(sequenza);
-		scrivi(graphics,false);
+		disegnaSchermata(graphics, schermate.vinto());
+	}
+
+	/**
+	 * La classifica ferma, a fine partita.
+	 */
+	public void hiscore(Graphics2D graphics) {
+		disegnaSchermata(graphics, schermate.hiscore(gestorePunteggi));
 	}
 
 	/**
@@ -302,158 +179,22 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 	 * scorrono tutti. Poi si ricomincia.
 	 */
 	public void intro(Graphics2D graphics) {
-		double secondi = secondiDalFotogrammaPrecedente();
-		switch (fase) {
-			case STORIA:
-				storia(graphics, secondi);
-				break;
-			case CLASSIFICA:
-				classifica(graphics, secondi);
-				break;
-			default:
-				trofei(graphics, secondi);
-				break;
+		IntroDelGioco.Quadro quadro = intro.avanza();
+		if (quadro.isOmbraDelDrago()) {
+			disegnaOmbraDelDrago(graphics);
 		}
-	}
-
-	private double secondiDalFotogrammaPrecedente() {
-		long adesso = System.nanoTime();
-		double secondi = ultimoFotogramma == 0 ? 0 : (adesso - ultimoFotogramma) / 1_000_000_000d;
-		ultimoFotogramma = adesso;
-		return Math.min(secondi, SECONDI_FOTOGRAMMA_MASSIMI);
-	}
-
-	private void storia(Graphics2D graphics, double secondi) {
-		if (scorrimento == null) {
-			scorrimento = ScorrimentoVerticale.dalBasso(immagineStoria(), schermo(), FASCIA);
+		if (quadro.getOpacitaDelloSfondoDellaStoria() > 0) {
+			disegnaConOpacita(graphics, ImageCache.sfondoStoria, (width - ImageCache.sfondoStoria.getWidth()) >> 1,
+					(height - ImageCache.sfondoStoria.getHeight()) >> 1, quadro.getOpacitaDelloSfondoDellaStoria());
 		}
-		if (!scorrimento.isUscito()) {
-			scorrimento.avanza(secondi, VELOCITA);
+		if (quadro.getColonna() != colonnaDisegnata) {
+			colonnaDisegnata = quadro.getColonna();
+			scorrimento = new ScorrimentoVerticale(disegno.comeImmagine(quadro.getContenuto()), colonnaDisegnata, IntroDelGioco.FASCIA);
 		}
-		secondiFase += secondi;
-		// Il logo della Foresta arriva quando la storia non ci finirebbe sopra, e resta un poco dopo che è uscita; il suo
-		// centro sta a un terzo dello schermo. Il logo 3AM sta in basso a destra, dove la storia non passa mai quando arriva
-		// il logo della Foresta, e compare e svanisce insieme a lui
-		BufferedImage logo3AM = ImageCache.logo3AM;
-		BufferedImage logoForesta = ImageCache.logoForesta;
-		int cimaLoghi = height / 3 - logoForesta.getHeight() / 2;
-		if (secondiLoghi < 0 && scorrimento.getFondo() <= cimaLoghi - MARGINE_LOGHI) {
-			secondiLoghi = 0;
+		scorrimento.disegna(graphics, quadro.getOpacitaDellaColonna());
+		for (Elemento logo : quadro.getLoghi()) {
+			disegno.disegnaConOpacita(graphics, logo, quadro.getOpacitaDeiLoghi());
 		}
-		float uscita = 0;
-		if (secondiLoghi >= 0) {
-			secondiLoghi += secondi;
-			if (scorrimento.isUscito() && secondiLoghi >= SECONDI_DISSOLVENZA) {
-				secondiFermo += secondi;
-			}
-			uscita = (float) Math.max(0, Math.min(1, (secondiFermo - SECONDI_LOGHI) / SECONDI_DISSOLVENZA));
-		}
-		// Lo sfondo della storia compare in dissolvenza, e sparisce insieme ai loghi
-		float comparsa = (float) Math.min(1, secondiFase / SECONDI_DISSOLVENZA);
-		disegnaConOpacita(graphics, ImageCache.sfondoStoria, (width - ImageCache.sfondoStoria.getWidth()) >> 1,
-				(height - ImageCache.sfondoStoria.getHeight()) >> 1, comparsa * (1 - uscita));
-		scorrimento.disegna(graphics, 1);
-		if (secondiLoghi >= 0) {
-			float opacita = (float) Math.min(1, secondiLoghi / SECONDI_DISSOLVENZA) * (1 - uscita);
-			// Con l'alone l'immagine è più grande di RAGGIO_ALONE per lato: la si sposta, e il logo resta al suo posto
-			if (logo3AMConAlone == null) {
-				logo3AMConAlone = TestoGrande.conAlone(logo3AM, RAGGIO_ALONE);
-				logoForestaConAlone = TestoGrande.conAlone(logoForesta, RAGGIO_ALONE);
-			}
-			disegnaConOpacita(graphics, logo3AMConAlone, width - MARGINE_LOGO_3AM - logo3AM.getWidth() - RAGGIO_ALONE,
-					height - MARGINE_LOGO_3AM - logo3AM.getHeight() - RAGGIO_ALONE, opacita);
-			disegnaConOpacita(graphics, logoForestaConAlone, ((width - logoForesta.getWidth()) >> 1) - RAGGIO_ALONE,
-					cimaLoghi - RAGGIO_ALONE, opacita);
-		}
-		if (uscita >= 1) {
-			passaA(Fase.CLASSIFICA);
-		}
-	}
-
-	private void classifica(Graphics2D graphics, double secondi) {
-		disegnaOmbraDelDrago(graphics);
-		if (scorrimento == null) {
-			scorrimento = ScorrimentoVerticale.dalBasso(immagineClassifica(), schermo(), FASCIA).fermaA(QUOTA_CLASSIFICA);
-		}
-		scorrimento.avanza(secondi, VELOCITA);
-		if (scorrimento.isArrivato()) {
-			secondiFermo += secondi;
-		}
-		float uscita = (float) Math.max(0, Math.min(1, (secondiFermo - SECONDI_CLASSIFICA) / SECONDI_DISSOLVENZA));
-		scorrimento.disegna(graphics, 1 - uscita);
-		if (uscita >= 1) {
-			passaA(Fase.TROFEI);
-		}
-	}
-
-	private void trofei(Graphics2D graphics, double secondi) {
-		disegnaOmbraDelDrago(graphics);
-		if (scorrimento == null) {
-			scorrimento = ScorrimentoVerticale.dalBasso(ImmagineTrofei.costruisci(vistaPartita, width - 2 * MARGINE, true),
-					schermo(), FASCIA);
-		}
-		scorrimento.avanza(secondi, VELOCITA);
-		scorrimento.disegna(graphics, 1);
-		if (scorrimento.isUscito()) {
-			passaA(Fase.STORIA);
-		}
-	}
-
-	/**
-	 * La classifica ferma, a fine partita.
-	 */
-	public void hiscore(Graphics2D graphics) {
-		disegnaOmbraDelDrago(graphics);
-		graphics.drawImage(immagineClassifica(), 0, QUOTA_CLASSIFICA, null);
-	}
-
-	private Rectangle schermo() {
-		return new Rectangle(0, 0, width, height);
-	}
-
-	/**
-	 * Tutta la storia in un'immagine, come un unico testo che va a capo dove serve (i paragrafi di VistaPartita.getStoria, che erano le
-	 * pagine dell'intro di una volta), con un alone nero attorno alle lettere. Non cambia mai: si fa una volta sola.
-	 */
-	private BufferedImage immagineStoria() {
-		if (immagineStoria == null) {
-			immagineStoria = TestoGrande.conAlone(
-					TestoGrande.immagine(String.join(" ", vistaPartita.getStoria()), width - 2 * RAGGIO_ALONE, true, INTERLINEA_STORIA), RAGGIO_ALONE);
-		}
-		return immagineStoria;
-	}
-
-	/**
-	 * La scritta "seleziona lo slot da caricare", con un alone nero attorno alle lettere perché si legga sullo
-	 * sfondo del drago. Non cambia mai: si fa una volta sola.
-	 */
-	private BufferedImage immagineSelezionaSlotDaCaricare() {
-		if (immagineSelezionaSlotDaCaricare == null) {
-			immagineSelezionaSlotDaCaricare = TestoGrande.conAlone(
-					TestoGrande.immagine(TestiDellaUI.get("SELEZIONA_SLOT_CARICAMENTO"), width - 2 * RAGGIO_ALONE, true), RAGGIO_ALONE);
-		}
-		return immagineSelezionaSlotDaCaricare;
-	}
-
-	/**
-	 * La classifica in un'immagine, nell'alfabeto grande: il nome a sinistra, il punteggio a destra.
-	 */
-	private BufferedImage immagineClassifica() {
-		int righe = gestorePunteggi.getConteggio();
-		BufferedImage immagine = new BufferedImage(width, Math.max(1, righe * RIGA_CLASSIFICA), BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g = immagine.createGraphics();
-		try {
-			for (int posizione = 0; posizione < righe; posizione++) {
-				Punteggio punteggio = gestorePunteggi.getPunteggio(posizione);
-				int y = posizione * RIGA_CLASSIFICA;
-				TestoGrande.disegnaRiga(g, punteggio.getNome(), MARGINE, y);
-				String valore = String.valueOf(punteggio.getPunteggio());
-				TestoGrande.disegnaRiga(g, valore, width - MARGINE - TestoGrande.larghezza(valore), y);
-			}
-		} finally {
-			g.dispose();
-		}
-		return immagine;
 	}
 
 	private static void disegnaConOpacita(Graphics2D graphics, Image immagine, int x, int y, float opacita) {
@@ -469,40 +210,5 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 	void disegnaOmbraDelDrago(Graphics2D graphics) {
 		Image d = ImageCache.ombraDelDrago;
 		graphics.drawImage(d, (width - d.getWidth(null)) >> 1, (height - d.getHeight(null)) >> 1, null);
-	}
-	
-	/**
-	 * Il testo nell'alfabeto grande, a capo dove serve, con le righe centrate a partire da quella quota.
-	 */
-	private void disegnaStringaCentrataConACapoAutomatico(Graphics2D graphics, String s, int yOffset) {
-		for (String riga : TestoGrande.righe(s, width)) {
-			TestoGrande.disegnaRiga(graphics, riga, (width - TestoGrande.larghezza(riga)) >> 1, yOffset);
-			yOffset += TestoGrande.ALTEZZA_RIGA;
-		}
-	}
-
-	private int getCoordinataY(int id) {
-		return 50 + 100 * id;
-	}
-
-	private void disegnaPersonaggi(Graphics2D graphics, int id, Collection<? extends VistaPersonaggio> personaggi, int coordinataY) {
-		List<BufferedImage> immagini = new ArrayList<>();
-		List<Integer> coordinateX = new ArrayList<>();
-		int coordinataX = (width >> 1) + 100 * (id - 3);
-		int altezzaMinima = 999;
-		for (VistaPersonaggio personaggio : personaggi) {
-			BufferedImage immagine = MappaPersonaggioImmagine.getImmagine(personaggio.getClasse());
-			immagini.add(0, immagine);
-			coordinateX.add(0, coordinataX);
-			coordinataX += immagine.getWidth() * 2 / 3;
-			if (altezzaMinima > immagine.getHeight()) {
-				altezzaMinima = immagine.getHeight();
-			}
-		}
-		coordinataY += altezzaMinima * 2 / 3;
-		for (int i = 0; i < immagini.size(); i++) {
-			BufferedImage immagine = immagini.get(i);
-			graphics.drawImage(immagine, coordinateX.get(i), coordinataY - immagine.getHeight(), null);
-		}
 	}
 }

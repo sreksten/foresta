@@ -181,6 +181,69 @@ public final class DatiDiProva {
 				.con("getProgressoTrofeo", a -> ((com.threeamigos.foresta.tipi.TipoTrofeo) a[0]).ordinal() % 10)
 				.con("isVoceDelBestiarioSbloccata", a -> ((TipoPersonaggio) a[0]).ordinal() % 2 == 0)
 				.con("getCaratteristicheScoperte", a -> Collections.emptySet())
+				.con("getStoria", a -> java.util.Arrays.asList(
+						"Un tempo la Foresta era un luogo tranquillo, dove i viandanti potevano riposare nelle locande e i mercanti commerciare in pace.",
+						"Poi è arrivato il Drago, che ha cominciato a distruggere le città una dopo l'altra, e nessuno ha saputo fermarlo.",
+						"Solo un gruppo di avventurieri coraggiosi potrà sconfiggerlo prima che non resti più niente: eccoli, comincia il viaggio.",
+						"Attenti ai goblin nel bosco, ai troll nelle grotte e a tutto ciò che si nasconde fra gli alberi dopo il tramonto.",
+						"E ricordate: una buona birra e un buon compagno valgono più di mille monete d'oro, ma le monete servono sempre."))
+				.con("getGiorno", a -> 12)
+				.con("getMostriUccisi", a -> ((TipoPersonaggio) a[0]).ordinal() % 7 == 0 ? 3 : 0)
+				.con("getNomeSingolare", a -> ((TipoPersonaggio) a[0]).name().toLowerCase(java.util.Locale.ROOT))
+				.con("getNomePlurale", a -> ((TipoPersonaggio) a[0]).name().toLowerCase(java.util.Locale.ROOT) + "i")
+				.con("getFinaleDellaSconfitta", a -> java.util.Arrays.asList("Il gruppo è caduto.", "La Foresta resta senza eroi."))
+				.con("getFinaleDellaVittoria", a -> java.util.Arrays.asList("Il Drago è stato sconfitto!", "La Foresta è salva."))
 				.con("isAiutoAbilitato", a -> true).mappa);
+	}
+
+	/**
+	 * Una classifica finta con otto punteggi
+	 */
+	public static com.threeamigos.foresta.interfacce.GestorePunteggi punteggi() {
+		return new com.threeamigos.foresta.interfacce.GestorePunteggi() {
+			@Override
+			public boolean carica() {
+				return true;
+			}
+
+			@Override
+			public int getConteggio() {
+				return 8;
+			}
+
+			@Override
+			public com.threeamigos.foresta.strumenti.Punteggio getPunteggio(int posizione) {
+				return new com.threeamigos.foresta.strumenti.Punteggio() {
+					@Override
+					public String getNome() {
+						return "Giocatore " + (posizione + 1);
+					}
+
+					@Override
+					public int getPunteggio() {
+						return 90000 - posizione * 7000;
+					}
+
+					@Override
+					public String getIdPartita() {
+						return null;
+					}
+				};
+			}
+
+			@Override
+			public boolean isPunteggioInClassifica(int punteggio, String idPartita) {
+				return true;
+			}
+
+			@Override
+			public void addPunteggio(String nome, int punteggio, String idPartita) {
+			}
+
+			@Override
+			public boolean salva() {
+				return true;
+			}
+		};
 	}
 }

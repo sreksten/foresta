@@ -36,4 +36,20 @@ public final class SagomeDiPixel {
 		}
 		return new ImmagineDiPixel(larghezza, immagine.getAltezza(), pixel);
 	}
+
+	/**
+	 * L'immagine ingrandita dello zoom, replicando i pixel senza interpolazione (come fa Swing con le immagini a metà risoluzione)
+	 */
+	public static ImmagineDiPixel ingrandisci(ImmagineDiPixel immagine, double zoom) {
+		int larghezza = (int) Math.round(immagine.getLarghezza() * zoom);
+		int altezza = (int) Math.round(immagine.getAltezza() * zoom);
+		int[] pixel = new int[Math.max(1, larghezza) * Math.max(1, altezza)];
+		for (int y = 0; y < altezza; y++) {
+			int sorgenteY = Math.min(immagine.getAltezza() - 1, (int) (y / zoom));
+			for (int x = 0; x < larghezza; x++) {
+				pixel[y * larghezza + x] = immagine.getArgb(Math.min(immagine.getLarghezza() - 1, (int) (x / zoom)), sorgenteY);
+			}
+		}
+		return new ImmagineDiPixel(Math.max(1, larghezza), Math.max(1, altezza), pixel);
+	}
 }

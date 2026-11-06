@@ -2,6 +2,7 @@ package com.threeamigos.foresta.ui.schermate;
 
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.tipi.TipoTrofeo;
+import com.threeamigos.foresta.ui.componenti.ContenutoDiColonna;
 import com.threeamigos.foresta.ui.immagini.ImmagineDiPixel;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
@@ -151,5 +152,23 @@ public final class PaginaTrofei {
 
 	public List<Voce> getVoci() {
 		return voci;
+	}
+
+	/**
+	 * La pagina come contenuto di una colonna: il titolo, i nomi grandi, le descrizioni e le quantità
+	 */
+	public ContenutoDiColonna comeContenuto() {
+		DoomdarkFont font = DoomdarkFont.medio();
+		List<ContenutoDiColonna.Elemento> elementi = new ArrayList<>();
+		if (titolo != null) {
+			elementi.add(ContenutoDiColonna.Elemento.testoGrande(titolo, 0, 0));
+		}
+		for (Voce voce : voci) {
+			elementi.add(ContenutoDiColonna.Elemento.testoGrande(voce.getNome(), 0, voce.getYDelNome()));
+			elementi.add(ContenutoDiColonna.Elemento.testo(voce.getRigheDellaDescrizione(), font, voce.getColore(), 0, voce.getYDellaDescrizione()));
+			elementi.add(ContenutoDiColonna.Elemento.testo(Collections.singletonList(voce.getQuantita()), font, voce.getColore(), voce.getXDellaQuantita(),
+					voce.getYDellaDescrizione()));
+		}
+		return new ContenutoDiColonna(larghezza, altezza, elementi);
 	}
 }

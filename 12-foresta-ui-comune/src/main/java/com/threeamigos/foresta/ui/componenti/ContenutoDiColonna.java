@@ -56,6 +56,7 @@ public final class ContenutoDiColonna {
 		private boolean specchiata;
 		private Integer sagomaRgb;
 		private int argb;
+		private int raggioDellAlone;
 
 		private Elemento(Tipo tipo, int x, int y) {
 			this.tipo = tipo;
@@ -99,6 +100,16 @@ public final class ContenutoDiColonna {
 			e.altezza = altezza;
 			e.specchiata = specchiata;
 			e.sagomaRgb = sagomaRgb;
+			return e;
+		}
+
+		/**
+		 * Un'immagine con attorno un alone nero sfumato di quel raggio (come le lettere della storia e i loghi dell'intro: si leggono anche su uno sfondo
+		 * chiaro): l'angolo in alto a sinistra dell'immagine sta in (x, y), l'alone esce di raggio pixel per lato
+		 */
+		public static Elemento immagineConAlone(String risorsa, int larghezza, int altezza, int raggioDellAlone, int x, int y) {
+			Elemento e = immagine(risorsa, larghezza, altezza, false, null, x, y);
+			e.raggioDellAlone = raggioDellAlone;
 			return e;
 		}
 
@@ -169,6 +180,13 @@ public final class ContenutoDiColonna {
 		 */
 		public Integer getSagomaRgb() {
 			return sagomaRgb;
+		}
+
+		/**
+		 * Il raggio dell'alone attorno all'immagine (0 se non ce l'ha)
+		 */
+		public int getRaggioDellAlone() {
+			return raggioDellAlone;
 		}
 
 		public int getArgb() {

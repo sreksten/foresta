@@ -32,8 +32,15 @@ public final class ScorrimentoVerticale {
 	 * Lo scorrimento manuale di una colonna già fatta (di chi la tiene, come la pagina dei trofei): l'immagine è il suo contenuto
 	 */
 	public ScorrimentoVerticale(BufferedImage contenuto, ColonnaScorrevole colonna) {
-		this(contenuto, new Rectangle(colonna.getArea().getX(), colonna.getArea().getY(), colonna.getArea().getLarghezza(), colonna.getArea().getAltezza()), 0,
-				colonna);
+		this(contenuto, colonna, 0);
+	}
+
+	/**
+	 * Come sopra, con le dissolvenze ai bordi alte quella fascia (lo scorrimento automatico dell'intro)
+	 */
+	public ScorrimentoVerticale(BufferedImage contenuto, ColonnaScorrevole colonna, int fascia) {
+		this(contenuto, new Rectangle(colonna.getArea().getX(), colonna.getArea().getY(), colonna.getArea().getLarghezza(), colonna.getArea().getAltezza()),
+				fascia, colonna);
 	}
 
 	private ScorrimentoVerticale(BufferedImage contenuto, Rectangle area, int fascia, ColonnaScorrevole colonna) {

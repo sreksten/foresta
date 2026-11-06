@@ -32,10 +32,9 @@ public class DisplayableCanvasBestiario extends SchermataBestiario {
 	private static final float OPACITA_OMBRA = 0.4f;
 	private static final Color COLORE_SEPARATORE = new Color(90, 90, 90);
 
-	// Le immagini degli elementi che non sono testo, preparate una volta per contenuto (le sagome e gli specchi costano a ogni fotogramma)
-	private final Map<Elemento, Image> immaginiPronte = new IdentityHashMap<>();
+	private final DisegnoDiContenutoAwt disegno = new DisegnoDiContenutoAwt();
 
-	private final ContenutiDelBestiario.Misure misure = new ContenutiDelBestiario.Misure() {
+	private final MisureDelleImmagini misure = new MisureDelleImmagini() {
 		@Override
 		public Misura personaggio(TipoPersonaggio classe) {
 			BufferedImage immagine = MappaPersonaggioImmagine.getImmagine(classe);
@@ -54,7 +53,7 @@ public class DisplayableCanvasBestiario extends SchermataBestiario {
 	}
 
 	@Override
-	protected ContenutiDelBestiario.Misure getMisure() {
+	protected MisureDelleImmagini getMisure() {
 		return misure;
 	}
 
@@ -62,11 +61,6 @@ public class DisplayableCanvasBestiario extends SchermataBestiario {
 	protected Misura misuraDellImmagine(String risorsa) {
 		java.awt.Dimension d = DimensioniRisorsa.di(risorsa);
 		return new Misura(d.width, d.height);
-	}
-
-	@Override
-	protected void contenutiAggiornati() {
-		immaginiPronte.clear();
 	}
 
 	/**
@@ -106,13 +100,10 @@ public class DisplayableCanvasBestiario extends SchermataBestiario {
 		Graphics2D g = (Graphics2D) graphics.create();
 		try {
 			g.clipRect(area.getX(), area.getY(), area.getLarghezza(), area.getAltezza());
-			g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 			// Il contenuto sta centrato in orizzontale nell'area
 			int x0 = area.getX() + (area.getLarghezza() - contenuto.getLarghezza()) / 2;
 			int y0 = area.getY() + (int) Math.round(colonna.getY());
-			for (Elemento e : contenuto.getElementi()) {
-				disegnaElemento(g, e, x0 + e.getX(), y0 + e.getY());
-			}
+			disegno.disegna(g, contenuto, x0, y0);
 		} finally {
 			g.dispose();
 		}
@@ -126,43 +117,5 @@ public class DisplayableCanvasBestiario extends SchermataBestiario {
 			Area a = colonna.areaDellaFrecciaGiu(new Misura(freccia.getWidth(null), freccia.getHeight(null)));
 			graphics.drawImage(freccia, a.getX(), a.getY(), null);
 		}
-	}
-
-	private void disegnaElemento(Graphics2D g, Elemento e, int x, int y) {
-		switch (e.getTipo()) {
-			case RETTANGOLO:
-				g.setColor(new Color(e.getArgb(), true));
-				g.fillRect(x, y, e.getLarghezza(), e.getAltezza());
-				break;
-			case TESTO:
-				int yRiga = y;
-				for (String riga : e.getRighe()) {
-					g.drawImage(ImageCache.get(riga, e.getFont(), e.getColore()), x, yRiga, null);
-					yRiga += e.getFont().getHeight();
-				}
-				break;
-			case TESTO_GRANDE:
-				g.drawImage(immaginiPronte.computeIfAbsent(e, el -> ImmaginiAwt.buffered(el.getPixel())), x, y, null);
-				break;
-			default:
-				Image immagine = immaginiPronte.computeIfAbsent(e, DisplayableCanvasBestiario::preparaLImmagine);
-				g.drawImage(immagine, x, y, e.getLarghezza(), e.getAltezza(), null);
-				break;
-		}
-	}
-
-	/**
-	 * L'immagine di un elemento: quella della risorsa (con lo zoom, per i personaggi), specchiata o ridotta a una sagoma se serve
-	 */
-	private static Image preparaLImmagine(Elemento e) {
-		double zoom = e.getRisorsa().startsWith("personaggi/") ? LivelloDiZoom.valore() : 1.0;
-		BufferedImage immagine = BufferedImageBuilder.buildBufferedImage(e.getRisorsa(), zoom);
-		if (e.isSpecchiata()) {
-			immagine = ImmaginiAwt.specchia(immagine);
-		}
-		if (e.getSagomaRgb() != null) {
-			immagine = ImageCache.sagomaScura(immagine, new Color(e.getSagomaRgb()));
-		}
-		return immagine;
 	}
 }

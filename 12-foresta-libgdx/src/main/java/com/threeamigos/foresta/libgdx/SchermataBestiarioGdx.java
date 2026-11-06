@@ -18,6 +18,7 @@ import com.threeamigos.foresta.ui.immagini.ImmagineDiPixel;
 import com.threeamigos.foresta.ui.immagini.NomiDelleImmagini;
 import com.threeamigos.foresta.ui.immagini.SagomeDiPixel;
 import com.threeamigos.foresta.ui.schermate.ContenutiDelBestiario;
+import com.threeamigos.foresta.ui.schermate.MisureDelleImmagini;
 import com.threeamigos.foresta.ui.schermate.SchermataBestiario;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
@@ -40,10 +41,10 @@ public final class SchermataBestiarioGdx extends SchermataBestiario {
 	private final ImmaginiGdx immagini;
 	private final TestoGdx piccolo;
 	private final TestoGdx medio;
-	private final Map<String, TextureRegion> texture = new HashMap<>();
+	private final DisegnoDiContenutoGdx disegno;
 	private final float zoom = (float) LivelloDiZoom.valore();
 
-	private final ContenutiDelBestiario.Misure misure = new ContenutiDelBestiario.Misure() {
+	private final MisureDelleImmagini misure = new MisureDelleImmagini() {
 		@Override
 		public Misura personaggio(TipoPersonaggio classe) {
 			TextureRegion regione = immagini.regione(NomiDelleImmagini.personaggio(classe));
@@ -61,10 +62,11 @@ public final class SchermataBestiarioGdx extends SchermataBestiario {
 		this.immagini = immagini;
 		this.piccolo = piccolo;
 		this.medio = medio;
+		this.disegno = new DisegnoDiContenutoGdx(immagini, piccolo, medio);
 	}
 
 	@Override
-	protected ContenutiDelBestiario.Misure getMisure() {
+	protected MisureDelleImmagini getMisure() {
 		return misure;
 	}
 
@@ -107,9 +109,7 @@ public final class SchermataBestiarioGdx extends SchermataBestiario {
 		int x0 = area.getX() + (area.getLarghezza() - contenuto.getLarghezza()) / 2;
 		int y0 = area.getY() + (int) Math.round(colonna.getY());
 		boolean ritagliato = RitaglioGdx.entra(batch, camera, viewport, area.getX(), area.getY(), area.getLarghezza(), area.getAltezza());
-		for (Elemento e : contenuto.getElementi()) {
-			disegnaElemento(batch, e, x0 + e.getX(), y0 + e.getY());
-		}
+		disegno.disegna(batch, contenuto, x0, y0, 1f);
 		if (ritagliato) {
 			RitaglioGdx.esci(batch);
 		}
@@ -121,53 +121,5 @@ public final class SchermataBestiarioGdx extends SchermataBestiario {
 			Area a = colonna.areaDellaFrecciaGiu(misuraDellImmagine(NomiDelleImmagini.FRECCIA_GIU));
 			immagini.disegna(batch, NomiDelleImmagini.FRECCIA_GIU, a.getX(), a.getY(), 1f);
 		}
-	}
-
-	private void disegnaElemento(Batch batch, Elemento e, int x, int y) {
-		switch (e.getTipo()) {
-			case RETTANGOLO:
-				int argb = e.getArgb();
-				immagini.riempi(batch, x, y, e.getLarghezza(), e.getAltezza(),
-						new Color(((argb & 0xFFFFFF) << 8) | ((argb >>> 24) & 0xFF)));
-				break;
-			case TESTO:
-				int yRiga = y;
-				for (String riga : e.getRighe()) {
-					(e.getFont() == piccolo.getFont() ? piccolo : medio).disegna(batch, riga, x, yRiga, e.getColore());
-					yRiga += e.getFont().getHeight();
-				}
-				break;
-			case TESTO_GRANDE:
-				batch.draw(nomeGrande(e), x, y);
-				break;
-			default:
-				batch.draw(immagine(e), x, y, e.getLarghezza(), e.getAltezza());
-				break;
-		}
-	}
-
-	private TextureRegion nomeGrande(Elemento e) {
-		String chiave = e.getChiave() != null ? e.getChiave() : "grande|" + System.identityHashCode(e);
-		return texture.computeIfAbsent(chiave, k -> immagini.regioneDaPixel(e.getPixel(), false));
-	}
-
-	/**
-	 * L'immagine di un elemento: quella della risorsa, specchiata o ridotta a una sagoma se serve
-	 */
-	private TextureRegion immagine(Elemento e) {
-		if (!e.isSpecchiata() && e.getSagomaRgb() == null) {
-			return immagini.regione(e.getRisorsa());
-		}
-		String chiave = e.getRisorsa() + "|" + e.isSpecchiata() + "|" + e.getSagomaRgb();
-		return texture.computeIfAbsent(chiave, k -> {
-			ImmagineDiPixel pixel = AtlanteDiImmagini.cerca(e.getRisorsa());
-			if (e.getSagomaRgb() != null) {
-				pixel = SagomeDiPixel.sagoma(pixel, e.getSagomaRgb());
-			}
-			if (e.isSpecchiata()) {
-				pixel = SagomeDiPixel.specchia(pixel);
-			}
-			return immagini.regioneDaPixel(pixel, false);
-		});
 	}
 }
