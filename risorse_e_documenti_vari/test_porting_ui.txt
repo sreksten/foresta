@@ -36,3 +36,4 @@ ScambioDeiConsumabiliTest
 ScenaDellIntermezzoTest
 RivelazioneDellArtefattoTest
 EditorDelleTatticheTest
+CodaDelleRivelazioniTest

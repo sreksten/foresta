@@ -10,6 +10,7 @@ import com.threeamigos.foresta.ui.Area;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.Misura;
 import com.threeamigos.foresta.ui.Punto;
+import com.threeamigos.foresta.ui.sprite.CodaDelleRivelazioni;
 import com.threeamigos.foresta.ui.sprite.RivelazioneDellArtefatto;
 import com.threeamigos.foresta.ui.sprite.RivelazioneDellArtefatto.Cerchio;
 import com.threeamigos.foresta.ui.sprite.RivelazioneDellArtefatto.Fotogramma;
@@ -28,7 +29,7 @@ import java.util.List;
  * lo stesso di Swing. Qui le sfumature radiali di Swing sono triangoli con il colore ai vertici: i raggi dall'alfa piena alla base a zero alla punta, il
  * cerchio e l'alone anelli concentrici i cui vertici hanno il colore della sfumatura in quel punto.
  */
-public final class RivelazioneDellArtefattoGdx {
+public final class RivelazioneDellArtefattoGdx implements CodaDelleRivelazioni.InCoda {
 
 	private static final int SEGMENTI = 48;
 	// Dove stanno gli anelli, in frazioni del raggio: più fitti dove il colore cambia di più
@@ -65,6 +66,7 @@ public final class RivelazioneDellArtefattoGdx {
 		return modello;
 	}
 
+	@Override
 	public boolean isAttivo() {
 		return modello.isAttivo();
 	}
@@ -75,6 +77,7 @@ public final class RivelazioneDellArtefattoGdx {
 	}
 
 	/** Con altre rivelazioni in coda la sosta si accorcia. */
+	@Override
 	public void accelera() {
 		modello.accelera();
 	}
