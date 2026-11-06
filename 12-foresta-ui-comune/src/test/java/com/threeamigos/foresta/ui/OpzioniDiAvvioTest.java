@@ -20,6 +20,7 @@ class OpzioniDiAvvioTest {
         assertFalse(opzioni.isTuttoSchermo());
         assertFalse(opzioni.isSaltaLogo());
         assertFalse(opzioni.isJoystickVirtuale());
+        assertFalse(opzioni.isTocco());
         assertFalse(opzioni.isLinguaDecisa());
         assertTrue(opzioni.getAltri().isEmpty());
     }
@@ -27,12 +28,13 @@ class OpzioniDiAvvioTest {
     @Test
     void leOpzioniSiLeggonoSenzaBadareAlleMaiuscoleEGliAltriArgomentiRestano() {
         OpzioniDiAvvio opzioni = OpzioniDiAvvio.leggi(new String[]{"verticale", "TuttoSchermo", "SALTALOGO", "barraclassica",
-                "joystick_virtuale", "Pagine_Di_Prova", "boh"});
+                "joystick_virtuale", "Tocco", "Pagine_Di_Prova", "boh"});
         assertEquals(Orientamento.VERTICALE, opzioni.getOrientamento());
         assertTrue(opzioni.isTuttoSchermo());
         assertTrue(opzioni.isSaltaLogo());
         assertFalse(opzioni.isBarraDock());
         assertTrue(opzioni.isJoystickVirtuale());
+        assertTrue(opzioni.isTocco());
         assertEquals(Arrays.asList("Pagine_Di_Prova", "boh"), opzioni.getAltri());
         assertTrue(opzioni.haAltro("PAGINE_DI_PROVA"));
         assertFalse(opzioni.haAltro("MODALITA_DI_PROVA"));

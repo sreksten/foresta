@@ -1,8 +1,10 @@
 package com.threeamigos.foresta.libgdx;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -22,6 +24,7 @@ import com.threeamigos.foresta.ui.ForestaUI;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.Misura;
 import com.threeamigos.foresta.ui.RouterDegliInput;
+import com.threeamigos.foresta.ui.TastoIndietro;
 import com.threeamigos.foresta.ui.immagini.MisureDaiFile;
 import com.threeamigos.foresta.ui.sfx.AnimazioneDelLogo;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
@@ -46,6 +49,7 @@ public final class ForestaLibGDX extends ForestaUI implements ApplicationListene
 	private final boolean barraDock;
 	private final boolean joystickVirtuale;
 	private final boolean saltaLogo;
+	private final boolean toccoRichiesto;
 	private final Misura dimensioni;
 
 	private SpriteBatch batch;
@@ -70,9 +74,10 @@ public final class ForestaLibGDX extends ForestaUI implements ApplicationListene
 	 * @param barraDock         vero per la barra delle icone che si ingrandisce sotto il cursore
 	 * @param joystickVirtuale  vero per il joystick a schermo sulla mappa
 	 * @param saltaLogo         vero per non mostrare il logo iniziale (per esempio nelle partite di prova)
+	 * @param toccoRichiesto    vero per trattare anche il mouse come un dito (per provare i gesti sul desktop); sui telefoni il dito c'è comunque
 	 */
 	public ForestaLibGDX(Orientamento orientamento, EsecutoreGdx esecutore, ControlloreDiGioco controlloreDiGioco, GestorePunteggi gestorePunteggi, VistaPartita vistaPartita,
-						 Temporizzatore temporizzatore, boolean barraDock, boolean joystickVirtuale, boolean saltaLogo) {
+						 Temporizzatore temporizzatore, boolean barraDock, boolean joystickVirtuale, boolean saltaLogo, boolean toccoRichiesto) {
 		super(vistaPartita, temporizzatore);
 		this.orientamento = orientamento;
 		this.dimensioni = dimensioniDelloSchermo(orientamento);
@@ -82,6 +87,7 @@ public final class ForestaLibGDX extends ForestaUI implements ApplicationListene
 		this.barraDock = barraDock;
 		this.joystickVirtuale = joystickVirtuale;
 		this.saltaLogo = saltaLogo;
+		this.toccoRichiesto = toccoRichiesto;
 	}
 
 	/**
@@ -106,15 +112,34 @@ public final class ForestaLibGDX extends ForestaUI implements ApplicationListene
 		DisposizioneDelloSchermo disposizione = new DisposizioneDelloSchermo(orientamento, dimensioni.larghezza, dimensioni.altezza,
 				new MisureDaiFile(), LivelloDiZoom.valore());
 		schermo = new SchermoGdx(disposizione, barraDock, gestorePunteggi, vistaPartita, immagini, piccolo, medio, camera, viewport);
-		schermo.setJoystickVirtuale(joystickVirtuale);
+		// Col dito: gesti del dito (pressione prolungata, doppio tocco più lento), area sensibile della barra più larga e joystick a schermo, perché
+		// senza mouse non c'è altro modo di muoversi sulla mappa a tutto schermo
+		boolean tocco = toccoRichiesto || Gdx.app.getType() != Application.ApplicationType.Desktop;
+		schermo.setJoystickVirtuale(joystickVirtuale || tocco);
+		schermo.setTocco(tocco);
 		campoDiTesto = new CampoDiTestoGdx(immagini, medio, dimensioni.larghezza, dimensioni.altezza);
 		interfacciaCompleta(schermo, campoDiTesto.getCampo());
 		pianificatore = new PianificatoreGdx();
-		RouterDegliInput router = new RouterDegliInput(schermo.contestoDegliInput(), pianificatore);
+		RouterDegliInput router = new RouterDegliInput(schermo.contestoDegliInput(), pianificatore,
+				tocco ? RouterDegliInput.INTERVALLO_DOPPIO_TOCCO : RouterDegliInput.INTERVALLO_DOPPIO_CLICK);
 		// Il campo di testo, quando si vede, prende i tasti e i tocchi prima dello schermo
 		// ...e durante il logo iniziale nessuno li riceve (in Swing il logo e' un pannello a se', che li assorbe)
-		Gdx.input.setInputProcessor(new InputMultiplexer(campoDiTesto, new AssorbiDuranteIlLogo(), new InputGdx(router, viewport)));
+		// Il tasto indietro di Android arriva a noi e non chiude l'app da solo
+		Gdx.input.setCatchKey(Input.Keys.BACK, true);
+		Gdx.input.setInputProcessor(new InputMultiplexer(campoDiTesto, new AssorbiDuranteIlLogo(), new IndietroGdx(), new InputGdx(router, pianificatore, viewport, tocco)));
 		BusEventi.pubblica(new InternoInterfacciaUtentePronta());
+	}
+
+	/**
+	 * Il tasto «indietro» di Android: chiude la finestra in primo piano o, dalla schermata di gioco, apre il salvataggio che propone di uscire
+	 * ({@link TastoIndietro}); se non c'è niente da fare lo lascia alla piattaforma, che manda l'app in background. Col campo di testo aperto lo prende
+	 * prima lui (rinuncia al testo).
+	 */
+	private static final class IndietroGdx extends InputAdapter {
+		@Override
+		public boolean keyDown(int keycode) {
+			return keycode == Input.Keys.BACK && TastoIndietro.premuto();
+		}
 	}
 
 	/**

@@ -61,7 +61,7 @@ public final class MainLibgdx {
 			// thread del motore sono demoni)
 			AvvioDelMotore motore = new AvvioDelMotore(esecutore, e -> Gdx.app.exit(), opzioni.isLinguaDecisa());
 			applicazione = new ForestaLibGDX(opzioni.getOrientamento(), esecutore, motore.getControlloreDiGioco(), motore.getGestorePunteggi(), motore.getVistaPartita(),
-					AvvioDelMotore.nuovoTemporizzatore(), opzioni.isBarraDock(), opzioni.isJoystickVirtuale(), opzioni.isSaltaLogo());
+					AvvioDelMotore.nuovoTemporizzatore(), opzioni.isBarraDock(), opzioni.isJoystickVirtuale(), opzioni.isSaltaLogo(), opzioni.isTocco());
 			Misura dimensioni = ForestaLibGDX.dimensioniDelloSchermo(opzioni.getOrientamento());
 			larghezza = dimensioni.larghezza;
 			altezza = dimensioni.altezza;

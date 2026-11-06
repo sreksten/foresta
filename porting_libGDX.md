@@ -28,6 +28,11 @@ Prese (dall'utente, 2026-10-31):
 7. **Logo iniziale**: la logica di `TracciatoreLogo` è stata estratta nel modulo comune (`AnimazioneDelLogo`) e libGDX la disegna con `LogoInizialeGdx`: fedele all'originale e senza fotogrammi precalcolati, ma con la torcia e le scie calcolate sui pixel (`TorciaDelLogo`, `ScieDelLogo`, `TestaDellaCometa`) invece che con `ShapeRenderer`, che non ha gradienti radiali né composizione `DstIn`.
 8. **Due front-end**: finché vivono entrambi, ogni novità di UI si fa in **tutti e due** (Swing resta alla pari).
 9. **Cartigli sul tocco**: la descrizione dei comandi compare con la **pressione prolungata**; il tocco normale esegue il comando.
+10. **Fase 4, decisioni del 2026-11-06**:
+    - la pressione prolungata **serve solo a leggere**: sollevando il dito si chiude la descrizione, senza eseguire niente;
+    - il **doppio click** diventa il **doppio tocco**, com'era già riconosciuto (scambi, mappa, tattiche, colonna del personaggio);
+    - i **bersagli piccoli** si risolvono allargando solo l'area sensibile, non il disegno;
+    - il tasto **indietro** chiude la finestra in primo piano e, dalla schermata di gioco, apre il salvataggio che propone l'uscita (con la conferma).
 
 Presa il 2026-11-06: l'atlante dei glifi si ricava **all'avvio** dall'immagine del font (è quello che fa già `TestoGdx`: una texture sola per font, costruita dai dati di `DoomdarkFont`; niente passo in fase di build, né file delle larghezze).
 
@@ -97,14 +102,16 @@ Traguardo: una partita giocabile in orizzontale, sul desktop con il mouse e sull
 
 ## 7. Fase 4: input a tocco
 
-È progettazione, non solo codice.
+Le decisioni sono la 9 e la 10 (sezione 2). Stato al 2026-11-06:
 
-- **Gesti**: tocco al posto del click; pressione prolungata al posto del passaggio del cursore; trascinamento e fling per le liste (`ComponenteScorrevole`, `ScorrimentoVerticale` da rifare).
-- **Cartigli** con la descrizione dei comandi: vivono del passaggio del cursore. Decisione: pressione prolungata per la descrizione, tocco normale per eseguire.
-- **Hit-test**: `Rectangle`/`Point` e i 24 `contains` si portano su tipi propri o su quelli di libGDX.
-- **Bersagli del tocco**: almeno 44 pt; le icone da 64 scendono a 35–43 pt sui telefoni (vedi la tabella in `assessment_portabilita.md`), quindi vanno ingrandite o ridisegnate.
-- **`Prompt`** (oggi un `JTextField`): tastiera di sistema.
-- **Tasto «indietro»** di Android e gesto di chiusura di iOS: mappati sulla stessa uscita della finestra, passando dalla conferma e dal salvataggio.
+- **Gesti** (fatto): `RiconoscitoreDiGesti`, nel modulo comune e testato, ricava da tocchi e movimenti grezzi premuto, trascinato, rilasciato, click e doppio click; col dito consegna la pressione al router solo quando sa che non è una pressione prolungata (la barra delle icone, per esempio, esegue il comando al rilascio: una pressione prolungata seguita dal rilascio lo avrebbe eseguito). Il trascinamento e l'inerzia delle liste c'erano già (`ScorrimentoSuUnAsse`).
+- **Cartigli** (fatto): la pressione prolungata (500 ms senza muoversi) fa comparire le descrizioni come se il cursore passasse sul punto, il rilascio le chiude senza click, e spostando il dito le descrizioni lo seguono. Valgono le stesse regole del mouse: le descrizioni compaiono solo se l'aiuto è acceso (l'icona dell'aiuto). Da decidere se sul dito la pressione prolungata debba mostrarle anche con l'aiuto spento.
+- **Doppio tocco** (fatto): il router aspetta 300 ms (`INTERVALLO_DOPPIO_TOCCO`) invece di 175 e il riconoscitore conta il secondo tocco solo entro lo stesso intervallo. Prima `InputGdx` accettava il secondo entro 400 ms mentre il router rimandava il click singolo di soli 175: un doppio tocco normale faceva scattare sia il singolo sia il doppio.
+- **Hit-test**: i tipi sono già quelli del modulo comune (`Area`, `Punto`), senza `Rectangle`/`Point` di AWT.
+- **Bersagli del tocco** (fatto in parte): le icone della barra sono una accanto all'altra, quindi lungo la barra non c'è spazio da prendere; col dito l'area sensibile arriva a tutto lo spessore della barra nell'asse trasversale (`BarraIcone.setAreaSensibileLarga`). Lungo la barra resta quella dell'icona: 64 pixel virtuali, circa 43 punti con la scala di un iPhone 15, appena sotto i 44 consigliati. Per averli davvero servirebbero icone più grandi: da verificare su un telefono vero. Gli altri bersagli (righe delle liste, frecce, riquadri) non sono stati misurati.
+- **`Prompt`**: la tastiera di sistema c'è già (`CampoDiTestoGdx`).
+- **Tasto «indietro»** (fatto per Android): `TastoIndietro` (comune) dà il comando che fa tornare indietro fra quelli possibili (`ANNULLA`, poi `NO`, poi `FLOPPY_SALVA`); `ForestaLibGDX` lo collega al tasto BACK. Se non c'è niente da fare lo lascia alla piattaforma. Il gesto di chiusura di iOS non esiste in libGDX come tasto: si vedrà con la Fase 8.
+- **Provare sul desktop**: l'argomento `TOCCO` fa trattare il mouse come un dito (pressione prolungata, doppio tocco lento, area larga). Sui telefoni è automatico, e porta con sé il joystick a schermo sulla mappa.
 
 ## 8. Fase 5: schermate a tutto schermo
 

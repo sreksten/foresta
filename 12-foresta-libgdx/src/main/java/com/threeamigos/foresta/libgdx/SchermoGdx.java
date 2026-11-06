@@ -131,6 +131,13 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 		}
 	}
 
+	/**
+	 * Col dito (vero) la barra delle icone prende il tocco da tutto il suo spessore, e non solo dall'icona che si vede.
+	 */
+	public void setTocco(boolean tocco) {
+		barraIcone.getModello().setAreaSensibileLarga(tocco);
+	}
+
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Il disegno
 

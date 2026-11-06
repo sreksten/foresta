@@ -125,6 +125,8 @@ public class BarraIcone implements Finestra {
 	 * Le misure lungo l'asse della barra: la lunghezza dell'asse, e quella dell'icona (le frecce occupano un'icona a ciascun capo)
 	 */
 	private final int lunghezzaAsse;
+	// Il dito tocca le icone da tutto lo spessore della barra (vedi setAreaSensibileLarga)
+	private boolean areaSensibileLarga;
 	private final int latoIcona;
 	/**
 	 * Dove sta l'icona sull'altro asse: centrata nella barra
@@ -412,11 +414,38 @@ public class BarraIcone implements Finestra {
 	protected int indiceSotto(int x, int y) {
 		preparaGeometria();
 		for (int i = 0; i < iconeVisibili.size(); i++) {
-			if (rettangoloDisegnato(i).contiene(x, y) && nellaFascia(x, y)) {
+			if (contieneConMargine(rettangoloDisegnato(i), x, y) && nellaFascia(x, y)) {
 				return i;
 			}
 		}
 		return -1;
+	}
+
+	/**
+	 * Col dito l'area sensibile di un'icona e' alta (o larga, in verticale) quanto tutta la barra e non quanto il disegno: le icone sono una accanto
+	 * all'altra, quindi lungo la barra non c'e' niente da allargare, ma nell'altro asse un tocco appena fuori dall'icona, dentro lo spessore della barra,
+	 * vale ancora come tocco su di lei (vedi {@link #setAreaSensibileLarga}).
+	 */
+	private boolean contieneConMargine(Area disegnato, int x, int y) {
+		if (!areaSensibileLarga) {
+			return disegnato.contiene(x, y);
+		}
+		return orizzontale
+				? x >= disegnato.getX() && x < disegnato.getX() + disegnato.getLarghezza() && y >= 0 && y < getAltezza()
+				: y >= disegnato.getY() && y < disegnato.getY() + disegnato.getAltezza() && x >= 0 && x < getLarghezza();
+	}
+
+	/**
+	 * Vero per il dito: l'area sensibile di ogni icona arriva ai bordi della barra nell'asse trasversale (predefinito falso: col mouse il cursore sta
+	 * sull'icona che vede). Non cambia il disegno ne' l'icona evidenziata. Lungo la barra l'area e' quella dell'icona: a 64 pixel virtuali
+	 * (circa 43 punti con la scala di un iPhone 15) resta appena sotto i 44 punti consigliati, e per averli davvero servirebbero icone piu' grandi.
+	 */
+	public void setAreaSensibileLarga(boolean areaSensibileLarga) {
+		this.areaSensibileLarga = areaSensibileLarga;
+	}
+
+	public boolean isAreaSensibileLarga() {
+		return areaSensibileLarga;
 	}
 
 	/**

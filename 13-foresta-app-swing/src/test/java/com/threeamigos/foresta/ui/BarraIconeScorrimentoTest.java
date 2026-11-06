@@ -552,4 +552,35 @@ class BarraIconeScorrimentoTest {
         assertTrue(dock.contiene(x, -5), "l'icona ingrandita esce sopra la barra");
         assertFalse(dock.contiene(x, -80));
     }
+
+    @Test
+    void conLAreaSensibileLargaIlDitoTocca_ancheFuoriDallIconaDentroLoSpessoreDellaBarra() {
+        BarraDiProva barra = new BarraDiProva(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE, LARGHEZZA, ALTEZZA);
+        imposta(barra, 3);
+        Area prima = barra.iconeVisibili.get(0).rettangolo;
+        Comando comandoPrima = barra.iconeVisibili.get(0).comando;
+        int x = prima.getX() + prima.getLarghezza() / 2;
+        // Appena sopra l'icona, ma dentro la barra
+        int yFuoriDallIcona = prima.getY() - 1;
+        assertTrue(yFuoriDallIcona >= 0, "la prova presume dello spazio sopra l'icona, dentro la barra");
+
+        barra.processaPressione(x, yFuoriDallIcona, Tasto.SINISTRO);
+        barra.processaRilascio(x, yFuoriDallIcona, Tasto.SINISTRO);
+        assertTrue(comandiMandati.isEmpty(), "col mouse serve stare sull'icona: " + comandiMandati);
+
+        barra.setAreaSensibileLarga(true);
+        assertTrue(barra.isAreaSensibileLarga());
+        barra.processaPressione(x, yFuoriDallIcona, Tasto.SINISTRO);
+        barra.processaRilascio(x, yFuoriDallIcona, Tasto.SINISTRO);
+        assertEquals(1, comandiMandati.size(), "col dito basta stare dentro la barra");
+        assertEquals(comandoPrima, comandiMandati.get(0).getComando());
+
+        // Lungo la barra l'area resta quella dell'icona: il primo pixel della seconda e' della seconda
+        comandiMandati.clear();
+        int xSeconda = barra.iconeVisibili.get(1).rettangolo.getX();
+        barra.processaPressione(xSeconda, 35, Tasto.SINISTRO);
+        barra.processaRilascio(xSeconda, 35, Tasto.SINISTRO);
+        assertEquals(1, comandiMandati.size());
+        assertEquals(barra.iconeVisibili.get(1).comando, comandiMandati.get(0).getComando());
+    }
 }

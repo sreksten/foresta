@@ -16,20 +16,26 @@ import java.util.List;
  *     <li>far catturare il trascinamento a chi lo chiede ({@link Finestra#catturaIlTrascinamento()}): finché il tasto sinistro resta premuto,
  *     trascinamento e rilascio vanno a lei, anche fuori dal suo rettangolo;</li>
  *     <li>portare davanti un riquadro impilato cliccato e non ultimo, senza altro;</li>
- *     <li>ritardare il click singolo di 175 ms per chi distingue il doppio click ({@link Finestra#gestisceDoppioClick()}), scartandolo se arriva
- *     il secondo e se nel frattempo la schermata è cambiata;</li>
+ *     <li>ritardare il click singolo (175 ms col mouse, di più col dito: {@link #getIntervalloDoppioClick()}) per chi distingue il doppio click
+ *     ({@link Finestra#gestisceDoppioClick()}), scartandolo se arriva il secondo e se nel frattempo la schermata è cambiata;</li>
  *     <li>dividere la rotella in passi consegnati a uno o due per fotogramma ({@link Finestra#passiPerScattoDellaRotella()}), perché lo scorrimento
  *     a pixel risulti fluido.</li>
  * </ol>
- * Limiti noti, lasciati così perché oggi innocui: l'intervallo del doppio click è fisso (175 ms) e non quello del sistema, quindi un doppio click
- * più lento fa scattare sia il click singolo sia il doppio.
+ * Limite noto: l'intervallo del doppio click è quello dato al costruttore e non quello del sistema, quindi un doppio click più lento fa scattare
+ * sia il click singolo sia il doppio. Chi riconosce i gesti ({@link RiconoscitoreDiGesti}) conta il secondo click solo entro lo stesso intervallo, così
+ * il doppio click e il singolo non scattano mai insieme.
  */
-public final class RouterDegliInput {
+public final class RouterDegliInput implements EventiDelPuntatore {
 
 	/**
 	 * Quanto aspetta il click singolo prima di scattare, nell'attesa di un secondo click
 	 */
 	public static final int INTERVALLO_DOPPIO_CLICK = 175;
+
+	/**
+	 * Quanto aspetta il click singolo col dito: i doppi tocchi sono piu' lenti dei doppi click del mouse
+	 */
+	public static final int INTERVALLO_DOPPIO_TOCCO = 300;
 
 	/**
 	 * Quel che il router chiede a chi lo ospita
@@ -108,9 +114,25 @@ public final class RouterDegliInput {
 	private int rotazioniInSospeso;
 	private Pianificatore.Pianificata passiDellaRotella;
 
+	private final int intervalloDoppioClick;
+
 	public RouterDegliInput(Contesto contesto, Pianificatore pianificatore) {
+		this(contesto, pianificatore, INTERVALLO_DOPPIO_CLICK);
+	}
+
+	/**
+	 * @param intervalloDoppioClick quanto aspetta il click singolo prima di scattare, nell'attesa di un secondo click: {@link #INTERVALLO_DOPPIO_CLICK}
+	 *                              col mouse, {@link #INTERVALLO_DOPPIO_TOCCO} col dito
+	 */
+	public RouterDegliInput(Contesto contesto, Pianificatore pianificatore, int intervalloDoppioClick) {
 		this.contesto = contesto;
 		this.pianificatore = pianificatore;
+		this.intervalloDoppioClick = intervalloDoppioClick;
+	}
+
+	@Override
+	public int getIntervalloDoppioClick() {
+		return intervalloDoppioClick;
 	}
 
 	// ---- chi riceve un evento ----
@@ -178,11 +200,13 @@ public final class RouterDegliInput {
 	/**
 	 * Il cursore esce dallo schermo: si esce anche dalla finestra su cui si era
 	 */
+	@Override
 	public void mouseUscito(int x, int y) {
 		aggiornaFinestraSottoIlCursore(null, x, y);
 		contesto.ridisegna();
 	}
 
+	@Override
 	public void mosso(int x, int y) {
 		Risultato risultato = trova(x, y);
 		aggiornaFinestraSottoIlCursore(risultato, x, y);
@@ -192,6 +216,7 @@ public final class RouterDegliInput {
 		contesto.ridisegna();
 	}
 
+	@Override
 	public void premuto(int x, int y, Finestra.Tasto tasto) {
 		Risultato risultato = trova(x, y);
 		if (risultato == null) {
@@ -204,6 +229,7 @@ public final class RouterDegliInput {
 		contesto.ridisegna();
 	}
 
+	@Override
 	public void trascinato(int x, int y) {
 		if (finestraCheCatturaIlTrascinamento != null) {
 			Area area = contesto.getArea(finestraCheCatturaIlTrascinamento);
@@ -220,6 +246,7 @@ public final class RouterDegliInput {
 		contesto.ridisegna();
 	}
 
+	@Override
 	public void rilasciato(int x, int y, Finestra.Tasto tasto) {
 		if (finestraCheCatturaIlTrascinamento != null && tasto == Finestra.Tasto.SINISTRO) {
 			Finestra finestra = finestraCheCatturaIlTrascinamento;
@@ -244,6 +271,7 @@ public final class RouterDegliInput {
 	 *
 	 * @param conteggio 1 per il primo click, 2 per il secondo di un doppio click
 	 */
+	@Override
 	public void clic(int x, int y, Finestra.Tasto tasto, int conteggio) {
 		Risultato risultato = trova(x, y);
 		if (risultato == null) {
@@ -273,7 +301,7 @@ public final class RouterDegliInput {
 			return;
 		}
 		Object statoAlClick = contesto.getStato();
-		clickSingoloInAttesa = pianificatore.dopo(INTERVALLO_DOPPIO_CLICK, () -> {
+		clickSingoloInAttesa = pianificatore.dopo(intervalloDoppioClick, () -> {
 			// Se nell'attesa la schermata è cambiata il click non vale più: la finestra cliccata non si vede
 			if (contesto.getStato() != statoAlClick) {
 				return;
@@ -286,6 +314,7 @@ public final class RouterDegliInput {
 	/**
 	 * La rotella: positiva verso il basso (verso chi guarda), negativa verso l'alto
 	 */
+	@Override
 	public void rotella(int x, int y, int rotazioni) {
 		Risultato risultato = trova(x, y);
 		if (risultato == null) {

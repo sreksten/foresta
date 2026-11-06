@@ -210,7 +210,7 @@ public class ForestaGdx extends ApplicationAdapter {
 				// si ridisegna a ogni fotogramma
 			}
 		}, pianificatore);
-		Gdx.input.setInputProcessor(new InputGdx(router, viewport));
+		Gdx.input.setInputProcessor(new InputGdx(router, pianificatore, viewport, false));
 	}
 
 	/**
