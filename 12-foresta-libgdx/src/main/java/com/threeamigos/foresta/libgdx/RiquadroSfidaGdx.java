@@ -10,6 +10,8 @@ import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.Misura;
 import com.threeamigos.foresta.ui.immagini.NomiDelleImmagini;
 import com.threeamigos.foresta.ui.riquadri.RiquadroSfida;
+import com.threeamigos.foresta.ui.sprite.ModelloDelloSprite;
+import com.threeamigos.foresta.ui.sprite.ModelloDelloSprite.Dissolvenza;
 
 /**
  * Il riquadro della sfida a carta, forbici e sasso in libGDX: le misure, il movimento delle mani e i punteggi sono del modulo comune ({@link RiquadroSfida},
@@ -48,8 +50,35 @@ public final class RiquadroSfidaGdx extends RiquadroSfida {
 		if (!isVisibile()) {
 			return;
 		}
+		disegna(batch, camera, viewport, fotogramma());
+	}
+
+	/**
+	 * Il riquadro fermo, con le mosse dell'ultima mano, anche se non è più visibile: per lo sprite che lo dissolve (vedi
+	 * {@link #spriteCheSiDissolve}). L'opacità è quella del colore del batch.
+	 */
+	void disegnaFermo(Batch batch, Camera camera, Viewport viewport) {
+		disegna(batch, camera, viewport, fotogrammaFermo());
+	}
+
+	/**
+	 * La sfida finita come uno sprite che resta intero per <code>attesa</code> secondi, per vedere l'ultima mano, e poi si dissolve
+	 * in <code>dissolvenza</code> secondi
+	 */
+	public SpriteGdx spriteCheSiDissolve(Camera camera, Viewport viewport, float attesa, float dissolvenza) {
+		Area area = disposizione().getArea();
+		return new SpriteGdx(new ModelloDelloSprite(attesa + dissolvenza, attesa, Dissolvenza.LINEARE_CON_SOGLIA, area.getX(), area.getY(),
+				area.getX(), area.getY(), 1f, 1f)) {
+			@Override
+			protected void disegna(Batch batch, float x, float y, float scala, float alpha) {
+				batch.setColor(1f, 1f, 1f, alpha);
+				disegnaFermo(batch, camera, viewport);
+			}
+		};
+	}
+
+	private void disegna(Batch batch, Camera camera, Viewport viewport, Fotogramma fotogramma) {
 		Disposizione d = disposizione();
-		Fotogramma fotogramma = fotogramma();
 		Area area = d.getArea();
 		batch.draw(immagini.regione(NomiDelleImmagini.CORNICE_LARGA), area.getX(), area.getY(), d.getCornice().larghezza, d.getCornice().altezza);
 

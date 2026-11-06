@@ -15,7 +15,7 @@ import java.awt.image.BufferedImage;
  *
  * @author Stefano Reksten
  */
-public class SpriteFumetto extends SpriteBase {
+public class SpriteFumetto extends SpriteBase implements FumettoDelloSchermo {
 
     private static final float SCALA_INIZIALE = 1.0f;
     private static final float SCALA_FINALE = 1.0f;

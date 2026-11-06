@@ -48,27 +48,27 @@ public final class AnteprimaSchermate {
 		PartitaDiAnteprima.prepara(TipoPersonaggio.GUERRIERO, "Aldric",
 				TipoPersonaggio.BARDO, TipoPersonaggio.MAGO, TipoPersonaggio.LADRA, TipoPersonaggio.ELFA);
 
-		Dimension finestra = ForestaUI.calcolaDimensioniFinestra(orientamento, false);
-		DisplayableCanvas canvas = new DisplayableCanvas(finestra.width, finestra.height, ForestaUI.orientamentoCanvas(orientamento),
-				ForestaUI.SPESSORE_BARRA_ICONE, false, new GestorePunteggiInMemoria(), new VistaPartitaMotore());
+		Dimension finestra = ForestaSwing.calcolaDimensioniFinestra(orientamento, false);
+		DisplayableCanvas canvas = new DisplayableCanvas(orientamento, finestra.width, finestra.height, false, new GestorePunteggiInMemoria(),
+				new VistaPartitaMotore());
 		canvas.setSize(finestra.width, finestra.height);
 
-		canvas.iniziaGioco();
+		canvas.getSchermo().iniziaGioco();
 		// Qualche messaggio nel riquadro di testo, con le lettere accentate
-		canvas.notifica("Arrivate in una radura. È già l'alba: càpita spesso, qui, di vedere un cavallo che parla.");
-		canvas.notifica("Il Guerriero dice: «Più in là c'è un lago, perché non ci riposiamo?»");
-		canvas.notifica("Trovate una pozione, un'antica spada e due monete d'oro. Che fortuna!");
-		canvas.notifica("Un lupo vi guarda dal bosco, poi se ne va: può darsi che tornerà domani.");
+		canvas.getSchermo().notifica("Arrivate in una radura. È già l'alba: càpita spesso, qui, di vedere un cavallo che parla.");
+		canvas.getSchermo().notifica("Il Guerriero dice: «Più in là c'è un lago, perché non ci riposiamo?»");
+		canvas.getSchermo().notifica("Trovate una pozione, un'antica spada e due monete d'oro. Che fortuna!");
+		canvas.getSchermo().notifica("Un lupo vi guarda dal bosco, poi se ne va: può darsi che tornerà domani.");
 		salva(canvas, new File(cartella, "gioco.png"));
-		canvas.inventario();
+		canvas.getSchermo().inventario();
 		salva(canvas, new File(cartella, "inventario.png"));
-		canvas.mappa();
+		canvas.getSchermo().mappa();
 		salva(canvas, new File(cartella, "mappa.png"));
-		canvas.inventario();
-		canvas.trofei();
+		canvas.getSchermo().inventario();
+		canvas.getSchermo().trofei();
 		salva(canvas, new File(cartella, "trofei.png"));
-		canvas.inventario();
-		canvas.bestiario();
+		canvas.getSchermo().inventario();
+		canvas.getSchermo().bestiario();
 		salva(canvas, new File(cartella, "bestiario.png"));
 		System.out.println("Salvate le schermate in " + cartella.getAbsolutePath());
 	}

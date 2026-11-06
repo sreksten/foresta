@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
  * disponibile o è stata completata. A differenza degli altri sprite non si sposta:
  * resta centrato sullo schermo e si ingrandisce mentre sfuma.
  */
-public class SpriteAnnuncioGlobale extends SpriteBase {
+public class SpriteAnnuncioGlobale extends SpriteBase implements AnnuncioDelloSchermo {
 
 	private static final Color COLORE_OMBRA = new Color(DescrizioneAnnuncioGlobale.OMBRA_ARGB, true);
 

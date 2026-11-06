@@ -2,13 +2,13 @@ package com.threeamigos.foresta.ui.testo;
 
 import com.threeamigos.foresta.tipi.TipoDanno;
 
-import java.awt.*;
-
 /**
  * Il testo che sale sopra un personaggio quando, per la sua classe, è debole, resiste o è immune a un tipo di danno: dice al
  * giocatore anche a quale ("Debole a Sacro", "Resiste a Fuoco", "Immune a Aria"), e il colore dice quanto: dal grigio verso il
  * verde man mano che è più debole (fino al doppio del danno), dal grigio verso il rosso man mano che resiste di più, rosso
  * acceso se è immune. Il colore ha {@link #SFUMATURE} gradi per parte.
+ * <p>
+ * I colori sono interi ARGB (opachi), senza il toolkit grafico: Swing e libGDX li convertono nel loro tipo.
  */
 public final class TestoReazioneDiClasse {
 
@@ -17,9 +17,9 @@ public final class TestoReazioneDiClasse {
 	/** Il moltiplicatore a cui la debolezza arriva al verde pieno */
 	static final double DEBOLEZZA_MASSIMA = 2.0d;
 
-	private static final Color NEUTRO = new Color(0xAD, 0xAD, 0xAD);
-	private static final Color VERDE = new Color(0, 255, 0);
-	private static final Color ROSSO = new Color(255, 0, 0);
+	private static final int NEUTRO = argb(0xAD, 0xAD, 0xAD);
+	private static final int VERDE = argb(0, 255, 0);
+	private static final int ROSSO = argb(255, 0, 0);
 
 	private TestoReazioneDiClasse() {
 	}
@@ -34,11 +34,11 @@ public final class TestoReazioneDiClasse {
 	}
 
 	/**
-	 * Il colore del testo: tanto più verde quanto più debole è il personaggio (verde pieno da {@link #DEBOLEZZA_MASSIMA} in su),
-	 * tanto più rosso quanto più resiste. L'immunità è il rosso pieno, e nessuna resistenza parziale ci arriva (la più forte è
-	 * l'ultima sfumatura prima).
+	 * Il colore del testo, in ARGB: tanto più verde quanto più debole è il personaggio (verde pieno da {@link #DEBOLEZZA_MASSIMA}
+	 * in su), tanto più rosso quanto più resiste. L'immunità è il rosso pieno, e nessuna resistenza parziale ci arriva (la più
+	 * forte è l'ultima sfumatura prima).
 	 */
-	public static Color colore(double moltiplicatore) {
+	public static int colore(double moltiplicatore) {
 		if (moltiplicatore == 0.0d) {
 			return ROSSO;
 		}
@@ -53,12 +53,31 @@ public final class TestoReazioneDiClasse {
 		return NEUTRO;
 	}
 
+	/** Il rosso di un colore ARGB, da 0 a 255 */
+	public static int rosso(int argb) {
+		return (argb >> 16) & 0xFF;
+	}
+
+	/** Il verde di un colore ARGB, da 0 a 255 */
+	public static int verde(int argb) {
+		return (argb >> 8) & 0xFF;
+	}
+
+	/** Il blu di un colore ARGB, da 0 a 255 */
+	public static int blu(int argb) {
+		return argb & 0xFF;
+	}
+
+	private static int argb(int rosso, int verde, int blu) {
+		return 0xFF000000 | (rosso << 16) | (verde << 8) | blu;
+	}
+
 	/** La sfumatura <code>passo</code> su {@link #SFUMATURE} fra due colori */
-	private static Color mescola(Color da, Color a, int passo) {
+	private static int mescola(int da, int a, int passo) {
 		double t = (double) passo / SFUMATURE;
-		return new Color(
-				(int) Math.round(da.getRed() + (a.getRed() - da.getRed()) * t),
-				(int) Math.round(da.getGreen() + (a.getGreen() - da.getGreen()) * t),
-				(int) Math.round(da.getBlue() + (a.getBlue() - da.getBlue()) * t));
+		return argb(
+				(int) Math.round(rosso(da) + (rosso(a) - rosso(da)) * t),
+				(int) Math.round(verde(da) + (verde(a) - verde(da)) * t),
+				(int) Math.round(blu(da) + (blu(a) - blu(da)) * t));
 	}
 }

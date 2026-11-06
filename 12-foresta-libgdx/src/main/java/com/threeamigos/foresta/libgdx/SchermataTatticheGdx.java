@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.libgdx;
 
+import com.threeamigos.foresta.ui.schermate.SchermataTattiche;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -31,7 +32,7 @@ import java.util.function.Consumer;
  * modulo comune, gli stessi di Swing; qui c'è il disegno: le righe sono contenuti (testi e icone con il loro posto) che {@link ElencoScorrevoleGdx} mostra,
  * il menu a discesa un riquadro con la sua lista, e il cartiglio dell'aiuto.
  */
-public final class SchermataTatticheGdx extends SchermataDiScambio {
+public final class SchermataTatticheGdx extends SchermataDiScambio implements SchermataTattiche {
 
 	private static final String CORNICE = "fondi/CorniceInventario.png";
 

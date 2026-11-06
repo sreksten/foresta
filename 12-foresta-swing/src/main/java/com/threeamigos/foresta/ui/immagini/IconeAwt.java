@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.immagini;
 
+import com.threeamigos.foresta.ui.DisposizioneDelloSchermo;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.tipi.TipoIcona;
@@ -115,17 +116,15 @@ public final class IconeAwt {
 	public static int getLarghezzaMassima() {
 		int larghezza = 0;
 		for (TipoIcona.SfondoIcona corrente : TipoIcona.SfondoIcona.values()) {
-			larghezza = Math.max(larghezza, DimensioniRisorsa.di(corrente.getRisorsa(), LivelloDiZoom.valore()).width);
+			larghezza = Math.max(larghezza, DisposizioneDelloSchermo.conZoom(new MisureDaiFile(), corrente.getRisorsa(), LivelloDiZoom.valore()).larghezza);
 		}
 		return larghezza;
 	}
 
 	public static int getAltezzaMassima() {
 		if (altezzaMassima == -1) {
-			for (TipoIcona corrente : TipoIcona.values()) {
-				// Dall'intestazione del file: non serve caricare le icone per saperlo
-				altezzaMassima = Math.max(altezzaMassima, DimensioniRisorsa.di(corrente.getSfondo().getRisorsa(), LivelloDiZoom.valore()).height);
-			}
+			// Dall'intestazione del file: non serve caricare le icone per saperlo
+			altezzaMassima = DisposizioneDelloSchermo.altezzaMassimaDelleIcone(new MisureDaiFile(), LivelloDiZoom.valore());
 		}
 		return altezzaMassima;
 	}

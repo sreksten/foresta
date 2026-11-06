@@ -16,6 +16,7 @@ import com.threeamigos.foresta.ui.sprite.DescrizioneSpriteATempo;
 import com.threeamigos.foresta.ui.componenti.ScorrimentoSuUnAsse;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
+import com.threeamigos.foresta.ui.testo.TestiDellAiuto;
 import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 import java.util.ArrayList;
@@ -188,6 +189,18 @@ public abstract class RiquadroGruppo implements Finestra {
 	/**
 	 * Se i personaggi (ospiti compresi) non ci stanno tutti e la rotella serve
 	 */
+	/**
+	 * Ad aiuto acceso, le righe del cartiglio accanto al mouse: la rotella, se la lista è più alta del riquadro. Vuota se non c'è
+	 * niente da dire; il cartiglio va accanto al mouse ({@link #getMouseX()}, {@link #getMouseY()}, relativi al riquadro).
+	 */
+	public List<String> righeDellAiuto() {
+		List<String> righe = new ArrayList<>();
+		if (vistaPartita.isAiutoAbilitato() && mouseX >= 0 && isScorrevole()) {
+			righe.add(TestiDellAiuto.rotella());
+		}
+		return righe;
+	}
+
 	public boolean isScorrevole() {
 		return offsetMassimo() > 0;
 	}

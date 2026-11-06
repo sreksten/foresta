@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.libgdx;
 
+import com.threeamigos.foresta.ui.schermate.SchermateIntroOutro;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -27,7 +28,7 @@ import java.util.Collection;
  * statistiche di fine partita, la scelta dello slot di salvataggio, la sconfitta e la vittoria. Che cosa mostrano lo dicono {@link SchermateSenzaPartita} (le
  * schermate ferme) e {@link IntroDelGioco} (l'intro, che dipende dal tempo), nel modulo comune; qui si disegna.
  */
-public final class SchermataIntroOutroGdx {
+public final class SchermataIntroOutroGdx implements SchermateIntroOutro {
 
 	private static final String OMBRA_DEL_DRAGO = "fondi/OmbraDelDrago.png";
 	private static final String TRIONFO = "fondi/Trionfo.png";

@@ -74,7 +74,7 @@ public final class EsecutoreTattiche {
 			return null;
 		}
 		// Pubblicato prima dell'esecuzione: nel log la spiegazione precede le righe dell'azione, e la UI scrive l'azione sotto il personaggio prima che
-		// questa accada (ForestaUI.gestisciEventoDecisioneTattica)
+		// questa accada (ForestaUI, evento InternoDecisioneTattica)
 		BusEventi.pubblica(new InternoDecisioneTattica(attore, decisione.getBersaglio(), decisione.getTipoEseguito(), decisione.getIndiceVoce(),
 				decisione.getSpiegazione()));
 		esegui(attore, decisione);

@@ -158,7 +158,7 @@ class IntermezzoIngressoNegozioTest {
 	/**
 	 * Verifica che, dopo l'apertura del negozio ({@code tipoEventoAperturaNegozio}), non sia stato
 	 * pubblicato un {@link InternoMostraSchermataGioco}: la UI reagisce a quest'ultimo evento tornando
-	 * alla schermata di gioco normale ({@code ForestaUI.gestisciEventoMostraSchermataGioco}), il che
+	 * alla schermata di gioco normale ({@code ForestaUI}, evento {@code InternoMostraSchermataGioco}), il che
 	 * sovrascriverebbe la finestra del negozio appena richiesta.
 	 */
 	private static void assertApreNegozioSenzaTornareAllaSchermataDiGioco(PartitaDiTest partita,

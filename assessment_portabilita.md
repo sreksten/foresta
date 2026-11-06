@@ -228,7 +228,7 @@ Una UI mobile userà `NotificaUscitaDalGioco` per l'errore fatale e il ciclo di 
 
 ### Da riscrivere (dipendono dal toolkit)
 
-- **`ForestaUI`** (714 righe): crea il `JFrame` (con `EXIT_ON_CLOSE`) e calcola le dimensioni da `Toolkit.getScreenSize()`. Si tiene la parte che traduce una quarantina di eventi del bus in chiamate sul canvas.
+- **`ForestaSwing`** (714 righe): crea il `JFrame` (con `EXIT_ON_CLOSE`) e calcola le dimensioni da `Toolkit.getScreenSize()`. Si tiene la parte che traduce una quarantina di eventi del bus in chiamate sul canvas.
 - **`DisplayableCanvas`** (1.788 righe): il pezzo più grosso. È un `JPanel` con un thread di animazione, `paintComponent` e circa 300 righe di input da mouse (click, doppio click e rotella con `javax.swing.Timer`, trascinamento, passaggio del cursore). Si tiene l'idea (pila di `Finestra`, schermata corrente, coda di sprite e fumetti), non il codice. Il profilo temporaneo (`-Dforesta.profilo`) si può togliere.
 - **`Prompt`** (un `JTextField` in un `JPanel`) è da rifare con la tastiera di sistema; `EsecutoreSwing` è l'adattatore da sostituire.
 - **Immagini**: `BufferedImageBuilder` (`ImageIO.read`, ingrandimento con `NEAREST_NEIGHBOR`), `DimensioniRisorsa` (`ImageReader`), `ImageCache` (532 righe, campi `static BufferedImage` e una cache LRU di immagini composte e di testo: l'elenco dei file e la logica di cache si tengono, il tipo di immagine cambia).
@@ -255,7 +255,7 @@ Una UI mobile userà `NotificaUscitaDalGioco` per l'errore fatale e il ciclo di 
 
 ### Dimensioni della finestra e dispositivi
 
-**Oggi** (`ForestaUI.calcolaDimensioniFinestra`, orizzontale, zoom 2,0, finestra non ridimensionabile): la finestra è la somma delle cornici dei riquadri, senza superare lo schermo.
+**Oggi** (`ForestaSwing.calcolaDimensioniFinestra`, orizzontale, zoom 2,0, finestra non ridimensionabile): la finestra è la somma delle cornici dei riquadri, senza superare lo schermo.
 
 | Elemento | Originale | Zoom 2,0 |
 | :--- | :---: | :---: |

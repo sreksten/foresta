@@ -25,7 +25,7 @@ Le interazioni con gli *stati* del difensore (un bagnato e il fulmine) sono un'a
   modificatori dell'arma, reazioni con gli stati) usano `CalcolatoreCombattimento.fattoreEffetti`, cioè il valore se è minore di 1.
   La durata degli stati non cambia. Gli incantamenti dell'arma seguono la stessa tabella, ognuno col suo elemento.
 - La UI scrive sopra il bersaglio **"Debole a Sacro"**, **"Resiste a Fuoco"**, **"Immune a Aria"**, a ogni colpo in cui il valore non è 1
-  (evento `NotificaReazioneDiClassePersonaggio`, testo e colore in `ui/testo/TestoReazioneDiClasse`). Il colore ha dieci sfumature per parte:
+  (evento `NotificaReazioneDiClassePersonaggio`, testo e colore in `ui/testo/TestoReazioneDiClasse`, nel modulo comune `12-foresta-ui-comune`; il colore è un intero ARGB che Swing e libGDX convertono nel loro tipo). Il colore ha dieci sfumature per parte:
   dal grigio verso il **verde** man mano che la debolezza cresce (verde pieno a ×2), dal grigio verso il **rosso** man mano che
   la resistenza cresce, **rosso acceso** per l'immunità.
 - Restano a parte, perché non sono tipi di danno, le immunità a un **incantesimo** (Morte non ha un tipo di danno) e a uno **stato**

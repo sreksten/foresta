@@ -21,7 +21,6 @@ import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import com.threeamigos.foresta.ui.testo.TestiDellaUI;
@@ -94,12 +93,9 @@ public class DisplayableCanvasRiquadroGruppo extends RiquadroGruppo {
 	 * larghezzaSchermo x altezzaSchermo.
 	 */
 	public void disegnaAiuto(Graphics2D graphics, int larghezzaSchermo, int altezzaSchermo) {
-		if (!vistaPartita.isAiutoAbilitato() || getMouseX() < 0) {
-			return;
-		}
-		if (isScorrevole()) {
-			Cartiglio.disegnaAccantoAlMouse(graphics, Collections.singletonList(Cartiglio.AIUTO_ROTELLA),
-					getTopLeftX() + getMouseX(), getTopLeftY() + getMouseY(), larghezzaSchermo, altezzaSchermo);
+		List<String> righe = righeDellAiuto();
+		if (!righe.isEmpty()) {
+			Cartiglio.disegnaAccantoAlMouse(graphics, righe, getTopLeftX() + getMouseX(), getTopLeftY() + getMouseY(), larghezzaSchermo, altezzaSchermo);
 		}
 	}
 }

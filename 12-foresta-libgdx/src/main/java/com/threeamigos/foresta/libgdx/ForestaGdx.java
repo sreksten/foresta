@@ -118,12 +118,12 @@ public class ForestaGdx extends ApplicationAdapter {
 		schermataBestiario.apri();
 		schermataIntro = new SchermataIntroOutroGdx(LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE, DatiDiProva.punteggi(), partita, immagini, piccolo, medio);
 		schermataIntro.resettaSequenza();
-		schermataDiScambio = new SchermataDiScambioArtefattiGdx(LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE, partita, immagini, piccolo, medio, "Inventario", "Armaiolo",
-				com.threeamigos.foresta.tipi.TipoPersonaggio.ARMAIOLO, "Armaiolo");
+		schermataDiScambio = new SchermataDiScambioArtefattiGdx(LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE, partita, immagini, piccolo, medio,
+				com.threeamigos.foresta.tipi.TipoBottega.ARMAIOLO);
 		schermataDiScambio.impostaScambio(DatiDiProva.scambio());
 		schermataDiScambio.impostaPersonaggio(partita.getGruppoGiocatore().getPersonaggio(0));
-		schermataIncantatore = new SchermataDiScambioArtefattiGdx(LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE, partita, immagini, piccolo, medio, "Inventario del gruppo",
-				"Banco di lavoro", com.threeamigos.foresta.tipi.TipoPersonaggio.INCANTATORE, "Incantatore");
+		schermataIncantatore = new SchermataDiScambioArtefattiGdx(LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE, partita, immagini, piccolo, medio,
+				com.threeamigos.foresta.tipi.TipoBottega.INCANTATORE);
 		schermataIncantatore.impostaBanco(DatiDiProva.banco());
 		schermataAlchimista = new SchermataDiScambioConsumabiliGdx(LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE, partita, immagini, piccolo, medio);
 		schermataAlchimista.impostaOfferte(DatiDiProva.offerteDelAlchimista());

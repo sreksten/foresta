@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.immagini;
 
+import com.threeamigos.foresta.ui.DisposizioneDelloSchermo;
 import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
 import com.threeamigos.foresta.tipi.MappaBottinoImmagine;
 import com.threeamigos.foresta.mappa.Foresta;
@@ -40,18 +41,13 @@ public class ImageCache {
 	private static final Map<List<Object>, Image> composte = lru(MASSIMO_COMPOSTE);
 	private static final Map<List<Object>, Image> porzioni = lru(MASSIMO_PORZIONI);
 	
-	// Le risorse di cui serve la dimensione prima di caricare le immagini (vedi ForestaUI.calcolaDimensioniFinestra):
-	// sono costanti, quindi usarle non inizializza ImageCache
+	// Le risorse dei loghi: sono costanti, quindi usarle non inizializza ImageCache. Quelle delle cornici di cui serve la dimensione
+	// prima di caricare le immagini stanno in DisposizioneDelloSchermo, nel modulo comune
 	public static final String RISORSA_LOGO_3AM = "Logo3AM.png";
 	// Il logo iniziale: quello completo, con la pergamena e gli uccelli, si mostra; da quello senza ombra, con la sola scritta nera
 	// esattamente nello stesso posto, si traccia il contorno (vedi TracciatoreLogo.Costruttore.immagineDaMostrare). Si usano senza zoom
 	public static final String RISORSA_LOGO_3AM_COMPLETO = "3AM_logo_completo.png";
 	public static final String RISORSA_LOGO_3AM_SENZA_OMBRA = "3AM_logo_senza_ombra.png";
-	public static final String RISORSA_CORNICE_GRANDE = "fondi/CorniceGrande.png";
-	public static final String RISORSA_CORNICE_MAPPA = "fondi/CorniceMappa.png";
-	// Non si disegna più: serve solo a ForestaUI per le dimensioni della finestra
-	public static final String RISORSA_CORNICE_INCANTESIMI = "fondi/CorniceIncantesimi.png";
-	public static final String RISORSA_BOSCO = "locazioni/Foresta.png";
 
 	public static BufferedImage logo3AM;
 	public static BufferedImage logoForesta;
@@ -151,9 +147,9 @@ public class ImageCache {
 		logo3AM = BufferedImageBuilder.buildBufferedImage(RISORSA_LOGO_3AM, zoom);
 		logoForesta = BufferedImageBuilder.buildBufferedImage("LogoForesta.png", zoom);
 
-		corniceGrande = BufferedImageBuilder.buildBufferedImage(RISORSA_CORNICE_GRANDE, zoom);
-		corniceMappa = BufferedImageBuilder.buildBufferedImage(RISORSA_CORNICE_MAPPA, zoom);
-		cornicePiccola = BufferedImageBuilder.buildBufferedImage("fondi/CornicePiccola.png", zoom);
+		corniceGrande = BufferedImageBuilder.buildBufferedImage(DisposizioneDelloSchermo.RISORSA_CORNICE_GRANDE, zoom);
+		corniceMappa = BufferedImageBuilder.buildBufferedImage(DisposizioneDelloSchermo.RISORSA_CORNICE_MAPPA, zoom);
+		cornicePiccola = BufferedImageBuilder.buildBufferedImage(DisposizioneDelloSchermo.RISORSA_CORNICE_PICCOLA, zoom);
 		corniceCombattimento = BufferedImageBuilder.buildBufferedImage("fondi/CorniceCombattimento.png", zoom);
 		corniceLarga = BufferedImageBuilder.buildBufferedImage("fondi/CorniceLarga.png", zoom);
 		corniceInventario = BufferedImageBuilder.buildBufferedImage("fondi/CorniceInventario.png", zoom);

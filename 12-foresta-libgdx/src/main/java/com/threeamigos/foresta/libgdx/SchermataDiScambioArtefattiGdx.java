@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.libgdx;
 
+import com.threeamigos.foresta.tipi.TipoBottega;
+import com.threeamigos.foresta.tipi.TipoNegozio;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -46,10 +48,8 @@ public final class SchermataDiScambioArtefattiGdx extends SchermataDiScambio {
 	private final ScambioDegliArtefatti scambioDegliArtefatti;
 	private final float zoom = (float) LivelloDiZoom.valore();
 	private final int larghezzaCornice;
-	private final String intestazioneSinistra;
-	private final String intestazioneDestra;
-	private final String etichettaDelCentro;
-	private final TipoPersonaggio mestiereAlCentro;
+	// Intestazioni, negoziante e aiuto del doppio click; quella del commerciante cambia secondo il negozio (vedi impostaNegozio)
+	private TipoBottega bottega;
 	private final DisegnoDiContenutoGdx disegno;
 	private final CartiglioGdx cartiglio;
 	// Se c'è, la bottega è quella dell'incantatore: sotto le monete vanno le righe della fusione
@@ -62,16 +62,13 @@ public final class SchermataDiScambioArtefattiGdx extends SchermataDiScambio {
 	private final ColonnaDelPersonaggio colonna = new ColonnaDelPersonaggio(this);
 
 	public SchermataDiScambioArtefattiGdx(int width, int height, VistaPartita vistaPartita, ImmaginiGdx immagini, TestoGdx piccolo, TestoGdx medio,
-										  String intestazioneSinistra, String intestazioneDestra, TipoPersonaggio mestiereAlCentro, String etichettaDelCentro) {
+										  TipoBottega bottega) {
 		super(width, height, vistaPartita, immagini.larghezza(CORNICE, (float) LivelloDiZoom.valore()), immagini.altezza(CORNICE, (float) LivelloDiZoom.valore()),
 				misure(immagini));
 		this.immagini = immagini;
 		this.medio = medio;
 		this.larghezzaCornice = immagini.larghezza(CORNICE, zoom);
-		this.intestazioneSinistra = intestazioneSinistra;
-		this.intestazioneDestra = intestazioneDestra;
-		this.etichettaDelCentro = etichettaDelCentro;
-		this.mestiereAlCentro = mestiereAlCentro;
+		this.bottega = bottega;
 		this.disegno = new DisegnoDiContenutoGdx(immagini, piccolo, medio);
 		this.cartiglio = new CartiglioGdx(immagini, medio);
 		this.elencoGdx = new ElencoScorrevoleGdx(immagini, piccolo, medio);
@@ -89,12 +86,12 @@ public final class SchermataDiScambioArtefattiGdx extends SchermataDiScambio {
 
 			@Override
 			public String aiutoDoppioClickSinistra() {
-				return "Doppio click: sposta a destra";
+				return bottega.getAiutoDoppioClickSinistra();
 			}
 
 			@Override
 			public String aiutoDoppioClickDestra() {
-				return "Doppio click: sposta a sinistra";
+				return bottega.getAiutoDoppioClickDestra();
 			}
 
 			@Override
@@ -119,6 +116,13 @@ public final class SchermataDiScambioArtefattiGdx extends SchermataDiScambio {
 		});
 	}
 
+	/**
+	 * La schermata del commerciante: armaiolo o venditore di pergamene, con l'intestazione, il personaggio e il mestiere del negozio.
+	 */
+	public void impostaNegozio(TipoNegozio negozio) {
+		bottega = TipoBottega.del(negozio);
+	}
+
 	static MisureDelleImmagini misure(ImmaginiGdx immagini) {
 		return new MisureDelleImmagini() {
 			@Override
@@ -136,12 +140,12 @@ public final class SchermataDiScambioArtefattiGdx extends SchermataDiScambio {
 
 	@Override
 	public TipoPersonaggio getMestiereAlCentro() {
-		return mestiereAlCentro;
+		return bottega.getMestiere();
 	}
 
 	@Override
 	public String getEtichettaMestiere() {
-		return etichettaDelCentro;
+		return bottega.getEtichettaDelMestiere();
 	}
 
 	public void impostaScambio(VistaScambio scambio) {
@@ -195,10 +199,10 @@ public final class SchermataDiScambioArtefattiGdx extends SchermataDiScambio {
 		}
 		disegnaElenco(batch, camera, viewport, scambioDegliArtefatti.getArtefattiDellaParteAttiva(), xMinimaZonaSinistra, scorrimentoSinistra, true);
 		disegnaElenco(batch, camera, viewport, scambioDegliArtefatti.getArtefattiDellaParteRemota(), xMinimaZonaDestra, scorrimentoDestra, false);
-		intestazione(batch, intestazioneSinistra, SPACING + larghezzaCornice / 2);
-		intestazione(batch, intestazioneDestra, width - SPACING - larghezzaCornice / 2);
+		intestazione(batch, bottega.getIntestazioneSinistra(), SPACING + larghezzaCornice / 2);
+		intestazione(batch, bottega.getIntestazioneDestra(), width - SPACING - larghezzaCornice / 2);
 		if (colonna.getPersonaggio() == null) {
-			disegno.disegna(batch, colonnaDelNegoziante(mestiereAlCentro, banco == null ? Collections.emptyList() : RigheDellIncantatore.righe(banco)), 0, 0, 1f);
+			disegno.disegna(batch, colonnaDelNegoziante(bottega.getMestiere(), banco == null ? Collections.emptyList() : RigheDellIncantatore.righe(banco)), 0, 0, 1f);
 		} else {
 			disegnaColonnaDelPersonaggio(batch, camera, viewport);
 		}

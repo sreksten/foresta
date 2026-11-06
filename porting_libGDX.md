@@ -1,6 +1,12 @@
 # Piano di porting su libGDX (Android e famiglia Apple: iMac, iPhone, iPad)
 
-Stato al 2026-10-31. È un piano, non una decisione presa: dice in che ordine fare le cose se si porta la Foresta su Android e iOS. Il «cosa manca» e i numeri sul codice Swing stanno in [`assessment_portabilita.md`](assessment_portabilita.md); qui c'è solo l'ordine dei lavori.
+Stato al 2026-11-06 (il piano è del 2026-10-31). È un piano, non una decisione presa: dice in che ordine fare le cose se si porta la Foresta su Android e iOS. Il «cosa manca» e i numeri sul codice Swing stanno in [`assessment_portabilita.md`](assessment_portabilita.md); qui c'è solo l'ordine dei lavori.
+
+## 0. A che punto siamo (2026-11-06)
+
+- **Fatto**: Fase 1 (`EsecutoreGdx`, `MainLibgdx` collegato al motore con `AvvioDelMotore`, ciclo di vita con `pause`/`resume`, uscita con `Gdx.app.exit()`; mancano la cartella privata e il log per Android, con la Fase 7), Fase 2, Fase 3 (lo schermo di gioco con tutti i riquadri, la barra e gli sprite, `SchermoGdx`, collegato al motore da `ForestaLibGDX`: si gioca una partita) e Fase 5 tranne il logo. Il campo di testo (`CampoDiTestoGdx` sul `CampoDiTesto` comune) c'è, anche con la tastiera di sistema.
+- **Messo in comune** (12bis): la radice e la traduzione degli eventi (`ForestaUI`), lo schermo senza disegno (`SchermoDelGioco`), la disposizione (`DisposizioneDelloSchermo`), il campo di testo (`CampoDiTesto`), gli argomenti (`OpzioniDiAvvio`), il collegamento del motore (`AvvioDelMotore`, in `12-foresta-motore`).
+- **Resta**: il logo (`TracciatoreLogo` con `ShapeRenderer`), la finestra di prova (solo desktop), i cartigli dell'aiuto dei riquadri del gruppo e delle missioni, la sfida che si dissolve; poi le Fasi 4, 6, 7 e 8.
 
 ## 1. Perché questo piano, e che cosa non è in discussione
 
@@ -83,7 +89,7 @@ Prima di disegnare schermate serve il punto d'ingresso, perché il motore parta 
 2. **Riquadri** nell'ordine in cui servono per vedere una partita: Locazione, Gruppo, Testo (ridotto), Mappa (come tile), Missioni, Incantesimi e pozioni, Statistiche; poi Combattimento e Sfida.
 3. **Barra icone**: la classica (`DisplayableCanvasBarraIcone`). La versione dock si ingrandisce sotto il cursore e non ha senso sul tocco.
 4. **Sprite e fumetti**: prima quelli che usano solo `drawImage` e alpha; poi `SpriteEffetto` (`SrcIn`) e `SpriteInDissolvenza` (sfocatura), da rifare con shader o precalcolati; `SpriteRivelazioneArtefatto` (forme e gradiente radiale) per ultimo.
-5. **Traduzione degli eventi** di `ForestaUI` (una quarantina) in chiamate sul nuovo canvas: la parte che si tiene.
+5. **Traduzione degli eventi**: fatta una volta per tutte e due, in `ForestaUI` (modulo comune).
 
 Traguardo: una partita giocabile in orizzontale, sul desktop con il mouse e sull'emulatore Android.
 
@@ -109,7 +115,7 @@ Nell'ordine, dalla più semplice alla più pesante:
 5. **Tattiche** (`DisplayableCanvasTattiche`, 1.203 righe) per ultime: menu a discesa (`CasellaADiscesa`: la logica è ora `MenuADiscesa` nel comune, il disegno resta per toolkit), liste scorrevoli, modifiche multiple. La logica sta già in `08-foresta-tattiche` (`BozzaTattica`, `TestoTattica`).
 6. **Logo** (`TracciatoreLogo`, 1.443 righe): decisione presa, si riscrive con `ShapeRenderer` (poligoni, tratti sovrapposti, scia animata, gradienti radiali delle nuvole in `CloudGenerator`, da precalcolare in una texture). Isolato dal resto: si fa per ultimo.
 
-La finestra di prova (`FinestraDiProva`) non si porta: resta del desktop.
+La finestra di prova (`FinestraDiProva`) si porta anche lei (decisione del 2026-11-06), ma solo per il desktop.
 
 ## 9. Fase 6: layout per telefono
 
@@ -166,13 +172,13 @@ Da estrarre **componente per componente, quando lo si porta** (si separa il mode
 | `SfondoARiempimento` | la maschera dell'interno della cornice e l'interpolazione dei colori, su `ImmagineDiPixel` | la composizione dell'immagine finale |
 | `ImageCache` | l'elenco dei file, le chiavi, le regole della cache e delle composizioni | il tipo dell'immagine e la cache viva (libGDX libera le texture a mano) |
 | `DoomdarkTextProducer`, `TestoGrande` | la divisione in righe e l'impaginazione (già in `FontTool`) | la produzione dell'immagine (`IndexColorModel`, `ConvolveOp`) |
-| `DisplayableCanvas` | pila dei riquadri e coordinate, instradamento del mouse, doppio click, stati delle schermate | `JPanel`, disegno, eventi di Swing |
-| `ForestaUI` | la traduzione di una quarantina di eventi del bus in chiamate (la parte da tenere, vedi la Fase 3), il calcolo delle dimensioni della finestra | `JFrame`, il thread di Swing |
+| `DisplayableCanvas` | **fatto**: `SchermoDelGioco` (stati, pila, code degli effetti, sprite in vita, contesto del router) e `DisposizioneDelloSchermo` (coordinate) | `JPanel`, disegno, eventi di Swing |
+| `ForestaSwing` | **fatto**: `ForestaUI` (la traduzione degli eventi del bus, il temporizzatore della UI, le fasi di gioco), `DisposizioneDelloSchermo.dimensioniDelloSchermo` | `JFrame`, il logo, il thread di Swing |
 | Riquadri e schermate | il contenuto da mostrare (testi, elenchi, ordinamenti, stato del mouse), le coordinate | `Graphics2D` |
 | `DisplayableCanvasTattiche`, `CasellaADiscesa` | **fatto**: `EditorDelleTattiche` e `MenuADiscesa` (stato della modifica, righe, selezione, click) | il disegno |
 | Sprite (`SpriteBase`, `SpriteATempo`, fumetti, annunci…) | tempi, traiettorie, dissolvenza, `CoordinateFumetto` | disegno e filtri (`SrcIn`, sfocatura) |
 | `TracciatoreLogo`, `CloudGenerator` | geometria e animazione del tracciato (una parte grande delle 1466 righe è calcolo) | i tratti disegnati |
-| `Prompt` | il testo e le regole (annulla, invio) | il campo di testo |
+| `Prompt` | **fatto**: `CampoDiTesto` (chi aspetta la risposta, invio, Esc, caratteri ammessi) | il campo di testo |
 
 ## Osservazioni
 

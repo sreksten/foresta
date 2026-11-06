@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.libgdx;
 
+import com.threeamigos.foresta.ui.sprite.AnnuncioDelloSchermo;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.threeamigos.foresta.ui.sprite.DescrizioneAnnuncioGlobale;
@@ -11,7 +12,7 @@ import com.threeamigos.foresta.ui.sprite.ModelloDelloSprite.Dissolvenza;
  * ingrandiscono mentre sfumano. Che cosa mostra lo dice {@link DescrizioneAnnuncioGlobale}, nel modulo comune, che compone anche i pixel; la loro texture
  * appartiene a {@link ImmaginiGdx} e si libera con lui.
  */
-public final class SpriteAnnuncioGlobaleGdx extends SpriteGdx {
+public final class SpriteAnnuncioGlobaleGdx extends SpriteGdx implements AnnuncioDelloSchermo {
 
 	private final DescrizioneAnnuncioGlobale dati;
 	private final TextureRegion regione;

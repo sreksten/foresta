@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.schermate;
 
+import com.threeamigos.foresta.tipi.TipoBottega;
 import com.threeamigos.foresta.artefatti.VistaArtefatto;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
@@ -52,27 +53,27 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
 
     @Override
     protected String aiutoDoppioClickSinistra() {
-        return TestiDellaUI.get("AIUTO_DOPPIO_CLICK_SUL_BANCO");
+        return TipoBottega.INCANTATORE.getAiutoDoppioClickSinistra();
     }
 
     @Override
     protected String aiutoDoppioClickDestra() {
-        return TestiDellaUI.get("AIUTO_DOPPIO_CLICK_DAL_BANCO");
+        return TipoBottega.INCANTATORE.getAiutoDoppioClickDestra();
     }
 
     @Override
     public void disegnaIntestazioniInventario(Graphics2D graphics) {
-        disegnaIntestazioniInventarioImpl(graphics, TestiDellaUI.get("INVENTARIO_GRUPPO"), TestiDellaUI.get("BANCO_DI_LAVORO"));
+        disegnaIntestazioniInventarioImpl(graphics, TipoBottega.INCANTATORE.getIntestazioneSinistra(), TipoBottega.INCANTATORE.getIntestazioneDestra());
     }
 
     @Override
     public TipoPersonaggio getMestiereAlCentro() {
-        return TipoPersonaggio.INCANTATORE;
+        return TipoBottega.INCANTATORE.getMestiere();
     }
 
     @Override
     public String getEtichettaMestiere() {
-        return TestiDellaUI.get("MESTIERE_INCANTATORE");
+        return TipoBottega.INCANTATORE.getEtichettaDelMestiere();
     }
 
     private final DisegnoDiContenutoAwt disegno = new DisegnoDiContenutoAwt();

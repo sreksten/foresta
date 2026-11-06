@@ -20,7 +20,7 @@ import java.util.List;
  * puntatore (mostra il nome di ciò che ha sotto); al rilascio sparisce. Dove sta la mappa, il nome sotto il mouse e la mano sono di
  * {@link MappaATuttoSchermo} e il notiziario di {@link StrisciaDelleNotizie}, nel modulo comune; qui c'è il disegno.
  */
-public class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Finestra {
+public class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements SchermataMappa {
 
 	// Il notiziario si ferma a metà della larghezza della sfera magica: l'altra metà è coperta dalla sfera stessa (disegnata in primo piano sull'angolo
 	// inferiore sinistro di tutto il canvas, vedi DisplayableCanvas.disegnaSferaMagica), ma essendo un'immagine con trasparenza le notizie continuano a

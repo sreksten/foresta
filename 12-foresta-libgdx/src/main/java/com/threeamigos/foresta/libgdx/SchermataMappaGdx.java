@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.libgdx;
 
+import com.threeamigos.foresta.ui.schermate.SchermataMappa;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -24,7 +25,7 @@ import com.threeamigos.foresta.ui.sfx.GestoreNuvole;
  * disegnano una per una (solo quelle che si vedono), non con un'immagine di tutta la foresta come in Swing; la striscia del notiziario pezzo per pezzo,
  * ripetuta affiancata; il disco del joystick è un'immagine calcolata pixel per pixel ({@link ImmaginiDelJoystick}).
  */
-public final class SchermataMappaGdx implements Finestra {
+public final class SchermataMappaGdx implements SchermataMappa {
 
 	private static final float OSCURAMENTO_DELLE_VISITATE = 0.5f;
 	private static final float OPACITA_DELLE_NUVOLE = 0.45f;

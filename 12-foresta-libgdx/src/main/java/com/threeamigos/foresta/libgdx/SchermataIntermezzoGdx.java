@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.libgdx;
 
+import com.threeamigos.foresta.ui.schermate.SchermataIntermezzo;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -26,7 +27,7 @@ import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
  * {@link PaginaIntermezzo#conRivelazioneDiArtefatto}) è {@link RivelazioneDellArtefattoGdx}: parte quando l'elemento di destinazione (il capo) è stato
  * disegnato e quindi se ne conosce il posto, e al termine vola verso di lui.
  */
-public final class SchermataIntermezzoGdx {
+public final class SchermataIntermezzoGdx implements SchermataIntermezzo {
 
 	private final int width;
 	private final int height;

@@ -1,7 +1,7 @@
 /**
  * L'interfaccia grafica in Swing.
  * <p>
- * {@link com.threeamigos.foresta.ui.ForestaUI} è la classe radice: crea la finestra, si iscrive agli eventi del bus e traduce ciascuno in una chiamata sul
+ * {@link com.threeamigos.foresta.ui.ForestaSwing} è la classe radice: crea la finestra, si iscrive agli eventi del bus e traduce ciascuno in una chiamata sul
  * {@link com.threeamigos.foresta.ui.DisplayableCanvas}, il canvas principale che disegna la schermata corrente (un riquadro di gioco o una schermata a tutto schermo). Lo stato della
  * partita la UI lo legge da {@code VistaPartita}, in sola lettura, e verso il motore manda soltanto eventi: non conosce né il motore né il dominio. Vedi motore_grafico.md.
  * <p>

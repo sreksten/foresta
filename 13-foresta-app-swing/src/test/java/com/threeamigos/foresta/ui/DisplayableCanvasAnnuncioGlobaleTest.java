@@ -28,7 +28,7 @@ class DisplayableCanvasAnnuncioGlobaleTest {
 	void creaCanvas() {
 		BusEventi.azzera();
 		BusEventi.impostaConsegna(Runnable::run);
-		canvas = new DisplayableCanvas(1024, 768, DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE, 72, false,
+		canvas = new DisplayableCanvas(com.threeamigos.foresta.tipi.Orientamento.ORIZZONTALE, 1024, 768, false,
 				new GestorePunteggiInMemoria(), new VistaPartitaMotore());
 		uiOccupataPubblicati = new AtomicInteger();
 		BusEventi.iscriviti(InternoUiOccupata.class, e -> uiOccupataPubblicati.incrementAndGet());
@@ -42,14 +42,14 @@ class DisplayableCanvasAnnuncioGlobaleTest {
 
 	@Test
 	void unAnnuncioRichiestoDuranteUnIntermezzoAspettaDiTornareAlGioco() {
-		canvas.mostraPaginaIntermezzo(new PaginaIntermezzo());
+		canvas.getSchermo().mostraPaginaIntermezzo(new PaginaIntermezzo());
 
-		canvas.notificaAnnuncioGlobale("NUOVA MISSIONE", "Missione di prova");
+		canvas.getSchermo().notificaAnnuncioGlobale("NUOVA MISSIONE", "Missione di prova");
 
 		assertEquals(0, uiOccupataPubblicati.get(),
 				"l'annuncio non deve comparire finché l'intermezzo è ancora a schermo");
 
-		canvas.iniziaGioco();
+		canvas.getSchermo().iniziaGioco();
 
 		assertEquals(1, uiOccupataPubblicati.get(),
 				"appena si torna al gioco l'annuncio rimandato deve comparire");
@@ -57,7 +57,7 @@ class DisplayableCanvasAnnuncioGlobaleTest {
 
 	@Test
 	void unAnnuncioFuoriDaUnIntermezzoComparesubito() {
-		canvas.notificaAnnuncioGlobale("LIVELLO SUCCESSIVO", "NotiziaMD di prova");
+		canvas.getSchermo().notificaAnnuncioGlobale("LIVELLO SUCCESSIVO", "NotiziaMD di prova");
 
 		assertEquals(1, uiOccupataPubblicati.get(),
 				"fuori da un intermezzo l'annuncio deve comparire subito, come prima di questa modifica");

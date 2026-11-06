@@ -14,6 +14,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.schermate.DisplayableCanvasIntermezzo;
 import com.threeamigos.foresta.ui.schermate.DisplayableCanvasIntroOutro;
+import com.threeamigos.foresta.ui.schermate.MisureDelleImmaginiAwt;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -78,11 +79,11 @@ public final class AnteprimaIntermezzo {
 
 	private AnteprimaIntermezzo(Intermezzo intermezzo, int indicePagina) {
 		this.intermezzo = intermezzo;
-		Dimension finestra = ForestaUI.calcolaDimensioniFinestra(Orientamento.ORIZZONTALE, false);
-		Dimension contenuto = DisplayableCanvas.calcolaAreaDiContenuto(finestra.width, finestra.height,
-				ForestaUI.orientamentoCanvas(Orientamento.ORIZZONTALE), ForestaUI.SPESSORE_BARRA_ICONE);
-		larghezza = contenuto.width;
-		altezza = contenuto.height;
+		Dimension finestra = ForestaSwing.calcolaDimensioniFinestra(Orientamento.ORIZZONTALE, false);
+		DisposizioneDelloSchermo disposizione = new DisposizioneDelloSchermo(Orientamento.ORIZZONTALE, finestra.width, finestra.height,
+				new MisureDelleImmaginiAwt(), LivelloDiZoom.valore());
+		larghezza = disposizione.getLarghezzaContenuto();
+		altezza = disposizione.getAltezzaContenuto();
 		schermata = new DisplayableCanvasIntermezzo(larghezza, altezza, new DisplayableCanvasIntroOutro(larghezza, altezza,
 				new GestorePunteggiInMemoria(), new VistaPartitaMotore()));
 		pagine = generaPagine();

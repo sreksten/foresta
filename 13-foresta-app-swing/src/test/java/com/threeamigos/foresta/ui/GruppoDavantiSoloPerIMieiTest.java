@@ -32,7 +32,7 @@ class GruppoDavantiSoloPerIMieiTest {
 		ModelloDati.installa();
 		ModelloDati.setIstanza(new ModelloDati());
 		GruppoGiocatore.azzeraIstanza();
-		canvas = new DisplayableCanvas(1024, 768, DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE, 72, false,
+		canvas = new DisplayableCanvas(com.threeamigos.foresta.tipi.Orientamento.ORIZZONTALE, 1024, 768, false,
 				new GestorePunteggiInMemoria(), new VistaPartitaMotore());
 	}
 
@@ -44,13 +44,13 @@ class GruppoDavantiSoloPerIMieiTest {
 	}
 
 	private TipoFinestra davanti() {
-		List<TipoFinestra> impilati = canvas.riquadriImpilati();
+		List<TipoFinestra> impilati = canvas.getSchermo().riquadriImpilati();
 		return impilati.get(impilati.size() - 1);
 	}
 
 	@Test
 	void leStatisticheDiUnMostroNonPortanoDavantiIlGruppo() {
-		canvas.primoPiano(TipoFinestra.MISSIONI);
+		canvas.getSchermo().primoPiano(TipoFinestra.MISSIONI);
 		assertEquals(TipoFinestra.MISSIONI, davanti());
 
 		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(new Goblin(1), TipoAttributo.SALUTE, 10, 5));
@@ -62,7 +62,7 @@ class GruppoDavantiSoloPerIMieiTest {
 	void leStatisticheDiUnoDeiMieiPortanoDavantiIlGruppo() {
 		Guerriero guerriero = new Guerriero("Arsenio", 1);
 		GruppoGiocatore.getIstanza().aggiungiPersonaggio(guerriero);
-		canvas.primoPiano(TipoFinestra.MISSIONI);
+		canvas.getSchermo().primoPiano(TipoFinestra.MISSIONI);
 
 		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(guerriero, TipoAttributo.SALUTE, 10, 5));
 

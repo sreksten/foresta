@@ -31,7 +31,7 @@ import java.util.function.LongSupplier;
  * e sotto un pannello scuro con nome, descrizione ed effetti. I tempi, la geometria a ogni istante e il testo del pannello sono di
  * {@link RivelazioneDellArtefatto}, nel modulo comune; qui c'è il disegno con le sfumature radiali di Java2D. Il gioco continua sotto.
  */
-public class SpriteRivelazioneArtefatto implements SpriteInterface {
+public class SpriteRivelazioneArtefatto implements SpriteInterface, CodaDelleRivelazioni.InCoda {
 
 	// La veste, gli ingredienti magici, il talismano e il ninnolo non si trovano nelle locazioni, quindi non sono in MappaBottinoImmagine
 	// Per ora la veste è quella del mago, anche per il ladro e il sacerdote

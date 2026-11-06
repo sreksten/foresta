@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.schermate;
 
+import com.threeamigos.foresta.tipi.TipoBottega;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoVenditaArtefatto;
@@ -57,28 +58,28 @@ public class DisplayableCanvasCommerciante extends DisplayableCanvasScambiatoreA
 
     @Override
     public TipoPersonaggio getMestiereAlCentro() {
-        return negozio == TipoNegozio.VENDITORE_DI_PERGAMENE ? TipoPersonaggio.VENDITORE_DI_PERGAMENE : TipoPersonaggio.ARMAIOLO;
+        return TipoBottega.del(negozio).getMestiere();
     }
 
     @Override
     public String getEtichettaMestiere() {
-        return negozio.getNome();
+        return TipoBottega.del(negozio).getEtichettaDelMestiere();
     }
 
     @Override
     protected String aiutoDoppioClickSinistra() {
-        return TestiDellaUI.get("AIUTO_DOPPIO_CLICK_VENDI");
+        return TipoBottega.del(negozio).getAiutoDoppioClickSinistra();
     }
 
     @Override
     protected String aiutoDoppioClickDestra() {
-        return TestiDellaUI.get("AIUTO_DOPPIO_CLICK_COMPRA");
+        return TipoBottega.del(negozio).getAiutoDoppioClickDestra();
     }
 
     @Override
     public void disegnaIntestazioniInventario(Graphics2D graphics) {
-        disegnaIntestazioniInventarioImpl(graphics, TestiDellaUI.get("INVENTARIO_GRUPPO"),
-                TestiDellaUI.get(negozio == TipoNegozio.VENDITORE_DI_PERGAMENE ? "INVENTARIO_VENDITORE" : "INVENTARIO_ARMAIOLO"));
+        TipoBottega bottega = TipoBottega.del(negozio);
+        disegnaIntestazioniInventarioImpl(graphics, bottega.getIntestazioneSinistra(), bottega.getIntestazioneDestra());
     }
 
     private final DisegnoDiContenutoAwt disegno = new DisegnoDiContenutoAwt();

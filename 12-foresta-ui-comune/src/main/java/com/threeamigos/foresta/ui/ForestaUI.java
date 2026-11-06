@@ -1,0 +1,429 @@
+package com.threeamigos.foresta.ui;
+
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.*;
+import com.threeamigos.foresta.eventi.notifiche.*;
+import com.threeamigos.foresta.eventi.richieste.*;
+import com.threeamigos.foresta.interfacce.VistaPartita;
+import com.threeamigos.foresta.interfacce.VistaPersonaggio;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.modificatori.TestoDeiModificatori;
+import com.threeamigos.foresta.strumenti.TestataSalvataggio;
+import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzabile;
+import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzatore;
+import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.FaseDiGioco;
+import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoFinestra;
+import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.ui.barra.ComandiPossibili;
+import com.threeamigos.foresta.ui.riquadri.RiquadroCombattimento;
+import com.threeamigos.foresta.ui.sfx.GestoreNuvole;
+import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
+import com.threeamigos.foresta.ui.testo.TestoReazioneDiClasse;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Locale;
+
+/**
+ * La classe radice dell'interfaccia, senza toolkit: si iscrive, subito, agli eventi del bus che la UI deve mostrare e traduce
+ * ciascuno in una chiamata sullo schermo del gioco ({@link SchermoDelGioco}) o sul campo di testo ({@link CampoDiTesto}), e tiene il
+ * temporizzatore della UI (il logo iniziale, l'intro). Il toolkit (<code>ForestaSwing</code>, <code>ForestaLibGDX</code>) apre la
+ * finestra, mostra il logo iniziale mentre carica le risorse, costruisce schermo e campo di testo e li consegna con
+ * {@link #interfacciaCompleta}; quando la finestra è aperta pubblica {@code InternoInterfacciaUtentePronta}, e da lì l'automa parte.
+ * Vedi motore_grafico.md.
+ */
+public abstract class ForestaUI implements Temporizzabile {
+
+	/** Quanto resta la prima schermata dell'intro (loghi o classifica) prima che l'intro vada avanti da sola */
+	private static final int PRIMA_SCHERMATA_DELL_INTRO_MS = 5_000;
+
+	protected final VistaPartita vistaPartita;
+	protected final Temporizzatore temporizzatore;
+	// Arrivano quando il toolkit ha finito di costruirli (durante il logo iniziale)
+	private SchermoDelGioco<?, ?, ?, ?> schermo;
+	private CampoDiTesto campo;
+	private FaseDiGioco faseDiGioco;
+
+	/**
+	 * Si iscrive agli eventi: le iscrizioni devono esserci tutte prima che l'interfaccia, appena pronta, pubblichi eventi a cui il
+	 * motore risponde.
+	 *
+	 * @param vistaPartita    lo stato della partita da mostrare, in sola lettura
+	 * @param temporizzatore  il temporizzatore della UI: fa avanzare il logo iniziale e l'intro
+	 */
+	protected ForestaUI(VistaPartita vistaPartita, Temporizzatore temporizzatore) {
+		this.vistaPartita = vistaPartita;
+		this.temporizzatore = temporizzatore;
+		temporizzatore.setTemporizzabile(this);
+
+		BusEventi.iscriviti(InternoCaricamentoCompletato.class, e -> {
+			// Caricata un'altra partita: le nuvole della mappa si rigenerano sulla sua area conosciuta
+			GestoreNuvole.azzera();
+			schermo.ripristinaMessaggi(e.getUltimiMessaggi());
+		});
+		// Un errore interno lo si dice al giocatore (oltre che nel log): senza, una transizione a metà lascerebbe il gioco fermo e muto
+		SegnalatoreDegliErrori segnalatoreDegliErrori = new SegnalatoreDegliErrori(messaggio -> {
+			if (schermo != null) {
+				schermo.notifica(messaggio);
+			}
+		});
+		BusEventi.iscriviti(InternoException.class, segnalatoreDegliErrori::segnala);
+		BusEventi.iscriviti(NotificaErroreCaricamento.class,
+				e -> schermo.notificaAnnuncioGlobale(TestiDellaUI.get("ERRORE"), TestiDellaUI.get("FILE_CORROTTO")));
+		BusEventi.iscriviti(NotificaGlobale.class, e -> schermo.notificaAnnuncioGlobale(e.getEtichetta(), e.getMessaggio()));
+		BusEventi.iscriviti(InternoTrofeoAcquisito.class,
+				e -> schermo.notificaAnnuncioGlobale(TestiDellaUI.get("TROFEO_VINTO"), e.getTrofeo().getNome()));
+		// Il nome della voce, che per chi ha due forme le dice tutte e due ("Mago e Maga")
+		BusEventi.iscriviti(InternoVoceDelBestiarioSbloccata.class,
+				e -> schermo.notificaAnnuncioGlobale(TestiDellaUI.get("NUOVA_VOCE"), e.getVoce().getNomeDellaVoce()));
+		BusEventi.iscriviti(InternoAggiornamentoComandiDisponibili.class, e -> {
+			ComandiPossibili.set(e.getPossibilita());
+			schermo.impostaAzioniIcone();
+		});
+		// Si può spendere un punto dopo l'altro, anche su personaggi diversi: ogni annuncio sostituisce il precedente
+		BusEventi.iscriviti(NotificaConsumoPuntoAbilitaPersonaggio.class,
+				e -> schermo.notificaAnnuncioGlobaleSostituibile("AUMENTO", e.getTipoAttributo().getNome().toUpperCase(Locale.ROOT)));
+		BusEventi.iscriviti(NotificaFineGioco.class, e -> {
+			if (e.isCompletatoConSuccesso()) {
+				schermo.vinto();
+			} else {
+				schermo.perso();
+			}
+		});
+		BusEventi.iscriviti(InternoNotificaViaFumettoATempo.class, e -> schermo.notificaFumetto(e.getTesto(), e.getCoordinateFumetto()));
+		BusEventi.iscriviti(NotificaInterazionePersonaggio.class, e -> schermo.aggiungiInterazione(e.getPersonaggio(), e.getTipoInterazione()));
+		BusEventi.iscriviti(NotificaReazioneDiClassePersonaggio.class, e -> schermo.aggiungiTestoSulPersonaggio(e.getPersonaggio(),
+				TestoReazioneDiClasse.di(e.getTipoDanno(), e.getMoltiplicatore()), TestoReazioneDiClasse.colore(e.getMoltiplicatore())));
+		BusEventi.iscriviti(NotificaColpoMancato.class, e -> schermo.aggiungiColpoMancato(e.getPersonaggio()));
+		BusEventi.iscriviti(NotificaTestoFrase.class, e -> schermo.notifica(e.getMessaggio()));
+		BusEventi.iscriviti(InternoMostraFinestraStato.class, e -> mostraFinestra(TipoFinestra.STATO));
+		BusEventi.iscriviti(InternoMostraFinestraStatistiche.class, e -> mostraFinestra(TipoFinestra.STATISTICHE));
+		BusEventi.iscriviti(InternoMostraFinestraIncantesimiEPozioni.class, e -> mostraFinestra(TipoFinestra.INCANTESIMI_E_POZIONI));
+		BusEventi.iscriviti(NotificaMostraPunteggiMigliori.class, e -> schermo.mostraPunteggi());
+		BusEventi.iscriviti(InternoMostraSchermataGioco.class, e -> {
+			schermo.iniziaGioco();
+			schermo.primoPiano(TipoFinestra.GRAFICA);
+		});
+		BusEventi.iscriviti(NotificaMostraStatisticheFineGioco.class, e -> schermo.mostraStatistiche());
+		BusEventi.iscriviti(NotificaTestoParagrafo.class, e -> schermo.notificaParagrafo(e.getMessaggio()));
+		// A tutto schermo, testo e personaggi; il ritorno al gioco arriva con InternoMostraSchermataGioco dopo l'ultima pagina
+		BusEventi.iscriviti(NotificaPaginaIntermezzo.class, e -> schermo.mostraPaginaIntermezzo(e.getPagina()));
+		BusEventi.iscriviti(InternoFumettoSuccessivo.class, e -> schermo.saltaNellaPaginaIntermezzo(e.getSecondi()));
+		BusEventi.iscriviti(InternoPreparazioneLocazione.class, e -> {
+			// La sfida a carta, forbici e sasso finita nella locazione prima resta visibile fino a qui
+			schermo.getRiquadroSfida().setVisibile(false);
+			schermo.preparaLocazione();
+		});
+		BusEventi.iscriviti(InternoAssegnaCoordinateAPersonaggi.class, e -> schermo.assegnaCoordinateAPersonaggi());
+		BusEventi.iscriviti(InternoRichiestaAperturaFinestraCombattimento.class, e -> {
+			RiquadroCombattimento combattimento = schermo.getRiquadroCombattimento();
+			combattimento.setCombattente(e.getPersonaggio());
+			combattimento.setAvversario(e.getAvversario());
+			combattimento.setVisible(true);
+			rinfresca();
+		});
+		BusEventi.iscriviti(InternoAzioneInCombattimento.class, this::gestisciEventoAzioneInCombattimento);
+		// La tattica ha scelto l'azione (viene prima che si esegua): il riquadro la scrive sotto il personaggio
+		BusEventi.iscriviti(InternoDecisioneTattica.class, e -> schermo.getRiquadroCombattimento().setAzione(e.getPersonaggio(),
+				RiquadroCombattimento.testoDellAzione(e.getAzione(), e.getPersonaggio(), e.getBersaglio())));
+		BusEventi.iscriviti(RichiestaAperturaInventarioCommerciante.class, e -> {
+			impostaAzioni(e.getPossibilita());
+			schermo.impostaScambioCommerciante(e.getNegozio(), e.getScambio());
+			schermo.commerciante();
+		});
+		BusEventi.iscriviti(RichiestaAperturaIncantatore.class, e -> {
+			impostaAzioni(e.getPossibilita());
+			schermo.impostaBancoIncantatore(e.getBanco());
+			schermo.incantatore(e.getMessaggio());
+		});
+		BusEventi.iscriviti(RichiestaAperturaInventarioFornitore.class, e -> {
+			impostaAzioni(e.getPossibilita());
+			schermo.impostaOfferteAlchimista(e.getOfferte());
+			schermo.alchimista();
+		});
+		BusEventi.iscriviti(RichiestaAperturaInventarioGruppo.class, e -> {
+			impostaAzioni(e.getPossibilita());
+			schermo.impostaScambioInventario(e.getScambio(), e.getPersonaggio());
+			schermo.inventario();
+		});
+		BusEventi.iscriviti(RichiestaAperturaTrofei.class, e -> {
+			impostaAzioni(e.getPossibilita());
+			schermo.trofei();
+		});
+		BusEventi.iscriviti(RichiestaAperturaBestiario.class, e -> {
+			impostaAzioni(e.getPossibilita());
+			schermo.bestiario();
+		});
+		BusEventi.iscriviti(RichiestaAperturaTattiche.class, e -> {
+			impostaAzioni(e.getPossibilita());
+			schermo.tattiche(e.getPersonaggio(), e.getTattica(), e.getTatticaPredefinita(), e.getAzioniPossibili());
+		});
+		BusEventi.iscriviti(InternoRichiestaChiusuraFinestraCombattimento.class, e -> {
+			schermo.primoPiano(TipoFinestra.STATO);
+			schermo.getRiquadroCombattimento().setVisible(false);
+		});
+		BusEventi.iscriviti(InternoSfidaCartaForbiciSasso.class, e -> {
+			schermo.getRiquadroSfida().aggiorna(e.getMossaDelGiocatore(), e.getMossaDellAvversario(), e.getPunteggioDelGiocatore(),
+					e.getPunteggioDellAvversario(), e.isInizio());
+			schermo.primoPiano(TipoFinestra.SFIDA);
+			if (e.isFinale()) {
+				schermo.dissolviLaSfida();
+			}
+			rinfresca();
+		});
+		BusEventi.iscriviti(NotificaRaccoltaOggetti.class, e -> schermo.raccogliOggetto());
+		BusEventi.iscriviti(RichiestaUscitaDalGioco.class, e -> {
+			impostaAzioni(e.getPossibilita());
+			schermo.confermaUscita();
+		});
+		BusEventi.iscriviti(InternoRichiestaRefreshUI.class, e -> rinfresca());
+		BusEventi.iscriviti(InternoRichiestaReinizializzazioneUI.class, e -> {
+			schermo.reinizializza();
+			schermo.iniziaGioco();
+			schermo.primoPiano(TipoFinestra.GRAFICA);
+			rinfresca();
+		});
+		BusEventi.iscriviti(RichiestaTesto.class, e -> {
+			schermo.scriviGrande(e.getRichiesta());
+			campo.mostra(e.getTestoPredefinito());
+		});
+		BusEventi.iscriviti(RichiestaSelezioneSlotPerRilettura.class, e -> {
+			temporizzatore.termina();
+			Collection<Comando> possibilita = new ArrayList<>();
+			e.getSalvataggiDisponibili().stream().map(TestataSalvataggio::getId).forEach(possibilita::add);
+			possibilita.add(Comando.ANNULLA);
+			impostaAzioni(possibilita);
+			schermo.selezioneSlotSalvataggioDaCaricare(e.getSalvataggiDisponibili());
+		});
+		BusEventi.iscriviti(RichiestaSelezioneSlotPerSalvataggio.class, e -> schermo.selezioneSlotSalvataggioDaSalvare(e.getSalvataggiDisponibili()));
+		BusEventi.iscriviti(RichiestaVisualizzazioneMappa.class, e -> schermo.mappa());
+		BusEventi.iscriviti(RichiestaSelezioneDirezione.class, e -> {
+			impostaAzioni(e.getPossibilita());
+			schermo.primoPiano(TipoFinestra.MAPPA);
+		});
+		BusEventi.iscriviti(RichiestaSelezioneIncantesimoDaLanciare.class, e -> {
+			ComandiPossibili.set(e.getPossibilita(), e.getComandiVisibili(), e.getInRicarica());
+			schermo.impostaAzioniIcone();
+			schermo.primoPiano(TipoFinestra.INCANTESIMI_E_POZIONI);
+		});
+		BusEventi.iscriviti(RichiestaSelezioneSiNo.class, e -> {
+			impostaAzioni(e.getPossibilita());
+			schermo.primoPiano(TipoFinestra.STATO);
+		});
+		// Domanda e opzioni sono nel riquadro del testo: lì va lo sguardo
+		BusEventi.iscriviti(RichiestaSelezioneMissione.class, e -> {
+			impostaAzioni(e.getPossibilita());
+			schermo.primoPiano(TipoFinestra.TESTO);
+		});
+		BusEventi.iscriviti(InternoFaseDiGioco.class, this::gestisciEventoFaseDiGioco);
+		BusEventi.iscriviti(NotificaVariazioneEffettoDiStatoPersonaggio.class, this::gestisciEventoVariazioneEffettoDiStato);
+		BusEventi.iscriviti(NotificaVariazioneModificatorePersonaggio.class, this::gestisciEventoVariazioneModificatore);
+		BusEventi.iscriviti(NotificaVariazioneStatistichePersonaggio.class, this::gestisciEventoVariazioneStatistichePersonaggio);
+		BusEventi.iscriviti(NotificaVariazioneStatoVitalePersonaggio.class, e -> schermo.notificaVariazioneStatoVitale(e.getPersonaggio()));
+	}
+
+	/**
+	 * Il toolkit ha costruito lo schermo e il campo di testo: da qui gli eventi li raggiungono. Il campo serve anche alla schermata
+	 * delle tattiche, che chiede il nome di una voce.
+	 */
+	protected final void interfacciaCompleta(SchermoDelGioco<?, ?, ?, ?> schermo, CampoDiTesto campo) {
+		this.schermo = schermo;
+		this.campo = campo;
+		schermo.setRichiestaTesto(campo::mostra, campo::annulla);
+	}
+
+	protected SchermoDelGioco<?, ?, ?, ?> getSchermo() {
+		return schermo;
+	}
+
+	protected FaseDiGioco getFaseDiGioco() {
+		return faseDiGioco;
+	}
+
+	/**
+	 * Fase LOGO_INIZIALE: il toolkit fa partire l'animazione del logo (con il temporizzatore, se gli serve) e intanto carica le
+	 * risorse e costruisce l'interfaccia.
+	 */
+	protected abstract void avviaLogoIniziale();
+
+	/**
+	 * Un fotogramma del logo iniziale, a ogni impulso del temporizzatore durante la fase LOGO_INIZIALE: quando l'animazione è finita
+	 * e l'interfaccia è completa il toolkit lascia il posto allo schermo e pubblica {@code InternoFineLogoIniziale}.
+	 */
+	protected abstract void avanzaLogoIniziale();
+
+	/**
+	 * Ridisegna subito, per dare un riscontro immediato (all'apertura e alla chiusura del riquadro del combattimento, per esempio).
+	 */
+	protected void rinfresca() {
+		if (schermo != null) {
+			schermo.ridisegna();
+		}
+	}
+
+	/**
+	 * Un impulso del temporizzatore: durante il logo iniziale fa avanzare il logo, durante l'intro le sue schermate.
+	 */
+	@Override
+	public void tick() {
+		if (faseDiGioco == FaseDiGioco.LOGO_INIZIALE) {
+			avanzaLogoIniziale();
+		} else if (faseDiGioco == FaseDiGioco.INTRO) {
+			schermo.avanzaIntro();
+		}
+	}
+
+	/**
+	 * Mostra nella barra delle icone i comandi che il giocatore può dare.
+	 */
+	protected void impostaAzioni(Collection<Comando> possibilita) {
+		ComandiPossibili.set(possibilita);
+		schermo.impostaAzioniIcone();
+	}
+
+	private void mostraFinestra(TipoFinestra finestra) {
+		schermo.primoPiano(finestra);
+		rinfresca();
+	}
+
+	/**
+	 * Chi sta agendo e, se c'è, il bersaglio: sono dell'uno o dell'altro gruppo, a turno
+	 */
+	private void gestisciEventoAzioneInCombattimento(InternoAzioneInCombattimento evento) {
+		RiquadroCombattimento combattimento = schermo.getRiquadroCombattimento();
+		combattimento.setCombattente(evento.getPersonaggio());
+		combattimento.setAvversario(evento.getBersaglio());
+		if (!combattimento.haAzionePer(evento.getPersonaggio())) {
+			// Fuori dalla tattica: l'azione non ha una decisione, si scrive che attacca il bersaglio (se c'è)
+			combattimento.setAzione(evento.getPersonaggio(), evento.getAzione() != null
+					? RiquadroCombattimento.testoDellAzione(evento.getAzione(), evento.getPersonaggio(), evento.getBersaglio())
+					: RiquadroCombattimento.azionePredefinita(evento.getBersaglio()));
+		}
+		combattimento.setVisible(true);
+		rinfresca();
+	}
+
+	private void gestisciEventoFaseDiGioco(InternoFaseDiGioco evento) {
+		faseDiGioco = evento.getFase();
+		switch (faseDiGioco) {
+			case LOGO_INIZIALE:
+				avviaLogoIniziale();
+				break;
+
+			case INTRO:
+				// Richiama la schermata o animazione di introduzione
+				schermo.avviaIntro();
+				// La prima schermata (loghi o classifica) deve restare per un periodo intero
+				temporizzatore.iniziaDopo(PRIMA_SCHERMATA_DELL_INTRO_MS);
+				impostaAzioni(evento.getComandiPossibili());
+				break;
+
+			case LINGUA:
+				// Comincia una partita nuova: prima di tutto si sceglie la lingua (la scritta è nelle lingue offerte)
+				GestoreNuvole.azzera();
+				temporizzatore.termina();
+				schermo.scriviGrande(TestiDellaUI.get("SCEGLI_LINGUA"));
+				impostaAzioni(evento.getComandiPossibili());
+				break;
+
+			case NOME_PERSONAGGIO:
+				// Comincia una partita nuova: le nuvole della mappa si rigenerano sulla sua area conosciuta
+				GestoreNuvole.azzera();
+				temporizzatore.termina();
+				schermo.scriviGrande(TestiDellaUI.get("SCEGLI_NOME"));
+				campo.mostraVuoto();
+				impostaAzioni(Collections.emptyList());
+				break;
+
+			case SESSO_PERSONAGGIO:
+				schermo.scriviGrande(TestiDellaUI.get("SCEGLI_SESSO", campo.getTesto()));
+				impostaAzioni(evento.getComandiPossibili());
+				break;
+
+			case CLASSE_PERSONAGGIO:
+				schermo.scriviGrande(TestiDellaUI.get("SCEGLI_CLASSE", campo.getTesto()));
+				impostaAzioni(evento.getComandiPossibili());
+				break;
+
+			case SALVATAGGIO_DA_SCRIVERE:
+				// La schermata è già aperta, con le testate, da RichiestaSelezioneSlotPerSalvataggio
+				impostaAzioni(evento.getComandiPossibili());
+				break;
+
+			default:
+				throw new IllegalArgumentException("Fase di gioco non ancora gestita: " + evento.getFase());
+		}
+	}
+
+	private void gestisciEventoVariazioneStatistichePersonaggio(NotificaVariazioneStatistichePersonaggio evento) {
+		// Anche i personaggi del gruppo, che si vedono in locazione: lo schermo porta in primo piano il loro riquadro
+		VistaPersonaggio personaggio = evento.getPersonaggio();
+		TipoAttributo tipo = evento.getTipoAttributo();
+		if (tipo == TipoAttributo.SALUTE) {
+			schermo.variaSalute(personaggio, (int) (evento.getNuovoValore() - evento.getValorePrecedente()));
+		} else if (tipo == TipoAttributo.MAGIA) {
+			schermo.variaMagia(personaggio, (int) (evento.getNuovoValore() - evento.getValorePrecedente()));
+		}
+	}
+
+	private void gestisciEventoVariazioneEffettoDiStato(NotificaVariazioneEffettoDiStatoPersonaggio evento) {
+		switch (evento.getTipo()) {
+			case AGGIUNTA:
+			case RINFORZO:
+				schermo.aggiungiEffettoDiStato(evento.getPersonaggio(), evento.getEffetto(), DoomdarkColorModel.Color.YELLOW);
+				break;
+			case DECADIMENTO:
+				// Solo la durata scende di un turno: nessuno sprite, altrimenti si duplicherebbe quello già mostrato per
+				// l'AGGIUNTA/RINFORZO nello stesso round
+				break;
+			case RIMOZIONE:
+				// L'effetto è terminato: sprite in grigio per segnalarlo
+				schermo.aggiungiEffettoDiStato(evento.getPersonaggio(), evento.getEffetto(), DoomdarkColorModel.Color.MEDIUM_GRAY);
+				break;
+			default:
+				throw new IllegalArgumentException("TipoVariazioneEffettoDiStato non gestito: " + evento.getTipo());
+		}
+	}
+
+	/**
+	 * Come per gli effetti di stato, uno sprite sul personaggio con la descrizione ("Furtività +5", "Intelligenza a 0"): giallo se
+	 * porta l'attributo a un valore, verde se lo alza, rosso se lo abbassa, grigio se l'effetto è finito. Solo per i modificatori a
+	 * tempo: quelli permanenti hanno già i loro messaggi.
+	 */
+	private void gestisciEventoVariazioneModificatore(NotificaVariazioneModificatorePersonaggio evento) {
+		ModificatoreAttributoMD modificatore = evento.getModificatore();
+		if (!modificatore.isTemporaneo()) {
+			return;
+		}
+		DoomdarkColorModel.Color colore;
+		switch (evento.getTipo()) {
+			case AGGIUNTA:
+				colore = coloreModificatore(modificatore);
+				break;
+			case MODIFICA:
+				// Solo se la durata si allunga (un doppione la rinfresca); se scende di un turno nessuno sprite
+				if (evento.getNuovaDurata() <= evento.getDurataPrecedente()) {
+					return;
+				}
+				colore = coloreModificatore(modificatore);
+				break;
+			case RIMOZIONE:
+				colore = DoomdarkColorModel.Color.MEDIUM_GRAY;
+				break;
+			default:
+				throw new IllegalArgumentException("TipoVariazioneModificatore non gestito: " + evento.getTipo());
+		}
+		schermo.aggiungiModificatore(evento.getPersonaggio(), TestoDeiModificatori.breve(modificatore), colore);
+	}
+
+	static DoomdarkColorModel.Color coloreModificatore(ModificatoreAttributoMD modificatore) {
+		if (modificatore.getTipoModificatoreAttributo() == TipoModificatore.QUANTITA_ASSOLUTA) {
+			return DoomdarkColorModel.Color.YELLOW;
+		}
+		return modificatore.getQuantita() >= 0 ? DoomdarkColorModel.Color.GREEN : DoomdarkColorModel.Color.RED;
+	}
+}

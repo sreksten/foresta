@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.libgdx;
 
+import com.threeamigos.foresta.ui.sprite.FumettoDelloSchermo;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.sprite.DescrizioneFumetto;
@@ -11,7 +12,7 @@ import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
  * Il fumetto in libGDX: un rettangolo bianco smussato con il testo e una punta che indica chi parla, che cresce verso l'alto da un punto e svanisce dopo
  * qualche secondo. Com'è fatta la nuvola e dov'è la punta lo dice {@link DescrizioneFumetto}, nel modulo comune.
  */
-public final class SpriteFumettoGdx extends SpriteGdx {
+public final class SpriteFumettoGdx extends SpriteGdx implements FumettoDelloSchermo {
 
 	private final DescrizioneFumetto dati;
 	private final DoomdarkColorModel.Color colore;

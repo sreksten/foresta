@@ -41,10 +41,10 @@ class CaratteriFuoriDalFontTest {
 
     @Test
     void ilPromptTogliePerCaratteriCheIlFontNonHa() {
-        assertEquals("Jurgen", Prompt.soloCaratteriDelFont("Ju|rgen"));
-        assertEquals("Bob", Prompt.soloCaratteriDelFont("Bob_"));
-        assertEquals("Chiara dell'Orto", Prompt.soloCaratteriDelFont("Chiara dell'Orto"));
-        assertEquals("Perù", Prompt.soloCaratteriDelFont("Perù|"));
-        assertNull(Prompt.soloCaratteriDelFont(null));
+        assertEquals("Jurgen", CampoDiTesto.soloCaratteriDelFont("Ju|rgen"));
+        assertEquals("Bob", CampoDiTesto.soloCaratteriDelFont("Bob_"));
+        assertEquals("Chiara dell'Orto", CampoDiTesto.soloCaratteriDelFont("Chiara dell'Orto"));
+        assertEquals("Perù", CampoDiTesto.soloCaratteriDelFont("Perù|"));
+        assertNull(CampoDiTesto.soloCaratteriDelFont(null));
     }
 }

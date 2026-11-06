@@ -47,6 +47,10 @@ Gli scambi di artefatti hanno automi propri: `AutomaInventario` (fra il gruppo e
 - **`FabbricaLocazioni`** costruisce quella di ogni `TipoLocazione`, e **`LocazioneCorrente`** tiene la locazione viva in cui si trova il gruppo: dura quanto la visita e poi si butta. Ciò che deve restare (nome, visitata, completata) sta nel `LocazioneMD` della casella.
 - **`RaccoltaBottino`** decide che cosa succede quando il gruppo prende il bottino (monete e pietre nella cassa, il cofano si apre, l'oggetto di una missione la avvisa, un artefatto va a chi può usarlo o all'inventario) e assegna i punti del suo valore. **`BottinoDegliAvversari`** dà ai gruppi avversari le pergamene e le pozioni che portano con sé, che se non usate diventano bottino. **`Pernottamento`** è la notte del gruppo (racconto, orologio, eventi del giorno).
 
+### L'avvio
+
+`AvvioDelMotore` collega il motore per ogni piattaforma (il `Main` di Swing, quello di libGDX): modello dati, thread principale (lo dà la piattaforma), uscita (`NotificaUscitaDalGioco`, che la piattaforma traduce: `System.exit` sul desktop Swing, `Gdx.app.exit()` in libGDX), componenti del motore, gestori su file, `Automa` che parte con `InternoInterfacciaUtentePronta`, trucchi sui dadi in modalità di prova e `VistaPartitaMotore`; `nuovoTemporizzatore()` dà un temporizzatore che segnala sul bus gli impulsi falliti.
+
 ### Verso la UI
 
 `VistaPartitaMotore` è l'implementazione di `VistaPartita`: non tiene stato, a ogni chiamata delega ai gruppi correnti e alle classi statiche, così vale anche dopo una partita nuova o riletta. `StrumentiDiSviluppoMotore` implementa gli strumenti della finestra di prova; `DotazioneDiProva` dà al gruppo in modalità di prova scorte abbondanti, la Falce del Tristo Mietitore, due spade che mettono un modificatore sul bersaglio e la mappa scoperta. `Notizie` è la facciata su `NotizieMD`: gli ultimi messaggi li prende dal bus, le notizie da chi le produce. `Racconto` ha l'introduzione e i finali (i testi stanno in `storia_<lingua>.properties`), che il motore dà alla UI così ogni piattaforma racconta la stessa storia. `TestoAvvisoDiFusione` scrive gli avvisi dell'incantatore.

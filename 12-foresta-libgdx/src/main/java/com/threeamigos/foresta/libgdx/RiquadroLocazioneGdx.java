@@ -95,6 +95,19 @@ public final class RiquadroLocazioneGdx extends RiquadroLocazione {
 	}
 
 	/**
+	 * Lo sprite che segnala la morte del personaggio: la sua immagine, rivolta come la si vedeva (gli avversari a destra, il gruppo
+	 * a sinistra), che si dissolve dove stava. Null se il personaggio non è in locazione.
+	 */
+	public SpriteInDissolvenzaGdx spriteDellaMorte(VistaPersonaggio personaggio) {
+		Punto posizione = getPosizione(personaggio);
+		if (posizione == null) {
+			return null;
+		}
+		Verso verso = vistaPartita.getGruppoGiocatore().contiene(personaggio) ? Verso.SINISTRA : Verso.DESTRA;
+		return new SpriteInDissolvenzaGdx(rivolta(personaggio.getClasse(), verso), zoom, posizione.x, posizione.y);
+	}
+
+	/**
 	 * @param agente    chi sta agendo (null se non c'è): gli appare una freccia sopra la testa
 	 * @param bersaglio il suo bersaglio, se c'è: anche a lui
 	 */

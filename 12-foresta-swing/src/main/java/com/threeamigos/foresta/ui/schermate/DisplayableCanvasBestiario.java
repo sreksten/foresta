@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.schermate;
 
+import com.threeamigos.foresta.ui.immagini.MisureDaiFile;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -9,7 +10,6 @@ import com.threeamigos.foresta.ui.componenti.ColonnaScorrevole;
 import com.threeamigos.foresta.ui.componenti.ContenutoDiColonna;
 import com.threeamigos.foresta.ui.componenti.ContenutoDiColonna.Elemento;
 import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
-import com.threeamigos.foresta.ui.immagini.DimensioniRisorsa;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.immagini.ImmaginiAwt;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
@@ -43,8 +43,7 @@ public class DisplayableCanvasBestiario extends SchermataBestiario {
 
 		@Override
 		public Misura immagine(String risorsa) {
-			java.awt.Dimension d = DimensioniRisorsa.di(risorsa);
-			return new Misura(d.width, d.height);
+			return new MisureDaiFile().immagine(risorsa);
 		}
 	};
 
@@ -59,8 +58,7 @@ public class DisplayableCanvasBestiario extends SchermataBestiario {
 
 	@Override
 	protected Misura misuraDellImmagine(String risorsa) {
-		java.awt.Dimension d = DimensioniRisorsa.di(risorsa);
-		return new Misura(d.width, d.height);
+		return new MisureDaiFile().immagine(risorsa);
 	}
 
 	/**

@@ -17,17 +17,17 @@ class PromptAnnullaTest {
         Prompt prompt = new Prompt();
         Consumer<String> mia = testo -> { };
         Consumer<String> altra = testo -> { };
-        prompt.mostra("nome", mia);
+        prompt.getCampo().mostra("nome", mia);
         assertTrue(prompt.isVisible());
 
-        prompt.annulla(altra);
+        prompt.getCampo().annulla(altra);
         assertTrue(prompt.isVisible(), "un'altra richiesta non chiude questa");
 
-        prompt.annulla(mia);
+        prompt.getCampo().annulla(mia);
         assertFalse(prompt.isVisible());
 
         // Già chiuso: non fa niente, e non riapre
-        prompt.annulla(mia);
+        prompt.getCampo().annulla(mia);
         assertFalse(prompt.isVisible());
     }
 }

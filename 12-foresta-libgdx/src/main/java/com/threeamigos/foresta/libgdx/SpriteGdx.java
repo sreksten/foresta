@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.libgdx;
 
+import com.threeamigos.foresta.ui.sprite.SpriteDelloSchermo;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -16,7 +17,7 @@ import com.threeamigos.foresta.ui.sprite.ModelloDelloSprite;
  * parti si sovrappongono (il contorno nero di una variazione, il testo sulla nuvola di un fumetto) durante la dissolvenza si vede un po' di più di quel che
  * sta sotto.
  */
-public abstract class SpriteGdx {
+public abstract class SpriteGdx implements SpriteDelloSchermo {
 
 	private final ModelloDelloSprite modello;
 

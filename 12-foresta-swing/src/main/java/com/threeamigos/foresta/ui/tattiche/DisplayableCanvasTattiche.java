@@ -13,6 +13,7 @@ import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.schermate.DisegnoDiContenutoAwt;
 import com.threeamigos.foresta.ui.schermate.DisplayableCanvasScambiatore;
 import com.threeamigos.foresta.ui.schermate.EditorDelleTattiche;
+import com.threeamigos.foresta.ui.schermate.SchermataTattiche;
 import com.threeamigos.foresta.ui.schermate.EditorDelleTattiche.Quadro;
 import com.threeamigos.foresta.ui.schermate.EditorDelleTattiche.Riga;
 import com.threeamigos.foresta.ui.schermate.MenuADiscesa;
@@ -32,7 +33,7 @@ import java.util.function.Consumer;
  * click sono di {@link EditorDelleTattiche} e {@link MenuADiscesa}, nel modulo comune; qui c'è il disegno: l'elenco delle voci (un
  * {@link ComponenteScorrevole} con una riga per nodo), la colonna centrale, la spiegazione a destra, il menu a discesa e il cartiglio dell'aiuto.
  */
-public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
+public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore implements SchermataTattiche {
 
 	private final EditorDelleTattiche editor;
 	private final DisegnoDiContenutoAwt disegnoDelContenuto = new DisegnoDiContenutoAwt();
@@ -83,7 +84,7 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore {
 	}
 
 	/** Per i test: la logica della schermata */
-	EditorDelleTattiche getEditor() {
+	public EditorDelleTattiche getEditor() {
 		return editor;
 	}
 

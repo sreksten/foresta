@@ -36,7 +36,7 @@ import java.util.Map;
  * ImageCache; gli sprite sheet sono ritagliati in fotogrammi una volta sola. Ogni immagine di tipo ANIMAZIONE ha una sua istanza di
  * {@link AnimazioneImmagine}, anch'essa tenuta per tutto l'intermezzo.
  */
-public class DisplayableCanvasIntermezzo implements Finestra {
+public class DisplayableCanvasIntermezzo implements SchermataIntermezzo {
 
 	private final int width;
 	private final int height;

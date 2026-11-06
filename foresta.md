@@ -37,7 +37,7 @@ Il codice si divide in due parti, che si parlano attraverso un bus eventi publis
 ```
         UI (ui)                                              Motore (Automa e il resto)
   ┌────────────────────────┐   Comando*  ──────────────▶  ┌──────────────────────────────┐
-  │ ForestaUI              │                              │ Automa: macchina a stati     │
+  │ ForestaSwing              │                              │ Automa: macchina a stati     │
   │ DisplayableCanvas      │   ◀──────  Notifica*,        │ reattiva, senza game loop    │
   │ thread di ridisegno    │            Richiesta*,       │                              │
   │ a 60 FPS (solo repaint)│            Interno*          │ TemporizzatoreJ2SE: impulsi  │
@@ -89,7 +89,7 @@ Il progetto è un insieme di moduli Maven (pom padre nella radice); ogni modulo 
 | 12 | [`12-foresta-ui-comune`](12-foresta-ui-comune.md) | le immagini del gioco (PNG) e la logica d'interfaccia che non disegna | motore-api, tattiche |
 | 12 | [`12-foresta-swing`](12-foresta-swing.md) | `ui` (e gli eventi con sprite) | ui-comune |
 | 12 | [`12-foresta-libgdx`](12-foresta-libgdx.md) | l'interfaccia in libGDX (Android, famiglia Apple, desktop) | ui-comune |
-| 13 | [`13-foresta-app-libgdx`](13-foresta-app-libgdx.md) | `MainLibgdx`, l'applicazione desktop con libGDX | libgdx |
+| 13 | [`13-foresta-app-libgdx`](13-foresta-app-libgdx.md) | `MainLibgdx`, l'applicazione desktop con libGDX | motore, libgdx |
 | 13 | [`13-foresta-app-swing`](13-foresta-app-swing.md) | `Main`, `SnifferBusEventi` e i test che usano motore e UI insieme | motore, swing |
 
 Un pacchetto può stare in più moduli (`testi`, `strumenti`, `intermezzi`, `eventi.interni`): quel che conta è il modulo, non il pacchetto.
@@ -99,12 +99,10 @@ Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbrevia
 
 `Main.main()`:
 
-1. dice alle parti del gioco dove sono i loro dati (`ModelloDati.installa()`) e installa il thread principale (`ThreadPrincipale` con l'`EsecutoreSwing`: tutta la logica gira sull'EDT);
-2. registra sul bus `SnifferBusEventi` (log di ogni evento), si iscrive a `NotificaUscitaDalGioco` (è l'unico punto che chiama `System.exit`) e fa registrare con `StatoDelMotore.registraComponenti()` i componenti che ascoltano tutta la partita: `Notizie`, `Statistiche`, `RegistroTrofei`, `RegistroArtefatti`, `RegistroMissioni`;
-3. legge gli argomenti: `ORIZZONTALE`/`VERTICALE`, `TUTTOSCHERMO`, `SALTALOGO`, `BARRACLASSICA` (barra icone fissa invece del Dock), `MODALITA_DI_PROVA`;
-4. installa i gestori su file di classifica, salvataggi e trofei (i trofei si leggono qui, una volta sola);
-5. crea l'`Automa` con il suo `Temporizzatore` e si iscrive a `InternoInterfacciaUtentePronta`;
-6. crea `VistaPartitaMotore` e `ForestaUI` (con un secondo temporizzatore per le animazioni), e in modalità di prova i trucchi sui dadi e la finestra di prova. Quando la finestra è pronta, l'evento arriva e l'automa parte con `inizia()`: mentre la UI traccia il logo, il motore precarica grammatiche e generatore di artefatti.
+1. legge gli argomenti con `OpzioniDiAvvio` (modulo comune): `ORIZZONTALE`/`VERTICALE`, `TUTTOSCHERMO`, `SALTALOGO`, `BARRACLASSICA` (barra icone fissa invece del Dock), `JOYSTICK_VIRTUALE`, `LINGUA=`, `ZOOM=`, `MODALITA_DI_PROVA`;
+2. registra sul bus `SnifferBusEventi` (log di ogni evento);
+3. collega il motore con `AvvioDelMotore` (lo stesso di libGDX): dice alle parti del gioco dove sono i loro dati (`ModelloDati.installa()`), installa il thread principale (`ThreadPrincipale` con l'`EsecutoreSwing`: tutta la logica gira sull'EDT), si iscrive a `NotificaUscitaDalGioco` (in Swing l'unico punto che chiama `System.exit`), fa registrare con `StatoDelMotore.registraComponenti()` i componenti che ascoltano tutta la partita (`Notizie`, `Statistiche`, `RegistroTrofei`, `RegistroArtefatti`, `RegistroMissioni`), installa i gestori su file di classifica, salvataggi, trofei e bestiario, crea l'`Automa` con il suo `Temporizzatore`, si iscrive a `InternoInterfacciaUtentePronta` e in modalità di prova installa i trucchi sui dadi;
+4. crea `ForestaSwing` (con un secondo temporizzatore per le animazioni) e in modalità di prova la finestra di prova. Quando la finestra è pronta, l'evento arriva e l'automa parte con `inizia()`: mentre la UI traccia il logo, il motore precarica grammatiche e generatore di artefatti.
 
 ## Stack e build
 

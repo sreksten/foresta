@@ -28,7 +28,7 @@ Il progetto è diviso in due parti che **non si conoscono**: il **motore** (le r
 ```
             INTERFACCIA (12-foresta-swing)                      MOTORE (12-foresta-motore)
    ┌───────────────────────────────────┐            ┌───────────────────────────────────┐
-   │ ForestaUI, DisplayableCanvas      │  comandi   │ Automa: macchina a stati          │
+   │ ForestaSwing, DisplayableCanvas      │  comandi   │ Automa: macchina a stati          │
    │ riquadri, schermate, barra icone  │ ─────────▶ │ locazioni, combattimento,         │
    │ sprite, font bitmap               │            │ missioni, oggetti, mondo          │
    │                                   │  notifiche │                                   │
@@ -285,7 +285,7 @@ Le classi `…MD` sono semplici dati serializzabili; le facciate nel motore cont
 Tutto il disegno è Java2D, e il testo passa da un font bitmap fatto in casa (`Doomdark`). La UI è composta così:
 
 ```
- ForestaUI              si iscrive al bus e traduce ogni evento in una chiamata sul canvas
+ ForestaSwing              si iscrive al bus e traduce ogni evento in una chiamata sul canvas
    └─ DisplayableCanvas il pannello Swing che disegna tutto, 60 volte al secondo se serve
         ├─ riquadri     locazione, gruppo, combattimento, mappa, missioni, testo, statistiche,
         │               incantesimi e pozioni   (la schermata di gioco, in una pila di finestre)

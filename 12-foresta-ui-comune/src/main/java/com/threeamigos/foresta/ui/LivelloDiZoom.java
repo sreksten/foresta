@@ -3,7 +3,7 @@ package com.threeamigos.foresta.ui;
 /**
  * Di quanto ingrandire all'avvio le immagini che nei file sono a metà risoluzione (2.0 = 200%).
  * Si imposta una volta sola, prima di creare la UI (vedi l'argomento ZOOM= di Main): ImageCache e
- * DimensioniRisorsa lo leggono, e ImageCache lo fa al primo uso.
+ * DisposizioneDelloSchermo lo leggono, e ImageCache lo fa al primo uso.
  */
 public final class LivelloDiZoom {
 

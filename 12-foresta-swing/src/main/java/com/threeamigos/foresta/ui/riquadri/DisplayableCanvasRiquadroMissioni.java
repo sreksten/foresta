@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.ui.riquadri;
 
-import com.threeamigos.foresta.interfacce.VistaMissione;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.ui.Area;
 import com.threeamigos.foresta.ui.Misura;
@@ -13,17 +12,12 @@ import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Il riquadro con le missioni attive, disegnato con Swing: l'albero, lo scorrimento e i click sono di {@link RiquadroMissioni}, nel modulo comune.
  */
 public class DisplayableCanvasRiquadroMissioni extends RiquadroMissioni {
-
-	// Dove sta il mouse, relativo al riquadro, per l'aiuto (-1 fuori)
-	private int mouseX = -1;
-	private int mouseY = -1;
 
 	public DisplayableCanvasRiquadroMissioni(int topLeftX, int topLeftY, VistaPartita vistaPartita) {
 		super(topLeftX, topLeftY, ImageCache.corniceGrande.getWidth(), ImageCache.corniceGrande.getHeight(), vistaPartita);
@@ -93,40 +87,15 @@ public class DisplayableCanvasRiquadroMissioni extends RiquadroMissioni {
 		graphics.setClip(clipOriginale);
 	}
 
-	@Override
-	public void processaMovimento(int x, int y) {
-		mouseX = x;
-		mouseY = y;
-	}
-
-	@Override
-	public void processaUscita(int x, int y) {
-		mouseX = -1;
-		mouseY = -1;
-	}
-
 	/**
 	 * Ad aiuto acceso, i cartigli accanto al mouse dentro l'elenco: sul nome di una missione cosa fa il click (aprire
 	 * o chiudere la descrizione), e se l'elenco è più alto del riquadro la rotella. Va chiamato dopo aver disegnato
 	 * tutto lo schermo, grande larghezzaSchermo x altezzaSchermo.
 	 */
 	public void disegnaAiuto(Graphics2D graphics, int larghezzaSchermo, int altezzaSchermo) {
-		if (!getVistaPartita().isAiutoAbilitato() || mouseX < 0) {
-			return;
+		List<String> righe = righeDellAiuto();
+		if (!righe.isEmpty()) {
+			Cartiglio.disegnaAccantoAlMouse(graphics, righe, getTopLeftX() + getMouseX(), getTopLeftY() + getMouseY(), larghezzaSchermo, altezzaSchermo);
 		}
-		int xInterno = mouseX - BORDO;
-		int yInterno = mouseY - BORDO;
-		if (xInterno < 0 || xInterno >= getAreaElenco().getLarghezza() || yInterno < 0 || yInterno >= getAltezzaInterna()) {
-			return;
-		}
-		List<String> righe = new ArrayList<>();
-		VistaMissione missione = missioneInPosizione(mouseX, mouseY);
-		if (missione != null) {
-			righe.add(Cartiglio.aiutoClick(missione.isDescrizioneVisibile(), TestiDellaUI.get("COSA_DESCRIZIONE")));
-		}
-		if (isScorrevole()) {
-			righe.add(Cartiglio.AIUTO_ROTELLA);
-		}
-		Cartiglio.disegnaAccantoAlMouse(graphics, righe, getTopLeftX() + mouseX, getTopLeftY() + mouseY, larghezzaSchermo, altezzaSchermo);
 	}
 }

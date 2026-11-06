@@ -10,7 +10,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 /**
  * Un testo su un cartiglio: un nastro alto 24 pixel (un bordo marrone sopra e uno sotto, 22 pixel arancioni in mezzo)
@@ -28,11 +27,6 @@ public final class Cartiglio {
 	private static final Color SFONDO = new Color(0xFF, 0xAD, 0x00);
 	private static final Color BORDO = new Color(0x8C, 0x42, 0x10);
 
-	/**
-	 * Il testo dell'aiuto per gli elenchi che si scorrono con la rotella
-	 */
-	public static final String AIUTO_ROTELLA = TestiDellaUI.get("AIUTO_ROTELLA");
-
 	private Cartiglio() {
 	}
 
@@ -41,13 +35,6 @@ public final class Cartiglio {
 	 */
 	static Image testo(String testo) {
 		return ImageCache.get(testo, DoomdarkFont.medio(), DoomdarkColorModel.Color.BROWN);
-	}
-
-	/**
-	 * Il testo dell'aiuto per il click su una voce che apre e chiude qualcosa (un elenco, una descrizione)
-	 */
-	public static String aiutoClick(boolean aperto, String cosaSiApre) {
-		return TestiDellaUI.get(aperto ? "AIUTO_CLICK_CHIUDI" : "AIUTO_CLICK_APRI", cosaSiApre);
 	}
 
 	static int larghezza(Image testo) {

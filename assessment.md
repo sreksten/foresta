@@ -183,7 +183,7 @@ Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md).
   - i contenuti (storia, finali, testi delle enum, grammatiche) stanno sotto la UI.
 - **Ancora aperto:**
   - le costanti di bilanciamento sono codice (`Costanti*`), non dati;
-  - la UI Swing chiude il processo da sola con `EXIT_ON_CLOSE` (`ForestaUI`), senza passare dal motore.
+  - la UI Swing chiude il processo da sola con `EXIT_ON_CLOSE` (`ForestaSwing`), senza passare dal motore.
 - **Il grosso resta la UI**, che va riscritta (libGDX è la scelta più naturale per restare in Java), con l'input ripensato per il tocco.
 
 ## 7. Rischi tecnici

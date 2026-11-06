@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.schermate;
 
+import com.threeamigos.foresta.ui.immagini.MisureDaiFile;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
@@ -10,7 +11,6 @@ import com.threeamigos.foresta.ui.Misura;
 import com.threeamigos.foresta.ui.componenti.ColonnaScorrevole;
 import com.threeamigos.foresta.ui.componenti.ContenutoDiColonna.Elemento;
 import com.threeamigos.foresta.ui.componenti.ScorrimentoVerticale;
-import com.threeamigos.foresta.ui.immagini.DimensioniRisorsa;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 
 import java.awt.*;
@@ -22,7 +22,7 @@ import java.util.Collection;
  * sfondo con l'ombra del drago, le statistiche di fine partita e la scelta dello slot di salvataggio da caricare. Che cosa mostrano lo dicono
  * {@link SchermateSenzaPartita} (le schermate ferme) e {@link IntroDelGioco} (l'intro, che dipende dal tempo), nel modulo comune; qui si disegna.
  */
-public class DisplayableCanvasIntroOutro implements Finestra {
+public class DisplayableCanvasIntroOutro implements SchermateIntroOutro {
 
 	private final int width;
 	private final int height;
@@ -52,8 +52,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 
 			@Override
 			public Misura immagine(String risorsa) {
-				Dimension d = DimensioniRisorsa.di(risorsa);
-				return new Misura(d.width, d.height);
+				return new MisureDaiFile().immagine(risorsa);
 			}
 		};
 		this.schermate = new SchermateSenzaPartita(width, height, vistaPartita, misure);

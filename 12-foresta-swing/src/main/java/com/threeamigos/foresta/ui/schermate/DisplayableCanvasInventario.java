@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.schermate;
 
+import com.threeamigos.foresta.tipi.TipoBottega;
 import com.threeamigos.foresta.artefatti.VistaArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -17,7 +18,6 @@ import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
-import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 /**
  * La schermata dell'inventario: a sinistra gli artefatti del personaggio scelto, a destra quelli del gruppo, in mezzo la colonna del personaggio con
@@ -53,17 +53,17 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
 
     @Override
     protected String aiutoDoppioClickSinistra() {
-        return TestiDellaUI.get("AIUTO_DOPPIO_CLICK_SPOSTA_NEL_GRUPPO");
+        return TipoBottega.INVENTARIO.getAiutoDoppioClickSinistra();
     }
 
     @Override
     protected String aiutoDoppioClickDestra() {
-        return TestiDellaUI.get("AIUTO_DOPPIO_CLICK_EQUIPAGGIA");
+        return TipoBottega.INVENTARIO.getAiutoDoppioClickDestra();
     }
 
     @Override
     public void disegnaIntestazioniInventario(Graphics2D graphics) {
-        disegnaIntestazioniInventarioImpl(graphics, TestiDellaUI.get("INVENTARIO_PERSONAGGIO"), TestiDellaUI.get("INVENTARIO_GRUPPO"));
+        disegnaIntestazioniInventarioImpl(graphics, TipoBottega.INVENTARIO.getIntestazioneSinistra(), TipoBottega.INVENTARIO.getIntestazioneDestra());
     }
 
     private final DisegnoDiContenutoAwt disegno = new DisegnoDiContenutoAwt();

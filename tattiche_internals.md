@@ -378,7 +378,7 @@ tiri; la spiegazione registra il percorso, non i tiri.
 
 `agisci(attore, tattica)`: costruisce il contesto, chiede la decisione, **pubblica `InternoDecisioneTattica`**, esegue, e se la decisione non è un ripiego registra l'uso della voce
 (`stato.registraUsoVoce`) **dopo** l'esecuzione, così durante l'azione la voce risulta ancora non usata in questo round. L'evento arriva *prima* dell'azione: la UI scrive l'azione
-sotto il personaggio prima che accada (`ForestaUI.gestisciEventoDecisioneTattica`).
+sotto il personaggio prima che accada (`ForestaUI`, evento `InternoDecisioneTattica`).
 
 `esegui(attore, decisione)` ricava il lato (`miei.contiene(attore)`) e fa uno `switch` sul tipo eseguito:
 

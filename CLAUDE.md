@@ -35,7 +35,7 @@ Il progetto è un insieme di moduli Maven (pom padre nella radice); ogni modulo 
 | 12 | `12-foresta-motore` | il resto: `motore`, `tipi.CostantiMotore` (il bilanciamento di locazioni, avversari e locande), `oggetti` (`RaccoltaBottino`), `locazioni`, `testi`, `salvataggi`, `intermezzi/IntermezziDelMotore` (registra gli intermezzi delle missioni), gli eventi interni che portano il dominio, le grammatiche `.txt` | motore-api |
 | 12 | `12-foresta-ui-comune` | le immagini del gioco (PNG, in `img/`) e la logica d'interfaccia che non disegna, uguale per ogni toolkit grafico; niente `java.awt`, Swing né libGDX | motore-api, tattiche || 12 | `12-foresta-swing` | `ui` (e gli eventi con sprite) | ui-comune |
 | 12 | `12-foresta-libgdx` | l'interfaccia in libGDX (Android, famiglia Apple, desktop): stessa partita di Swing con un altro toolkit | ui-comune |
-| 13 | `13-foresta-app-libgdx` | `MainLibgdx`: l'applicazione desktop con libGDX (Android e iOS hanno il loro, fuori da Maven) | libgdx |
+| 13 | `13-foresta-app-libgdx` | `MainLibgdx`: l'applicazione desktop con libGDX (Android e iOS hanno il loro, fuori da Maven) | motore, libgdx |
 | 13 | `13-foresta-app-swing` | `Main`, `SnifferBusEventi` e i test che usano motore e UI insieme | motore, swing |
 
 Un pacchetto può stare in più moduli (`testi`, `strumenti`, `intermezzi`, `eventi.interni`): quel che conta è il modulo, non il pacchetto.
@@ -60,7 +60,7 @@ La catena: `strumenti` danno funzioni ai `testi`; i testi agli `attributi`, agli
 | Salvataggi e modello dati | `…/modellodati`, `…/interfacce/GestoreSalvataggi`, `…/salvataggi/GestoreSalvataggiSuFile`, `…/motore/RiletturaPartita` | `motore_di_gioco.md` §5 |
 | Mappa, tempo, locazioni | `…/mappa/Foresta` (in `02-foresta-mappa`; anche le città distrutte e `Direzioni`), `…/motore/CostruttoreDellaForesta` (costruisce il mondo sulla mappa), `…/statistiche/LineaTemporale` e `Statistiche` (in `06-foresta-statistiche`), `…/locazioni` | `motore_di_gioco.md` §6 |
 | Combattimento | `…/combattimento/CalcolatoreCombattimento`, `Ondata`, `StatoDelCombattimento`, `ApplicazioneDelRisultato` (cosa succede a chi è colpito), `AttaccoConLeArmi`, `…/effettidistato/EffettoDiStatoMD`, `…/danni/tipi/*` | `motore_di_gioco.md` §7, `interazioni_effetti_di_stato.md` |
-| Debolezze, resistenze e immunità di classe ai tipi di danno | `…/tipi/CategoriaPersonaggio`, `TipoPersonaggio` (tabelle), `…/personaggi/PersonaggioBase` (`getMoltiplicatoreDannoSubito`), `…/combattimento/CalcolatoreCombattimento`, `…/ui/TestoReazioneDiClasse` | `debolezze_e_resistenze.md` |
+| Debolezze, resistenze e immunità di classe ai tipi di danno | `…/tipi/CategoriaPersonaggio`, `TipoPersonaggio` (tabelle), `…/personaggi/PersonaggioBase` (`getMoltiplicatoreDannoSubito`), `…/combattimento/CalcolatoreCombattimento`, `…/ui/testo/TestoReazioneDiClasse` (in `12-foresta-ui-comune`) | `debolezze_e_resistenze.md` |
 | Modificatori di attributo a tempo, armi che li mettono sul bersaglio | `…/modificatori/ModificatoreAttributoMD` (in `02-foresta-attributi`), `…/artefatti/ModificatoreDelTesto`, `PersonaggioBase`, `CalcolatoreCombattimento` | `modificatori_temporanei.md` |
 | Canti del Bardo (curativo, ipnotico, di valore), effetto di stato `ISPIRATO` | `…/canti/Canto*`, `…/tipi/TipoCanto`, `FabbricaCanti`, `…/locazioni/LocazioneBase` (`cantaUnCanto`), `…/motore/Automa` | `personaggi_giocabili.md` |
 | Abilità innate (scacciare i non morti, imposizione delle mani, radici, sciame, pelle di corteccia, rigenerazione del chierico e del druido; alba sacra e luce divina del sacerdote; dardo arcano di mago ed elfo; costanti in `CostantiAbilitaInnate`), effetto di stato `RIGENERAZIONE` | `…/personaggi/{Chierico,Chierica,Druido,Druida}`, `…/abilita/*`, `…/tipi/TipoAbilita`, `…/locazioni/LocazioneBase` (`usaUnaAbilita`), `…/motore/Automa` | `personaggi_giocabili.md` |
@@ -83,9 +83,9 @@ La catena: `strumenti` danno funzioni ai `testi`; i testi agli `attributi`, agli
 
 ## Schermate (tutte in `…/ui`, divise in sottopacchetti)
 
-Sottopacchetti di `ui`: `schermate` (le schermate a tutto schermo e i loro aiuti), `riquadri` (i riquadri della schermata di gioco), `barra` (la barra icone), `sprite`, `testo` (font bitmap Doomdark), `immagini` (`ImageCache` e le immagini), `tattiche` (la schermata delle tattiche), `componenti` (componenti riusabili), `sfx` (logo e nuvole); in `ui` restano `ForestaUI`, `DisplayableCanvas` e poco altro.
+Sottopacchetti di `ui`: `schermate` (le schermate a tutto schermo e i loro aiuti), `riquadri` (i riquadri della schermata di gioco), `barra` (la barra icone), `sprite`, `testo` (font bitmap Doomdark), `immagini` (`ImageCache` e le immagini), `tattiche` (la schermata delle tattiche), `componenti` (componenti riusabili), `sfx` (logo e nuvole); in `ui` restano `ForestaSwing`, `DisplayableCanvas` e poco altro.
 
-Il canvas principale è `DisplayableCanvas` (enum interno `StatoDisplayableCanvas` per le schermate a tutto schermo).
+Il canvas principale è `DisplayableCanvas`; quel che fa senza disegnare (la schermata corrente, `tipi.StatoDelloSchermo`, la pila dei riquadri, le code degli effetti, il contesto del router) è di `SchermoDelGioco`, nel modulo comune, e la traduzione degli eventi del bus è di `ForestaUI` (comune), che `ForestaSwing` estende; le posizioni dei riquadri le dà `DisposizioneDelloSchermo` (comune). libGDX ha i gemelli `SchermoGdx` e `ForestaLibGDX`.
 Lo stato della partita la UI lo legge da `…/interfacce/VistaPartita` (sola lettura, implementata da `…/motore/VistaPartitaMotore`), mai dai singleton del motore; verso il motore manda solo eventi.
 Panoramica in `motore_grafico.md`.
 
@@ -99,7 +99,7 @@ Panoramica in `motore_grafico.md`.
 - Mappa a tutto schermo e notiziario: `DisplayableCanvasMappaATuttoSchermo`, `DisegnatoreMappa`, `Notiziario`.
 - Riquadri della schermata di gioco: `DisplayableCanvasRiquadro{Locazione,Gruppo,Combattimento,Mappa,Missioni,Testo,Statistiche,IncantesimiEPozioni}`.
 - Barra icone: `DisplayableCanvasBarraIconeDock` (default) e `DisplayableCanvasBarraIcone` (con argomento `BARRACLASSICA`).
-- Testo: font bitmap `DoomdarkFont`, `DoomdarkTextRectangle*`. Prompt di input: `Prompt`.
+- Testo: font bitmap `DoomdarkFont`, `DoomdarkTextRectangle*`. Prompt di input: `Prompt` (Swing) e `CampoDiTestoGdx` (libGDX), comandati dal `CampoDiTesto` comune.
 
 ## Come si lavora (regole di collaborazione)
 

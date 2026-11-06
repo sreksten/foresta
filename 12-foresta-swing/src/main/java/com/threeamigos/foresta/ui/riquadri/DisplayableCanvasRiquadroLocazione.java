@@ -1,40 +1,26 @@
 package com.threeamigos.foresta.ui.riquadri;
 
-import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.interfacce.VistaGruppo;
-import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.tipi.Verso;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoBottino;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.Misura;
 import com.threeamigos.foresta.ui.Punto;
 import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
 import com.threeamigos.foresta.tipi.MappaBottinoImmagine;
 import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
-import com.threeamigos.foresta.ui.sprite.DescrizioneSpriteATempo;
-import com.threeamigos.foresta.ui.sprite.DescrizioneSpriteEffetto;
-import com.threeamigos.foresta.ui.sprite.SpriteATempo;
-import com.threeamigos.foresta.ui.sprite.SpriteEffetto;
 import com.threeamigos.foresta.ui.sprite.SpriteInDissolvenza;
 import com.threeamigos.foresta.ui.sprite.SpriteInterface;
-import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
-import com.threeamigos.foresta.ui.testo.DoomdarkFont;
-import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Il riquadro con la locazione corrente: sfondo, avversari e personaggi che incontrano il gruppo; ospita gli sprite che mostrano cosa accade (danni, effetti, oggetti raccolti).
@@ -155,70 +141,6 @@ public class DisplayableCanvasRiquadroLocazione extends RiquadroLocazione {
 	}
 
 	/**
-	 * Crea lo sprite che mostra la variazione di salute del personaggio.
-	 */
-	public SpriteInterface variaSalute(VistaPersonaggio personaggio, int variazione) {
-		return sprite(spriteDellaSalute(personaggio, variazione));
-	}
-
-	/**
-	 * Crea lo sprite che mostra la variazione di magia del personaggio.
-	 */
-	public SpriteInterface variaMagia(VistaPersonaggio personaggio, int variazione) {
-		return sprite(spriteDellaMagia(personaggio, variazione));
-	}
-
-	/**
-	 * Crea lo sprite che mostra il gruppo che raccoglie un oggetto.
-	 */
-	public SpriteInterface raccogliOggetto() {
-		return sprite(spriteDelloOggettoRaccolto());
-	}
-
-	/**
-	 * Crea lo sprite con il nome dell'effetto di stato subito dal personaggio.
-	 */
-	public SpriteInterface aggiungiEffettoDiStato(VistaPersonaggio personaggio, TipoEffettoDiStato effettoDiStato, DoomdarkColorModel.Color colore) {
-		return sprite(spriteDellEffettoDiStato(personaggio, effettoDiStato.getDescrizione(), colore));
-	}
-
-	/**
-	 * Come l'effetto di stato, ma con la descrizione di un modificatore di attributo ("Furtività +5")
-	 */
-	public SpriteInterface aggiungiModificatore(VistaPersonaggio personaggio, String descrizione, DoomdarkColorModel.Color colore) {
-		return sprite(spriteDellEffettoDiStato(personaggio, descrizione, colore));
-	}
-
-	/**
-	 * Crea lo sprite con la descrizione dell'interazione scattata sul personaggio.
-	 */
-	public SpriteInterface aggiungiInterazione(VistaPersonaggio personaggio, TipoInterazioneConEffettiDiStato interazione) {
-		return aggiungiTestoSulPersonaggio(personaggio, interazione.getDescrizione(), DoomdarkColorModel.Color.GREEN);
-	}
-
-	/**
-	 * Crea lo sprite con quel testo, di quel colore, sul personaggio.
-	 */
-	public SpriteInterface aggiungiTestoSulPersonaggio(VistaPersonaggio personaggio, String testo, DoomdarkColorModel.Color colore) {
-		return sprite(spriteDelTestoSulPersonaggio(personaggio, testo, DoomdarkFont.medio(), colore));
-	}
-
-	/**
-	 * Crea lo sprite "Mancato", in grigio medio e in piccolo, sul personaggio che il colpo non ha raggiunto.
-	 */
-	public SpriteInterface aggiungiColpoMancato(VistaPersonaggio personaggio) {
-		return sprite(spriteDelTestoSulPersonaggio(personaggio, TestiDellaUI.get("COLPO_MANCATO"), DoomdarkFont.piccolo(),
-				DoomdarkColorModel.Color.MEDIUM_GRAY));
-	}
-
-	/**
-	 * Come sopra, con un colore costruito al volo (non uno dei colori fissi di DoomdarkColorModel)
-	 */
-	public SpriteInterface aggiungiTestoSulPersonaggio(VistaPersonaggio personaggio, String testo, java.awt.Color colore) {
-		return sprite(spriteDelTestoColoratoSulPersonaggio(personaggio, testo, colore.getRGB()));
-	}
-
-	/**
 	 * L'oggetto che si trova in locazione sta al centro dello spazio a disposizione, in basso: i lati sono dei due gruppi
 	 */
 	private int xOggetto(BufferedImage oggetto) {
@@ -229,11 +151,4 @@ public class DisplayableCanvasRiquadroLocazione extends RiquadroLocazione {
 		return yDelloOggetto(locazione.getHeight(), oggetto.getHeight());
 	}
 
-	private static SpriteInterface sprite(DescrizioneSpriteATempo descrizione) {
-		return descrizione == null ? null : new SpriteATempo(descrizione);
-	}
-
-	private static SpriteInterface sprite(DescrizioneSpriteEffetto descrizione) {
-		return descrizione == null ? null : new SpriteEffetto(descrizione);
-	}
 }

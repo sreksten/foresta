@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.schermate;
 
+import com.threeamigos.foresta.tipi.TipoBottega;
 import com.threeamigos.foresta.interfacce.VistaOffertaConsumabile;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -8,7 +9,6 @@ import com.threeamigos.foresta.ui.componenti.ComponenteScorrevole;
 import com.threeamigos.foresta.ui.componenti.ScorrimentoSuUnAsse;
 import com.threeamigos.foresta.ui.schermate.ScambioDeiConsumabili.Voce;
 import com.threeamigos.foresta.ui.sprite.SpriteATempo;
-import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 import java.awt.*;
 import java.util.List;
@@ -38,17 +38,17 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
 
     @Override
     public void disegnaIntestazioniInventario(Graphics2D graphics) {
-        disegnaIntestazioniInventarioImpl(graphics, TestiDellaUI.get("INVENTARIO_GRUPPO"), TestiDellaUI.get("INVENTARIO_ALCHIMISTA"));
+        disegnaIntestazioniInventarioImpl(graphics, TipoBottega.ALCHIMISTA.getIntestazioneSinistra(), TipoBottega.ALCHIMISTA.getIntestazioneDestra());
     }
 
     @Override
     public TipoPersonaggio getMestiereAlCentro() {
-        return TipoPersonaggio.ALCHIMISTA;
+        return TipoBottega.ALCHIMISTA.getMestiere();
     }
 
     @Override
     public String getEtichettaMestiere() {
-        return TestiDellaUI.get("MESTIERE_ALCHIMISTA");
+        return TipoBottega.ALCHIMISTA.getEtichettaDelMestiere();
     }
 
     private final DisegnoDiContenutoAwt disegno = new DisegnoDiContenutoAwt();

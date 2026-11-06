@@ -17,7 +17,10 @@ import com.threeamigos.foresta.ui.immagini.NomiDelleImmagini;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorAlternante;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
+import com.threeamigos.foresta.ui.testo.TestiDellAiuto;
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,6 +36,10 @@ public abstract class RiquadroMissioni implements Finestra {
 	 * Lo spessore del bordo interno della cornice grande più lo spazio: l'elenco parte da lì
 	 */
 	public static final int BORDO = 16 + SPACING;
+
+	// Dove sta il mouse, relativo al riquadro, per l'aiuto (-1 fuori)
+	private int mouseX = -1;
+	private int mouseY = -1;
 	// Pixel di scorrimento per ogni scatto della rotella
 	private static final int PASSO_SCORRIMENTO = 2;
 	private static final int INDENTAZIONE = 10;
@@ -172,6 +179,51 @@ public abstract class RiquadroMissioni implements Finestra {
 		}
 		// La quota va espressa in coordinate della lista, non della finestra visibile
 		return costruisciElenco().riferimentoTitoloAllaQuota(yInterno + getOffset());
+	}
+
+	public int getMouseX() {
+		return mouseX;
+	}
+
+	public int getMouseY() {
+		return mouseY;
+	}
+
+	@Override
+	public void processaMovimento(int x, int y) {
+		mouseX = x;
+		mouseY = y;
+	}
+
+	@Override
+	public void processaUscita(int x, int y) {
+		mouseX = -1;
+		mouseY = -1;
+	}
+
+	/**
+	 * Ad aiuto acceso, le righe del cartiglio accanto al mouse dentro l'elenco: sul nome di una missione che cosa fa il click
+	 * (aprire o chiudere la descrizione), e se l'elenco è più alto del riquadro la rotella. Vuota se non c'è niente da dire; il
+	 * cartiglio va accanto al mouse ({@link #getMouseX()}, {@link #getMouseY()}, relativi al riquadro).
+	 */
+	public List<String> righeDellAiuto() {
+		List<String> righe = new ArrayList<>();
+		if (!vistaPartita.isAiutoAbilitato() || mouseX < 0) {
+			return righe;
+		}
+		int xInterno = mouseX - BORDO;
+		int yInterno = mouseY - BORDO;
+		if (xInterno < 0 || xInterno >= larghezzaInterna || yInterno < 0 || yInterno >= altezzaInterna) {
+			return righe;
+		}
+		VistaMissione missione = missioneInPosizione(mouseX, mouseY);
+		if (missione != null) {
+			righe.add(TestiDellAiuto.click(missione.isDescrizioneVisibile(), TestiDellaUI.get("COSA_DESCRIZIONE")));
+		}
+		if (isScorrevole()) {
+			righe.add(TestiDellAiuto.rotella());
+		}
+		return righe;
 	}
 
 	/**

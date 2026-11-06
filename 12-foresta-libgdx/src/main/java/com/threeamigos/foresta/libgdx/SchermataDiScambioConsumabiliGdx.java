@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.libgdx;
 
+import com.threeamigos.foresta.tipi.TipoBottega;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -14,7 +15,6 @@ import com.threeamigos.foresta.ui.schermate.ScambioDeiConsumabili;
 import com.threeamigos.foresta.ui.schermate.ScambioDeiConsumabili.Voce;
 import com.threeamigos.foresta.ui.schermate.SchermataDiScambio;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
-import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,12 +54,12 @@ public final class SchermataDiScambioConsumabiliGdx extends SchermataDiScambio {
 
 	@Override
 	public TipoPersonaggio getMestiereAlCentro() {
-		return TipoPersonaggio.ALCHIMISTA;
+		return TipoBottega.ALCHIMISTA.getMestiere();
 	}
 
 	@Override
 	public String getEtichettaMestiere() {
-		return TestiDellaUI.get("MESTIERE_ALCHIMISTA");
+		return TipoBottega.ALCHIMISTA.getEtichettaDelMestiere();
 	}
 
 	/** Imposta le offerte da mostrare. */
@@ -90,8 +90,8 @@ public final class SchermataDiScambioConsumabiliGdx extends SchermataDiScambio {
 		immagini.disegna(batch, CORNICE, xCorniceDestra, SPACING, zoom);
 		disegnaElenco(batch, camera, viewport, logica.getElencoGruppo(), xMinimaZonaSinistra, scorrimentoSinistra, false);
 		disegnaElenco(batch, camera, viewport, logica.getElencoVenditore(), xMinimaZonaDestra, scorrimentoDestra, true);
-		intestazione(batch, TestiDellaUI.get("INVENTARIO_GRUPPO"), SPACING + larghezzaCornice / 2);
-		intestazione(batch, TestiDellaUI.get("INVENTARIO_ALCHIMISTA"), width - SPACING - larghezzaCornice / 2);
+		intestazione(batch, TipoBottega.ALCHIMISTA.getIntestazioneSinistra(), SPACING + larghezzaCornice / 2);
+		intestazione(batch, TipoBottega.ALCHIMISTA.getIntestazioneDestra(), width - SPACING - larghezzaCornice / 2);
 		disegno.disegna(batch, colonnaDelNegoziante(getMestiereAlCentro()), 0, 0, 1f);
 		for (SpriteATempoGdx sprite : new ArrayList<>(spriteLocali)) {
 			sprite.anima(batch, camera, viewport);

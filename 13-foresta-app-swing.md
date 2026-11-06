@@ -22,16 +22,10 @@ Dipende da `12-foresta-motore` e da `12-foresta-swing`, e per i test anche dal `
 
 Mette insieme le parti nell'ordine giusto:
 
-1. dice alle parti del gioco dove sono i loro dati (`ModelloDati.installa()`) e installa il thread principale (`ThreadPrincipale` con l'`EsecutoreSwing`: tutta la logica gira sull'Event Dispatch Thread di Swing);
+1. legge gli argomenti con `OpzioniDiAvvio` (modulo comune, la stessa di libGDX): `ORIZZONTALE`, `VERTICALE`, `TUTTOSCHERMO`, `SALTALOGO`, `BARRACLASSICA`, `JOYSTICK_VIRTUALE` (il joystick a schermo sulla mappa, anche dove c'è il mouse), `LINGUA=<codice>`, `ZOOM=<numero>`, `MODALITA_DI_PROVA`, senza distinguere maiuscole e minuscole; quelli sconosciuti sono ignorati con una riga nel log;
 2. crea lo `SnifferBusEventi`;
-3. si iscrive a `NotificaUscitaDalGioco`: sul desktop si esce con `System.exit(codice)` (il motore **non chiude mai il processo**, lo chiede con questo evento e lo decide `Main`), loggando il motivo se è un errore;
-4. registra i componenti del motore (`StatoDelMotore.registraComponenti()`) e legge gli argomenti;
-5. crea il gestore della classifica e imposta i gestori dei trofei e del bestiario, che valgono da una partita all'altra e si rileggono una volta sola, all'avvio;
-6. crea l'`Automa` con un temporizzatore, il gestore dei salvataggi su file e la classifica;
-7. si iscrive a `InternoInterfacciaUtentePronta` **prima** di creare la UI (altrimenti l'evento, pubblicato sul thread principale, andrebbe perso lasciando il gioco sulla finestra nera) e fa partire l'automa quando arriva;
-8. in modalità di prova installa i trucchi sui dadi, crea `VistaPartitaMotore` e `ForestaUI`, e apre la `FinestraDiProva`.
-
-Argomenti riconosciuti, senza distinguere maiuscole e minuscole: `ORIZZONTALE`, `VERTICALE`, `TUTTOSCHERMO`, `SALTALOGO`, `BARRACLASSICA`, `JOYSTICK_VIRTUALE` (il joystick a schermo sulla mappa, anche dove c'è il mouse), `ZOOM=<numero>`, `MODALITA_DI_PROVA`; quelli sconosciuti sono ignorati con una riga nel log.
+3. collega il motore con `AvvioDelMotore` (in `12-foresta-motore`, lo stesso di libGDX): modello dati, thread principale (`EsecutoreSwing`: tutta la logica gira sull'Event Dispatch Thread di Swing), uscita (sul desktop `System.exit(codice)`: il motore **non chiude mai il processo**, lo chiede con `NotificaUscitaDalGioco`), componenti del motore, gestori su file, `Automa` che parte con `InternoInterfacciaUtentePronta` (l'iscrizione c'è **prima** che la UI esista, altrimenti l'evento andrebbe perso lasciando il gioco sulla finestra nera), trucchi sui dadi in modalità di prova, `VistaPartitaMotore`;
+4. crea `ForestaSwing` e, in modalità di prova, apre la `FinestraDiProva`.
 
 ### `SnifferBusEventi`
 
