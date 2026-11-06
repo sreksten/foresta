@@ -2,8 +2,9 @@ package com.threeamigos.foresta.ui.riquadri;
 
 import com.threeamigos.foresta.tipi.MossaCartaForbiciSasso;
 import com.threeamigos.foresta.ui.DisplayableCanvas;
-import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
+import com.threeamigos.foresta.ui.Misura;
+import com.threeamigos.foresta.ui.immagini.NomiDelleImmagini;
 import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.TestoGrande;
@@ -26,39 +27,8 @@ import java.util.Map;
  * occupa al massimo la metà della sua larghezza e la metà della sua altezza (vedi {@link #fattoreDiScala}): finita la
  * sfida diventa uno sprite che si dissolve (vedi {@link DisplayableCanvas#dissolviLaSfida}).
  */
-public class DisplayableCanvasRiquadroSfida implements Finestra {
+public class DisplayableCanvasRiquadroSfida extends RiquadroSfida {
 
-	/**
-	 * La parte massima dell'area di contenuto, in larghezza e in altezza, che il riquadro può occupare.
-	 */
-	static final double PARTE_MASSIMA_DELLO_SCHERMO = 0.5;
-	/**
-	 * Lo spessore del bordo interno nero della cornice larga, da tutti i lati: le mani stanno, e vengono ritagliate,
-	 * dentro quello che resta.
-	 */
-	public static final int BORDO_DELLA_CORNICE = 20;
-	/**
-	 * Quanto restano ferme le mani a mostrare le due mosse prima di riprendere a muoversi.
-	 */
-	static final double SECONDI_DI_PAUSA_DOPO_UNA_MANO = 0.5;
-	// Quanto si spostano le mani al massimo, in parte dello spazio dentro la cornice: avanti e indietro (verso i lati) e su e giù
-	static final double AMPIEZZA_ORIZZONTALE = 0.04;
-	static final double AMPIEZZA_VERTICALE = 0.04;
-	// Le due sinusoidi, in oscillazioni al secondo: su e giù va a velocità doppia rispetto ad avanti e indietro
-	public static final double FREQUENZA_ORIZZONTALE = 1.0;
-	static final double FREQUENZA_VERTICALE = 2.0;
-	// Mentre si muovono le mani stanno più vicine al bordo della cornice di quando sono ferme al centro: ognuna verso il
-	// suo lato, fino al margine che c'è fra la mano e il bordo e un po' oltre (questa parte dello spazio dentro la cornice). Il ritaglio
-	// nasconde quello che esce dal bordo nero, quindi sulla cornice non si vede niente
-	static final double SPOSTAMENTO_VERSO_IL_BORDO = 0.02;
-	// Il passaggio dal centro alla posizione verso il bordo, a inizio movimento, per non fare uno scatto
-	public static final double SECONDI_PER_ANDARE_VERSO_IL_BORDO = 0.8;
-	private static final int RAGGIO_ALONE = 6;
-	// Il punteggio sta in alto, a questa distanza dal bordo interno della cornice (a grandezza naturale)
-	private static final int MARGINE_PUNTEGGIO = 8;
-
-	private final int larghezzaContenuto;
-	private final int altezzaContenuto;
 	// Quello che si registra nel canvas per il mouse: vuoto finché non si disegna per la prima volta, perché le immagini
 	// si caricano solo allora
 	private final Rectangle rettangolo = new Rectangle();
@@ -67,122 +37,42 @@ public class DisplayableCanvasRiquadroSfida implements Finestra {
 	private final Map<Integer, BufferedImage> punteggi = new HashMap<>();
 
 	private boolean dimensionato;
-	// Tutto qui sotto è alla grandezza di schermo, dentro il riquadro (l'origine è il suo angolo in alto a sinistra)
-	private double scala;
 	private BufferedImage cornice;
-	private Rectangle spazio;
-	private int xManoSinistra;
-	private int xManoDestra;
-	private int yMani;
-	private int larghezzaManoSinistra;
-	private int larghezzaManoDestra;
-	private int ampiezzaX;
-	private int ampiezzaY;
-	private int spostamentoVersoIlBordo;
-
-	private boolean visibile;
-	private MossaCartaForbiciSasso mossaDelGiocatore = MossaCartaForbiciSasso.SASSO;
-	private MossaCartaForbiciSasso mossaDellAvversario = MossaCartaForbiciSasso.SASSO;
-	private int punteggioDelGiocatore;
-	private int punteggioDellAvversario;
-	// Quando le mani ripartono (il movimento comincia da ferme), e fino a quando mostrano le mosse scelte
-	private long inizioMovimentoNanos;
-	private long fermeFinoANanos;
 
 	public DisplayableCanvasRiquadroSfida(int larghezzaContenuto, int altezzaContenuto) {
-		this.larghezzaContenuto = larghezzaContenuto;
-		this.altezzaContenuto = altezzaContenuto;
+		super(larghezzaContenuto, altezzaContenuto);
 	}
 
-	/**
-	 * Di quanto si riducono le immagini perché le due mani affiancate, grandi {@code larghezzaTotale} per
-	 * {@code altezzaMassima}, non occupino più di metà dell'area di contenuto in larghezza e in altezza. Non si
-	 * ingrandiscono mai.
-	 */
-	public static double fattoreDiScala(int larghezzaContenuto, int altezzaContenuto, int larghezzaTotale, int altezzaMassima) {
-		double perLaLarghezza = PARTE_MASSIMA_DELLO_SCHERMO * larghezzaContenuto / Math.max(1, larghezzaTotale);
-		double perLAltezza = PARTE_MASSIMA_DELLO_SCHERMO * altezzaContenuto / Math.max(1, altezzaMassima);
-		return Math.min(1.0, Math.min(perLaLarghezza, perLAltezza));
+	@Override
+	protected Misura misuraDellaCornice() {
+		return new Misura(ImageCache.corniceLarga.getWidth(), ImageCache.corniceLarga.getHeight());
 	}
 
-	/**
-	 * Lo spostamento orizzontale delle mani dopo quel tempo dall'inizio del movimento, da -ampiezza a +ampiezza: una
-	 * sinusoide che parte da zero.
-	 */
-	public static double spostamentoOrizzontale(double secondi, double ampiezza) {
-		return ampiezza * Math.sin(2 * Math.PI * FREQUENZA_ORIZZONTALE * secondi);
-	}
-
-	/**
-	 * Quanto delle mani è già andato dal centro alla posizione verso il bordo, da 0 a 1, dopo quel tempo dall'inizio del
-	 * movimento: una salita dolce, perché le mani non scattino.
-	 */
-	public static double avvicinamentoAlBordo(double secondi) {
-		double t = Math.max(0, Math.min(1, secondi / SECONDI_PER_ANDARE_VERSO_IL_BORDO));
-		return t * t * (3 - 2 * t);
-	}
-
-	/**
-	 * Lo spostamento verticale delle mani, con la sua sinusoide.
-	 */
-	public static double spostamentoVerticale(double secondi, double ampiezza) {
-		return ampiezza * Math.sin(2 * Math.PI * FREQUENZA_VERTICALE * secondi);
+	@Override
+	protected Misura misuraDellaMano(MossaCartaForbiciSasso mossa, boolean sinistra) {
+		BufferedImage mano = (sinistra ? maniSinistre : maniDestre).computeIfAbsent(mossa,
+				m -> BufferedImageBuilder.buildBufferedImage(NomiDelleImmagini.manoDellaSfida(m, sinistra), LivelloDiZoom.valore()));
+		return new Misura(mano.getWidth(), mano.getHeight());
 	}
 
 	public Rectangle getRettangolo() {
 		return rettangolo;
 	}
 
-	@Override
-	public boolean isVisibile() {
-		return visibile;
-	}
-
-	public void setVisibile(boolean visibile) {
-		this.visibile = visibile;
-	}
-
-	/**
-	 * La sfida comincia ({@code inizio} vero: i due sassi si muovono) o si è giocata una mano (le mani si fermano a
-	 * mostrare le due mosse, e dopo la pausa riprendono a muoversi con il punteggio nuovo).
-	 */
-	public void aggiorna(MossaCartaForbiciSasso mossaDelGiocatore, MossaCartaForbiciSasso mossaDellAvversario,
-				  int punteggioDelGiocatore, int punteggioDellAvversario, boolean inizio) {
-		this.mossaDelGiocatore = mossaDelGiocatore;
-		this.mossaDellAvversario = mossaDellAvversario;
-		this.punteggioDelGiocatore = punteggioDelGiocatore;
-		this.punteggioDellAvversario = punteggioDellAvversario;
-		long ora = System.nanoTime();
-		if (inizio) {
-			fermeFinoANanos = ora;
-		} else {
-			fermeFinoANanos = ora + (long) (SECONDI_DI_PAUSA_DOPO_UNA_MANO * 1_000_000_000L);
-		}
-		inizioMovimentoNanos = fermeFinoANanos;
-		this.visibile = true;
-	}
-
 	/**
 	 * Disegna il riquadro della sfida a carta, forbici e sasso.
 	 */
 	public void disegna(Graphics2D graphics) {
-		if (!visibile) {
+		if (!isVisibile()) {
 			return;
 		}
 		dimensiona();
-		long ora = System.nanoTime();
+		Fotogramma fotogramma = fotogramma();
 		Graphics2D g = (Graphics2D) graphics.create();
 		try {
 			g.translate(rettangolo.x, rettangolo.y);
 			g.drawImage(cornice, 0, 0, null);
-			if (ora < fermeFinoANanos) {
-				disegnaLeMani(g, mossaDelGiocatore, mossaDellAvversario, 0, 0);
-			} else {
-				double secondi = (ora - inizioMovimentoNanos) / 1_000_000_000.0;
-				disegnaLeMani(g, MossaCartaForbiciSasso.SASSO, MossaCartaForbiciSasso.SASSO,
-						spostamentoOrizzontale(secondi, ampiezzaX) - avvicinamentoAlBordo(secondi) * spostamentoVersoIlBordo,
-						spostamentoVerticale(secondi, ampiezzaY));
-			}
+			disegnaLeMani(g, fotogramma);
 			scriviIPunteggi(g);
 		} finally {
 			g.dispose();
@@ -198,7 +88,7 @@ public class DisplayableCanvasRiquadroSfida implements Finestra {
 		Graphics2D g = immagine.createGraphics();
 		try {
 			g.drawImage(cornice, 0, 0, null);
-			disegnaLeMani(g, mossaDelGiocatore, mossaDellAvversario, 0, 0);
+			disegnaLeMani(g, fotogrammaFermo());
 			scriviIPunteggi(g);
 		} finally {
 			g.dispose();
@@ -224,75 +114,46 @@ public class DisplayableCanvasRiquadroSfida implements Finestra {
 	 * il suo bordo) e la destra del contrario (si avvicinano e si allontanano), tutte e due di {@code dy} (su e giù
 	 * insieme).
 	 */
-	private void disegnaLeMani(Graphics2D graphics, MossaCartaForbiciSasso sinistra, MossaCartaForbiciSasso destra,
-							   double dx, double dy) {
+	private void disegnaLeMani(Graphics2D graphics, Fotogramma fotogramma) {
+		Disposizione d = disposizione();
 		Graphics2D g = (Graphics2D) graphics.create();
 		try {
-			g.clipRect(spazio.x, spazio.y, spazio.width, spazio.height);
-			g.drawImage(maniSinistre.get(sinistra), (int) Math.round(xManoSinistra + dx), (int) Math.round(yMani + dy), null);
-			g.drawImage(maniDestre.get(destra), (int) Math.round(xManoDestra - dx), (int) Math.round(yMani + dy), null);
+			g.clipRect(d.getSpazio().getX(), d.getSpazio().getY(), d.getSpazio().getLarghezza(), d.getSpazio().getAltezza());
+			g.drawImage(maniSinistre.get(fotogramma.getSinistra()), (int) Math.round(d.getXManoSinistra() + fotogramma.getDx()),
+					(int) Math.round(d.getYMani() + fotogramma.getDy()), null);
+			g.drawImage(maniDestre.get(fotogramma.getDestra()), (int) Math.round(d.getXManoDestra() - fotogramma.getDx()),
+					(int) Math.round(d.getYMani() + fotogramma.getDy()), null);
 		} finally {
 			g.dispose();
 		}
 	}
 
 	private void scriviIPunteggi(Graphics2D graphics) {
-		scriviIlPunteggio(graphics, punteggioDelGiocatore, xManoSinistra, larghezzaManoSinistra);
-		scriviIlPunteggio(graphics, punteggioDellAvversario, xManoDestra, larghezzaManoDestra);
+		Disposizione d = disposizione();
+		scriviIlPunteggio(graphics, getPunteggioDelGiocatore(), d.getXManoSinistra(), d.getLarghezzaManoSinistra(), d.getYDelPunteggio());
+		scriviIlPunteggio(graphics, getPunteggioDellAvversario(), d.getXManoDestra(), d.getLarghezzaManoDestra(), d.getYDelPunteggio());
 	}
 
-	private void scriviIlPunteggio(Graphics2D graphics, int punteggio, int xMano, int larghezzaMano) {
+	private void scriviIlPunteggio(Graphics2D graphics, int punteggio, int xMano, int larghezzaMano, int y) {
 		BufferedImage numero = punteggi.computeIfAbsent(punteggio,
 				p -> TestoGrande.conAlone(TestoGrande.immagine(String.valueOf(p), Math.max(1, larghezzaMano), true), RAGGIO_ALONE));
-		int y = spazio.y + (int) Math.round(MARGINE_PUNTEGGIO * scala);
 		graphics.drawImage(numero, xMano + (larghezzaMano - numero.getWidth()) / 2, y, null);
 	}
 
 	/**
-	 * La prima volta si caricano la cornice e le sei mani, si calcola di quanto va ridotto tutto perché il riquadro stia
-	 * entro metà schermo, si dispongono le mani al centro dello spazio dentro il bordo e si centra il riquadro.
+	 * La prima volta si caricano la cornice e le sei mani (e si riducono, se serve) e si centra il riquadro.
 	 */
 	private void dimensiona() {
 		if (dimensionato) {
 			return;
 		}
-		BufferedImage corniceOriginale = ImageCache.corniceLarga;
-		scala = fattoreDiScala(larghezzaContenuto, altezzaContenuto, corniceOriginale.getWidth(), corniceOriginale.getHeight());
-		cornice = scalata(corniceOriginale, scala);
-		int bordo = (int) Math.round(BORDO_DELLA_CORNICE * scala);
-		spazio = new Rectangle(bordo, bordo, cornice.getWidth() - 2 * bordo, cornice.getHeight() - 2 * bordo);
-
-		int sinistra = 0;
-		int destra = 0;
-		int alto = 0;
+		Disposizione d = disposizione();
+		cornice = scalata(ImageCache.corniceLarga, d.getScala());
 		for (MossaCartaForbiciSasso mossa : MossaCartaForbiciSasso.values()) {
-			BufferedImage sx = BufferedImageBuilder.buildBufferedImage("fondi/" + nomeDellaMano(mossa) + "-sx.png", LivelloDiZoom.valore());
-			BufferedImage dx = BufferedImageBuilder.buildBufferedImage("fondi/" + nomeDellaMano(mossa) + "-dx.png", LivelloDiZoom.valore());
-			maniSinistre.put(mossa, sx);
-			maniDestre.put(mossa, dx);
-			sinistra = Math.max(sinistra, sx.getWidth());
-			destra = Math.max(destra, dx.getWidth());
-			alto = Math.max(alto, Math.max(sx.getHeight(), dx.getHeight()));
+			maniSinistre.put(mossa, scalata(maniSinistre.get(mossa), d.getScalaDelleMani()));
+			maniDestre.put(mossa, scalata(maniDestre.get(mossa), d.getScalaDelleMani()));
 		}
-		// Le mani non si ingrandiscono, e se non stanno nello spazio dentro la cornice si riducono, insieme alla cornice
-		double perLeMani = Math.min(scala, Math.min((double) spazio.width / (sinistra + destra), (double) spazio.height / alto));
-		for (MossaCartaForbiciSasso mossa : MossaCartaForbiciSasso.values()) {
-			maniSinistre.put(mossa, scalata(maniSinistre.get(mossa), perLeMani));
-			maniDestre.put(mossa, scalata(maniDestre.get(mossa), perLeMani));
-		}
-		larghezzaManoSinistra = (int) Math.round(sinistra * perLeMani);
-		larghezzaManoDestra = (int) Math.round(destra * perLeMani);
-		int altezzaMani = (int) Math.round(alto * perLeMani);
-		xManoSinistra = spazio.x + (spazio.width - larghezzaManoSinistra - larghezzaManoDestra) / 2;
-		xManoDestra = xManoSinistra + larghezzaManoSinistra;
-		yMani = spazio.y + (spazio.height - altezzaMani) / 2;
-		ampiezzaX = (int) Math.round(AMPIEZZA_ORIZZONTALE * spazio.width);
-		ampiezzaY = (int) Math.round(AMPIEZZA_VERTICALE * spazio.height);
-		// Fin dove arriva il margine fra la mano e il bordo, e un poco oltre
-		spostamentoVersoIlBordo = xManoSinistra - spazio.x + (int) Math.round(SPOSTAMENTO_VERSO_IL_BORDO * spazio.width);
-
-		rettangolo.setBounds((larghezzaContenuto - cornice.getWidth()) / 2, (altezzaContenuto - cornice.getHeight()) / 2,
-				cornice.getWidth(), cornice.getHeight());
+		rettangolo.setBounds(d.getArea().getX(), d.getArea().getY(), d.getArea().getLarghezza(), d.getArea().getAltezza());
 		dimensionato = true;
 	}
 
@@ -311,19 +172,5 @@ public class DisplayableCanvasRiquadroSfida implements Finestra {
 			g.dispose();
 		}
 		return scalata;
-	}
-
-	/**
-	 * Il nome della mossa nei file delle immagini: "Carta", "Forbici", "Sasso".
-	 */
-	public static String nomeDellaMano(MossaCartaForbiciSasso mossa) {
-		switch (mossa) {
-			case CARTA:
-				return "Carta";
-			case FORBICE:
-				return "Forbici";
-			default:
-				return "Sasso";
-		}
 	}
 }

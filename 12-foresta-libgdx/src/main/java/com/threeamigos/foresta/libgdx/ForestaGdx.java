@@ -10,13 +10,18 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.threeamigos.foresta.libgdx.sviluppo.DatiDiProva;
+import com.threeamigos.foresta.libgdx.sviluppo.PaginaDegliSprite;
 import com.threeamigos.foresta.libgdx.sviluppo.PaginaDiProva;
+import com.threeamigos.foresta.interfacce.VistaPartita;
+import com.threeamigos.foresta.tipi.MossaCartaForbiciSasso;
 import com.threeamigos.foresta.ui.Area;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.RouterDegliInput;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 
 import java.nio.IntBuffer;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,6 +39,8 @@ public class ForestaGdx extends ApplicationAdapter {
 	private static final String ETICHETTA_LOG = "Foresta";
 	private static final String[] ATLANTI = {"icone", "mappa", "oggetti", "locazioni", "fondi", "fondinon2x2", "personaggi"};
 	private static final int MARGINE = 20;
+	// La pagina di prova del testo e i riquadri provati (testo, gruppo, locazione, sfida)
+	private static final int PAGINE_DI_PROVA = 6;
 
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
@@ -42,8 +49,19 @@ public class ForestaGdx extends ApplicationAdapter {
 	private TestoGdx piccolo;
 	private TestoGdx medio;
 	private RiquadroTestoGdx riquadroTesto;
+	private RiquadroGruppoGdx riquadroGruppo;
+	private RiquadroLocazioneGdx riquadroLocazione;
+	private RiquadroStatisticheGdx riquadroStatistiche;
+	private RiquadroMappaGdx riquadroMappa;
+	private NuvoleGdx nuvole;
+	private TestoGrandeGdx testoGrande;
+	private RiquadroSfidaGdx riquadroSfida;
+	private RiquadroIncantesimiEPozioniGdx riquadroIncantesimi;
+	private RiquadroCombattimentoGdx riquadroCombattimento;
+	private RiquadroMissioniGdx riquadroMissioni;
+	private PaginaDegliSprite paginaDegliSprite;
 	private PianificatoreGdx pianificatore;
-	/** 0 è la pagina di prova, 1 il riquadro del testo, poi un atlante per pagina */
+	/** 0 è la pagina di prova, 1 il riquadro del testo, 2 i riquadri del gruppo, delle statistiche, di incantesimi e pozioni e della mappa, 3 la locazione con il combattimento, 4 la sfida, 5 gli sprite, poi un atlante per pagina */
 	private int corrente;
 
 	@Override
@@ -67,6 +85,23 @@ public class ForestaGdx extends ApplicationAdapter {
 		for (String messaggio : PaginaDiProva.messaggiDiEsempio()) {
 			riquadroTesto.addString(messaggio);
 		}
+		VistaPartita partita = DatiDiProva.partita();
+		riquadroGruppo = new RiquadroGruppoGdx(MARGINE, MARGINE, partita, immagini, medio);
+		riquadroLocazione = new RiquadroLocazioneGdx(Finestra.SPACING, Finestra.SPACING, 800, partita, immagini);
+		riquadroLocazione.assegnaCoordinateAgliAvversari();
+		riquadroIncantesimi = new RiquadroIncantesimiEPozioniGdx(MARGINE + 368 + 10, MARGINE, partita, immagini, medio);
+		nuvole = new NuvoleGdx(immagini);
+		testoGrande = new TestoGrandeGdx(immagini);
+		riquadroSfida = new RiquadroSfidaGdx(LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE, immagini, testoGrande);
+		riquadroSfida.aggiorna(MossaCartaForbiciSasso.SASSO, MossaCartaForbiciSasso.SASSO, 3, 1, true);
+		paginaDegliSprite = new PaginaDegliSprite(immagini, piccolo, medio, LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE);
+		riquadroMissioni = new RiquadroMissioniGdx(MARGINE + 368 + 10, MARGINE + 288 + 10, partita, immagini, piccolo, medio);
+		riquadroMappa = new RiquadroMappaGdx(MARGINE + 2 * (368 + 10), MARGINE, partita, immagini, nuvole);
+		riquadroStatistiche = new RiquadroStatisticheGdx(MARGINE, MARGINE + 288 + 10, partita, immagini, medio);
+		riquadroCombattimento = new RiquadroCombattimentoGdx(LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE, Finestra.SPACING + 320 + Finestra.SPACING, partita, immagini, medio);
+		riquadroCombattimento.setVisible(true);
+		riquadroCombattimento.setCombattente(partita.getGruppoGiocatore().getPersonaggio(0));
+		riquadroCombattimento.setAzione(partita.getGruppoGiocatore().getPersonaggio(0), "Attacca il goblin");
 		// Gli eventi passano dal router del modulo comune, come in Swing: qui la sola finestra in prova è il riquadro del testo
 		pianificatore = new PianificatoreGdx();
 		RouterDegliInput router = new RouterDegliInput(new RouterDegliInput.Contesto() {
@@ -82,11 +117,22 @@ public class ForestaGdx extends ApplicationAdapter {
 
 			@Override
 			public List<Finestra> getFinestreImpilate() {
-				return corrente == 1 ? Collections.<Finestra>singletonList(riquadroTesto) : Collections.<Finestra>emptyList();
+				return finestreDellaPagina();
 			}
 
 			@Override
 			public Area getArea(Finestra finestra) {
+				if (finestra == riquadroLocazione) {
+					return new Area(Finestra.SPACING, Finestra.SPACING, 800, 320);
+				} else if (finestra == riquadroCombattimento) {
+					return riquadroCombattimento.getArea();
+				} else if (finestra == riquadroGruppo) {
+					return riquadroGruppo.getArea();
+				} else if (finestra == riquadroMissioni) {
+					return new Area(riquadroMissioni.getTopLeftX(), riquadroMissioni.getTopLeftY(), riquadroMissioni.getLarghezzaCornice(), 288);
+				} else if (finestra == riquadroIncantesimi) {
+					return new Area(riquadroIncantesimi.getTopLeftX(), riquadroIncantesimi.getTopLeftY(), riquadroIncantesimi.getLarghezzaCornice(), 288);
+				}
 				return new Area(riquadroTesto.getTopLeftX(), riquadroTesto.getTopLeftY(), riquadroTesto.getWidth(), riquadroTesto.getHeight());
 			}
 
@@ -108,6 +154,20 @@ public class ForestaGdx extends ApplicationAdapter {
 		Gdx.input.setInputProcessor(new InputGdx(router, viewport));
 	}
 
+	/**
+	 * I riquadri della pagina corrente, dal fondo al primo piano (nelle pagine senza riquadri, quello del testo che non si vede: gli eventi non lo cambiano)
+	 */
+	private List<Finestra> finestreDellaPagina() {
+		switch (corrente) {
+			case 2:
+				return Arrays.<Finestra>asList(riquadroGruppo, riquadroIncantesimi, riquadroMissioni);
+			case 3:
+				return Arrays.<Finestra>asList(riquadroLocazione, riquadroCombattimento);
+			default:
+				return Collections.<Finestra>singletonList(riquadroTesto);
+		}
+	}
+
 	private static int dimensioneMassimaDelleTexture() {
 		IntBuffer valore = BufferUtils.newIntBuffer(16);
 		Gdx.gl.glGetIntegerv(GL20.GL_MAX_TEXTURE_SIZE, valore);
@@ -123,7 +183,7 @@ public class ForestaGdx extends ApplicationAdapter {
 	public void render() {
 		pianificatore.aggiorna();
 		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.justTouched()) {
-			corrente = (corrente + 1) % (ATLANTI.length + 2);
+			corrente = (corrente + 1) % (ATLANTI.length + PAGINE_DI_PROVA);
 		}
 		Gdx.gl.glClearColor(0.16f, 0.16f, 0.16f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -134,8 +194,21 @@ public class ForestaGdx extends ApplicationAdapter {
 			PaginaDiProva.disegna(batch, immagini, piccolo, medio);
 		} else if (corrente == 1) {
 			riquadroTesto.disegna(batch, camera, viewport);
+		} else if (corrente == 2) {
+			riquadroGruppo.disegna(batch, camera, viewport);
+			riquadroIncantesimi.disegna(batch, camera, viewport);
+			riquadroStatistiche.disegna(batch);
+			riquadroMissioni.disegna(batch, camera, viewport);
+			riquadroMappa.disegna(batch, camera, viewport, LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE);
+		} else if (corrente == 3) {
+			riquadroLocazione.disegna(batch, null, null);
+			riquadroCombattimento.disegna(batch);
+		} else if (corrente == 4) {
+			riquadroSfida.disegna(batch, camera, viewport);
+		} else if (corrente == 5) {
+			paginaDegliSprite.disegna(batch, camera, viewport);
 		} else {
-			disegnaUnAtlante(ATLANTI[corrente - 2]);
+			disegnaUnAtlante(ATLANTI[corrente - PAGINE_DI_PROVA]);
 		}
 		batch.end();
 	}

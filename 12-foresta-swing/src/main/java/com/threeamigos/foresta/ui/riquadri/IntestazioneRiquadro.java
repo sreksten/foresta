@@ -21,10 +21,9 @@ final class IntestazioneRiquadro {
 	static void disegna(Graphics2D graphics, String testo, int xCornice, int yCornice, int larghezzaCornice) {
 		Image ombra = ImageCache.get(testo, DoomdarkColorModel.Color.BLACK);
 		Image immagine = ImageCache.get(testo, DoomdarkColorModel.Color.LIGHT_GRAY);
-		int x = xCornice + larghezzaCornice / 2 - immagine.getWidth(null) / 2;
-		// Il corpo del testo sta dove stava: le righe in più per gli accenti salgono sopra
-		int y = yCornice + ImageCache.SPACING - DoomdarkFont.medio().getRigheInCima();
-		graphics.drawImage(ombra, x + 2, y + 2, null);
+		int x = PosizioneDellIntestazione.x(xCornice, larghezzaCornice, immagine.getWidth(null));
+		int y = PosizioneDellIntestazione.y(yCornice);
+		graphics.drawImage(ombra, x + PosizioneDellIntestazione.SCOSTAMENTO_OMBRA, y + PosizioneDellIntestazione.SCOSTAMENTO_OMBRA, null);
 		graphics.drawImage(immagine, x, y, null);
 	}
 }

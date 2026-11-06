@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.ui.sprite;
 
+import com.threeamigos.foresta.ui.sprite.ModelloDelloSprite.Dissolvenza;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
@@ -20,15 +22,13 @@ public class SpriteInDissolvenza extends SpriteBase {
 	private final BufferedImage immagineFornita;
 	// Per la dissolvenza con attesa: restare interi per un po' e poi sfumare in modo lineare, senza sfocare
 	private final boolean conAttesa;
-	private final float attesaInSecondi;
 
 	public SpriteInDissolvenza(String descrizione, BufferedImage immagine, int xIniziale, int yIniziale) {
 		this.descrizione = descrizione;
 		this.immagineFornita = immagine;
 		this.conAttesa = false;
-		this.attesaInSecondi = 0;
 		inizializza(buildImage(),
-				DURATA_IN_SECONDI, ATTACCO_DISSOLVENZA_DOPO_SECONDI,
+				DURATA_IN_SECONDI, ATTACCO_DISSOLVENZA_DOPO_SECONDI, Dissolvenza.DA_SUBITO,
 				null, 0,
 				xIniziale, yIniziale,
 				xIniziale, yIniziale,
@@ -45,9 +45,8 @@ public class SpriteInDissolvenza extends SpriteBase {
 		this.descrizione = descrizione;
 		this.immagineFornita = immagine;
 		this.conAttesa = true;
-		this.attesaInSecondi = attesaInSecondi;
 		inizializza(buildImage(),
-				attesaInSecondi + dissolvenzaInSecondi, attesaInSecondi,
+				attesaInSecondi + dissolvenzaInSecondi, attesaInSecondi, Dissolvenza.LINEARE_CON_SOGLIA,
 				null, 0,
 				xIniziale, yIniziale,
 				xIniziale, yIniziale,
@@ -63,15 +62,6 @@ public class SpriteInDissolvenza extends SpriteBase {
 		return immagineFornita;
 	}
 
-	@Override
-	protected float calcolaAlpha(float secondiTrascorsi) {
-		if (conAttesa) {
-			return dissolvenzaLineareConSoglia(secondiTrascorsi, attesaInSecondi, durataInSecondi);
-		}
-		// Curva tarata sui tick storici da 0.1s (1/(1+ticks)): moltiplicando per 10 i secondi
-		// trascorsi si ottiene lo stesso andamento. A differenza degli altri sfuma da subito.
-		return 1.0f / (1 + secondiTrascorsi * 10);
-	}
 
 	@Override
 	public void disegna(Graphics2D g, float x, float y, float scala) {

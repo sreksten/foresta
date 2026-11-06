@@ -1,13 +1,10 @@
 package com.threeamigos.foresta.ui.testo;
 
 import com.threeamigos.foresta.ui.immagini.ImageCache;
+import com.threeamigos.foresta.ui.immagini.ImmaginiAwt;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
-import java.awt.image.RescaleOp;
-import java.util.*;
 import java.util.List;
 
 /**
@@ -20,24 +17,15 @@ public final class TestoGrande {
 	/**
 	 * Lo spazio fra un carattere e l'altro.
 	 */
-	static final int SPAZIO_FRA_CARATTERI = 1;
+	static final int SPAZIO_FRA_CARATTERI = LayoutDelTestoGrande.SPAZIO_FRA_CARATTERI;
 	/**
 	 * Da una riga all'altra.
 	 */
-	public static final int ALTEZZA_RIGA = 36;
-	private static final int LARGHEZZA_SPAZIO = 10;
+	public static final int ALTEZZA_RIGA = LayoutDelTestoGrande.ALTEZZA_RIGA;
 	/**
 	 * L'altezza delle lettere.
 	 */
-	public static final int ALTEZZA_GLIFO = 28;
-	/**
-	 * Quanto della luminosità resta al testo grigio scuro.
-	 */
-	private static final float LUMINOSITA_SCURO = 0.3f;
-	/**
-	 * Quanto è scuro l'alone attorno alle lettere: più di 1 lo rende pieno vicino alle lettere.
-	 */
-	private static final float FORZA_ALONE = 4f;
+	public static final int ALTEZZA_GLIFO = LayoutDelTestoGrande.ALTEZZA_GLIFO;
 
 	private TestoGrande() {
 	}
@@ -55,49 +43,25 @@ public final class TestoGrande {
 	 * L'altezza dell'immagine di una riga: quella di un riquadro dell'atlante, accenti e cediglie compresi.
 	 */
 	public static int altezzaConAccenti() {
-		return ImageCache.glifoGrande('A').getHeight();
+		return LayoutDelTestoGrande.altezzaConAccenti();
 	}
 
 	static int larghezzaCarattere(char c) {
-		BufferedImage glifo = glifo(c);
-		if (glifo != null) {
-			return glifo.getWidth();
-		}
-		return c == ' ' ? LARGHEZZA_SPAZIO : 1;
+		return LayoutDelTestoGrande.larghezzaCarattere(c);
 	}
 
 	/**
 	 * Quanto è largo il testo, su una riga.
 	 */
 	public static int larghezza(String testo) {
-		int larghezza = 0;
-		for (char c : testo.toCharArray()) {
-			larghezza += larghezzaCarattere(c) + SPAZIO_FRA_CARATTERI;
-		}
-		return larghezza;
+		return LayoutDelTestoGrande.larghezza(testo);
 	}
 
 	/**
 	 * Le righe del testo, andando a capo fra una parola e l'altra per non superare la larghezza massima.
 	 */
 	public static List<String> righe(String testo, int larghezzaMassima) {
-		List<String> righe = new ArrayList<>();
-		StringBuilder riga = new StringBuilder();
-		StringTokenizer parole = new StringTokenizer(testo, " ");
-		while (parole.hasMoreTokens()) {
-			String parola = parole.nextToken();
-			String conParola = riga.length() == 0 ? parola : riga + " " + parola;
-			if (riga.length() > 0 && larghezza(conParola) > larghezzaMassima) {
-				righe.add(riga.toString());
-				riga = new StringBuilder(parola);
-			} else {
-				riga = new StringBuilder(conParola);
-			}
-		}
-		if (riga.length() > 0) {
-			righe.add(riga.toString());
-		}
-		return righe;
+		return LayoutDelTestoGrande.righe(testo, larghezzaMassima);
 	}
 
 	/**
@@ -118,7 +82,7 @@ public final class TestoGrande {
 	 * a sinistra.
 	 */
 	public static BufferedImage immagine(String testo, int larghezzaMassima, boolean centrato) {
-		return immagine(testo, larghezzaMassima, centrato, 0);
+		return ImmaginiAwt.buffered(LayoutDelTestoGrande.immagine(testo, larghezzaMassima, centrato));
 	}
 
 	/**
@@ -126,21 +90,7 @@ public final class TestoGrande {
 	 * {@link #ALTEZZA_RIGA}.
 	 */
 	public static BufferedImage immagine(String testo, int larghezzaMassima, boolean centrato, int interlinea) {
-		List<String> righe = righe(testo, larghezzaMassima);
-		int passo = ALTEZZA_RIGA + interlinea;
-		BufferedImage immagine = new BufferedImage(Math.max(1, larghezzaMassima),
-				Math.max(1, (righe.size() - 1) * passo + altezzaConAccenti()), BufferedImage.TYPE_INT_ARGB);
-		Graphics2D graphics = immagine.createGraphics();
-		try {
-			for (int i = 0; i < righe.size(); i++) {
-				String riga = righe.get(i);
-				int x = centrato ? (larghezzaMassima - larghezza(riga)) / 2 : 0;
-				disegnaRiga(graphics, riga, x, i * passo);
-			}
-		} finally {
-			graphics.dispose();
-		}
-		return immagine;
+		return ImmaginiAwt.buffered(LayoutDelTestoGrande.immagine(testo, larghezzaMassima, centrato, interlinea));
 	}
 
 	/**
@@ -148,42 +98,13 @@ public final class TestoGrande {
 	 * si leggano anche su uno sfondo chiaro o movimentato: l'immagine si allarga di {@code raggio} pixel per lato.
 	 */
 	public static BufferedImage conAlone(BufferedImage immagine, int raggio) {
-		// Un margine doppio: ConvolveOp con EDGE_NO_OP non sfuma i pixel entro raggio dal bordo dell'immagine di
-		// lavoro, li copia soltanto. Calcolando la sfumatura su un margine doppio, quel bordo non sfumato cade fuori
-		// dal ritaglio finale, e l'alone non resta tagliato sopra e sotto (e ai lati).
-		int margine = 2 * raggio;
-		int larghezzaConMargine = immagine.getWidth() + 2 * margine;
-		int altezzaConMargine = immagine.getHeight() + 2 * margine;
-		// La sagoma nera delle lettere
-		BufferedImage sagoma = new BufferedImage(larghezzaConMargine, altezzaConMargine, BufferedImage.TYPE_INT_ARGB);
-		for (int y = 0; y < immagine.getHeight(); y++) {
-			for (int x = 0; x < immagine.getWidth(); x++) {
-				int alfa = immagine.getRGB(x, y) >>> 24;
-				sagoma.setRGB(x + margine, y + margine, alfa << 24);
-			}
-		}
-		// Sfumata, e rinforzata perché non svanisca troppo presto
-		float[] nucleo = new float[(2 * raggio + 1) * (2 * raggio + 1)];
-		Arrays.fill(nucleo, FORZA_ALONE / nucleo.length);
-		BufferedImage aloneConMargine = new ConvolveOp(new Kernel(2 * raggio + 1, 2 * raggio + 1, nucleo), ConvolveOp.EDGE_NO_OP, null)
-				.filter(sagoma, null);
-		BufferedImage alone = new BufferedImage(immagine.getWidth() + 2 * raggio, immagine.getHeight() + 2 * raggio,
-				BufferedImage.TYPE_INT_ARGB);
-		Graphics2D graphics = alone.createGraphics();
-		try {
-			graphics.drawImage(aloneConMargine, -raggio, -raggio, null);
-			graphics.drawImage(immagine, raggio, raggio, null);
-		} finally {
-			graphics.dispose();
-		}
-		return alone;
+		return ImmaginiAwt.buffered(LayoutDelTestoGrande.conAlone(ImmaginiAwt.pixel(immagine), raggio));
 	}
 
 	/**
 	 * La stessa immagine, in grigio scuro: per quello che manca ancora (un trofeo non vinto).
 	 */
 	public static BufferedImage scura(BufferedImage immagine) {
-		return new RescaleOp(new float[] {LUMINOSITA_SCURO, LUMINOSITA_SCURO, LUMINOSITA_SCURO, 1f}, new float[4], null)
-				.filter(immagine, null);
+		return ImmaginiAwt.buffered(LayoutDelTestoGrande.scura(ImmaginiAwt.pixel(immagine)));
 	}
 }

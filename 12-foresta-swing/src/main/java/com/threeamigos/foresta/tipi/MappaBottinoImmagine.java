@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.tipi;
 
 import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
+import com.threeamigos.foresta.ui.immagini.NomiDelleImmagini;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
 
 import java.awt.image.BufferedImage;
@@ -11,40 +12,43 @@ import java.awt.image.BufferedImage;
  */
 public enum MappaBottinoImmagine {
 
-    ANELLO(TipoBottino.ANELLO, "oggetti/Anello.png"),
-    COFANO(TipoBottino.COFANO, "oggetti/Cofano.png"),
-    CORONA(TipoBottino.CORONA, "oggetti/Corona.png"),
-    PIETRA_PREZIOSA(TipoBottino.PIETRA_PREZIOSA, "oggetti/PietraPreziosa.png"),
-    MONETA(TipoBottino.MONETA, "oggetti/Moneta.png"),
-    SCUDO(TipoBottino.SCUDO, "oggetti/Scudo.png"),
-    SPADA(TipoBottino.SPADA, "oggetti/Spada.png"),
-    SPADONE(TipoBottino.SPADONE, "oggetti/Spadone.png"),
-    FALCE(TipoBottino.FALCE, "oggetti/FalceDelTristoMietitore.png"),
-    MAZZA(TipoBottino.MAZZA, "oggetti/Mazza.png"),
-    ASCIA(TipoBottino.ASCIA, "oggetti/Ascia.png"),
-    LANCIA(TipoBottino.LANCIA, "oggetti/Lancia.png"),
-    BASTONE_MAGICO(TipoBottino.BASTONE_MAGICO, "oggetti/BastoneMagico.png"),
-    LIBRO_MAGICO(TipoBottino.LIBRO_MAGICO, "oggetti/LibroMagico.png"),
-    ELMO(TipoBottino.ELMO, "oggetti/Elmo.png"),
+    ANELLO(TipoBottino.ANELLO),
+    COFANO(TipoBottino.COFANO),
+    CORONA(TipoBottino.CORONA),
+    PIETRA_PREZIOSA(TipoBottino.PIETRA_PREZIOSA),
+    MONETA(TipoBottino.MONETA),
+    SCUDO(TipoBottino.SCUDO),
+    SPADA(TipoBottino.SPADA),
+    SPADONE(TipoBottino.SPADONE),
+    FALCE(TipoBottino.FALCE),
+    MAZZA(TipoBottino.MAZZA),
+    ASCIA(TipoBottino.ASCIA),
+    LANCIA(TipoBottino.LANCIA),
+    BASTONE_MAGICO(TipoBottino.BASTONE_MAGICO),
+    LIBRO_MAGICO(TipoBottino.LIBRO_MAGICO),
+    ELMO(TipoBottino.ELMO),
     // Per ora una copia dell'elmo, da ridisegnare
-    MASCHERA(TipoBottino.MASCHERA, "oggetti/Maschera.png"),
-    ARMATURA(TipoBottino.ARMATURA, "oggetti/Armatura.png"),
-    SCHINIERI(TipoBottino.SCHINIERI, "oggetti/Schinieri.png"),
+    MASCHERA(TipoBottino.MASCHERA),
+    ARMATURA(TipoBottino.ARMATURA),
+    SCHINIERI(TipoBottino.SCHINIERI),
     // Non si trova per terra: è l'aspetto dei libri tecnici (vedi ArtefattoMD.getAspetto)
-    LIBRO_TECNICO(null, "oggetti/LibroTecnico.png"),
+    LIBRO_TECNICO(null),
     // Non si trova per terra: è l'aspetto della spada normalmente nascosta (vedi ArtefattoMD.getAspetto)
-    SPADA_NORMALMENTE_NASCOSTA(null, "oggetti/LaSpadaNormalmenteNascosta.png"),
+    SPADA_NORMALMENTE_NASCOSTA(null),
     // Per ora un sacchetto generico per tutti gli oggetti delle missioni
-    OGGETTO_MISSIONE(TipoBottino.OGGETTO_MISSIONE, "oggetti/OggettoMissione.png"),
+    OGGETTO_MISSIONE(TipoBottino.OGGETTO_MISSIONE),
     // Gli artefatti non si mostrano nelle locazioni
-    ARTEFATTO(TipoBottino.ARTEFATTO, null);
+    ARTEFATTO(TipoBottino.ARTEFATTO);
 
     private final TipoBottino tipoOggetto;
     private final BufferedImage immagine;
 
-    MappaBottinoImmagine(TipoBottino tipoOggetto, String nomeRisorsa) {
+    MappaBottinoImmagine(TipoBottino tipoOggetto) {
         this.tipoOggetto = tipoOggetto;
-        this.immagine = BufferedImageBuilder.buildBufferedImage(nomeRisorsa, LivelloDiZoom.valore());
+        // I nomi delle risorse sono nel modulo comune, che Swing e libGDX condividono: quelli senza tipo di bottino (i libri tecnici, la spada
+        // normalmente nascosta) sono aspetti di artefatto, con lo stesso nome della costante
+        String nomeRisorsa = tipoOggetto != null ? NomiDelleImmagini.oggetto(tipoOggetto) : NomiDelleImmagini.oggetto(AspettoArtefatto.valueOf(name()));
+        this.immagine = nomeRisorsa == null ? null : BufferedImageBuilder.buildBufferedImage(nomeRisorsa, LivelloDiZoom.valore());
     }
 
     public static MappaBottinoImmagine getClassiOggettoImmagine(TipoBottino tipoOggetto) {

@@ -1,194 +1,96 @@
 package com.threeamigos.foresta.ui.riquadri;
 
-import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoCommutazioneElenco;
 import com.threeamigos.foresta.interfacce.VistaMissione;
 import com.threeamigos.foresta.interfacce.VistaPartita;
-import com.threeamigos.foresta.ui.Finestra;
+import com.threeamigos.foresta.ui.Area;
+import com.threeamigos.foresta.ui.Misura;
 import com.threeamigos.foresta.ui.barra.Cartiglio;
-import com.threeamigos.foresta.ui.componenti.ComponenteScorrevole;
-import com.threeamigos.foresta.ui.componenti.ScorrimentoSuUnAsse;
+import com.threeamigos.foresta.ui.componenti.ElementoDelElenco;
+import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
-import com.threeamigos.foresta.ui.testo.*;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
+import com.threeamigos.foresta.ui.immagini.NomiDelleImmagini;
 import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Il riquadro con le missioni attive.
+ * Il riquadro con le missioni attive, disegnato con Swing: l'albero, lo scorrimento e i click sono di {@link RiquadroMissioni}, nel modulo comune.
  */
-public class DisplayableCanvasRiquadroMissioni implements Finestra {
-
-	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE = 16;
-	private static final int SPACING = 4;
-	// Pixel di scorrimento per ogni scatto della rotella
-	private static final int PASSO_SCORRIMENTO = 2;
-
-	private static final DoomdarkFont fontNome = DoomdarkFont.medio();
-	private static final DoomdarkFont fontDescrizione = DoomdarkFont.piccolo();
-
-	private final int topLeftX;
-	private int topLeftY;
-	private final int innerWidth;
-	private final int innerHeight;
-
-	// Quanto la lista è scorsa: con la rotella e trascinandola (anche col dito, e le prosegue per inerzia)
-	private final ScorrimentoSuUnAsse scorrimento = new ScorrimentoSuUnAsse(System::nanoTime);
+public class DisplayableCanvasRiquadroMissioni extends RiquadroMissioni {
 
 	// Dove sta il mouse, relativo al riquadro, per l'aiuto (-1 fuori)
 	private int mouseX = -1;
 	private int mouseY = -1;
 
-	private final VistaPartita vistaPartita;
-
 	public DisplayableCanvasRiquadroMissioni(int topLeftX, int topLeftY, VistaPartita vistaPartita) {
-		this.vistaPartita = vistaPartita;
-		this.topLeftX = topLeftX;
-		this.topLeftY = topLeftY;
-		innerWidth = ImageCache.corniceGrande.getWidth() - ((DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE  + SPACING) << 1);
-		innerHeight = ImageCache.corniceGrande.getHeight() - ((DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + SPACING) << 1);
+		super(topLeftX, topLeftY, ImageCache.corniceGrande.getWidth(), ImageCache.corniceGrande.getHeight(), vistaPartita);
+	}
+
+	@Override
+	protected Misura misuraDellIcona(String risorsa) {
+		BufferedImage icona = BufferedImageBuilder.buildBufferedImage(risorsa);
+		return new Misura(icona.getWidth(), icona.getHeight());
 	}
 
 	/**
-	 * Sposta il riquadro in verticale: topLeftY è la nuova quota del bordo superiore della cornice
+	 * Le icone come le tiene ImageCache (già con lo zoom, dove serve)
 	 */
-	public void spostaInVerticale(int topLeftY) {
-		this.topLeftY = topLeftY;
+	private static Image icona(String risorsa) {
+		switch (risorsa) {
+			case NomiDelleImmagini.MISSIONE_BIRRA:
+				return ImageCache.missioneBirra;
+			case NomiDelleImmagini.MISSIONE_GALLO:
+				return ImageCache.missioneGallo;
+			default:
+				return ImageCache.separatore;
+		}
 	}
 
 	/**
 	 * Disegna le missioni attive.
 	 */
 	public void disegnaMissioni(Graphics2D graphics) {
-		graphics.drawImage(ImageCache.corniceGrande, topLeftX, topLeftY, null);
-		IntestazioneRiquadro.disegna(graphics, TestiDellaUI.get("RIQUADRO_MISSIONI"), topLeftX, topLeftY, ImageCache.corniceGrande.getWidth());
+		graphics.drawImage(ImageCache.corniceGrande, getTopLeftX(), getTopLeftY(), null);
+		IntestazioneRiquadro.disegna(graphics, TestiDellaUI.get("RIQUADRO_MISSIONI"), getTopLeftX(), getTopLeftY(), ImageCache.corniceGrande.getWidth());
 
-		ComponenteScorrevole<VistaMissione> componenteScorrevole = costruisciComponenteScorrevole();
-		scorrimento.aggiorna();
-		// L'elenco può essere cambiato dall'ultimo scorrimento: produci rimette l'offset nei limiti
-		Image image = componenteScorrevole.produci(innerHeight, scorrimento);
-		graphics.drawImage(image, topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE  + SPACING,
-				topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + SPACING, null);
-	}
-
-	/**
-	 * L'albero viene ricostruito a ogni disegno e a ogni click: lo stato di apertura
-	 * dei nodi non vive qui ma nel modello dati delle missioni.
-	 */
-	private ComponenteScorrevole<VistaMissione> costruisciComponenteScorrevole() {
-		ComponenteScorrevole<VistaMissione> componenteScorrevole = new ComponenteScorrevole<>(innerWidth, 10, 1);
-		DoomdarkColorAlternante coloreAlternante = new DoomdarkColorAlternante();
-		for (VistaMissione missione : vistaPartita.getMissioniAttive()) {
-			DoomdarkColorModel.Color colore = coloreAlternante.getColor();
-			ComponenteScorrevole<VistaMissione>.Nodo nodo = componenteScorrevole.creaNodo(
-					missione.getNome(), fontNome, colore,
-					missione.getDescrizione(), fontDescrizione, colore,
-					getIcona(missione), missione);
-			configuraNodo(nodo, missione, colore, true);
-		}
-		List<? extends VistaMissione> missioniCompletate = vistaPartita.getMissioniCompletate();
-		if (!missioniCompletate.isEmpty()) {
-			componenteScorrevole.creaSeparatore();
-			for (VistaMissione missione : missioniCompletate) {
-				DoomdarkColorModel.Color colore = DoomdarkColorModel.Color.DARK_GRAY;
-				ComponenteScorrevole<VistaMissione>.Nodo nodo = componenteScorrevole.creaNodo(
-						missione.getNome(), fontNome, colore,
-						missione.getDescrizione(), fontDescrizione, colore,
-						getIcona(missione), missione);
-				configuraNodo(nodo, missione, colore, false);
+		sincronizza();
+		Area area = getAreaElenco();
+		Shape clipOriginale = graphics.getClip();
+		graphics.setClip(area.getX(), area.getY(), area.getLarghezza(), area.getAltezza());
+		int x0 = area.getX();
+		int y0 = area.getY() - getOffset();
+		for (ElementoDelElenco e : elementiVisibili()) {
+			Image immagine;
+			switch (e.getTipo()) {
+				case ICONA:
+				case VALORE_IMMAGINE:
+					immagine = icona((String) e.getImmagine());
+					break;
+				case VALORE_TESTO:
+					immagine = ImageCache.get(e.getTesto(), e.getFont(), e.getColore());
+					break;
+				default:
+					// Titolo o descrizione: il testo a capo, già in cache come immagine
+					immagine = ImageCache.getTestoACapo(e.getTesto(), e.getFont(), e.getColore(),
+							Math.max(e.getLarghezzaDiImpaginazione(), e.getFont().getHeight()), e.getPassoRiga() - e.getFont().getHeight());
+					break;
 			}
+			graphics.drawImage(immagine, x0 + e.getX(), y0 + e.getY(), null);
 		}
-		// Le fallite per ultime, dopo un altro separatore, in rosso
-		List<? extends VistaMissione> missioniFallite = vistaPartita.getMissioniFallite();
-		if (!missioniFallite.isEmpty()) {
-			componenteScorrevole.creaSeparatore();
-			for (VistaMissione missione : missioniFallite) {
-				DoomdarkColorModel.Color colore = DoomdarkColorModel.Color.RED;
-				ComponenteScorrevole<VistaMissione>.Nodo nodo = componenteScorrevole.creaNodo(
-						missione.getNome(), fontNome, colore,
-						missione.getDescrizione(), fontDescrizione, colore,
-						getIcona(missione), missione);
-				configuraNodo(nodo, missione, colore, false);
-			}
+		// Le frecce, in alto e in basso a destra se la lista continua da quella parte
+		if (isFrecciaSuVisibile()) {
+			Image freccia = ImageCache.componenteScorrevoleFrecciaSu;
+			graphics.drawImage(freccia, area.getX() + area.getLarghezza() - freccia.getWidth(null) - ImageCache.SPACING, area.getY() + ImageCache.SPACING, null);
 		}
-		return componenteScorrevole;
-	}
-
-	/**
-	 * Una sotto-missione non ancora attivata non viene mostrata. Fra le missioni in corso si nascondono anche le
-	 * sotto-missioni completate, che compaiono fra le completate (vedi RegistroMissioni.getMissioniCompletate).
-	 * Vale a ogni livello dell'albero.
-	 */
-	private void configuraNodo(ComponenteScorrevole<VistaMissione>.Nodo nodo, VistaMissione missione, DoomdarkColorModel.Color colore,
-			boolean nascondiCompletate) {
-		nodo.setFigliVisibili(missione.isDescrizioneVisibile());
-		for (VistaMissione missioneSecondaria : missione.getMissioniSecondarie()) {
-			if (!missioneSecondaria.isAttiva() || (nascondiCompletate && missioneSecondaria.isCompleta())) {
-				continue;
-			}
-			ComponenteScorrevole<VistaMissione>.Nodo nodoFiglio = nodo.creaNodo(
-					missioneSecondaria.getNome(), fontNome, colore,
-					missioneSecondaria.getDescrizione(), fontDescrizione, colore,
-					null, missioneSecondaria);
-			configuraNodo(nodoFiglio, missioneSecondaria, colore, nascondiCompletate);
+		if (isFrecciaGiuVisibile()) {
+			Image freccia = ImageCache.componenteScorrevoleFrecciaGiu;
+			graphics.drawImage(freccia, area.getX() + area.getLarghezza() - freccia.getWidth(null) - ImageCache.SPACING,
+					area.getY() + area.getAltezza() - ImageCache.SPACING - freccia.getHeight(null), null);
 		}
-	}
-
-	/**
-	 * Di quanti pixel la lista è scorsa, come l'ha disegnata produci
-	 */
-	private int offsetY() {
-		return (int) Math.round(scorrimento.getScorrimento());
-	}
-
-	/**
-	 * Il gesto che comincia sul riquadro prosegue anche se il puntatore ne esce, finché non si lascia
-	 */
-	@Override
-	public boolean catturaIlTrascinamento() {
-		return true;
-	}
-
-	@Override
-	public void processaPressione(int x, int y, Tasto tasto) {
-		if (tasto == Tasto.SINISTRO) {
-			scorrimento.premi(y, true);
-		}
-	}
-
-	@Override
-	public void processaTrascinamento(int x, int y) {
-		scorrimento.trascina(y);
-	}
-
-	@Override
-	public void processaRilascio(int x, int y, Tasto tasto) {
-		if (tasto == Tasto.SINISTRO) {
-			scorrimento.rilascia();
-		}
-	}
-
-	@Override
-	public void processaClick(int x, int y, Tasto tasto) {
-		// Il rilascio di un trascinamento non è un click sul nome di una missione
-		if (tasto != Tasto.SINISTRO || scorrimento.isGestoTrascinato()) {
-			return;
-		}
-		int bordo = DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + SPACING;
-		int xInterno = x - bordo;
-		int yInterno = y - bordo;
-		// Il click può cadere sulla cornice, fuori dall'elenco
-		if (xInterno < 0 || xInterno >= innerWidth || yInterno < 0 || yInterno >= innerHeight) {
-			return;
-		}
-		// La quota va espressa in coordinate della lista, non della finestra visibile
-		VistaMissione missione = costruisciComponenteScorrevole().riferimentoTitoloAllaQuota(yInterno + offsetY());
-		if (missione == null) {
-			return;
-		}
-		BusEventi.pubblica(ComandoCommutazioneElenco.missione(missione.getId()));
+		graphics.setClip(clipOriginale);
 	}
 
 	@Override
@@ -209,47 +111,22 @@ public class DisplayableCanvasRiquadroMissioni implements Finestra {
 	 * tutto lo schermo, grande larghezzaSchermo x altezzaSchermo.
 	 */
 	public void disegnaAiuto(Graphics2D graphics, int larghezzaSchermo, int altezzaSchermo) {
-		if (!vistaPartita.isAiutoAbilitato() || mouseX < 0) {
+		if (!getVistaPartita().isAiutoAbilitato() || mouseX < 0) {
 			return;
 		}
-		int bordo = DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + SPACING;
-		int xInterno = mouseX - bordo;
-		int yInterno = mouseY - bordo;
-		if (xInterno < 0 || xInterno >= innerWidth || yInterno < 0 || yInterno >= innerHeight) {
+		int xInterno = mouseX - BORDO;
+		int yInterno = mouseY - BORDO;
+		if (xInterno < 0 || xInterno >= getAreaElenco().getLarghezza() || yInterno < 0 || yInterno >= getAltezzaInterna()) {
 			return;
 		}
-		ComponenteScorrevole<VistaMissione> componenteScorrevole = costruisciComponenteScorrevole();
 		List<String> righe = new ArrayList<>();
-		VistaMissione missione = componenteScorrevole.riferimentoTitoloAllaQuota(yInterno + offsetY());
+		VistaMissione missione = missioneInPosizione(mouseX, mouseY);
 		if (missione != null) {
 			righe.add(Cartiglio.aiutoClick(missione.isDescrizioneVisibile(), TestiDellaUI.get("COSA_DESCRIZIONE")));
 		}
-		if (componenteScorrevole.isScorrevole(innerHeight)) {
+		if (isScorrevole()) {
 			righe.add(Cartiglio.AIUTO_ROTELLA);
 		}
-		Cartiglio.disegnaAccantoAlMouse(graphics, righe, topLeftX + mouseX, topLeftY + mouseY, larghezzaSchermo, altezzaSchermo);
-	}
-
-	@Override
-	public int passiPerScattoDellaRotella() {
-		return PASSI_PER_SCATTO_DELLE_LISTE;
-	}
-
-	@Override
-	public void processaRotella(int x, int y, int numeroRotazioni, MovimentoRotella movimentoRotella) {
-		int pixel = numeroRotazioni * PASSO_SCORRIMENTO;
-		scorrimento.scorriDi(movimentoRotella == MovimentoRotella.SU ? -pixel : pixel);
-	}
-
-	private Image getIcona(VistaMissione missione) {
-		switch (missione.getClasse()) {
-			case NESSUN_BOCCALE_LASCIATO_INDIETRO:
-			case CRONACHE_DI_UN_FEGATO_EROICO:
-				return ImageCache.missioneBirra;
-			case DISTURBATORE_DELLA_QUIETE_PUBBLICA:
-				return ImageCache.missioneGallo;
-			default:
-				return null;
-		}
+		Cartiglio.disegnaAccantoAlMouse(graphics, righe, getTopLeftX() + mouseX, getTopLeftY() + mouseY, larghezzaSchermo, altezzaSchermo);
 	}
 }

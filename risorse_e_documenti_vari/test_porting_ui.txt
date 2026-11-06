@@ -22,3 +22,9 @@ FinestraDiProvaTest
 BugCacheMappaGeneraleTest
 DisposizioneDeiGlifiTest
 RouterDegliInputTest
+RiquadroGruppoTest
+ElencoScorrevoleTest
+ModelloDelloSpriteTest
+DescrizioniDegliSpriteTest
+SpriteDeiRiquadriTest
+SpriteDellaLocazioneTest

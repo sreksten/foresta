@@ -76,7 +76,7 @@ public class DisegnatoreMappa {
     }
 
     protected boolean isSegnaliniVisibili() {
-        return (System.currentTimeMillis() / 1000) % 2 == 0;
+        return com.threeamigos.foresta.ui.riquadri.RiquadroMappa.segnaliniVisibili();
     }
 
     private static Image recuperaImmaginePerLocazione(VistaMappa mappa, CoordinateMD coordinateMD) {

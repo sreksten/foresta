@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Le nuvole della mappa si generano anche su un'area conosciuta stretta (un corridoio) e si dimenticano quando comincia un'altra partita.
  */
-class CloudManagerTest {
+class GestoreNuvoleTest {
 
     /** Una foresta di venti per venti caselle di cui se ne conosce solo un corridoio, alto una sola riga */
     private static VistaMappa corridoio(int caselle) {
@@ -46,7 +46,7 @@ class CloudManagerTest {
 
     @AfterEach
     void azzera() {
-        CloudManager.azzera();
+        GestoreNuvole.azzera();
     }
 
     // La foresta (20 x 20 caselle da 8 pixel) disegnata a (120, 20): al centro dello schermo di prova
@@ -54,7 +54,7 @@ class CloudManagerTest {
         BufferedImage schermo = new BufferedImage(400, 200, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = schermo.createGraphics();
         try {
-            CloudManager.disegna(g, 0, 0, 120, 20, 8, 8);
+            NuvoleAwt.disegna(g, 0, 0, 120, 20, 8, 8);
         } finally {
             g.dispose();
         }
@@ -80,36 +80,36 @@ class CloudManagerTest {
 
     @Test
     void conUnCorridoioConosciutoLeNuvoleSiGenerano() {
-        CloudManager.azzera();
+        GestoreNuvole.azzera();
 
-        assertDoesNotThrow(() -> CloudManager.assicuraGenerate(corridoio(40), 400, 200, 8, 8));
+        assertDoesNotThrow(() -> GestoreNuvole.assicuraGenerate(corridoio(40), 400, 200, 8, 8));
 
         assertTrue(pixelDisegnati() > 0, "le nuvole ci sono e si disegnano");
     }
 
     @Test
     void conUnaCasellaSolaLeNuvoleSiGenerano() {
-        CloudManager.azzera();
+        GestoreNuvole.azzera();
 
-        assertDoesNotThrow(() -> CloudManager.assicuraGenerate(corridoio(1), 400, 200, 8, 8));
+        assertDoesNotThrow(() -> GestoreNuvole.assicuraGenerate(corridoio(1), 400, 200, 8, 8));
     }
 
     @Test
     void azzerandoLeNuvoleSparisconoFinoAllaProssimaGenerazione() {
-        CloudManager.assicuraGenerate(corridoio(40), 400, 200, 8, 8);
+        GestoreNuvole.assicuraGenerate(corridoio(40), 400, 200, 8, 8);
         assertTrue(pixelDisegnati() > 0);
 
-        CloudManager.azzera();
+        GestoreNuvole.azzera();
 
         assertEquals(0, pixelDisegnati(), "dopo l'azzeramento non ce n'è nessuna");
-        CloudManager.assicuraGenerate(corridoio(40), 400, 200, 8, 8);
+        GestoreNuvole.assicuraGenerate(corridoio(40), 400, 200, 8, 8);
         assertTrue(pixelDisegnati() > 0, "e si rigenerano sulla nuova area");
     }
 
     @Test
     void leNuvoleVaganoSuTuttaLaForestaNonSoloSuQuellaConosciuta() {
         // Si conoscono solo le prime quattro caselle della riga 3: la foresta è di venti per venti, a partire da (120, 20)
-        CloudManager.assicuraGenerate(foresta(20, 20, 4), 400, 200, 8, 8);
+        GestoreNuvole.assicuraGenerate(foresta(20, 20, 4), 400, 200, 8, 8);
 
         int oltreLaZonaConosciuta = pixelDisegnati(120 + 4 * 8 + 30, 20, 400, 200);
 

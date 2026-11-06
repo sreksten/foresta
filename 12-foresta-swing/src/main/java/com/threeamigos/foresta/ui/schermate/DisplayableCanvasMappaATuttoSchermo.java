@@ -6,7 +6,8 @@ import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.barra.Cartiglio;
 import com.threeamigos.foresta.ui.componenti.JoystickVirtuale;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
-import com.threeamigos.foresta.ui.sfx.CloudManager;
+import com.threeamigos.foresta.ui.sfx.GestoreNuvole;
+import com.threeamigos.foresta.ui.sfx.NuvoleAwt;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -180,7 +181,7 @@ public class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implem
 			disegnaIndicatori(graphics);
 		}
 
-		CloudManager.assicuraGenerate(vistaPartita.getMappa(), width, height, LARGHEZZA_ICONA, ALTEZZA_ICONA);
+		GestoreNuvole.assicuraGenerate(vistaPartita.getMappa(), width, height, LARGHEZZA_ICONA, ALTEZZA_ICONA);
 
 		// Applica la clip sull'area occupata dalla mappa, in modo che le nuvole non
 		// vengano disegnate al di fuori di essa quando la mappa è più piccola dello schermo
@@ -190,14 +191,14 @@ public class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implem
 		// allineate rispetto alla cella (0,0) della foresta che qui corrisponde sempre
 		// all'angolo in alto a sinistra dell'immagine disegnata a (mappaXOffset, mappaYOffset)
 		graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.45f));
-		CloudManager.disegna(graphics, 0, 0, mappaXOffset, mappaYOffset, LARGHEZZA_ICONA, ALTEZZA_ICONA);
+		NuvoleAwt.disegna(graphics, 0, 0, mappaXOffset, mappaYOffset, LARGHEZZA_ICONA, ALTEZZA_ICONA);
 
 		// Ripristina la clip e il composite originali
 		graphics.setComposite(originalComposite);
 		graphics.setClip(originalClip);
 
 		// Aggiorna la posizione delle nuvolette
-		CloudManager.aggiorna();
+		GestoreNuvole.aggiorna();
 
 		if (altezzaMappa < height) {
 			notiziario.disegna(graphics, LARGHEZZA_SFERA_MAGICA_COPERTA, altezzaMappa);

@@ -1,6 +1,10 @@
 package com.threeamigos.foresta.ui.sprite;
 
+import com.threeamigos.foresta.ui.Area;
+import com.threeamigos.foresta.ui.Misura;
+import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
+import com.threeamigos.foresta.ui.sprite.ModelloDelloSprite.Dissolvenza;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 
@@ -9,42 +13,29 @@ import java.awt.image.BufferedImage;
 
 /**
  * Un'icona, con eventualmente una variazione scritta a fianco (per esempio "+5" in verde o "-3" in rosso), che sale e sfuma in poco più di un secondo: per segnalare un cambiamento di
- * salute, magia, monete e simili sopra l'elemento che lo riguarda.
+ * salute, magia, monete e simili sopra l'elemento che lo riguarda. Che cosa mostra e dove sta ogni parte lo dice {@link DescrizioneSpriteATempo}, nel modulo comune: qui c'è il disegno.
  */
 public class SpriteATempo extends SpriteBase {
 
-	private static final float DURATA_IN_SECONDI = 1.6f;
-	private static final float ATTACCO_DISSOLVENZA_DOPO_SECONDI = DURATA_IN_SECONDI / 2;
-	private static final float DISTANZA_TOTALE_MOVIMENTO = 10f * DURATA_IN_SECONDI;
-
-	private final String descrizione;
+	private final DescrizioneSpriteATempo dati;
+	// L'icona come immagine: la descrizione la dà come BufferedImage oppure come nome della risorsa (se viene dai riquadri del modulo comune)
+	private final BufferedImage icona;
 
 	/**
-	 * Campi usati solo da {@link #buildImage()}: da un lato il caso "immagine già pronta"
-	 * (icona singola), dall'altro il caso "icona + testo Doomdark da comporre".
+	 * Uno sprite che mostra quel che dice la descrizione, la cui icona è un <code>BufferedImage</code>
 	 */
-	private BufferedImage immagineFornita;
-	private BufferedImage icona;
-	private String testoVariazione;
-	private DoomdarkFont font;
-	private DoomdarkColorModel.Color color;
-	private boolean ancoraSinistra;
-
-	/**
-	 * Coordinate di appoggio, mutabili: {@link #buildImage()} le corregge in base alle
-	 * dimensioni dell'immagine appena costruita (es. per allineare icona e testo una volta
-	 * composti), prima che {@link #completaCostruzione()} le passi a {@code inizializza()}
-	 * come posizione iniziale/finale definitiva dello sprite.
-	 */
-	private float x;
-	private float y;
+	public SpriteATempo(DescrizioneSpriteATempo dati) {
+		this.dati = dati;
+		this.icona = immagineDellIcona(dati.getIcona(), dati.getScalaDellIcona());
+		completaCostruzione();
+		Area ritaglio = dati.getRitaglio();
+		if (ritaglio != null) {
+			setRitaglio(new Rectangle(ritaglio.getX(), ritaglio.getY(), ritaglio.getLarghezza(), ritaglio.getAltezza()));
+		}
+	}
 
 	public SpriteATempo(BufferedImage icona, int xIniziale, int yIniziale, String descrizione) {
-		this.descrizione = descrizione;
-		this.immagineFornita = icona;
-		this.x = xIniziale;
-		this.y = yIniziale;
-		completaCostruzione();
+		this(DescrizioneSpriteATempo.immagine(icona, misura(icona), xIniziale, yIniziale, descrizione));
 	}
 
 	public SpriteATempo(BufferedImage icona, int variazione, DoomdarkFont font, int xIniziale, int yIniziale, String descrizione) {
@@ -59,9 +50,7 @@ public class SpriteATempo extends SpriteBase {
 	 */
 	public SpriteATempo(BufferedImage icona, int variazione, DoomdarkFont font, int xIniziale, int yIniziale,
 				 boolean ancoraSinistra, String descrizione) {
-		this(icona, variazione, font,
-				variazione >= 0 ? DoomdarkColorModel.Color.GREEN : DoomdarkColorModel.Color.RED,
-				xIniziale, yIniziale, ancoraSinistra, descrizione);
+		this(DescrizioneSpriteATempo.conVariazione(icona, misura(icona), variazione, font, xIniziale, yIniziale, ancoraSinistra, descrizione));
 	}
 
 	public SpriteATempo(BufferedImage icona, int variazione, DoomdarkFont font, DoomdarkColorModel.Color color,
@@ -71,29 +60,54 @@ public class SpriteATempo extends SpriteBase {
 
 	public SpriteATempo(BufferedImage icona, int variazione, DoomdarkFont font, DoomdarkColorModel.Color color,
 				 int xIniziale, int yIniziale, boolean ancoraSinistra, String descrizione) {
-		this.descrizione = descrizione;
-		this.icona = icona;
-		this.testoVariazione = testoVariazione(variazione);
-		this.font = font;
-		this.color = color;
-		this.x = xIniziale;
-		this.y = yIniziale;
-		this.ancoraSinistra = ancoraSinistra;
-		completaCostruzione();
+		this(DescrizioneSpriteATempo.conVariazione(icona, misura(icona), variazione, font, color, xIniziale, yIniziale, ancoraSinistra, descrizione));
+	}
+
+	/**
+	 * La descrizione di uno sprite che è solo quell'immagine (vedi i costruttori con gli stessi argomenti)
+	 */
+	public static DescrizioneSpriteATempo descrizione(BufferedImage icona, int xIniziale, int yIniziale, String descrizione) {
+		return DescrizioneSpriteATempo.immagine(icona, misura(icona), xIniziale, yIniziale, descrizione);
+	}
+
+	/**
+	 * La descrizione di uno sprite con la variazione scritta, col colore verde o rosso secondo il segno
+	 */
+	public static DescrizioneSpriteATempo descrizione(BufferedImage icona, int variazione, DoomdarkFont font, int xIniziale, int yIniziale, String descrizione) {
+		return DescrizioneSpriteATempo.conVariazione(icona, misura(icona), variazione, font, xIniziale, yIniziale, false, descrizione);
+	}
+
+	/**
+	 * La descrizione di uno sprite con la variazione scritta di quel colore
+	 */
+	public static DescrizioneSpriteATempo descrizione(BufferedImage icona, int variazione, DoomdarkFont font, DoomdarkColorModel.Color color,
+													  int xIniziale, int yIniziale, String descrizione) {
+		return DescrizioneSpriteATempo.conVariazione(icona, misura(icona), variazione, font, color, xIniziale, yIniziale, false, descrizione);
+	}
+
+	private static BufferedImage immagineDellIcona(Object icona, float scala) {
+		if (icona instanceof String) {
+			return BufferedImageBuilder.buildBufferedImage((String) icona, scala);
+		}
+		return (BufferedImage) icona;
+	}
+
+	private static Misura misura(BufferedImage immagine) {
+		return immagine != null ? new Misura(immagine.getWidth(), immagine.getHeight()) : null;
 	}
 
 	private void completaCostruzione() {
 		BufferedImage immagineCostruita = buildImage();
 		inizializza(immagineCostruita,
-				DURATA_IN_SECONDI, ATTACCO_DISSOLVENZA_DOPO_SECONDI,
+				DescrizioneSpriteATempo.DURATA_IN_SECONDI, DescrizioneSpriteATempo.ATTACCO_DISSOLVENZA_DOPO_SECONDI, Dissolvenza.IPERBOLICA_CON_SOGLIA,
 				null, 0,
-				x, y,
-				x, y - DISTANZA_TOTALE_MOVIMENTO,
+				dati.getXIniziale(), dati.getYIniziale(),
+				dati.getXIniziale(), dati.getYIniziale() - DescrizioneSpriteATempo.DISTANZA_TOTALE_MOVIMENTO,
 				1f, 1f);
 	}
 
 	public String getDescrizione() {
-		return descrizione;
+		return dati.getDescrizione();
 	}
 
 	/**
@@ -101,83 +115,31 @@ public class SpriteATempo extends SpriteBase {
 	 */
 	public void centraEntro(float xCentro, float limiteSinistro, float limiteDestro) {
 		float larghezza = immagine.getWidth();
-		impostaX(SpriteEffetto.centroEntro(xCentro, larghezza, limiteSinistro, limiteDestro) - larghezza / 2.0f);
-	}
-
-	private static String testoVariazione(int variazione) {
-		StringBuilder sb = new StringBuilder();
-		if (variazione >= 0) {
-			sb.append("+");
-		}
-		sb.append(variazione);
-		return sb.toString();
+		impostaX(DescrizioneSpriteEffetto.centroEntro(xCentro, larghezza, limiteSinistro, limiteDestro) - larghezza / 2.0f);
 	}
 
 	@Override
 	protected BufferedImage buildImage() {
-		if (immagineFornita != null) {
-			return immagineFornita;
+		if (dati.isSoloImmagine()) {
+			return icona;
 		}
 
-		Image doomdark = ImageCache.get(testoVariazione, font, color);
-		Image blackDoomdark = ImageCache.get(testoVariazione, font, DoomdarkColorModel.Color.BLACK);
-		int doomdarkHeight = doomdark.getHeight(null) + 2; // per il bordo nero
-		int width;
-		int height;
-		int offsetYIcona;
-		int offsetXTesto;
-		int offsetYTesto;
-		if (icona != null) {
-			width = icona.getWidth() + doomdark.getWidth(null) + 3;
-			offsetXTesto = icona.getWidth() + 1;
-			height = Math.max(icona.getHeight(), doomdarkHeight);
-			if (icona.getHeight() < doomdarkHeight) {
-				offsetYIcona = ((doomdarkHeight - icona.getHeight()) >> 1);
-				offsetYTesto = 0;
-			} else {
-				offsetYIcona = 0;
-				offsetYTesto = ((icona.getHeight() - doomdarkHeight) >> 1);
-			}
-		} else {
-			width = doomdark.getWidth(null) + 2;
-			height = doomdarkHeight;
-			offsetXTesto = 0;
-			offsetYTesto = 0;
-			offsetYIcona = 0;
-		}
+		Image doomdark = ImageCache.get(dati.getTestoVariazione(), dati.getFont(), dati.getColore());
+		Image blackDoomdark = ImageCache.get(dati.getTestoVariazione(), dati.getFont(), DoomdarkColorModel.Color.BLACK);
 
 		final GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 
-		BufferedImage image = gc.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+		BufferedImage image = gc.createCompatibleImage(dati.getLarghezza(), dati.getAltezza(), Transparency.TRANSLUCENT);
 		Graphics2D g2d = image.createGraphics();
 		if (icona != null) {
-			g2d.drawImage(icona, 0, offsetYIcona, null);
+			g2d.drawImage(icona, 0, dati.getYIcona(), null);
 		}
-
-		g2d.drawImage(blackDoomdark, offsetXTesto, offsetYTesto, null);
-		g2d.drawImage(blackDoomdark, offsetXTesto + 1, offsetYTesto, null);
-		g2d.drawImage(blackDoomdark, offsetXTesto + 2, offsetYTesto, null);
-
-		g2d.drawImage(blackDoomdark, offsetXTesto, offsetYTesto + 1, null);
-		g2d.drawImage(blackDoomdark, offsetXTesto + 2, offsetYTesto + 1, null);
-
-		g2d.drawImage(blackDoomdark, offsetXTesto, offsetYTesto + 2, null);
-		g2d.drawImage(blackDoomdark, offsetXTesto + 1, offsetYTesto + 2, null);
-		g2d.drawImage(blackDoomdark, offsetXTesto + 2, offsetYTesto + 2, null);
-
-		g2d.drawImage(doomdark, offsetXTesto + 1, offsetYTesto + 1, null);
+		for (int[] scostamento : DescrizioneSpriteATempo.getContorno()) {
+			g2d.drawImage(blackDoomdark, dati.getXTesto() + scostamento[0], dati.getYTesto() + scostamento[1], null);
+		}
+		g2d.drawImage(doomdark, dati.getXTesto() + 1, dati.getYTesto() + 1, null);
 		g2d.dispose();
-
-		if (!ancoraSinistra) {
-			this.x -= image.getWidth();
-		}
-		this.y -= offsetYTesto;
 		return image;
-	}
-
-	@Override
-	protected float calcolaAlpha(float secondiTrascorsi) {
-		return dissolvenzaIperbolicaConSoglia(secondiTrascorsi, momentoInizioFade);
 	}
 
 	@Override

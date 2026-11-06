@@ -4,6 +4,8 @@ import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 
+import com.threeamigos.foresta.ui.sprite.ModelloDelloSprite.Dissolvenza;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -17,15 +19,29 @@ import java.awt.image.BufferedImage;
  */
 public class SpriteEffetto extends SpriteBase {
 
-	private static final float DURATA_IN_SECONDI = 2.0f;
-	private static final float ATTACCO_DISSOLVENZA_DOPO_SECONDI = DURATA_IN_SECONDI / 2;
-	private static final float SCALA_INIZIALE = 1.0f;
-	private static final float SCALA_FINALE = 1.8f;
-	private static final int OMBRA_SCOSTAMENTO = 2;
-	private static final Color OMBRA_COLORE = new Color(0, 0, 0, 160);
+	private static final float DURATA_IN_SECONDI = DescrizioneSpriteEffetto.DURATA_IN_SECONDI;
+	private static final float ATTACCO_DISSOLVENZA_DOPO_SECONDI = DescrizioneSpriteEffetto.ATTACCO_DISSOLVENZA_DOPO_SECONDI;
+	private static final float SCALA_INIZIALE = DescrizioneSpriteEffetto.SCALA_INIZIALE;
+	private static final float SCALA_FINALE = DescrizioneSpriteEffetto.SCALA_FINALE;
+	private static final int OMBRA_SCOSTAMENTO = DescrizioneSpriteEffetto.OMBRA_SCOSTAMENTO;
+	private static final Color OMBRA_COLORE = new Color(DescrizioneSpriteEffetto.OMBRA_ARGB, true);
 
 	private final String testo;
 	private final BufferedImage testoRenderizzato;
+
+	/**
+	 * Uno sprite che mostra quel che dice la descrizione
+	 */
+	public SpriteEffetto(DescrizioneSpriteEffetto dati) {
+		this(dati.getTesto(), dati.getColore() != null ? costruisciTestoColorato(dati.getTesto(), dati.getFont(), dati.getColore())
+				: costruisciTestoConPattern(dati.getTesto(), dati.getFont(), pixelDelColore(dati.getColoreRgb())), dati.getX(), dati.getY());
+	}
+
+	private static BufferedImage pixelDelColore(int argb) {
+		BufferedImage pattern = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+		pattern.setRGB(0, 0, argb);
+		return pattern;
+	}
 
 	public SpriteEffetto(String testo, DoomdarkFont font, DoomdarkColorModel.Color color, int xIniziale, int yIniziale) {
 		this(testo, costruisciTestoColorato(testo, font, color), xIniziale, yIniziale);
@@ -35,11 +51,11 @@ public class SpriteEffetto extends SpriteBase {
 		this(testo, costruisciTestoConPattern(testo, font, pattern), xIniziale, yIniziale);
 	}
 
-	private SpriteEffetto(String testo, BufferedImage testoRenderizzato, int xIniziale, int yIniziale) {
+	private SpriteEffetto(String testo, BufferedImage testoRenderizzato, float xIniziale, float yIniziale) {
 		this.testo = testo;
 		this.testoRenderizzato = testoRenderizzato;
 		inizializza(buildImage(),
-				DURATA_IN_SECONDI, ATTACCO_DISSOLVENZA_DOPO_SECONDI,
+				DURATA_IN_SECONDI, ATTACCO_DISSOLVENZA_DOPO_SECONDI, Dissolvenza.LINEARE_CON_SOGLIA,
 				OMBRA_COLORE, OMBRA_SCOSTAMENTO,
 				xIniziale, yIniziale,
 				xIniziale, yIniziale,
@@ -61,11 +77,7 @@ public class SpriteEffetto extends SpriteBase {
 	 * Il centro di uno sprite largo così, il più vicino possibile a quel punto, che lo tiene dentro i limiti; se non ci sta, il centro dei limiti.
 	 */
 	public static float centroEntro(float xCentro, float larghezza, float limiteSinistro, float limiteDestro) {
-		float meta = larghezza / 2.0f;
-		if (limiteDestro - limiteSinistro < larghezza) {
-			return (limiteSinistro + limiteDestro) / 2.0f;
-		}
-		return Math.max(limiteSinistro + meta, Math.min(limiteDestro - meta, xCentro));
+		return DescrizioneSpriteEffetto.centroEntro(xCentro, larghezza, limiteSinistro, limiteDestro);
 	}
 
 	@Override
@@ -97,10 +109,6 @@ public class SpriteEffetto extends SpriteBase {
 		return immagine;
 	}
 
-	@Override
-	protected float calcolaAlpha(float secondiTrascorsi) {
-		return dissolvenzaLineareConSoglia(secondiTrascorsi, momentoInizioFade, durataInSecondi);
-	}
 
 	@Override
 	public void disegna(Graphics2D g, float x, float y, float scala) {

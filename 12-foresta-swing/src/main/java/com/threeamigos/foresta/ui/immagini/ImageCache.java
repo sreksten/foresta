@@ -87,9 +87,7 @@ public class ImageCache {
 	public static Map<TipoLocazione, BufferedImage> mappa;
 	// Le immagini alternative del bosco sulla mappa (indice 0 = Foresta.png), vedi
 	// Foresta.VARIANTE_BOSCO e getImmagineMappaBosco: devono essere Foresta.NUMERO_VARIANTI_BOSCO (lo controlla un test)
-	static final String[] RISORSE_VARIANTI_BOSCO = {
-			"mappa/Foresta.png", "mappa/Foresta2.png", "mappa/Foresta3.png", "mappa/Foresta4.png"
-	};
+	static final String[] RISORSE_VARIANTI_BOSCO = NomiDelleImmagini.VARIANTI_DEL_BOSCO_SULLA_MAPPA;
 	static BufferedImage[] mappaVariantiBosco;
 	/**
 	 * I glifi dell'alfabeto grande (maiuscole, cifre e ' , . ?), già ingranditi, presi dall'atlante {@code img/font/alfabeto_grande.png}
@@ -180,63 +178,30 @@ public class ImageCache {
 		separatoreNinnoli = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Ninnoli.png", zoom);
 
 		locazioni = new EnumMap<>(TipoLocazione.class);
-		BufferedImage d;
-		locazioni.put(TipoLocazione.BOSCO, BufferedImageBuilder.buildBufferedImage(RISORSA_BOSCO, zoom));
-		d = BufferedImageBuilder.buildBufferedImage("locazioni/Castello.png", zoom);
+		// I nomi degli sfondi sono nel modulo comune; quelli con lo stesso sfondo (i castelli, le città) condividono l'immagine
+		Map<String, BufferedImage> sfondi = new HashMap<>();
 		for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
-			if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CASTELLO) {
-				locazioni.put(tipoLocazione, d);
+			String risorsa = NomiDelleImmagini.locazione(tipoLocazione);
+			if (risorsa != null) {
+				locazioni.put(tipoLocazione, sfondi.computeIfAbsent(risorsa, r -> BufferedImageBuilder.buildBufferedImage(r, zoom)));
 			}
 		}
-		d = BufferedImageBuilder.buildBufferedImage("locazioni/Citta.png", zoom);
-		for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
-			if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CITTA) {
-				locazioni.put(tipoLocazione, d);
-			}
-		}
-		d = BufferedImageBuilder.buildBufferedImage("locazioni/Grotta.png", zoom);
-		locazioni.put(TipoLocazione.GROTTA, d);
-		locazioni.put(TipoLocazione.LOCANDA, BufferedImageBuilder.buildBufferedImage("locazioni/Locanda.png", zoom));
-		locazioni.put(TipoLocazione.PALUDE, BufferedImageBuilder.buildBufferedImage("locazioni/Palude.png", zoom));
-		locazioni.put(TipoLocazione.RADURA, BufferedImageBuilder.buildBufferedImage("locazioni/Radura.png", zoom));
-		d = BufferedImageBuilder.buildBufferedImage("locazioni/Rovine.png", zoom);
-		locazioni.put(TipoLocazione.ROVINE, d);
-		locazioni.put(TipoLocazione.TEMPIO, BufferedImageBuilder.buildBufferedImage("locazioni/Tempio.png", zoom));
-		locazioni.put(TipoLocazione.ALCHIMISTA, BufferedImageBuilder.buildBufferedImage("locazioni/Alchimista.png", zoom));
-		locazioni.put(TipoLocazione.ARMAIOLO, BufferedImageBuilder.buildBufferedImage("locazioni/Armaiolo.png", zoom));
-		locazioni.put(TipoLocazione.VENDITORE_DI_PERGAMENE, BufferedImageBuilder.buildBufferedImage("locazioni/VenditoreDiPergamene.png", zoom));
-		locazioni.put(TipoLocazione.INCANTATORE, BufferedImageBuilder.buildBufferedImage("locazioni/Incantatore.png", zoom));
 
 		mappa = new EnumMap<>(TipoLocazione.class);
 		mappaVariantiBosco = new BufferedImage[RISORSE_VARIANTI_BOSCO.length];
 		for (int i = 0; i < RISORSE_VARIANTI_BOSCO.length; i++) {
 			mappaVariantiBosco[i] = BufferedImageBuilder.buildBufferedImage(RISORSE_VARIANTI_BOSCO[i], zoom);
 		}
-		mappa.put(TipoLocazione.BOSCO, mappaVariantiBosco[0]);
-		d = BufferedImageBuilder.buildBufferedImage("mappa/Castello.png", zoom);
+		// I nomi delle tessere sono nel modulo comune; quelle con la stessa tessera (i castelli, le città) condividono l'immagine
+		Map<String, BufferedImage> tessere = new HashMap<>();
 		for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
-			if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CASTELLO) {
-				mappa.put(tipoLocazione, d);
+			String risorsa = NomiDelleImmagini.tessera(tipoLocazione);
+			if (tipoLocazione == TipoLocazione.BOSCO) {
+				mappa.put(tipoLocazione, mappaVariantiBosco[0]);
+			} else if (risorsa != null) {
+				mappa.put(tipoLocazione, tessere.computeIfAbsent(risorsa, r -> BufferedImageBuilder.buildBufferedImage(r, zoom)));
 			}
 		}
-		d = BufferedImageBuilder.buildBufferedImage("mappa/Citta.png", zoom);
-		for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
-			if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CITTA) {
-				mappa.put(tipoLocazione, d);
-			}
-		}
-		d = BufferedImageBuilder.buildBufferedImage("mappa/Grotta.png", zoom);
-		mappa.put(TipoLocazione.GROTTA, d);
-		mappa.put(TipoLocazione.LOCANDA, BufferedImageBuilder.buildBufferedImage("mappa/Locanda.png", zoom));
-		mappa.put(TipoLocazione.PALUDE, BufferedImageBuilder.buildBufferedImage("mappa/Palude.png", zoom));
-		mappa.put(TipoLocazione.RADURA, BufferedImageBuilder.buildBufferedImage("mappa/Radura.png", zoom));
-		d = BufferedImageBuilder.buildBufferedImage("mappa/Rovine.png", zoom);
-		mappa.put(TipoLocazione.ROVINE, d);
-		mappa.put(TipoLocazione.TEMPIO, BufferedImageBuilder.buildBufferedImage("mappa/Tempio.png", zoom));
-		mappa.put(TipoLocazione.ALCHIMISTA, BufferedImageBuilder.buildBufferedImage("mappa/Alchimista.png", zoom));
-		mappa.put(TipoLocazione.ARMAIOLO, BufferedImageBuilder.buildBufferedImage("mappa/Armaiolo.png", zoom));
-		mappa.put(TipoLocazione.VENDITORE_DI_PERGAMENE, BufferedImageBuilder.buildBufferedImage("mappa/VenditoreDiPergamene.png", zoom));
-		mappa.put(TipoLocazione.INCANTATORE, BufferedImageBuilder.buildBufferedImage("mappa/Incantatore.png", zoom));
 		segnalino = BufferedImageBuilder.buildBufferedImage("mappa/Segnalino.png", zoom);
 		indicatore = BufferedImageBuilder.buildBufferedImage("mappa/Indicatore.png", zoom);
 

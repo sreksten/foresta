@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
+import com.threeamigos.foresta.ui.riquadri.PosizioneDellIntestazione;
+import com.threeamigos.foresta.ui.riquadri.VoceDiTesto;
 import com.threeamigos.foresta.ui.testo.CaratteriDelFont;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
@@ -91,18 +93,34 @@ public final class TestoGdx implements Disposable {
 	 * Scrive una riga di testo con l'angolo in alto a sinistra in (x, y)
 	 */
 	public void disegna(Batch batch, String testo, float x, float y, DoomdarkColorModel.Color colore) {
+		disegna(batch, testo, x, y, colore(colore), 1f);
+	}
+
+	/**
+	 * Come sopra, di un colore qualunque (con la sua alfa) e ingrandita di <code>scala</code>: i glifi si allargano senza interpolazione. Serve agli sprite,
+	 * che sfumano e si ingrandiscono.
+	 */
+	public void disegna(Batch batch, String testo, float x, float y, Color colore, float scala) {
 		Color precedente = new Color(batch.getColor());
-		batch.setColor(colore(colore));
+		batch.setColor(colore);
 		float colonna = x;
 		for (int i = 0; i < testo.length(); i++) {
 			TextureRegion glifo = glifi.get(testo.charAt(i));
 			if (glifo == null) {
 				continue; // un carattere che il font non ha non lascia posto, come in FontTool.getWidth
 			}
-			batch.draw(glifo, colonna, y);
-			colonna += font.getGlyphWidth(testo.charAt(i)) + font.getSpacing();
+			batch.draw(glifo, colonna, y, glifo.getRegionWidth() * scala, font.getHeight() * scala);
+			colonna += (font.getGlyphWidth(testo.charAt(i)) + font.getSpacing()) * scala;
 		}
 		batch.setColor(precedente);
+	}
+
+	/**
+	 * Il colore del font come colore di libGDX, con quell'alfa
+	 */
+	public static Color coloreConAlfa(DoomdarkColorModel.Color colore, float alfa) {
+		Color base = colore(colore);
+		return new Color(base.r, base.g, base.b, alfa);
 	}
 
 	/**
@@ -140,6 +158,33 @@ public final class TestoGdx implements Disposable {
 		vertici[da + 2] = colore;
 		vertici[da + 3] = u;
 		vertici[da + 4] = v;
+	}
+
+	/**
+	 * Scrive una scritta di un riquadro così com'è: nella sua posizione (o con il bordo destro lì, se allineata a destra), del suo colore, a capo entro la
+	 * sua larghezza massima se ce l'ha, con l'ombra se la vuole
+	 */
+	public void disegna(Batch batch, VoceDiTesto voce) {
+		float x = voce.isAllineataADestra() ? voce.getX() - larghezza(voce.getTesto()) : voce.getX();
+		if (voce.isConOmbra()) {
+			disegna(batch, voce.getTesto(), x + PosizioneDellIntestazione.SCOSTAMENTO_OMBRA, voce.getY() + PosizioneDellIntestazione.SCOSTAMENTO_OMBRA,
+					DoomdarkColorModel.Color.BLACK);
+		}
+		if (voce.getLarghezzaMassima() > 0) {
+			disegnaSuPiuRighe(batch, voce.getTesto(), x, voce.getY(), voce.getColore(), voce.getLarghezzaMassima());
+		} else {
+			disegna(batch, voce.getTesto(), x, voce.getY(), voce.getColore());
+		}
+	}
+
+	/**
+	 * L'intestazione di un riquadro: scritta grigia chiara con l'ombra nera dietro, centrata sul bordo superiore della cornice
+	 */
+	public void disegnaIntestazione(Batch batch, String titolo, int xCornice, int yCornice, int larghezzaCornice) {
+		int x = PosizioneDellIntestazione.x(xCornice, larghezzaCornice, larghezza(titolo));
+		int y = PosizioneDellIntestazione.y(yCornice);
+		disegna(batch, titolo, x + PosizioneDellIntestazione.SCOSTAMENTO_OMBRA, y + PosizioneDellIntestazione.SCOSTAMENTO_OMBRA, DoomdarkColorModel.Color.BLACK);
+		disegna(batch, titolo, x, y, DoomdarkColorModel.Color.LIGHT_GRAY);
 	}
 
 	/**

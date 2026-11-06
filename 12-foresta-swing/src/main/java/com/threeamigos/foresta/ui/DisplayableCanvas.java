@@ -407,7 +407,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	private void gestisciEventoCreazioneSpriteATempo(InternoCreazioneSpriteATempo evento) {
 		if (stato == StatoDisplayableCanvas.STATO_IN_GIOCO) {
-			aggiungiSprite(evento.getSprite());
+			aggiungiSprite(new SpriteATempo(evento.getDescrizione()));
 		}
 	}
 
@@ -1387,7 +1387,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 * aspettare che sfilino tutti. Gli annunci di altro genere (una missione completata) non si toccano.
 	 */
 	public void notificaAnnuncioGlobaleSostituibile(String etichetta, String messaggio) {
-		SpriteAnnuncioGlobale annuncio = new SpriteAnnuncioGlobale(etichetta, messaggio, larghezzaSchermo, altezzaSchermo).sostituibile();
+		SpriteAnnuncioGlobale annuncio = new SpriteAnnuncioGlobale(new DescrizioneAnnuncioGlobale(etichetta, messaggio, larghezzaSchermo, altezzaSchermo, true));
 		if (stato == StatoDisplayableCanvas.STATO_INTERMEZZO) {
 			annunciGlobaliRimandati.removeIf(SpriteAnnuncioGlobale::isSostituibile);
 			annunciGlobaliRimandati.add(annuncio);

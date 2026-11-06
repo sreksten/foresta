@@ -1,13 +1,11 @@
 package com.threeamigos.foresta.ui.sprite;
 
 import com.threeamigos.foresta.ui.immagini.ImageCache;
-import com.threeamigos.foresta.ui.testo.TestoGrande;
+import com.threeamigos.foresta.ui.sprite.ModelloDelloSprite.Dissolvenza;
+import com.threeamigos.foresta.ui.testo.LayoutDelTestoGrande;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
 
 /**
  * Annuncia a schermo, con le lettere di {@link ImageCache}, che una missione è
@@ -16,177 +14,66 @@ import java.util.StringTokenizer;
  */
 public class SpriteAnnuncioGlobale extends SpriteBase {
 
-	private static final float DURATA_IN_SECONDI = 2.0f;
-	private static final float ATTACCO_DISSOLVENZA_DOPO_SECONDI = DURATA_IN_SECONDI / 2;
-	private static final Color COLORE_OMBRA = new Color(0, 0, 0, 160);
-	private static final int SCOSTAMENTO_OMBRA = 2;
-	private static final float SCALA_INIZIALE = 1.0f;
-	private static final float SCALA_FINALE = 1.8f;
+	private static final Color COLORE_OMBRA = new Color(DescrizioneAnnuncioGlobale.OMBRA_ARGB, true);
 
-	private static final int SPAZIATURA_CARATTERI = 1;
-	private static final int LARGHEZZA_SPAZIO = 10;
-	private static final int DIVARIO_RIGHE = 4;
-	private static final int DIVARIO_GRUPPI = 12;
-
-	private final String titolo;
-	private final String descrizione;
-	private final int larghezzaSchermo;
-	private final int altezzaSchermo;
-	private boolean sostituibile;
+	private final DescrizioneAnnuncioGlobale dati;
 
 	public SpriteAnnuncioGlobale(String titolo, String descrizione, int larghezzaSchermo, int altezzaSchermo) {
-		this.titolo = titolo;
-		this.descrizione = descrizione;
-		this.larghezzaSchermo = larghezzaSchermo;
-		this.altezzaSchermo = altezzaSchermo;
-		inizializza(buildImage(),
-				DURATA_IN_SECONDI, ATTACCO_DISSOLVENZA_DOPO_SECONDI,
-				COLORE_OMBRA, SCOSTAMENTO_OMBRA,
-				0, 0,
-				0, 0,
-				SCALA_INIZIALE, SCALA_FINALE);
+		this(new DescrizioneAnnuncioGlobale(titolo, descrizione, larghezzaSchermo, altezzaSchermo, false));
 	}
 
 	/**
-	 * Un annuncio sostituibile, quando ne arriva un altro dello stesso genere, non aspetta il suo turno né finisce la sua
-	 * animazione: il nuovo prende subito il suo posto (vedi DisplayableCanvas.notificaAnnuncioGlobaleSostituibile).
+	 * Uno sprite che mostra quel che dice la descrizione
 	 */
-	public SpriteAnnuncioGlobale sostituibile() {
-		this.sostituibile = true;
-		return this;
+	public SpriteAnnuncioGlobale(DescrizioneAnnuncioGlobale dati) {
+		this.dati = dati;
+		inizializza(buildImage(),
+				DescrizioneAnnuncioGlobale.DURATA_IN_SECONDI, DescrizioneAnnuncioGlobale.ATTACCO_DISSOLVENZA_DOPO_SECONDI, Dissolvenza.LINEARE_CON_SOGLIA,
+				COLORE_OMBRA, DescrizioneAnnuncioGlobale.SCOSTAMENTO_OMBRA,
+				0, 0,
+				0, 0,
+				DescrizioneAnnuncioGlobale.SCALA_INIZIALE, DescrizioneAnnuncioGlobale.SCALA_FINALE);
 	}
 
 	public boolean isSostituibile() {
-		return sostituibile;
+		return dati.isSostituibile();
 	}
 
 	public String getTitolo() {
-		return titolo;
+		return dati.getTitolo();
 	}
 
 	public String getDescrizione() {
-		return descrizione;
+		return dati.getDescrizione();
 	}
 
 	@Override
 	protected BufferedImage buildImage() {
-		return costruisciImmagine(righe(titolo), righe(descrizione));
-	}
-
-	private List<String> righe(String testo) {
-		int larghezzaMassima = larghezzaSchermo / 2;
-		return spezzaInRighe(testo, larghezzaMassima);
-	}
-
-	private static List<String> spezzaInRighe(String testo, int larghezzaMassima) {
-		List<String> righe = new ArrayList<>();
-		StringTokenizer st = new StringTokenizer(testo, " ");
-		StringBuilder riga = new StringBuilder();
-		int larghezzaRiga = 0;
-		while (st.hasMoreTokens()) {
-			String parola = st.nextToken();
-			int larghezzaParola = larghezzaParola(parola);
-			if (larghezzaRiga > 0 && larghezzaRiga + LARGHEZZA_SPAZIO + SPAZIATURA_CARATTERI + larghezzaParola > larghezzaMassima) {
-				righe.add(riga.toString());
-				riga = new StringBuilder();
-				larghezzaRiga = 0;
-			}
-			if (riga.length() > 0) {
-				riga.append(" ");
-				larghezzaRiga += LARGHEZZA_SPAZIO + SPAZIATURA_CARATTERI;
-			}
-			riga.append(parola);
-			larghezzaRiga += larghezzaParola;
+		BufferedImage testo = new BufferedImage(Math.max(1, dati.getLarghezza()), Math.max(1, dati.getAltezza()), BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = testo.createGraphics();
+		for (DescrizioneAnnuncioGlobale.Riga riga : dati.getRighe()) {
+			disegnaRiga(g, riga.getTesto(), riga.getX(), riga.getY());
 		}
-		if (riga.length() > 0) {
-			righe.add(riga.toString());
-		}
-		return righe;
-	}
-
-	/**
-	 * La larghezza di un testo come lo si disegna: ogni carattere, lo spazio compreso, avanza della sua larghezza più la spaziatura.
-	 */
-	private static int larghezzaParola(String parola) {
-		int larghezza = 0;
-		for (int i = 0; i < parola.length(); i++) {
-			larghezza += larghezzaCarattere(parola.charAt(i)) + SPAZIATURA_CARATTERI;
-		}
-		return larghezza;
-	}
-
-	private static int larghezzaCarattere(char c) {
-		BufferedImage glifo = glifo(c);
-		if (glifo != null) {
-			return glifo.getWidth();
-		}
-		if (c == ' ') {
-			return LARGHEZZA_SPAZIO;
-		}
-		return 1;
-	}
-
-	// L'alfabeto grande ha solo le maiuscole (come in TestoGrande.glifo): un nome come "Defeat the Dragon" non deve perdere le minuscole
-	private static BufferedImage glifo(char c) {
-		return ImageCache.glifoGrande(Character.toUpperCase(c));
-	}
-
-	private static BufferedImage costruisciImmagine(List<String> righeEtichetta, List<String> righeNome) {
-		List<String> tutteLeRighe = new ArrayList<>(righeEtichetta.size() + righeNome.size());
-		tutteLeRighe.addAll(righeEtichetta);
-		tutteLeRighe.addAll(righeNome);
-
-		int altezzaRiga = TestoGrande.ALTEZZA_GLIFO + DIVARIO_RIGHE;
-
-		int larghezzaTesto = 0;
-		for (String riga : tutteLeRighe) {
-			larghezzaTesto = Math.max(larghezzaTesto, larghezzaParola(riga));
-		}
-		// L'ultima riga ha in più lo spazio di accenti e cediglie
-		int altezzaTesto = righeEtichetta.size() * altezzaRiga + DIVARIO_GRUPPI + righeNome.size() * altezzaRiga
-				+ TestoGrande.altezzaConAccenti() - TestoGrande.ALTEZZA_GLIFO;
-
-		BufferedImage testo = new BufferedImage(larghezzaTesto, altezzaTesto, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D gTesto = testo.createGraphics();
-		int y = 0;
-		for (int i = 0; i < righeEtichetta.size(); i++) {
-			disegnaRigaCentrata(gTesto, righeEtichetta.get(i), larghezzaTesto, y);
-			y += altezzaRiga;
-		}
-		y += DIVARIO_GRUPPI - DIVARIO_RIGHE;
-		for (int i = 0; i < righeNome.size(); i++) {
-			disegnaRigaCentrata(gTesto, righeNome.get(i), larghezzaTesto, y);
-			y += altezzaRiga;
-		}
-		gTesto.dispose();
-
+		g.dispose();
 		return testo;
 	}
 
-	private static void disegnaRigaCentrata(Graphics2D g, String riga, int larghezzaTotale, int y) {
-		int larghezzaRiga = larghezzaParola(riga);
-		int x = (larghezzaTotale - larghezzaRiga) >> 1;
+	private static void disegnaRiga(Graphics2D g, String riga, int x, int y) {
 		for (int i = 0; i < riga.length(); i++) {
 			char c = riga.charAt(i);
-			BufferedImage glifo = glifo(c);
+			// L'alfabeto grande ha solo le maiuscole (come in TestoGrande.glifo): un nome come "Defeat the Dragon" non deve perdere le minuscole
+			BufferedImage glifo = ImageCache.glifoGrande(Character.toUpperCase(c));
 			if (glifo != null) {
 				g.drawImage(glifo, x, y, null);
 			}
-			x += larghezzaCarattere(c) + SPAZIATURA_CARATTERI;
+			x += LayoutDelTestoGrande.larghezzaCarattere(c) + LayoutDelTestoGrande.SPAZIO_FRA_CARATTERI;
 		}
-	}
-
-	@Override
-	protected float calcolaAlpha(float secondiTrascorsi) {
-		return dissolvenzaLineareConSoglia(secondiTrascorsi, momentoInizioFade, durataInSecondi);
 	}
 
 	@Override
 	public void disegna(Graphics2D g, float x, float y, float scala) {
 		int larghezzaScalata = Math.round(immagine.getWidth() * scala);
 		int altezzaScalata = Math.round(immagine.getHeight() * scala);
-		int disegnaX = (larghezzaSchermo - larghezzaScalata) >> 1;
-		int disegnaY = (altezzaSchermo - altezzaScalata) >> 1;
-		g.drawImage(immagine, disegnaX, disegnaY, larghezzaScalata, altezzaScalata, null);
+		g.drawImage(immagine, dati.xAllaScala(scala, immagine.getWidth()), dati.yAllaScala(scala, immagine.getHeight()), larghezzaScalata, altezzaScalata, null);
 	}
 }

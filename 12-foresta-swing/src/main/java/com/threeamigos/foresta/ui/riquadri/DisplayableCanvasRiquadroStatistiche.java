@@ -7,8 +7,10 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneDisponibilitaP
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazionePuntiEsperienzaPersonaggio;
 import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.interfacce.VistaPartita;
-import com.threeamigos.foresta.ui.Finestra;
+import com.threeamigos.foresta.ui.Misura;
+import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
+import com.threeamigos.foresta.ui.sprite.DescrizioneSpriteATempo;
 import com.threeamigos.foresta.ui.sprite.SpriteATempo;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
@@ -21,113 +23,26 @@ import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 /**
  * Il riquadro con le statistiche del gruppo: monete, preziosi e punti esperienza.
  */
-public class DisplayableCanvasRiquadroStatistiche implements Finestra {
-
-	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_STATISTICHE = 6;
-
-	private final DoomdarkFont fontMedium = DoomdarkFont.medio();
-	private final DoomdarkColorModel.Color coloreTestata = DoomdarkColorModel.Color.LIGHT_GRAY;
-
-	private final int topLeftX;
-	private final int topLeftY;
-	private final int moneteY;
-	private final int preziosiY;
-	private final int puntiY;
-	private final int scrittaX;
-	private final int totaleX;
-	
-	private final VistaPartita vistaPartita;
+public class DisplayableCanvasRiquadroStatistiche extends RiquadroStatistiche {
 
 	public DisplayableCanvasRiquadroStatistiche(int topLeftX, int topLeftY, VistaPartita vistaPartita) {
-		this.vistaPartita = vistaPartita;
-		this.topLeftX = topLeftX;
-		this.topLeftY = topLeftY;
-		// Tre righe fisse (etichette senza accenti e numeri) nella cornice piccola: il corpo del testo sta dov'era
-		// e il passo è quello del corpo, le righe in più per gli accenti restano libere sopra e sotto
-		moneteY = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_STATISTICHE + 4 - fontMedium.getRigheInCima();
-		preziosiY = moneteY + fontMedium.getAltezzaDelCorpo() + 1;
-		puntiY = preziosiY + fontMedium.getAltezzaDelCorpo() + 1;
-		scrittaX = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_STATISTICHE + 4;
-		totaleX = topLeftX + ImageCache.cornicePiccola.getWidth() - DIMENSIONE_BORDO_INTERNO_CORNICE_STATISTICHE - 4;
-
-		registratiAEventi();
+		super(topLeftX, topLeftY, ImageCache.cornicePiccola.getWidth(), vistaPartita);
 	}
 
-	private void registratiAEventi() {
-        BusEventi.iscriviti(NotificaVariazioneDisponibilitaPreziosi.class, this::gestisciEventoVariazionePreziosi);
-		BusEventi.iscriviti(NotificaVariazioneDisponibilitaMonete.class, this::gestisciEventoVariazioneMonete);
-		BusEventi.iscriviti(NotificaVariazionePuntiEsperienzaPersonaggio.class, this::gestisciEventoVariazionePuntiEsperienza);
+	@Override
+	protected Misura misuraDellIcona(String risorsa) {
+		BufferedImage icona = BufferedImageBuilder.buildBufferedImage(risorsa);
+		return new Misura(icona.getWidth(), icona.getHeight());
 	}
 
 	/**
 	 * Disegna le statistiche del gruppo.
 	 */
 	public void disegnaStatistiche(Graphics2D graphics) {
-		VistaGruppoGiocatore gruppoGiocatore = vistaPartita.getGruppoGiocatore();
 		graphics.drawImage(ImageCache.cornicePiccola, topLeftX, topLeftY, null);
-		
-		Image image = ImageCache.get(TestiDellaUI.get("MONETE"), fontMedium, coloreTestata);
-		graphics.drawImage(image, scrittaX, moneteY, null);
-		image = ImageCache.get(vistaPartita.getCassa().getMonete(), fontMedium, coloreTestata);
-		graphics.drawImage(image, totaleX - image.getWidth(null), moneteY, null);
-		
-		image = ImageCache.get(TestiDellaUI.get("PREZIOSI"), fontMedium, coloreTestata);
-		graphics.drawImage(image, scrittaX, preziosiY, null);
-		image = ImageCache.get(vistaPartita.getCassa().getPreziosi(), fontMedium, coloreTestata);
-		graphics.drawImage(image, totaleX - image.getWidth(null), preziosiY, null);
-
-		image = ImageCache.get(TestiDellaUI.get("PUNTI"), fontMedium, coloreTestata);
-		graphics.drawImage(image, scrittaX, puntiY, null);
-		int puntiEsperienza = vistaPartita.getPuntiEsperienza();
-		int puntiPerProssimoLivello = vistaPartita.getPuntiEsperienzaPerProssimoLivello();
-		image = ImageCache.get(puntiEsperienza + "/" + puntiPerProssimoLivello, fontMedium, coloreTestata);
-		graphics.drawImage(image, totaleX - image.getWidth(null), puntiY, null);
-	}
-
-	private void gestisciEventoVariazionePreziosi(NotificaVariazioneDisponibilitaPreziosi evento) {
-		SpriteATempo sprite = costruisciSpritePerVariazionePreziosi(
-				evento.getNuovoValore() - evento.getValorePrecedente());
-		if (sprite != null) {
-			BusEventi.pubblica(new InternoCreazioneSpriteATempo(sprite));
+		for (VoceDiTesto voce : voci()) {
+			Image image = ImageCache.get(voce.getTesto(), fontMedium, voce.getColore());
+			graphics.drawImage(image, voce.isAllineataADestra() ? voce.getX() - image.getWidth(null) : voce.getX(), voce.getY(), null);
 		}
-	}
-
-	private SpriteATempo costruisciSpritePerVariazionePreziosi(int variazione) {
-		if (variazione == 0) {
-			return null;
-		}
-		BufferedImage icona = ImageCache.spritePietraPreziosa;
-		return new SpriteATempo(icona, variazione, fontMedium, totaleX, preziosiY, "Preziosi variati");
-	}
-
-	private void gestisciEventoVariazioneMonete(NotificaVariazioneDisponibilitaMonete evento) {
-		SpriteATempo sprite = costruisciSpritePerVariazioneMonete(
-				evento.getNuovoValore() - evento.getValorePrecedente());
-		if (sprite != null) {
-			BusEventi.pubblica(new InternoCreazioneSpriteATempo(sprite));
-		}
-	}
-
-	private SpriteATempo costruisciSpritePerVariazioneMonete(int variazione) {
-		if (variazione == 0) {
-			return null;
-		}
-		BufferedImage icona = ImageCache.spriteMoneta;
-		return new SpriteATempo(icona, variazione, fontMedium, totaleX, moneteY, "Monete variate");
-	}
-
-	private void gestisciEventoVariazionePuntiEsperienza(NotificaVariazionePuntiEsperienzaPersonaggio evento) {
-		SpriteATempo sprite = costruisciSpritePerVariazionePuntiEsperienza(
-				evento.getNuovoValore() - evento.getValorePrecedente());
-		if (sprite != null) {
-			BusEventi.pubblica(new InternoCreazioneSpriteATempo(sprite));
-		}
-	}
-
-	private SpriteATempo costruisciSpritePerVariazionePuntiEsperienza(int variazione) {
-		if (variazione == 0) {
-			return null;
-		}
-		return new SpriteATempo(null, variazione, fontMedium, totaleX, puntiY, "Punti esperienza variati");
 	}
 }

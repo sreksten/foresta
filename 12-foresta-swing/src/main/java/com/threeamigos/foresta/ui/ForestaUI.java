@@ -26,7 +26,7 @@ import com.threeamigos.foresta.ui.barra.ComandiPossibili;
 import com.threeamigos.foresta.ui.immagini.DimensioniRisorsa;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.riquadri.DisplayableCanvasRiquadroCombattimento;
-import com.threeamigos.foresta.ui.sfx.CloudManager;
+import com.threeamigos.foresta.ui.sfx.GestoreNuvole;
 import com.threeamigos.foresta.ui.sfx.PannelloLogoIniziale;
 import com.threeamigos.foresta.ui.sfx.TracciatoreLogo;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
@@ -343,7 +343,7 @@ public class ForestaUI implements Temporizzabile {
 
 	private void gestisciEventoCaricamentoCompletato(InternoCaricamentoCompletato evento) {
 		// Caricata un'altra partita: le nuvole della mappa si rigenerano sulla sua area conosciuta
-		CloudManager.azzera();
+		GestoreNuvole.azzera();
 		displayableCanvas.ripristinaMessaggi(evento.getUltimiMessaggi());
 	}
 
@@ -542,7 +542,7 @@ public class ForestaUI implements Temporizzabile {
 
 			case LINGUA:
 				// Comincia una partita nuova: prima di tutto si sceglie la lingua (la scritta è nelle lingue offerte)
-				CloudManager.azzera();
+				GestoreNuvole.azzera();
 				temporizzatore.termina();
 				displayableCanvas.scriviGrande(TestiDellaUI.get("SCEGLI_LINGUA"));
 				impostaAzioni(evento.getComandiPossibili());
@@ -550,7 +550,7 @@ public class ForestaUI implements Temporizzabile {
 
 			case NOME_PERSONAGGIO:
 				// Comincia una partita nuova: le nuvole della mappa si rigenerano sulla sua area conosciuta
-				CloudManager.azzera();
+				GestoreNuvole.azzera();
 				temporizzatore.termina();
 				displayableCanvas.scriviGrande(TestiDellaUI.get("SCEGLI_NOME"));
 				prompt.setVisible(true);

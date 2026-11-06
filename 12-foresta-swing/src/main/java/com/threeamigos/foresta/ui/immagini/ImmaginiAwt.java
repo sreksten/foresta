@@ -33,4 +33,16 @@ public final class ImmaginiAwt {
 		}
 		return risultato;
 	}
+
+	/**
+	 * L'immagine rovesciata orizzontalmente, pixel per pixel. Non è ancora compatibile con lo schermo: lo diventa
+	 * quando la costruisce MappaPersonaggioImmagine (vedi BufferedImageBuilder.ingrandisci).
+	 */
+	public static BufferedImage specchia(BufferedImage immagine) {
+		BufferedImage specchiata = new BufferedImage(immagine.getWidth(), immagine.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		java.awt.Graphics2D g = specchiata.createGraphics();
+		g.drawImage(immagine, immagine.getWidth(), 0, -immagine.getWidth(), immagine.getHeight(), null);
+		g.dispose();
+		return specchiata;
+	}
 }

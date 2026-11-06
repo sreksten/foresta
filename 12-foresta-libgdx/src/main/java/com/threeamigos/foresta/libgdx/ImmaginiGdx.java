@@ -9,7 +9,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
 import com.threeamigos.foresta.ui.immagini.AtlanteDiImmagini;
 
+import com.threeamigos.foresta.ui.immagini.ImmagineDiPixel;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,6 +33,7 @@ public final class ImmaginiGdx implements Disposable {
 	private final Map<String, Texture> pagine = new HashMap<>();
 	private final Map<String, TextureRegion> regioni = new HashMap<>();
 	private Texture pixelBianco;
+	private final List<Texture> daPixel = new ArrayList<>();
 
 	/**
 	 * La regione di quell'immagine
@@ -85,6 +90,54 @@ public final class ImmaginiGdx implements Disposable {
 	}
 
 	/**
+	 * Quanto è grande l'immagine con quella scala (2 per le immagini a metà risoluzione), arrotondata
+	 */
+	public int larghezza(String risorsa, float scala) {
+		return Math.round(regione(risorsa).getRegionWidth() * scala);
+	}
+
+	public int altezza(String risorsa, float scala) {
+		return Math.round(regione(risorsa).getRegionHeight() * scala);
+	}
+
+	/**
+	 * Una porzione dell'immagine (coordinate dell'immagine originale, senza zoom), già capovolta come tutto il resto
+	 */
+	public TextureRegion porzione(String risorsa, int x, int y, int larghezza, int altezza) {
+		String chiave = risorsa + "#" + x + "," + y + "," + larghezza + "," + altezza;
+		TextureRegion porzione = regioni.get(chiave);
+		if (porzione == null) {
+			TextureRegion base = regione(risorsa);
+			porzione = capovolta(new TextureRegion(base.getTexture(), base.getRegionX() + x, base.getRegionY() + y, larghezza, altezza));
+			regioni.put(chiave, porzione);
+		}
+		return porzione;
+	}
+
+	/**
+	 * Una regione di texture con i pixel dati (un testo composto, una nuvola, una sagoma), già capovolta come tutto il resto; la texture appartiene a
+	 * questo oggetto e si libera con {@link #dispose()}
+	 *
+	 * @param lineare campionamento lineare (per le sfumature) invece che NEAREST (per il pixel-art)
+	 */
+	public TextureRegion regioneDaPixel(ImmagineDiPixel immagine, boolean lineare) {
+		Pixmap pixmap = new Pixmap(immagine.getLarghezza(), immagine.getAltezza(), Pixmap.Format.RGBA8888);
+		pixmap.setBlending(Pixmap.Blending.None);
+		for (int y = 0; y < immagine.getAltezza(); y++) {
+			for (int x = 0; x < immagine.getLarghezza(); x++) {
+				int argb = immagine.getArgb(x, y);
+				pixmap.drawPixel(x, y, (argb << 8) | (argb >>> 24));
+			}
+		}
+		Texture texture = new Texture(pixmap);
+		pixmap.dispose();
+		Texture.TextureFilter filtro = lineare ? Texture.TextureFilter.Linear : Texture.TextureFilter.Nearest;
+		texture.setFilter(filtro, filtro);
+		daPixel.add(texture);
+		return capovolta(new TextureRegion(texture));
+	}
+
+	/**
 	 * Riempie un rettangolo di un colore (con la sua alfa), con l'angolo in alto a sinistra in (x, y)
 	 */
 	public void riempi(Batch batch, float x, float y, float larghezza, float altezza, Color colore) {
@@ -112,5 +165,9 @@ public final class ImmaginiGdx implements Disposable {
 		}
 		pagine.clear();
 		regioni.clear();
+		for (Texture texture : daPixel) {
+			texture.dispose();
+		}
+		daPixel.clear();
 	}
 }
