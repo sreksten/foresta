@@ -7,12 +7,16 @@ import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.VistaPartitaMotore;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoIcona;
+import com.threeamigos.foresta.ui.immagini.IconeAwt;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.Finestra.Tasto;
 import com.threeamigos.foresta.ui.barra.ComandiPossibili;
 import com.threeamigos.foresta.ui.componenti.ScorrimentoSuUnAsse;
 import com.threeamigos.foresta.ui.barra.DisplayableCanvasBarraIcone;
-import com.threeamigos.foresta.ui.barra.DisplayableCanvasBarraIcone.IconaVisibile;
+import com.threeamigos.foresta.ui.Area;
+import com.threeamigos.foresta.ui.barra.BarraIcone;
+import com.threeamigos.foresta.ui.barra.BarraIcone.IconaVisibile;
+import com.threeamigos.foresta.ui.barra.BarraIconeDisegnabile;
 import com.threeamigos.foresta.ui.barra.DisplayableCanvasBarraIconeDock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +38,7 @@ class BarraIconeScorrimentoTest {
 
     private static final int LARGHEZZA = 300;
     private static final int ALTEZZA = 70;
-    private static final int LATO = TipoIcona.getLarghezzaMassima();
+    private static final int LATO = IconeAwt.getLarghezzaMassima();
     private static final long MILLISECONDO = 1_000_000L;
 
     private ModelloDati modelloDatiPrecedente;
@@ -104,13 +108,13 @@ class BarraIconeScorrimentoTest {
         throw new IllegalStateException("Servono " + quanti + " comandi con un'icona, ce ne sono " + comandi.size());
     }
 
-    private static void imposta(DisplayableCanvasBarraIcone barra, int quanti) {
+    private static void imposta(BarraIcone barra, int quanti) {
         ComandiPossibili.set(comandiDaMostrare(quanti));
         barra.impostaAzioni();
     }
 
     /** Fa passare il tempo disegnando un fotogramma ogni 16 ms */
-    private void lasciaPassare(DisplayableCanvasBarraIcone barra, long millisecondi) {
+    private void lasciaPassare(BarraIconeDisegnabile barra, long millisecondi) {
         BufferedImage immagine = new BufferedImage(LARGHEZZA + 100, ALTEZZA + 400, BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics = immagine.createGraphics();
         try {
@@ -123,9 +127,9 @@ class BarraIconeScorrimentoTest {
         }
     }
 
-    private static Comando comandoNellaPosizione(DisplayableCanvasBarraIcone barra, int x, int y) {
+    private static Comando comandoNellaPosizione(BarraIcone barra, int x, int y) {
         for (IconaVisibile icona : barra.iconeVisibili) {
-            if (icona.rettangolo.contains(x, y)) {
+            if (icona.rettangolo.contiene(x, y)) {
                 return icona.comando;
             }
         }
@@ -160,10 +164,10 @@ class BarraIconeScorrimentoTest {
             assertNotEquals(Comando.DESTRA, icona.comando);
         }
         // La prima icona sta a inizio barra e l'ultima visibile esce dalla fine (la ritaglia il disegno)
-        assertEquals(0, barra.iconeVisibili.get(0).rettangolo.x);
+        assertEquals(0, barra.iconeVisibili.get(0).rettangolo.getX());
         IconaVisibile ultima = barra.iconeVisibili.get(barra.iconeVisibili.size() - 1);
-        assertTrue(ultima.rettangolo.x < LARGHEZZA);
-        assertTrue(ultima.rettangolo.x + ultima.rettangolo.width > LARGHEZZA);
+        assertTrue(ultima.rettangolo.getX() < LARGHEZZA);
+        assertTrue(ultima.rettangolo.getX() + ultima.rettangolo.getLarghezza() > LARGHEZZA);
         // 9 icone con l'aiuto, su tutta la lunghezza
         assertEquals(9 * LATO - LARGHEZZA, barra.getScorrimentoMassimo(), 0.001d);
     }
@@ -180,7 +184,7 @@ class BarraIconeScorrimentoTest {
         assertTrue(barra.isScorrevole());
         assertEquals(4 * LATO - 200, barra.getScorrimentoMassimo(), 0.001d);
         for (IconaVisibile icona : barra.iconeVisibili) {
-            assertTrue(icona.rettangolo.x < 200, "" + icona.rettangolo);
+            assertTrue(icona.rettangolo.getX() < 200, "" + icona.rettangolo);
         }
         // When: la riserva sparisce
         barra.setRiservaAFineAsse(0);
@@ -207,14 +211,14 @@ class BarraIconeScorrimentoTest {
         // Given
         BarraDiProva barra = new BarraDiProva(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE, LARGHEZZA, ALTEZZA);
         imposta(barra, 8);
-        int xPrimaIcona = barra.iconeVisibili.get(1).rettangolo.x;
+        int xPrimaIcona = barra.iconeVisibili.get(1).rettangolo.getX();
         // When: si preme a metà e si trascina a sinistra; i primi 10 pixel superano la soglia e non contano
         barra.processaPressione(150, 35, Tasto.SINISTRO);
         barra.processaTrascinamento(140, 35);
         barra.processaTrascinamento(110, 35);
         // Then
         assertEquals(30.0d, barra.getScorrimento(), 0.001d);
-        assertEquals(xPrimaIcona - 30, barra.iconeVisibili.get(1).rettangolo.x);
+        assertEquals(xPrimaIcona - 30, barra.iconeVisibili.get(1).rettangolo.getX());
         // When: si lascia subito, senza velocità
         barra.processaRilascio(110, 35, Tasto.SINISTRO);
         // Then: nessun comando e nessuna inerzia
@@ -258,8 +262,8 @@ class BarraIconeScorrimentoTest {
     void ilRilascioSuUnAltraIconaNonEUnTocco() {
         BarraDiProva barra = new BarraDiProva(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE, LARGHEZZA, ALTEZZA);
         imposta(barra, 3);
-        barra.processaPressione(barra.iconeVisibili.get(0).rettangolo.x + 5, 35, Tasto.SINISTRO);
-        barra.processaRilascio(barra.iconeVisibili.get(1).rettangolo.x + 5, 35, Tasto.SINISTRO);
+        barra.processaPressione(barra.iconeVisibili.get(0).rettangolo.getX() + 5, 35, Tasto.SINISTRO);
+        barra.processaRilascio(barra.iconeVisibili.get(1).rettangolo.getX() + 5, 35, Tasto.SINISTRO);
         assertTrue(comandiMandati.isEmpty(), "" + comandiMandati);
     }
 
@@ -267,7 +271,7 @@ class BarraIconeScorrimentoTest {
     void ilClickDiSwingDopoIlRilascioNonVieneContatoDueVolte() {
         BarraDiProva barra = new BarraDiProva(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE, LARGHEZZA, ALTEZZA);
         imposta(barra, 3);
-        int x = barra.iconeVisibili.get(0).rettangolo.x + 5;
+        int x = barra.iconeVisibili.get(0).rettangolo.getX() + 5;
         barra.processaPressione(x, 35, Tasto.SINISTRO);
         barra.processaRilascio(x, 35, Tasto.SINISTRO);
         barra.processaClick(x, 35, Tasto.SINISTRO);
@@ -437,16 +441,16 @@ class BarraIconeScorrimentoTest {
     void inVerticaleLeIconeSiDispongonoLungoLAltezzaSenzaSovrapporsi() {
         int altezzaBarra = 600;
         int larghezzaBarra = 72;
-        int latoVerticale = TipoIcona.getAltezzaMassima();
+        int latoVerticale = IconeAwt.getAltezzaMassima();
         // Quante ci stanno senza frecce
         BarraDiProva barra = new BarraDiProva(DisplayableCanvas.ORIENTAMENTO_VERTICALE, larghezzaBarra, altezzaBarra);
         imposta(barra, 4);
         assertFalse(barra.isScorrevole());
         for (int i = 0; i + 1 < barra.iconeVisibili.size(); i++) {
-            Rectangle a = barra.iconeVisibili.get(i).rettangolo;
-            Rectangle b = barra.iconeVisibili.get(i + 1).rettangolo;
-            assertEquals(latoVerticale, b.y - a.y, "icone adiacenti, senza sovrapposizioni");
-            assertEquals((larghezzaBarra - LATO) / 2, a.x, "centrate nella colonna");
+            Area a = barra.iconeVisibili.get(i).rettangolo;
+            Area b = barra.iconeVisibili.get(i + 1).rettangolo;
+            assertEquals(latoVerticale, b.getY() - a.getY(), "icone adiacenti, senza sovrapposizioni");
+            assertEquals((larghezzaBarra - LATO) / 2, a.getX(), "centrate nella colonna");
         }
         // Troppe: scorrono, senza bottoni SU e GIU ai capi
         imposta(barra, 14);
@@ -455,7 +459,7 @@ class BarraIconeScorrimentoTest {
             assertNotEquals(Comando.SU, icona.comando);
             assertNotEquals(Comando.GIU, icona.comando);
         }
-        assertEquals(0, barra.iconeVisibili.get(0).rettangolo.y);
+        assertEquals(0, barra.iconeVisibili.get(0).rettangolo.getY());
     }
 
     @Test
@@ -508,8 +512,8 @@ class BarraIconeScorrimentoTest {
         DockDiProva dock = new DockDiProva();
         imposta(dock, 3);
         assertFalse(dock.isScorrevole());
-        Rectangle seconda = dock.iconeVisibili.get(1).rettangolo;
-        int x = seconda.x + seconda.width / 2;
+        Area seconda = dock.iconeVisibili.get(1).rettangolo;
+        int x = seconda.getX() + seconda.getLarghezza() / 2;
         // When: il cursore entra e tocca l'icona
         dock.processaMovimento(x, 35);
         dock.processaPressione(x, 35, Tasto.SINISTRO);
@@ -535,8 +539,8 @@ class BarraIconeScorrimentoTest {
     void ilDockReclamaIPuntiDelleIconeIngrandite() {
         DockDiProva dock = new DockDiProva();
         imposta(dock, 3);
-        Rectangle seconda = dock.iconeVisibili.get(1).rettangolo;
-        int x = seconda.x + seconda.width / 2;
+        Area seconda = dock.iconeVisibili.get(1).rettangolo;
+        int x = seconda.getX() + seconda.getLarghezza() / 2;
         dock.processaMovimento(x, 35);
         // L'effetto del Dock cresce in tempo reale (120 ms)
         try {

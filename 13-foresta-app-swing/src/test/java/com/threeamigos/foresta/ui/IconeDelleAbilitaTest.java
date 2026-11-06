@@ -6,6 +6,7 @@ import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoIcona;
+import com.threeamigos.foresta.ui.immagini.IconeAwt;
 import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +30,7 @@ class IconeDelleAbilitaTest {
 			assertNotNull(comando, tipo.name());
 			assertTrue(comandi.add(comando), "comando ripetuto: " + comando);
 			assertSame(tipo, ComandiAssociati.abilita(comando));
-			assertNotNull(TipoIcona.ofComando(comando).getIcona(), comando.name());
+			assertNotNull(IconeAwt.icona(TipoIcona.ofComando(comando)), comando.name());
 		}
 		assertEquals(TipoAbilita.values().length, comandi.size());
 	}
@@ -37,7 +38,7 @@ class IconeDelleAbilitaTest {
 	@Test
 	void leQuattroClassiHannoIcona() {
 		for (Comando comando : Arrays.asList(Comando.CHIERICO, Comando.CHIERICA, Comando.DRUIDO, Comando.DRUIDA)) {
-			assertNotNull(TipoIcona.ofComando(comando).getIcona(), comando.name());
+			assertNotNull(IconeAwt.icona(TipoIcona.ofComando(comando)), comando.name());
 		}
 	}
 

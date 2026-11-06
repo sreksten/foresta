@@ -10,6 +10,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.Orientamento;
+import com.threeamigos.foresta.ui.barra.ComandiPossibili;
 import com.threeamigos.foresta.libgdx.sviluppo.DatiDiProva;
 import com.threeamigos.foresta.libgdx.sviluppo.PaginaDegliSprite;
 import com.threeamigos.foresta.libgdx.sviluppo.PaginaDiProva;
@@ -40,7 +43,7 @@ public class ForestaGdx extends ApplicationAdapter {
 	private static final String[] ATLANTI = {"icone", "mappa", "oggetti", "locazioni", "fondi", "fondinon2x2", "personaggi"};
 	private static final int MARGINE = 20;
 	// La pagina di prova del testo e i riquadri provati (testo, gruppo, locazione, sfida)
-	private static final int PAGINE_DI_PROVA = 6;
+	private static final int PAGINE_DI_PROVA = 7;
 
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
@@ -60,8 +63,9 @@ public class ForestaGdx extends ApplicationAdapter {
 	private RiquadroCombattimentoGdx riquadroCombattimento;
 	private RiquadroMissioniGdx riquadroMissioni;
 	private PaginaDegliSprite paginaDegliSprite;
+	private BarraIconeGdx barraIcone;
 	private PianificatoreGdx pianificatore;
-	/** 0 è la pagina di prova, 1 il riquadro del testo, 2 i riquadri del gruppo, delle statistiche, di incantesimi e pozioni e della mappa, 3 la locazione con il combattimento, 4 la sfida, 5 gli sprite, poi un atlante per pagina */
+	/** 0 è la pagina di prova, 1 il riquadro del testo, 2 i riquadri del gruppo, delle statistiche, di incantesimi e pozioni e della mappa, 3 la locazione con il combattimento, 4 la sfida, 5 gli sprite, 6 la barra delle icone, poi un atlante per pagina */
 	private int corrente;
 
 	@Override
@@ -94,6 +98,13 @@ public class ForestaGdx extends ApplicationAdapter {
 		testoGrande = new TestoGrandeGdx(immagini);
 		riquadroSfida = new RiquadroSfidaGdx(LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE, immagini, testoGrande);
 		riquadroSfida.aggiorna(MossaCartaForbiciSasso.SASSO, MossaCartaForbiciSasso.SASSO, 3, 1, true);
+		// La barra delle icone in fondo allo schermo, come il Dock; i comandi sono tanti, perché scorrano
+		ComandiPossibili.set(Arrays.asList(Comando.PERSONAGGIO_1, Comando.PERSONAGGIO_2, Comando.PERSONAGGIO_3, Comando.NORD, Comando.EST, Comando.SUD,
+				Comando.OVEST, Comando.MAPPA, Comando.INVENTARIO, Comando.FUOCO, Comando.GELO, Comando.POZIONE_SALUTE, Comando.POZIONE_MAGIA,
+				Comando.FUGA, Comando.SI, Comando.NO, Comando.NUMERO_1, Comando.NUMERO_2, Comando.NUMERO_3, Comando.NUMERO_4, Comando.NUMERO_5,
+				Comando.CARTA, Comando.FORBICE, Comando.SASSO));
+		barraIcone = new BarraIconeGdx(Orientamento.ORIZZONTALE, true, 0, ALTEZZA_VIRTUALE - 76, LARGHEZZA_VIRTUALE, 76, partita, immagini, piccolo, medio);
+		barraIcone.getModello().impostaAzioni();
 		paginaDegliSprite = new PaginaDegliSprite(immagini, piccolo, medio, LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE);
 		riquadroMissioni = new RiquadroMissioniGdx(MARGINE + 368 + 10, MARGINE + 288 + 10, partita, immagini, piccolo, medio);
 		riquadroMappa = new RiquadroMappaGdx(MARGINE + 2 * (368 + 10), MARGINE, partita, immagini, nuvole);
@@ -107,7 +118,16 @@ public class ForestaGdx extends ApplicationAdapter {
 		RouterDegliInput router = new RouterDegliInput(new RouterDegliInput.Contesto() {
 			@Override
 			public Finestra getBarraIcone() {
-				return null;
+				return corrente == 6 ? barraIcone.getModello() : null;
+			}
+
+			@Override
+			public boolean contiene(Finestra finestra, int xLocale, int yLocale) {
+				// La barra decide da sé quali punti sono suoi: le icone ingrandite escono dal suo rettangolo
+				if (finestra == barraIcone.getModello()) {
+					return barraIcone.getModello().contiene(xLocale, yLocale);
+				}
+				return RouterDegliInput.Contesto.super.contiene(finestra, xLocale, yLocale);
 			}
 
 			@Override
@@ -122,6 +142,10 @@ public class ForestaGdx extends ApplicationAdapter {
 
 			@Override
 			public Area getArea(Finestra finestra) {
+				if (finestra == barraIcone.getModello()) {
+					return new Area(barraIcone.getModello().getOffsetX(), barraIcone.getModello().getOffsetY(), barraIcone.getModello().getLarghezza(),
+							barraIcone.getModello().getAltezza());
+				}
 				if (finestra == riquadroLocazione) {
 					return new Area(Finestra.SPACING, Finestra.SPACING, 800, 320);
 				} else if (finestra == riquadroCombattimento) {
@@ -207,6 +231,9 @@ public class ForestaGdx extends ApplicationAdapter {
 			riquadroSfida.disegna(batch, camera, viewport);
 		} else if (corrente == 5) {
 			paginaDegliSprite.disegna(batch, camera, viewport);
+		} else if (corrente == 6) {
+			barraIcone.disegna(batch, camera, viewport);
+			barraIcone.disegnaAiuto(batch, LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE);
 		} else {
 			disegnaUnAtlante(ATLANTI[corrente - PAGINE_DI_PROVA]);
 		}

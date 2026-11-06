@@ -300,7 +300,7 @@ public class ImageCache {
 			// ...e quelle degli oggetti, che il motore non carica (vedi MappaBottinoImmagine)
 			MappaBottinoImmagine.values();
 			// ...e le icone, che si caricano al primo uso (vedi TipoIcona)
-			TipoIcona.precarica();
+			IconeAwt.precarica();
 			inited = true;
 		}
 	}

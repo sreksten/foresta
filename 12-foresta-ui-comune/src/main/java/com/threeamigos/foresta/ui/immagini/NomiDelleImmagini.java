@@ -152,6 +152,11 @@ public final class NomiDelleImmagini {
 	public static final String POZIONE_AUMENTO_LIVELLO = "icone/AumentoLivello.png";
 	public static final String FRECCIA_SU = "icone/ComponenteScorrevole-FrecciaSu.png";
 	public static final String FRECCIA_GIU = "icone/ComponenteScorrevole-FrecciaGiu.png";
+	public static final String FRECCIA_SINISTRA = "icone/ComponenteScorrevole-FrecciaSinistra.png";
+	public static final String FRECCIA_DESTRA = "icone/ComponenteScorrevole-FrecciaDestra.png";
+	public static final String CARTIGLIO_SINISTRO = "fondinon2x2/Cartiglio-sinistro.png";
+	public static final String CARTIGLIO_DESTRO = "fondinon2x2/Cartiglio-destro.png";
+	public static final String SFONDO_ICONA_TRASPARENTE = "icone/Sfondo-icona-trasparente.png";
 	public static final String MISSIONE_BIRRA = "icone/Missione-birra-grande.png";
 	public static final String MISSIONE_GALLO = "icone/Missione-gallo.png";
 	public static final String SEPARATORE = "fondinon2x2/Separatore.png";

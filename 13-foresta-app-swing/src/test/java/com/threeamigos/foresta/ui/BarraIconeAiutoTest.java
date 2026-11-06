@@ -7,6 +7,10 @@ import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.VistaPartitaMotore;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.ui.barra.ComandiPossibili;
+import com.threeamigos.foresta.tipi.Orientamento;
+import com.threeamigos.foresta.ui.Area;
+import com.threeamigos.foresta.ui.Punto;
+import com.threeamigos.foresta.ui.barra.BarraIcone;
 import com.threeamigos.foresta.ui.barra.DisplayableCanvasBarraIcone;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -90,8 +94,8 @@ class BarraIconeAiutoTest {
 
     @Test
     void conLaBarraInBassoIlCartiglioStaSopraLIconaECentrato() {
-        Point p = DisplayableCanvasBarraIcone.posizioneCartiglio(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE,
-                new Rectangle(300, 530, 62, 64), 100, 25, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO);
+        Punto p = BarraIcone.posizioneCartiglio(Orientamento.ORIZZONTALE,
+                new Area(300, 530, 62, 64), 100, 25, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO);
         assertEquals(300 + (62 - 100) / 2, p.x);
         assertTrue(p.y + 25 <= 530, "sopra l'icona: " + p);
     }
@@ -99,26 +103,26 @@ class BarraIconeAiutoTest {
     @Test
     void ilCartiglioDiUnIconaAiBordiRestaDentroLoSchermo() {
         // Barra in basso: icona all'estrema sinistra e all'estrema destra
-        Point sinistra = DisplayableCanvasBarraIcone.posizioneCartiglio(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE,
-                new Rectangle(0, 530, 62, 64), 300, 25, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO);
+        Punto sinistra = BarraIcone.posizioneCartiglio(Orientamento.ORIZZONTALE,
+                new Area(0, 530, 62, 64), 300, 25, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO);
         assertEquals(0, sinistra.x);
-        Point destra = DisplayableCanvasBarraIcone.posizioneCartiglio(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE,
-                new Rectangle(LARGHEZZA_SCHERMO - 62, 530, 62, 64), 300, 25, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO);
+        Punto destra = BarraIcone.posizioneCartiglio(Orientamento.ORIZZONTALE,
+                new Area(LARGHEZZA_SCHERMO - 62, 530, 62, 64), 300, 25, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO);
         assertEquals(LARGHEZZA_SCHERMO - 300, destra.x);
         // Un'icona ingrandita del Dock che arriva in cima allo schermo: il cartiglio non esce sopra
-        Point inCima = DisplayableCanvasBarraIcone.posizioneCartiglio(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE,
-                new Rectangle(300, 10, 93, 96), 100, 25, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO);
+        Punto inCima = BarraIcone.posizioneCartiglio(Orientamento.ORIZZONTALE,
+                new Area(300, 10, 93, 96), 100, 25, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO);
         assertEquals(0, inCima.y);
         // Barra a destra: il cartiglio sta a sinistra dell'icona, e dentro lo schermo in alto e in basso
-        Point aSinistra = DisplayableCanvasBarraIcone.posizioneCartiglio(DisplayableCanvas.ORIENTAMENTO_VERTICALE,
-                new Rectangle(LARGHEZZA_SCHERMO - 64, 200, 62, 64), 100, 25, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO);
+        Punto aSinistra = BarraIcone.posizioneCartiglio(Orientamento.VERTICALE,
+                new Area(LARGHEZZA_SCHERMO - 64, 200, 62, 64), 100, 25, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO);
         assertTrue(aSinistra.x + 100 <= LARGHEZZA_SCHERMO - 64, "a sinistra dell'icona: " + aSinistra);
-        Point inBasso = DisplayableCanvasBarraIcone.posizioneCartiglio(DisplayableCanvas.ORIENTAMENTO_VERTICALE,
-                new Rectangle(LARGHEZZA_SCHERMO - 64, ALTEZZA_SCHERMO - 10, 62, 64), 100, 25, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO);
+        Punto inBasso = BarraIcone.posizioneCartiglio(Orientamento.VERTICALE,
+                new Area(LARGHEZZA_SCHERMO - 64, ALTEZZA_SCHERMO - 10, 62, 64), 100, 25, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO);
         assertEquals(ALTEZZA_SCHERMO - 25, inBasso.y);
         // Un cartiglio più largo dello schermo resta allineato al bordo sinistro
-        Point largo = DisplayableCanvasBarraIcone.posizioneCartiglio(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE,
-                new Rectangle(300, 530, 62, 64), 1000, 25, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO);
+        Punto largo = BarraIcone.posizioneCartiglio(Orientamento.ORIZZONTALE,
+                new Area(300, 530, 62, 64), 1000, 25, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO);
         assertEquals(0, largo.x);
     }
 

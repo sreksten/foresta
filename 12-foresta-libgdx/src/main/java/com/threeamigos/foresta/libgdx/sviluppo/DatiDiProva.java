@@ -176,6 +176,6 @@ public final class DatiDiProva {
 				.con("getGruppoAvversario", a -> avversari)
 				.con("getMappa", a -> mappa)
 				.con("getTipoBottinoInLocazione", a -> TipoBottino.COFANO)
-				.con("isAiutoAbilitato", a -> false).mappa);
+				.con("isAiutoAbilitato", a -> true).mappa);
 	}
 }

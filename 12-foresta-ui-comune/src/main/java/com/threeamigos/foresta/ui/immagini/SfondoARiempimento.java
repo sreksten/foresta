@@ -1,13 +1,12 @@
 package com.threeamigos.foresta.ui.immagini;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
 /**
  * Lo sfondo di un'icona in ricarica: la cornice con l'interno vuoto, che si riempie dal basso verso l'alto in proporzione ai turni passati, con un colore
  * che va dal rosso scuro al verde scuro passando per il giallo scuro (come la barra della salute: così a metà non viene fuori un marrone); la parte
- * non ancora riempita è nera (il grigio si distingueva poco dal riempimento). Sopra ci va il disegno dell'icona (vedi TipoIcona.componi).
+ * non ancora riempita è nera (il grigio si distingueva poco dal riempimento). Sopra ci va il disegno dell'icona (vedi ComposizioneDelleIcone.componi).
  * <p>
  * L'interno è la zona trasparente della cornice raggiungibile dal suo centro: gli angoli fuori dal bordo restano trasparenti.
  */
@@ -29,9 +28,9 @@ public final class SfondoARiempimento {
 	 * @param turniPassati da quanti turni è in ricarica, contando quello dell'uso: da 1 a {@code durata}
 	 * @param durata i turni che dura la ricarica in tutto: lo sfondo si riempie di {@code turniPassati/(durata+1)}, e alla fine dei turni l'icona torna normale
 	 */
-	public static BufferedImage crea(BufferedImage cornice, int turniPassati, int durata) {
-		int larghezza = cornice.getWidth();
-		int altezza = cornice.getHeight();
+	public static ImmagineDiPixel crea(ImmagineDiPixel cornice, int turniPassati, int durata) {
+		int larghezza = cornice.getLarghezza();
+		int altezza = cornice.getAltezza();
 		boolean[][] interno = interno(cornice);
 		int primaRiga = altezza;
 		int ultimaRiga = -1;
@@ -48,26 +47,26 @@ public final class SfondoARiempimento {
 		int righeRiempite = (int) Math.round(righeInterne * quota);
 		int coloreRiempimento = coloreDelRiempimento(quota);
 
-		BufferedImage sfondo = new BufferedImage(larghezza, altezza, BufferedImage.TYPE_INT_ARGB);
+		int[] pixel = new int[larghezza * altezza];
 		for (int y = 0; y < altezza; y++) {
 			for (int x = 0; x < larghezza; x++) {
 				if (!interno[x][y]) {
-					sfondo.setRGB(x, y, cornice.getRGB(x, y));
+					pixel[y * larghezza + x] = cornice.getArgb(x, y);
 				} else {
 					boolean riempito = ultimaRiga - y < righeRiempite;
-					sfondo.setRGB(x, y, 0xFF000000 | (riempito ? coloreRiempimento : NERO));
+					pixel[y * larghezza + x] = 0xFF000000 | (riempito ? coloreRiempimento : NERO);
 				}
 			}
 		}
-		return sfondo;
+		return new ImmagineDiPixel(larghezza, altezza, pixel);
 	}
 
 	/**
 	 * I pixel dell'interno: quelli trasparenti raggiungibili dal centro senza attraversare il bordo.
 	 */
-	private static boolean[][] interno(BufferedImage cornice) {
-		int larghezza = cornice.getWidth();
-		int altezza = cornice.getHeight();
+	private static boolean[][] interno(ImmagineDiPixel cornice) {
+		int larghezza = cornice.getLarghezza();
+		int altezza = cornice.getAltezza();
 		boolean[][] interno = new boolean[larghezza][altezza];
 		int partenzaX = larghezza / 2;
 		int partenzaY = altezza / 2;
@@ -92,8 +91,8 @@ public final class SfondoARiempimento {
 		return interno;
 	}
 
-	private static boolean isTrasparente(BufferedImage immagine, int x, int y) {
-		return (immagine.getRGB(x, y) >>> 24) == 0;
+	private static boolean isTrasparente(ImmagineDiPixel immagine, int x, int y) {
+		return (immagine.getArgb(x, y) >>> 24) == 0;
 	}
 
 	/**

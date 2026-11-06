@@ -22,6 +22,7 @@ import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.FaseDiGioco;
 import com.threeamigos.foresta.tipi.TipoIcona;
+import com.threeamigos.foresta.ui.immagini.IconeAwt;
 import com.threeamigos.foresta.ui.barra.ComandiPossibili;
 import com.threeamigos.foresta.ui.immagini.DimensioniRisorsa;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
@@ -188,7 +189,7 @@ public class ForestaUI implements Temporizzabile {
 				ImageCache.SPACING +
 				corniceGrande.height +
 				ImageCache.SPACING +
-				TipoIcona.getAltezzaMassima() +
+				IconeAwt.getAltezzaMassima() +
 				ImageCache.SPACING;
 		if (orientamento != Orientamento.ORIZZONTALE) {
 			width += SPESSORE_BARRA_ICONE;

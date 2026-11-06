@@ -3,6 +3,7 @@ package com.threeamigos.foresta.ui.immagini;
 import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoIcona;
+import com.threeamigos.foresta.ui.immagini.IconeAwt;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -20,6 +21,6 @@ class MappaPersonaggioImmagineTest {
         assertNotSame(MappaPersonaggioImmagine.getImmagine(TipoPersonaggio.BARDO),
                 MappaPersonaggioImmagine.getImmagine(TipoPersonaggio.VIANDANTE), "non più l'immagine del bardo");
         // Come per ogni altro personaggio, anche la barra delle icone lo sa disegnare
-        assertNotNull(TipoIcona.ofClasse(TipoPersonaggio.VIANDANTE).getIcona());
+        assertNotNull(IconeAwt.icona(TipoIcona.ofClasse(TipoPersonaggio.VIANDANTE)));
     }
 }

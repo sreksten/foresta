@@ -5,6 +5,7 @@ import com.threeamigos.foresta.tipi.ComandiAssociati;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.tipi.TipoIcona;
+import com.threeamigos.foresta.ui.immagini.IconeAwt;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -25,7 +26,7 @@ class IconeDeiCantiTest {
 			assertNotNull(comando, tipo.name());
 			assertTrue(comandi.add(comando), "comando ripetuto: " + comando);
 			assertSame(tipo, ComandiAssociati.canto(comando));
-			assertNotNull(TipoIcona.ofComando(comando).getIcona(), comando.name());
+			assertNotNull(IconeAwt.icona(TipoIcona.ofComando(comando)), comando.name());
 		}
 		assertEquals(4, comandi.size());
 	}

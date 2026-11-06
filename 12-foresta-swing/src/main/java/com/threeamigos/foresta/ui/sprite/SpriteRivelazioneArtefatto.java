@@ -12,6 +12,7 @@ import com.threeamigos.foresta.modificatori.TestoDeiModificatori;
 import com.threeamigos.foresta.tipi.TipoBottino;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.tipi.TipoIcona;
+import com.threeamigos.foresta.ui.immagini.IconeAwt;
 import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
 import com.threeamigos.foresta.tipi.MappaBottinoImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
@@ -415,7 +416,7 @@ public class SpriteRivelazioneArtefatto implements SpriteInterface {
 			case NINNOLO:
 				return NINNOLO;
 			default:
-				return tipo.isIngrediente() ? TipoIcona.PERGAMENA.getIcona() : null;
+				return tipo.isIngrediente() ? IconeAwt.icona(TipoIcona.PERGAMENA) : null;
 		}
 	}
 

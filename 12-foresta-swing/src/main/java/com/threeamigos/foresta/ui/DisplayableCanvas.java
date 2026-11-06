@@ -16,6 +16,7 @@ import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzatore;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoNegozio;
+import com.threeamigos.foresta.ui.barra.BarraIconeDisegnabile;
 import com.threeamigos.foresta.ui.barra.DisplayableCanvasBarraIcone;
 import com.threeamigos.foresta.ui.barra.DisplayableCanvasBarraIconeDock;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
@@ -108,7 +109,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private final transient DisplayableCanvasCommerciante commerciante;
 	private final transient DisplayableCanvasScambiatoreConsumabili alchimista;
 	private final transient DisplayableCanvasIncantatore incantatore;
-	private final transient DisplayableCanvasBarraIcone barraIcone;
+	private final transient BarraIconeDisegnabile barraIcone;
 	private final transient DisplayableCanvasIntermezzo intermezzo;
 
 	private final ArrayList<SpriteInterface> sprites;
