@@ -108,7 +108,10 @@ public final class ImmaginiGdx implements Disposable {
 		TextureRegion porzione = regioni.get(chiave);
 		if (porzione == null) {
 			TextureRegion base = regione(risorsa);
-			porzione = capovolta(new TextureRegion(base.getTexture(), base.getRegionX() + x, base.getRegionY() + y, larghezza, altezza));
+			// La base è già capovolta: getRegionY() darebbe il suo bordo basso, quindi l'angolo alto a sinistra si prende dalle coordinate della texture
+			int xBase = Math.round(Math.min(base.getU(), base.getU2()) * base.getTexture().getWidth());
+			int yBase = Math.round(Math.min(base.getV(), base.getV2()) * base.getTexture().getHeight());
+			porzione = capovolta(new TextureRegion(base.getTexture(), xBase + x, yBase + y, larghezza, altezza));
 			regioni.put(chiave, porzione);
 		}
 		return porzione;

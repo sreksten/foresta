@@ -26,7 +26,7 @@ import java.util.Locale;
  * Su macOS la finestra deve stare sul primo thread del processo (<code>-XstartOnFirstThread</code>): se la JVM non è partita così,
  * la si fa ripartire.
  * <p>
- * Gli argomenti sono quelli di {@link OpzioniDiAvvio} (l'orientamento, il tutto schermo e il logo non contano ancora), più
+ * Gli argomenti sono quelli di {@link OpzioniDiAvvio} (contano tutte), più
  * {@code PAGINE_DI_PROVA} per le pagine di prova dei pezzi dell'interfaccia (<code>ForestaGdx</code>) al posto del gioco.
  */
 public final class MainLibgdx {
@@ -60,9 +60,9 @@ public final class MainLibgdx {
 			// Il motore chiede di uscire con NotificaUscitaDalGioco: qui si chiude l'applicazione, e il processo finisce con lei (i
 			// thread del motore sono demoni)
 			AvvioDelMotore motore = new AvvioDelMotore(esecutore, e -> Gdx.app.exit(), opzioni.isLinguaDecisa());
-			applicazione = new ForestaLibGDX(esecutore, motore.getControlloreDiGioco(), motore.getGestorePunteggi(), motore.getVistaPartita(),
-					AvvioDelMotore.nuovoTemporizzatore(), opzioni.isBarraDock(), opzioni.isJoystickVirtuale());
-			Misura dimensioni = ForestaLibGDX.dimensioniDelloSchermo();
+			applicazione = new ForestaLibGDX(opzioni.getOrientamento(), esecutore, motore.getControlloreDiGioco(), motore.getGestorePunteggi(), motore.getVistaPartita(),
+					AvvioDelMotore.nuovoTemporizzatore(), opzioni.isBarraDock(), opzioni.isJoystickVirtuale(), opzioni.isSaltaLogo());
+			Misura dimensioni = ForestaLibGDX.dimensioniDelloSchermo(opzioni.getOrientamento());
 			larghezza = dimensioni.larghezza;
 			altezza = dimensioni.altezza;
 		}
@@ -70,6 +70,10 @@ public final class MainLibgdx {
 		Lwjgl3ApplicationConfiguration configurazione = new Lwjgl3ApplicationConfiguration();
 		configurazione.setTitle("La Foresta");
 		configurazione.setWindowedMode(larghezza, altezza);
+		if (opzioni.isTuttoSchermo()) {
+			// A schermo intero con la risoluzione del desktop: il gioco resta alla sua risoluzione virtuale e si adatta con le bande nere
+			configurazione.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
+		}
 		configurazione.useVsync(true);
 		configurazione.setForegroundFPS(60);
 		new Lwjgl3Application(applicazione, configurazione);

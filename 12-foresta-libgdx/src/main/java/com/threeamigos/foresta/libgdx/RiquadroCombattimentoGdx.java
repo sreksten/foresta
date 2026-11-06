@@ -44,9 +44,11 @@ public final class RiquadroCombattimentoGdx extends RiquadroCombattimento {
 		immagini.riempi(batch, area.getX() + area.getLarghezza() - d.getBordoLaterale(), area.getY(), d.getBordoLaterale(), area.getAltezza(),
 				colore(COLORE_BORDO));
 		// La cornice tagliata a metà: la metà alta in cima, la bassa in fondo (le coordinate della porzione sono quelle dell'immagine originale, senza zoom)
-		int altaOriginale = Math.round(d.getMetaAlta() / zoom);
-		int bassaOriginale = Math.round(d.getMetaBassa() / zoom);
-		int larghezzaOriginale = Math.round(area.getLarghezza() / zoom);
+		// La metà bassa è il resto dell'altezza originale: arrotondandola da sola le due metà potrebbero sommare una riga più dell'immagine
+		int altezzaOriginale = immagini.regione(CORNICE).getRegionHeight();
+		int larghezzaOriginale = immagini.regione(CORNICE).getRegionWidth();
+		int altaOriginale = Math.min(altezzaOriginale - 1, Math.round(d.getMetaAlta() / zoom));
+		int bassaOriginale = altezzaOriginale - altaOriginale;
 		batch.draw(immagini.porzione(CORNICE, 0, 0, larghezzaOriginale, altaOriginale), area.getX(), area.getY(), area.getLarghezza(), d.getMetaAlta());
 		batch.draw(immagini.porzione(CORNICE, 0, altaOriginale, larghezzaOriginale, bassaOriginale), area.getX(),
 				area.getY() + area.getAltezza() - d.getMetaBassa(), area.getLarghezza(), d.getMetaBassa());

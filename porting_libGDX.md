@@ -6,7 +6,7 @@ Stato al 2026-11-06 (il piano è del 2026-10-31). È un piano, non una decisione
 
 - **Fatto**: Fase 1 (`EsecutoreGdx`, `MainLibgdx` collegato al motore con `AvvioDelMotore`, ciclo di vita con `pause`/`resume`, uscita con `Gdx.app.exit()`; mancano la cartella privata e il log per Android, con la Fase 7), Fase 2, Fase 3 (lo schermo di gioco con tutti i riquadri, la barra e gli sprite, `SchermoGdx`, collegato al motore da `ForestaLibGDX`: si gioca una partita) e Fase 5 tranne il logo. Il campo di testo (`CampoDiTestoGdx` sul `CampoDiTesto` comune) c'è, anche con la tastiera di sistema.
 - **Messo in comune** (12bis): la radice e la traduzione degli eventi (`ForestaUI`), lo schermo senza disegno (`SchermoDelGioco`), la disposizione (`DisposizioneDelloSchermo`), il campo di testo (`CampoDiTesto`), gli argomenti (`OpzioniDiAvvio`), il collegamento del motore (`AvvioDelMotore`, in `12-foresta-motore`).
-- **Resta**: il logo (`TracciatoreLogo` con `ShapeRenderer`), la finestra di prova (solo desktop), i cartigli dell'aiuto dei riquadri del gruppo e delle missioni, la sfida che si dissolve; poi le Fasi 4, 6, 7 e 8.
+- **Resta**: la finestra di prova è solo per il desktop e non si porta; poi le Fasi 4, 6, 7 e 8. Fatti anche il logo iniziale (`LogoInizialeGdx`, sulla logica comune `AnimazioneDelLogo`), `TUTTOSCHERMO` e `SALTALOGO`, e i cartigli dell'aiuto di gruppo e missioni, la sfida che si dissolve, l'alfabeto grande a colori, l'ascolto delle rivelazioni degli artefatti e l'orientamento verticale (`VERTICALE`: la barra delle icone sul lato destro).
 
 ## 1. Perché questo piano, e che cosa non è in discussione
 
@@ -22,12 +22,14 @@ Prese (dall'utente, 2026-10-31):
 1. **Build**: si resta con Maven. Quando servirà, la versione Gradle (per i moduli Android e iOS) si costruirà **in più**, partendo da quella Maven, che resta la principale.
 2. **Moduli**: `12-foresta-libgdx` per il front-end, `13-foresta-app-libgdx` per il punto d'ingresso desktop. I moduli Android e iOS, se stanno fuori da Maven, non entrano nella numerazione.
 3. **Codice comune (cambiata il 2026-11-06)**: niente copie. Quel che non dipende dal toolkit sta in `12-foresta-ui-comune` (le immagini, e man mano la logica d'interfaccia che non disegna), usato da `12-foresta-swing` e da `12-foresta-libgdx`. Swing resta come alternativa e ogni pezzo di UI si porta anche in libGDX.
-4. **Orientamento**: il gioco resta **orizzontale**. Niente layout verticale vero.
+4. **Orientamento** (confermata il 2026-11-06): il gioco resta **orizzontale**, niente layout verticale vero. Sul telefono si usa la disposizione `VERTICALE` (la barra delle icone sul lato destro, che stringe l'altezza), e **l'utente deve ruotare il telefono in orizzontale**: l'orientamento non cambia mentre il gioco è aperto, si sceglie una volta all'avvio (`MainLibgdx VERTICALE`, `ForestaLibGDX(orientamento, …)`, funzionante anche in libGDX). Quindi su Android l'attività si forza in orizzontale (Fase 7) e non serve nessuna gestione del cambio di orientamento.
 5. **Layout per il telefono**: prima prova, la sola barra icone piazzata in verticale sul lato destro, per stringere l'altezza e allargare la lunghezza (vedi la sezione 9). **Fatta in Swing** (2026-10-31): la modalità `VERTICALE` funziona, con la barra che scorre in pixel fra due frecce fisse, col trascinamento e l'inerzia.
 6. **Android**: `minSdk` 24 (Android 7.0), dove lambda e stream di Java 8 funzionano senza desugaring particolare.
-7. **Logo iniziale**: `TracciatoreLogo` si riscrive con `ShapeRenderer` (forme, tratti e gradienti), fedele all'originale e senza fotogrammi precalcolati.
+7. **Logo iniziale**: la logica di `TracciatoreLogo` è stata estratta nel modulo comune (`AnimazioneDelLogo`) e libGDX la disegna con `LogoInizialeGdx`: fedele all'originale e senza fotogrammi precalcolati, ma con la torcia e le scie calcolate sui pixel (`TorciaDelLogo`, `ScieDelLogo`, `TestaDellaCometa`) invece che con `ShapeRenderer`, che non ha gradienti radiali né composizione `DstIn`.
 8. **Due front-end**: finché vivono entrambi, ogni novità di UI si fa in **tutti e due** (Swing resta alla pari).
 9. **Cartigli sul tocco**: la descrizione dei comandi compare con la **pressione prolungata**; il tocco normale esegue il comando.
+
+Presa il 2026-11-06: l'atlante dei glifi si ricava **all'avvio** dall'immagine del font (è quello che fa già `TestoGdx`: una texture sola per font, costruita dai dati di `DoomdarkFont`; niente passo in fase di build, né file delle larghezze).
 
 Da prendere: l'altezza target del layout (dopo la Fase 3).
 
@@ -113,13 +115,13 @@ Nell'ordine, dalla più semplice alla più pesante:
 3. Intermezzo (fumetti e animazioni).
 4. Inventario, Commerciante, Incantatore, Scambiatore consumabili (famiglia `DisplayableCanvasScambiatore`: un comportamento comune va nella classe base).
 5. **Tattiche** (`DisplayableCanvasTattiche`, 1.203 righe) per ultime: menu a discesa (`CasellaADiscesa`: la logica è ora `MenuADiscesa` nel comune, il disegno resta per toolkit), liste scorrevoli, modifiche multiple. La logica sta già in `08-foresta-tattiche` (`BozzaTattica`, `TestoTattica`).
-6. **Logo** (`TracciatoreLogo`, 1.443 righe): decisione presa, si riscrive con `ShapeRenderer` (poligoni, tratti sovrapposti, scia animata, gradienti radiali delle nuvole in `CloudGenerator`, da precalcolare in una texture). Isolato dal resto: si fa per ultimo.
+6. **Logo** (`TracciatoreLogo`, 1.443 righe): **fatto**. La logica (contorni, corridori, fasi) è in `AnimazioneDelLogo` nel modulo comune, `TracciatoreLogo` resta la veste Swing e `LogoInizialeGdx` quella libGDX (vedi sopra, decisione 7). I gradienti radiali delle nuvole in `CloudGenerator` si precalcolano in una texture.
 
 La finestra di prova (`FinestraDiProva`) si porta anche lei (decisione del 2026-11-06), ma solo per il desktop.
 
 ## 9. Fase 6: layout per telefono
 
-Il gioco resta orizzontale. Prima prova, **fatta in Swing** (argomento `VERTICALE`): la barra icone passa da orizzontale in fondo a verticale sul lato destro, e scorre in pixel su tutta la lunghezza (con rotella, trascinamento, inerzia ed elastico), con due freccine blu sovrapposte che segnalano dove c'è altro. Restano da fare il layout a tile (mappa come tile, testo ridotto) e la scelta dell'altezza target. Con le misure di lavoro (zoom 2,0) la barra tiene 64 + 4 px di spaziatura:
+Il gioco resta orizzontale. Prima prova, **fatta in Swing e in libGDX** (argomento `VERTICALE`): la barra icone passa da orizzontale in fondo a verticale sul lato destro, e scorre in pixel su tutta la lunghezza (con rotella, trascinamento, inerzia ed elastico), con due freccine blu sovrapposte che segnalano dove c'è altro. Restano da fare il layout a tile (mappa come tile, testo ridotto) e la scelta dell'altezza target. Con le misure di lavoro (zoom 2,0) la barra tiene 64 + 4 px di spaziatura:
 
 | | Barra in fondo | Barra a destra |
 | :--- | :---: | :---: |
@@ -138,7 +140,7 @@ Il rapporto 2,06 è vicino a quello dei telefoni (circa 2,2), quindi le bande ne
 1. Modulo Android (Gradle) con il lancio dell'attività, il ciclo di vita e la cartella privata dell'app.
 2. Compatibilità del sorgente: `minSdk` 24, dove lambda e stream di Java 8 funzionano; i gestori su file sono già in `java.io`, non `java.nio.file`.
 3. Prestazioni e memoria su un dispositivo di fascia bassa; pressione sulla memoria e thread di precaricamento.
-4. Icona, nome, orientamento forzato, schermo sempre acceso durante la partita, notch e barre di sistema.
+4. Icona, nome, orientamento forzato in orizzontale (con `VERTICALE` per la barra delle icone, vedi decisione 4), schermo sempre acceso durante la partita, notch e barre di sistema.
 5. Pubblicazione: firma dell'app e pacchetto per lo store (account a pagamento una tantum).
 
 ## 11. Fase 8: iOS (iPhone e iPad)
@@ -177,7 +179,8 @@ Da estrarre **componente per componente, quando lo si porta** (si separa il mode
 | Riquadri e schermate | il contenuto da mostrare (testi, elenchi, ordinamenti, stato del mouse), le coordinate | `Graphics2D` |
 | `DisplayableCanvasTattiche`, `CasellaADiscesa` | **fatto**: `EditorDelleTattiche` e `MenuADiscesa` (stato della modifica, righe, selezione, click) | il disegno |
 | Sprite (`SpriteBase`, `SpriteATempo`, fumetti, annunci…) | tempi, traiettorie, dissolvenza, `CoordinateFumetto` | disegno e filtri (`SrcIn`, sfocatura) |
-| `TracciatoreLogo`, `CloudGenerator` | geometria e animazione del tracciato (una parte grande delle 1466 righe è calcolo) | i tratti disegnati |
+| `TracciatoreLogo` | **fatto**: `AnimazioneDelLogo` (geometria e animazione del tracciato), `ContorniDelLogo`, `TorciaDelLogo`, `ScieDelLogo`, `TestaDellaCometa`, `LogoIniziale` | i tratti disegnati (Swing: `Graphics2D`; libGDX: texture riscritte dai pixel) |
+| `CloudGenerator` | geometria e animazione delle nuvole | il disegno |
 | `Prompt` | **fatto**: `CampoDiTesto` (chi aspetta la risposta, invio, Esc, caratteri ammessi) | il campo di testo |
 
 ## Osservazioni
@@ -189,7 +192,6 @@ Da estrarre **componente per componente, quando lo si porta** (si separa il mode
 ## Da fare / idee aperte
 
 - Nel prototipo, sul testo: quanti glifi si disegnano per fotogramma in una schermata di gioco piena, e se i colori del font sono tinte semplici o hanno più toni (decide se serve un atlante dei glifi per colore).
-- Decidere se l'atlante dei glifi di libGDX si ricava all'avvio dalle GIF del font (con la lettura della griglia riscritta sul `Pixmap`) o in fase di build, con un file delle larghezze accanto.
 - Quando serviranno i moduli Android e iOS, costruire ANCHE la versione Gradle partendo da quella Maven (che resta la principale).
 - Costruire il prototipo della Fase 0 e riempire qui la tabella delle misure.
 - Decidere il layout definitivo (altezza target, tile, striscia di testo) dopo la Fase 3.
