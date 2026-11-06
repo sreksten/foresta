@@ -44,6 +44,14 @@ Come si rifà un atlante: si aggiunge o si cambia il file in `sorgenti-immagini/
 
 `DoomdarkFont` (piccolo e medio), `AtlanteDiGlifi`, `ImmagineDelFont` e `ImmagineDelFontAColori` leggono la griglia di glifi dell'immagine del font (`img/font/`) e ne ricavano, per ogni carattere, un `GlifoDelFont` (livelli di grigio che fanno da alfa) o un `GlifoAColori`, con le larghezze misurate sui pixel; `CaratteriDelFont` è l'elenco dei caratteri, `FontTool` divide il testo in righe, `DoomdarkColorModel.Color` sono i colori del testo (con il loro RGB pieno). Come un glifo diventa un'immagine lo decide il toolkit: Swing con un modello a due indici (`ModelliDiColoreAwt`), libGDX con una tinta.
 
+### Il router degli input
+
+`RouterDegliInput` instrada mouse e tocco alle finestre, senza toolkit: trova a chi spetta un evento (la barra delle icone per prima, poi l'eventuale finestra a tutto schermo, altrimenti la più in primo piano della pila che contiene il punto), dà a ogni finestra le coordinate sue, sintetizza entrata e uscita, fa catturare il trascinamento a chi lo chiede (`Finestra.catturaIlTrascinamento`), porta davanti un riquadro impilato cliccato e non ultimo, ritarda di 175 ms il click singolo di chi distingue il doppio click (e lo scarta se arriva il secondo o se la schermata cambia) e divide la rotella in passi per fotogramma (`Finestra.passiPerScattoDellaRotella`). Da chi lo ospita vuole un `RouterDegliInput.Contesto` (la barra, la finestra a tutto schermo, la pila, le aree `Area`, lo stato, il ridisegno) e un `Pianificatore` (timer: `PianificatoreSwing` in Swing con un `javax.swing.Timer`, `PianificatoreGdx` in libGDX, a ogni fotogramma). Gli eventi arrivano in coordinate dello schermo: `mosso`, `premuto`, `trascinato`, `rilasciato`, `clic` (con il conteggio, 2 per il doppio), `rotella`, `mouseEntrato`, `mouseUscito`. In Swing `DisplayableCanvas.GestoreMouse` traduce gli eventi di AWT; in libGDX `InputGdx` traduce quelli di `InputProcessor` e ricava i click (un tocco rilasciato quasi dove è cominciato) e il doppio click. `RouterDegliInputTest` lo prova con finestre finte.
+
+### Il riquadro del testo
+
+`StoricoDelTesto` (le righe già spezzate alla larghezza, il cuscino di righe vuote, il limite di `NotizieMD`, l'offset di scorrimento a pixel e `perOgniRigaVisibile`, che dice a chi disegna dove sta ogni riga) e `RiquadroTesto` (la finestra: `addString`, `clear`, rotella, trascinamento con inerzia ed elastico, ritorno alla riga più recente) sono il modello del riquadro dei messaggi; `DisplayableCanvasRiquadroTesto` in Swing e `RiquadroTestoGdx` in libGDX lo estendono e ci mettono sopra il disegno.
+
 ### Il resto
 
 Le finestre e l'input (`Finestra`, `TipoFinestra`, `Orientamento`), lo scorrimento su un asse (`ScorrimentoSuUnAsse`), lo zoom (`LivelloDiZoom`), i comandi possibili (`ComandiPossibili`), i testi della UI (`TestiDellaUI`), il segnalatore degli errori, le coordinate dei fumetti e il testo delle azioni in combattimento.

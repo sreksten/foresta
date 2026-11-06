@@ -14,12 +14,13 @@ import java.util.regex.Pattern;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Il motore non conosce il toolkit grafico: nessun sorgente fuori dal modulo 12-foresta-swing usa java.awt, javax.swing, javax.imageio o
+ * Il motore non conosce il toolkit grafico: nessun sorgente fuori dal modulo 12-foresta-swing (compresi i moduli libGDX) usa java.awt, javax.swing, javax.imageio o
  * javax.sound. Così motore, dominio, eventi e interfacce si possono isolare in un modulo che non dipende da Swing
  * (e riusare con un altro front-end). Il thread principale si raggiunge da {@code temporizzatore.ThreadPrincipale}.
  */
 class DipendenzeDalToolkitGraficoTest {
 
+	private static final Pattern LIBGDX = Pattern.compile("\\bcom\\.badlogic\\.");
 	private static final Pattern TOOLKIT = Pattern.compile("\\b(java\\.awt|javax\\.swing|javax\\.imageio|javax\\.sound)\\.");
 
 	@Test
@@ -31,6 +32,26 @@ class DipendenzeDalToolkitGraficoTest {
 			}
 		}
 		assertTrue(vietati.isEmpty(), "Questi sorgenti fuori dal modulo della UI dipendono dal toolkit grafico:\n" + String.join("\n", vietati));
+	}
+
+	/**
+	 * libGDX sta solo nei suoi due moduli (12-foresta-libgdx e 13-foresta-app-libgdx): il motore, il dominio, il modulo comune delle
+	 * interfacce e Swing non lo conoscono. Quei due moduli, a loro volta, non usano AWT né Swing (lo vieta il test qui sopra, che li
+	 * controlla come tutti i moduli diversi da 12-foresta-swing).
+	 */
+	@Test
+	void libGdxStaSoloNeiSuoiModuli() throws IOException {
+		Set<String> vietati = new TreeSet<>();
+		for (Path file : SorgentiDelProgetto.sorgenti(false)) {
+			String nome = SorgentiDelProgetto.radice().relativize(file).toString().replace('\\', '/');
+			if (nome.startsWith("12-foresta-libgdx/") || nome.startsWith("13-foresta-app-libgdx/")) {
+				continue;
+			}
+			if (LIBGDX.matcher(codice(file)).find()) {
+				vietati.add(nome);
+			}
+		}
+		assertTrue(vietati.isEmpty(), "Questi sorgenti fuori dai moduli libGDX dipendono da libGDX:\n" + String.join("\n", vietati));
 	}
 
 	private static String codice(Path file) throws IOException {

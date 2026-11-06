@@ -38,12 +38,15 @@
         <module>12-foresta-motore</module>
         <module>12-foresta-ui-comune</module>
         <module>12-foresta-swing</module>
+        <module>12-foresta-libgdx</module>
         <module>13-foresta-app-swing</module>
+        <module>13-foresta-app-libgdx</module>
     </modules>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <libgdx.version>1.14.2</libgdx.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>

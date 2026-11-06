@@ -88,6 +88,8 @@ Il progetto è un insieme di moduli Maven (pom padre nella radice); ogni modulo 
 | 12 | [`12-foresta-motore`](12-foresta-motore.md) | il resto: `motore`, `tipi.CostantiMotore` (il bilanciamento di locazioni, avversari e locande), `oggetti` (`RaccoltaBottino`), `locazioni`, `testi`, `salvataggi`, `intermezzi/IntermezziDelMotore` (registra gli intermezzi delle missioni), gli eventi interni che portano il dominio, le grammatiche `.txt` | motore-api |
 | 12 | [`12-foresta-ui-comune`](12-foresta-ui-comune.md) | le immagini del gioco (PNG) e la logica d'interfaccia che non disegna | motore-api, tattiche |
 | 12 | [`12-foresta-swing`](12-foresta-swing.md) | `ui` (e gli eventi con sprite) | ui-comune |
+| 12 | [`12-foresta-libgdx`](12-foresta-libgdx.md) | l'interfaccia in libGDX (Android, famiglia Apple, desktop) | ui-comune |
+| 13 | [`13-foresta-app-libgdx`](13-foresta-app-libgdx.md) | `MainLibgdx`, l'applicazione desktop con libGDX | libgdx |
 | 13 | [`13-foresta-app-swing`](13-foresta-app-swing.md) | `Main`, `SnifferBusEventi` e i test che usano motore e UI insieme | motore, swing |
 
 Un pacchetto può stare in più moduli (`testi`, `strumenti`, `intermezzi`, `eventi.interni`): quel che conta è il modulo, non il pacchetto.

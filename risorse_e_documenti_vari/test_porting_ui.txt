@@ -20,3 +20,5 @@ PaginaIntermezzoTest
 SnifferBusEventiTest
 FinestraDiProvaTest
 BugCacheMappaGeneraleTest
+DisposizioneDeiGlifiTest
+RouterDegliInputTest

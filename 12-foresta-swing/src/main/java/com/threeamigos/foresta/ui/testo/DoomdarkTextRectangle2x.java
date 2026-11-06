@@ -1,79 +1,44 @@
 package com.threeamigos.foresta.ui.testo;
 
-import com.threeamigos.foresta.modellodati.NotizieMD;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 
 import java.awt.image.ColorModel;
 import java.awt.image.MemoryImageSource;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
- * Un rettangolo con i glifi del font a immagine ({@link DoomdarkFont}):
- * rettangolo di testo scorrevole in cui le righe già spezzate alla larghezza del rettangolo vengono conservate in uno
- * storico, e il raster viene ridisegnato a partire da quello: è ciò che permette di tornare indietro con la rotella
- * invece di limitarsi a far scorrere via il testo vecchio. Si scorre a pixel, non a righe: la prima e l'ultima riga
- * visibili possono essere tagliate dal bordo. Lo storico condivide il limite con quanto ricordato da
- * {@code motore.Notizie} (vedi {@link NotizieMD#MASSIMO_MESSAGGI_RICORDATI}), così che dopo un ricaricamento il pannello
- * possa essere ripopolato per intero.
- * <p>
- * Una riga di testo è alta quanto l'immagine del font, con le righe in più per accenti e cediglie, e fra una riga e
- * l'altra c'è un pixel solo, perché le righe in più le separano già. Il raster è bianco, con l'alfa del livello del
- * glifo: i bordi sfumano sullo sfondo.
+ * Il raster di un rettangolo di testo scorrevole in font Doomdark: lo storico delle righe e lo scorrimento stanno in {@link StoricoDelTesto}
+ * (che non usa il toolkit, e usa anche libGDX), qui c'è solo il disegno dei glifi dell'immagine del font in un raster ARGB, ricostruito quando
+ * cambia la versione dello storico. Il raster è bianco, con l'alfa del livello del glifo: i bordi sfumano sullo sfondo.
  */
 public class DoomdarkTextRectangle2x {
 
-	// Pixel aggiuntivi fra il fondo di una riga e l'inizio della successiva
-	private static final int INTERLINEA = 1;
 	private static final int BIANCO = 0xFFFFFFFF;
 	private static final int TRASPARENTE = 0x00000000;
 
-	// Le righe già spezzate alla larghezza del rettangolo, dalla più vecchia alla più recente
-	private final List<String> righe = new ArrayList<>();
+	private final StoricoDelTesto storico;
 	// Il raster prima della consegna, in ARGB
 	private final int[] textData;
-
 	private final int width;
 	private final int height;
-	private final DoomdarkFont font = DoomdarkFont.medio();
-	private final int fontHeight = font.getHeight();
-	private final int charPadding = font.getPadding();
-	// Distanza fra le cime di due righe consecutive
-	private final int passoRiga = fontHeight + INTERLINEA;
-	private final int righeVisibili;
+	private final DoomdarkFont font;
+	private final int fontHeight;
+	private final int charPadding;
+	// La versione dello storico con cui si è costruito il raster
+	private int versioneDisegnata = -1;
 
-	// Di quanti pixel si è tornati indietro rispetto alla più recente (0: la più recente in fondo); fuori dai limiti
-	// di getScorrimentoMassimo di poco, per l'elastico di chi trascina
-	private int offsetPixel;
-	// Il raster va ricostruito solo quando il testo o lo scorrimento sono cambiati
-	private boolean daRidisegnare = true;
-	// Cresce a ogni cambiamento: chi conserva un'immagine del testo sa quando rifarla
-	private int versione;
-
-	public DoomdarkTextRectangle2x(int width, int height) {
-		this.width = width;
-		this.height = height;
-		// La riga più in basso sta a height - fontHeight, le altre a salire di passoRiga
-		righeVisibili = height < fontHeight ? 0 : (height - fontHeight) / passoRiga + 1;
+	public DoomdarkTextRectangle2x(StoricoDelTesto storico) {
+		this.storico = storico;
+		width = storico.getLarghezza();
+		height = storico.getAltezza();
+		font = storico.getFont();
+		fontHeight = font.getHeight();
+		charPadding = font.getPadding();
 		textData = new int[width * height];
-		imbottisci();
 	}
 
-	/**
-	 * Mette in testa allo storico un cuscino di righe vuote. Serve allo scorrimento: la
-	 * parte alta del rettangolo è coperta da una sfumatura che spegne il testo, e senza
-	 * il cuscino le righe più vecchie resterebbero inchiodate lassù, illeggibili. Con
-	 * mezzo rettangolo di righe vuote sopra di loro, arrivano invece a metà altezza,
-	 * dove la sfumatura non le tocca più.
-	 * <p>
-	 * Le righe vuote fanno parte dello storico come le altre, quindi sono le prime a
-	 * essere dimenticate quando il testo cresce: sono un cuscino, non un ingombro fisso.
-	 */
-	private void imbottisci() {
-		for (int i = 0; i < righeVisibili / 2; i++) {
-			righe.add("");
-		}
+	public DoomdarkTextRectangle2x(int width, int height) {
+		this(new StoricoDelTesto(width, height));
 	}
 
 	// scrive una stringa alla quota indicata: le righe del glifo che cadono fuori dal rettangolo non si scrivono
@@ -100,121 +65,59 @@ public class DoomdarkTextRectangle2x {
 		}
 	}
 
-	/**
-	 * Ridisegna il raster con le righe che lo scorrimento corrente inquadra: la più recente in basso, spostata
-	 * dell'offset, le precedenti a salire.
-	 */
 	private void ridisegna() {
 		Arrays.fill(textData, TRASPARENTE);
-		// La riga i, contando dalla più recente, sta a height - fontHeight - i * passoRiga + offsetPixel: si scrivono
-		// solo quelle che ne vedono almeno una parte
-		int da = Math.max(0, Math.floorDiv(offsetPixel - fontHeight, passoRiga));
-		int fine = Math.min(righe.size() - 1, Math.floorDiv(height + offsetPixel, passoRiga) + 1);
-		for (int i = da; i <= fine; i++) {
-			int quota = height - fontHeight - i * passoRiga + offsetPixel;
-			if (quota + fontHeight <= 0 || quota >= height) {
-				continue;
-			}
-			render(righe.get(righe.size() - 1 - i), quota);
-		}
-		daRidisegnare = false;
+		storico.perOgniRigaVisibile(this::render);
+	}
+
+	public StoricoDelTesto getStorico() {
+		return storico;
+	}
+
+	public void addString(String s) {
+		storico.addString(s);
+	}
+
+	public void clear() {
+		storico.clear();
+	}
+
+	public int getScorrimentoMassimo() {
+		return storico.getScorrimentoMassimo();
+	}
+
+	public void impostaOffset(int pixel) {
+		storico.impostaOffset(pixel);
+	}
+
+	public void scorri(int righeIndietro) {
+		storico.scorri(righeIndietro);
+	}
+
+	public boolean isScorribileSu() {
+		return storico.isScorribileSu();
+	}
+
+	public boolean isScorribileGiu() {
+		return storico.isScorribileGiu();
 	}
 
 	/**
-	 * Aggiunge una riga in fondo, spezzandola se è più larga del rettangolo, e la ricorda nello storico.
+	 * Un numero che cambia ogni volta che il contenuto visibile cambia (testo aggiunto, svuotato o fatto scorrere)
 	 */
-	public final synchronized void addString(String s) {
-		// Gestisce i \n letterali come vere newline
-		String[] lines = s.split("\\\\n");
-		for (String line : lines) {
-			righe.addAll(FontTool.split(font, line, width));
-		}
-		while (righe.size() > NotizieMD.MASSIMO_MESSAGGI_RICORDATI) {
-			righe.remove(0);
-		}
-		// Un messaggio nuovo riporta in fondo: nel mezzo di una partita non deve poter
-		// passare inosservato perché si stava rileggendo il testo vecchio
-		offsetPixel = 0;
-		segnaCambiato();
+	public int getVersione() {
+		return storico.getVersione();
 	}
 
-	/**
-	 * Svuota il rettangolo e lo storico.
-	 */
-	public final synchronized void clear() {
-		righe.clear();
-		imbottisci();
-		offsetPixel = 0;
-		segnaCambiato();
-	}
-
-	/**
-	 * Di quanti pixel si può tornare indietro al massimo: fino a che la riga più vecchia arriva in cima.
-	 */
-	public final synchronized int getScorrimentoMassimo() {
-		return Math.max(0, righe.size() - righeVisibili) * passoRiga;
-	}
-
-	/**
-	 * Mette il testo a quell'offset, in pixel indietro rispetto alla riga più recente (0: la più recente in fondo).
-	 * Non lo limita: chi trascina può tirare di poco oltre i capi (elastico) e riportarlo dentro.
-	 */
-	public final synchronized void impostaOffset(int pixel) {
-		if (pixel != offsetPixel) {
-			offsetPixel = pixel;
-			segnaCambiato();
-		}
-	}
-
-	/**
-	 * Sposta indietro (o avanti) di righe intere, senza uscire dallo storico disponibile.
-	 *
-	 * @param righeIndietro positivo per tornare al testo più vecchio
-	 */
-	public final synchronized void scorri(int righeIndietro) {
-		int nuovoOffset = offsetPixel + righeIndietro * passoRiga;
-		nuovoOffset = Math.max(0, Math.min(nuovoOffset, getScorrimentoMassimo()));
-		impostaOffset(nuovoOffset);
-	}
-
-	private void segnaCambiato() {
-		daRidisegnare = true;
-		versione++;
-	}
-
-	/**
-	 * Se si può ancora scorrere all'indietro verso i messaggi più vecchi (freccia su).
-	 */
-	public synchronized boolean isScorribileSu() {
-		return offsetPixel < getScorrimentoMassimo();
-	}
-
-	/**
-	 * Se si è già scorsi all'indietro e si può tornare verso i messaggi più recenti (freccia giù).
-	 */
-	public synchronized boolean isScorribileGiu() {
-		return offsetPixel > 0;
-	}
-
-	/**
-	 * Un numero che cambia ogni volta che il contenuto visibile cambia (testo aggiunto,
-	 * svuotato o fatto scorrere): finché resta uguale, getImageSource() darebbe lo
-	 * stesso raster.
-	 */
-	public synchronized int getVersione() {
-		return versione;
-	}
-
-	/**
-	 * Quante righe di testo stanno nel rettangolo
-	 */
 	public int getRigheVisibili() {
-		return righeVisibili;
+		return storico.getRigheVisibili();
 	}
 
 	public synchronized MemoryImageSource getImageSource() {
-		if (daRidisegnare) {
+		int versione = storico.getVersione();
+		if (versione != versioneDisegnata) {
 			ridisegna();
+			versioneDisegnata = versione;
 		}
 		return new MemoryImageSource(width, height, ColorModel.getRGBdefault(), textData, 0, width);
 	}

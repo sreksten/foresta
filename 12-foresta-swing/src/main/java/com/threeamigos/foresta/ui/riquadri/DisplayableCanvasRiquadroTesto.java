@@ -1,7 +1,5 @@
 package com.threeamigos.foresta.ui.riquadri;
 
-import com.threeamigos.foresta.ui.Finestra;
-import com.threeamigos.foresta.ui.componenti.ScorrimentoSuUnAsse;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.testo.DoomdarkTextRectangle2x;
 
@@ -11,103 +9,17 @@ import java.awt.image.BufferedImage;
 /**
  * Il riquadro di testo in cui scorrono le frasi che raccontano la partita.
  */
-public class DisplayableCanvasRiquadroTesto implements Finestra {
+public class DisplayableCanvasRiquadroTesto extends RiquadroTesto {
 
-	// Pixel di scorrimento per ogni passo della rotella (uno scatto fa più passi: circa una riga)
-	private static final int PASSO_SCORRIMENTO = 3;
-
-	private final int topLeftX;
-	private final int topLeftY;
-	private final int width;
-	private final int height;
 	private final DoomdarkTextRectangle2x doomdarkTextRectangle;
 	// L'immagine finita del riquadro (ombra del drago + testo sfumato), rifatta solo
 	// quando cambia la versione del testo
 	private BufferedImage immagineTesto;
 	private int versioneDisegnata;
-	// Quanto si è tornati indietro nel testo, ma al contrario: 0 è la riga più vecchia e il massimo la più recente (che
-	// è dove si parte), così trascinare verso il basso mostra il testo più vecchio, come negli altri elenchi
-	private final ScorrimentoSuUnAsse scorrimento = new ScorrimentoSuUnAsse(System::nanoTime);
-	// Un messaggio nuovo (o il testo svuotato) riporta alla riga più recente: lo si fa al prossimo disegno, sul suo thread
-	private volatile boolean riportaInFondo = true;
 
 	public DisplayableCanvasRiquadroTesto(int topLeftX, int topLeftY, int width, int height) {
-		this.topLeftX = topLeftX;
-		this.topLeftY = topLeftY;
-		this.width = width;
-		this.height = height;
-		doomdarkTextRectangle = new DoomdarkTextRectangle2x(width, height);
-	}
-
-	/**
-	 * Cancella tutto il testo.
-	 */
-	public void clear() {
-		doomdarkTextRectangle.clear();
-		riportaInFondo = true;
-	}
-	
-	/**
-	 * Aggiunge una frase in fondo.
-	 */
-	public void addString(String messaggio) {
-		doomdarkTextRectangle.addString(messaggio);
-		riportaInFondo = true;
-	}
-
-	@Override
-	public int passiPerScattoDellaRotella() {
-		return PASSI_PER_SCATTO_DELLE_LISTE;
-	}
-
-	@Override
-	public void processaRotella(int x, int y, int numeroRotazioni, MovimentoRotella movimentoRotella) {
-		int pixel = numeroRotazioni * PASSO_SCORRIMENTO;
-		// Su, verso il testo più vecchio, è verso l'inizio dello scorrimento
-		scorrimento.scorriDi(movimentoRotella == MovimentoRotella.SU ? -pixel : pixel);
-	}
-
-	/**
-	 * Il gesto che comincia sul riquadro prosegue anche se il puntatore ne esce, finché non si lascia
-	 */
-	@Override
-	public boolean catturaIlTrascinamento() {
-		return true;
-	}
-
-	@Override
-	public void processaPressione(int x, int y, Tasto tasto) {
-		if (tasto == Tasto.SINISTRO) {
-			scorrimento.premi(y, true);
-		}
-	}
-
-	@Override
-	public void processaTrascinamento(int x, int y) {
-		scorrimento.trascina(y);
-	}
-
-	@Override
-	public void processaRilascio(int x, int y, Tasto tasto) {
-		if (tasto == Tasto.SINISTRO) {
-			scorrimento.rilascia();
-		}
-	}
-
-	/**
-	 * Porta il testo dov'è lo scorrimento: aggiorna limite e movimento, e rimette il testo alla riga più recente se è
-	 * arrivato qualcosa di nuovo.
-	 */
-	private void sincronizzaScorrimento() {
-		int massimo = doomdarkTextRectangle.getScorrimentoMassimo();
-		scorrimento.imposta(massimo > 0, massimo);
-		if (riportaInFondo) {
-			riportaInFondo = false;
-			scorrimento.reimposta();
-			scorrimento.scorriDi(massimo);
-		}
-		scorrimento.aggiorna();
-		doomdarkTextRectangle.impostaOffset(massimo - (int) Math.round(scorrimento.getScorrimento()));
+		super(topLeftX, topLeftY, width, height);
+		doomdarkTextRectangle = new DoomdarkTextRectangle2x(getStorico());
 	}
 
 	/**
@@ -121,17 +33,17 @@ public class DisplayableCanvasRiquadroTesto implements Finestra {
 			immagineTesto = componi(raster);
 			versioneDisegnata = versione;
 		}
-		graphics.drawImage(immagineTesto, topLeftX, topLeftY, null);
+		graphics.drawImage(immagineTesto, getTopLeftX(), getTopLeftY(), null);
 
 		final int SPACING = ImageCache.SPACING;
 		if (doomdarkTextRectangle.isScorribileSu()) {
 			Image frecciaSu = ImageCache.componenteScorrevoleFrecciaSu;
-			graphics.drawImage(frecciaSu, topLeftX + width - frecciaSu.getWidth(null) - SPACING, topLeftY + SPACING, null);
+			graphics.drawImage(frecciaSu, getTopLeftX() + getWidth() - frecciaSu.getWidth(null) - SPACING, getTopLeftY() + SPACING, null);
 		}
 		if (doomdarkTextRectangle.isScorribileGiu()) {
 			Image frecciaGiu = ImageCache.componenteScorrevoleFrecciaGiu;
-			graphics.drawImage(frecciaGiu, topLeftX + width - frecciaGiu.getWidth(null) - SPACING,
-					topLeftY + height - frecciaGiu.getHeight(null) - SPACING, null);
+			graphics.drawImage(frecciaGiu, getTopLeftX() + getWidth() - frecciaGiu.getWidth(null) - SPACING,
+					getTopLeftY() + getHeight() - frecciaGiu.getHeight(null) - SPACING, null);
 		}
 	}
 

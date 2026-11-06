@@ -1475,77 +1475,51 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		}
 	}
 
-	private class GestoreMouse implements MouseListener, MouseMotionListener, MouseWheelListener {
+	/**
+	 * Quel che il router degli input (nel modulo comune: lo usa anche libGDX) chiede al canvas
+	 */
+	private class ContestoDegliInput implements RouterDegliInput.Contesto {
 
-		// AWT segnala entrata e uscita solo per il canvas nel suo complesso: per averle
-		// per singolo riquadro va ricordato su quale si trovava il cursore.
-		private Finestra finestraSottoIlCursore;
-		// La finestra su cui si è premuto il tasto sinistro, se si fa trascinare (vedi Finestra.catturaIlTrascinamento):
-		// finché il tasto resta premuto trascinamento e rilascio vanno a lei, anche fuori dal suo rettangolo
-		private Finestra finestraCheCatturaIlTrascinamento;
-
-		// mouseClicked scatta una volta per ogni click: su un doppio click arrivano quindi
-		// sia un evento con clickCount 1 sia uno con clickCount 2. Il primo va quindi rimandato,
-		// per poterlo scartare se nel frattempo arriva il secondo (altrimenti processaClick e
-		// processaDoppioClick scatterebbero entrambi per un solo doppio click).
-		//
-		// Limiti noti, lasciati così perché oggi innocui:
-		// - l'intervallo è fisso a 175 ms, mentre Swing riconosce il doppio click con quello del sistema (di
-		//   solito 400-500 ms): un doppio click più lento di 175 ms fa scattare sia il click singolo sia il
-		//   doppio. Con l'intervallo del sistema il click singolo risponderebbe più lentamente.
-		private final int intervalloDoppioClick = intervalloDoppioClick();
-		private Timer timerClickSingolo;
-
-		private int intervalloDoppioClick() {
-			return 175;
-//			Object valore = Toolkit.getDefaultToolkit().getDesktopProperty("awt.multiClickInterval");
-//			return valore instanceof Integer ? (Integer) valore : 500;
+		@Override
+		public Finestra getBarraIcone() {
+			return barraIcone;
 		}
 
-		private class RisultatoRicerca {
-			final Finestra finestra;
-			final int xRelativoAFinestra;
-			final int yRelativoAFinestra;
-			RisultatoRicerca(Finestra finestra, int xRelativoAFinestra, int yRelativoAFinestra) {
-				this.finestra = finestra;
-				this.xRelativoAFinestra = xRelativoAFinestra;
-				this.yRelativoAFinestra = yRelativoAFinestra;
-			}
+		@Override
+		public Finestra getFinestraATuttoSchermo() {
+			return finestraATuttoSchermo();
 		}
 
-		private RisultatoRicerca trovaFinestra(MouseEvent e) {
-			int x = e.getX();
-			int y = e.getY();
-			// La barra delle icone è sempre disegnata in primo piano sopra a tutto
-			// il resto (vedi aggiornaSchermo), quindi va controllata per prima.
-			RisultatoRicerca risultatoBarraIcone = creaRisultato(barraIcone, x, y);
-			if (risultatoBarraIcone != null) {
-				return risultatoBarraIcone;
+		@Override
+		public List<Finestra> getFinestreImpilate() {
+			List<Finestra> finestre = new ArrayList<>();
+			for (TipoFinestra tipo : new ArrayList<>(stackElementiGrafici)) {
+				finestre.add(recuperaFinestra(tipo));
 			}
-			// Fuori dal gioco lo schermo è occupato da un unico elemento grafico:
-			// non c'è nessuno stack da percorrere.
-			Finestra finestraATuttoSchermo = finestraATuttoSchermo();
-			if (finestraATuttoSchermo != null) {
-				return creaRisultato(finestraATuttoSchermo, x, y);
+			return finestre;
+		}
+
+		@Override
+		public Area getArea(Finestra finestra) {
+			Rectangle rettangolo = mappaCoordinateElementiGrafici.get(finestra);
+			return new Area(rettangolo.x, rettangolo.y, rettangolo.width, rettangolo.height);
+		}
+
+		@Override
+		public boolean contiene(Finestra finestra, int xLocale, int yLocale) {
+			// La barra decide da sé quali punti sono suoi: le icone ingrandite escono dal suo rettangolo
+			if (finestra == barraIcone) {
+				return barraIcone.contiene(xLocale, yLocale);
 			}
-			ArrayList<TipoFinestra> copiaStack = new ArrayList<>(stackElementiGrafici.size());
-			copiaStack.addAll(stackElementiGrafici);
-			// Lo stack viene disegnato dal fondo (indice 0) verso il primo piano (ultimo
-			// indice), quindi va percorso al contrario: l'evento spetta all'elemento
-			// più in primo piano fra quelli che contengono il punto.
-			for (int indice = copiaStack.size() - 1; indice >= 0; indice--) {
-				RisultatoRicerca risultato = creaRisultato(recuperaFinestra(copiaStack.get(indice)), x, y);
-				if (risultato != null) {
-					return risultato;
-				}
-			}
-			return null;
+			Rectangle rettangolo = mappaCoordinateElementiGrafici.get(finestra);
+			return xLocale >= 0 && yLocale >= 0 && xLocale < rettangolo.width && yLocale < rettangolo.height;
 		}
 
 		/**
 		 * @return true se la finestra è un riquadro impilato che non era l'ultimo, ed è stato portato davanti
 		 */
-		private boolean portaInPrimoPianoSeImpilato(Finestra finestra) {
+		@Override
+		public boolean portaInPrimoPianoSeImpilato(Finestra finestra) {
 			List<TipoFinestra> impilati = riquadriImpilati();
 			for (TipoFinestra tipo : impilati) {
 				if (recuperaFinestra(tipo) == finestra) {
@@ -1559,268 +1533,82 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			return false;
 		}
 
-		private RisultatoRicerca creaRisultato(Finestra finestra, int x, int y) {
-			if (!finestra.isVisibile()) {
-				return null;
-			}
-			Rectangle rettangolo = mappaCoordinateElementiGrafici.get(finestra);
-			// La barra decide da sé quali punti sono suoi: le icone ingrandite escono dal suo rettangolo
-			boolean dentro = finestra == barraIcone
-					? barraIcone.contiene(x - rettangolo.x, y - rettangolo.y)
-					: rettangolo.contains(x, y);
-			if (!dentro) {
-				return null;
-			}
-			return new RisultatoRicerca(finestra, x - rettangolo.x, y - rettangolo.y);
+		@Override
+		public Object getStato() {
+			return stato;
 		}
 
-		/**
-		 * Notifica uscita ed entrata quando il cursore passa da un riquadro a un altro.
-		 * Le coordinate assolute servono per l'uscita, che va comunicata al riquadro
-		 * precedente e cade quindi fuori dal suo rettangolo.
-		 */
-		private void aggiornaFinestraSottoIlCursore(RisultatoRicerca risultatoRicerca, int x, int y) {
-			Finestra nuovaFinestra = risultatoRicerca == null ? null : risultatoRicerca.finestra;
-			if (nuovaFinestra == finestraSottoIlCursore) {
-				return;
+		@Override
+		public void ridisegna() {
+			repaint();
+		}
+	}
+
+	/**
+	 * Gli eventi del mouse di AWT, tradotti per il router degli input (che li instrada alle finestre: vedi {@link RouterDegliInput})
+	 */
+	private class GestoreMouse implements MouseListener, MouseMotionListener, MouseWheelListener {
+
+		private final RouterDegliInput router = new RouterDegliInput(new ContestoDegliInput(), new PianificatoreSwing());
+
+		private Finestra.Tasto tasto(MouseEvent e) {
+			if (SwingUtilities.isLeftMouseButton(e)) {
+				return Finestra.Tasto.SINISTRO;
+			} else if (SwingUtilities.isRightMouseButton(e)) {
+				return Finestra.Tasto.DESTRO;
+			} else if (SwingUtilities.isMiddleMouseButton(e)) {
+				return Finestra.Tasto.CENTRALE;
 			}
-			if (finestraSottoIlCursore != null) {
-				Rectangle rettangolo = mappaCoordinateElementiGrafici.get(finestraSottoIlCursore);
-				finestraSottoIlCursore.processaUscita(x - rettangolo.x, y - rettangolo.y);
-			}
-			finestraSottoIlCursore = nuovaFinestra;
-			if (risultatoRicerca != null) {
-				nuovaFinestra.processaEntrata(risultatoRicerca.xRelativoAFinestra, risultatoRicerca.yRelativoAFinestra);
-			}
+			return null;
 		}
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			RisultatoRicerca risultatoRicerca = trovaFinestra(e);
-			if (risultatoRicerca == null) {
-				return;
-			}
-			Finestra finestra = risultatoRicerca.finestra;
-			int x = risultatoRicerca.xRelativoAFinestra;
-			int y = risultatoRicerca.yRelativoAFinestra;
-
-			// Il click su un riquadro impilato che non è l'ultimo lo porta davanti e basta
-			if (portaInPrimoPianoSeImpilato(finestra)) {
-				repaint();
-				return;
-			}
-
-			Finestra.Tasto tasto;
-			if (SwingUtilities.isLeftMouseButton(e)) {
-				tasto = Finestra.Tasto.SINISTRO;
-			} else if (SwingUtilities.isRightMouseButton(e)) {
-				tasto = Finestra.Tasto.DESTRO;
-			} else if (SwingUtilities.isMiddleMouseButton(e)) {
-				tasto = Finestra.Tasto.CENTRALE;
-			} else {
-				return;
-			}
-
-			if (!finestra.gestisceDoppioClick()) {
-				// Nessuna attesa: questa finestra non distingue il doppio click dal singolo,
-				// quindi ogni click va processato subito.
-				finestra.processaClick(x, y, tasto);
-				repaint();
-				return;
-			}
-
-			if (timerClickSingolo != null) {
-				timerClickSingolo.stop();
-				timerClickSingolo = null;
-			}
-			if (e.getClickCount() >= 2) {
-				finestra.processaDoppioClick(x, y, tasto);
-				repaint();
-			} else {
-				final StatoDisplayableCanvas statoAlClick = stato;
-				timerClickSingolo = new Timer(intervalloDoppioClick, evento -> {
-					// Se nell'attesa la schermata è cambiata il click non vale più: la finestra cliccata non si vede
-					if (stato != statoAlClick) {
-						return;
-					}
-					finestra.processaClick(x, y, tasto);
-					repaint();
-				});
-				timerClickSingolo.setRepeats(false);
-				timerClickSingolo.start();
+			Finestra.Tasto tasto = tasto(e);
+			if (tasto != null) {
+				router.clic(e.getX(), e.getY(), tasto, e.getClickCount());
 			}
 		}
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			RisultatoRicerca risultatoRicerca = trovaFinestra(e);
-			if (risultatoRicerca == null) {
-				return;
+			Finestra.Tasto tasto = tasto(e);
+			if (tasto != null) {
+				router.premuto(e.getX(), e.getY(), tasto);
 			}
-			Finestra finestra = risultatoRicerca.finestra;
-			int x = risultatoRicerca.xRelativoAFinestra;
-			int y = risultatoRicerca.yRelativoAFinestra;
-
-			if (SwingUtilities.isLeftMouseButton(e)) {
-				finestraCheCatturaIlTrascinamento = finestra.catturaIlTrascinamento() ? finestra : null;
-				finestra.processaPressione(x, y, Finestra.Tasto.SINISTRO);
-			} else if (SwingUtilities.isRightMouseButton(e)) {
-				finestra.processaPressione(x, y, Finestra.Tasto.DESTRO);
-			} else if (SwingUtilities.isMiddleMouseButton(e)) {
-				finestra.processaPressione(x, y, Finestra.Tasto.CENTRALE);
-			}
-			repaint();
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			if (finestraCheCatturaIlTrascinamento != null && SwingUtilities.isLeftMouseButton(e)) {
-				Finestra finestra = finestraCheCatturaIlTrascinamento;
-				finestraCheCatturaIlTrascinamento = null;
-				Rectangle rettangolo = mappaCoordinateElementiGrafici.get(finestra);
-				finestra.processaRilascio(e.getX() - rettangolo.x, e.getY() - rettangolo.y, Finestra.Tasto.SINISTRO);
-				// Durante il trascinamento nessuno ha seguito il cursore: adesso si stabilisce dove sta
-				aggiornaFinestraSottoIlCursore(trovaFinestra(e), e.getX(), e.getY());
-				repaint();
-				return;
+			Finestra.Tasto tasto = tasto(e);
+			if (tasto != null) {
+				router.rilasciato(e.getX(), e.getY(), tasto);
 			}
-			RisultatoRicerca risultatoRicerca = trovaFinestra(e);
-			if (risultatoRicerca == null) {
-				return;
-			}
-			Finestra finestra = risultatoRicerca.finestra;
-			int x = risultatoRicerca.xRelativoAFinestra;
-			int y = risultatoRicerca.yRelativoAFinestra;
-
-			if (SwingUtilities.isLeftMouseButton(e)) {
-				finestra.processaRilascio(x, y, Finestra.Tasto.SINISTRO);
-			} else if (SwingUtilities.isRightMouseButton(e)) {
-				finestra.processaRilascio(x, y, Finestra.Tasto.DESTRO);
-			} else if (SwingUtilities.isMiddleMouseButton(e)) {
-				finestra.processaRilascio(x, y, Finestra.Tasto.CENTRALE);
-			}
-			repaint();
 		}
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			// Entrando nel canvas si stabilisce su quale riquadro si trova il cursore
-			aggiornaFinestraSottoIlCursore(trovaFinestra(e), e.getX(), e.getY());
-			repaint();
+			router.mouseEntrato(e.getX(), e.getY());
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e) {
-			// Uscendo dal canvas si esce anche dal riquadro su cui si era
-			aggiornaFinestraSottoIlCursore(null, e.getX(), e.getY());
-			repaint();
+			router.mouseUscito(e.getX(), e.getY());
 		}
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
-			if (finestraCheCatturaIlTrascinamento != null) {
-				Rectangle rettangolo = mappaCoordinateElementiGrafici.get(finestraCheCatturaIlTrascinamento);
-				finestraCheCatturaIlTrascinamento.processaTrascinamento(e.getX() - rettangolo.x, e.getY() - rettangolo.y);
-				repaint();
-				return;
-			}
-			RisultatoRicerca risultatoRicerca = trovaFinestra(e);
-			// Anche trascinando si può passare da un riquadro all'altro: chi viene lasciato riceve processaUscita
-			aggiornaFinestraSottoIlCursore(risultatoRicerca, e.getX(), e.getY());
-			if (risultatoRicerca == null) {
-				repaint();
-				return;
-			}
-			Finestra finestra = risultatoRicerca.finestra;
-			int x = risultatoRicerca.xRelativoAFinestra;
-			int y = risultatoRicerca.yRelativoAFinestra;
-
-			finestra.processaTrascinamento(x, y);
-			repaint();
+			router.trascinato(e.getX(), e.getY());
 		}
 
 		@Override
 		public void mouseMoved(MouseEvent e) {
-			RisultatoRicerca risultatoRicerca = trovaFinestra(e);
-			aggiornaFinestraSottoIlCursore(risultatoRicerca, e.getX(), e.getY());
-			if (risultatoRicerca == null) {
-				repaint();
-				return;
-			}
-			Finestra finestra = risultatoRicerca.finestra;
-			int x = risultatoRicerca.xRelativoAFinestra;
-			int y = risultatoRicerca.yRelativoAFinestra;
-
-			finestra.processaMovimento(x, y);
-			repaint();
+			router.mosso(e.getX(), e.getY());
 		}
 
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent e) {
-			RisultatoRicerca risultatoRicerca = trovaFinestra(e);
-			if (risultatoRicerca == null) {
-				return;
-			}
-			Finestra finestra = risultatoRicerca.finestra;
-			int x = risultatoRicerca.xRelativoAFinestra;
-			int y = risultatoRicerca.yRelativoAFinestra;
-
-			int rotazioni = e.getWheelRotation();
-			int passi = finestra.passiPerScattoDellaRotella();
-			if (passi <= 1) {
-				consegnaRotella(finestra, x, y, rotazioni);
-				repaint();
-				return;
-			}
-			// Se il cursore è passato a un'altra finestra, quel che restava per la precedente si consegna subito
-			if (finestraRotella != null && finestraRotella != finestra) {
-				consegnaRotellaInSospeso();
-			}
-			finestraRotella = finestra;
-			xRotella = x;
-			yRotella = y;
-			rotazioniInSospeso += rotazioni * passi;
-			if (!timerRotella.isRunning()) {
-				timerRotella.start();
-			}
-		}
-
-		// Uno scatto della rotella si divide in più passi, consegnati a uno o due per fotogramma: lo scorrimento
-		// risulta fluido come col trackpad. Il timer gira sull'EDT, come gli eventi del mouse, e si ferma a coda vuota.
-		private Finestra finestraRotella;
-		private int xRotella;
-		private int yRotella;
-		private int rotazioniInSospeso;
-		private final Timer timerRotella = new Timer(1000 / Temporizzatore.FRAME_PER_SECONDO, evento -> consegnaUnPassoDiRotella());
-
-		private void consegnaUnPassoDiRotella() {
-			if (rotazioniInSospeso == 0) {
-				timerRotella.stop();
-				return;
-			}
-			// Più la coda è lunga più passi per fotogramma, così una rotella girata in fretta non resta indietro
-			int passi = Math.max(1, (Math.abs(rotazioniInSospeso) + 3) / 4);
-			int consegnati = Math.min(passi, Math.abs(rotazioniInSospeso)) * Integer.signum(rotazioniInSospeso);
-			rotazioniInSospeso -= consegnati;
-			consegnaRotella(finestraRotella, xRotella, yRotella, consegnati);
-			repaint();
-			if (rotazioniInSospeso == 0) {
-				timerRotella.stop();
-			}
-		}
-
-		private void consegnaRotellaInSospeso() {
-			int daConsegnare = rotazioniInSospeso;
-			rotazioniInSospeso = 0;
-			consegnaRotella(finestraRotella, xRotella, yRotella, daConsegnare);
-		}
-
-		private void consegnaRotella(Finestra finestra, int x, int y, int rotazioni) {
-			if (rotazioni < 0) {
-				finestra.processaRotella(x, y, -rotazioni, Finestra.MovimentoRotella.SU);
-			} else if (rotazioni > 0) {
-				finestra.processaRotella(x, y, rotazioni, Finestra.MovimentoRotella.GIU);
-			}
+			router.rotella(e.getX(), e.getY(), e.getWheelRotation());
 		}
 	}
 }
