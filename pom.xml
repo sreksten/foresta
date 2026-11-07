@@ -11,7 +11,6 @@
     <modules>
         <module>00-foresta-serializzazione</module>
         <module>00-foresta-strumenti</module>
-        <module>00-foresta-tutorial</module>
         <module>01-foresta-eventi</module>
         <module>01-foresta-punteggi</module>
         <module>01-foresta-testi</module>
@@ -21,6 +20,7 @@
         <module>02-foresta-mappa</module>
         <module>02-foresta-notizie</module>
         <module>03-foresta-danni</module>
+        <module>03-foresta-tutorial</module>
         <module>04-foresta-artefatti</module>
         <module>05-foresta-personaggi</module>
         <module>06-foresta-bestiario</module>
