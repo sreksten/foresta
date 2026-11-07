@@ -5,6 +5,7 @@ import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.eventi.richieste.*;
 import com.threeamigos.foresta.interfacce.VistaPartita;
+import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modificatori.TestoDeiModificatori;
@@ -320,8 +321,8 @@ public abstract class ForestaUI implements Temporizzabile {
 		}
 		boolean consentito = schermo.getStato() == StatoDelloSchermo.IN_GIOCO;
 		boolean missioneAttiva = !vistaPartita.getMissioniAttive().isEmpty();
-		boolean aperto = schermo.getTutor()
-				.aggiorna(situazioni.correnti(ComandiPossibili.getComandi(), missioneAttiva, schermo.getTutor().isDito()), consentito).isPresent();
+		boolean aperto = schermo.getTutor().aggiorna(situazioni.correnti(ComandiPossibili.getComandi(), missioneAttiva, schermo.getTutor().isDito(),
+				isQualcunoFeritoConUnaPozione()), consentito).isPresent();
 		if (aperto) {
 			// Finché il fumetto è aperto il motore aspetta (vedi SchermoDelGioco.fineFotogramma, che avvisa quando si chiude)
 			BusEventi.pubblica(new InternoUiOccupata());
@@ -332,6 +333,22 @@ public abstract class ForestaUI implements Temporizzabile {
 	private void mostraFinestra(TipoFinestra finestra) {
 		schermo.primoPiano(finestra);
 		rinfresca();
+	}
+
+	/**
+	 * Se qualcuno del gruppo è ferito e c'è una pozione di salute (piccola o grande) da dargli: letto dalla vista della partita, non da un evento.
+	 */
+	private boolean isQualcunoFeritoConUnaPozione() {
+		VistaGruppoGiocatore gruppo = vistaPartita.getGruppoGiocatore();
+		if (gruppo == null || gruppo.getPozioniSalute() + gruppo.getPozioniSaluteGrande() <= 0) {
+			return false;
+		}
+		for (VistaPersonaggio personaggio : gruppo.getPersonaggiVivi()) {
+			if (personaggio.getSalute() < personaggio.getSaluteMassima()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -411,6 +428,8 @@ public abstract class ForestaUI implements Temporizzabile {
 		TipoAttributo tipo = evento.getTipoAttributo();
 		if (tipo == TipoAttributo.SALUTE) {
 			schermo.variaSalute(personaggio, (int) (evento.getNuovoValore() - evento.getValorePrecedente()));
+			// Chi si ferisce può far scattare il suggerimento sulle pozioni
+			aggiornaIlTutorial();
 		} else if (tipo == TipoAttributo.MAGIA) {
 			schermo.variaMagia(personaggio, (int) (evento.getNuovoValore() - evento.getValorePrecedente()));
 		}

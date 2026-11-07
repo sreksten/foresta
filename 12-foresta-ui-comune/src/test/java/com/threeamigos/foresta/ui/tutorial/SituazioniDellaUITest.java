@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SituazioniDellaUITest {
 
 	private static Set<Situazione> correnti(SituazioniDellaUI ui, Comando... comandi) {
-		return ui.correnti(Arrays.asList(comandi), false, false);
+		return ui.correnti(Arrays.asList(comandi), false, false, false);
 	}
 
 	@Test
@@ -80,17 +80,26 @@ class SituazioniDellaUITest {
 	void leIconeDiMostriPozioniBottegheEAccampamento() {
 		SituazioniDellaUI ui = new SituazioniDellaUI();
 		ui.segnaSchermataDiGioco();
-		Set<Situazione> s = correnti(ui, Comando.CORRUZIONE, Comando.AMICIZIA, Comando.INCANTESIMO, Comando.POZIONE_SALUTE_GRANDE,
-				Comando.NEGOZIO_ARMAIOLO, Comando.ACCAMPAMENTO);
+		Set<Situazione> s = correnti(ui, Comando.CORRUZIONE, Comando.AMICIZIA, Comando.INCANTESIMO, Comando.NEGOZIO_ARMAIOLO, Comando.ACCAMPAMENTO);
 		assertTrue(s.containsAll(EnumSet.of(Situazione.AVVERSARIO_CORROMPIBILE, Situazione.AVVERSARIO_AMICHEVOLE, Situazione.INCANTESIMO_LANCIABILE,
-				Situazione.FERITO_CON_UNA_POZIONE, Situazione.INGRESSO_IN_BOTTEGA, Situazione.NOTTE)));
+				Situazione.INGRESSO_IN_BOTTEGA, Situazione.NOTTE)));
+	}
+
+	@Test
+	void ilFeritoConUnaPozioneNonSiLeggeDalleIconeDelleBevande() {
+		SituazioniDellaUI ui = new SituazioniDellaUI();
+		ui.segnaSchermataDiGioco();
+		// In combattimento le icone delle pozioni ci sono anche a chi sta bene: non bastano
+		assertFalse(correnti(ui, Comando.POZIONE_SALUTE, Comando.POZIONE_SALUTE_GRANDE).contains(Situazione.FERITO_CON_UNA_POZIONE));
+		// Lo dice chi guarda il gruppo
+		assertTrue(ui.correnti(Collections.<Comando>emptyList(), false, false, true).contains(Situazione.FERITO_CON_UNA_POZIONE));
 	}
 
 	@Test
 	void laMissioneEIlDitoVengonoDaFuori() {
 		SituazioniDellaUI ui = new SituazioniDellaUI();
 		ui.segnaSchermataDiGioco();
-		Set<Situazione> s = ui.correnti(Collections.<Comando>emptyList(), true, true);
+		Set<Situazione> s = ui.correnti(Collections.<Comando>emptyList(), true, true, false);
 		assertTrue(s.contains(Situazione.MISSIONE_ATTIVA));
 		assertTrue(s.contains(Situazione.DITO_SULLO_SCHERMO));
 	}

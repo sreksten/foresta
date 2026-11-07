@@ -19,7 +19,7 @@ public enum Situazione {
 	COMBATTIMENTO_APERTO,
 	/** Il gruppo ha trovato un oggetto. */
 	OGGETTO_TROVATO,
-	/** Qualcuno è ferito e c'è una pozione da bere. */
+	/** Qualcuno del gruppo è ferito e c'è una pozione di salute da dargli. */
 	FERITO_CON_UNA_POZIONE,
 	/** In combattimento ci sono più comandi del solo attacco semplice (la fuga, il combattimento a round...). */
 	SCELTE_IN_COMBATTIMENTO,
@@ -35,7 +35,7 @@ public enum Situazione {
 	INCANTESIMO_LANCIABILE,
 	/** Il gruppo entra in una bottega. */
 	INGRESSO_IN_BOTTEGA,
-	/** Cala la notte. */
+	/** Cala la notte e ci si può accampare (l'icona dell'accampamento è nella barra). */
 	NOTTE,
 	/** Si gioca con il dito (tocco) invece che con il mouse. */
 	DITO_SULLO_SCHERMO

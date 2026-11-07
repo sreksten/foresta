@@ -84,8 +84,10 @@ public final class SituazioniDellaUI {
 	 * @param comandi le icone che ci sono nella barra
 	 * @param missioneAttiva se c'è una missione da mostrare nel riquadro delle missioni
 	 * @param dito se si gioca con il dito
+	 * @param feritoConUnaPozione se qualcuno del gruppo è ferito e c'è una pozione di salute da dargli (le icone delle pozioni non bastano: in
+	 *                            combattimento ci sono anche a chi sta bene)
 	 */
-	public synchronized Set<Situazione> correnti(Collection<Comando> comandi, boolean missioneAttiva, boolean dito) {
+	public synchronized Set<Situazione> correnti(Collection<Comando> comandi, boolean missioneAttiva, boolean dito, boolean feritoConUnaPozione) {
 		Set<Situazione> situazioni = EnumSet.noneOf(Situazione.class);
 		if (!schermataDiGioco) {
 			return situazioni;
@@ -105,7 +107,7 @@ public final class SituazioniDellaUI {
 		if (oggettoTrovato) {
 			situazioni.add(Situazione.OGGETTO_TROVATO);
 		}
-		if (comandi.contains(Comando.POZIONE_SALUTE) || comandi.contains(Comando.POZIONE_SALUTE_GRANDE)) {
+		if (feritoConUnaPozione) {
 			situazioni.add(Situazione.FERITO_CON_UNA_POZIONE);
 		}
 		if (comandi.contains(Comando.COMBATTIMENTO) && (comandi.contains(Comando.FUGA) || comandi.contains(Comando.PASSA_INOSSERVATO))) {
@@ -117,6 +119,8 @@ public final class SituazioniDellaUI {
 		if (comandi.contains(Comando.MOSTRA_TATTICHE) && scontriVisti >= SCONTRI_PRIMA_DELLE_TATTICHE) {
 			situazioni.add(Situazione.TATTICHE_DISPONIBILI);
 		}
+		// Le icone della corruzione e dell'amicizia compaiono solo se fra gli avversari c'è chi si può corrompere (e il gruppo ha monete) o chi è
+		// amichevole: anche qui la barra basta
 		if (comandi.contains(Comando.CORRUZIONE)) {
 			situazioni.add(Situazione.AVVERSARIO_CORROMPIBILE);
 		}
@@ -132,7 +136,8 @@ public final class SituazioniDellaUI {
 				break;
 			}
 		}
-		// Provvisorio: l'icona dell'accampamento compare quando cala la sera; un evento della notte la sostituirà
+		// L'icona dell'accampamento compare esattamente quando ci si può accampare: di notte, con più di un personaggio, fuori da città e castelli.
+		// Non serve un evento: la barra lo dice già
 		if (comandi.contains(Comando.ACCAMPAMENTO)) {
 			situazioni.add(Situazione.NOTTE);
 		}
