@@ -125,6 +125,23 @@ class RegistroBestiarioTest {
     }
 
     @Test
+    void ilPersonaggioConCuiSiComincia_sbloccaLaVoceSenzaAnnunciarla() {
+        RegistroBestiario.sbloccaInSilenzio(TipoPersonaggio.GUERRIERA);
+
+        assertTrue(RegistroBestiario.isSbloccata(TipoPersonaggio.GUERRIERO), "Guerriero e Guerriera sono la stessa voce");
+        assertTrue(annunciate.isEmpty(), "nessun annuncio: la schermata e' ancora vuota");
+        assertTrue(gestore.contieneRiga("GUERRIERO|true|"), "ma si salva");
+        // Quando poi entra nel gruppo la voce c'e' gia': nemmeno allora c'e' niente da annunciare
+        BusEventi.pubblica(new InternoPersonaggioEntratoNelGruppo(TipoPersonaggio.GUERRIERA));
+        assertTrue(annunciate.isEmpty());
+        // Una classe senza voce nel bestiario (un non combattente) non fa niente
+        assertFalse(TipoPersonaggio.MOGLIE_DEL_BARDO.hasVoceNelBestiario());
+        int sbloccate = RegistroBestiario.getNumeroVociSbloccate();
+        RegistroBestiario.sbloccaInSilenzio(TipoPersonaggio.MOGLIE_DEL_BARDO);
+        assertEquals(sbloccate, RegistroBestiario.getNumeroVociSbloccate());
+    }
+
+    @Test
     void chiEntraNelGruppoSbloccaLaVoceDelSuoRuolo() {
         BusEventi.pubblica(new InternoPersonaggioEntratoNelGruppo(TipoPersonaggio.MAGA));
 

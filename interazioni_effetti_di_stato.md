@@ -32,7 +32,7 @@ indicate. Le interazioni che non compaiono cambiano solo il danno o hanno effett
 | `FRANTUMAZIONE_DEL_GHIACCIO`, `DISGELO_VIOLENTO` | `CONGELATO` | — |
 | `RIGETTO`, `COLLASSO_ENTROPICO` | `MALEDETTO` | — |
 | `PURIFICAZIONE` | `INFETTATO` | — |
-| `TOSSICITA_SETTICA` | — | `AVVELENATO` (danno periodico doppio) |
+| `TOSSICITA_SETTICA` | — | `AVVELENATO` (danno periodico doppio; il colpo vale ×1,2) |
 | `SCHIACCIAMENTO` | — | `ATTERRATO` (un turno in più) |
 | `INCIAMPO` | — | `ATTERRATO` |
 | `INCENDIO_LIBERATORIO` | `IMMOBILIZZATO` | — |

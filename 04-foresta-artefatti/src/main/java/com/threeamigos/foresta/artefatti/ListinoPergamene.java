@@ -74,11 +74,11 @@ public final class ListinoPergamene {
 	}
 
 	/**
-	 * Il prezzo di un incantamento su un oggetto di quel livello, perché la parte fissa si moltiplica per il
-	 * livello dell'oggetto (vedi CalcolatoreCombattimento).
+	 * Il prezzo di un incantamento su un oggetto di quel livello, perché la parte fissa si moltiplica per la
+	 * radice quadrata del livello dell'oggetto (vedi CalcolatoreCombattimento.livelloDiCombattimento).
 	 */
 	public static double prezzo(IncantamentoMD incantamento, int livello) {
-		double danno = Math.abs(incantamento.getDannoBonusFisso()) * livello
+		double danno = Math.abs(incantamento.getDannoBonusFisso()) * Math.sqrt(livello)
 				+ Math.abs(incantamento.getCoefficienteScala()) * valoreTipico(TipoAttributo.INTELLIGENZA);
 		double prezzo = CostantiArtefatti.PERGAMENA_PREZZO_PER_PUNTO_DI_DANNO * danno;
 		if (incantamento.getTipoDannoElementale().hasEffettiDiStato()) {

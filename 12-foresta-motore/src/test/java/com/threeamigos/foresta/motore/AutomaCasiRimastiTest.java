@@ -440,7 +440,7 @@ class AutomaCasiRimastiTest {
     /** Si guarda la mappa e si torna: la scelta della direzione ricalcola i comandi */
     private static void riapriLaSceltaDellaDirezione(PartitaDiTest partita) {
         partita.comando(Comando.MAPPA);
-        partita.comando(Comando.SI);
+        partita.comando(Comando.ANNULLA);
         partita.assertStato(Stato.SCELTA_DIREZIONE);
     }
 }

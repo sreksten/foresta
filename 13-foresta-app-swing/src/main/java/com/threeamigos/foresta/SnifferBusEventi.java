@@ -173,6 +173,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(RichiestaAperturaTattiche.class, this::onEventoRichiestaAperturaTattiche);
         BusEventi.iscriviti(RichiestaAperturaTrofei.class, this::onEventoRichiestaAperturaTrofei);
         BusEventi.iscriviti(RichiestaAperturaBestiario.class, this::onEventoRichiestaAperturaBestiario);
+        BusEventi.iscriviti(RichiestaAperturaGrimorio.class, this::onEventoRichiestaAperturaGrimorio);
         BusEventi.iscriviti(RichiestaSelezioneMissione.class, this::onEventoRichiestaSelezioneMissione);
     }
 
@@ -255,6 +256,10 @@ public class SnifferBusEventi {
     }
 
     private void onEventoRichiestaAperturaBestiario(RichiestaAperturaBestiario evento) {
+        Logger.log(() -> headerEvento(evento) + "Comandi: " + evento.getPossibilita());
+    }
+
+    private void onEventoRichiestaAperturaGrimorio(RichiestaAperturaGrimorio evento) {
         Logger.log(() -> headerEvento(evento) + "Comandi: " + evento.getPossibilita());
     }
 

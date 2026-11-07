@@ -52,8 +52,8 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
     void lArmaturaIncantataAlzaLaDifesaControQuelTipoDiDanno() {
         // Difesa base 30; armatura di livello 3 con un fuoco medio (+10, +10%, che sull'armatura vale la metà)
         difensore.addArtefatto(pezzoIncantato(TipoArtefatto.ARMATURA, 3, TipoDanno.FUOCO, 10, 0.10));
-        // (30 + 10 × 3) × (1 + 0,05) = 63: il danno di fuoco passa dal 77% al 61%
-        assertEquals(63.0, CalcolatoreCombattimento.difesaContro(difensore, TipoDanno.FUOCO), DELTA);
+        // (30 + 10 × radice di 3) × (1 + 0,05): il bonus fisso scala con la radice quadrata del livello del pezzo
+        assertEquals((30 + 10 * Math.sqrt(3)) * 1.05, CalcolatoreCombattimento.difesaContro(difensore, TipoDanno.FUOCO), DELTA);
         assertEquals(30.0, CalcolatoreCombattimento.difesaContro(difensore, TipoDanno.GELO), DELTA);
     }
 
@@ -61,16 +61,16 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
     void siSommanoLeResistenzeDiElmoScudoEArmatura() {
         difensore.addArtefatto(pezzoIncantato(TipoArtefatto.ELMO, 2, TipoDanno.FUOCO, 5, 0.10));
         difensore.addArtefatto(pezzoIncantato(TipoArtefatto.SCUDO, 1, TipoDanno.FUOCO, 5, 0.10));
-        // (30 + resistenza magica dello scudo + 5 × 2 + 5 × 1) × (1 + 0,05 + 0,05)
+        // (30 + resistenza magica dello scudo + 5 × radice di 2 + 5 × radice di 1) × (1 + 0,05 + 0,05)
         double base = 30 + CostantiPersonaggi.SCUDO_RESISTENZA_MAGICA_PER_LIVELLO;
-        assertEquals((base + 15) * 1.1, CalcolatoreCombattimento.difesaContro(difensore, TipoDanno.FUOCO), DELTA);
+        assertEquals((base + 5 * Math.sqrt(2) + 5) * 1.1, CalcolatoreCombattimento.difesaContro(difensore, TipoDanno.FUOCO), DELTA);
     }
 
     @Test
     void ancheGliSchinieriIncantatiProteggono() {
         difensore.addArtefatto(pezzoIncantato(TipoArtefatto.SCHINIERI, 2, TipoDanno.FUOCO, 5, 0.10));
-        // (30 + 5 × 2) × (1 + 0,05)
-        assertEquals(40 * 1.05, CalcolatoreCombattimento.difesaContro(difensore, TipoDanno.FUOCO), DELTA);
+        // (30 + 5 × radice di 2) × (1 + 0,05)
+        assertEquals((30 + 5 * Math.sqrt(2)) * 1.05, CalcolatoreCombattimento.difesaContro(difensore, TipoDanno.FUOCO), DELTA);
     }
 
     @Test

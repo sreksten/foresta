@@ -99,7 +99,7 @@ public abstract class SchermataBestiario implements Finestra {
 		return cimaDelleColonne(1);
 	}
 
-	private static int cimaDelleColonne(int righeDelSottotitolo) {
+	public static int cimaDelleColonne(int righeDelSottotitolo) {
 		return QUOTA_TITOLO + LayoutDelTestoGrande.ALTEZZA_RIGA + SPAZIO_SOPRA_IL_SOTTOTITOLO + righeDelSottotitolo * DoomdarkFont.medio().getHeight()
 				+ SPAZIO_SOTTO_IL_TITOLO;
 	}

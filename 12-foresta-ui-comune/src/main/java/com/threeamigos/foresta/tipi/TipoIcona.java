@@ -156,6 +156,8 @@ public enum TipoIcona {
 	MOSTRA_TROFEI(Comando.MOSTRA_TROFEI, "icone/Trofei.png", SfondoIcona.VERDE),
 	// Per ora la copia dell'icona del goblin (vedi todo.md)
 	MOSTRA_BESTIARIO(Comando.MOSTRA_BESTIARIO, "icone/Bestiario.png", SfondoIcona.VERDE),
+	// Per ora la copia dell'icona dell'incantesimo (da sostituire con quella definitiva)
+	MOSTRA_GRIMORIO(Comando.MOSTRA_GRIMORIO, "icone/Grimorio.png", SfondoIcona.VERDE),
 	MOSTRA_TATTICHE(Comando.MOSTRA_TATTICHE, "icone/TatticheAttacco.png", SfondoIcona.VERDE),
 	PERGAMENA(Comando.PERGAMENA, "icone/Pergamena.png", SfondoIcona.GRIGIO),
 

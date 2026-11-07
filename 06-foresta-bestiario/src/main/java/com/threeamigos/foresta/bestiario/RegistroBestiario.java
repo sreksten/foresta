@@ -85,6 +85,17 @@ public final class RegistroBestiario {
 	}
 
 	/**
+	 * Sblocca la voce di quella classe **senza annunciarla**: serve per il personaggio con cui comincia una partita. Se il bestiario è vuoto (nuovo o
+	 * azzerato) l'annuncio «Nuova voce» comparirebbe su una schermata ancora vuota, prima che la partita si veda, e non dice niente al giocatore che ha
+	 * appena scelto quella classe. Le voci che si sbloccano giocando restano annunciate.
+	 */
+	public static void sbloccaInSilenzio(TipoPersonaggio classe) {
+		if (classe.hasVoceNelBestiario()) {
+			sbloccaESalva(classe);
+		}
+	}
+
+	/**
 	 * Sblocca la voce di quella classe; non fa niente se la classe non ha una voce (un non combattente) o se era già sbloccata.
 	 */
 	static void sblocca(TipoPersonaggio classe) {

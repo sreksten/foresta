@@ -64,6 +64,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private final transient DisplayableCanvasInventario inventario;
 	private final transient DisplayableCanvasTrofei paginaTrofei;
 	private final transient DisplayableCanvasBestiario bestiario;
+	private final transient DisplayableCanvasGrimorio grimorio;
 	private final transient DisplayableCanvasTattiche tattiche;
 	// Armaiolo e venditore di pergamene: una sola schermata, che cambia secondo il negozio
 	private final transient DisplayableCanvasCommerciante commerciante;
@@ -116,6 +117,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		inventario = new DisplayableCanvasInventario(larghezzaContenuto, altezzaContenuto, vistaPartita);
 		paginaTrofei = new DisplayableCanvasTrofei(larghezzaContenuto, altezzaContenuto, vistaPartita);
 		bestiario = new DisplayableCanvasBestiario(larghezzaContenuto, altezzaContenuto, vistaPartita);
+		grimorio = new DisplayableCanvasGrimorio(larghezzaContenuto, altezzaContenuto);
 		tattiche = new DisplayableCanvasTattiche(larghezzaContenuto, altezzaContenuto, vistaPartita);
 		commerciante = new DisplayableCanvasCommerciante(larghezzaContenuto, altezzaContenuto, vistaPartita);
 		alchimista = new DisplayableCanvasScambiatoreConsumabili(larghezzaContenuto, altezzaContenuto, vistaPartita);
@@ -263,6 +265,11 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		@Override
 		protected SchermataBestiario schermataBestiario() {
 			return bestiario;
+		}
+
+		@Override
+		protected SchermataGrimorio schermataGrimorio() {
+			return grimorio;
 		}
 
 		@Override
@@ -539,6 +546,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 				break;
 			case BESTIARIO:
 				bestiario.disegna(graphics);
+				break;
+			case GRIMORIO:
+				grimorio.disegna(graphics);
 				break;
 			case TATTICHE:
 				tattiche.disegna(graphics);

@@ -54,7 +54,9 @@ public class AttaccoAlleSpalle implements Abilita {
 		}
 		Personaggio bersaglio = scelto != null && scelto.isVivo() && avversari.contains(scelto) ? scelto : avversari.get(0);
 		AnnuncioDellAzione.azione(utilizzatore, bersaglio, getTipo().getTipoAzione());
-		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "AttaccoAlleSpalle.annuncio",
+		// È il bersaglio a essere distratto, quindi il participio si accorda con lui («distratto», «distratta»)
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri",
+				bersaglio.getSesso() == Personaggio.Sesso.MASCHIO ? "AttaccoAlleSpalle.annuncio.M" : "AttaccoAlleSpalle.annuncio.F",
 				utilizzatore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA),
 				bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE))));
 		AttaccoConLeArmi.alleSpalle(utilizzatore, bersaglio);

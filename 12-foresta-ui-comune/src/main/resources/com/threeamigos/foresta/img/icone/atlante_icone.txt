@@ -24,6 +24,6 @@ Nord Est Sud Ovest Su Giu Sinistra Destra ComponenteScorrevole-FrecciaSu@16x16 C
 # Scelte e conferme
 Si No Annulla Aggiungi Rimuovi Aiuto 1 2 3 4 5 Maschio Femmina LinguaItaliano LinguaIngleseGb LinguaIngleseUsa
 # Negozi, luoghi e schermate di contorno (a destra due icone scherzose)
-NegozioAlchimista NegozioArmaiolo NegozioIncantatore NegozioVenditoreDiPergamene Locanda Fusione Mappa Inventario Gruppo Trofei Bestiario TatticheAttacco Floppy - - - - - - - Ruttolomeo Storpsgorblin
+NegozioAlchimista NegozioArmaiolo NegozioIncantatore NegozioVenditoreDiPergamene Locanda Fusione Mappa Inventario Gruppo Trofei Bestiario TatticheAttacco Floppy Grimorio - - - - - - Ruttolomeo Storpsgorblin
 # Consumabili, valori e missioni (a destra gli sfondi delle icone)
 Pergamena PozioneSalute PozioneSaluteGrande PozioneMagia PozioneMagiaGrande PozionePanacea Moneta@27x28 PietraPreziosa@27x28 Tempo@27x28 AumentoLivello Missione-gallo Missione-birra-grande@16x16 - - - - - Sfondo-icona-trasparente Sfondo-icona-grigio Sfondo-icona-marrone Sfondo-icona-rosso Sfondo-icona-verde

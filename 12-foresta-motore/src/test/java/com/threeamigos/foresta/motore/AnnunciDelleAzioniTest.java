@@ -258,4 +258,36 @@ class AnnunciDelleAzioniTest {
         assertSame(goblin, annuncio().getBersaglio());
         assertEquals(TipoAzione.URLO_DELLA_BANSHEE, annuncio().getAzione());
     }
+
+    @Test
+    void l_attaccoAlleSpalleAccordaIlParticipioConIlBersaglioCheEDistratto() {
+        com.threeamigos.foresta.personaggi.Ladro ladro = pronto(new com.threeamigos.foresta.personaggi.Ladro("Wyan", 5));
+        compagni.aggiungiPersonaggio(ladro);
+        compagni.aggiungiPersonaggio(new Guerriero("Bruno", 5));
+        compagni.aggiungiPersonaggio(new Guerriero("Carla", 5));
+        Personaggio chimera = com.threeamigos.foresta.personaggi.FabbricaPersonaggi.crea(com.threeamigos.foresta.tipi.TipoPersonaggio.CHIMERA, 5);
+        Personaggio goblin = com.threeamigos.foresta.personaggi.FabbricaPersonaggi.crea(com.threeamigos.foresta.tipi.TipoPersonaggio.GOBLIN, 5);
+        avversari.aggiungiPersonaggio(chimera);
+        avversari.aggiungiPersonaggio(goblin);
+
+        new com.threeamigos.foresta.abilita.AttaccoAlleSpalle(ladro).usaSu(ladro, chimera, compagni, avversari);
+        String perLaChimera = ultimaFrase();
+        assertTrue(perLaChimera.startsWith("Wyan colpisce alle spalle la "), perLaChimera);
+        assertTrue(perLaChimera.endsWith(", distratta dai compagni."), "la Chimera e' femmina: " + perLaChimera);
+
+        eventi.clear();
+        new com.threeamigos.foresta.abilita.AttaccoAlleSpalle(ladro).usaSu(ladro, goblin, compagni, avversari);
+        assertTrue(ultimaFrase().endsWith(", distratto dai compagni."), "il Goblin e' maschio: " + ultimaFrase());
+    }
+
+    private String ultimaFrase() {
+        String frase = null;
+        for (Object evento : eventi) {
+            if (evento instanceof NotificaTestoFrase && ((NotificaTestoFrase) evento).getMessaggio().contains("alle spalle")) {
+                frase = ((NotificaTestoFrase) evento).getMessaggio();
+            }
+        }
+        assertNotNull(frase, "nessuna frase dell'attacco alle spalle: " + eventi);
+        return frase;
+    }
 }

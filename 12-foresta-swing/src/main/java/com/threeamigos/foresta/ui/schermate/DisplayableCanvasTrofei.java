@@ -25,8 +25,8 @@ public class DisplayableCanvasTrofei extends SchermataTrofei {
 
 	@Override
 	protected Misura misuraDellImmagine(String risorsa) {
-		BufferedImage immagine = BufferedImageBuilder.buildBufferedImage(risorsa);
-		return new Misura(immagine.getWidth(), immagine.getHeight());
+		// Una volta sola per risorsa: questo metodo si chiama a ogni ridisegno
+		return BufferedImageBuilder.misura(risorsa);
 	}
 
 	@Override

@@ -27,7 +27,7 @@ Ogni `Stato` (51) ha due gestori: uno di ingresso, per quando ci si arriva senza
 | avvio | `LOGO_INIZIALE`, `INTRO`, nome, sesso e classe del personaggio, `PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE`, `INIZIO_GIOCO` |
 | ciclo di una locazione | `INIZIO_LOCAZIONE`, `INTERMEZZO`, `PREPARAZIONE_LOCAZIONE`, `IN_LOCAZIONE`, `IN_COMBATTIMENTO`, `FINE_LOCAZIONE` (e `…_2`), `ATTESA_DIREZIONE`, `SCELTA_DIREZIONE`, `SCELTA_PASSI` |
 | scelte | personaggio (automatica, qualsiasi, manuale), destinatario di un oggetto, incantesimo da lanciare, sì/no, risposta a una missione, pozioni, resurrezione (formulante, bersaglio, esecuzione) |
-| schermate | `INVENTARIO`, `TROFEI`, `BESTIARIO`, `TATTICHE`, `MAPPA`, `INGRESSO_NEGOZIO`, `ACCAMPAMENTO`, `SELEZIONE_SALVATAGGIO_DA_SCRIVERE`, `CONFERMA_USCITA` |
+| schermate | `INVENTARIO`, `TROFEI`, `BESTIARIO`, `GRIMORIO`, `TATTICHE`, `MAPPA`, `INGRESSO_NEGOZIO`, `ACCAMPAMENTO`, `SELEZIONE_SALVATAGGIO_DA_SCRIVERE`, `CONFERMA_USCITA` |
 | fine partita | `GIOCO_PERSO`, `GIOCO_VINTO`, `STATISTICHE`, `ATTESA_NOME_PUNTEGGI` → di nuovo `INTRO` |
 
 **Il ciclo di una locazione** è il filo conduttore: `INIZIO_LOCAZIONE` (controllo delle missioni «prima», evento della linea temporale, intermezzi di inizio) → `PREPARAZIONE_LOCAZIONE` (si costruisce la locazione e la si popola; missioni «dentro») → `IN_LOCAZIONE` ⇄ `IN_COMBATTIMENTO`/negozi/mappa/inventario → `FINE_LOCAZIONE` (raccolta del bottino, missioni «dopo», intermezzi di fine, salvataggio automatico in memoria) → scelta della direzione e dei passi → il tempo avanza → nuova casella.

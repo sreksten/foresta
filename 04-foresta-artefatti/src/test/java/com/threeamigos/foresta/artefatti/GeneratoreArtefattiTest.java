@@ -240,12 +240,12 @@ class GeneratoreArtefattiTest {
 
     @Test
     void prezziDelListino() {
-        // Incantamento: 0,5 per punto di danno, fisso × livello + coefficiente × Intelligenza tipica (9,7)
+        // Incantamento: 0,5 per punto di danno, fisso × radice del livello + coefficiente × Intelligenza tipica (9,7)
         assertEquals(0.5 * (10 + 0.97), ListinoPergamene.prezzo(new IncantamentoMD("prova", TipoDanno.ACIDO, 10, 0.1), 1), 0.0001);
-        assertEquals(0.5 * (40 + 0.97), ListinoPergamene.prezzo(new IncantamentoMD("prova", TipoDanno.ACIDO, 10, 0.1), 4), 0.0001);
-        assertEquals(0.5 * 40, ListinoPergamene.prezzo(new IncantamentoMD("prova", TipoDanno.ACIDO, 10, 0), 4), 0.0001);
+        assertEquals(0.5 * (20 + 0.97), ListinoPergamene.prezzo(new IncantamentoMD("prova", TipoDanno.ACIDO, 10, 0.1), 4), 0.0001);
+        assertEquals(0.5 * 20, ListinoPergamene.prezzo(new IncantamentoMD("prova", TipoDanno.ACIDO, 10, 0), 4), 0.0001);
         // +25% per un tipo di danno con effetti di stato
-        assertEquals(0.5 * 40 * 1.25, ListinoPergamene.prezzo(new IncantamentoMD("prova", TipoDanno.FUOCO, 10, 0), 4), 0.0001);
+        assertEquals(0.5 * 20 * 1.25, ListinoPergamene.prezzo(new IncantamentoMD("prova", TipoDanno.FUOCO, 10, 0), 4), 0.0001);
         // Modificatore fisso: 0,5 per ogni 1% del valore tipico, quindi +3 di Precisione (3,2) costa più di +3 di Forza (11,5)
         assertEquals(0.5 * 300 / 11.5, ListinoPergamene.prezzo(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 3)), 0.0001);
         assertEquals(0.5 * 300 / 3.2, ListinoPergamene.prezzo(new ModificatoreAttributoMD(TipoAttributo.PRECISIONE, TipoModificatore.VARIAZIONE_FISSA, 3)), 0.0001);

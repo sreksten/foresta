@@ -33,6 +33,8 @@ public enum StatoDelloSchermo {
 	TROFEI,
 	/** Il bestiario, aperto dall'inventario */
 	BESTIARIO,
+	/** Il grimorio, aperto dall'inventario */
+	GRIMORIO,
 	/** Le tattiche di un personaggio, aperte dall'inventario */
 	TATTICHE,
 	/** L'armaiolo o il venditore di pergamene */

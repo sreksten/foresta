@@ -55,7 +55,7 @@ Ogni abilità innata e ogni canto, dopo l'uso, va in **ricarica**: i turni che d
 | Mago/Maga, Elfo/Elfa | dardo arcano |
 | Ladro/Ladra | attacco alle spalle (`AttaccoAlleSpalle`: un colpo con le armi che va sempre a segno ed è sempre un critico, senza costo di Magia, con ricarica 3; servono almeno tre personaggi vivi nel gruppo (due distraggono, il Ladro colpisce), `ABILITA_ATTACCO_ALLE_SPALLE_PERSONAGGI_MINIMI`; non estende `AbilitaDiDanno` perché è un attacco con le armi, `AttaccoConLeArmi.alleSpalle`) |
 
-I valori sono in `CostantiAbilitaInnate`; `AbilitaInnateDiClasse` raccoglie nome e descrizione di ogni capacità di una classe per il bestiario. Il quadro è in [`personaggi_giocabili.md`](personaggi_giocabili.md).
+I valori sono in `CostantiAbilitaInnate`; `AbilitaInnateDiClasse` raccoglie nome e descrizione di ogni capacità di una classe per il bestiario. Il quadro è in [`personaggi_giocabili.md`](personaggi_giocabili.md). Il modulo porta anche `eventi.richieste.RichiestaAperturaGrimorio`, la richiesta con cui il motore apre dall'inventario la pagina del grimorio (vedi [`pagina_degli_incantesimi.md`](pagina_degli_incantesimi.md)).
 
 ### Il ponte con le azioni
 

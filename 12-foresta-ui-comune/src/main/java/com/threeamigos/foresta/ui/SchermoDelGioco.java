@@ -192,6 +192,8 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 
 	protected abstract SchermataBestiario schermataBestiario();
 
+	protected abstract SchermataGrimorio schermataGrimorio();
+
 	/** Imposta lo scambio e il personaggio che l'inventario mostra */
 	protected abstract void scambioDellInventario(VistaScambio scambio, VistaPersonaggio personaggio);
 
@@ -411,6 +413,8 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 				return schermataTrofei();
 			case BESTIARIO:
 				return schermataBestiario();
+			case GRIMORIO:
+				return schermataGrimorio();
 			case TATTICHE:
 				return schermataTattiche();
 			case COMMERCIANTE:
@@ -428,7 +432,7 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 
 	/**
 	 * Cambia la schermata mostrata: lasciando quella delle tattiche, il nome di una voce che si stava scrivendo non si aspetta più;
-	 * entrando in una bottega o nell'inventario la schermata si prepara (ma dalle pagine dei trofei, del bestiario e delle tattiche
+	 * entrando in una bottega o nell'inventario la schermata si prepara (ma dalle pagine dei trofei, del bestiario, del grimorio e delle tattiche
 	 * si torna all'inventario com'era).
 	 */
 	private void cambiaStato(StatoDelloSchermo nuovo) {
@@ -438,7 +442,8 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 		if (nuovo != stato) {
 			SchermataDiScambio aperta = scambiatoreDelloStato(nuovo);
 			boolean ritornoAllInventario = nuovo == StatoDelloSchermo.INVENTARIO
-					&& (stato == StatoDelloSchermo.TROFEI || stato == StatoDelloSchermo.BESTIARIO || stato == StatoDelloSchermo.TATTICHE);
+					&& (stato == StatoDelloSchermo.TROFEI || stato == StatoDelloSchermo.BESTIARIO || stato == StatoDelloSchermo.GRIMORIO
+							|| stato == StatoDelloSchermo.TATTICHE);
 			if (aperta != null && !ritornoAllInventario) {
 				aperta.apri();
 			}
@@ -539,6 +544,15 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	public void bestiario() {
 		schermataBestiario().apri();
 		cambiaStato(StatoDelloSchermo.BESTIARIO);
+		ridisegna();
+	}
+
+	/**
+	 * Il grimorio, aperto dall'inventario.
+	 */
+	public void grimorio() {
+		schermataGrimorio().apri();
+		cambiaStato(StatoDelloSchermo.GRIMORIO);
 		ridisegna();
 	}
 
@@ -1060,7 +1074,8 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 				|| corrente == StatoDelloSchermo.TATTICHE || corrente == StatoDelloSchermo.ALCHIMISTA
 				|| corrente == StatoDelloSchermo.INCANTATORE || corrente == StatoDelloSchermo.INTERMEZZO
 				|| annuncioAttivo != null || !codaAnnunci.isEmpty()
-				|| barraIcone().inTransizione() || schermataTrofei().inTransizione() || schermataBestiario().inTransizione();
+				|| barraIcone().inTransizione() || schermataTrofei().inTransizione() || schermataBestiario().inTransizione()
+				|| schermataGrimorio().inTransizione();
 	}
 
 	/**

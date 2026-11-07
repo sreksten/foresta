@@ -92,6 +92,7 @@ Sono i difetti trovati dalla revisione completa del 2026-10-19. I codici sono qu
 
 ## Gioco e contenuti
 
+- **La pagina degli incantesimi (2026-11-07).** Una pagina dell'inventario in stile bestiario che spiega i tipi di incantesimo e con cosa reagiscono per fare più danno. Il piano è in [`pagina_degli_incantesimi.md`](pagina_degli_incantesimi.md); si può fare prima del tutorial.
 - **Il tutorial (2026-11-07).** Suggerimenti contestuali, una volta sola, che si possono spegnere e rivedere; le icone non si nascondono. Il piano, con quel che c'è già da riusare e le domande aperte (come appare un suggerimento, dove sta il modulo), è in [`tutorial.md`](tutorial.md).
 - **Punteggio dei cofani.** Oggi un cofano vale sempre 150 punti per ogni cofano trovato (`TipoBottino.COFANO`), qualunque cosa contenga, e quello che c'è dentro (monete, pietre, pozioni, pergamene, artefatti) non dà punti suoi. L'idea è che conti il valore degli oggetti contenuti. Prima va definita una tabella: quanti punti per una moneta, una pietra, una pozione, una pergamena, un artefatto (oggi `MONETA` vale 50 per un mucchietto di 1–2, mentre nel cofano le monete sono 5–10 una per una). Per ora resta 150 a cofano. Il punto in cui calcolarlo è `RaccoltaBottino.apri`.
 - Fumetto che attende la chiusura.

@@ -158,6 +158,10 @@ public abstract class ForestaUI implements Temporizzabile {
 			impostaAzioni(e.getPossibilita());
 			schermo.bestiario();
 		});
+		BusEventi.iscriviti(RichiestaAperturaGrimorio.class, e -> {
+			impostaAzioni(e.getPossibilita());
+			schermo.grimorio();
+		});
 		BusEventi.iscriviti(RichiestaAperturaTattiche.class, e -> {
 			impostaAzioni(e.getPossibilita());
 			schermo.tattiche(e.getPersonaggio(), e.getTattica(), e.getTatticaPredefinita(), e.getAzioniPossibili());

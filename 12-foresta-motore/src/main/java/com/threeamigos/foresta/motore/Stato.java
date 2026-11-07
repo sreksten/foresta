@@ -53,6 +53,8 @@ public enum Stato {
 	TROFEI,
 	// Il bestiario, aperto dall'inventario: con ANNULLA si torna all'inventario
 	BESTIARIO,
+	// Il grimorio, aperto dall'inventario: con ANNULLA si torna all'inventario
+	GRIMORIO,
 	// La schermata delle tattiche, aperta dall'inventario: con ANNULLA si torna all'inventario
 	TATTICHE,
 

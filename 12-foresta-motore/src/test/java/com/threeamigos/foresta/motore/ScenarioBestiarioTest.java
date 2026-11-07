@@ -40,7 +40,7 @@ class ScenarioBestiarioTest {
     }
 
     @Test
-    void ilPersonaggioSceltoAInizioPartitaSbloccaLaSuaVoceEQuellaDiChiCondivideIlRuolo() {
+    void ilPersonaggioSceltoAInizioPartitaSbloccaLaSuaVoceEQuellaDiChiCondivideIlRuoloSenzaAnnunciarla() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(901)) {
             partita.eventi().ascolta(InternoVoceDelBestiarioSbloccata.class);
             iniziaDaMaga(partita);
@@ -48,7 +48,8 @@ class ScenarioBestiarioTest {
             assertTrue(RegistroBestiario.isSbloccata(TipoPersonaggio.MAGA));
             assertTrue(RegistroBestiario.isSbloccata(TipoPersonaggio.MAGO), "Mago e Maga sono la stessa voce");
             assertFalse(RegistroBestiario.isSbloccata(TipoPersonaggio.GUERRIERO));
-            assertEquals(TipoPersonaggio.MAGO, partita.eventi().ultimo(InternoVoceDelBestiarioSbloccata.class).getVoce());
+            // Nessun annuncio «Nuova voce»: comparirebbe su una schermata ancora vuota e non dice niente a chi ha appena scelto quella classe
+            assertFalse(partita.eventi().haRicevuto(InternoVoceDelBestiarioSbloccata.class), "la voce del personaggio iniziale non si annuncia");
             assertTrue(partita.bestiario().contieneRiga("MAGO|true|"), "appena sbloccata, la voce va salvata");
         }
     }

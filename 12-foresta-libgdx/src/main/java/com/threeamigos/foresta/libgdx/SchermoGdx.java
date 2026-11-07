@@ -70,6 +70,7 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 	private final SchermataDiScambioConsumabiliGdx alchimista;
 	private final SchermataTrofeiGdx trofei;
 	private final SchermataBestiarioGdx bestiario;
+	private final SchermataGrimorioGdx grimorio;
 	private final SchermataTatticheGdx tattiche;
 	private final BarraIconeGdx barraIcone;
 
@@ -115,6 +116,7 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 		alchimista = new SchermataDiScambioConsumabiliGdx(larghezza, altezza, vistaPartita, immagini, piccolo, medio);
 		trofei = new SchermataTrofeiGdx(larghezza, altezza, vistaPartita, immagini, medio, testoGrande);
 		bestiario = new SchermataBestiarioGdx(larghezza, altezza, vistaPartita, immagini, piccolo, medio);
+		grimorio = new SchermataGrimorioGdx(larghezza, altezza, immagini, piccolo, medio);
 		tattiche = new SchermataTatticheGdx(larghezza, altezza, vistaPartita, immagini, piccolo, medio);
 		Area barra = disposizione.getBarra();
 		barraIcone = new BarraIconeGdx(disposizione.getOrientamento(), barraDock, barra.getX(), barra.getY(), barra.getLarghezza(),
@@ -194,6 +196,9 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 				break;
 			case BESTIARIO:
 				bestiario.disegna(batch, camera, viewport, testoGrande);
+				break;
+			case GRIMORIO:
+				grimorio.disegna(batch, camera, viewport, testoGrande);
 				break;
 			case TATTICHE:
 				tattiche.disegna(batch, camera, viewport);
@@ -395,6 +400,11 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 	@Override
 	protected SchermataBestiario schermataBestiario() {
 		return bestiario;
+	}
+
+	@Override
+	protected SchermataGrimorio schermataGrimorio() {
+		return grimorio;
 	}
 
 	@Override

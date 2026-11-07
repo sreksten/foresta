@@ -1,10 +1,13 @@
 package com.threeamigos.foresta.ui.immagini;
 
+import com.threeamigos.foresta.ui.Misura;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaUscitaDalGioco;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 
 import javax.imageio.ImageIO;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
@@ -31,6 +34,20 @@ public class BufferedImageBuilder {
 			}
 		}
 		return new BufferedImage(larghezza, altezza, trasparenza == Transparency.OPAQUE ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB);
+	}
+
+	// Le misure delle immagini già misurate: i riquadri le chiedono a ogni ridisegno, e senza questa cache ognuna si decodificherebbe dal disco ogni volta
+	private static final Map<String, Misura> MISURE = new ConcurrentHashMap<>();
+
+	/**
+	 * Quanto è grande l'immagine (senza zoom), misurata una volta sola per risorsa: chi la chiede a ogni ridisegno (i riquadri, per le loro icone) non fa
+	 * ricaricare la PNG ogni volta.
+	 */
+	public static Misura misura(String resource) {
+		return MISURE.computeIfAbsent(resource, r -> {
+			BufferedImage immagine = buildBufferedImage(r);
+			return new Misura(immagine.getWidth(), immagine.getHeight());
+		});
 	}
 
 	/**

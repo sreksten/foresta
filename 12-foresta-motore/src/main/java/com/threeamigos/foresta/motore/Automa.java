@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.bestiario.RegistroBestiario;
 import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.CostruttoreArtefatto;
@@ -258,6 +259,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriIngresso.put(Stato.INVENTARIO, this::entraInStatoInventario);
 		gestoriIngresso.put(Stato.TROFEI, this::entraInStatoTrofei);
 		gestoriIngresso.put(Stato.BESTIARIO, this::entraInStatoBestiario);
+		gestoriIngresso.put(Stato.GRIMORIO, this::entraInStatoGrimorio);
 		gestoriIngresso.put(Stato.TATTICHE, this::entraInStatoTattiche);
 		// Uscendo da MAPPA o INVENTARIO aperti mentre si era IN_LOCAZIONE si torna qui
 		// tramite CONTINUA_CON_INGRESSO (statoPrecedente vale IN_LOCAZIONE), con comando
@@ -310,6 +312,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriComando.put(Stato.INVENTARIO, this::gestisciComandoInStatoInventario);
 		gestoriComando.put(Stato.TROFEI, this::gestisciComandoInStatoTrofei);
 		gestoriComando.put(Stato.BESTIARIO, this::gestisciComandoInStatoBestiario);
+		gestoriComando.put(Stato.GRIMORIO, this::gestisciComandoInStatoGrimorio);
 		gestoriComando.put(Stato.TATTICHE, this::gestisciComandoInStatoTattiche);
 		gestoriComando.put(Stato.SELEZIONE_SALVATAGGIO_DA_SCRIVERE, this::gestisciComandoInStatoSelezioneSalvataggioDaScrivere);
 		gestoriComando.put(Stato.CONFERMA_USCITA, this::gestisciComandoInStatoConfermaUscita);
@@ -400,6 +403,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			case INVENTARIO:
 			case TROFEI:
 			case BESTIARIO:
+			case GRIMORIO:
 			case TATTICHE:
 				return statoPrecedente == Stato.ATTESA_DIREZIONE;
 			default:
@@ -1637,7 +1641,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private Esito entraInStatoMappa() {
 		Logger.log("Stato MAPPA, azione null");
-		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.SI));
+		// Come in ogni altra pagina (inventario, trofei, bestiario, tattiche) si torna indietro con ANNULLA, la X
+		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.ANNULLA));
 		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore", "Automa.consultaLaMappa", gruppo.getCapo().getNome(
 				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
@@ -1647,7 +1652,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private Esito gestisciComandoInStatoMappa(Comando comando) {
 		Logger.log(() -> "Stato MAPPA, azione " + comando);
-		if (comando == Comando.SI) {
+		if (comando == Comando.ANNULLA) {
 			stato = statoPrecedente;
 			BusEventi.pubblica(new InternoMostraSchermataGioco());
 			return Esito.CONTINUA_CON_INGRESSO;
@@ -1687,6 +1692,9 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			case MOSTRA_BESTIARIO:
 				stato = Stato.BESTIARIO;
 				return Esito.CONTINUA_CON_INGRESSO;
+			case MOSTRA_GRIMORIO:
+				stato = Stato.GRIMORIO;
+				return Esito.CONTINUA_CON_INGRESSO;
 			case MOSTRA_TATTICHE:
 				stato = Stato.TATTICHE;
 				return Esito.CONTINUA_CON_INGRESSO;
@@ -1722,6 +1730,23 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	private Esito gestisciComandoInStatoBestiario(Comando comando) {
+		if (comando != Comando.ANNULLA) {
+			comandoNonValido(comando);
+			return Esito.FERMATI;
+		}
+		stato = Stato.INVENTARIO;
+		return Esito.CONTINUA_CON_INGRESSO;
+	}
+
+	/**
+	 * Il grimorio: l'unico comando è ANNULLA, che torna all'inventario. Gli incantesimi sono tutti, e la UI li legge dalle enum.
+	 */
+	private Esito entraInStatoGrimorio() {
+		BusEventi.pubblica(new RichiestaAperturaGrimorio(Collections.singletonList(Comando.ANNULLA)));
+		return Esito.FERMATI;
+	}
+
+	private Esito gestisciComandoInStatoGrimorio(Comando comando) {
 		if (comando != Comando.ANNULLA) {
 			comandoNonValido(comando);
 			return Esito.FERMATI;
@@ -1979,6 +2004,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private void inizializzaGioco() {
 
+		// La voce del bestiario del personaggio con cui si comincia si sblocca senza annuncio: «Nuova voce» comparirebbe su una schermata ancora vuota
+		RegistroBestiario.sbloccaInSilenzio(personaggio.getClasse());
 		gruppo.aggiungiPersonaggioSenzaNotificare(personaggio);
 
 		if (!ModalitaDiProva.isAttiva()) {
@@ -2445,6 +2472,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		}
 		comandiPossibili.add(Comando.MOSTRA_TROFEI);
 		comandiPossibili.add(Comando.MOSTRA_BESTIARIO);
+		comandiPossibili.add(Comando.MOSTRA_GRIMORIO);
 		comandiPossibili.add(Comando.MOSTRA_TATTICHE);
 		comandiPossibili.add(Comando.ANNULLA);
 

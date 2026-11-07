@@ -308,11 +308,14 @@ public abstract class SchermataDiScambio implements Finestra {
 		elementi.add(Elemento.immagine(NomiDelleImmagini.personaggio(personaggio.getClasse()), immagine.larghezza, immagine.altezza, false, null,
 				(width - immagine.larghezza) / 2, y - immagine.altezza));
 		y += SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
-		// I set leggendari completi, sotto l'immagine: quello che segue scende di quanto serve
+		// I set leggendari completi, sotto l'immagine: un nome lungo non deve finire sopra le due cornici, quindi va a capo dentro la zona centrale (come il
+		// nome del negoziante), una riga per volta centrata; quello che segue scende di quanto serve
 		for (String setCompleto : personaggio.getDescrizioniSetCompleti()) {
-			elementi.add(Elemento.testo(Collections.singletonList(setCompleto), font, DoomdarkColorModel.Color.YELLOW,
-					(width - Math.max(1, FontTool.getWidth(font, setCompleto))) / 2, y));
-			y += fontHeight + SPACING;
+			for (String riga : righeFraLeDueCornici(setCompleto)) {
+				elementi.add(Elemento.testo(Collections.singletonList(riga), font, DoomdarkColorModel.Color.YELLOW,
+						(width - Math.max(1, FontTool.getWidth(font, riga))) / 2, y));
+				y += fontHeight + SPACING;
+			}
 		}
 		coppia(elementi, TipoAttributo.LIVELLO.getNome(), String.valueOf(personaggio.getLivello()), y, coloreTestata);
 		y += fontHeight + SPACING;
@@ -331,6 +334,14 @@ public abstract class SchermataDiScambio implements Finestra {
 		Misura separatore = misure.immagine(NomiDelleImmagini.SEPARATORE);
 		elementi.add(Elemento.immagine(NomiDelleImmagini.SEPARATORE, separatore.larghezza, separatore.altezza, false, null, (width - separatore.larghezza) / 2, y));
 		return new ContenutoDiColonna(width, y + separatore.altezza, elementi);
+	}
+
+	/**
+	 * Il testo spezzato in righe che stiano nella zona centrale, fra le due cornici (una riga sola se ci sta).
+	 */
+	public List<String> righeFraLeDueCornici(String testo) {
+		List<String> righe = FontTool.split(font, testo, xMassimaZonaCentrale - xMinimaZonaCentrale);
+		return righe.isEmpty() ? Collections.singletonList(testo) : righe;
 	}
 
 	/** Un'etichetta a sinistra e il suo valore a destra, sulla stessa riga della zona centrale. */

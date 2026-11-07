@@ -165,6 +165,8 @@ public enum Comando {
 	MOSTRA_TATTICHE,
 	// Dall'inventario, il bestiario: i personaggi incontrati e quel che si è scoperto di loro
 	MOSTRA_BESTIARIO,
+	// Dall'inventario, il grimorio: tutti gli incantesimi, con quel che fanno e come reagiscono con gli effetti di stato
+	MOSTRA_GRIMORIO,
 
 	// Usata per chiedere conferma all'utente prima di andare avanti
 	PERGAMENA,

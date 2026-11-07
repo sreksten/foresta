@@ -343,4 +343,16 @@ class ScansioneDelCalcolatoreTest {
         assertTrue(CalcolatoreCombattimento.difesaContro(difensore, TipoDanno.FUOCO) > senza);
         assertTrue(CalcolatoreCombattimento.difesaContro(difensore, TipoDanno.GELO) >= senza - 100);
     }
+
+    @RepeatedTest(2)
+    void ilBonusFissoDiUnIncantamentoCresceConLaRadiceQuadrataDelLivelloDellOggetto() {
+        Personaggio attaccante = new Guerriero("Attaccante", 8);
+        Arma senza = arma(TipoDanno.FUOCO, false, Collections.emptyList(), Collections.emptyList());
+        Arma con = arma(TipoDanno.FUOCO, false, Collections.singletonList(new IncantamentoMD("Fuoco fisso", TipoDanno.FUOCO, 10, 0.0d)),
+                Collections.emptyList());
+
+        // L'arma di prova è di livello 4: il bonus fisso 10 vale 10 x radice di 4 = 20, non 10 x 4 = 40
+        assertEquals(20.0d, CalcolatoreCombattimento.dannoAttesoDellArma(attaccante, con) - CalcolatoreCombattimento.dannoAttesoDellArma(attaccante, senza),
+                1e-9);
+    }
 }

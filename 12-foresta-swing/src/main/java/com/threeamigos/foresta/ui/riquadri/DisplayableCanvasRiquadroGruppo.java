@@ -38,8 +38,8 @@ public class DisplayableCanvasRiquadroGruppo extends RiquadroGruppo {
 
 	@Override
 	protected Misura misuraDellIcona(String risorsa) {
-		BufferedImage icona = BufferedImageBuilder.buildBufferedImage(risorsa);
-		return new Misura(icona.getWidth(), icona.getHeight());
+		// Una volta sola per risorsa: questo metodo si chiama a ogni ridisegno
+		return BufferedImageBuilder.misura(risorsa);
 	}
 
 	/**

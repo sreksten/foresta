@@ -320,7 +320,7 @@ public class CalcolatoreCombattimento {
     public static double dannoAttesoDellArma(Personaggio attaccante, Arma arma) {
         double danno = arma.getDanni() * livelloDiCombattimento(arma.getLivello());
         for (IncantamentoMD incantamento : arma.getIncantamenti()) {
-            danno += incantamento.getDannoBonusFisso() * arma.getLivello()
+            danno += incantamento.getDannoBonusFisso() * livelloDiCombattimento(arma.getLivello())
                     + attaccante.get(TipoAttributo.INTELLIGENZA) * incantamento.getCoefficienteScala() * moltiplicatoreDanniMagici(attaccante);
         }
         return danno;
@@ -741,13 +741,13 @@ public class CalcolatoreCombattimento {
 
     /**
      * Il danno di un incantamento, mitigato dalla difesa del bersaglio contro il suo tipo di danno.
-     * La parte fissa scala con il livello dell'oggetto (e per moltiplicatoreParteFissa), quella percentuale
+     * La parte fissa scala con il livello di combattimento dell'oggetto, cioè la sua radice quadrata (e per moltiplicatoreParteFissa), quella percentuale
      * con l'INTELLIGENZA e il moltiplicatore di danno magico di chi colpisce: una spada di fuoco rende di più
      * in mano a un elfo che a un guerriero. Contro un bersaglio BAGNATO il fuoco fa la metà.
      */
     private static double dannoIncantamento(Personaggio attaccante, Personaggio difensore, IncantamentoMD incantamento,
                                             int livelloOggetto, double fattore, double moltiplicatoreParteFissa) {
-        double dannoGrezzo = ((incantamento.getDannoBonusFisso() * livelloOggetto * moltiplicatoreParteFissa) +
+        double dannoGrezzo = ((incantamento.getDannoBonusFisso() * livelloDiCombattimento(livelloOggetto) * moltiplicatoreParteFissa) +
                 (attaccante.get(TipoAttributo.INTELLIGENZA) * incantamento.getCoefficienteScala() * moltiplicatoreDanniMagici(attaccante))) * fattore;
         double mitigazione = 100.0d / (100.0d + difesaContro(difensore, incantamento.getTipoDannoElementale()));
         double danno = Math.floor(dannoGrezzo * mitigazione);
@@ -1065,7 +1065,7 @@ public class CalcolatoreCombattimento {
             double moltiplicatoreSet = RegoleSetLeggendari.moltiplicatore(difensore.getModelloDati().getArtefatti(), pezzo.getModelloDati());
             for (IncantamentoMD incantamento : pezzo.getIncantamenti()) {
                 if (incantamento.getTipoDannoElementale() == tipoDanno) {
-                    fisso += incantamento.getDannoBonusFisso() * pezzo.getLivello() * moltiplicatoreSet;
+                    fisso += incantamento.getDannoBonusFisso() * livelloDiCombattimento(pezzo.getLivello()) * moltiplicatoreSet;
                     percentuale += incantamento.getCoefficienteScala() * CostantiPersonaggi.RESISTENZA_FATTORE_PERCENTUALE * moltiplicatoreSet;
                 }
             }

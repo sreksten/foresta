@@ -194,7 +194,7 @@ public enum TipoInterazioneConEffettiDiStato {
     TOSSICITA_SETTICA(
             Collections.singletonList(TipoEffettoDiStato.INFETTATO),
             Collections.singletonList(TipoDanno.VELENO),
-            1.0d,
+            1.2d,
             Collections.emptyList(),
             Collections.singletonList(TipoEffettoDiStato.AVVELENATO)),
 

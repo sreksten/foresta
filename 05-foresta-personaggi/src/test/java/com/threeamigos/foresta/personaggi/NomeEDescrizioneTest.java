@@ -125,6 +125,25 @@ class NomeEDescrizioneTest {
     }
 
     @Test
+    void l_ombraNeraFraDueOmbreSiDistingueConLOrdinaleENonConIlNumero() {
+        // «L'Ombra Nera 1 formula un incantesimo del Gelo contro il gruppo» era il difetto: deve essere «La prima Ombra Nera ...»
+        GruppoAvversario gruppo = GruppoAvversario.getIstanza();
+        Personaggio prima = FabbricaPersonaggi.crea(TipoPersonaggio.OMBRA_NERA, 1);
+        Personaggio seconda = FabbricaPersonaggi.crea(TipoPersonaggio.OMBRA_NERA, 1);
+        gruppo.aggiungiPersonaggio(prima);
+        gruppo.aggiungiPersonaggio(seconda);
+        String chi = prima.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
+        assertEquals("La prima Ombra Nera", chi);
+        assertFalse(chi.matches(".*\\d.*"), "niente cifre: " + chi);
+        assertEquals("la seconda Ombra Nera", seconda.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
+        // Da sola, invece, e' l'Ombra Nera di sempre
+        gruppo.reimposta();
+        gruppo.aggiungiPersonaggio(prima);
+        assertEquals("L'Ombra Nera", prima.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+                Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA));
+    }
+
+    @Test
     void l_ordinaleInInglese() {
         Testi.impostaLingua("en");
         try {

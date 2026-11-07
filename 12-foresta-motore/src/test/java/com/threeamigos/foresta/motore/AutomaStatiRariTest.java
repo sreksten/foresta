@@ -429,7 +429,8 @@ class AutomaStatiRariTest {
         try (PartitaDiTest partita = partitaFuoriDallaCitta(129)) {
             partita.comando(Comando.MAPPA);
             partita.assertStato(Stato.MAPPA);
-            partita.comando(Comando.SI);
+            // Si torna indietro con la X (ANNULLA), come da ogni altra pagina
+            partita.comando(Comando.ANNULLA);
             partita.assertStato(Stato.SCELTA_DIREZIONE);
         }
     }

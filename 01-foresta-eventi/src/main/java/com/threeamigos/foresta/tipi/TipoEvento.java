@@ -82,6 +82,10 @@ public enum TipoEvento {
      */
     RICHIESTA_APERTURA_BESTIARIO,
     /**
+     * Richiesta di vedere il grimorio, dall'inventario
+     */
+    RICHIESTA_APERTURA_GRIMORIO,
+    /**
      * Richiede di visualizzare la mappa conosciuta della foresta a schermo intero
      */
     RICHIESTA_VISUALIZZAZIONE_MAPPA,
