@@ -14,6 +14,8 @@ import com.threeamigos.foresta.salvataggi.GestoreSalvataggiSuFile;
 import com.threeamigos.foresta.salvataggi.GestoreTrofeiSuFile;
 import com.threeamigos.foresta.strumenti.ModalitaDiProva;
 import com.threeamigos.foresta.strumenti.TrucchiDiSviluppo;
+import com.threeamigos.foresta.strumenti.dado.Dado;
+import com.threeamigos.foresta.tutorial.PilotaggioDelTutorial;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzatore;
 import com.threeamigos.foresta.strumenti.temporizzatore.TemporizzatoreJ2SE;
@@ -66,10 +68,9 @@ public final class AvvioDelMotore {
 		// Ci si iscrive prima di creare l'interfaccia: un evento senza iscritti andrebbe perso lasciando il gioco sulla finestra nera
 		BusEventi.iscriviti(InternoInterfacciaUtentePronta.class, e -> controlloreDiGioco.inizia());
 
-		// In modalità di prova i dadi si possono truccare dalla finestra di prova (vedi strumenti_di_prova.md)
-		if (ModalitaDiProva.isAttiva()) {
-			TrucchiDiSviluppo.istanza().installa();
-		}
+		// Il tutorial pilota i primi turni truccando i dadi; in modalità di prova i dadi si possono truccare anche dalla finestra di prova
+		// (vedi strumenti_di_prova.md), e i suoi trucchi hanno la precedenza
+		Dado.impostaTruccatore(new PilotaggioDelTutorial(ModalitaDiProva.isAttiva() ? TrucchiDiSviluppo.istanza() : null));
 		vistaPartita = new VistaPartitaMotore();
 	}
 

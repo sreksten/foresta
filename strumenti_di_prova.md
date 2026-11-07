@@ -17,7 +17,7 @@ sa che esiste.
 | `ui/sviluppo/FinestraDiProva` | swing | La finestra a tab (personaggi, gruppo, statistiche, missioni, dadi); la crea `Main` solo in modalità di prova |
 
 La finestra vede solo i contratti (`VistaPartita` per leggere, `StrumentiDiSviluppo` e `TrucchiDiSviluppo` per cambiare), come ogni
-altra parte della UI. `Main`, se la modalità di prova è accesa, installa `TrucchiDiSviluppo` come truccatore di `Dado` e apre la
+altra parte della UI. `AvvioDelMotore` installa sempre `PilotaggioDelTutorial` come truccatore di `Dado`; se la modalità di prova è accesa gli passa `TrucchiDiSviluppo`, che ha la precedenza (il tutorial decide solo dove i trucchi della finestra non decidono) e apre la
 finestra sul thread principale.
 
 ## 2. I dadi con contesto

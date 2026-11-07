@@ -36,6 +36,7 @@ import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.statistiche.Statistiche;
+import com.threeamigos.foresta.tutorial.PilotaggioDelTutorial;
 import com.threeamigos.foresta.tutorial.RegistroSuggerimenti;
 import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
@@ -295,10 +296,11 @@ public abstract class LocazioneBase implements Locazione {
 			// Non sempre si trovano mostri. Al primo turno però vogliamo sempre trovarne uno,
 			// un po' per non dare l'impressione che la foresta sia vuota, un po' per non far
 			// scattare immediatamente le missioni secondarie che scattano a fine locazione.
-			boolean possibilitaIncontro = Statistiche.getTurniGiocati() == 0 || Dado.tira(100) <= 90;
+			// (e nei primi turni del tutorial, che sceglie il mostro da incontrare)
+			boolean possibilitaIncontro = Statistiche.getTurniGiocati() == 0 || PilotaggioDelTutorial.pilotaQuestoTurno() || Dado.tira(100) <= 90;
 			if (possibilitaIncontro) {
 				// Per non far apparire subito un Eremita che fa scattare la missione secondaria a inizio locazione
-				List<TipoPersonaggio> ammessi = new ArrayList<>(Arrays.asList(m));
+				List<TipoPersonaggio> ammessi = PilotaggioDelTutorial.conIlMostroDelTurno(new ArrayList<>(Arrays.asList(m)));
 				if (Statistiche.getTurniGiocati() == 0 && ammessi.size() > 1) {
 					ammessi.remove(TipoPersonaggio.EREMITA);
 				}
