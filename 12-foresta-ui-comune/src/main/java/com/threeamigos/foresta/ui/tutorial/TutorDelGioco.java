@@ -6,6 +6,7 @@ import com.threeamigos.foresta.tutorial.RegistroSuggerimenti;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * Chi decide, a ogni cambiamento della UI, se mostrare un suggerimento del tutorial: la UI gli dice che cosa vede ({@link #aggiorna}), lui
@@ -66,17 +67,19 @@ public final class TutorDelGioco {
 	 * in una di queste situazioni.
 	 *
 	 * @param situazioni che cosa vede la UI adesso
-	 * @param consentito (con il tutorial non abilitato non si apre mai niente) falso durante un intermezzo o nel mezzo di un'azione che chiede attenzione: allora non si apre niente
+	 * @param apribile dice se un suggerimento si può aprire adesso: la schermata è quella giusta e ciò a cui punta è già a schermo (un suggerimento che
+	 *                 punta a un'icona che non c'è aspetta che compaia); falso per tutti durante un intermezzo o nel mezzo di un'azione che chiede attenzione
 	 * @return il fumetto appena aperto, se ce n'è uno
 	 */
-	public synchronized Optional<FumettoDelTutorial> aggiorna(Set<Situazione> situazioni, boolean consentito) {
-		if (!abilitato || fumetto != null || !consentito) {
+	public synchronized Optional<FumettoDelTutorial> aggiorna(Set<Situazione> situazioni, Predicate<TipoSuggerimento> apribile) {
+		if (!abilitato || fumetto != null) {
 			return Optional.empty();
 		}
-		Optional<TipoSuggerimento> suggerimento = RegistroSuggerimenti.situazione(situazioni);
-		if (suggerimento.isPresent() && suggerimento.get().getNumeroPagine() > 0) {
-			fumetto = new FumettoDelTutorial(suggerimento.get(), dito);
-			return Optional.of(fumetto);
+		for (TipoSuggerimento suggerimento : RegistroSuggerimenti.candidati(situazioni)) {
+			if (suggerimento.getNumeroPagine() > 0 && apribile.test(suggerimento)) {
+				fumetto = new FumettoDelTutorial(suggerimento, dito);
+				return Optional.of(fumetto);
+			}
 		}
 		return Optional.empty();
 	}

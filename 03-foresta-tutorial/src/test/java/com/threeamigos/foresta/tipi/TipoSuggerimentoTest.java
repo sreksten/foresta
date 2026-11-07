@@ -22,7 +22,8 @@ class TipoSuggerimentoTest {
 			Testi.impostaLingua(lingua);
 			for (TipoSuggerimento suggerimento : TipoSuggerimento.values()) {
 				int pagine = suggerimento.getNumeroPagine();
-				assertTrue(pagine >= 1 && pagine <= TipoSuggerimento.PAGINE_MASSIME, suggerimento + " in " + lingua + ": " + pagine);
+				int massime = suggerimento == TipoSuggerimento.LUOGHI ? TipoSuggerimento.PAGINE_MASSIME : TipoSuggerimento.PAGINE_NORMALI;
+				assertTrue(pagine >= 1 && pagine <= massime, suggerimento + " in " + lingua + ": " + pagine);
 				for (int pagina = 1; pagina <= pagine; pagina++) {
 					assertFalse(suggerimento.getPagina(pagina, false).trim().isEmpty(), suggerimento + " pagina " + pagina);
 					assertNotEquals(suggerimento.name(), suggerimento.getPagina(pagina, false), "manca " + suggerimento + " pagina " + pagina);
@@ -32,10 +33,33 @@ class TipoSuggerimentoTest {
 	}
 
 	@Test
+	void soloLElencoDeiLuoghiHaPiuDiTrePagine() {
+		for (TipoSuggerimento suggerimento : TipoSuggerimento.values()) {
+			if (suggerimento != TipoSuggerimento.LUOGHI) {
+				assertTrue(suggerimento.getNumeroPagine() <= TipoSuggerimento.PAGINE_NORMALI, suggerimento.name());
+			}
+		}
+		assertTrue(TipoSuggerimento.LUOGHI.getNumeroPagine() > TipoSuggerimento.PAGINE_NORMALI);
+	}
+
+	@Test
 	void nonCiSonoPagineOltreIlMassimo() {
 		for (TipoSuggerimento suggerimento : TipoSuggerimento.values()) {
 			assertFalse(Testi.testo(suggerimento, "PAGINA_" + (TipoSuggerimento.PAGINE_MASSIME + 1)).isPresent(), suggerimento.name());
 		}
+	}
+
+	@Test
+	void ognuniPaginaPuntaAQuelloDiCuiParla() {
+		// La pagina sulla mappa punta alla mappa, non alle frecce; quella sull'aiuto al punto interrogativo
+		assertEquals(BersaglioDelSuggerimento.ICONE_DI_MOVIMENTO, TipoSuggerimento.MOVIMENTO_E_MAPPA.getBersaglio(1));
+		assertEquals(BersaglioDelSuggerimento.ICONA_DELLA_MAPPA, TipoSuggerimento.MOVIMENTO_E_MAPPA.getBersaglio(2));
+		assertEquals(BersaglioDelSuggerimento.BARRA_DELLE_ICONE, TipoSuggerimento.BARRA_DELLE_ICONE.getBersaglio(1));
+		assertEquals(BersaglioDelSuggerimento.ICONA_DELL_AIUTO, TipoSuggerimento.BARRA_DELLE_ICONE.getBersaglio(2));
+		// Le pagine oltre l'ultimo bersaglio ripetono l'ultimo; senza bersagli per pagina vale sempre lo stesso
+		assertEquals(BersaglioDelSuggerimento.ICONA_DELLA_MAPPA, TipoSuggerimento.MOVIMENTO_E_MAPPA.getBersaglio(5));
+		assertEquals(BersaglioDelSuggerimento.ICONA_DELLA_MAPPA, TipoSuggerimento.LUOGHI.getBersaglio(4));
+		assertEquals(TipoSuggerimento.COMBATTIMENTO.getBersaglio(), TipoSuggerimento.COMBATTIMENTO.getBersaglio(2));
 	}
 
 	@Test

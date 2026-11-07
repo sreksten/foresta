@@ -261,15 +261,11 @@ class PilotaggioDelTutorialTest {
 	}
 
 	@Test
-	void alPassoDelloScheletroSiTrovaUnArmaChePuoUsareIlCapo() {
+	void ilPrimoOggettoTrovatoEUnArmaChePuoUsareIlCapoFincheNonSiVedeIlSuggerimento() {
 		try (PartitaDiTest partita = partita(37)) {
 			Dado.impostaTruccatore(new PilotaggioDelTutorial(null));
-			// I primi due passi non decidono l'oggetto
-			assertFalse(PilotaggioDelTutorial.oggettoDelTurno().isPresent());
-			alPasso(1);
-			assertFalse(PilotaggioDelTutorial.oggettoDelTurno().isPresent());
-			alPasso(2);
-			// Il capo è un guerriero: la mazza, anche in una radura, che non lascia oggetti
+			alPasso(0);
+			// Il capo è un guerriero: la mazza, anche in una radura, che non lascia oggetti, e non una gemma a caso
 			assertEquals(TipoBottino.MAZZA, PilotaggioDelTutorial.oggettoDelTurno().get());
 			for (int prova = 0; prova < 30; prova++) {
 				Radura radura = new Radura();
@@ -278,7 +274,14 @@ class PilotaggioDelTutorialTest {
 				assertNotNull(radura.getOggetto(), "prova " + prova);
 				assertEquals(TipoBottino.MAZZA, radura.getOggetto().getClasse());
 			}
-			alPasso(3);
+			// Vale a qualunque passo, finché il giocatore non ha letto il suggerimento dell'oggetto trovato
+			alPasso(2);
+			assertEquals(TipoBottino.MAZZA, PilotaggioDelTutorial.oggettoDelTurno().get());
+			// Letto, gli oggetti tornano al caso; e a tutorial spento non si decide niente
+			RegistroSuggerimenti.visto(TipoSuggerimento.OGGETTO_TROVATO);
+			assertFalse(PilotaggioDelTutorial.oggettoDelTurno().isPresent());
+			RegistroSuggerimenti.ripristina();
+			RegistroSuggerimenti.setAttivo(false);
 			assertFalse(PilotaggioDelTutorial.oggettoDelTurno().isPresent());
 		}
 	}

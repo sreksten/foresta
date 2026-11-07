@@ -14,7 +14,6 @@ import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzabile;
 import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzatore;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.FaseDiGioco;
-import com.threeamigos.foresta.tipi.StatoDelloSchermo;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoFinestra;
 import com.threeamigos.foresta.tipi.TipoModificatore;
@@ -319,10 +318,9 @@ public abstract class ForestaUI implements Temporizzabile {
 		if (schermo == null) {
 			return;
 		}
-		boolean consentito = schermo.getStato() == StatoDelloSchermo.IN_GIOCO;
 		boolean missioneAttiva = !vistaPartita.getMissioniAttive().isEmpty();
 		boolean aperto = schermo.getTutor().aggiorna(situazioni.correnti(ComandiPossibili.getComandi(), missioneAttiva, schermo.getTutor().isDito(),
-				isQualcunoFeritoConUnaPozione()), consentito).isPresent();
+				isQualcunoFeritoConUnaPozione()), schermo::isApribile).isPresent();
 		if (aperto) {
 			// Finché il fumetto è aperto il motore aspetta (vedi SchermoDelGioco.fineFotogramma, che avvisa quando si chiude)
 			BusEventi.pubblica(new InternoUiOccupata());
@@ -370,6 +368,8 @@ public abstract class ForestaUI implements Temporizzabile {
 
 	private void gestisciEventoFaseDiGioco(InternoFaseDiGioco evento) {
 		faseDiGioco = evento.getFase();
+		// La scelta della classe ha il suo suggerimento (vedi tutorial.md §4 quater)
+		situazioni.segnaSceltaDellaClasse(faseDiGioco == FaseDiGioco.CLASSE_PERSONAGGIO);
 		switch (faseDiGioco) {
 			case LOGO_INIZIALE:
 				avviaLogoIniziale();

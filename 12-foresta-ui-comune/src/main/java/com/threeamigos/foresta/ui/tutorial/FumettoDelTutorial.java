@@ -25,8 +25,11 @@ public final class FumettoDelTutorial {
 		return suggerimento;
 	}
 
+	/**
+	 * A che cosa punta la coda nella pagina in cui siamo (la pagina sulla mappa punta alla mappa, quella sul movimento alle frecce).
+	 */
 	public BersaglioDelSuggerimento getBersaglio() {
-		return suggerimento.getBersaglio();
+		return suggerimento.getBersaglio(pagina);
 	}
 
 	/**

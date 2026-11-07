@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.EnumSet;
+import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,6 +26,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * Il fumetto del tutorial in Swing: si disegna con il bordo del bersaglio giallo, e il pollice lo porta avanti fino a chiuderlo.
  */
 class DisplayableCanvasTutorialTest {
+
+	private static final Predicate<TipoSuggerimento> SI = suggerimento -> true;
 
 	private static final int COLORE_DEL_BORDO = 0xFFFFD700;
 	private DisplayableCanvas canvas;
@@ -75,19 +78,19 @@ class DisplayableCanvasTutorialTest {
 
 	@Test
 	void ilToolkitAbilitaIlTutorial() {
-		assertTrue(canvas.getSchermo().getTutor().aggiorna(EnumSet.of(Situazione.PRIMA_SCHERMATA_DI_GIOCO), true).isPresent());
+		assertTrue(canvas.getSchermo().getTutor().aggiorna(EnumSet.of(Situazione.PRIMA_SCHERMATA_DI_GIOCO), SI).isPresent());
 	}
 
 	@Test
 	void ilFumettoAppareConIlBordoDelBersaglio() {
 		assertFalse(haIlBordoGiallo(disegna()));
-		canvas.getSchermo().getTutor().aggiorna(EnumSet.of(Situazione.PRIMA_SCHERMATA_DI_GIOCO), true);
+		canvas.getSchermo().getTutor().aggiorna(EnumSet.of(Situazione.PRIMA_SCHERMATA_DI_GIOCO), SI);
 		assertTrue(haIlBordoGiallo(disegna()), "il bordo del bersaglio deve lampeggiare, acceso appena si apre");
 	}
 
 	@Test
 	void ilPoliceLoPortaAvantiPoiLoChiudeESegnaVisto() {
-		canvas.getSchermo().getTutor().aggiorna(EnumSet.of(Situazione.PRIMA_SCHERMATA_DI_GIOCO), true);
+		canvas.getSchermo().getTutor().aggiorna(EnumSet.of(Situazione.PRIMA_SCHERMATA_DI_GIOCO), SI);
 		canvas.getSchermo().pollicePremuto();
 		assertTrue(canvas.getSchermo().getTutor().isAperto());
 		canvas.getSchermo().pollicePremuto();
@@ -98,7 +101,7 @@ class DisplayableCanvasTutorialTest {
 
 	@Test
 	void l_annullaSpegneIlTutorial() {
-		canvas.getSchermo().getTutor().aggiorna(EnumSet.of(Situazione.PRIMA_SCHERMATA_DI_GIOCO), true);
+		canvas.getSchermo().getTutor().aggiorna(EnumSet.of(Situazione.PRIMA_SCHERMATA_DI_GIOCO), SI);
 		canvas.getSchermo().annullaPremuto();
 		assertFalse(canvas.getSchermo().getTutor().isAperto());
 		assertFalse(RegistroSuggerimenti.isAttivo());

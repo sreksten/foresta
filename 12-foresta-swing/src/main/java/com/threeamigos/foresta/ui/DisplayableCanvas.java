@@ -579,8 +579,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		}
 		schermo.disegnaLAnnuncio(annuncio -> annuncio.anima(graphics));
 		barraIcone.disegna(graphics);
-		// Il suggerimento del tutorial sta sopra la barra delle icone, ma sotto le sfere e i cartigli dell'aiuto
-		if (stato == StatoDelloSchermo.IN_GIOCO) {
+		// Il suggerimento del tutorial sta sopra la barra delle icone, ma sotto le sfere e i cartigli dell'aiuto; si vede solo sulla sua schermata
+		if (schermo.isTutorialVisibile()) {
 			tutorial.disegna(graphics, getWidth(), getHeight());
 		}
 		// Decorazione nell'angolo in basso a sinistra della mappa a tutto schermo

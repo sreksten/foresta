@@ -28,7 +28,7 @@ class SituazioniDellaUITest {
 		SituazioniDellaUI ui = new SituazioniDellaUI();
 		ui.segnaSchermataDiGioco();
 		assertEquals(EnumSet.of(Situazione.PRIMA_SCHERMATA_DI_GIOCO), correnti(ui));
-		assertEquals(EnumSet.of(Situazione.PRIMA_SCHERMATA_DI_GIOCO, Situazione.BARRA_DELLE_ICONE_VISIBILE), correnti(ui, Comando.MAPPA));
+		assertEquals(EnumSet.of(Situazione.PRIMA_SCHERMATA_DI_GIOCO, Situazione.BARRA_DELLE_ICONE_VISIBILE), correnti(ui, Comando.INVENTARIO));
 	}
 
 	@Test
@@ -67,13 +67,22 @@ class SituazioniDellaUITest {
 		ui.segnaSchermataDiGioco();
 		ui.segnaCombattimentoAperto();
 		ui.segnaCombattimentoChiuso();
-		assertFalse(correnti(ui, Comando.MOSTRA_TATTICHE).contains(Situazione.TATTICHE_DISPONIBILI));
+		assertFalse(correnti(ui, Comando.INVENTARIO).contains(Situazione.TATTICHE_DISPONIBILI));
 		ui.segnaCombattimentoAperto();
 		// Lo stesso scontro che si riapre non è un altro scontro
 		ui.segnaCombattimentoAperto();
 		assertEquals(2, ui.getScontriVisti());
-		assertTrue(correnti(ui, Comando.MOSTRA_TATTICHE).contains(Situazione.TATTICHE_DISPONIBILI));
-		assertFalse(correnti(ui).contains(Situazione.TATTICHE_DISPONIBILI));
+		// Non serve l'icona delle tattiche, che sta dentro l'inventario: basta aver visto i due scontri
+		assertTrue(correnti(ui, Comando.INVENTARIO).contains(Situazione.TATTICHE_DISPONIBILI));
+		assertTrue(correnti(ui).contains(Situazione.TATTICHE_DISPONIBILI));
+	}
+
+	@Test
+	void l_iconaDellaMappaSiLeggeDallaBarra() {
+		SituazioniDellaUI ui = new SituazioniDellaUI();
+		ui.segnaSchermataDiGioco();
+		assertFalse(correnti(ui, Comando.NORD).contains(Situazione.ICONA_DELLA_MAPPA_PRESENTE));
+		assertTrue(correnti(ui, Comando.MAPPA).contains(Situazione.ICONA_DELLA_MAPPA_PRESENTE));
 	}
 
 	@Test
@@ -112,5 +121,19 @@ class SituazioniDellaUITest {
 		assertTrue(correnti(ui, Comando.NORD, Comando.EST, Comando.SUD, Comando.OVEST).isEmpty());
 		ui.segnaSchermataDiGioco();
 		assertTrue(correnti(ui).contains(Situazione.PRIMA_SCHERMATA_DI_GIOCO));
+	}
+
+	@Test
+	void laSceltaDellaClasseSiVedeSubitoEFinisceConLaSchermataDiGioco() {
+		SituazioniDellaUI ui = new SituazioniDellaUI();
+		// Prima della schermata di gioco: l'unica situazione è la scelta
+		ui.segnaSceltaDellaClasse(true);
+		assertEquals(EnumSet.of(Situazione.SCELTA_DELLA_CLASSE), correnti(ui, Comando.GUERRIERO, Comando.MAGO));
+		ui.segnaSceltaDellaClasse(false);
+		assertTrue(correnti(ui, Comando.GUERRIERO, Comando.MAGO).isEmpty());
+		// Se si arriva al gioco senza che la fase sia stata chiusa, la scelta è comunque finita
+		ui.segnaSceltaDellaClasse(true);
+		ui.segnaSchermataDiGioco();
+		assertFalse(correnti(ui, Comando.NORD, Comando.EST, Comando.SUD, Comando.OVEST).contains(Situazione.SCELTA_DELLA_CLASSE));
 	}
 }

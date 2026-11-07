@@ -5,6 +5,8 @@ import com.threeamigos.foresta.modellodati.SuggerimentiMD;
 import com.threeamigos.foresta.tipi.Situazione;
 import com.threeamigos.foresta.tipi.TipoSuggerimento;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -69,15 +71,25 @@ public final class RegistroSuggerimenti {
 	 * Il primo suggerimento ancora da vedere che scatta in una di queste situazioni, nell'ordine dell'enum, o niente (anche se il tutorial è spento).
 	 */
 	public static synchronized Optional<TipoSuggerimento> situazione(Set<Situazione> situazioni) {
+		List<TipoSuggerimento> candidati = candidati(situazioni);
+		return candidati.isEmpty() ? Optional.<TipoSuggerimento>empty() : Optional.of(candidati.get(0));
+	}
+
+	/**
+	 * Tutti i suggerimenti ancora da vedere che scattano in una di queste situazioni, nell'ordine dell'enum (nessuno se il tutorial è spento): chi li
+	 * mostra sceglie il primo che può aprire adesso (per esempio quello il cui bersaglio è già a schermo).
+	 */
+	public static synchronized List<TipoSuggerimento> candidati(Set<Situazione> situazioni) {
+		List<TipoSuggerimento> candidati = new ArrayList<>();
 		if (!suggerimentiMD.isAttivo()) {
-			return Optional.empty();
+			return candidati;
 		}
 		for (TipoSuggerimento suggerimento : TipoSuggerimento.values()) {
 			if (!suggerimentiMD.isVisto(suggerimento) && situazioni.contains(suggerimento.getInnesco())) {
-				return Optional.of(suggerimento);
+				candidati.add(suggerimento);
 			}
 		}
-		return Optional.empty();
+		return candidati;
 	}
 
 	/**

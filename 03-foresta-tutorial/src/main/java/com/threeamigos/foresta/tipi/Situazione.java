@@ -9,10 +9,14 @@ package com.threeamigos.foresta.tipi;
  */
 public enum Situazione {
 
+	/** Si sta scegliendo la classe del personaggio (le classi sono le icone della barra). */
+	SCELTA_DELLA_CLASSE,
 	/** La prima volta che si vede la schermata di gioco. */
 	PRIMA_SCHERMATA_DI_GIOCO,
 	/** La barra delle icone è visibile. */
 	BARRA_DELLE_ICONE_VISIBILE,
+	/** C'è l'icona della mappa. */
+	ICONA_DELLA_MAPPA_PRESENTE,
 	/** Ci sono le quattro icone di movimento (nord, est, sud, ovest). */
 	ICONE_DI_MOVIMENTO_PRESENTI,
 	/** Si apre il combattimento. */
@@ -25,7 +29,7 @@ public enum Situazione {
 	SCELTE_IN_COMBATTIMENTO,
 	/** C'è una missione da mostrare nel riquadro delle missioni. */
 	MISSIONE_ATTIVA,
-	/** Compare l'icona delle tattiche, dopo due scontri visti con la tattica che agisce da sola. */
+	/** Si sono visti due scontri con la tattica che agisce da sola: ora si può dire che si cambia (dall'inventario). */
 	TATTICHE_DISPONIBILI,
 	/** L'avversario si può corrompere. */
 	AVVERSARIO_CORROMPIBILE,

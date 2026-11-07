@@ -141,12 +141,12 @@ public final class PilotaggioDelTutorial implements TruccatoreDiDadi {
 	}
 
 	/**
-	 * L'oggetto che il tutorial vuole far trovare in questo turno (quello dello scheletro), se lo pilota: un'arma che il capo del gruppo può
-	 * impugnare, perché il suggerimento sull'inventario abbia qualcosa da equipaggiare. La mazza prima di tutto: contro lo scheletro, le ossa si
-	 * spezzano a bastonate. Un mago o un druido trovano un bastone magico, un bardo una spada.
+	 * L'oggetto che il tutorial vuole far trovare, se lo pilota: il primo che il giocatore trova è un'arma che il capo del gruppo può impugnare, perché
+	 * il suggerimento sull'inventario abbia qualcosa da equipaggiare (e non una gemma a caso). Vale finché quel suggerimento non è stato visto. La
+	 * mazza prima di tutto: contro lo scheletro, le ossa si spezzano a bastonate. Un mago o un druido trovano un bastone magico, un bardo una spada.
 	 */
 	public static Optional<TipoBottino> oggettoDelTurno() {
-		if (!mostroDelTurno().filter(mostro -> mostro == TipoPersonaggio.SCHELETRO).isPresent()) {
+		if (!pilotaQuestoTurno() || RegistroSuggerimenti.isVisto(TipoSuggerimento.OGGETTO_TROVATO)) {
 			return Optional.empty();
 		}
 		TipoPersonaggio classe = GruppoGiocatore.getIstanza().getCapo().getClasse();

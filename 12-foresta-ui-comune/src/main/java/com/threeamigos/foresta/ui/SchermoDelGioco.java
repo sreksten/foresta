@@ -17,6 +17,7 @@ import com.threeamigos.foresta.modellodati.TatticaMD;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 import com.threeamigos.foresta.tipi.BersaglioDelSuggerimento;
 import com.threeamigos.foresta.tipi.StatoDelloSchermo;
+import com.threeamigos.foresta.tipi.TipoSuggerimento;
 import com.threeamigos.foresta.ui.tutorial.DisposizioneDelFumetto;
 import com.threeamigos.foresta.ui.tutorial.TutorDelGioco;
 import com.threeamigos.foresta.tipi.TipoAzione;
@@ -1091,6 +1092,46 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	}
 
 	/**
+	 * Se un suggerimento si può aprire adesso: la schermata è quella giusta (la scelta della classe sta sul messaggio a tutto schermo, gli altri sulla
+	 * schermata di gioco) e ciò a cui punta è già a schermo: un suggerimento che punta a un'icona che non c'è (la barra è vuota fra un comando e l'altro)
+	 * aspetta che compaia, invece di puntare a niente.
+	 */
+	public boolean isApribile(TipoSuggerimento suggerimento) {
+		return isSchermataDelSuggerimento(suggerimento) && isBersaglioVisibile(suggerimento.getBersaglio());
+	}
+
+	private boolean isSchermataDelSuggerimento(TipoSuggerimento suggerimento) {
+		StatoDelloSchermo corrente = stato;
+		return suggerimento == TipoSuggerimento.SCELTA_DELLA_CLASSE ? corrente == StatoDelloSchermo.MESSAGGIO : corrente == StatoDelloSchermo.IN_GIOCO;
+	}
+
+	private boolean isBersaglioVisibile(BersaglioDelSuggerimento bersaglio) {
+		switch (bersaglio) {
+			case RIQUADRI:
+			case RIQUADRO_DEL_COMBATTIMENTO:
+			case RIQUADRO_DELLE_MISSIONI:
+			case RIQUADRO_DEGLI_INCANTESIMI_E_DELLE_POZIONI:
+				return true;
+			case BARRA_DELLE_ICONE:
+				return !barraIcone().iconeVisibili.isEmpty();
+			default:
+				for (BarraIcone.IconaVisibile icona : barraIcone().iconeVisibili) {
+					if (bersaglio.getIcone().contains(icona.comando)) {
+						return true;
+					}
+				}
+				return false;
+		}
+	}
+
+	/**
+	 * Se il suggerimento aperto si vede adesso: c'è, e la schermata è la sua. Chi disegna (Swing, libGDX) lo disegna solo allora.
+	 */
+	public boolean isTutorialVisibile() {
+		return tutor.getFumetto().filter(f -> isSchermataDelSuggerimento(f.getSuggerimento())).isPresent();
+	}
+
+	/**
 	 * Dove sta, in coordinate dello schermo, quello a cui punta un suggerimento: un riquadro (i tre impilati insieme, per i riquadri in generale), la
 	 * barra delle icone o le sole icone che si vedono fra quelle indicate (se nessuna si vede, la barra intera).
 	 */
@@ -1130,6 +1171,11 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	 * mostrare il prossimo intermezzo in attesa (se ce n'è uno).
 	 */
 	public void fineFotogramma() {
+		// Un suggerimento aperto che non si vede più (si è lasciata la sua schermata) si chiude, senza segnarlo letto: tornerà. Altrimenti terrebbe
+		// ferma la UI, e con lei gli intermezzi, senza che nessuno possa premere il pollice
+		if (tutor.isAperto() && !isTutorialVisibile()) {
+			tutor.chiudi();
+		}
 		boolean occupataOra = !sprite.isEmpty() || annuncioAttivo != null || !codaAnnunci.isEmpty() || rivelazioni.isOccupata() || tutor.isAperto();
 		if (uiOccupata && !occupataOra) {
 			BusEventi.pubblica(new InternoUiInattiva());

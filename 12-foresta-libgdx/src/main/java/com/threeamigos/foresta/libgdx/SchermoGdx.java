@@ -234,7 +234,7 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 		disegnaLAnnuncio(annuncio -> annuncio.anima(batch, camera, viewport));
 		barraIcone.disegna(batch, camera, viewport);
 		// Il suggerimento del tutorial sta sopra la barra delle icone, ma sotto i cartigli dell'aiuto
-		if (stato == StatoDelloSchermo.IN_GIOCO) {
+		if (isTutorialVisibile()) {
 			tutorial.disegna(batch, disposizione.getLarghezzaTotale(), disposizione.getAltezzaTotale());
 		}
 		if (stato == StatoDelloSchermo.IN_GIOCO) {

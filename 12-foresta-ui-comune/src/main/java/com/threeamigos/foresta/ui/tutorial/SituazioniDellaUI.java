@@ -23,11 +23,19 @@ public final class SituazioniDellaUI {
 	private static final Set<Comando> BOTTEGHE = EnumSet.of(Comando.NEGOZIO_ALCHIMISTA, Comando.NEGOZIO_ARMAIOLO,
 			Comando.NEGOZIO_VENDITORE_DI_PERGAMENE, Comando.NEGOZIO_INCANTATORE);
 
+	private boolean sceltaDellaClasse;
 	private boolean schermataDiGioco;
 	private boolean primaSchermataDaDare;
 	private boolean combattimentoAperto;
 	private int scontriVisti;
 	private boolean oggettoTrovato;
+
+	/**
+	 * Si sta scegliendo la classe del personaggio (a inizio partita, prima della schermata di gioco), o si ha finito.
+	 */
+	public synchronized void segnaSceltaDellaClasse(boolean inCorso) {
+		sceltaDellaClasse = inCorso;
+	}
 
 	/**
 	 * La schermata di gioco è comparsa: la prima volta è una situazione a sé (i riquadri).
@@ -37,6 +45,7 @@ public final class SituazioniDellaUI {
 			primaSchermataDaDare = true;
 		}
 		schermataDiGioco = true;
+		sceltaDellaClasse = false;
 	}
 
 	/**
@@ -89,6 +98,9 @@ public final class SituazioniDellaUI {
 	 */
 	public synchronized Set<Situazione> correnti(Collection<Comando> comandi, boolean missioneAttiva, boolean dito, boolean feritoConUnaPozione) {
 		Set<Situazione> situazioni = EnumSet.noneOf(Situazione.class);
+		if (sceltaDellaClasse) {
+			situazioni.add(Situazione.SCELTA_DELLA_CLASSE);
+		}
 		if (!schermataDiGioco) {
 			return situazioni;
 		}
@@ -97,6 +109,9 @@ public final class SituazioniDellaUI {
 		}
 		if (!comandi.isEmpty()) {
 			situazioni.add(Situazione.BARRA_DELLE_ICONE_VISIBILE);
+		}
+		if (comandi.contains(Comando.MAPPA)) {
+			situazioni.add(Situazione.ICONA_DELLA_MAPPA_PRESENTE);
 		}
 		if (comandi.containsAll(MOVIMENTO)) {
 			situazioni.add(Situazione.ICONE_DI_MOVIMENTO_PRESENTI);
@@ -116,7 +131,8 @@ public final class SituazioniDellaUI {
 		if (missioneAttiva) {
 			situazioni.add(Situazione.MISSIONE_ATTIVA);
 		}
-		if (comandi.contains(Comando.MOSTRA_TATTICHE) && scontriVisti >= SCONTRI_PRIMA_DELLE_TATTICHE) {
+		// Le tattiche si aprono dall'inventario, la cui icona è già nella barra: il suggerimento aspetta solo i due scontri (e che l'icona si veda)
+		if (scontriVisti >= SCONTRI_PRIMA_DELLE_TATTICHE) {
 			situazioni.add(Situazione.TATTICHE_DISPONIBILI);
 		}
 		// Le icone della corruzione e dell'amicizia compaiono solo se fra gli avversari c'è chi si può corrompere (e il gruppo ha monete) o chi è
