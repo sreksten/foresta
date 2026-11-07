@@ -25,6 +25,8 @@ import com.threeamigos.foresta.strumenti.ModalitaDiProva;
 import com.threeamigos.foresta.personaggi.ArmaNaturale;
 import com.threeamigos.foresta.personaggi.OmbraFiamma;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.gruppi.GruppoAvversario;
+import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -198,7 +200,8 @@ public class CalcolatoreCombattimento {
         int probabilitaFinale = calcolaProbabilitaDiColpire(attaccante, difensore, tipoDanno);
 
         // 6. TIRO DEL DADO (Generazione numero casuale da 1 a 100)
-        int tiroDado = Dado.tira(100);
+        // Il colpo di un mostro ha il suo contesto (il tutorial lo trucca per non far perdere il primo scontro)
+        int tiroDado = GruppoAvversario.getIstanza().contiene(attaccante) ? Dado.tira(ContestoLancio.COLPO_DEI_MOSTRI, 100) : Dado.tira(100);
         Logger.log(() -> "Risultato sul COLPIRE (tiro del dado = " + tiroDado + "): " + (tiroDado <= probabilitaFinale));
 
         return tiroDado <= probabilitaFinale;

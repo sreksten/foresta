@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.locazioni.Bosco;
@@ -8,6 +9,7 @@ import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.strumenti.TrucchiDiSviluppo;
 import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
+import com.threeamigos.foresta.tipi.CategoriaDanno;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -100,6 +102,62 @@ class PilotaggioDelTutorialTest {
 			List<Personaggio> mostri = incontro();
 			assertEquals(TipoPersonaggio.HOBGOBLIN, mostri.get(0).getClasse());
 			assertTrue(mostri.size() <= 2);
+		}
+	}
+
+	/** Quante volte, su 300 colpi di un mostro contro il capo, vanno a segno. */
+	private static int colpiDelMostroASegno() {
+		Personaggio mostro = incontro().get(0);
+		Personaggio capo = GruppoGiocatore.getIstanza().getCapo();
+		int asegno = 0;
+		for (int i = 0; i < 300; i++) {
+			if (CalcolatoreCombattimento.colpisce(mostro, capo, CategoriaDanno.FISICO)) {
+				asegno++;
+			}
+		}
+		return asegno;
+	}
+
+	@Test
+	void ilPrimoScontroEQuelloConLoScheletroNonSiPossonoPerdere() {
+		try (PartitaDiTest partita = partita(35)) {
+			Dado.impostaTruccatore(new PilotaggioDelTutorial(null));
+			// Turno 0, l'arpia: nessun colpo a segno
+			assertEquals(0, colpiDelMostroASegno());
+			Statistiche.incrementaTurniGiocati();
+			// Turno 1, la chimera drago: non è protetta
+			assertTrue(colpiDelMostroASegno() > 0);
+			Statistiche.incrementaTurniGiocati();
+			// Turno 2, lo scheletro: protetto
+			assertEquals(0, colpiDelMostroASegno());
+			Statistiche.incrementaTurniGiocati();
+			// Turno 3, il goblin: non è protetto
+			assertTrue(colpiDelMostroASegno() > 0);
+		}
+	}
+
+	@Test
+	void ilTutorialDecideLeAltreCoseDeiPrimiTurniSoloNelLoroTurno() {
+		try (PartitaDiTest partita = partita(36)) {
+			PilotaggioDelTutorial pilota = new PilotaggioDelTutorial(null);
+			// Turno 0, l'arpia: niente incantesimi (una voce con una probabilità sotto il 100 non vale), niente di altro
+			assertEquals(100, pilota.lancio(ContestoLancio.TATTICA_DEI_MOSTRI, 1, 100).getAsInt());
+			assertFalse(pilota.lancio(ContestoLancio.PASSAGGIO_INOSSERVATO, 1, 100).isPresent());
+			assertFalse(pilota.lancio(ContestoLancio.CORRUZIONE, 1, 10).isPresent());
+			Statistiche.incrementaTurniGiocati();
+			// Turno 1, la chimera drago: passare inosservati riesce sempre (un tiro di 1 è sotto qualunque probabilità)
+			assertEquals(1, pilota.lancio(ContestoLancio.PASSAGGIO_INOSSERVATO, 1, 100).getAsInt());
+			assertFalse(pilota.lancio(ContestoLancio.TATTICA_DEI_MOSTRI, 1, 100).isPresent());
+			Statistiche.incrementaTurniGiocati();
+			Statistiche.incrementaTurniGiocati();
+			// Turno 3, il goblin: la corruzione riesce (il tiro più alto supera la soglia)
+			assertEquals(10, pilota.lancio(ContestoLancio.CORRUZIONE, 1, 10).getAsInt());
+			assertFalse(pilota.lancio(ContestoLancio.AMICIZIA, 1, 20).isPresent());
+			Statistiche.incrementaTurniGiocati();
+			// Turno 4, il folletto: l'amicizia riesce (il tiro più basso è sotto il carisma) e non c'è la sfida a carta, forbici e sasso
+			assertEquals(1, pilota.lancio(ContestoLancio.AMICIZIA, 1, 20).getAsInt());
+			assertEquals(100, pilota.lancio(ContestoLancio.SFIDA_CARTA_FORBICI_SASSO, 1, 100).getAsInt());
+			assertFalse(pilota.lancio(ContestoLancio.CORRUZIONE, 1, 10).isPresent());
 		}
 	}
 }

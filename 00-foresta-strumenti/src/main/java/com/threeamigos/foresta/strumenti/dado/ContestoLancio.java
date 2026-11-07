@@ -22,7 +22,19 @@ public enum ContestoLancio {
     /** La percentuale di monete e preziosi che il gruppo perde fuggendo, da 1 al massimo (vedi CostantiPersonaggi). */
     FUGA_PERDITA_DENARO("Fuga, perdita denaro (%)", false),
     /** La percentuale di incantesimi e pozioni che il gruppo perde fuggendo, da 1 al massimo (vedi CostantiPersonaggi). */
-    FUGA_PERDITA_SCORTE("Fuga, perdita scorte (%)", false);
+    FUGA_PERDITA_SCORTE("Fuga, perdita scorte (%)", false),
+    /** Il tiro (da 1 a 100) con cui un mostro colpisce: va a segno se non supera la probabilità di colpire, che arriva al massimo a 95. */
+    COLPO_DEI_MOSTRI("Colpo dei mostri", false),
+    /** Il tiro (da 1 a 100) di una voce delle tattiche dei mostri con una probabilità, per esempio quella di lanciare un incantesimo: la voce vale se non supera la percentuale. */
+    TATTICA_DEI_MOSTRI("Tattica dei mostri", false),
+    /** Il tiro (da 1 a 100) per passare inosservati: riesce se non supera la probabilità, che è almeno 5. */
+    PASSAGGIO_INOSSERVATO("Passare inosservati", false),
+    /** Il tiro del dado della corruzione (da 1 a 10): riesce se supera la soglia, avendo le monete. */
+    CORRUZIONE("Corruzione", false),
+    /** Il tiro del dado dell'amicizia: riesce se è minore del carisma. */
+    AMICIZIA("Amicizia", false),
+    /** Il tiro (da 1 a 100) che fa scattare la sfida a carta, forbici e sasso dopo un'amicizia: scatta se non supera la percentuale. */
+    SFIDA_CARTA_FORBICI_SASSO("Sfida a carta", false);
 
     private final String descrizione;
     private final boolean scelta;

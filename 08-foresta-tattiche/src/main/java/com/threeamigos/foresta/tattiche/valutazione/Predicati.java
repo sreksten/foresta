@@ -6,6 +6,7 @@ import com.threeamigos.foresta.modellodati.OrdinamentoMD;
 import com.threeamigos.foresta.modellodati.PredicatoMD;
 import com.threeamigos.foresta.modellodati.SelettoreMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tattiche.ContestoTattico;
 import com.threeamigos.foresta.tipi.TipoPredicato;
@@ -38,7 +39,8 @@ public final class Predicati {
 		// attuale del personaggio, quello su cui si basavano le soglie dei mostri prima delle tattiche
 		VERIFICHE.put(TipoPredicato.INTELLIGENZA, (p, ctx) -> p.getTipoConfronto().vale(ctx.getAttore().get(TipoAttributo.INTELLIGENZA), p.getNumero()));
 		// L'unico predicato che tira il dado: un tiro da 1 a 100, vero se non supera la percentuale. Si ritira a ogni valutazione, anche della stessa voce
-		VERIFICHE.put(TipoPredicato.PROBABILITA, (p, ctx) -> Dado.tira(100) <= p.getNumero());
+		// (Il tiro di un mostro ha un contesto suo, perché il tutorial può impedirgli di lanciare incantesimi)
+		VERIFICHE.put(TipoPredicato.PROBABILITA, (p, ctx) -> (ctx.isAttoreDelGiocatore() ? Dado.tira(100) : Dado.tira(ContestoLancio.TATTICA_DEI_MOSTRI, 100)) <= p.getNumero());
 		VERIFICHE.put(TipoPredicato.VOCE_USATA, (p, ctx) -> p.getTipoConfronto().vale(
 				ctx.getStato().getUsiDellaVoce(ctx.getAttore(), voce(ctx)), p.getNumero()));
 		VERIFICHE.put(TipoPredicato.ROUND_DALL_ULTIMO_USO, (p, ctx) -> p.getTipoConfronto().vale(roundDallUltimoUso(ctx), p.getNumero()));

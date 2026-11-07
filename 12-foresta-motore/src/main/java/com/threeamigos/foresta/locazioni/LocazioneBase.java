@@ -824,7 +824,7 @@ public abstract class LocazioneBase implements Locazione {
 					// Annullare non e' un'azione: nessun turno trascorre, si ripresentano solo i comandi
 					return annullaScelta();
 				}
-				if (Cassa.getMonete() >= gruppo.getNumeroPersonaggi() * 2 && Dado.tira(CostantiMotore.FACCE_DEL_DADO_DELLA_CORRUZIONE) > CostantiMotore.SOGLIA_DEL_DADO_DELLA_CORRUZIONE) {
+				if (Cassa.getMonete() >= gruppo.getNumeroPersonaggi() * 2 && Dado.tira(ContestoLancio.CORRUZIONE, CostantiMotore.FACCE_DEL_DADO_DELLA_CORRUZIONE) > CostantiMotore.SOGLIA_DEL_DADO_DELLA_CORRUZIONE) {
 					Cassa.subMonete(gruppo.getNumeroPersonaggi() * 2);
 					BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "LocazioneBase.3", gruppo.chiMaiuscolo())));
 					BusEventi.pubblica(new InternoCorruzioneRiuscita(classiAvversariVivi()));
@@ -871,7 +871,7 @@ public abstract class LocazioneBase implements Locazione {
 					return annullaScelta();
 				}
 				Personaggio personaggio = gruppo.getPersonaggio(azione.getIndicePersonaggio());
-				int tiroDelDado = Dado.tira(CostantiPersonaggi.FACCE_DEL_DADO_DELL_AMICIZIA);
+				int tiroDelDado = Dado.tira(ContestoLancio.AMICIZIA, CostantiPersonaggi.FACCE_DEL_DADO_DELL_AMICIZIA);
 				int carismaNelTiro = Math.min(personaggio.get(TipoAttributo.CARISMA), CostantiPersonaggi.FACCE_DEL_DADO_DELL_AMICIZIA);
 				Logger.log(() -> "Carisma personaggio: " + personaggio.get(TipoAttributo.CARISMA) + " (nel tiro " + carismaNelTiro + "); tiro del dado: " + tiroDelDado);
 				if (carismaNelTiro > tiroDelDado) {
@@ -885,7 +885,7 @@ public abstract class LocazioneBase implements Locazione {
 
 					// Finché la missione La sfida dei campioni non è partita, a volte l'avversario sfida invece di offrire
 					if (!RegistroMissioni.isPartita(MissionePredefinita.LA_SFIDA_DEI_CAMPIONI) && PartitaCartaForbiciSasso.puoGiocare(gruppoAvversario.getCapo().getClasse())
-							&& Dado.tira(100) <= CostantiMissioni.PERCENTUALE_PROBABILITA_CARTA_FORBICI_SASSO) {
+							&& Dado.tira(ContestoLancio.SFIDA_CARTA_FORBICI_SASSO, 100) <= CostantiMissioni.PERCENTUALE_PROBABILITA_CARTA_FORBICI_SASSO) {
 						return iniziaLaSfida();
 					}
 					return offriLAmicizia();
@@ -1993,7 +1993,7 @@ public abstract class LocazioneBase implements Locazione {
 		passaggioEscluso = true;
 		int probabilita = probabilitaDiPassareInosservati(gruppo, gruppoAvversario, LineaTemporale.getOra());
 		LineaTemporale.aggiungiOre(1);
-		if (Dado.tira(100) <= probabilita) {
+		if (Dado.tira(ContestoLancio.PASSAGGIO_INOSSERVATO, 100) <= probabilita) {
 			BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore", "LocazioneBase.12", gruppo.chiMaiuscolo())));
 			BusEventi.pubblica(new InternoPassaggioInosservato());
 			setCompleta(false);

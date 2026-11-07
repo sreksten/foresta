@@ -489,6 +489,15 @@ public class FinestraDiProva {
                             "6 - panacea", "7 - monete", "8 - pietre preziose"};
                 case COFANO_OGGETTO:
                     return strumenti.getOggettiSpeciali().toArray();
+                case COLPO_DEI_MOSTRI:
+                case TATTICA_DEI_MOSTRI:
+                case PASSAGGIO_INOSSERVATO:
+                case SFIDA_CARTA_FORBICI_SASSO:
+                    return numeri(1, 100);
+                case CORRUZIONE:
+                    return numeri(1, 10);
+                case AMICIZIA:
+                    return numeri(1, CostantiPersonaggi.FACCE_DEL_DADO_DELL_AMICIZIA);
                 case FUGA_PERDITA_DENARO:
                 case FUGA_PERDITA_SCORTE:
                     return numeri(CostantiPersonaggi.FUGA_PERDITA_MINIMA_PERCENTUALE, CostantiPersonaggi.FUGA_PERDITA_MASSIMA_PERCENTUALE);

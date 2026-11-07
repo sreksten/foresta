@@ -24,6 +24,10 @@ public final class PilotaggioDelTutorial implements TruccatoreDiDadi {
 	private static final TipoPersonaggio[] MOSTRI_DEI_PRIMI_TURNI = {
 			TipoPersonaggio.ARPIA, TipoPersonaggio.CHIMERA_DRAGO, TipoPersonaggio.SCHELETRO, TipoPersonaggio.GOBLIN, TipoPersonaggio.FOLLETTO};
 
+	private static final int TURNO_DELLA_CHIMERA_DRAGO = 1;
+	private static final int TURNO_DEL_GOBLIN = 3;
+	private static final int TURNO_DEL_FOLLETTO = 4;
+
 	private final TruccatoreDiDadi prioritario;
 
 	/**
@@ -64,6 +68,13 @@ public final class PilotaggioDelTutorial implements TruccatoreDiDadi {
 		return ammessi;
 	}
 
+	/**
+	 * I turni in cui il giocatore non può perdere: il primo scontro (l'arpia) e quello con lo scheletro. Con la chimera drago non è protetto.
+	 */
+	private static boolean isTurnoProtetto(int turno) {
+		return MOSTRI_DEI_PRIMI_TURNI[turno] == TipoPersonaggio.ARPIA || MOSTRI_DEI_PRIMI_TURNI[turno] == TipoPersonaggio.SCHELETRO;
+	}
+
 	@Override
 	public OptionalInt lancio(ContestoLancio contesto, int min, int max) {
 		if (prioritario != null) {
@@ -72,11 +83,33 @@ public final class PilotaggioDelTutorial implements TruccatoreDiDadi {
 				return voluto;
 			}
 		}
-		// Un mostro solo, per spiegare una cosa alla volta
-		if (contesto == ContestoLancio.NUMERO_MOSTRI && pilotaQuestoTurno()) {
-			return OptionalInt.of(1);
+		if (!pilotaQuestoTurno()) {
+			return OptionalInt.empty();
 		}
-		return OptionalInt.empty();
+		int turno = Statistiche.getTurniGiocati();
+		switch (contesto) {
+			// Un mostro solo, per spiegare una cosa alla volta
+			case NUMERO_MOSTRI:
+				return OptionalInt.of(1);
+			// Il primo scontro (l'arpia) e quello con lo scheletro non si possono perdere: i mostri non colpiscono e non lanciano incantesimi
+			// (un tiro di 100 non va mai a segno, e non fa valere nessuna voce con una probabilità sotto il 100)
+			case COLPO_DEI_MOSTRI:
+			case TATTICA_DEI_MOSTRI:
+				return isTurnoProtetto(turno) ? OptionalInt.of(100) : OptionalInt.empty();
+			// Davanti alla chimera drago conviene non farsi vedere: passare inosservati riesce sempre
+			case PASSAGGIO_INOSSERVATO:
+				return turno == TURNO_DELLA_CHIMERA_DRAGO ? OptionalInt.of(1) : OptionalInt.empty();
+			// Il goblin si corrompe (il dado supera la soglia)
+			case CORRUZIONE:
+				return turno == TURNO_DEL_GOBLIN ? OptionalInt.of(max) : OptionalInt.empty();
+			// Il folletto diventa amico (il dado è sotto il carisma) e non sfida a carta, forbici e sasso
+			case AMICIZIA:
+				return turno == TURNO_DEL_FOLLETTO ? OptionalInt.of(min) : OptionalInt.empty();
+			case SFIDA_CARTA_FORBICI_SASSO:
+				return turno == TURNO_DEL_FOLLETTO ? OptionalInt.of(max) : OptionalInt.empty();
+			default:
+				return OptionalInt.empty();
+		}
 	}
 
 	@Override

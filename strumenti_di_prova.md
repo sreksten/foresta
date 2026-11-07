@@ -32,6 +32,13 @@ prova hanno un `ContestoLancio`:
 | `NUMERO_MOSTRI` | `LocazioneBase.crea` | Quanti mostri di quel tipo; il valore voluto vale solo se rientra nel limite della locazione (altrimenti va al caso) |
 | `COFANO_ESITO` | `RaccoltaBottino` (apertura del cofano) | Che cosa c'è dentro, da 0 (niente) a 7 (pietre preziose); nei castelli lo 0 non esce |
 | `COFANO_OGGETTO` | `RaccoltaBottino` (apertura del cofano) | L'oggetto speciale: niente, un ingrediente, un artefatto, un aggiornamento, un leggendario del catalogo o un libro tecnico (anche se già trovato; il suo intermezzo però scatta solo la prima volta) |
+| `FUGA_PERDITA_DENARO`, `FUGA_PERDITA_SCORTE` | `Cassa.perdeNellaFuga`, `GruppoGiocatore.fugge` | La percentuale (da 1 a 20) di monete e preziosi, e di incantesimi e pozioni, che si perde fuggendo |
+| `COLPO_DEI_MOSTRI` | `CalcolatoreCombattimento.colpisce` | Il tiro (da 1 a 100) con cui un mostro colpisce: un 100 non va mai a segno (la probabilità arriva al massimo a 95) |
+| `TATTICA_DEI_MOSTRI` | `Predicati` (predicato `PROBABILITA`, solo per i mostri) | Il tiro (da 1 a 100) delle voci con una probabilità, per esempio quella di lanciare un incantesimo: un 100 non fa valere nessuna voce sotto il 100% |
+| `PASSAGGIO_INOSSERVATO` | `LocazioneBase.passaInosservati` | Il tiro (da 1 a 100): riesce se non supera la probabilità, che è almeno 5 |
+| `CORRUZIONE` | `LocazioneBase` (`CHI_CORROMPE`) | Il dado della corruzione (da 1 a 10): riesce se supera la soglia, avendo le monete |
+| `AMICIZIA` | `LocazioneBase` (`CHI_FA_AMICIZIA`) | Il dado dell'amicizia: riesce se è minore del carisma |
+| `SFIDA_CARTA_FORBICI_SASSO` | `LocazioneBase` (dopo un'amicizia) | Il tiro (da 1 a 100) che fa scattare la sfida: scatta se non supera la percentuale |
 
 **Regole.**
 
