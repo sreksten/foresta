@@ -1,8 +1,12 @@
 package com.threeamigos.foresta.tutorial;
 
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
+import com.threeamigos.foresta.personaggi.RegoleEquipaggiamento;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
 import com.threeamigos.foresta.strumenti.dado.TruccatoreDiDadi;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoBottino;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.List;
@@ -75,6 +79,38 @@ public final class PilotaggioDelTutorial implements TruccatoreDiDadi {
 		return MOSTRI_DEI_PRIMI_TURNI[turno] == TipoPersonaggio.ARPIA || MOSTRI_DEI_PRIMI_TURNI[turno] == TipoPersonaggio.SCHELETRO;
 	}
 
+	/**
+	 * L'oggetto che il tutorial vuole far trovare in questo turno (quello dello scheletro), se lo pilota: un'arma che il capo del gruppo può
+	 * impugnare, perché il suggerimento sull'inventario abbia qualcosa da equipaggiare. La mazza prima di tutto: contro lo scheletro, le ossa si
+	 * spezzano a bastonate. Un mago o un druido trovano un bastone magico, un bardo una spada.
+	 */
+	public static Optional<TipoBottino> oggettoDelTurno() {
+		if (!mostroDelTurno().filter(mostro -> mostro == TipoPersonaggio.SCHELETRO).isPresent()) {
+			return Optional.empty();
+		}
+		TipoPersonaggio classe = GruppoGiocatore.getIstanza().getCapo().getClasse();
+		if (RegoleEquipaggiamento.puoUsare(classe, TipoArtefatto.MAZZA)) {
+			return Optional.of(TipoBottino.MAZZA);
+		}
+		if (RegoleEquipaggiamento.puoUsare(classe, TipoArtefatto.BASTONE_MAGICO)) {
+			return Optional.of(TipoBottino.BASTONE_MAGICO);
+		}
+		return Optional.of(TipoBottino.SPADA);
+	}
+
+	/**
+	 * Gli oggetti che una locazione può avere, con in più quello del turno se il tutorial lo pilota: la locazione (una radura non ne ha) non può
+	 * impedire di trovarlo. La scelta resta al dado.
+	 */
+	public static List<TipoBottino> conLOggettoDelTurno(List<TipoBottino> possibili) {
+		oggettoDelTurno().ifPresent(oggetto -> {
+			if (!possibili.contains(oggetto)) {
+				possibili.add(oggetto);
+			}
+		});
+		return possibili;
+	}
+
 	@Override
 	public OptionalInt lancio(ContestoLancio contesto, int min, int max) {
 		if (prioritario != null) {
@@ -118,6 +154,14 @@ public final class PilotaggioDelTutorial implements TruccatoreDiDadi {
 			Optional<T> voluto = prioritario.scelta(contesto, ammessi);
 			if (voluto.isPresent()) {
 				return voluto;
+			}
+		}
+		if (contesto == ContestoLancio.TIPO_OGGETTO_TROVATO) {
+			Optional<TipoBottino> oggetto = oggettoDelTurno();
+			if (oggetto.isPresent() && ammessi.contains(oggetto.get())) {
+				@SuppressWarnings("unchecked")
+				T scelto = (T) oggetto.get();
+				return Optional.of(scelto);
 			}
 		}
 		if (contesto == ContestoLancio.TIPO_MOSTRO) {

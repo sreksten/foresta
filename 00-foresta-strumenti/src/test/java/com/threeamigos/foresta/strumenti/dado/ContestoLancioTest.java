@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
- * I contesti dei lanci che si possono truccare: ognuno ha un nome per la finestra di prova, e solo due scelgono fra elementi
+ * I contesti dei lanci che si possono truccare: ognuno ha un nome per la finestra di prova, e solo tre scelgono fra elementi
  * invece di dare un numero.
  */
 class ContestoLancioTest {
@@ -20,9 +20,10 @@ class ContestoLancioTest {
     }
 
     @Test
-    void soloIlTipoDiMostroEIlCofanoOggettoScelgonoFraElementi() {
+    void soloIContestiDiSceltaScelgonoFraElementi() {
         for (ContestoLancio contesto : ContestoLancio.values()) {
-            boolean attesa = contesto == ContestoLancio.TIPO_MOSTRO || contesto == ContestoLancio.COFANO_OGGETTO;
+            boolean attesa = contesto == ContestoLancio.TIPO_MOSTRO || contesto == ContestoLancio.COFANO_OGGETTO
+                    || contesto == ContestoLancio.TIPO_OGGETTO_TROVATO;
             assertEquals(attesa, contesto.isScelta(), contesto.name());
         }
     }

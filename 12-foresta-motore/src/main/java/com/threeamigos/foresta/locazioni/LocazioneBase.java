@@ -327,11 +327,11 @@ public abstract class LocazioneBase implements Locazione {
 			setOggetto(BottinoArtefatto.giaFatto(a));
 		} else if (!isLocazioneVisitata()) {
 			// Non ci sono artefatti, creiamo un oggetto.
-			TipoBottino[] o = getPossibiliOggetti();
-			Logger.log(() -> "Scelta da " + o.length + " oggetti");
-			if (o.length > 0) {
-				int indice = Dado.tiraAncheAUnaFaccia(o.length) - 1;
-				TipoBottino tipoOggetto = o[indice];
+			// (nel tutorial c'è anche l'oggetto che il tutorial vuole far trovare)
+			List<TipoBottino> o = PilotaggioDelTutorial.conLOggettoDelTurno(new ArrayList<>(Arrays.asList(getPossibiliOggetti())));
+			Logger.log(() -> "Scelta da " + o.size() + " oggetti");
+			if (!o.isEmpty()) {
+				TipoBottino tipoOggetto = Dado.scegli(ContestoLancio.TIPO_OGGETTO_TROVATO, o);
 				Logger.log(() -> "Classe oggetto " + tipoOggetto);
 				Bottino probabileOggetto = FabbricaOggetti.crea(tipoOggetto);
 				if (probabileOggetto.getQuantita() > 0) {

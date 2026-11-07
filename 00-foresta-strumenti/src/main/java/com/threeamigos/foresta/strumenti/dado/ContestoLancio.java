@@ -34,7 +34,9 @@ public enum ContestoLancio {
     /** Il tiro del dado dell'amicizia: riesce se è minore del carisma. */
     AMICIZIA("Amicizia", false),
     /** Il tiro (da 1 a 100) che fa scattare la sfida a carta, forbici e sasso dopo un'amicizia: scatta se non supera la percentuale. */
-    SFIDA_CARTA_FORBICI_SASSO("Sfida a carta", false);
+    SFIDA_CARTA_FORBICI_SASSO("Sfida a carta", false),
+    /** Il tipo di oggetto che una locazione lascia da trovare, scelto fra quelli che può avere. */
+    TIPO_OGGETTO_TROVATO("Tipo di oggetto trovato", true);
 
     private final String descrizione;
     private final boolean scelta;

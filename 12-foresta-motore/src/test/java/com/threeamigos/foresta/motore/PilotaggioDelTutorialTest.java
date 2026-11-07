@@ -4,6 +4,7 @@ import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.locazioni.Bosco;
+import com.threeamigos.foresta.locazioni.Radura;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.strumenti.TrucchiDiSviluppo;
@@ -11,6 +12,7 @@ import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.CategoriaDanno;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoBottino;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tutorial.PilotaggioDelTutorial;
@@ -158,6 +160,27 @@ class PilotaggioDelTutorialTest {
 			assertEquals(1, pilota.lancio(ContestoLancio.AMICIZIA, 1, 20).getAsInt());
 			assertEquals(100, pilota.lancio(ContestoLancio.SFIDA_CARTA_FORBICI_SASSO, 1, 100).getAsInt());
 			assertFalse(pilota.lancio(ContestoLancio.CORRUZIONE, 1, 10).isPresent());
+		}
+	}
+
+	@Test
+	void alTurnoDelloScheletroSiTrovaUnArmaChePuoUsareIlCapo() {
+		try (PartitaDiTest partita = partita(37)) {
+			Dado.impostaTruccatore(new PilotaggioDelTutorial(null));
+			// I primi due turni non decidono l'oggetto
+			assertFalse(PilotaggioDelTutorial.oggettoDelTurno().isPresent());
+			Statistiche.incrementaTurniGiocati();
+			Statistiche.incrementaTurniGiocati();
+			// Il capo è un guerriero: la mazza, anche in una radura, che non lascia oggetti
+			assertEquals(TipoBottino.MAZZA, PilotaggioDelTutorial.oggettoDelTurno().get());
+			for (int prova = 0; prova < 30; prova++) {
+				Radura radura = new Radura();
+				radura.crea(GruppoGiocatore.getIstanza(), GruppoAvversario.getIstanza());
+				assertNotNull(radura.getOggetto(), "prova " + prova);
+				assertEquals(TipoBottino.MAZZA, radura.getOggetto().getClasse());
+			}
+			Statistiche.incrementaTurniGiocati();
+			assertFalse(PilotaggioDelTutorial.oggettoDelTurno().isPresent());
 		}
 	}
 }

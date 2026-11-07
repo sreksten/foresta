@@ -39,6 +39,7 @@ prova hanno un `ContestoLancio`:
 | `CORRUZIONE` | `LocazioneBase` (`CHI_CORROMPE`) | Il dado della corruzione (da 1 a 10): riesce se supera la soglia, avendo le monete |
 | `AMICIZIA` | `LocazioneBase` (`CHI_FA_AMICIZIA`) | Il dado dell'amicizia: riesce se è minore del carisma |
 | `SFIDA_CARTA_FORBICI_SASSO` | `LocazioneBase` (dopo un'amicizia) | Il tiro (da 1 a 100) che fa scattare la sfida: scatta se non supera la percentuale |
+| `TIPO_OGGETTO_TROVATO` | `LocazioneBase.crea` | Il tipo di oggetto che la locazione lascia da trovare, fra quelli che può avere (il truccatore sceglie un elemento di `TipoBottino`) |
 
 **Regole.**
 
