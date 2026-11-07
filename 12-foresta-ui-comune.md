@@ -6,7 +6,7 @@ Non usa `java.awt`, Swing, `javax.imageio` né libGDX: lo controlla `DipendenzeD
 
 ## Dipendenze
 
-**Dichiarate nel pom:** `11-foresta-motore-api`, `08-foresta-tattiche`.
+**Dichiarate nel pom:** `11-foresta-motore-api`, `08-foresta-tattiche`, `03-foresta-tutorial`.
 
 **Lo dichiarano:** `12-foresta-swing`.
 
@@ -99,6 +99,10 @@ Tutto quello che la UI fa senza disegnare, uguale per Swing e libGDX:
 - **`DisposizioneDelloSchermo`** dice dove stanno la barra delle icone, l'area di contenuto e i riquadri della schermata di gioco, dalle misure delle cornici con lo zoom, e quanto deve essere grande lo schermo per vederli tutti (`dimensioniDelloSchermo`). **`MisureDaiFile`** dà le misure delle immagini senza toolkit e senza scheda grafica (dal descrittore dell'atlante o dall'intestazione del PNG): libGDX le usa prima di aprire la finestra, e `MisureDaiFileTest` (in `13-foresta-app-swing`) controlla che siano quelle di Swing.
 - **`OpzioniDiAvvio`** legge gli argomenti della riga di comando comuni ai due `Main` (orientamento, tutto schermo, logo, barra, joystick, lingua, zoom, modalità di prova); gli altri restano a chi avvia (`getAltri`, `haAltro`).
 - **`CampoDiTesto`** è il campo in cui il giocatore scrive: chi aspetta la risposta (il motore, con `ComandoInvioTesto`, o la UI, per il nome di una voce delle tattiche), l'invio, la rinuncia con Esc (solo per i testi chiesti dalla UI) e i caratteri ammessi (quelli del font, senza il `|` dei salvataggi). Il campo vero è del toolkit (`CampoDiTesto.Campo`: il `Prompt` di Swing, `CampoDiTestoGdx`).
+
+### Il tutorial (pacchetto `ui.tutorial`)
+
+Il modello dei suggerimenti, senza disegno (vedi [`tutorial.md`](tutorial.md) e [`03-foresta-tutorial.md`](03-foresta-tutorial.md)). **`SituazioniDellaUI`** traduce quello che la UI sa (le icone nella barra, il combattimento aperto, un oggetto trovato, quanti scontri si sono visti) nelle `Situazione` che il registro capisce; **`TutorDelGioco`** (lo tiene `SchermoDelGioco`, `getTutor()`) chiede al `RegistroSuggerimenti` se c'è qualcosa da spiegare e tiene aperto il **`FumettoDelTutorial`** (suggerimento, pagina, testo, bersaglio) finché il giocatore non preme il pollice (`pollice()`: avanti, e sull'ultima pagina «visto») o l'annulla (`annulla()`: spegne tutto il tutorial); dice anche quando il bordo del bersaglio è acceso (`isBordoAcceso`, lampeggia). `ForestaUI` aggiorna le situazioni dagli eventi che già riceve e a ogni cambio di icone (`aggiornaIlTutorial`); un fumetto si apre solo sulla schermata di gioco, e finché è aperto `SchermoDelGioco.fineFotogramma` tiene occupata la UI (il motore aspetta). **Il tutorial non è abilitato finché un toolkit non lo dice** (`TutorDelGioco.setAbilitato(true)`): un fumetto che non si può disegnare né chiudere terrebbe ferma la UI.
 
 ### Il resto
 

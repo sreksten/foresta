@@ -13,6 +13,7 @@ import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzabile;
 import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzatore;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.FaseDiGioco;
+import com.threeamigos.foresta.tipi.StatoDelloSchermo;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoFinestra;
 import com.threeamigos.foresta.tipi.TipoModificatore;
@@ -22,6 +23,7 @@ import com.threeamigos.foresta.ui.sfx.GestoreNuvole;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 import com.threeamigos.foresta.ui.testo.TestoReazioneDiClasse;
+import com.threeamigos.foresta.ui.tutorial.SituazioniDellaUI;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,6 +49,8 @@ public abstract class ForestaUI implements Temporizzabile {
 	private SchermoDelGioco<?, ?, ?, ?> schermo;
 	private CampoDiTesto campo;
 	private FaseDiGioco faseDiGioco;
+	// Quel che il tutorial deve sapere e che non si legge dalle icone (vedi aggiornaIlTutorial)
+	private final SituazioniDellaUI situazioni = new SituazioniDellaUI();
 
 	/**
 	 * Si iscrive agli eventi: le iscrizioni devono esserci tutte prima che l'interfaccia, appena pronta, pubblichi eventi a cui il
@@ -83,6 +87,7 @@ public abstract class ForestaUI implements Temporizzabile {
 		BusEventi.iscriviti(InternoAggiornamentoComandiDisponibili.class, e -> {
 			ComandiPossibili.set(e.getPossibilita());
 			schermo.impostaAzioniIcone();
+			aggiornaIlTutorial();
 		});
 		// Si può spendere un punto dopo l'altro, anche su personaggi diversi: ogni annuncio sostituisce il precedente
 		BusEventi.iscriviti(NotificaConsumoPuntoAbilitaPersonaggio.class,
@@ -107,6 +112,8 @@ public abstract class ForestaUI implements Temporizzabile {
 		BusEventi.iscriviti(InternoMostraSchermataGioco.class, e -> {
 			schermo.iniziaGioco();
 			schermo.primoPiano(TipoFinestra.GRAFICA);
+			situazioni.segnaSchermataDiGioco();
+			aggiornaIlTutorial();
 		});
 		BusEventi.iscriviti(NotificaMostraStatisticheFineGioco.class, e -> schermo.mostraStatistiche());
 		BusEventi.iscriviti(NotificaTestoParagrafo.class, e -> schermo.notificaParagrafo(e.getMessaggio()));
@@ -117,6 +124,7 @@ public abstract class ForestaUI implements Temporizzabile {
 			// La sfida a carta, forbici e sasso finita nella locazione prima resta visibile fino a qui
 			schermo.getRiquadroSfida().setVisibile(false);
 			schermo.preparaLocazione();
+			situazioni.segnaNuovaLocazione();
 		});
 		BusEventi.iscriviti(InternoAssegnaCoordinateAPersonaggi.class, e -> schermo.assegnaCoordinateAPersonaggi());
 		BusEventi.iscriviti(InternoRichiestaAperturaFinestraCombattimento.class, e -> {
@@ -125,6 +133,8 @@ public abstract class ForestaUI implements Temporizzabile {
 			combattimento.setAvversario(e.getAvversario());
 			combattimento.setVisible(true);
 			rinfresca();
+			situazioni.segnaCombattimentoAperto();
+			aggiornaIlTutorial();
 		});
 		BusEventi.iscriviti(InternoAzioneInCombattimento.class, this::gestisciEventoAzioneInCombattimento);
 		// La tattica ha scelto l'azione (viene prima che si esegua): il riquadro la scrive sotto il personaggio
@@ -169,6 +179,7 @@ public abstract class ForestaUI implements Temporizzabile {
 		BusEventi.iscriviti(InternoRichiestaChiusuraFinestraCombattimento.class, e -> {
 			schermo.primoPiano(TipoFinestra.STATO);
 			schermo.getRiquadroCombattimento().setVisible(false);
+			situazioni.segnaCombattimentoChiuso();
 		});
 		BusEventi.iscriviti(InternoSfidaCartaForbiciSasso.class, e -> {
 			schermo.getRiquadroSfida().aggiorna(e.getMossaDelGiocatore(), e.getMossaDellAvversario(), e.getPunteggioDelGiocatore(),
@@ -179,16 +190,24 @@ public abstract class ForestaUI implements Temporizzabile {
 			}
 			rinfresca();
 		});
-		BusEventi.iscriviti(NotificaRaccoltaOggetti.class, e -> schermo.raccogliOggetto());
+		BusEventi.iscriviti(NotificaRaccoltaOggetti.class, e -> {
+			schermo.raccogliOggetto();
+			situazioni.segnaOggettoTrovato();
+			aggiornaIlTutorial();
+		});
 		BusEventi.iscriviti(RichiestaUscitaDalGioco.class, e -> {
 			impostaAzioni(e.getPossibilita());
 			schermo.confermaUscita();
 		});
 		BusEventi.iscriviti(InternoRichiestaRefreshUI.class, e -> rinfresca());
 		BusEventi.iscriviti(InternoRichiestaReinizializzazioneUI.class, e -> {
+			// Si ricomincia: il fumetto aperto si chiude senza segnare nulla, e la schermata di gioco ricomparirà
+			schermo.getTutor().chiudi();
+			situazioni.segnaFuoriDalGioco();
 			schermo.reinizializza();
 			schermo.iniziaGioco();
 			schermo.primoPiano(TipoFinestra.GRAFICA);
+			situazioni.segnaSchermataDiGioco();
 			rinfresca();
 		});
 		BusEventi.iscriviti(RichiestaTesto.class, e -> {
@@ -287,6 +306,26 @@ public abstract class ForestaUI implements Temporizzabile {
 	protected void impostaAzioni(Collection<Comando> possibilita) {
 		ComandiPossibili.set(possibilita);
 		schermo.impostaAzioniIcone();
+		aggiornaIlTutorial();
+	}
+
+	/**
+	 * Dice al tutorial che cosa si vede adesso (le icone, il combattimento, un oggetto trovato...) e, se c'è un suggerimento da dare, lo apre. Si
+	 * apre solo sulla schermata di gioco, non durante un intermezzo, una mappa a tutto schermo o una scelta: lì il giocatore ha altro da guardare.
+	 */
+	private void aggiornaIlTutorial() {
+		if (schermo == null) {
+			return;
+		}
+		boolean consentito = schermo.getStato() == StatoDelloSchermo.IN_GIOCO;
+		boolean missioneAttiva = !vistaPartita.getMissioniAttive().isEmpty();
+		boolean aperto = schermo.getTutor()
+				.aggiorna(situazioni.correnti(ComandiPossibili.getComandi(), missioneAttiva, schermo.getTutor().isDito()), consentito).isPresent();
+		if (aperto) {
+			// Finché il fumetto è aperto il motore aspetta (vedi SchermoDelGioco.fineFotogramma, che avvisa quando si chiude)
+			BusEventi.pubblica(new InternoUiOccupata());
+		}
+		rinfresca();
 	}
 
 	private void mostraFinestra(TipoFinestra finestra) {
@@ -320,6 +359,8 @@ public abstract class ForestaUI implements Temporizzabile {
 
 			case INTRO:
 				// Richiama la schermata o animazione di introduzione
+				schermo.getTutor().chiudi();
+				situazioni.segnaFuoriDalGioco();
 				schermo.avviaIntro();
 				// La prima schermata (loghi o classifica) deve restare per un periodo intero
 				temporizzatore.iniziaDopo(PRIMA_SCHERMATA_DELL_INTRO_MS);

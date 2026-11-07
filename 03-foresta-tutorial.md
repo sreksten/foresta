@@ -1,6 +1,6 @@
 # 03-foresta-tutorial
 
-Il **tutorial**: i suggerimenti per chi gioca per la prima volta (il piano e le decisioni sono in [`tutorial.md`](tutorial.md)). Il modulo è la *memoria* del tutorial e il catalogo dei suggerimenti: dice quali sono, quando scattano, a che cosa puntano, quali sono già stati visti e se il tutorial è acceso. **Non sa niente della UI e non manda eventi**: la UI gli dice che cosa vede e quando un suggerimento è stato letto, il motore lo legge per pilotare la partita (vedi `12-foresta-motore`, `PilotaggioDelTutorial`). Il disegno del fumetto, il pollice e il bordo che lampeggia sono della UI e non ci sono ancora.
+Il **tutorial**: i suggerimenti per chi gioca per la prima volta (il piano e le decisioni sono in [`tutorial.md`](tutorial.md)). Il modulo è la *memoria* del tutorial e il catalogo dei suggerimenti: dice quali sono, quando scattano, a che cosa puntano, quali sono già stati visti e se il tutorial è acceso. **Non sa niente della UI e non manda eventi**: la UI gli dice che cosa vede e quando un suggerimento è stato letto, il motore lo legge per pilotare la partita (vedi `12-foresta-motore`, `PilotaggioDelTutorial`). Il modello del fumetto (`TutorDelGioco`) è in `12-foresta-ui-comune`; il disegno del fumetto, il pollice e il bordo che lampeggia sono dei toolkit e non ci sono ancora.
 
 Esiste a sé perché, come il bestiario, **non appartiene a una partita**: non fa parte di `ModelloDati`, non si reimposta mai e si salverebbe in un file a parte.
 
@@ -8,7 +8,7 @@ Esiste a sé perché, come il bestiario, **non appartiene a una partita**: non f
 
 **Dichiarate nel pom:** `00-foresta-serializzazione`, `02-foresta-comandi`.
 
-**Lo dichiarano:** `12-foresta-motore`.
+**Lo dichiarano:** `12-foresta-motore`, `12-foresta-ui-comune`.
 
 Le dipendenze sono transitive: un modulo vede anche quello che vedono i moduli da cui dipende, quindi il compilatore garantisce la separazione fra i moduli che non si raggiungono.
 

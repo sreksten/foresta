@@ -16,6 +16,7 @@ import com.threeamigos.foresta.modellodati.MessaggioMD;
 import com.threeamigos.foresta.modellodati.TatticaMD;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 import com.threeamigos.foresta.tipi.StatoDelloSchermo;
+import com.threeamigos.foresta.ui.tutorial.TutorDelGioco;
 import com.threeamigos.foresta.tipi.TipoAzione;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoFinestra;
@@ -90,6 +91,8 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	private final CodaDelleRivelazioni<R> rivelazioni = new CodaDelleRivelazioni<>();
 	// Rileva il fronte "appena tornata inattiva" per notificare l'Automa con InternoUiInattiva
 	private boolean uiOccupata;
+	// I suggerimenti del tutorial: finché un fumetto è aperto la UI è occupata e il motore aspetta
+	private final TutorDelGioco tutor = new TutorDelGioco();
 	// La prossima intro deve partire dalla classifica invece che dai loghi (vedi mostraPunteggi)
 	private boolean introDallaClassifica;
 
@@ -1053,11 +1056,18 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	}
 
 	/**
+	 * Il tutorial: il suggerimento aperto, se c'è, e i comandi per chiuderlo (il toolkit lo disegna e gli manda il pollice e l'annulla).
+	 */
+	public TutorDelGioco getTutor() {
+		return tutor;
+	}
+
+	/**
 	 * Alla fine di ogni fotogramma, in qualunque schermata: appena sprite, annunci e rivelazioni sono tutti finiti, l'Automa può
 	 * mostrare il prossimo intermezzo in attesa (se ce n'è uno).
 	 */
 	public void fineFotogramma() {
-		boolean occupataOra = !sprite.isEmpty() || annuncioAttivo != null || !codaAnnunci.isEmpty() || rivelazioni.isOccupata();
+		boolean occupataOra = !sprite.isEmpty() || annuncioAttivo != null || !codaAnnunci.isEmpty() || rivelazioni.isOccupata() || tutor.isAperto();
 		if (uiOccupata && !occupataOra) {
 			BusEventi.pubblica(new InternoUiInattiva());
 		}
