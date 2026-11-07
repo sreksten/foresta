@@ -11,11 +11,13 @@ import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.salvataggi.GestoreBestiarioSuFile;
 import com.threeamigos.foresta.salvataggi.GestorePunteggiSuFile;
 import com.threeamigos.foresta.salvataggi.GestoreSalvataggiSuFile;
+import com.threeamigos.foresta.salvataggi.GestoreSuggerimentiSuFile;
 import com.threeamigos.foresta.salvataggi.GestoreTrofeiSuFile;
 import com.threeamigos.foresta.strumenti.ModalitaDiProva;
 import com.threeamigos.foresta.strumenti.TrucchiDiSviluppo;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tutorial.PilotaggioDelTutorial;
+import com.threeamigos.foresta.tutorial.RegistroSuggerimenti;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzatore;
 import com.threeamigos.foresta.strumenti.temporizzatore.TemporizzatoreJ2SE;
@@ -59,6 +61,8 @@ public final class AvvioDelMotore {
 		// Trofei e bestiario valgono da una partita all'altra: si rileggono una volta sola, all'avvio
 		RegistroTrofei.impostaGestoreTrofei(new GestoreTrofeiSuFile());
 		RegistroBestiario.impostaGestoreBestiario(new GestoreBestiarioSuFile());
+		// Anche il tutorial vale da una partita all'altra: i suggerimenti già visti non si rivedono, finché non lo si ripristina
+		RegistroSuggerimenti.impostaGestore(new GestoreSuggerimentiSuFile());
 
 		automa = new Automa(nuovoTemporizzatore(), new GestoreSalvataggiSuFile(), gestorePunteggi);
 		if (!linguaDecisa) {

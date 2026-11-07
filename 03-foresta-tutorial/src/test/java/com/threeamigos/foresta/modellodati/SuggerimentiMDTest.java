@@ -47,6 +47,11 @@ class SuggerimentiMDTest {
 	}
 
 	@Test
+	void unaPrimaRigaCheNonELoStatoEUnFileRovinato() {
+		assertThrows(IOException.class, () -> letto("forse\nMISSIONI\n"));
+	}
+
+	@Test
 	void unFileVuotoDaIlTutorialAccesoESenzaVisti() throws IOException {
 		SuggerimentiMD md = letto("");
 		assertTrue(md.isAttivo());

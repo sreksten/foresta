@@ -71,7 +71,8 @@ public class SuggerimentiMD implements Serializzabile {
 	}
 
 	/**
-	 * Un suggerimento che il gioco non ha più (una costante rinominata o tolta) si salta: non deve impedire di leggere gli altri.
+	 * Un suggerimento che il gioco non ha più (una costante rinominata o tolta) si salta: non deve impedire di leggere gli altri. Una prima riga
+	 * che non è lo stato (true o false) è un file rovinato: lancia IOException.
 	 */
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
@@ -80,7 +81,12 @@ public class SuggerimentiMD implements Serializzabile {
 		if (riga == null || riga.isEmpty()) {
 			return;
 		}
-		attivo = new LettoreCampi(riga).booleano();
+		// Una prima riga che non dice né true né false è un file rovinato (booleano() la leggerebbe come falso e spegnerebbe il tutorial)
+		String stato = new LettoreCampi(riga).testo();
+		if (!"true".equals(stato) && !"false".equals(stato)) {
+			throw new IOException("Il file del tutorial non comincia con lo stato (true o false): " + stato);
+		}
+		attivo = Boolean.parseBoolean(stato);
 		while ((riga = stream.readLine()) != null) {
 			if (riga.isEmpty()) {
 				continue;
