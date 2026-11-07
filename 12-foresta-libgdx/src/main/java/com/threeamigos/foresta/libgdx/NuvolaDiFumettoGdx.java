@@ -26,8 +26,17 @@ final class NuvolaDiFumettoGdx {
 	 */
 	static void disegna(Batch batch, ImmaginiGdx immagini, TestoGdx testo, DescrizioneFumetto dati, DoomdarkColorModel.Color colore, int sinistra, int basso,
 						int puntaVersoX, int puntaVersoY, float alpha) {
-		int larghezza = dati.getLarghezza();
-		int altezza = dati.getAltezza();
+		disegna(batch, immagini, testo, dati, colore, sinistra, basso, dati.getLarghezza(), dati.getAltezza(), puntaVersoX, puntaVersoY, alpha);
+	}
+
+	/**
+	 * Come sopra, ma con una nuvola più grande del testo (lo spazio per qualcos'altro, come i pulsanti del tutorial): il testo sta in alto a sinistra.
+	 *
+	 * @param larghezza la larghezza della nuvola, almeno quella del testo
+	 * @param altezza   la sua altezza, almeno quella del testo
+	 */
+	static void disegna(Batch batch, ImmaginiGdx immagini, TestoGdx testo, DescrizioneFumetto dati, DoomdarkColorModel.Color colore, int sinistra, int basso,
+						int larghezza, int altezza, int puntaVersoX, int puntaVersoY, float alpha) {
 		int alto = basso - altezza;
 		Color bianco = new Color(1f, 1f, 1f, alpha);
 

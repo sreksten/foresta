@@ -54,6 +54,14 @@ public final class IconeGdx {
 		return daPixel("icona|" + tipo + "|" + sfondo, () -> ComposizioneDelleIcone.componi(pixel(sfondo.getRisorsa()), pixel(tipo.getNomeRisorsa())));
 	}
 
+	/**
+	 * L'immagine di un'icona fuori dalla barra (il pollice e l'annulla del tutorial): normale, con il suo sfondo.
+	 */
+	public TextureRegion regione(TipoIcona tipo) {
+		return daPixel("icona|" + tipo + "|" + tipo.getSfondo(),
+				() -> ComposizioneDelleIcone.componi(pixel(tipo.getSfondo().getRisorsa()), pixel(tipo.getNomeRisorsa())));
+	}
+
 	private static ImmagineDiPixel pixel(String risorsa) {
 		ImmagineDiPixel immagine = AtlanteDiImmagini.cerca(risorsa);
 		if (immagine == null) {

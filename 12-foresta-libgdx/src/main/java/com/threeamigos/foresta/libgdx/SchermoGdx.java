@@ -73,6 +73,7 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 	private final SchermataGrimorioGdx grimorio;
 	private final SchermataTatticheGdx tattiche;
 	private final BarraIconeGdx barraIcone;
+	private final TutorialGdx tutorial;
 
 	/**
 	 * @param barraDock vero per la barra delle icone che si ingrandisce sotto il cursore (solo in orizzontale)
@@ -121,6 +122,7 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 		Area barra = disposizione.getBarra();
 		barraIcone = new BarraIconeGdx(disposizione.getOrientamento(), barraDock, barra.getX(), barra.getY(), barra.getLarghezza(),
 				barra.getAltezza(), vistaPartita, immagini, piccolo, medio);
+		tutorial = new TutorialGdx(this, immagini, medio);
 		prepara();
 	}
 
@@ -131,6 +133,13 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 		if (abilitato) {
 			mappaATuttoSchermo.getModello().abilitaJoystickVirtuale();
 		}
+	}
+
+	/**
+	 * Il fumetto del tutorial: l'input gli chiede se un tocco è sui suoi pulsanti (vedi {@link InputDelTutorialGdx}).
+	 */
+	TutorialGdx getTutorial() {
+		return tutorial;
 	}
 
 	/**
@@ -224,6 +233,10 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 		}
 		disegnaLAnnuncio(annuncio -> annuncio.anima(batch, camera, viewport));
 		barraIcone.disegna(batch, camera, viewport);
+		// Il suggerimento del tutorial sta sopra la barra delle icone, ma sotto i cartigli dell'aiuto
+		if (stato == StatoDelloSchermo.IN_GIOCO) {
+			tutorial.disegna(batch, disposizione.getLarghezzaTotale(), disposizione.getAltezzaTotale());
+		}
 		if (stato == StatoDelloSchermo.IN_GIOCO) {
 			disegnaAiuto(batch, riquadroGruppo.righeDellAiuto(), riquadroGruppo.getTopLeftX() + riquadroGruppo.getMouseX(),
 					riquadroGruppo.getTopLeftY() + riquadroGruppo.getMouseY());

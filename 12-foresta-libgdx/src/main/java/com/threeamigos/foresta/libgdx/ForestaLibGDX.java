@@ -117,6 +117,9 @@ public final class ForestaLibGDX extends ForestaUI implements ApplicationListene
 		boolean tocco = toccoRichiesto || Gdx.app.getType() != Application.ApplicationType.Desktop;
 		schermo.setJoystickVirtuale(joystickVirtuale || tocco);
 		schermo.setTocco(tocco);
+		// Il fumetto del tutorial lo sa disegnare e chiudere questo toolkit: da qui i suggerimenti si aprono, con i testi per il dito se serve
+		schermo.getTutor().setAbilitato(true);
+		schermo.getTutor().setDito(tocco);
 		campoDiTesto = new CampoDiTestoGdx(immagini, medio, dimensioni.larghezza, dimensioni.altezza);
 		interfacciaCompleta(schermo, campoDiTesto.getCampo());
 		pianificatore = new PianificatoreGdx();
@@ -126,7 +129,8 @@ public final class ForestaLibGDX extends ForestaUI implements ApplicationListene
 		// ...e durante il logo iniziale nessuno li riceve (in Swing il logo e' un pannello a se', che li assorbe)
 		// Il tasto indietro di Android arriva a noi e non chiude l'app da solo
 		Gdx.input.setCatchKey(Input.Keys.BACK, true);
-		Gdx.input.setInputProcessor(new InputMultiplexer(campoDiTesto, new AssorbiDuranteIlLogo(), new IndietroGdx(), new InputGdx(router, pianificatore, viewport, tocco)));
+		Gdx.input.setInputProcessor(new InputMultiplexer(campoDiTesto, new AssorbiDuranteIlLogo(), new IndietroGdx(), new InputDelTutorialGdx(schermo.getTutorial(), viewport),
+				new InputGdx(router, pianificatore, viewport, tocco)));
 		BusEventi.pubblica(new InternoInterfacciaUtentePronta());
 	}
 
