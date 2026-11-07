@@ -241,15 +241,18 @@ class GruppoGiocatoreTest {
     }
 
     @Test
-    void reimpostareDaLeScorteDiPartenza() {
+    void reimpostareRiportaLeScorteDiPartenzaAZero() {
         GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
         gruppo.aggiungiPersonaggio(guerriero("Arsenio"));
         gruppo.aggiungiOspite(FabbricaPersonaggi.crea(TipoPersonaggio.UOMO, 1));
         gruppo.reimposta();
         assertEquals(0, gruppo.getNumeroPersonaggi());
         assertTrue(gruppo.getOspiti().isEmpty());
-        assertEquals(3, gruppo.getIncantesimi(TipoIncantesimo.ARIA));
-        assertEquals(CostantiPersonaggi.POZIONI_SALUTE_INIZIALI, gruppo.getPozioniSalute());
+        // Si comincia senza incantesimi né pozioni: li dà l'eremita alla fine della prima locazione
+        assertEquals(0, gruppo.getIncantesimi(TipoIncantesimo.ARIA));
+        assertEquals(0, gruppo.getIncantesimi(TipoIncantesimo.ACQUA));
+        assertEquals(0, gruppo.getIncantesimi(TipoIncantesimo.TERRA));
+        assertEquals(0, gruppo.getPozioniSalute());
         assertEquals(0, gruppo.getPozioniMagia());
     }
 
@@ -310,7 +313,7 @@ class GruppoGiocatoreTest {
         // Un solo tiro per le scorte (7%), poi quello della salute di chi fugge
         Dado.trucca(7, CostantiPersonaggi.FUGA_DANNO_MINIMO_PERCENTUALE);
         gruppo.fugge();
-        assertTrue(gruppo.getPozioniSalute() < 100 + CostantiPersonaggi.POZIONI_SALUTE_INIZIALI);
+        assertTrue(gruppo.getPozioniSalute() < 100);
         assertEquals(100 - 100 * 7 / 100, gruppo.getPozioniMagia());
         assertEquals(100 - 100 * 7 / 100, gruppo.getIncantesimi(TipoIncantesimo.FUOCO));
         assertTrue(a.getSalute() < massima);

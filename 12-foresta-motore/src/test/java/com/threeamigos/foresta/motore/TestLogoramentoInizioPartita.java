@@ -2,6 +2,7 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.personaggi.GestoreProgressione;
+import com.threeamigos.foresta.tipi.CostantiMotore;
 import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 
 import com.threeamigos.foresta.combattimento.ApplicazioneDelRisultato;
@@ -27,7 +28,7 @@ import java.util.*;
 
 /**
  * Il logoramento a inizio partita: un protagonista di livello 1 con la dotazione di base (EquipaggiamentoIniziale),
- * da solo, con le pozioni iniziali del gruppo (CostantiPersonaggi.POZIONI_SALUTE_INIZIALI) ma senza usare le pergamene, che attraversa una locazione del bosco dopo l'altra. Gli incontri seguono le regole
+ * da solo, con le pozioni iniziali del gruppo (CostantiMotore.DOTAZIONE_EREMITA_POZIONI_SALUTE) ma senza usare le pergamene, che attraversa una locazione del bosco dopo l'altra. Gli incontri seguono le regole
  * di LocazioneBase.crea (incontriPossibili e numeroMassimoDiMostri, mostri al livello del protagonista, un incontro il
  * 90% delle volte, sempre alla prima locazione); a fine locazione la stanchezza cresce di 1 e la salute recupera
  * getRigenerazioneSalute(), come in Automa; l'esperienza dei mostri uccisi fa salire di livello.
@@ -134,8 +135,8 @@ public class TestLogoramentoInizioPartita {
     private void catene(PrintStream out) {
         int iterazioni = 2_000;
         List<Variante> varianti = new ArrayList<>();
-        Variante attuale = new Variante("gioco attuale (" + CostantiPersonaggi.POZIONI_SALUTE_INIZIALI + " pozioni iniziali)");
-        attuale.pozioni = CostantiPersonaggi.POZIONI_SALUTE_INIZIALI;
+        Variante attuale = new Variante("gioco attuale (" + CostantiMotore.DOTAZIONE_EREMITA_POZIONI_SALUTE + " pozioni iniziali)");
+        attuale.pozioni = CostantiMotore.DOTAZIONE_EREMITA_POZIONI_SALUTE;
         varianti.add(attuale);
         varianti.add(new Variante("senza pozioni iniziali"));
         Variante senzaRecupero = new Variante("senza recupero a fine locazione");

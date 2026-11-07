@@ -126,7 +126,7 @@ Punti da realizzare, in ordine:
 
 - **Incantesimi e pozioni**: `GruppoGiocatore.reimposta()` (`05-foresta-personaggi`) dà 3 incantesimi di ARIA, 3 di ACQUA, 3 di TERRA e `CostantiPersonaggi.POZIONI_SALUTE_INIZIALI` (2) pozioni di salute; le altre pozioni partono da 0.
 - **Monete e preziosi**: `Cassa` (`08-foresta-economia`) con `CostantiEconomia.MONETE_INIZIALI` (150) e `PREZIOSI_INIZIALI` (5). Restano come sono.
-- **Da fare**: `reimposta()` parte da zero incantesimi e zero pozioni, e la consegna la fa il motore all'eremita di fine prima locazione (con quei numeri, spostati in una costante del motore). Attenzione ai test e al `PartitaDiTest`, che contano su queste dotazioni.
+- **Fatto (2026-11-07)**: `GruppoGiocatore.reimposta()` parte da zero incantesimi e zero pozioni; la consegna la fa il motore all'eremita di fine prima locazione (`DotazioneDellEremita`, chiamata dall'`Automa` quando scatta `INTERMEZZO_FINE_PRIMA_LOCAZIONE`), con 3 incantesimi per ognuno dei tre elementi e 2 pozioni di salute (`CostantiMotore.DOTAZIONE_EREMITA_*`; `POZIONI_SALUTE_INIZIALI` non esiste più). L'eremita ora dice due battute: il dono e l'augurio (`IntermezzoFinePrimaLocazione.1` e `.2`, in italiano e inglese). Sempre, tutorial acceso o spento. Lo prova `IntermezzoLocazioneCompletataTest`. **Resta**: il fumetto non elenca cosa dà (generico, senza numeri).
 
 ## 4 quater. La scelta della classe (decisa dall'utente, 2026-11-07)
 

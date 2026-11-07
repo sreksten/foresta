@@ -8,7 +8,10 @@ import com.threeamigos.foresta.intermezzi.FabbricaIntermezzi;
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
 import com.threeamigos.foresta.modellodati.ModelloDati;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.CostantiMotore;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
@@ -43,6 +46,35 @@ class IntermezzoLocazioneCompletataTest {
 			// Da questo momento in poi il checkpoint non troverebbe piu' nulla da mostrare: non si ripete
 			assertNull(RegistroIntermezzi.getProssimoIntermezzo(MomentoIntermezzo.LOCAZIONE_COMPLETATA),
 					"a una successiva fine locazione l'intermezzo non deve scattare di nuovo");
+		}
+	}
+
+	/**
+	 * L'eremita regala al gruppo incantesimi e pozioni (si comincia senza), e lo fa una volta sola. La modalità di prova dei test ha già
+	 * le sue scorte: si guarda quanto aumentano.
+	 */
+	@Test
+	void lEremitaRegalaIncantesimiEPozioniUnaVoltaSola() {
+		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
+			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+			GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
+			int aria = gruppo.getIncantesimi(TipoIncantesimo.ARIA);
+			int acqua = gruppo.getIncantesimi(TipoIncantesimo.ACQUA);
+			int terra = gruppo.getIncantesimi(TipoIncantesimo.TERRA);
+			int pozioni = gruppo.getPozioniSalute();
+
+			partita.comando(Comando.ESCI_DA_CITTA);
+
+			int perElemento = CostantiMotore.DOTAZIONE_EREMITA_INCANTESIMI_PER_ELEMENTO;
+			assertEquals(aria + perElemento, gruppo.getIncantesimi(TipoIncantesimo.ARIA));
+			assertEquals(acqua + perElemento, gruppo.getIncantesimi(TipoIncantesimo.ACQUA));
+			assertEquals(terra + perElemento, gruppo.getIncantesimi(TipoIncantesimo.TERRA));
+			assertEquals(pozioni + CostantiMotore.DOTAZIONE_EREMITA_POZIONI_SALUTE, gruppo.getPozioniSalute());
+
+			// L'intermezzo non si ripete, e nemmeno la dotazione
+			assertNull(RegistroIntermezzi.getProssimoIntermezzo(MomentoIntermezzo.LOCAZIONE_COMPLETATA));
+			assertEquals(pozioni + CostantiMotore.DOTAZIONE_EREMITA_POZIONI_SALUTE, gruppo.getPozioniSalute());
 		}
 	}
 

@@ -208,10 +208,8 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		super.reimposta();
 		md.reimposta();
 		ospiti.clear();
-		md.setIncantesimi(TipoIncantesimo.ARIA, 3);
-		md.setIncantesimi(TipoIncantesimo.ACQUA, 3);
-		md.setIncantesimi(TipoIncantesimo.TERRA, 3);
-		md.setPozioniSalute(CostantiPersonaggi.POZIONI_SALUTE_INIZIALI);
+		// Si comincia senza incantesimi né pozioni: li dà l'eremita alla fine della prima locazione (vedi DotazioneDellEremita)
+		md.setPozioniSalute(0);
 		md.setPozioniSaluteGrande(0);
 		md.setPozioniMagia(0);
 		md.setPozioniMagiaGrande(0);

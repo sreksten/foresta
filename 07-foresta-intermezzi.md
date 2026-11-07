@@ -49,7 +49,7 @@ Per non riscrivere ogni volta ingressi e dialoghi ci sono gli strumenti di scena
 - **`FabbricaIntermezzi`** costruisce l'intermezzo di ogni `TipoIntermezzo`. Quelli di questo modulo si registrano da soli; quelli che hanno bisogno delle missioni li registra chi li conosce con `FabbricaIntermezzi.registra`.
 - **`FonteDiIntermezzi`**: chi ha intermezzi suoi oltre a quelli fissi — le missioni, con gli intermezzi dei loro passi. Gli intermezzi non sanno che esistono: è chi sta sopra a dirlo al registro (`RegistroIntermezzi.aggiungiFonte`).
 
-Gli intermezzi concreti qui sono quelli che non hanno bisogno delle missioni: `IntermezzoIntroduttivo`, `IntermezzoFinePrimaLocazione`, `IntermezzoBenvenutoNegozio`, `IntermezzoOroscopo` (l'alchimista), `IntermezzoLocandaPrimaVisita` e `…VisitaSuccessiva`, `IntermezzoNonChiudeteMai` (chi entra a ore impossibili), `IntermezzoSpadaNascosta`, `IntermezzoLibroTecnico`, `IntermezzoRiprogrammazione`, `IntermezzoAccampamento`.
+Gli intermezzi concreti qui sono quelli che non hanno bisogno delle missioni: `IntermezzoIntroduttivo`, `IntermezzoFinePrimaLocazione` (l'eremita dà al gruppo incantesimi e pozioni e gli augura buona fortuna: la consegna la fa il motore, `DotazioneDellEremita`, perché gli intermezzi non conoscono gli oggetti), `IntermezzoBenvenutoNegozio`, `IntermezzoOroscopo` (l'alchimista), `IntermezzoLocandaPrimaVisita` e `…VisitaSuccessiva`, `IntermezzoNonChiudeteMai` (chi entra a ore impossibili), `IntermezzoSpadaNascosta`, `IntermezzoLibroTecnico`, `IntermezzoRiprogrammazione`, `IntermezzoAccampamento`.
 
 ### I contratti per la UI
 

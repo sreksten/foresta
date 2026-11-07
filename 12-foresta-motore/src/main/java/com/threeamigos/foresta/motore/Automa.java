@@ -15,6 +15,7 @@ import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.eventi.richieste.*;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
+import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.interfacce.ControlloreDiGioco;
@@ -813,6 +814,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			// Segnato subito, così non viene riproposto: né dopo essere stato mostrato,
 			// né se non ha pagine (in quel caso si passa semplicemente al successivo)
 			RegistroIntermezzi.segnaScattato(intermezzo);
+			// L'eremita della prima locazione regala al gruppo la dotazione con cui si comincia (incantesimi e pozioni)
+			if (TipoIntermezzo.INTERMEZZO_FINE_PRIMA_LOCAZIONE.name().equals(intermezzo.getId())) {
+				DotazioneDellEremita.consegna(gruppo);
+			}
 			pagine = intermezzo.getPagine();
 		} while (pagine == null || pagine.isEmpty());
 		intermezzoCorrente = intermezzo;

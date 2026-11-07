@@ -11,6 +11,11 @@ public final class CostantiMotore {
     private CostantiMotore() {
     }
 
+    // La dotazione che l'eremita dà al gruppo alla fine della prima locazione (vedi DotazioneDellEremita): quanti incantesimi per ognuno
+    // dei tre elementi, e quante pozioni di salute. Si comincia la partita senza
+    public static final int DOTAZIONE_EREMITA_INCANTESIMI_PER_ELEMENTO = 3;
+    public static final int DOTAZIONE_EREMITA_POZIONI_SALUTE = 2;
+
     // Amicizia e corruzione
     // Il tentativo di amicizia riesce se il carisma di chi lo fa è maggiore del tiro di un dado con queste facce: con un
     // carisma di una faccia in più il tentativo riesce sempre

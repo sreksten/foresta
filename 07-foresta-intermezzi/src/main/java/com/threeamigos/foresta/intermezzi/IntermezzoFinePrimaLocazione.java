@@ -16,8 +16,8 @@ import com.threeamigos.foresta.testi.Testi;
 /**
  * Intermezzo di prova per il checkpoint {@link MomentoIntermezzo#LOCAZIONE_COMPLETATA}:
  * copia spudorata di {@link IntermezzoIntroduttivo}, con l'unica differenza che l'eremita
- * pronuncia una sola battuta. Scatta alla prima fine locazione della partita e non si
- * ripete più.
+ * dà al gruppo incantesimi e pozioni (la consegna la fa il motore, che conosce gli oggetti) e
+ * gli augura buona fortuna. Scatta alla prima fine locazione della partita e non si ripete più.
  */
 public class IntermezzoFinePrimaLocazione implements Intermezzo {
 
@@ -53,7 +53,9 @@ public class IntermezzoFinePrimaLocazione implements Intermezzo {
 								.conBocca(0.5, -0.15)
 								.guarda(Verso.SINISTRA)
 								.poi(Tappa.inSecondi(2).verso(0.62, 0.61)))
-						.conBattuta(BattutaIntermezzo.di("eremita", Testi.formatta("intermezzi", GruppoGiocatore.getIstanza().getCapo().getSesso() == Personaggio.Sesso.MASCHIO ? "IntermezzoFinePrimaLocazione.M" : "IntermezzoFinePrimaLocazione.F")).daSecondo(2));
+						// L'eremita dà al gruppo incantesimi e pozioni (li consegna il motore) e poi gli augura buona fortuna
+						.conBattuta(BattutaIntermezzo.di("eremita", Testi.formatta("intermezzi", "IntermezzoFinePrimaLocazione.1")).daSecondo(2).perSecondi(5))
+						.conBattuta(BattutaIntermezzo.di("eremita", Testi.formatta("intermezzi", "IntermezzoFinePrimaLocazione.2")));
 		pagineIntermezzo.add(finale);
 		return pagineIntermezzo;
 	}

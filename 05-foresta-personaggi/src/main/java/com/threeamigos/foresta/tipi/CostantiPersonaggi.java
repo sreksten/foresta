@@ -90,8 +90,7 @@ public final class CostantiPersonaggi {
      */
     public static final int MASSIMO_LIVELLO = 50;
 
-    // Con cosa comincia una partita (le monete e i preziosi in CostantiEconomia)
-    public static final int POZIONI_SALUTE_INIZIALI = 2;
+    // Con cosa comincia una partita: le monete e i preziosi in CostantiEconomia, incantesimi e pozioni in CostantiMotore (li dà l'eremita)
 
     public static final int RECUPERO_DA_POZIONE_SALUTE = 100;
     public static final int RECUPERO_DA_POZIONE_SALUTE_GRANDE = 150;
