@@ -51,7 +51,6 @@ public final class ContenutiDelBestiario {
 	private static final String CHIUSA = "???";
 
 	private static final DoomdarkFont MEDIO = DoomdarkFont.medio();
-	private static final DoomdarkFont PICCOLO = DoomdarkFont.piccolo();
 
 	// Lo svolazzo che separa i mostri dai personaggi giocanti nell'elenco. È fra i file non a blocchi 2x2 (fondinon2x2): si legge senza zoom
 	private static final String RISORSA_SEPARATORE = "fondinon2x2/Separatore.png";
@@ -268,7 +267,7 @@ public final class ContenutiDelBestiario {
 		titolo(colonna, TestiDellaUI.get("BESTIARIO_ABILITA_INNATE"));
 		for (AbilitaInnataDiClasse a : abilita.values()) {
 			colonna.testo(righe(MEDIO, a.getNome(), larghezza), MEDIO, DoomdarkColorModel.Color.WHITE, 0, 6);
-			colonna.testo(righe(PICCOLO, a.getDescrizione(), larghezza), PICCOLO, DoomdarkColorModel.Color.MEDIUM_GRAY, 0, 0);
+			colonna.testo(righe(MEDIO, a.getDescrizione(), larghezza), MEDIO, DoomdarkColorModel.Color.MEDIUM_GRAY, 0, 0);
 		}
 	}
 
@@ -371,12 +370,12 @@ public final class ContenutiDelBestiario {
 		if (note.size() == 1 || forme.size() == 1) {
 			String nota = valori.get(0).getNota();
 			if (!nota.isEmpty()) {
-				colonna.testo(righe(PICCOLO, nota, larghezza), PICCOLO, DoomdarkColorModel.Color.MEDIUM_GRAY, 0, 0);
+				colonna.testo(righe(MEDIO, nota, larghezza), MEDIO, DoomdarkColorModel.Color.MEDIUM_GRAY, 0, 0);
 			}
 		} else {
 			for (int i = 0; i < valori.size(); i++) {
 				if (!valori.get(i).getNota().isEmpty()) {
-					colonna.testo(righe(PICCOLO, forme.get(i).getNome() + ": " + valori.get(i).getNota(), larghezza), PICCOLO,
+					colonna.testo(righe(MEDIO, forme.get(i).getNome() + ": " + valori.get(i).getNota(), larghezza), MEDIO,
 							DoomdarkColorModel.Color.MEDIUM_GRAY, 0, 0);
 				}
 			}

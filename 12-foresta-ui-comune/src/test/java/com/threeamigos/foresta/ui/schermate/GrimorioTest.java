@@ -104,6 +104,26 @@ class GrimorioTest {
 	}
 
 	@Test
+	void nellaSchedaIconaENomeSonoCentratiInsiemeEAllaStessaAltezzaDelleLettere() {
+		for (TipoIncantesimo incantesimo : TipoIncantesimo.values()) {
+			List<Elemento> elementi = ContenutiDelGrimorio.scheda(incantesimo, LARGHEZZA, MISURE).getElementi();
+			Elemento icona = elementi.stream().filter(e -> e.getRisorsa() != null).findFirst().get();
+			Elemento nome = elementi.stream().filter(e -> e.getPixel() != null).findFirst().get();
+
+			// In orizzontale: il blocco icona + nome sta al centro della colonna
+			int sinistra = icona.getX();
+			int destra = nome.getX() + nome.getPixel().getLarghezza();
+			assertTrue(Math.abs(sinistra - (LARGHEZZA - destra)) <= 1, incantesimo + ": margini " + sinistra + " e " + (LARGHEZZA - destra));
+			assertTrue(icona.getX() + icona.getLarghezza() <= nome.getX(), incantesimo + ": l'icona sta a sinistra del nome");
+			// In verticale: il centro dell'icona è il centro delle lettere
+			int[] lettere = ContenutiDelGrimorio.estremiDelleLettere(nome.getPixel());
+			double centroDelleLettere = nome.getY() + (lettere[0] + lettere[1] + 1) / 2.0d;
+			double centroDellIcona = icona.getY() + icona.getAltezza() / 2.0d;
+			assertTrue(Math.abs(centroDelleLettere - centroDellIcona) <= 1.0d, incantesimo + ": " + centroDelleLettere + " contro " + centroDellIcona);
+		}
+	}
+
+	@Test
 	void ilNumeroDelMoltiplicatoreNonHaZeriInutili() {
 		assertEquals("1,5", ContenutiDelGrimorio.numero(1.5d));
 		assertEquals("1", ContenutiDelGrimorio.numero(1.0d));

@@ -47,7 +47,6 @@ public final class ContenutiDelGrimorio {
 	private static final int COLORE_SELEZIONE = (45 << 24) | 0xFFFFFF;
 
 	private static final DoomdarkFont MEDIO = DoomdarkFont.medio();
-	private static final DoomdarkFont PICCOLO = DoomdarkFont.piccolo();
 
 	private ContenutiDelGrimorio() {
 	}
@@ -87,6 +86,26 @@ public final class ContenutiDelGrimorio {
 	}
 
 	/**
+	 * La prima e l'ultima riga dell'immagine che hanno qualcosa di scritto (non trasparente): dove stanno davvero le lettere nel riquadro del testo
+	 */
+	static int[] estremiDelleLettere(com.threeamigos.foresta.ui.immagini.ImmagineDiPixel immagine) {
+		int primo = -1;
+		int ultimo = -1;
+		for (int y = 0; y < immagine.getAltezza(); y++) {
+			for (int x = 0; x < immagine.getLarghezza(); x++) {
+				if ((immagine.getArgb(x, y) >>> 24) != 0) {
+					if (primo < 0) {
+						primo = y;
+					}
+					ultimo = y;
+					break;
+				}
+			}
+		}
+		return primo < 0 ? new int[] {0, Math.max(0, immagine.getAltezza() - 1)} : new int[] {primo, ultimo};
+	}
+
+	/**
 	 * Il nome dell'immagine dell'icona dell'incantesimo: la stessa del suo comando
 	 */
 	static String risorsaDellIcona(TipoIncantesimo voce) {
@@ -103,22 +122,29 @@ public final class ContenutiDelGrimorio {
 		Misura icona = new Misura(originale.larghezza * INGRANDIMENTO_ICONA, originale.altezza * INGRANDIMENTO_ICONA);
 		// Il nome può occupare al più lo spazio che l'icona lascia a destra
 		int larghezzaPerIlNome = Math.max(1, larghezza - icona.larghezza - SPAZIO_ICONA_NOME);
-		com.threeamigos.foresta.ui.immagini.ImmagineDiPixel nome = LayoutDelTestoGrande.immagine(voce.getNome(), larghezzaPerIlNome, true);
-		int altezzaRiga = Math.max(nome.getAltezza(), icona.altezza);
+		// L'immagine del nome è larga quanto il testo (a capo solo se non ci sta), non quanto lo spazio disponibile: così icona e nome si centrano insieme
+		int larghezzaDelTesto = Math.max(1, Math.min(LayoutDelTestoGrande.larghezza(voce.getNome()), larghezzaPerIlNome));
+		com.threeamigos.foresta.ui.immagini.ImmagineDiPixel nome = LayoutDelTestoGrande.immagine(voce.getNome(), larghezzaDelTesto, true);
+		// Si centra la parte scritta del nome (le lettere), non il riquadro dell'immagine, che ha spazio in più per gli accenti: l'icona sta alla stessa
+		// altezza delle lettere
+		int[] inchiostro = estremiDelleLettere(nome);
+		int centroDelleLettere = (inchiostro[0] + inchiostro[1] + 1) / 2;
+		int yNome = Math.max(0, icona.altezza / 2 - centroDelleLettere);
+		int yIcona = Math.max(0, centroDelleLettere - icona.altezza / 2);
+		int altezzaRiga = Math.max(yNome + nome.getAltezza(), yIcona + icona.altezza);
 		int yRiga = colonna.iniziaUnaRiga(SPAZIO_FRA_SEZIONI);
 		// L'icona e il nome stanno insieme, centrati come un blocco solo: l'icona a sinistra e il nome subito dopo
 		int xIcona = Math.max(0, (larghezza - (icona.larghezza + SPAZIO_ICONA_NOME + nome.getLarghezza())) / 2);
-		colonna.aggiungi(Elemento.immagine(risorsa, icona.larghezza, icona.altezza, false, null, xIcona, yRiga + (altezzaRiga - icona.altezza) / 2));
-		colonna.aggiungi(Elemento.testoGrande(nome, "grimorio|" + voce + "|" + larghezza, xIcona + icona.larghezza + SPAZIO_ICONA_NOME,
-				yRiga + (altezzaRiga - nome.getAltezza()) / 2));
+		colonna.aggiungi(Elemento.immagine(risorsa, icona.larghezza, icona.altezza, false, null, xIcona, yRiga + yIcona));
+		colonna.aggiungi(Elemento.testoGrande(nome, "grimorio|" + voce + "|" + larghezza, xIcona + icona.larghezza + SPAZIO_ICONA_NOME, yRiga + yNome));
 		colonna.finisciLaRiga(altezzaRiga);
 		colonna.testo(righe(MEDIO, voce.getEffetto(), larghezza), MEDIO, DoomdarkColorModel.Color.WHITE, 0, SPAZIO_FRA_SEZIONI);
 		colonna.testo(righe(MEDIO, portata(voce), larghezza), MEDIO, DoomdarkColorModel.Color.LIGHT_GRAY, 0, SPAZIO_FRA_SEZIONI);
 		int danniBase = danniBase(voce);
 		if (danniBase > 0) {
 			colonna.testo(righe(MEDIO, TestiDellaUI.get("GRIMORIO_DANNI_BASE", danniBase), larghezza), MEDIO, DoomdarkColorModel.Color.LIGHT_GRAY, 0, 4);
-			// La nota, in piccolo: i danni veri dipendono da chi lancia e da quel che porta
-			colonna.testo(righe(PICCOLO, TestiDellaUI.get("GRIMORIO_DANNI_BASE_NOTA"), larghezza), PICCOLO, DoomdarkColorModel.Color.MEDIUM_GRAY, 0, 2);
+			// La nota: i danni veri dipendono da chi lancia e da quel che porta
+			colonna.testo(righe(MEDIO, TestiDellaUI.get("GRIMORIO_DANNI_BASE_NOTA"), larghezza), MEDIO, DoomdarkColorModel.Color.MEDIUM_GRAY, 0, 2);
 		}
 		colonna.testo(righe(MEDIO, TestiDellaUI.get("GRIMORIO_COSTO_DI_LANCIO", voce.getCostoLancio()), larghezza), MEDIO,
 				DoomdarkColorModel.Color.LIGHT_GRAY, 0, 4);
