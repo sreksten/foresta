@@ -15,7 +15,9 @@ import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.modellodati.MessaggioMD;
 import com.threeamigos.foresta.modellodati.TatticaMD;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
+import com.threeamigos.foresta.tipi.BersaglioDelSuggerimento;
 import com.threeamigos.foresta.tipi.StatoDelloSchermo;
+import com.threeamigos.foresta.ui.tutorial.DisposizioneDelFumetto;
 import com.threeamigos.foresta.ui.tutorial.TutorDelGioco;
 import com.threeamigos.foresta.tipi.TipoAzione;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
@@ -93,6 +95,7 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	private boolean uiOccupata;
 	// I suggerimenti del tutorial: finché un fumetto è aperto la UI è occupata e il motore aspetta
 	private final TutorDelGioco tutor = new TutorDelGioco();
+	private Runnable ricontrollaIlTutorial;
 	// La prossima intro deve partire dalla classifica invece che dai loghi (vedi mostraPunteggi)
 	private boolean introDallaClassifica;
 
@@ -1060,6 +1063,66 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	 */
 	public TutorDelGioco getTutor() {
 		return tutor;
+	}
+
+	/**
+	 * Chi, chiuso un suggerimento, controlla se ce n'è un altro da dare (lo imposta {@code ForestaUI}).
+	 */
+	public void setRicontrollaIlTutorial(Runnable ricontrolla) {
+		this.ricontrollaIlTutorial = ricontrolla;
+	}
+
+	/**
+	 * Il giocatore ha premuto il pollice del suggerimento: avanti di una pagina, o chiuso se era l'ultima; chiuso, si guarda se ce n'è un altro.
+	 */
+	public void pollicePremuto() {
+		if (tutor.pollice() && ricontrollaIlTutorial != null) {
+			ricontrollaIlTutorial.run();
+		}
+		ridisegna();
+	}
+
+	/**
+	 * Il giocatore ha premuto l'annulla del suggerimento: il tutorial si spegne.
+	 */
+	public void annullaPremuto() {
+		tutor.annulla();
+		ridisegna();
+	}
+
+	/**
+	 * Dove sta, in coordinate dello schermo, quello a cui punta un suggerimento: un riquadro (i tre impilati insieme, per i riquadri in generale), la
+	 * barra delle icone o le sole icone che si vedono fra quelle indicate (se nessuna si vede, la barra intera).
+	 */
+	public Area getAreaDelBersaglio(BersaglioDelSuggerimento bersaglio) {
+		switch (bersaglio) {
+			case RIQUADRI:
+				return DisposizioneDelFumetto.unione(DisposizioneDelFumetto.unione(getArea(riquadroGruppo()), getArea(riquadroIncantesimiEPozioni())),
+						getArea(riquadroMissioni()));
+			case RIQUADRO_DEL_COMBATTIMENTO:
+				return getArea(riquadroCombattimento());
+			case RIQUADRO_DELLE_MISSIONI:
+				return getArea(riquadroMissioni());
+			case RIQUADRO_DEGLI_INCANTESIMI_E_DELLE_POZIONI:
+				return getArea(riquadroIncantesimiEPozioni());
+			case BARRA_DELLE_ICONE:
+				return disposizione.getBarra();
+			default:
+				return areaDelleIcone(bersaglio);
+		}
+	}
+
+	private Area areaDelleIcone(BersaglioDelSuggerimento bersaglio) {
+		BarraIcone barra = barraIcone();
+		Area totale = null;
+		for (BarraIcone.IconaVisibile icona : barra.iconeVisibili) {
+			if (bersaglio.getIcone().contains(icona.comando)) {
+				Area r = new Area(barra.getOffsetX() + icona.rettangolo.getX(), barra.getOffsetY() + icona.rettangolo.getY(),
+						icona.rettangolo.getLarghezza(), icona.rettangolo.getAltezza());
+				totale = totale == null ? r : DisposizioneDelFumetto.unione(totale, r);
+			}
+		}
+		return totale != null ? totale : disposizione.getBarra();
 	}
 
 	/**

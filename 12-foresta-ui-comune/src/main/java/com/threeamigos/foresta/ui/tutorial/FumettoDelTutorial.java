@@ -13,6 +13,7 @@ public final class FumettoDelTutorial {
 
 	private final TipoSuggerimento suggerimento;
 	private final boolean dito;
+	private final long apertoAlleNs = System.nanoTime();
 	private int pagina = 1;
 
 	FumettoDelTutorial(TipoSuggerimento suggerimento, boolean dito) {
@@ -48,6 +49,13 @@ public final class FumettoDelTutorial {
 	 */
 	public String getTesto() {
 		return suggerimento.getPagina(pagina, dito);
+	}
+
+	/**
+	 * Da quanto tempo è aperto, in millisecondi: il bordo del bersaglio lampeggia a questo ritmo.
+	 */
+	public long getMillisDallApertura() {
+		return (System.nanoTime() - apertoAlleNs) / 1_000_000L;
 	}
 
 	/**

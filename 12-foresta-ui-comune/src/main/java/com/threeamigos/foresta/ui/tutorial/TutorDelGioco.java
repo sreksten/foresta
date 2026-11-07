@@ -112,6 +112,13 @@ public final class TutorDelGioco {
 	}
 
 	/**
+	 * Se adesso il bordo del bersaglio è acceso, contando dall'apertura del fumetto aperto.
+	 */
+	public synchronized boolean isBordoAcceso() {
+		return fumetto != null && isBordoAcceso(fumetto.getMillisDallApertura());
+	}
+
+	/**
 	 * Chiude il fumetto senza segnare nulla (si cambia partita, o la UI si reinizializza): il suggerimento si riproporrà.
 	 */
 	public synchronized void chiudi() {

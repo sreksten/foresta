@@ -16,6 +16,7 @@ import com.threeamigos.foresta.tipi.TipoFinestra;
 import com.threeamigos.foresta.tipi.TipoNegozio;
 import com.threeamigos.foresta.ui.barra.BarraIcone;
 import com.threeamigos.foresta.ui.barra.BarraIconeDisegnabile;
+import com.threeamigos.foresta.ui.tutorial.DisplayableCanvasTutorial;
 import com.threeamigos.foresta.ui.barra.DisplayableCanvasBarraIcone;
 import com.threeamigos.foresta.ui.barra.DisplayableCanvasBarraIconeDock;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
@@ -71,6 +72,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private final transient DisplayableCanvasScambiatoreConsumabili alchimista;
 	private final transient DisplayableCanvasIncantatore incantatore;
 	private final transient BarraIconeDisegnabile barraIcone;
+	private final transient DisplayableCanvasTutorial tutorial;
 	private final transient DisplayableCanvasIntermezzo intermezzo;
 
 	private final transient Schermo schermo;
@@ -129,6 +131,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 				barra.getX(), barra.getY(), barra.getLarghezza(), barra.getAltezza(), vistaPartita);
 
 		schermo = new Schermo(disposizione, vistaPartita);
+		// Il fumetto del tutorial lo sa disegnare e chiudere questo toolkit: da qui i suggerimenti si aprono
+		tutorial = new DisplayableCanvasTutorial(schermo);
+		schermo.getTutor().setAbilitato(true);
 
 		GestoreMouse gestoreMouse = new GestoreMouse();
 		addMouseListener(gestoreMouse);
@@ -574,6 +579,10 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		}
 		schermo.disegnaLAnnuncio(annuncio -> annuncio.anima(graphics));
 		barraIcone.disegna(graphics);
+		// Il suggerimento del tutorial sta sopra la barra delle icone, ma sotto le sfere e i cartigli dell'aiuto
+		if (stato == StatoDelloSchermo.IN_GIOCO) {
+			tutorial.disegna(graphics, getWidth(), getHeight());
+		}
 		// Decorazione nell'angolo in basso a sinistra della mappa a tutto schermo
 		if (schermo.isSferaMagicaVisibile()) {
 			graphics.drawImage(ImageCache.sferaMagica, 0, getHeight() - ImageCache.sferaMagica.getHeight(), null);
@@ -607,6 +616,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
+			if (tutorial.clic(e.getX(), e.getY())) {
+				return;
+			}
 			Finestra.Tasto tasto = tasto(e);
 			if (tasto != null) {
 				router.clic(e.getX(), e.getY(), tasto, e.getClickCount());
@@ -615,6 +627,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
+			if (tutorial.suiPulsanti(e.getX(), e.getY())) {
+				return;
+			}
 			Finestra.Tasto tasto = tasto(e);
 			if (tasto != null) {
 				router.premuto(e.getX(), e.getY(), tasto);
@@ -623,6 +638,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
+			if (tutorial.suiPulsanti(e.getX(), e.getY())) {
+				return;
+			}
 			Finestra.Tasto tasto = tasto(e);
 			if (tasto != null) {
 				router.rilasciato(e.getX(), e.getY(), tasto);

@@ -257,6 +257,7 @@ public abstract class ForestaUI implements Temporizzabile {
 		this.schermo = schermo;
 		this.campo = campo;
 		schermo.setRichiestaTesto(campo::mostra, campo::annulla);
+		schermo.setRicontrollaIlTutorial(this::aggiornaIlTutorial);
 	}
 
 	protected SchermoDelGioco<?, ?, ?, ?> getSchermo() {
