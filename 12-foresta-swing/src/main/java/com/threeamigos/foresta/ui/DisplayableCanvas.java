@@ -550,6 +550,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 				paginaTrofei.disegna(graphics);
 				break;
 			case BESTIARIO:
+			case SCELTA_DELLA_CLASSE:
 				bestiario.disegna(graphics);
 				break;
 			case GRIMORIO:

@@ -419,6 +419,7 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 			case TROFEI:
 				return schermataTrofei();
 			case BESTIARIO:
+			case SCELTA_DELLA_CLASSE:
 				return schermataBestiario();
 			case GRIMORIO:
 				return schermataGrimorio();
@@ -551,6 +552,16 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	public void bestiario() {
 		schermataBestiario().apri();
 		cambiaStato(StatoDelloSchermo.BESTIARIO);
+		ridisegna();
+	}
+
+	/**
+	 * La scelta della classe: il bestiario dei soli personaggi giocabili, con quel titolo. Le classi sono le icone della barra: passarci sopra mostra la
+	 * scheda della classe ({@link #fineFotogramma}), e premerla la sceglie.
+	 */
+	public void sceltaDellaClasse(String titolo) {
+		schermataBestiario().apriPerLaSceltaDellaClasse(titolo);
+		cambiaStato(StatoDelloSchermo.SCELTA_DELLA_CLASSE);
 		ridisegna();
 	}
 
@@ -1102,7 +1113,7 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 
 	private boolean isSchermataDelSuggerimento(TipoSuggerimento suggerimento) {
 		StatoDelloSchermo corrente = stato;
-		return suggerimento == TipoSuggerimento.SCELTA_DELLA_CLASSE ? corrente == StatoDelloSchermo.MESSAGGIO : corrente == StatoDelloSchermo.IN_GIOCO;
+		return suggerimento == TipoSuggerimento.SCELTA_DELLA_CLASSE ? corrente == StatoDelloSchermo.SCELTA_DELLA_CLASSE : corrente == StatoDelloSchermo.IN_GIOCO;
 	}
 
 	private boolean isBersaglioVisibile(BersaglioDelSuggerimento bersaglio) {
@@ -1171,6 +1182,10 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	 * mostrare il prossimo intermezzo in attesa (se ce n'è uno).
 	 */
 	public void fineFotogramma() {
+		// Alla scelta della classe l'icona sotto il mouse mostra la scheda di quella classe (se il mouse è fuori dalle icone resta l'ultima)
+		if (stato == StatoDelloSchermo.SCELTA_DELLA_CLASSE) {
+			schermataBestiario().selezionaDaComando(barraIcone().getComandoSottoIlCursore());
+		}
 		// Un suggerimento aperto che non si vede più (si è lasciata la sua schermata) si chiude, senza segnarlo letto: tornerà. Altrimenti terrebbe
 		// ferma la UI, e con lei gli intermezzi, senza che nessuno possa premere il pollice
 		if (tutor.isAperto() && !isTutorialVisibile()) {
@@ -1189,6 +1204,7 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	public boolean deveRidisegnare() {
 		StatoDelloSchermo corrente = stato;
 		return corrente == StatoDelloSchermo.IN_GIOCO || corrente == StatoDelloSchermo.MAPPA || corrente == StatoDelloSchermo.INTRO
+				|| corrente == StatoDelloSchermo.SCELTA_DELLA_CLASSE
 				|| corrente == StatoDelloSchermo.INVENTARIO || corrente == StatoDelloSchermo.COMMERCIANTE
 				|| corrente == StatoDelloSchermo.TATTICHE || corrente == StatoDelloSchermo.ALCHIMISTA
 				|| corrente == StatoDelloSchermo.INCANTATORE || corrente == StatoDelloSchermo.INTERMEZZO

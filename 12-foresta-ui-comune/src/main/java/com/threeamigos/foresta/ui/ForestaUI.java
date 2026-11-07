@@ -408,7 +408,8 @@ public abstract class ForestaUI implements Temporizzabile {
 				break;
 
 			case CLASSE_PERSONAGGIO:
-				schermo.scriviGrande(TestiDellaUI.get("SCEGLI_CLASSE", campo.getTesto()));
+				// Il bestiario dei personaggi giocabili: passando sopra le icone delle classi si legge la scheda
+				schermo.sceltaDellaClasse(TestiDellaUI.get("SCEGLI_CLASSE", campo.getTesto()));
 				impostaAzioni(evento.getComandiPossibili());
 				break;
 

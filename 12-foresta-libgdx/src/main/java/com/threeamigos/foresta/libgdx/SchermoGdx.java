@@ -204,6 +204,7 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 				trofei.disegna(batch, camera, viewport);
 				break;
 			case BESTIARIO:
+			case SCELTA_DELLA_CLASSE:
 				bestiario.disegna(batch, camera, viewport, testoGrande);
 				break;
 			case GRIMORIO:

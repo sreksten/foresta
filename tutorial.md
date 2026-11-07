@@ -139,7 +139,7 @@ Punti da realizzare, in ordine:
 
 ## 4 quater. La scelta della classe (decisa dall'utente, 2026-11-07)
 
-**Direzione nuova (2026-11-07)**: la scheda non sarà un pannello nuovo ma il bestiario riusato (`SchermataBestiario.apriPerLaSceltaDellaClasse`: solo i giocabili, sempre noti, con le abilità innate, forze e debolezze, e la scheda che cambia passando sopra l'icona di una classe). Fatto il modello nel modulo comune; mancano il disegno alla fase della classe in Swing e libGDX, l'etichetta «consigliato» e un testo del suggerimento che dica «passa sopra un'icona».
+**Direzione nuova (2026-11-07)**: la scheda non sarà un pannello nuovo ma il bestiario riusato (`SchermataBestiario.apriPerLaSceltaDellaClasse`: solo i giocabili, sempre noti, con le abilità innate, forze e debolezze, e la scheda che cambia passando sopra l'icona di una classe). **Fatto (2026-11-07)**: il modello nel modulo comune, lo stato `SCELTA_DELLA_CLASSE` dello schermo (`ForestaUI` lo apre alla fase della classe), il disegno in Swing (visto in rendering: passando sopra l'icona del Mago la scheda mostra titolo, immagini, descrizione e abilità innate) e in libGDX (`SchermoGdx`, stesso disegno del bestiario, non provato), e il testo del suggerimento («passa sopra un'icona», e la variante per il dito con l'elenco). **Manca** l'etichetta «consigliato» sull'elenco.
 
 **Stato (2026-11-07)**: fatto solo il fumetto (`TipoSuggerimento.SCELTA_DELLA_CLASSE`, due pagine: la scelta è importante e le icone sono le classi; i consigli per chi comincia, Guerriero o Ladro), che si apre sul messaggio a tutto schermo con le icone delle classi nella barra. **Manca** il pannello fisso con la scheda di ogni classe (descrizione, barre, etichetta «consigliato»).
 

@@ -98,7 +98,7 @@ La scheda di una voce aperta, dall'alto:
   classe che non esiste più si salta; un file rovinato si mette da parte (`bestiario.rovinato`).
 - `GestoreBestiario` (`11-foresta-motore-api`), `GestoreBestiarioSuFile` (`salvataggi`, passato a `RegistroBestiario.impostaGestoreBestiario` da `Main`); nei test
   `GestoreBestiarioInMemoria`, collegato a `PartitaDiTest` (ogni test riparte con il bestiario vuoto).
-- Il trofeo **Enciclopedista** (`TipoTrofeo.ENCICLOPEDISTA`, `TrofeoEnciclopedista`) si vince con tutte le 33 voci sbloccate. Il progresso non è quello del registro dei
+- Il trofeo **Enciclopedista** (`TipoTrofeo.ENCICLOPEDISTA`, `TrofeoEnciclopedista`) si vince con tutte le voci da scoprire sbloccate (25: i personaggi giocabili, noti da sempre, non si contano). Il progresso non è quello del registro dei
   trofei (che si perde se il gruppo muore nella locazione) ma quanto sa il bestiario; si controlla a fine locazione, come gli altri. Il Perdigiorno, che chiede tutti gli
   altri trofei, ora chiede anche questo.
 - L'icona del bottone è per ora la copia di quella del goblin (`img/icone/Bestiario.png`).

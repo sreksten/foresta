@@ -33,6 +33,8 @@ public enum StatoDelloSchermo {
 	TROFEI,
 	/** Il bestiario, aperto dall'inventario */
 	BESTIARIO,
+	/** La scelta della classe del personaggio: il bestiario dei soli personaggi giocabili, con la scheda che cambia passando sopra le icone della barra */
+	SCELTA_DELLA_CLASSE,
 	/** Il grimorio, aperto dall'inventario */
 	GRIMORIO,
 	/** Le tattiche di un personaggio, aperte dall'inventario */
