@@ -3,6 +3,7 @@ package com.threeamigos.foresta.gruppi;
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.GeneratoreArtefattiTabelle;
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.eventi.interni.InternoPrelievoArtefatto;
 import com.threeamigos.foresta.eventi.interni.InternoPuntiEsperienzaAssegnati;
 import com.threeamigos.foresta.eventi.interni.InternoStoccaggioArtefatto;
@@ -59,6 +60,7 @@ class GruppoGiocatoreTest {
     void ripulisce() {
         iscrizioni.forEach(Runnable::run);
         BusEventi.impostaConsegna(null);
+        Dado.ripristina();
         DatiDiProva.nuovaPartita();
     }
 
@@ -305,10 +307,12 @@ class GruppoGiocatoreTest {
         gruppo.addPozioniMagia(100);
         gruppo.addIncantesimi(TipoIncantesimo.FUOCO, 100);
         int massima = a.getSaluteMassima();
+        // Un solo tiro per le scorte (7%), poi quello della salute di chi fugge
+        Dado.trucca(7, CostantiPersonaggi.FUGA_DANNO_MINIMO_PERCENTUALE);
         gruppo.fugge();
         assertTrue(gruppo.getPozioniSalute() < 100 + CostantiPersonaggi.POZIONI_SALUTE_INIZIALI);
-        assertEquals(100 - 100 * CostantiPersonaggi.FUGA_PERDITA_CONSUMABILI_PERCENTUALE / 100, gruppo.getPozioniMagia());
-        assertEquals(100 - 100 * CostantiPersonaggi.FUGA_PERDITA_CONSUMABILI_PERCENTUALE / 100, gruppo.getIncantesimi(TipoIncantesimo.FUOCO));
+        assertEquals(100 - 100 * 7 / 100, gruppo.getPozioniMagia());
+        assertEquals(100 - 100 * 7 / 100, gruppo.getIncantesimi(TipoIncantesimo.FUOCO));
         assertTrue(a.getSalute() < massima);
         assertTrue(frasi.stream().anyMatch(f -> f.contains("cerca la salvezza nella fuga")), frasi.toString());
     }

@@ -11,6 +11,7 @@
     <modules>
         <module>00-foresta-serializzazione</module>
         <module>00-foresta-strumenti</module>
+        <module>00-foresta-tutorial</module>
         <module>01-foresta-eventi</module>
         <module>01-foresta-punteggi</module>
         <module>01-foresta-testi</module>

@@ -6,7 +6,9 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneDisponibilitaM
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneDisponibilitaPreziosi;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.modellodati.CassaMD;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.CostantiEconomia;
+import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,6 +32,7 @@ class CassaTest {
 
     @AfterEach
     void ripulisce() {
+        Dado.ripristina();
         MondoDiProva.finito();
     }
 
@@ -82,13 +85,29 @@ class CassaTest {
     }
 
     @Test
-    void nellaFugaSiPerdeUnaPercentualeArrotondataPerDifetto() {
+    void nellaFugaSiPerdeUnaPercentualeTirataArrotondataPerDifetto() {
+        // Un solo tiro (13%) per monete e preziosi: 101 * 13 / 100 = 13 monete, 7 * 13 / 100 = 0 preziosi
+        Dado.trucca(13);
         Cassa.addMonete(101);
         Cassa.addPreziosi(7);
+        int monete = Cassa.getMonete();
+        int preziosi = Cassa.getPreziosi();
         Cassa.perdeNellaFuga();
-        assertTrue(Cassa.getMonete() < 101);
-        assertTrue(Cassa.getMonete() > 0);
-        assertTrue(Cassa.getPreziosi() <= 7);
+        assertEquals(monete - monete * 13 / 100, Cassa.getMonete());
+        assertEquals(preziosi - preziosi * 13 / 100, Cassa.getPreziosi());
+    }
+
+    @Test
+    void nellaFugaSiPerdeSempreAlmenoUnaPercentoENonPiuDelMassimo() {
+        Cassa.addMonete(10000 - Cassa.getMonete());
+        Dado.trucca(CostantiPersonaggi.FUGA_PERDITA_MINIMA_PERCENTUALE);
+        Cassa.perdeNellaFuga();
+        assertEquals(10000 - 100, Cassa.getMonete());
+
+        Cassa.addMonete(10000 - Cassa.getMonete());
+        Dado.trucca(CostantiPersonaggi.FUGA_PERDITA_MASSIMA_PERCENTUALE);
+        Cassa.perdeNellaFuga();
+        assertEquals(10000 - 2000, Cassa.getMonete());
     }
 
     @Test

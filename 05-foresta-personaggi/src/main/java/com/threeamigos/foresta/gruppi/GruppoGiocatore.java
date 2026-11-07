@@ -17,6 +17,8 @@ import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.modellodati.*;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.*;
@@ -395,13 +397,14 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 
 	/**
 	 * Il gruppo fugge: ogni personaggio vivo subisce delle ferite (vedi {@link Personaggio#fugge}) e il gruppo perde una parte delle sue
-	 * scorte, il {@value CostantiPersonaggi#FUGA_PERDITA_CONSUMABILI_PERCENTUALE}% di ognuna (arrotondato per difetto: con poche pozioni non se ne
-	 * perdono): pergamene e pozioni. Gli artefatti restano; le monete e i preziosi li perde la cassa (vedi economia.Cassa).
+	 * scorte, da {@value CostantiPersonaggi#FUGA_PERDITA_MINIMA_PERCENTUALE} a {@value CostantiPersonaggi#FUGA_PERDITA_MASSIMA_PERCENTUALE}% di ognuna
+	 * (la stessa percentuale per tutte, tirata una volta; arrotondato per difetto: con poche pozioni può non perderne): pergamene e pozioni. Gli artefatti restano; le monete e i preziosi li perde la cassa (vedi economia.Cassa).
 	 */
 	public final void fugge() {
 		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_personaggi", "FUGA", chiMaiuscolo())));
 
-		Function<Integer, Integer> calcolaPerdita = m -> m * CostantiPersonaggi.FUGA_PERDITA_CONSUMABILI_PERCENTUALE / 100;
+		int percentuale = Dado.tira(ContestoLancio.FUGA_PERDITA_SCORTE, CostantiPersonaggi.FUGA_PERDITA_MINIMA_PERCENTUALE, CostantiPersonaggi.FUGA_PERDITA_MASSIMA_PERCENTUALE);
+		Function<Integer, Integer> calcolaPerdita = m -> m * percentuale / 100;
 
 		for (TipoIncantesimo tipoIncantesimo : TipoIncantesimo.values()) {
 			subIncantesimi(tipoIncantesimo, calcolaPerdita.apply(md.getIncantesimi(tipoIncantesimo)));

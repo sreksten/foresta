@@ -36,6 +36,7 @@ import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.statistiche.Statistiche;
+import com.threeamigos.foresta.tutorial.RegistroSuggerimenti;
 import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.strumenti.logger.Logger;
@@ -1146,8 +1147,10 @@ public abstract class LocazioneBase implements Locazione {
 		if (statoLocazione != StatoLocazione.IN_COMBATTIMENTO) {
 			comandiPossibili.add(Comando.INVENTARIO);
 		}
-		// Si può sempre ricorrere a una bella...
-		comandiPossibili.add(Comando.FUGA);
+		// Si può sempre ricorrere a una bella (tranne al primo turno del tutorial)...
+		if (isFugaPossibile()) {
+			comandiPossibili.add(Comando.FUGA);
+		}
 		// ...o provare, una volta, a passare inosservati
 		if (isPassaggioPossibile()) {
 			comandiPossibili.add(Comando.PASSA_INOSSERVATO);
@@ -1811,7 +1814,7 @@ public abstract class LocazioneBase implements Locazione {
 			statoLocazione = StatoLocazione.CHI_FORMULA;
 			return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 		}
-		if (azione == Comando.FUGA) {
+		if (azione == Comando.FUGA && isFugaPossibile()) {
 			BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
 			chiediConfermaPerLaFuga();
 			statoLocazione = StatoLocazione.CONFERMA_FUGA;
@@ -1885,6 +1888,9 @@ public abstract class LocazioneBase implements Locazione {
 					return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 
 				case FUGA:
+					if (!isFugaPossibile()) {
+						return null;
+					}
 					chiediConfermaPerLaFuga();
 					statoLocazione = StatoLocazione.CONFERMA_FUGA;
 					BusEventi.pubblica(new RichiestaSelezioneSiNo());
@@ -1930,13 +1936,27 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	/**
+	 * Se il gruppo può fuggire: sempre, tranne al primo turno del tutorial, dove il primo scontro va combattuto (vedi tutorial.md).
+	 */
+	private boolean isFugaPossibile() {
+		return !isPrimoTurnoDelTutorial();
+	}
+
+	/**
+	 * Il primo turno della partita, a tutorial acceso: niente fuga né passaggio inosservato.
+	 */
+	private static boolean isPrimoTurnoDelTutorial() {
+		return RegistroSuggerimenti.isAttivo() && Statistiche.getTurniGiocati() == 0;
+	}
+
+	/**
 	 * Se il gruppo può provare a passare inosservato: una volta sola, prima di fare qualunque altra cosa (vedi
 	 * isAzione), fuori dal combattimento, in una locazione della
 	 * foresta (non in una città, in un castello o nella locazione di una missione secondaria), con avversari che non
 	 * vanno affrontati per forza (vedi Personaggio.isDaAffrontare), che non sfidano a duello e senza ondate in arrivo.
 	 */
 	private boolean isPassaggioPossibile() {
-		return !passaggioEscluso && statoLocazione == StatoLocazione.IN_LOCAZIONE
+		return !passaggioEscluso && !isPrimoTurnoDelTutorial() && statoLocazione == StatoLocazione.IN_LOCAZIONE
 				&& Foresta.getLocazioneDelGruppo().getCategoriaLocazione() == CategoriaLocazione.STANDARD
 				&& !gruppoAvversario.getPersonaggiVivi().isEmpty() && !gruppoAvversario.isDaAffrontare() && !gruppoAvversario.isDuello()
 				&& !hasOndateSuccessive();

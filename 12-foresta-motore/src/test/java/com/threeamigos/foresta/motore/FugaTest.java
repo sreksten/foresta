@@ -96,15 +96,21 @@ class FugaTest {
             gruppo.addIncantesimi(com.threeamigos.foresta.tipi.TipoIncantesimo.FUOCO, 5 - gruppo.getIncantesimi(com.threeamigos.foresta.tipi.TipoIncantesimo.FUOCO));
             int artefatti = gruppo.getInventario().size();
 
-            // Come in LocazioneBase: il gruppo perde le sue scorte, la cassa monete e preziosi
+            // Come in LocazioneBase: il gruppo perde le sue scorte (tiro del 20% e poi quello della salute di ognuno), la cassa
+            // monete e preziosi (tiro del 20%)
+            int percentuale = CostantiPersonaggi.FUGA_PERDITA_MASSIMA_PERCENTUALE;
+            Dado.trucca(percentuale);
+            for (int i = 0; i < gruppo.getPersonaggiVivi().size(); i++) {
+                Dado.trucca(CostantiPersonaggi.FUGA_DANNO_MINIMO_PERCENTUALE);
+            }
             gruppo.fugge();
+            Dado.trucca(percentuale);
             Cassa.perdeNellaFuga();
 
-            int percentuale = CostantiPersonaggi.FUGA_PERDITA_CONSUMABILI_PERCENTUALE;
             assertEquals(100 - 100 * percentuale / 100, Cassa.getMonete());
             assertEquals(10 - 10 * percentuale / 100, gruppo.getPozioniSalute());
             assertEquals(5 - 5 * percentuale / 100, gruppo.getIncantesimi(com.threeamigos.foresta.tipi.TipoIncantesimo.FUOCO));
-            assertEquals(3, gruppo.getPozioniMagia(), "con poche pozioni, arrotondando per difetto, non se ne perde nessuna");
+            assertEquals(3 - 3 * percentuale / 100, gruppo.getPozioniMagia(), "con poche pozioni, arrotondando per difetto, non se ne perde nessuna");
             assertEquals(artefatti, gruppo.getInventario().size());
         }
     }

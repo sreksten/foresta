@@ -68,10 +68,12 @@ public final class CostantiPersonaggi {
     // per questo numero di locazioni dopo quella della fuga
     // Fuggire costa a ognuno una quota della sua salute massima, tirata fra queste due percentuali: la fuga non uccide, lascia almeno un punto
     // (a fine locazione ognuno recupera dal 16 al 35% della salute massima, secondo la classe: per questo la fuga deve costare di più)
-    // Il gruppo che fugge perde questa percentuale di ognuna delle sue scorte: monete, preziosi, pergamene e pozioni (non gli artefatti)
+    // Il gruppo che fugge perde una percentuale, tirata fra queste due, di ognuna delle sue scorte: un tiro per le monete e i preziosi
+    // e uno per gli incantesimi, le pergamene e le pozioni (non gli artefatti)
     public static final int FUGA_DANNO_MINIMO_PERCENTUALE = 30;
     public static final int FUGA_DANNO_MASSIMO_PERCENTUALE = 50;
-    public static final int FUGA_PERDITA_CONSUMABILI_PERCENTUALE = 20;
+    public static final int FUGA_PERDITA_MINIMA_PERCENTUALE = 1;
+    public static final int FUGA_PERDITA_MASSIMA_PERCENTUALE = 20;
     public static final int FUGA_IGNOMINIA_PERCENTUALE = 20;
     public static final int FUGA_IGNOMINIA_LOCAZIONI = 3;
     public static final String FUGA_IGNOMINIA_NOTA = "Ignominia della fuga";

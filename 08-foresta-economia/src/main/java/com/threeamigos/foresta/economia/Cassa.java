@@ -7,6 +7,8 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneDisponibilitaP
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.interfacce.VistaCassa;
 import com.threeamigos.foresta.modellodati.CassaMD;
+import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
+import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.CostantiEconomia;
 import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 
@@ -133,11 +135,13 @@ public final class Cassa {
 	}
 
 	/**
-	 * Il gruppo è fuggito: perde il {@value CostantiPersonaggi#FUGA_PERDITA_CONSUMABILI_PERCENTUALE}% delle monete e dei preziosi
-	 * (arrotondato per difetto), come delle altre scorte (vedi GruppoGiocatore.fugge).
+	 * Il gruppo è fuggito: perde da {@value CostantiPersonaggi#FUGA_PERDITA_MINIMA_PERCENTUALE} a
+	 * {@value CostantiPersonaggi#FUGA_PERDITA_MASSIMA_PERCENTUALE}% delle monete e dei preziosi (la stessa percentuale per entrambi, tirata una volta;
+	 * arrotondato per difetto), come delle altre scorte (vedi GruppoGiocatore.fugge).
 	 */
 	public static void perdeNellaFuga() {
-		subMonete(getMonete() * CostantiPersonaggi.FUGA_PERDITA_CONSUMABILI_PERCENTUALE / 100);
-		subPreziosi(getPreziosi() * CostantiPersonaggi.FUGA_PERDITA_CONSUMABILI_PERCENTUALE / 100);
+		int percentuale = Dado.tira(ContestoLancio.FUGA_PERDITA_DENARO, CostantiPersonaggi.FUGA_PERDITA_MINIMA_PERCENTUALE, CostantiPersonaggi.FUGA_PERDITA_MASSIMA_PERCENTUALE);
+		subMonete(getMonete() * percentuale / 100);
+		subPreziosi(getPreziosi() * percentuale / 100);
 	}
 }

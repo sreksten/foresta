@@ -98,7 +98,7 @@ I collegamenti nel disegno sono indicativi: il livello dice «dipende al più da
 
 | Livello | Moduli | Documenti |
 | :--- | :--- | :--- |
-| 00 | strumenti, serializzazione | [`00-foresta-strumenti.md`](00-foresta-strumenti.md), [`00-foresta-serializzazione.md`](00-foresta-serializzazione.md) |
+| 00 | strumenti, serializzazione, tutorial | [`00-foresta-strumenti.md`](00-foresta-strumenti.md), [`00-foresta-serializzazione.md`](00-foresta-serializzazione.md), [`00-foresta-tutorial.md`](00-foresta-tutorial.md) |
 | 01 | eventi, testi, punteggi | [`01-foresta-eventi.md`](01-foresta-eventi.md), [`01-foresta-testi.md`](01-foresta-testi.md), [`01-foresta-punteggi.md`](01-foresta-punteggi.md) |
 | 02 | attributi, effettidistato, mappa, notizie, comandi | [`02-foresta-attributi.md`](02-foresta-attributi.md), [`02-foresta-effettidistato.md`](02-foresta-effettidistato.md), [`02-foresta-mappa.md`](02-foresta-mappa.md), [`02-foresta-notizie.md`](02-foresta-notizie.md), [`02-foresta-comandi.md`](02-foresta-comandi.md) |
 | 03 | danni | [`03-foresta-danni.md`](03-foresta-danni.md) |

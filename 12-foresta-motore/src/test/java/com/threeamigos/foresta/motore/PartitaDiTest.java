@@ -2,6 +2,7 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.missioni.leggende.LaLeggendaDelNegoziante;
 import com.threeamigos.foresta.strumenti.ModalitaDiProva;
+import com.threeamigos.foresta.tutorial.RegistroSuggerimenti;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.mappa.Foresta;
 
@@ -66,10 +67,14 @@ final class PartitaDiTest implements AutoCloseable {
 	private final boolean modalitaDiProvaPrecedente = ModalitaDiProva.isAttiva();
 	private static final String DISPONIBILE_DALLE = "DISPONIBILE_DALLE";
 	private final boolean sorteggioDegliIncarichiPrecedente = SceltaDegliIncarichi.isSorteggioAttivo();
+	private final boolean tutorialPrecedente = RegistroSuggerimenti.isAttivo();
 
 	private PartitaDiTest(long seme, GestoreSalvataggiInMemoria salvataggi, boolean modalitaDiProva) {
 		this.salvataggi = salvataggi;
         ModalitaDiProva.setAttiva(modalitaDiProva);
+		// Il tutorial pilota il primo turno (niente fuga né passaggio inosservato): i test guidano la partita da sé
+		// (chi prova il tutorial lo riaccende con RegistroSuggerimenti.setAttivo)
+		RegistroSuggerimenti.setAttivo(false);
 		// I test guidano di solito un incarico alla volta: senza sorteggio parte il primo pronto, come vuole il test
 		// (chi prova il sorteggio lo riaccende con conSorteggioDegliIncarichi)
 		SceltaDegliIncarichi.setSorteggioAttivo(false);
@@ -450,6 +455,7 @@ final class PartitaDiTest implements AutoCloseable {
 		// BugMappaReimpostataTest passerebbe o fallirebbe a seconda dell'ordine in cui girano
 		ModalitaDiProva.setAttiva(modalitaDiProvaPrecedente);
 		SceltaDegliIncarichi.setSorteggioAttivo(sorteggioDegliIncarichiPrecedente);
+		RegistroSuggerimenti.setAttivo(tutorialPrecedente);
 	}
 
 	/**

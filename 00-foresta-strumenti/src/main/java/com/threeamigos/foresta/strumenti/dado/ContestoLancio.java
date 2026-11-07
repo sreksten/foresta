@@ -18,7 +18,11 @@ public enum ContestoLancio {
     /** Che cosa c'è in un cofano, da 0 (niente) a 7 (pietre preziose), o da 1 a 6 nei castelli. */
     COFANO_ESITO("Contenuto del cofano", false),
     /** L'oggetto raro di un cofano, al posto dell'esito solito: una chiave scelta fra quelle proposte dal cofano. */
-    COFANO_OGGETTO("Oggetto speciale del cofano", true);
+    COFANO_OGGETTO("Oggetto speciale del cofano", true),
+    /** La percentuale di monete e preziosi che il gruppo perde fuggendo, da 1 al massimo (vedi CostantiPersonaggi). */
+    FUGA_PERDITA_DENARO("Fuga, perdita denaro (%)", false),
+    /** La percentuale di incantesimi e pozioni che il gruppo perde fuggendo, da 1 al massimo (vedi CostantiPersonaggi). */
+    FUGA_PERDITA_SCORTE("Fuga, perdita scorte (%)", false);
 
     private final String descrizione;
     private final boolean scelta;

@@ -8,6 +8,7 @@ import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.strumenti.TrucchiDiSviluppo;
 import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
+import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 import com.threeamigos.foresta.tipi.MossaCartaForbiciSasso;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -488,6 +489,9 @@ public class FinestraDiProva {
                             "6 - panacea", "7 - monete", "8 - pietre preziose"};
                 case COFANO_OGGETTO:
                     return strumenti.getOggettiSpeciali().toArray();
+                case FUGA_PERDITA_DENARO:
+                case FUGA_PERDITA_SCORTE:
+                    return numeri(CostantiPersonaggi.FUGA_PERDITA_MINIMA_PERCENTUALE, CostantiPersonaggi.FUGA_PERDITA_MASSIMA_PERCENTUALE);
                 default:
                     return new Object[0];
             }
