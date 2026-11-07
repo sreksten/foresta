@@ -509,6 +509,11 @@ public class CalcolatoreCombattimento {
         boolean criticoAutomatico = false;
         boolean purificazioneAttiva = false;
 
+        // Il vento asciuga sempre: l'ARIA toglie il BAGNATO a chiunque, anche a chi è immune o resiste e quindi non si raffredda
+        if (tipoDanno == TipoDanno.ARIA && difensore.hasEffettoDiStato(TipoEffettoDiStato.BAGNATO)) {
+            dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BAGNATO);
+        }
+
         if (!immuneATipoDannoBase) {
 
             // Quali interazioni scattano, e quanto moltiplicano il danno e cambiano la difesa, lo dicono le stesse funzioni
@@ -1162,6 +1167,11 @@ public class CalcolatoreCombattimento {
         // Lo stato speciale BERSERK non ha turni, termina al cambio mappa
         if (stato == TipoEffettoDiStato.BERSERK) {
             return 1;
+        }
+
+        // Un raffreddore dura sempre tre turni: nessun attributo lo accorcia
+        if (stato == TipoEffettoDiStato.RAFFREDDATO) {
+            return CostantiPersonaggi.RAFFREDDATO_TURNI;
         }
 
         int durataBase;

@@ -18,12 +18,12 @@ Dipende da `01-foresta-testi` per le descrizioni (`tipo_effetto_di_stato_<lingua
 
 ### `TipoEffettoDiStato`
 
-Venti stati, raggruppati nel codice per natura:
+Ventuno stati, raggruppati nel codice per natura:
 
 - **movimento e controllo**: `RALLENTATO`, `IMMOBILIZZATO`, `STORDITO`, `ATTERRATO`, `SPAVENTATO`;
 - **danni nel tempo**: `SANGUINAMENTO`, `BRUCIATO`, `AVVELENATO`, `INFETTATO`;
 - **mente e sensi**: `CONFUSO`, `MENTE_FRATTURATA`, `ACCECATO`, `ASSORDATO`, `SILENZIATO`, `MALEDETTO`;
-- **ambientali**: `BAGNATO`, `CONGELATO`;
+- **ambientali**: `BAGNATO`, `RAFFREDDATO`, `CONGELATO`. Il **raffreddato** lo mette il vento su un bagnato (la reazione `RAFFREDDAMENTO`, in `03-foresta-danni`): dura **sempre tre turni** (nessun attributo lo accorcia: `CostantiPersonaggi.RAFFREDDATO_TURNI`), non fa danni, e a ogni azione di chi lo ha, **una volta su due** (`RAFFREDDATO_PROBABILITA_STARNUTO`, 50%), il personaggio **starnutisce** (si scrive a video: «Il guerriero starnutisce!») e perde il turno: l'attacco, l'incantesimo, il canto, l'abilità o la pozione non partono e non costano niente (lo fa `LocazioneBase.starnutisce`; vedi `motore_di_gioco.md`);
 - **di classe e benefici**: `BERSERK` (esclusivo del Guerriero, scala il danno fisico col sangue perso e finisce uscendo dalla locazione), `ISPIRATO` (il canto di valore del Bardo, con intensità che dipende dal livello di chi canta) e `RIGENERAZIONE` (la rigenerazione del Druido, che guarisce una quantità fissa a turno).
 
 `isBenefico()` dice quali sono un vantaggio (`ISPIRATO`, `BERSERK`, `RIGENERAZIONE`); gli altri sono un male da togliere, per esempio con l'Alba sacra. Le costanti non portano dati: la descrizione sta nel file dei testi (`getDescrizione`).

@@ -419,7 +419,7 @@ public final class RivelazioneDellArtefatto {
 
 	/**
 	 * Il nome della risorsa dell'immagine dell'oggetto, dove c'è: gli ingredienti magici hanno la loro, i tipi senza immagine mostrano solo il cerchio (null).
-	 * Un artefatto con un aspetto suo (i libri tecnici) ha l'immagine di quello; gli ingredienti senza una propria immagine hanno l'icona della pergamena.
+	 * Un artefatto con un aspetto suo (i libri tecnici) ha l'immagine di quello; gli ingredienti senza una propria immagine hanno l'icona della pergamena (l'aggiornamento di livello usa quella della pergamena).
 	 */
 	public static String risorsaDellOggetto(VistaArtefatto artefatto) {
 		if (artefatto.getAspetto() != null) {
@@ -427,6 +427,8 @@ public final class RivelazioneDellArtefatto {
 		}
 		switch (artefatto.getTipo()) {
 			case PERGAMENA:
+			case AGGIORNAMENTO:
+				// L'aggiornamento di livello è una pergamena anche per l'occhio
 				return "oggetti/Pergamena.png";
 			case GEMMA:
 				return "oggetti/Gemma.png";

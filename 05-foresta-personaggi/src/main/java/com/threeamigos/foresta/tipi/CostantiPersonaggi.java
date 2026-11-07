@@ -70,6 +70,11 @@ public final class CostantiPersonaggi {
     // (a fine locazione ognuno recupera dal 16 al 35% della salute massima, secondo la classe: per questo la fuga deve costare di più)
     // Il gruppo che fugge perde una percentuale, tirata fra queste due, di ognuna delle sue scorte: un tiro per le monete e i preziosi
     // e uno per gli incantesimi, le pergamene e le pozioni (non gli artefatti)
+    // Il raffreddore (RAFFREDDATO, messo dall'ARIA su un BAGNATO): quanti turni dura, sempre, e la probabilità (percentuale) che a ogni turno chi lo ha starnutisca
+    // invece di agire, perdendo il turno
+    public static final int RAFFREDDATO_TURNI = 3;
+    public static final int RAFFREDDATO_PROBABILITA_STARNUTO = 50;
+
     public static final int FUGA_DANNO_MINIMO_PERCENTUALE = 30;
     public static final int FUGA_DANNO_MASSIMO_PERCENTUALE = 50;
     public static final int FUGA_PERDITA_MINIMA_PERCENTUALE = 1;

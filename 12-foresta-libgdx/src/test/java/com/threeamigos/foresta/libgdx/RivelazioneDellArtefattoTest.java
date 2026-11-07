@@ -115,4 +115,17 @@ class RivelazioneDellArtefattoTest {
 	void unaRisorsaDellOggettoPerLaSpada() {
 		assertNotNull(RivelazioneDellArtefatto.risorsaDellOggetto(spada));
 	}
+
+	@Test
+	void l_immagineDiUnIngredienteComeLAggiornamentoDiLivelloVieneIngrandita() {
+		VistaArtefatto aggiornamento = new GeneratoreArtefattiTabelle(new Random(7)).generaArtefatto(TipoArtefatto.AGGIORNAMENTO, 4);
+		String risorsa = RivelazioneDellArtefatto.risorsaDellOggetto(aggiornamento);
+		assertEquals("oggetti/Pergamena.png", risorsa, "l'aggiornamento di livello ha l'immagine della pergamena");
+		// Gli oggetti e le icone sono a metà risoluzione: vanno ingranditi dello zoom
+		assertEquals(com.threeamigos.foresta.ui.LivelloDiZoom.valore(), RivelazioneDellArtefattoGdx.zoomDellImmagine(risorsa), 0.0001d);
+		assertEquals(com.threeamigos.foresta.ui.LivelloDiZoom.valore(), RivelazioneDellArtefattoGdx.zoomDellImmagine("icone/Pergamena.png"), 0.0001d);
+		assertEquals(com.threeamigos.foresta.ui.LivelloDiZoom.valore(), RivelazioneDellArtefattoGdx.zoomDellImmagine("oggetti/Gemma.png"), 0.0001d);
+		// Il resto (i fondi, per esempio) non si ingrandisce
+		assertEquals(1.0d, RivelazioneDellArtefattoGdx.zoomDellImmagine("fondi/Qualcosa.png"), 0.0001d);
+	}
 }

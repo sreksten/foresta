@@ -23,6 +23,7 @@ indicate. Le interazioni che non compaiono cambiano solo il danno o hanno effett
 | :--- | :--- | :--- |
 | `CONGELAMENTO` | `BAGNATO` | `CONGELATO` |
 | `VAPORIZZAZIONE` | `BAGNATO` | `ACCECATO` (la nuvola di vapore) |
+| `RAFFREDDAMENTO` | `BAGNATO` | `RAFFREDDATO` (sempre tre turni; a ogni azione, una volta su due, starnutisce e perde il turno) |
 | `ESTINZIONE` | `BRUCIATO`, `BAGNATO` (l'acqua si consuma nello spegnere) | — |
 | `SCIOGLIMENTO_TERMICO` | `BRUCIATO` | `BAGNATO` |
 | `ESPLOSIONE_DI_GAS` | `BRUCIATO`, `AVVELENATO` | — |
@@ -43,6 +44,8 @@ indicate. Le interazioni che non compaiono cambiano solo il danno o hanno effett
 | `FANGO` | — | `RALLENTATO` (due turni in più) |
 | `DISORIENTAMENTO` | `ASSORDATO` | `STORDITO` (un turno) |
 | `ISOLAMENTO_SENSORIALE` | — | `ACCECATO` |
+
+Il vento asciuga sempre e comunque: un colpo d'`ARIA` toglie il `BAGNATO` a chiunque, anche quando la reazione non scatta (il difensore resiste all'aria, è un non morto e non si raffredda, o è immune all'aria come lo spettro).
 
 Le stesse conseguenze le usano le stime delle tattiche: `CalcolatoreCombattimento.statiCausabili(difensore, arma)` conta, oltre agli
 stati nativi del tipo di danno, quelli che mettono le reazioni con gli stati che il difensore ha già (la TERRA su un RALLENTATO lo
@@ -84,7 +87,7 @@ già porta con sé.
 
 ## 1. Già a posto — nessun intervento
 
-- [x] BAGNATO: ELETTROCUZIONE (FULMINE), CONGELAMENTO (GELO), VAPORIZZAZIONE (FUOCO) — l'elettrocuzione si propaga nella pozza dei BAGNATI vicini (vedi «Danni ad area»)
+- [x] BAGNATO: ELETTROCUZIONE (FULMINE), CONGELAMENTO (GELO), VAPORIZZAZIONE (FUOCO), RAFFREDDAMENTO (ARIA) — l'elettrocuzione si propaga nella pozza dei BAGNATI vicini (vedi «Danni ad area»)
 - [x] BRUCIATO: ALIMENTAZIONE_FIAMMA (ARIA), ESTINZIONE (ACQUA), SCIOGLIMENTO_TERMICO (GELO), ESPLOSIONE_DI_GAS (VELENO)
 - [x] CONGELATO: FRANTUMAZIONE_DEL_GHIACCIO (CONTUNDENTE), DISGELO_VIOLENTO (FUOCO), SUPERCONDUZIONE (FULMINE)
   — la Frantumazione è un critico automatico (×2, come il Colpo di Grazia, e non si somma a un critico vero), non più un moltiplicatore ×2 a cui un critico vero poteva aggiungersi (×4)

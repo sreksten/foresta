@@ -51,7 +51,7 @@ public final class RivelazioneDellArtefattoGdx implements CodaDelleRivelazioni.I
 		Misura misura = null;
 		if (risorsa != null) {
 			try {
-				double zoom = ScenaDellIntermezzo.mezzaRisoluzione(risorsa) ? LivelloDiZoom.valore() : 1.0;
+				double zoom = zoomDellImmagine(risorsa);
 				misura = new Misura((int) Math.round(immagini.larghezza(risorsa, 1f) * zoom), (int) Math.round(immagini.altezza(risorsa, 1f) * zoom));
 			} catch (IllegalArgumentException e) {
 				// L'immagine non c'è: resta il cerchio
@@ -60,6 +60,15 @@ public final class RivelazioneDellArtefattoGdx implements CodaDelleRivelazioni.I
 		}
 		this.risorsaDellOggetto = risorsa;
 		this.modello = new RivelazioneDellArtefatto(artefatto, livelloMondo, area, destinazione, misura, System::nanoTime);
+	}
+
+	/**
+	 * Di quanto va ingrandita l'immagine dell'oggetto: quelle a metà risoluzione (gli oggetti, i personaggi, le locazioni) e le icone (come quella della pergamena
+	 * che hanno gli ingredienti, per esempio l'aggiornamento di livello di un artefatto) dello zoom; il resto no. Le icone stanno negli atlanti a metà
+	 * risoluzione come tutto il resto, e chi le disegna le ingrandisce (vedi {@code IconeGdx}): senza, la pergamena usciva a 32 pixel invece di 64.
+	 */
+	static double zoomDellImmagine(String risorsa) {
+		return ScenaDellIntermezzo.mezzaRisoluzione(risorsa) || risorsa.startsWith("icone/") ? LivelloDiZoom.valore() : 1.0;
 	}
 
 	public RivelazioneDellArtefatto getModello() {

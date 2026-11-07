@@ -50,6 +50,15 @@ public enum TipoInterazioneConEffettiDiStato {
             Collections.singletonList(TipoEffettoDiStato.BAGNATO),
             Collections.singletonList(TipoEffettoDiStato.ACCECATO)),
 
+    // + ARIA
+    /** Se il difensore è {@code BAGNATO} e riceve un danno {@code ARIA}: perde {@code BAGNATO}; riceve {@code RAFFREDDATO} (tre turni, e a ogni turno una volta su due starnutisce e perde il turno). */
+    RAFFREDDAMENTO(
+            Collections.singletonList(TipoEffettoDiStato.BAGNATO),
+            Collections.singletonList(TipoDanno.ARIA),
+            1.0d,
+            Collections.singletonList(TipoEffettoDiStato.BAGNATO),
+            Collections.singletonList(TipoEffettoDiStato.RAFFREDDATO)),
+
     // Interazioni con BRUCIATO
     // + ARIA
     /** Se il difensore è {@code BRUCIATO} e riceve un danno {@code ARIA}: il danno si moltiplica per 1,5; riceve {@code BRUCIATO}. */

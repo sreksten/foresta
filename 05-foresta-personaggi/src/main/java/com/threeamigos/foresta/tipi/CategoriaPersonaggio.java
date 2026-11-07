@@ -64,9 +64,10 @@ public enum CategoriaPersonaggio {
 		// Ciò che è fabbricato non respira, non ha una mente e non ha sangue
 		COSTRUTTO.modifica(TipoDanno.VELENO, 0.0d);
 		COSTRUTTO.modifica(TipoDanno.PSICHICO, 0.0d);
-		// I non morti non hanno una forza vitale da prosciugare, né sangue da perdere o un corpo che si infetta
+		// I non morti non hanno una forza vitale da prosciugare, né sangue da perdere, un corpo che si infetta o che prende freddo (il vento sul bagnato
+		// non li raffredda: non hanno raffreddore da prendere)
 		NON_MORTO.immuneAIncantesimi.addAll(EnumSet.of(TipoIncantesimo.MORTE, TipoIncantesimo.VELENO));
-		NON_MORTO.immuneAEffetti.addAll(EnumSet.of(TipoEffettoDiStato.SANGUINAMENTO, TipoEffettoDiStato.INFETTATO));
+		NON_MORTO.immuneAEffetti.addAll(EnumSet.of(TipoEffettoDiStato.SANGUINAMENTO, TipoEffettoDiStato.INFETTATO, TipoEffettoDiStato.RAFFREDDATO));
 	}
 
 	// Quanto danno subisce, per tipo di danno, chi è di questa categoria. Tipi mancanti restituiscono 1

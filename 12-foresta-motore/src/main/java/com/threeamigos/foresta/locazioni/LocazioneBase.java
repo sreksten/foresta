@@ -620,7 +620,7 @@ public abstract class LocazioneBase implements Locazione {
 				if (azione == Comando.ANNULLA) {
 					return annullaScelta();
 				}
-				gruppo.consumaPozioneSalute(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
+				beve(gruppo.getPersonaggio(azione.getIndicePersonaggio()), gruppo::consumaPozioneSalute);
 				// Bere la pozione è l'azione del personaggio: consuma il suo turno nel round
 				return dopoUnaPozione(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
 
@@ -630,7 +630,7 @@ public abstract class LocazioneBase implements Locazione {
 				if (azione == Comando.ANNULLA) {
 					return annullaScelta();
 				}
-				gruppo.consumaPozioneSaluteGrande(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
+				beve(gruppo.getPersonaggio(azione.getIndicePersonaggio()), gruppo::consumaPozioneSaluteGrande);
 				// Bere la pozione è l'azione del personaggio: consuma il suo turno nel round
 				return dopoUnaPozione(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
 
@@ -640,7 +640,7 @@ public abstract class LocazioneBase implements Locazione {
 				if (azione == Comando.ANNULLA) {
 					return annullaScelta();
 				}
-				gruppo.consumaPozioneMagia(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
+				beve(gruppo.getPersonaggio(azione.getIndicePersonaggio()), gruppo::consumaPozioneMagia);
 				// Bere la pozione è l'azione del personaggio: consuma il suo turno nel round
 				return dopoUnaPozione(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
 
@@ -650,7 +650,7 @@ public abstract class LocazioneBase implements Locazione {
 				if (azione == Comando.ANNULLA) {
 					return annullaScelta();
 				}
-				gruppo.consumaPozioneMagiaGrande(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
+				beve(gruppo.getPersonaggio(azione.getIndicePersonaggio()), gruppo::consumaPozioneMagiaGrande);
 				// Bere la pozione è l'azione del personaggio: consuma il suo turno nel round
 				return dopoUnaPozione(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
 
@@ -660,7 +660,7 @@ public abstract class LocazioneBase implements Locazione {
 				if (azione == Comando.ANNULLA) {
 					return annullaScelta();
 				}
-				gruppo.consumaPozionePanacea(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
+				beve(gruppo.getPersonaggio(azione.getIndicePersonaggio()), gruppo::consumaPozionePanacea);
 				// Bere la pozione è l'azione del personaggio: consuma il suo turno nel round
 				return dopoUnaPozione(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
 
@@ -670,7 +670,7 @@ public abstract class LocazioneBase implements Locazione {
 				if (azione == Comando.ANNULLA) {
 					return annullaScelta();
 				}
-				gruppo.consumaPozioneAumentoLivello(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
+				beve(gruppo.getPersonaggio(azione.getIndicePersonaggio()), gruppo::consumaPozioneAumentoLivello);
 				// Bere la pozione è l'azione del personaggio: consuma il suo turno nel round
 				return dopoUnaPozione(gruppo.getPersonaggio(azione.getIndicePersonaggio()));
 
@@ -687,7 +687,20 @@ public abstract class LocazioneBase implements Locazione {
 				Logger.log(() -> "LocazioneBase.QUALE_FORMULA: " + azione);
 				if (azione == Comando.ANNULLA) {
 					return annullaScelta();
-				} else if (ComandiAssociati.canto(azione) != null) {
+				}
+				if (starnutisce(gruppo.getFormulante())) {
+					// L'incantesimo, il canto o l'abilità non partono e non costano niente, ma il turno passa
+					Stato dopoLoStarnuto = dopoAzioneDelGiocatore(gruppo.getFormulante());
+					if (dopoLoStarnuto != null) {
+						return dopoLoStarnuto;
+					}
+					if (!gruppo.getCapo().isVivo()) {
+						return Stato.GIOCO_PERSO;
+					}
+					statoLocazione = StatoLocazione.IN_LOCAZIONE;
+					break;
+				}
+				if (ComandiAssociati.canto(azione) != null) {
 					Stato statoDopoIlCanto = cantaUnCanto(gruppo.getFormulante(), ComandiAssociati.canto(azione), gruppo, gruppoAvversario);
 					if (statoDopoIlCanto != null) {
 						return statoDopoIlCanto;
@@ -1054,6 +1067,10 @@ public abstract class LocazioneBase implements Locazione {
 	 * @return lo stato in cui passare se lo scontro o la partita sono finiti, altrimenti vuoto
 	 */
 	private Optional<Stato> agisciConLaTattica(Personaggio attore, TatticaMD tattica) {
+		if (starnutisce(attore)) {
+			// Un raffreddato starnutisce, e perde il turno (vale per i miei e per gli avversari)
+			return Optional.empty();
+		}
 		boolean deiMiei = gruppo.contiene(attore);
 		if (esecutore().agisci(attore, tattica) == null) {
 			// Nessun bersaglio: per i miei vuol dire che gli avversari sono finiti
@@ -1348,6 +1365,30 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	/**
+	 * Chi sta per agire ed è RAFFREDDATO starnutisce una volta su due ({@link CostantiPersonaggi#RAFFREDDATO_PROBABILITA_STARNUTO}%): lo si scrive e
+	 * l'azione non parte (non costa niente) ma il turno passa lo stesso. Vale per ogni azione: attacco, incantesimo, canto, abilità e pozione.
+	 *
+	 * @return vero se starnutisce, e allora chi chiama non fa l'azione
+	 */
+	private boolean starnutisce(Personaggio attore) {
+		if (!attore.hasEffettoDiStato(TipoEffettoDiStato.RAFFREDDATO) || Dado.tira(100) > CostantiPersonaggi.RAFFREDDATO_PROBABILITA_STARNUTO) {
+			return false;
+		}
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_motore", "LocazioneBase.starnutisce",
+				attore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
+		return true;
+	}
+
+	/**
+	 * Chi beve una pozione (a meno che non starnutisca: allora la pozione resta dov'è e il turno passa lo stesso).
+	 */
+	private void beve(Personaggio chi, java.util.function.Consumer<Personaggio> consumo) {
+		if (!starnutisce(chi)) {
+			consumo.accept(chi);
+		}
+	}
+
+	/**
 	 * Se per un effetto di stato il personaggio salta il turno
 	 */
 	private static boolean isIncapaceDiAgire(Personaggio personaggio) {
@@ -1632,7 +1673,8 @@ public abstract class LocazioneBase implements Locazione {
 	 * finché il piano non torna a un mio personaggio.
 	 */
 	private Optional<Stato> eseguiSingoloAttacco() {
-		Optional<Stato> fine = attaccaConLeArmi(combattente);
+		// Se starnutisce l'attacco non parte, ma il turno passa
+		Optional<Stato> fine = starnutisce(combattente) ? Optional.<Stato>empty() : attaccaConLeArmi(combattente);
 		if (fine.isPresent()) {
 			return fine;
 		}
@@ -1748,7 +1790,7 @@ public abstract class LocazioneBase implements Locazione {
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			} else {
 				Personaggio unico = chiPuoAgire().get(0);
-				gruppo.consumaPozioneSalute(unico);
+				beve(unico, gruppo::consumaPozioneSalute);
 				return dopoUnaPozioneNellaMischia(unico);
 			}
 		}
@@ -1760,7 +1802,7 @@ public abstract class LocazioneBase implements Locazione {
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			} else {
 				Personaggio unico = chiPuoAgire().get(0);
-				gruppo.consumaPozioneSaluteGrande(unico);
+				beve(unico, gruppo::consumaPozioneSaluteGrande);
 				return dopoUnaPozioneNellaMischia(unico);
 			}
 		}
@@ -1772,7 +1814,7 @@ public abstract class LocazioneBase implements Locazione {
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			} else {
 				Personaggio unico = chiPuoAgire().get(0);
-				gruppo.consumaPozioneMagia(unico);
+				beve(unico, gruppo::consumaPozioneMagia);
 				return dopoUnaPozioneNellaMischia(unico);
 			}
 		}
@@ -1784,7 +1826,7 @@ public abstract class LocazioneBase implements Locazione {
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			} else {
 				Personaggio unico = chiPuoAgire().get(0);
-				gruppo.consumaPozioneMagiaGrande(unico);
+				beve(unico, gruppo::consumaPozioneMagiaGrande);
 				return dopoUnaPozioneNellaMischia(unico);
 			}
 		}
@@ -1796,7 +1838,7 @@ public abstract class LocazioneBase implements Locazione {
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			} else {
 				Personaggio unico = chiPuoAgire().get(0);
-				gruppo.consumaPozionePanacea(unico);
+				beve(unico, gruppo::consumaPozionePanacea);
 				return dopoUnaPozioneNellaMischia(unico);
 			}
 		}
@@ -1808,7 +1850,7 @@ public abstract class LocazioneBase implements Locazione {
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			} else {
 				Personaggio unico = chiPuoAgire().get(0);
-				gruppo.consumaPozioneAumentoLivello(unico);
+				beve(unico, gruppo::consumaPozioneAumentoLivello);
 				return dopoUnaPozioneNellaMischia(unico);
 			}
 		}

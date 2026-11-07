@@ -17,16 +17,17 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * L'introduzione del gioco, senza disegno: la storia sale sullo sfondo della storia, i loghi compaiono appena la storia è salita sopra di loro, poi loghi e
- * sfondo spariscono insieme; la classifica sale e si ferma, poi sparisce; i trofei scorrono tutti. Poi si ricomincia. Qui c'è il tempo e che cosa si vede in
- * ogni fotogramma ({@link #avanza()}): chi disegna (Swing, libGDX) mette il {@link Quadro}.
+ * L'introduzione del gioco, senza disegno: la storia sale sullo sfondo della storia, e il logo della Foresta la segue (compare sotto l'ultima riga e sale
+ * con lei) finché non arriva al suo posto, dove si ferma mentre la storia continua a salire; a quel punto compare anche il logo 3AM, poi loghi e sfondo
+ * spariscono insieme; la classifica sale e si ferma, poi sparisce; i trofei scorrono tutti. Poi si ricomincia. Qui c'è il tempo e che cosa si vede in ogni
+ * fotogramma ({@link #avanza()}): chi disegna (Swing, libGDX) mette il {@link Quadro}.
  */
 public final class IntroDelGioco {
 
 	// Lo scorrimento dell'intro (vedi ColonnaScorrevole): pixel al secondo, e quanto è alta la fascia di dissolvenza ai bordi
 	private static final double VELOCITA = 30;
 	public static final int FASCIA = 40;
-	// Il logo della Foresta compare quando la storia è salita almeno tanto sopra di lui
+	// Il logo della Foresta segue la storia a questa distanza sotto l'ultima riga, e si ferma al suo posto quando ci arriva
 	private static final int MARGINE_LOGHI = 20;
 	// Il logo 3AM sta in basso a destra, a questa distanza dai due bordi
 	private static final int MARGINE_LOGO_3AM = 20;
@@ -48,6 +49,28 @@ public final class IntroDelGioco {
 	}
 
 	/**
+	 * Un logo con il suo alone, nelle coordinate dello schermo, e la sua opacità in questo fotogramma: ognuno ha la sua, perché il logo della Foresta sale
+	 * con la storia (sfumando ai bordi) e quello 3AM compare solo quando il primo si è fermato.
+	 */
+	public static final class Logo {
+		private final Elemento elemento;
+		private final float opacita;
+
+		private Logo(Elemento elemento, float opacita) {
+			this.elemento = elemento;
+			this.opacita = opacita;
+		}
+
+		public Elemento getElemento() {
+			return elemento;
+		}
+
+		public float getOpacita() {
+			return opacita;
+		}
+	}
+
+	/**
 	 * Che cosa si vede in un fotogramma: prima lo sfondo (l'ombra del drago o lo sfondo della storia, di quell'opacità), poi la colonna che scorre, centrata
 	 * in orizzontale, di quell'opacità e sfumata ai bordi ({@link ColonnaScorrevole#opacitaAllaQuota}), poi i loghi con il loro alone
 	 */
@@ -58,11 +81,10 @@ public final class IntroDelGioco {
 		private final ColonnaScorrevole colonna;
 		private final ContenutoDiColonna contenuto;
 		private final float opacitaDellaColonna;
-		private final List<Elemento> loghi;
-		private final float opacitaDeiLoghi;
+		private final List<Logo> loghi;
 
 		private Quadro(Fase fase, boolean ombraDelDrago, float opacitaDelloSfondoDellaStoria, ColonnaScorrevole colonna, ContenutoDiColonna contenuto,
-					   float opacitaDellaColonna, List<Elemento> loghi, float opacitaDeiLoghi) {
+					   float opacitaDellaColonna, List<Logo> loghi) {
 			this.fase = fase;
 			this.ombraDelDrago = ombraDelDrago;
 			this.opacitaDelloSfondoDellaStoria = opacitaDelloSfondoDellaStoria;
@@ -70,7 +92,6 @@ public final class IntroDelGioco {
 			this.contenuto = contenuto;
 			this.opacitaDellaColonna = opacitaDellaColonna;
 			this.loghi = loghi;
-			this.opacitaDeiLoghi = opacitaDeiLoghi;
 		}
 
 		public Fase getFase() {
@@ -101,14 +122,10 @@ public final class IntroDelGioco {
 		}
 
 		/**
-		 * I due loghi con l'alone (vuoto se non si vedono ancora)
+		 * I loghi che si vedono, con l'alone e ognuno con la sua opacità (vuoto se non si vede ancora nessuno)
 		 */
-		public List<Elemento> getLoghi() {
+		public List<Logo> getLoghi() {
 			return loghi;
-		}
-
-		public float getOpacitaDeiLoghi() {
-			return opacitaDeiLoghi;
 		}
 	}
 
@@ -122,7 +139,7 @@ public final class IntroDelGioco {
 	private ColonnaScorrevole colonna;
 	private ContenutoDiColonna contenuto;
 	private ContenutoDiColonna contenutoDellaStoria;
-	// Il tempo della fase: dall'ultimo fotogramma, da quando i loghi compaiono, da quando si sta fermi
+	// Il tempo della fase: dall'ultimo fotogramma, da quando il logo della Foresta si è fermato (e compare il 3AM), da quando si sta fermi
 	private long ultimoFotogramma;
 	private double secondiLoghi = -1;
 	private double secondiFermo;
@@ -219,7 +236,13 @@ public final class IntroDelGioco {
 	 * Un fotogramma dell'intro: fa avanzare il tempo di quello che è passato dall'ultimo e dice che cosa si vede.
 	 */
 	public Quadro avanza() {
-		double secondi = secondiDalFotogrammaPrecedente();
+		return avanzaDi(secondiDalFotogrammaPrecedente());
+	}
+
+	/**
+	 * Come {@link #avanza()}, ma con i secondi dati invece di quelli misurati: per provare l'intro senza aspettarla.
+	 */
+	public Quadro avanzaDi(double secondi) {
 		switch (fase) {
 			case STORIA:
 				return storia(secondi);
@@ -245,12 +268,16 @@ public final class IntroDelGioco {
 			colonna.avanza(secondi, VELOCITA);
 		}
 		secondiFase += secondi;
-		// Il logo della Foresta arriva quando la storia non ci finirebbe sopra, e resta un poco dopo che è uscita; il suo centro sta a un terzo dello
-		// schermo. Il logo 3AM sta in basso a destra, dove la storia non passa mai quando arriva il logo della Foresta, e compare e svanisce insieme a lui
+		// Il logo della Foresta segue la storia: sta sotto la sua ultima riga e sale con lei, finché non arriva al suo posto (il suo centro è a un terzo
+		// dello schermo): lì si ferma, e la storia continua a salire. Dal momento in cui si ferma compare anche il logo 3AM, in basso a destra, dove la
+		// storia non passa mai; poi, uscita la storia, loghi e sfondo spariscono insieme
 		Misura logo3AM = conLoZoom(RISORSA_LOGO_3AM);
 		Misura logoForesta = conLoZoom(RISORSA_LOGO_FORESTA);
-		int cimaLoghi = height / 3 - logoForesta.altezza / 2;
-		if (secondiLoghi < 0 && colonna.getFondo() <= cimaLoghi - MARGINE_LOGHI) {
+		int cimaFerma = height / 3 - logoForesta.altezza / 2;
+		int cimaConLaStoria = colonna.getFondo() + MARGINE_LOGHI;
+		boolean fermo = cimaConLaStoria <= cimaFerma;
+		int cimaLogo = Math.max(cimaFerma, cimaConLaStoria);
+		if (secondiLoghi < 0 && fermo) {
 			secondiLoghi = 0;
 		}
 		float uscita = 0;
@@ -263,16 +290,21 @@ public final class IntroDelGioco {
 		}
 		// Lo sfondo della storia compare in dissolvenza, e sparisce insieme ai loghi
 		float comparsa = (float) Math.min(1, secondiFase / SECONDI_DISSOLVENZA);
-		List<Elemento> loghi = new ArrayList<>();
-		float opacitaLoghi = 0;
-		if (secondiLoghi >= 0) {
-			opacitaLoghi = (float) Math.min(1, secondiLoghi / SECONDI_DISSOLVENZA) * (1 - uscita);
-			loghi.add(Elemento.immagineConAlone(RISORSA_LOGO_3AM, logo3AM.larghezza, logo3AM.altezza, SchermateSenzaPartita.RAGGIO_ALONE,
-					width - MARGINE_LOGO_3AM - logo3AM.larghezza, height - MARGINE_LOGO_3AM - logo3AM.altezza));
-			loghi.add(Elemento.immagineConAlone(RISORSA_LOGO_FORESTA, logoForesta.larghezza, logoForesta.altezza, SchermateSenzaPartita.RAGGIO_ALONE,
-					(width - logoForesta.larghezza) >> 1, cimaLoghi));
+		List<Logo> loghi = new ArrayList<>();
+		// Mentre sale il logo della Foresta sfuma ai bordi come la storia (per l'opacità conta il suo centro); fermo è pieno
+		float opacitaForesta = fermo ? 1f : colonna.opacitaAllaQuota(cimaLogo + logoForesta.altezza / 2 - colonna.getCima());
+		if (opacitaForesta * (1 - uscita) > 0) {
+			loghi.add(new Logo(Elemento.immagineConAlone(RISORSA_LOGO_FORESTA, logoForesta.larghezza, logoForesta.altezza, SchermateSenzaPartita.RAGGIO_ALONE,
+					(width - logoForesta.larghezza) >> 1, cimaLogo), opacitaForesta * (1 - uscita)));
 		}
-		Quadro quadro = new Quadro(Fase.STORIA, false, comparsa * (1 - uscita), colonna, contenuto, 1f, loghi, opacitaLoghi);
+		if (secondiLoghi >= 0) {
+			float opacita3AM = (float) Math.min(1, secondiLoghi / SECONDI_DISSOLVENZA) * (1 - uscita);
+			if (opacita3AM > 0) {
+				loghi.add(new Logo(Elemento.immagineConAlone(RISORSA_LOGO_3AM, logo3AM.larghezza, logo3AM.altezza, SchermateSenzaPartita.RAGGIO_ALONE,
+						width - MARGINE_LOGO_3AM - logo3AM.larghezza, height - MARGINE_LOGO_3AM - logo3AM.altezza), opacita3AM));
+			}
+		}
+		Quadro quadro = new Quadro(Fase.STORIA, false, comparsa * (1 - uscita), colonna, contenuto, 1f, loghi);
 		if (uscita >= 1) {
 			passaA(Fase.CLASSIFICA);
 		}
@@ -289,7 +321,7 @@ public final class IntroDelGioco {
 			secondiFermo += secondi;
 		}
 		float uscita = (float) Math.max(0, Math.min(1, (secondiFermo - SECONDI_CLASSIFICA) / SECONDI_DISSOLVENZA));
-		Quadro quadro = new Quadro(Fase.CLASSIFICA, true, 0f, colonna, contenuto, 1 - uscita, Collections.<Elemento>emptyList(), 0f);
+		Quadro quadro = new Quadro(Fase.CLASSIFICA, true, 0f, colonna, contenuto, 1 - uscita, Collections.<Logo>emptyList());
 		if (uscita >= 1) {
 			passaA(Fase.TROFEI);
 		}
@@ -302,7 +334,7 @@ public final class IntroDelGioco {
 			colonna = ColonnaScorrevole.dalBasso(schermo(), contenuto.getAltezza(), FASCIA);
 		}
 		colonna.avanza(secondi, VELOCITA);
-		Quadro quadro = new Quadro(Fase.TROFEI, true, 0f, colonna, contenuto, 1f, Collections.<Elemento>emptyList(), 0f);
+		Quadro quadro = new Quadro(Fase.TROFEI, true, 0f, colonna, contenuto, 1f, Collections.<Logo>emptyList());
 		if (colonna.isUscito()) {
 			passaA(Fase.STORIA);
 		}

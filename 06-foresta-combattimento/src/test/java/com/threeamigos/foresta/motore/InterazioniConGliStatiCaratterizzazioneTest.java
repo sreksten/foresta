@@ -57,8 +57,10 @@ class InterazioniConGliStatiCaratterizzazioneTest {
      * anche il BAGNATO. Nel danno: la MIETITURA moltiplica per 2 e non più per 2 - SAGGEZZA/100 (51 righe), la
      * FRANTUMAZIONE_DEL_GHIACCIO è un critico automatico invece di un ×2 che un critico vero portava a ×4 (44 righe). Poi il
      * testo mostra anche il danno ad area (getDanniAdArea) di ELETTROCUZIONE, ESPLOSIONE_DI_GAS e RIGETTO (153 righe, il resto uguale). Infine la TOSSICITA_SETTICA moltiplica per 1,2 e non più per 1 (51 righe, solo nel danno).
+     * Infine la nuova reazione RAFFREDDAMENTO (ARIA su BAGNATO: toglie BAGNATO e mette RAFFREDDATO, tre turni): 51 righe, tutte con un difensore BAGNATO
+     * colpito da danno ARIA. E l'ARIA toglie sempre il BAGNATO, anche quando la reazione non scatta (per chi resiste all'aria).
      */
-    private static final String IMPRONTA_ATTESA = "c47d010c6fd1a65cddc34b8293979c9bd787ec18f637a3f1a93b3ca2fba1fcb7";
+    private static final String IMPRONTA_ATTESA = "c1a69a465693229e5411b8c3a64f701f240ea0809aa7e1b64adbd41adb3e425e";
 
     private static final TipoEffettoDiStato[] STATI = {
             TipoEffettoDiStato.BAGNATO, TipoEffettoDiStato.BRUCIATO, TipoEffettoDiStato.AVVELENATO, TipoEffettoDiStato.SANGUINAMENTO,

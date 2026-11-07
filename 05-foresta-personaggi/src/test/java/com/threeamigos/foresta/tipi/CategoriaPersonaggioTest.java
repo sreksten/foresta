@@ -91,4 +91,19 @@ class CategoriaPersonaggioTest {
         assertEquals(0.5d, TipoPersonaggio.ARPIA.getMoltiplicatoreDannoSubito(TipoDanno.TERRA), 1e-9);
         assertEquals(1.0d, TipoPersonaggio.ARPIA.getMoltiplicatoreDannoSubito(TipoDanno.FUOCO), 1e-9);
     }
+
+    @Test
+    void iNonMortiNonSiRaffreddano() {
+        // Scheletro, spettri, spiriti, fantasmi, ombre e Lich: il vento sul bagnato non li raffredda (lo dice la categoria)
+        for (TipoPersonaggio classe : TipoPersonaggio.values()) {
+            if (classe.isDellaCategoria(CategoriaPersonaggio.NON_MORTO)) {
+                assertTrue(classe.isImmuneAEffetto(com.threeamigos.foresta.tipi.TipoEffettoDiStato.RAFFREDDATO), classe.name());
+            }
+        }
+        assertTrue(TipoPersonaggio.SCHELETRO.isImmuneAEffetto(com.threeamigos.foresta.tipi.TipoEffettoDiStato.RAFFREDDATO));
+        assertTrue(TipoPersonaggio.SPETTRO.isImmuneAEffetto(com.threeamigos.foresta.tipi.TipoEffettoDiStato.RAFFREDDATO));
+        // I vivi sì che lo prendono
+        assertFalse(TipoPersonaggio.GOBLIN.isImmuneAEffetto(com.threeamigos.foresta.tipi.TipoEffettoDiStato.RAFFREDDATO));
+        assertFalse(TipoPersonaggio.GUERRIERO.isImmuneAEffetto(com.threeamigos.foresta.tipi.TipoEffettoDiStato.RAFFREDDATO));
+    }
 }

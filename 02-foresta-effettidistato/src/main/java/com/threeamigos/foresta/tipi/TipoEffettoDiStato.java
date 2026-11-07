@@ -116,6 +116,13 @@ public enum TipoEffettoDiStato {
     BAGNATO,
 
     /**
+     * Il vento su chi è bagnato: il personaggio ha preso freddo. Dura tre turni (sempre tre, qualunque sia chi lo subisce) e a ogni turno, una volta su due,
+     * invece di agire starnutisce (si scrive a video) e perde il turno: non attacca, non formula, non canta, non usa abilità e non beve. Lo mette la
+     * reazione RAFFREDDAMENTO (ARIA su BAGNATO); non danneggia, e si toglie come ogni stato che non sia un vantaggio (l'Alba sacra, la panacea).
+     */
+    RAFFREDDATO,
+
+    /**
      * Il bersaglio è completamente bloccato nel ghiaccio.
      */
     CONGELATO,

@@ -200,12 +200,13 @@ public class SpriteRivelazioneArtefatto implements SpriteInterface, CodaDelleRiv
 	}
 
 	/**
-	 * L'immagine dell'oggetto, dove c'è: gli ingredienti magici hanno la loro, l'aggiornamento l'icona della pergamena, i
+	 * L'immagine dell'oggetto, dove c'è: gli ingredienti magici hanno la loro (l'aggiornamento usa quella della pergamena), i
 	 * tipi senza immagine mostrano solo il cerchio. Un artefatto con un aspetto suo (i libri tecnici) ha l'immagine di quello.
 	 */
 	private static BufferedImage immagine(TipoArtefatto tipo) {
 		switch (tipo) {
 			case PERGAMENA:
+			case AGGIORNAMENTO:
 				return PERGAMENA;
 			case GEMMA:
 				return GEMMA;

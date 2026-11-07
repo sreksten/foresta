@@ -155,8 +155,9 @@ public final class SchermataIntroOutroGdx implements SchermateIntroOutro {
 	}
 
 	/**
-	 * L'intro, un fotogramma: la storia sale sullo sfondo della storia, i loghi compaiono appena la storia è salita sopra di loro, poi loghi e sfondo spariscono
-	 * insieme; la classifica sale e si ferma, poi sparisce; i trofei scorrono tutti. Poi si ricomincia.
+	 * L'intro, un fotogramma: la storia sale sullo sfondo della storia, e il logo della Foresta la segue e si ferma al suo posto mentre la storia continua a
+	 * salire; allora compare anche il 3AM, poi loghi e sfondo spariscono insieme; la classifica sale e si ferma, poi sparisce; i trofei scorrono tutti. Poi si
+	 * ricomincia.
 	 */
 	public void intro(Batch batch) {
 		IntroDelGioco.Quadro quadro = intro.avanza();
@@ -170,8 +171,8 @@ public final class SchermataIntroOutroGdx implements SchermateIntroOutro {
 			batch.setColor(precedente);
 		}
 		disegnaLaColonna(batch, quadro);
-		for (Elemento logo : quadro.getLoghi()) {
-			disegno.disegnaElemento(batch, logo, quadro.getOpacitaDeiLoghi());
+		for (IntroDelGioco.Logo logo : quadro.getLoghi()) {
+			disegno.disegnaElemento(batch, logo.getElemento(), logo.getOpacita());
 		}
 	}
 

@@ -173,9 +173,9 @@ public class DisplayableCanvasIntroOutro implements SchermateIntroOutro {
 	}
 
 	/**
-	 * L'intro, un fotogramma: la storia sale sullo sfondo della storia, i loghi compaiono appena la storia è salita
-	 * sopra di loro, poi loghi e sfondo spariscono insieme; la classifica sale e si ferma, poi sparisce; i trofei
-	 * scorrono tutti. Poi si ricomincia.
+	 * L'intro, un fotogramma: la storia sale sullo sfondo della storia, e il logo della Foresta la segue e si ferma
+	 * al suo posto mentre la storia continua a salire; allora compare anche il 3AM, poi loghi e sfondo spariscono
+	 * insieme; la classifica sale e si ferma, poi sparisce; i trofei scorrono tutti. Poi si ricomincia.
 	 */
 	public void intro(Graphics2D graphics) {
 		IntroDelGioco.Quadro quadro = intro.avanza();
@@ -191,8 +191,8 @@ public class DisplayableCanvasIntroOutro implements SchermateIntroOutro {
 			scorrimento = new ScorrimentoVerticale(disegno.comeImmagine(quadro.getContenuto()), colonnaDisegnata, IntroDelGioco.FASCIA);
 		}
 		scorrimento.disegna(graphics, quadro.getOpacitaDellaColonna());
-		for (Elemento logo : quadro.getLoghi()) {
-			disegno.disegnaConOpacita(graphics, logo, quadro.getOpacitaDeiLoghi());
+		for (IntroDelGioco.Logo logo : quadro.getLoghi()) {
+			disegno.disegnaConOpacita(graphics, logo.getElemento(), logo.getOpacita());
 		}
 	}
 
