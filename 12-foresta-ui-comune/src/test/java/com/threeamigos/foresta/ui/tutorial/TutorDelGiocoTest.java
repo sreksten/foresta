@@ -18,6 +18,7 @@ class TutorDelGiocoTest {
 	@AfterEach
 	void ripristina() {
 		RegistroSuggerimenti.ripristina();
+		RegistroSuggerimenti.setMostrabile(false);
 	}
 
 	private static TutorDelGioco tutor() {

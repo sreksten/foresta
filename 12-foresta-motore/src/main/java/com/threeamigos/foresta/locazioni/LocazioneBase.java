@@ -37,7 +37,6 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.statistiche.LineaTemporale;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.tutorial.PilotaggioDelTutorial;
-import com.threeamigos.foresta.tutorial.RegistroSuggerimenti;
 import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.strumenti.logger.Logger;
@@ -291,6 +290,8 @@ public abstract class LocazioneBase implements Locazione {
 	 * primo turno sì, perché la Foresta non sembri vuota.
 	 */
 	public void crea(GruppoGiocatore g, GruppoAvversario avversario) {
+		// Il tutorial guarda a che punto è il giocatore: quel passo vale per tutta la locazione
+		PilotaggioDelTutorial.iniziaLocazione();
 		TipoPersonaggio[] m = incontriPossibili(getPossibiliIncontri(), g.getCapo().getLivello());
 		if (m.length > 0) {
 			// Non sempre si trovano mostri. Al primo turno però vogliamo sempre trovarne uno,
@@ -1945,10 +1946,11 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	/**
-	 * Il primo turno della partita, a tutorial acceso: niente fuga né passaggio inosservato.
+	 * Il primo scontro del tutorial (quello con l'arpia, finché il giocatore non ha visto la spiegazione del combattimento): niente fuga né passaggio
+	 * inosservato.
 	 */
 	private static boolean isPrimoTurnoDelTutorial() {
-		return RegistroSuggerimenti.isAttivo() && Statistiche.getTurniGiocati() == 0;
+		return PilotaggioDelTutorial.isPrimoScontro();
 	}
 
 	/**

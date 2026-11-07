@@ -21,6 +21,8 @@ public final class RegistroSuggerimenti {
 
 	private static SuggerimentiMD suggerimentiMD = new SuggerimentiMD();
 	private static GestoreSuggerimenti gestore;
+	// Se l'interfaccia sa mostrare i suggerimenti (la dice lei); non si salva. Senza, il tutorial non deve pilotare la partita: nessuno li leggerebbe
+	private static volatile boolean mostrabile;
 
 	private RegistroSuggerimenti() {
 	}
@@ -39,6 +41,20 @@ public final class RegistroSuggerimenti {
 	 */
 	public static synchronized boolean isAttivo() {
 		return suggerimentiMD.isAttivo();
+	}
+
+	/**
+	 * Se l'interfaccia sa mostrare i suggerimenti: finché non lo dice (un'interfaccia senza il tutorial, o un test) la partita non va pilotata.
+	 */
+	public static boolean isMostrabile() {
+		return mostrabile;
+	}
+
+	/**
+	 * L'interfaccia dice se sa mostrare i suggerimenti (vedi {@code TutorDelGioco.setAbilitato}).
+	 */
+	public static void setMostrabile(boolean mostrabile) {
+		RegistroSuggerimenti.mostrabile = mostrabile;
 	}
 
 	/**

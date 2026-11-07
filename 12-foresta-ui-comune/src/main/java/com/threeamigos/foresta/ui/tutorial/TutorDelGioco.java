@@ -32,6 +32,8 @@ public final class TutorDelGioco {
 	 */
 	public synchronized void setAbilitato(boolean abilitato) {
 		this.abilitato = abilitato;
+		// Anche il motore lo deve sapere: la partita si pilota solo se i suggerimenti si possono leggere
+		RegistroSuggerimenti.setMostrabile(abilitato);
 		if (!abilitato) {
 			fumetto = null;
 		}

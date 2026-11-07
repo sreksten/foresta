@@ -24,7 +24,7 @@ Dipende da `00-foresta-serializzazione` per `SuggerimentiMD` (il dato che si sal
 
 ### Il registro e i dati
 
-- **`RegistroSuggerimenti`** (pacchetto `tutorial`): `isAttivo`/`setAttivo`; `situazione(Set<Situazione>)`, che risponde con il primo suggerimento ancora da vedere che scatta in una di quelle situazioni (niente se il tutorial è spento); `visto(suggerimento)`, `isVisto`; `ripristina()`, che riaccende il tutorial e fa rivedere tutto. Il modello si legge una volta (`impostaGestore`) e si salva a ogni novità.
+- **`RegistroSuggerimenti`** (pacchetto `tutorial`): `isAttivo`/`setAttivo`; `situazione(Set<Situazione>)`, che risponde con il primo suggerimento ancora da vedere che scatta in una di quelle situazioni (niente se il tutorial è spento); `visto(suggerimento)`, `isVisto`; `ripristina()`, che riaccende il tutorial e fa rivedere tutto; `isMostrabile`/`setMostrabile`, se l'interfaccia sa mostrare i suggerimenti (non si salva, non si ripristina). Il modello si legge una volta (`impostaGestore`) e si salva a ogni novità.
 - **`SuggerimentiMD`**: se è acceso e quali suggerimenti sono visti. Riga di stato, poi una riga per suggerimento visto; un suggerimento che non esiste più si salta.
 - **`GestoreSuggerimenti`** (interfaccia: `carica`, `salva`): dove sta il tutorial. **Per ora il motore non ne passa nessuno**, quindi non si salva niente e il tutorial parte sempre acceso e senza suggerimenti visti (decisione 10 di `tutorial.md`: altrimenti bisognerebbe ripristinarlo a ogni prova). L'implementazione su file, come per il bestiario, si fa quando il tutorial è finito.
 
@@ -37,5 +37,5 @@ Dipende da `00-foresta-serializzazione` per `SuggerimentiMD` (il dato che si sal
 ## Osservazioni
 
 - Lo stato è statico, come per il bestiario: i test devono rimettere com'era (`RegistroSuggerimenti.ripristina()`).
-- Il passo del pilota è ancora il numero del turno (`Statistiche.getTurniGiocati()`), non i suggerimenti visti: va spostato qui quando la UI li registra.
+- Il passo del pilota dei dadi (`12-foresta-motore`, `PilotaggioDelTutorial`) legge da qui quali suggerimenti sono visti (`isVisto`) e se l'interfaccia li mostra (`isMostrabile`, non si salva: lo dice il toolkit con `TutorDelGioco.setAbilitato`).
 - **Da fare**: la UI (il fumetto con coda e pagine, il pollice, l'annulla, il bordo che lampeggia, `ForestaUI` che mette insieme le `Situazione`), l'icona di ripristino a inizio partita, gli eventi nuovi dove la UI non può dedurre la situazione (notte, primo ferito, mostro corrompibile o amichevole), il gestore su file e il salvataggio acceso, la verifica dei gesti scritti in `GESTI_SUL_TOCCO` (tocco, doppio tocco, pressione prolungata, trascinamento) con quelli veri dei due toolkit.

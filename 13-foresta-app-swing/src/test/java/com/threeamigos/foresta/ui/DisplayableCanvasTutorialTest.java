@@ -49,6 +49,7 @@ class DisplayableCanvasTutorialTest {
 	@AfterEach
 	void ripristina() {
 		RegistroSuggerimenti.ripristina();
+		RegistroSuggerimenti.setMostrabile(false);
 		BusEventi.azzera();
 		BusEventi.impostaConsegna(BusEventi.CONSEGNA_SU_THREAD_PRINCIPALE);
 	}

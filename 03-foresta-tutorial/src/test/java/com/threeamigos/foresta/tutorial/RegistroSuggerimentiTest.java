@@ -24,6 +24,17 @@ class RegistroSuggerimentiTest {
 	@AfterEach
 	void ripristina() {
 		RegistroSuggerimenti.ripristina();
+		RegistroSuggerimenti.setMostrabile(false);
+	}
+
+	@Test
+	void iSuggerimentiNonSonoMostrabiliFincheLInterfacciaNonLoDice() {
+		assertFalse(RegistroSuggerimenti.isMostrabile());
+		RegistroSuggerimenti.setMostrabile(true);
+		assertTrue(RegistroSuggerimenti.isMostrabile());
+		// Non si salva e non si ripristina: dipende dall'interfaccia, non dal giocatore
+		RegistroSuggerimenti.ripristina();
+		assertTrue(RegistroSuggerimenti.isMostrabile());
 	}
 
 	@Test

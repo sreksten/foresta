@@ -10,6 +10,7 @@ import com.threeamigos.foresta.bestiario.RegistroBestiario;
 import com.threeamigos.foresta.combattimento.StatoDelCombattimento;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.ModelloDati;
+import com.threeamigos.foresta.tutorial.PilotaggioDelTutorial;
 import com.threeamigos.foresta.trofei.RegistroTrofei;
 import com.threeamigos.foresta.intermezzi.IntermezziDelMotore;
 
@@ -73,6 +74,8 @@ public final class StatoDelMotore {
 			automaAttivo = null;
 		}
 		ModelloDati.setIstanza(new ModelloDati());
+		// Una partita nuova: il tutorial ricomincia dal passo che il giocatore ha raggiunto, non da quello della partita di prima
+		PilotaggioDelTutorial.ricomincia();
 		GruppoGiocatore.azzeraIstanza();
 		LocazioneCorrente.azzera();
 		GruppoAvversario.azzeraIstanza();
