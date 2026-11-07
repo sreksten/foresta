@@ -59,6 +59,16 @@ Il tutorial è **un elenco di suggerimenti**, e **la UI decide quando mostrarli*
 | Prima notte | L'accampamento, e perché serve qualcuno di guardia |
 | Prima volta sul tocco | Gesti: tocco, doppio tocco, pressione prolungata, trascinamento |
 
+## 4 bis. Pilotare la partita durante il tutorial (idea, 2026-11-07)
+
+A tutorial attivo il gioco si **pilota** perché il giocatore incontri le cose una alla volta. Decisione dell'utente: **il mostro si sceglie truccando il dado, punto** (non con un filtro sui candidati). Quello che ci siamo detti:
+
+- **Cosa guida la scelta è ciò che il giocatore ha già visto**, non il numero del turno. Finché non ha visto i suggerimenti di base (l'attacco singolo e il combattimento) il dado è truccato in modo che **non escano corrompibili né amichevoli** (`Personaggio.isCorrompibile()`, `isAmichevole()`, proprietà della classe), così le icone da spiegare sono poche. Dopo, il dado è truccato per far uscire il mostro adatto al passo successivo: un corrompibile (per esempio il goblin), che fa scattare il suggerimento sulla corruzione quando lo si incontra; poi un amichevole, che fa scattare quello sull'amicizia.
+- **Attenzione al giro vizioso:** il trucco non può dipendere dal suggerimento della cosa che sta per comparire (i corrompibili non possono aspettare il suggerimento sulla corruzione, che appare solo quando se ne incontra uno). Conta solo il suggerimento **precedente**.
+- **Prima di fissare la sequenza** va guardato quali mostri compaiono nei primi luoghi e a che livello, per sapere quali esiti del dado servono.
+- **Trucchi anche sulle scelte:** a tutorial attivo si può truccare il gioco a fondo (anche «in maniera indecente», parole dell'utente) in modo che le scelte del giocatore siano più o meno obbligate: per esempio, nel primo scontro può fare solo un attacco semplice; nel secondo gli arriva l'occasione di corrompere.
+- **Interruttore:** tutto questo vale solo con il tutorial attivo e il suggerimento non ancora visto. Se i suggerimenti sono spenti o azzerati, i dadi tornano identici a oggi.
+
 ## 5. Da decidere
 
 - **La conferma del disegno** del §3 (la UI decide guardando le icone e gli eventi che già riceve; il registro è solo una memoria).
@@ -72,6 +82,7 @@ Il tutorial è **un elenco di suggerimenti**, e **la UI decide quando mostrarli*
 ## Da fare / idee aperte
 
 - Rispondere alle domande del §5.
+- Pilotare la partita (§4 bis): guardare quali mostri compaiono nei primi luoghi e decidere la sequenza dei trucchi sui dadi.
 - Verificare per ognuna delle righe del §4 quale evento già esiste e quale va aggiunto.
 - Scrivere i testi (prima in italiano, poi nelle altre lingue).
 - Calcolare il livello esatto del modulo nuovo dalle sue dipendenze, e scegliere il nome (`NN-foresta-<nome>`).
