@@ -212,16 +212,24 @@ public class BarraIcone implements Finestra {
 		if (!possibiliAzioni.isEmpty()) {
 			possibiliAzioni.add(comandoAiuto());
 		}
-		int quanteScelte = possibiliAzioni.size();
-		comandi = new Comando[quanteScelte];
-		descrizioni = new Descrizione[quanteScelte];
-		for (int i = 0; i < quanteScelte; i++) {
-			Comando comando = possibiliAzioni.get(i);
+		// Il ripristino del tutorial sta staccato dalle altre icone da un posto vuoto (nell'array è null: non si disegna, non si tocca)
+		List<Comando> daMostrare = new ArrayList<>();
+		for (Comando comando : possibiliAzioni) {
 			if (comando == null) {
 				throw new IllegalArgumentException("Comando nullo");
 			}
+			if (comando == Comando.RIPRISTINA_TUTORIAL && !daMostrare.isEmpty()) {
+				daMostrare.add(null);
+			}
+			daMostrare.add(comando);
+		}
+		int quanteScelte = daMostrare.size();
+		comandi = new Comando[quanteScelte];
+		descrizioni = new Descrizione[quanteScelte];
+		for (int i = 0; i < quanteScelte; i++) {
+			Comando comando = daMostrare.get(i);
 			comandi[i] = comando;
-			descrizioni[i] = descrivi(comando);
+			descrizioni[i] = comando == null ? null : descrivi(comando);
 		}
 		scorrimento.reimposta();
 		ricalcolaGeometria();
@@ -322,14 +330,16 @@ public class BarraIcone implements Finestra {
 		if (!scorrevole) {
 			int posizione = (lunghezzaUtile() - quanteScelte * latoIcona) >> 1;
 			for (int i = 0; i < quanteScelte; i++) {
-				aggiungiIcona(posizione + i * latoIcona, comandi[i], descrizioni[i]);
+				if (comandi[i] != null) {
+					aggiungiIcona(posizione + i * latoIcona, comandi[i], descrizioni[i]);
+				}
 			}
 			return;
 		}
 		int origine = -(int) Math.round(scorrimento.getScorrimento());
 		for (int i = 0; i < quanteScelte; i++) {
 			int posizione = origine + i * latoIcona;
-			if (posizione + latoIcona > 0 && posizione < lunghezzaUtile()) {
+			if (comandi[i] != null && posizione + latoIcona > 0 && posizione < lunghezzaUtile()) {
 				aggiungiIcona(posizione, comandi[i], descrizioni[i]);
 			}
 		}

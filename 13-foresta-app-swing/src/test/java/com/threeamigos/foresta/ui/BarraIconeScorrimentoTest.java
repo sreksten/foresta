@@ -26,6 +26,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -87,12 +88,12 @@ class BarraIconeScorrimentoTest {
         BusEventi.azzera();
     }
 
-    /** I primi comandi che hanno un'icona e non sono né frecce, né aiuto, né personaggi */
+    /** I primi comandi che hanno un'icona e non sono né frecce, né aiuto, né personaggi, né il ripristino del tutorial (che ha uno spazio suo) */
     private static List<Comando> comandiDaMostrare(int quanti) {
         List<Comando> comandi = new ArrayList<>();
         for (Comando comando : Comando.values()) {
             if (comando == Comando.SU || comando == Comando.GIU || comando == Comando.SINISTRA || comando == Comando.DESTRA
-                    || comando == Comando.AIUTO || comando == Comando.NO_AIUTO || comando.isPersonaggio()) {
+                    || comando == Comando.AIUTO || comando == Comando.NO_AIUTO || comando == Comando.RIPRISTINA_TUTORIAL || comando.isPersonaggio()) {
                 continue;
             }
             try {
@@ -170,6 +171,27 @@ class BarraIconeScorrimentoTest {
         assertTrue(ultima.rettangolo.getX() + ultima.rettangolo.getLarghezza() > LARGHEZZA);
         // 9 icone con l'aiuto, su tutta la lunghezza
         assertEquals(9 * LATO - LARGHEZZA, barra.getScorrimentoMassimo(), 0.001d);
+    }
+
+    @Test
+    void ilRipristinoDelTutorialStaStaccatoDalleLingueDaUnPostoVuoto() {
+        // Given
+        // Una barra larga abbastanza perché ci stiano tutti e sei i posti (con quello vuoto)
+        BarraDiProva barra = new BarraDiProva(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE, 8 * LATO, ALTEZZA);
+        // When
+        ComandiPossibili.set(Arrays.asList(Comando.LINGUA_ITALIANO, Comando.LINGUA_INGLESE_USA, Comando.LINGUA_INGLESE_GB, Comando.RIPRISTINA_TUTORIAL));
+        barra.impostaAzioni();
+        // Then: le tre lingue una accanto all'altra, un posto vuoto, il ripristino e l'aiuto
+        List<IconaVisibile> icone = barra.iconeVisibili;
+        assertEquals(5, icone.size());
+        assertEquals(Comando.LINGUA_INGLESE_GB, icone.get(2).comando);
+        assertEquals(Comando.RIPRISTINA_TUTORIAL, icone.get(3).comando);
+        assertEquals(icone.get(1).rettangolo.getX() - icone.get(0).rettangolo.getX(),
+                icone.get(2).rettangolo.getX() - icone.get(1).rettangolo.getX());
+        assertEquals(2 * LATO, icone.get(3).rettangolo.getX() - icone.get(2).rettangolo.getX());
+        // Il posto vuoto non si tocca: nessuna icona ci sta sotto
+        int xDelVuoto = icone.get(2).rettangolo.getX() + LATO + LATO / 2;
+        assertNotEquals(Comando.RIPRISTINA_TUTORIAL, comandoNellaPosizione(barra, xDelVuoto, ALTEZZA / 2));
     }
 
     @Test

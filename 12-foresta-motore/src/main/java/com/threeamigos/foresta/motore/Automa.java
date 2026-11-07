@@ -53,6 +53,7 @@ import com.threeamigos.foresta.tattiche.RegistroTattiche;
 import com.threeamigos.foresta.tattiche.TatticheDeiPersonaggi;
 import com.threeamigos.foresta.testi.PrecaricatoreDeiTesti;
 import com.threeamigos.foresta.testi.Testi;
+import com.threeamigos.foresta.tutorial.RegistroSuggerimenti;
 import com.threeamigos.foresta.tipi.*;
 import com.threeamigos.foresta.trofei.RegistroTrofei;
 
@@ -568,8 +569,24 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		return Esito.FERMATI;
 	}
 
+	/**
+	 * La scelta della lingua, con in più, staccata, l'icona che ripristina il tutorial.
+	 */
+	private Esito offriLaLingua() {
+		stato = Stato.PRE_GAME_ATTESA_LINGUA;
+		BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.LINGUA, Comando.LINGUA_ITALIANO, Comando.LINGUA_INGLESE_USA, Comando.LINGUA_INGLESE_GB,
+				Comando.RIPRISTINA_TUTORIAL));
+		return Esito.FERMATI;
+	}
+
 	private Esito gestisciComandoInStatoPreGameAttesaLingua(Comando comando) {
 		switch (comando) {
+			case RIPRISTINA_TUTORIAL:
+				// Non è una lingua: il tutorial si riaccende e si resta a scegliere
+				RegistroSuggerimenti.ripristina();
+				BusEventi.pubblica(new NotificaGlobale(Testi.formatta("messaggi_motore", "Automa.tutorialRipristinato.titolo"),
+						Testi.formatta("messaggi_motore", "Automa.tutorialRipristinato")));
+				return offriLaLingua();
 			case LINGUA_ITALIANO:
 				Testi.impostaLingua("it");
 				break;
@@ -591,8 +608,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			case PERGAMENA:
 				if (sceltaDellaLingua) {
 					stato = Stato.PRE_GAME_ATTESA_LINGUA;
-					BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.LINGUA, Comando.LINGUA_ITALIANO, Comando.LINGUA_INGLESE_USA, Comando.LINGUA_INGLESE_GB));
-					return Esito.FERMATI;
+					return offriLaLingua();
 				}
 				return chiediIlNomeDelPersonaggio();
 			case FLOPPY_CARICA:

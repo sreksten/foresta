@@ -16,6 +16,8 @@ public enum TipoIcona {
 	LINGUA_ITALIANO(Comando.LINGUA_ITALIANO, "icone/LinguaItaliano.png", SfondoIcona.VERDE),
 	LINGUA_INGLESE_USA(Comando.LINGUA_INGLESE_USA, "icone/LinguaIngleseUsa.png", SfondoIcona.VERDE),
 	LINGUA_INGLESE_GB(Comando.LINGUA_INGLESE_GB, "icone/LinguaIngleseGb.png", SfondoIcona.VERDE),
+	/* Nella stessa schermata, dopo le lingue: riaccende il tutorial. Il pollice con una freccia circolare è provvisorio, dal disegno di Si.png */
+	RIPRISTINA_TUTORIAL(Comando.RIPRISTINA_TUTORIAL, "icone/RipristinaTutorial.png", SfondoIcona.VERDE),
 
 	/* Scelta sesso del personaggio a inizio gioco */
 	MASCHIO(Comando.MASCHIO, "icone/Maschio.png", SfondoIcona.VERDE),
