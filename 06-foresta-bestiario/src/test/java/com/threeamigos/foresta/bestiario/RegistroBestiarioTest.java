@@ -90,10 +90,15 @@ class RegistroBestiarioTest {
     }
 
     @Test
-    void unBestiarioNuovoNonHaVociSbloccate() {
+    void unBestiarioNuovoNonHaVociDaScoprireSbloccate_eIGiocabiliNonContano() {
         assertEquals(0, RegistroBestiario.getNumeroVociSbloccate());
         assertFalse(RegistroBestiario.isSbloccata(TipoPersonaggio.GOBLIN));
-        assertEquals(TipoPersonaggio.getVociDelBestiario().size(), RegistroBestiario.getNumeroVoci());
+        // I personaggi giocabili sono noti da sempre, ma non si contano: il contatore parte da zero
+        for (TipoPersonaggio giocabile : TipoPersonaggio.getVociDeiGiocabili()) {
+            assertTrue(RegistroBestiario.isSbloccata(giocabile), giocabile.name());
+        }
+        assertEquals(TipoPersonaggio.getVociDelBestiario().size() - TipoPersonaggio.getVociDeiGiocabili().size(), RegistroBestiario.getNumeroVoci());
+        assertEquals(TipoPersonaggio.getVociDaScoprire().size(), RegistroBestiario.getNumeroVoci());
         assertTrue(RegistroBestiario.getCaratteristicheScoperte(TipoPersonaggio.GOBLIN).isEmpty());
     }
 
@@ -142,11 +147,25 @@ class RegistroBestiarioTest {
     }
 
     @Test
-    void chiEntraNelGruppoSbloccaLaVoceDelSuoRuolo() {
+    void chiEntraNelGruppoHaGiaLaSuaVoceENonSiAnnuncia() {
+        assertTrue(RegistroBestiario.isSbloccata(TipoPersonaggio.MAGO), "i personaggi giocabili sono noti da sempre");
+
         BusEventi.pubblica(new InternoPersonaggioEntratoNelGruppo(TipoPersonaggio.MAGA));
 
         assertTrue(RegistroBestiario.isSbloccata(TipoPersonaggio.MAGO), "Mago e Maga sono la stessa voce");
-        assertEquals(Collections.singletonList(TipoPersonaggio.MAGO), annunciate);
+        assertTrue(annunciate.isEmpty(), "non c'è niente di nuovo da annunciare");
+    }
+
+    @Test
+    void forzeEDebolezzeDeiGiocabiliSonoGiaScoperte() {
+        for (TipoPersonaggio giocabile : TipoPersonaggio.getVociDeiGiocabili()) {
+            for (CaratteristicaDiClasse caratteristica : giocabile.getCaratteristiche()) {
+                assertTrue(RegistroBestiario.getCaratteristicheScoperte(giocabile).contains(caratteristica.getChiave()),
+                        giocabile + " " + caratteristica.getChiave());
+            }
+        }
+        // Per un mostro invece non si sa niente finché non lo si osserva
+        assertTrue(RegistroBestiario.getCaratteristicheScoperte(TipoPersonaggio.GOBLIN).isEmpty());
     }
 
     @Test

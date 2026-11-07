@@ -24,6 +24,10 @@ guardie, `UOMO`, `DONNA`, `BORGOMASTRO`, `VIANDANTE`: non si sconfiggono né si 
 
 Le descrizioni raccontano il personaggio e accennano a forze e debolezze, senza i numeri: quelli li scrive il bestiario man mano che si scoprono.
 
+## 1 bis. I personaggi giocabili sono noti da sempre
+
+Le otto voci dei personaggi che si scelgono a inizio partita o si reclutano (`TipoPersonaggio.getVociDeiGiocabili()`) sono sempre sbloccate, con forze e debolezze di classe sempre scoperte (`RegistroBestiario.isSbloccata` e `getCaratteristicheScoperte`, senza scrivere nel file). La scheda serve nella scelta della classe (`SchermataBestiario.apriPerLaSceltaDellaClasse`: solo i giocabili, un altro titolo e sottotitolo, e passare sopra l'icona di una classe, `selezionaDaComando`, ne mostra la scheda), e chi entra nel gruppo non fa più comparire «Nuova voce». Non si contano: il contatore del bestiario e il trofeo dell'Enciclopedista riguardano solo le voci da scoprire (`TipoPersonaggio.getVociDaScoprire()`, tutte tranne i giocabili) e partono da zero.
+
 ## 2. Quando una voce si sblocca
 
 In due modi: **si sconfigge un avversario di quella classe**, oppure **un personaggio di quella classe entra nel gruppo**. `RegistroBestiario` (facciata su

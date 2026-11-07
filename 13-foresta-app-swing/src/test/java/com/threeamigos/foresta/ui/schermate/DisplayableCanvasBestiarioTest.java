@@ -114,9 +114,11 @@ class DisplayableCanvasBestiarioTest {
 		for (TipoPersonaggio voce : TipoPersonaggio.getVociDelBestiario()) {
 			BusEventi.pubblica(new InternoAvversarioSconfitto(voce));
 		}
-		assertEquals(TipoPersonaggio.getVociDelBestiario().size(), RegistroBestiario.getNumeroVociSbloccate());
+		// Quelle da scoprire sono tutte sbloccate; i personaggi giocabili, noti da sempre, non si contano
+		assertEquals(TipoPersonaggio.getVociDaScoprire().size(), RegistroBestiario.getNumeroVociSbloccate());
 		DisplayableCanvasBestiario bestiario = new DisplayableCanvasBestiario(LARGHEZZA, ALTEZZA, new VistaPartitaMotore());
 		bestiario.apri();
+		assertEquals(TipoPersonaggio.getVociDaScoprire().size() + "/" + TipoPersonaggio.getVociDaScoprire().size(), bestiario.getQuanteSbloccate());
 
 		for (int riga = 0; riga < TipoPersonaggio.getVociDelBestiario().size(); riga++) {
 			// Un clic nella colonna di sinistra, sulla riga: la sceglie (la prima riga sta sotto il titolo)
@@ -196,5 +198,54 @@ class DisplayableCanvasBestiarioTest {
 				}
 			}
 		}
+	}
+
+	@Test
+	void allaSceltaDellaClasseMostraSoloIGiocabiliCompleti() {
+		DisplayableCanvasBestiario bestiario = new DisplayableCanvasBestiario(LARGHEZZA, ALTEZZA, new VistaPartitaMotore());
+
+		bestiario.apriPerLaSceltaDellaClasse("Scegli la classe di Arsenio");
+		bestiario.disegna(tela());
+
+		assertTrue(bestiario.isPerLaSceltaDellaClasse());
+		assertEquals("Scegli la classe di Arsenio", bestiario.getTitolo());
+		assertEquals("", bestiario.getQuanteSbloccate());
+		// L'elenco ha solo i personaggi giocabili, e la prima voce è la prima di loro
+		assertEquals(TipoPersonaggio.getVociDeiGiocabili().get(0), bestiario.getVoceScelta());
+		// Anche a bestiario vuoto le voci sono aperte e la scheda ha forze e debolezze (il bestiario di prova è vuoto)
+		for (TipoPersonaggio voce : TipoPersonaggio.getVociDeiGiocabili()) {
+			assertTrue(com.threeamigos.foresta.bestiario.RegistroBestiario.isSbloccata(voce), voce.name());
+		}
+	}
+
+	@Test
+	void passareSopraUnIconaMostraLaSchedaDiQuellaClasse() {
+		DisplayableCanvasBestiario bestiario = new DisplayableCanvasBestiario(LARGHEZZA, ALTEZZA, new VistaPartitaMotore());
+		bestiario.apriPerLaSceltaDellaClasse("Scegli la classe");
+
+		assertTrue(bestiario.selezionaDaComando(com.threeamigos.foresta.tipi.Comando.MAGO));
+		assertEquals(TipoPersonaggio.MAGO, bestiario.getVoceScelta());
+		// La femmina è la stessa voce del maschio
+		assertTrue(bestiario.selezionaDaComando(com.threeamigos.foresta.tipi.Comando.DRUIDA));
+		assertEquals(TipoPersonaggio.DRUIDO, bestiario.getVoceScelta());
+		bestiario.disegna(tela());
+		// Un comando che non è una classe, o una classe che non si sceglie, non cambia niente
+		assertEquals(false, bestiario.selezionaDaComando(com.threeamigos.foresta.tipi.Comando.MAPPA));
+		assertEquals(false, bestiario.selezionaDaComando(null));
+		assertEquals(TipoPersonaggio.DRUIDO, bestiario.getVoceScelta());
+	}
+
+	@Test
+	void ilBestiarioNormaleTornaCompletoDopoLaSceltaDellaClasse() {
+		DisplayableCanvasBestiario bestiario = new DisplayableCanvasBestiario(LARGHEZZA, ALTEZZA, new VistaPartitaMotore());
+		bestiario.apriPerLaSceltaDellaClasse("Scegli la classe");
+
+		bestiario.apri();
+
+		assertEquals(false, bestiario.isPerLaSceltaDellaClasse());
+		assertEquals(TipoPersonaggio.getVociDelBestiario().get(0), bestiario.getVoceScelta());
+		assertEquals(com.threeamigos.foresta.ui.testo.TestiDellaUI.get("TITOLO_BESTIARIO"), bestiario.getTitolo());
+		// Il contatore non conta i personaggi giocabili, noti da sempre
+		assertEquals("0/" + TipoPersonaggio.getVociDaScoprire().size(), bestiario.getQuanteSbloccate());
 	}
 }

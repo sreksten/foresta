@@ -514,6 +514,18 @@ public class BarraIcone implements Finestra {
 	}
 
 	/**
+	 * Il comando dell'icona sotto il mouse (anche con l'aiuto spento), o null: serve a chi mostra qualcosa passando sopra le icone, come la scheda della
+	 * classe nella scelta del personaggio.
+	 */
+	public Comando getComandoSottoIlCursore() {
+		if (mouseX < 0 || scorrimento.isTrascinando()) {
+			return null;
+		}
+		int indice = indiceSotto(mouseX, mouseY);
+		return indice < 0 ? null : iconeVisibili.get(indice).comando;
+	}
+
+	/**
 	 * Ad aiuto acceso, l'indice (fra le icone visibili) dell'icona sotto il mouse di cui mostrare il cartiglio; -1 se non c'è, se l'aiuto è spento o se si
 	 * sta trascinando
 	 */

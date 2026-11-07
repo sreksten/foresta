@@ -57,31 +57,45 @@ public final class RegistroBestiario {
 	}
 
 	/**
-	 * Se la voce di quella classe (o di quella che ne condivide il ruolo) è sbloccata
+	 * Se la voce di quella classe (o di quella che ne condivide il ruolo) è sbloccata. Le voci dei personaggi che si scelgono a inizio partita o si
+	 * reclutano lo sono sempre: chi sceglie la classe ne legge la scheda, e non c'è niente da scoprire (e niente da annunciare quando entrano nel gruppo).
 	 */
 	public static synchronized boolean isSbloccata(TipoPersonaggio classe) {
-		return bestiarioMD.isSbloccata(classe);
+		return classe.isCompagno() || bestiarioMD.isSbloccata(classe);
 	}
 
 	/**
-	 * Quante voci sono sbloccate
+	 * Quante voci da scoprire sono sbloccate: i personaggi giocabili, noti da sempre, non si contano (vedi {@link TipoPersonaggio#getVociDaScoprire()})
 	 */
 	public static synchronized int getNumeroVociSbloccate() {
-		return bestiarioMD.getSbloccate().size();
+		int sbloccate = 0;
+		for (TipoPersonaggio voce : TipoPersonaggio.getVociDaScoprire()) {
+			if (bestiarioMD.isSbloccata(voce)) {
+				sbloccate++;
+			}
+		}
+		return sbloccate;
 	}
 
 	/**
-	 * Quante voci ha il bestiario in tutto: tutte quelle che si possono sbloccare
+	 * Quante voci ha da scoprire il bestiario: tutte quelle che si possono sbloccare, senza i personaggi giocabili, che sono noti da sempre
 	 */
 	public static int getNumeroVoci() {
-		return TipoPersonaggio.getVociDelBestiario().size();
+		return TipoPersonaggio.getVociDaScoprire().size();
 	}
 
 	/**
 	 * Le chiavi delle caratteristiche già scoperte per la voce di quella classe
 	 */
 	public static synchronized Set<String> getCaratteristicheScoperte(TipoPersonaggio classe) {
-		return Collections.unmodifiableSet(new LinkedHashSet<>(bestiarioMD.getScoperte(classe)));
+		Set<String> scoperte = new LinkedHashSet<>(bestiarioMD.getScoperte(classe));
+		if (classe.isCompagno()) {
+			// Forze e debolezze di un personaggio giocabile si leggono nella scheda fin dalla scelta della classe: non c'è niente da scoprire
+			for (CaratteristicaDiClasse caratteristica : classe.getRuolo().getCaratteristiche()) {
+				scoperte.add(caratteristica.getChiave());
+			}
+		}
+		return Collections.unmodifiableSet(scoperte);
 	}
 
 	/**
@@ -103,7 +117,8 @@ public final class RegistroBestiario {
 		if (!classe.hasVoceNelBestiario()) {
 			return;
 		}
-		if (sbloccaESalva(classe)) {
+		// Un personaggio giocabile era già noto: non c'è niente da annunciare (si ricorda solo nel file)
+		if (sbloccaESalva(classe) && !classe.isCompagno()) {
 			// Fuori dal blocco: chi ascolta può richiamare il registro
 			BusEventi.pubblica(new InternoVoceDelBestiarioSbloccata(classe.getRuolo()));
 		}

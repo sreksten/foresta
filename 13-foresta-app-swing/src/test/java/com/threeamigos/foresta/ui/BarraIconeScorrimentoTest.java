@@ -195,6 +195,23 @@ class BarraIconeScorrimentoTest {
     }
 
     @Test
+    void ilComandoSottoIlCursoreSiLeggeAnchePassandoSenzaPremere() {
+        // Given
+        BarraDiProva barra = new BarraDiProva(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE, 8 * LATO, ALTEZZA);
+        ComandiPossibili.set(Arrays.asList(Comando.GUERRIERO, Comando.LADRO, Comando.MAGO));
+        barra.impostaAzioni();
+        assertNull(barra.getComandoSottoIlCursore(), "il mouse non è ancora sulla barra");
+        IconaVisibile seconda = barra.iconeVisibili.get(1);
+        // When: il mouse passa sulla seconda icona
+        barra.processaMovimento(seconda.rettangolo.getX() + 2, seconda.rettangolo.getY() + 2);
+        // Then
+        assertEquals(Comando.LADRO, barra.getComandoSottoIlCursore());
+        // E fuori dalle icone non c'è niente
+        barra.processaMovimento(1, 1 + ALTEZZA);
+        assertNull(barra.getComandoSottoIlCursore());
+    }
+
+    @Test
     void laRiservaAFineAsseAccorciaLaBarraDelleIcone() {
         // Given: 4 icone ci stanno in 300 pixel
         BarraDiProva barra = new BarraDiProva(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE, LARGHEZZA, ALTEZZA);

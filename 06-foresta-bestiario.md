@@ -24,6 +24,10 @@ Una **voce** è un ruolo (`TipoPersonaggio.getRuolo()`): Mago e Maga sono la ste
 
 Le **caratteristiche** scoperte si ricordano per chiave (`DANNO:FUOCO`, `INCANTESIMO:MORTE`, `EFFETTO:SANGUINAMENTO`): non il loro contenuto, che lo sa `TipoPersonaggio`, ma il fatto che il giocatore l'ha vista. Si scoprono **indipendentemente dalla voce** (un colpo di fuoco su una classe dice come reagisce al fuoco anche se non l'hai ancora sconfitta) ma la voce le mostra solo da sbloccata.
 
+### I personaggi giocabili sono noti da sempre
+
+Le voci dei personaggi che si scelgono a inizio partita o si reclutano (Guerriero, Ladro, Bardo, Elfo, Mago, Sacerdote, Chierico, Druido: `TipoPersonaggio.isCompagno`, `getVociDeiGiocabili`) sono **sempre sbloccate**, e **forze e debolezze** della loro classe sempre scoperte: `RegistroBestiario.isSbloccata` e `getCaratteristicheScoperte` lo dicono senza toccare il file, così nessun salvataggio va migrato. Servono alla scelta della classe, che mostra la scheda del personaggio (vedi `12-foresta-ui-comune`, `SchermataBestiario.apriPerLaSceltaDellaClasse`), e tolgono l'annuncio «Nuova voce» di chi entra nel gruppo: non c'è niente di nuovo. Non si contano: il contatore del bestiario e il trofeo dell'Enciclopedista riguardano solo le voci da scoprire (`TipoPersonaggio.getVociDaScoprire()`, tutte tranne i giocabili), quindi partono da zero (`getNumeroVoci` e `getNumeroVociSbloccate` le escludono).
+
 ### Quando una voce si sblocca
 
 In due modi: si sconfigge un avversario di quella classe (anche facendoci amicizia, corrompendolo o battendolo a carta, forbici e sasso), oppure un personaggio di quella classe entra nel gruppo. `RegistroBestiario.registrati()` si iscrive agli eventi (`InternoAvversarioSconfitto`, `InternoAmiciziaStretta`, `InternoCorruzioneRiuscita`, `InternoSfidaVinta`, `InternoPersonaggioEntratoNelGruppo` e `InternoCaratteristicaOsservata`), sblocca la voce o scopre la caratteristica, **salva subito** (le novità sono rare: ogni scoperta una volta sola in tutte le partite) e pubblica `InternoVoceDelBestiarioSbloccata`.

@@ -40,14 +40,16 @@ class ScenarioBestiarioTest {
     }
 
     @Test
-    void ilPersonaggioSceltoAInizioPartitaSbloccaLaSuaVoceEQuellaDiChiCondivideIlRuoloSenzaAnnunciarla() {
+    void ilPersonaggioSceltoAInizioPartitaHaGiaLaSuaVoceENonSiAnnuncia() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(901)) {
             partita.eventi().ascolta(InternoVoceDelBestiarioSbloccata.class);
             iniziaDaMaga(partita);
 
             assertTrue(RegistroBestiario.isSbloccata(TipoPersonaggio.MAGA));
             assertTrue(RegistroBestiario.isSbloccata(TipoPersonaggio.MAGO), "Mago e Maga sono la stessa voce");
-            assertFalse(RegistroBestiario.isSbloccata(TipoPersonaggio.GUERRIERO));
+            // I personaggi giocabili sono noti da sempre (la scheda si legge nella scelta della classe); un mostro no
+            assertTrue(RegistroBestiario.isSbloccata(TipoPersonaggio.GUERRIERO));
+            assertFalse(RegistroBestiario.isSbloccata(TipoPersonaggio.GOBLIN));
             // Nessun annuncio «Nuova voce»: comparirebbe su una schermata ancora vuota e non dice niente a chi ha appena scelto quella classe
             assertFalse(partita.eventi().haRicevuto(InternoVoceDelBestiarioSbloccata.class), "la voce del personaggio iniziale non si annuncia");
             assertTrue(partita.bestiario().contieneRiga("MAGO|true|"), "appena sbloccata, la voce va salvata");
@@ -55,15 +57,16 @@ class ScenarioBestiarioTest {
     }
 
     @Test
-    void unCompagnoReclutatoOUnAiutoNelGruppoSbloccaLaSuaVoceMaUnOspiteNo() {
+    void unCompagnoHaGiaLaSuaVoceEUnOspiteNonSbloccaNienteSeNonFaParteDelGruppo() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(902)) {
             iniziaDaMaga(partita);
 
             partita.gruppo().aggiungiPersonaggio(new Druido("Alder", 1));
-            partita.gruppo().aggiungiOspite(new Ladro("Viaggiatore", 1));
+            // Un mostro come ospite (come in una missione di scorta): viaggia con il gruppo senza farne parte, e la sua voce non si sblocca
+            partita.gruppo().aggiungiOspite(new com.threeamigos.foresta.personaggi.Goblin(1));
 
-            assertTrue(RegistroBestiario.isSbloccata(TipoPersonaggio.DRUIDA), "il druido e la druida sono una voce sola");
-            assertFalse(RegistroBestiario.isSbloccata(TipoPersonaggio.LADRO), "un ospite viaggia con il gruppo senza farne parte");
+            assertTrue(RegistroBestiario.isSbloccata(TipoPersonaggio.DRUIDA), "il druido e la druida sono una voce sola, ed erano già noti");
+            assertFalse(RegistroBestiario.isSbloccata(TipoPersonaggio.GOBLIN), "un ospite viaggia con il gruppo senza farne parte");
         }
     }
 
@@ -292,13 +295,14 @@ class ScenarioBestiarioTest {
             iniziaDaMaga(partita);
             partita.eventi().ascolta(InternoTrofeoAcquisito.class);
             com.threeamigos.foresta.trofei.Trofeo trofeo = com.threeamigos.foresta.tipi.RegolaTrofeo.di(TipoTrofeo.ENCICLOPEDISTA);
-            assertEquals(33, trofeo.getObiettivo());
-            assertEquals(1, trofeo.getProgresso(), "la voce del Mago, del personaggio scelto");
+            int daScoprire = TipoPersonaggio.getVociDaScoprire().size();
+            assertEquals(daScoprire, trofeo.getObiettivo(), "i personaggi giocabili, noti da sempre, non si contano");
+            assertEquals(0, trofeo.getProgresso());
 
             for (TipoPersonaggio voce : TipoPersonaggio.getVociDelBestiario()) {
                 partita.pubblica(new InternoAvversarioSconfitto(voce));
             }
-            assertEquals(33, trofeo.getProgresso());
+            assertEquals(daScoprire, trofeo.getProgresso());
             assertFalse(RegistroTrofei.isVinto(TipoTrofeo.ENCICLOPEDISTA), "i trofei si controllano solo a fine locazione");
             partita.pubblica(new InternoFineLocazione());
 

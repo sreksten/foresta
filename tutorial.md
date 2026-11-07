@@ -139,6 +139,8 @@ Punti da realizzare, in ordine:
 
 ## 4 quater. La scelta della classe (decisa dall'utente, 2026-11-07)
 
+**Direzione nuova (2026-11-07)**: la scheda non sarà un pannello nuovo ma il bestiario riusato (`SchermataBestiario.apriPerLaSceltaDellaClasse`: solo i giocabili, sempre noti, con le abilità innate, forze e debolezze, e la scheda che cambia passando sopra l'icona di una classe). Fatto il modello nel modulo comune; mancano il disegno alla fase della classe in Swing e libGDX, l'etichetta «consigliato» e un testo del suggerimento che dica «passa sopra un'icona».
+
 **Stato (2026-11-07)**: fatto solo il fumetto (`TipoSuggerimento.SCELTA_DELLA_CLASSE`, due pagine: la scelta è importante e le icone sono le classi; i consigli per chi comincia, Guerriero o Ladro), che si apre sul messaggio a tutto schermo con le icone delle classi nella barra. **Manca** il pannello fisso con la scheda di ogni classe (descrizione, barre, etichetta «consigliato»).
 
 Chi sceglie la classe la prima volta non sa quale prendere, e la scelta è la più importante della partita. Non è un suggerimento «una volta sola»: l'aiuto sta **dentro la schermata di scelta** e, dove serve, dipende dal tutorial.

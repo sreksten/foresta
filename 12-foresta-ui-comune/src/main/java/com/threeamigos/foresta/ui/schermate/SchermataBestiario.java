@@ -2,6 +2,7 @@ package com.threeamigos.foresta.ui.schermate;
 
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.strumenti.dado.Dado;
+import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.Area;
 import com.threeamigos.foresta.ui.Finestra;
@@ -51,7 +52,9 @@ public abstract class SchermataBestiario implements Finestra {
 	protected final VistaPartita vistaPartita;
 	private Area areaElenco;
 	private Area areaScheda;
-	private final List<TipoPersonaggio> voci = TipoPersonaggio.getVociDelBestiario();
+	private List<TipoPersonaggio> voci = TipoPersonaggio.getVociDelBestiario();
+	// Alla scelta della classe il bestiario mostra solo i personaggi giocabili, con un altro titolo (vedi apriPerLaSceltaDellaClasse)
+	private String titoloDellaScelta;
 
 	private int scelta;
 	private List<String> sottotitolo = new ArrayList<>();
@@ -141,10 +144,55 @@ public abstract class SchermataBestiario implements Finestra {
 	 * Prepara il bestiario com'è adesso, con la prima voce scelta, le due colonne dalla cima e un sottotitolo a caso.
 	 */
 	public void apri() {
+		voci = TipoPersonaggio.getVociDelBestiario();
+		titoloDellaScelta = null;
 		impostaIlSottotitolo(TestiDellaUI.get("BESTIARIO_SOTTOTITOLO_" + Dado.tiraAncheAUnaFaccia(NUMERO_SOTTOTITOLI)));
 		scelta = 0;
 		costruisciElenco(0);
 		costruisciScheda();
+	}
+
+	/**
+	 * Prepara il bestiario per la scelta della classe: nell'elenco ci sono solo i personaggi giocabili (le cui schede sono sempre complete), il titolo è
+	 * quello dato (per esempio «Scegli la classe di Arsenio») e il sottotitolo dice come leggerle. La scelta vera si fa con le icone della barra: passarci
+	 * sopra ({@link #selezionaDaComando}) mostra la scheda di quella classe, e un clic su una riga dell'elenco fa lo stesso (per chi non ha il mouse).
+	 */
+	public void apriPerLaSceltaDellaClasse(String titolo) {
+		voci = TipoPersonaggio.getVociDeiGiocabili();
+		titoloDellaScelta = titolo;
+		impostaIlSottotitolo(TestiDellaUI.get("SCELTA_DELLA_CLASSE_SOTTOTITOLO"));
+		scelta = 0;
+		costruisciElenco(0);
+		costruisciScheda();
+	}
+
+	/**
+	 * Se il bestiario è aperto per la scelta della classe
+	 */
+	public boolean isPerLaSceltaDellaClasse() {
+		return titoloDellaScelta != null;
+	}
+
+	/**
+	 * Mostra la scheda della classe che quel comando crea (l'icona della barra sotto il mouse nella scelta della classe).
+	 *
+	 * @return vero se il comando è quello di una classe che ha una voce nell'elenco
+	 */
+	public boolean selezionaDaComando(Comando comando) {
+		if (comando == null || elenco == null) {
+			return false;
+		}
+		TipoPersonaggio classe;
+		try {
+			classe = TipoPersonaggio.valueOf(comando.name());
+		} catch (IllegalArgumentException e) {
+			return false;
+		}
+		if (!voci.contains(classe.getRuolo())) {
+			return false;
+		}
+		selezionaVoce(classe);
+		return true;
 	}
 
 	private void costruisciElenco(int scorrimentoMantenuto) {
@@ -161,7 +209,7 @@ public abstract class SchermataBestiario implements Finestra {
 	}
 
 	public String getTitolo() {
-		return TestiDellaUI.get("TITOLO_BESTIARIO");
+		return titoloDellaScelta != null ? titoloDellaScelta : TestiDellaUI.get("TITOLO_BESTIARIO");
 	}
 
 	public int getXDelTitolo() {
@@ -180,11 +228,16 @@ public abstract class SchermataBestiario implements Finestra {
 	}
 
 	/**
-	 * Quante voci si sono sbloccate su quante ce ne sono, come "3/40": sta in alto a destra
+	 * Quante voci si sono sbloccate su quante ce ne sono da scoprire, come "3/25": sta in alto a destra. I personaggi giocabili, noti da sempre, non si
+	 * contano; alla scelta della classe non si scrive niente.
 	 */
 	public String getQuanteSbloccate() {
-		long sbloccate = voci.stream().filter(vistaPartita::isVoceDelBestiarioSbloccata).count();
-		return sbloccate + "/" + voci.size();
+		if (isPerLaSceltaDellaClasse()) {
+			return "";
+		}
+		List<TipoPersonaggio> daScoprire = TipoPersonaggio.getVociDaScoprire();
+		long sbloccate = daScoprire.stream().filter(vistaPartita::isVoceDelBestiarioSbloccata).count();
+		return sbloccate + "/" + daScoprire.size();
 	}
 
 	public Area getAreaElenco() {

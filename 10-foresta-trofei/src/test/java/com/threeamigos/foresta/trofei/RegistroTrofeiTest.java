@@ -413,6 +413,8 @@ class RegistroTrofeiTest {
         enciclopedista.registrati();
         assertEquals(TipoTrofeo.ENCICLOPEDISTA, enciclopedista.getTipo());
         assertEquals(RegistroBestiario.getNumeroVoci(), enciclopedista.getObiettivo());
+        // I personaggi giocabili, noti da sempre, non contano né nell'obiettivo né nel progresso
+        assertEquals(com.threeamigos.foresta.tipi.TipoPersonaggio.getVociDaScoprire().size(), enciclopedista.getObiettivo());
         assertEquals(0, enciclopedista.getProgresso());
         assertFalse(enciclopedista.isMeritato());
     }

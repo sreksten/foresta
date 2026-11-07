@@ -376,6 +376,34 @@ public enum TipoPersonaggio {
 	}
 
 	/**
+	 * Le voci del bestiario che si scoprono giocando, nell'ordine dell'enum: tutte tranne quelle dei personaggi giocabili, che sono note da sempre. Sono
+	 * quelle che contano per il contatore del bestiario e per il trofeo dell'Enciclopedista.
+	 */
+	public static List<TipoPersonaggio> getVociDaScoprire() {
+		List<TipoPersonaggio> daScoprire = new ArrayList<>();
+		for (TipoPersonaggio voce : getVociDelBestiario()) {
+			if (!voce.isCompagno()) {
+				daScoprire.add(voce);
+			}
+		}
+		return Collections.unmodifiableList(daScoprire);
+	}
+
+	/**
+	 * Le voci del bestiario dei personaggi che si possono scegliere a inizio partita (o reclutare), nell'ordine dell'enum: una per ruolo. Sono sempre
+	 * note al bestiario, e sono l'elenco della scelta della classe.
+	 */
+	public static List<TipoPersonaggio> getVociDeiGiocabili() {
+		List<TipoPersonaggio> giocabili = new ArrayList<>();
+		for (TipoPersonaggio voce : getVociDelBestiario()) {
+			if (voce.isCompagno()) {
+				giocabili.add(voce);
+			}
+		}
+		return Collections.unmodifiableList(giocabili);
+	}
+
+	/**
 	 * La classe al femminile che condivide il ruolo con questa (la Maga per il Mago, la Cantastorie per il Bardo), o null se la classe non ne ha
 	 */
 	public TipoPersonaggio getFormaFemminile() {
