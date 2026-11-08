@@ -5,6 +5,7 @@ import com.threeamigos.foresta.bestiario.RegistroBestiario;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.interni.InternoAmiciziaStretta;
+import com.threeamigos.foresta.eventi.interni.InternoArtefattoSpezzato;
 import com.threeamigos.foresta.eventi.interni.InternoArtefattoTrovato;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.eventi.interni.InternoCorruzioneRiuscita;
@@ -359,6 +360,14 @@ class RegistroTrofeiTest {
         BusEventi.pubblica(new InternoSpadaNascostaImpugnata());
         fineLocazione();
         assertTrue(RegistroTrofei.isVinto(TipoTrofeo.TROVAROBE));
+    }
+
+    @Test
+    void unArtefattoSpezzatoDall_incantatoreFaIlHacker() {
+        BusEventi.pubblica(new InternoArtefattoSpezzato());
+        assertFalse(RegistroTrofei.isVinto(TipoTrofeo.HACKER), "i trofei si controllano solo a fine locazione");
+        fineLocazione();
+        assertTrue(RegistroTrofei.isVinto(TipoTrofeo.HACKER));
     }
 
     @Test

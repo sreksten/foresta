@@ -497,6 +497,10 @@ public enum TipoEvento {
      */
     INTERNO_SPADA_NASCOSTA_IMPUGNATA,
     /**
+     * L'incantatore ha spezzato un artefatto in artefatto base e ingredienti del Core Dump
+     */
+    INTERNO_ARTEFATTO_SPEZZATO,
+    /**
      * Il motore chiede alla UI di portare in primo piano il riquadro dello stato del gruppo
      */
     INTERNO_MOSTRA_FINESTRA_STATO,

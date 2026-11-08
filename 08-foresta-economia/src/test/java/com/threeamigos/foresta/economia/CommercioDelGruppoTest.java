@@ -6,6 +6,7 @@ import com.threeamigos.foresta.artefatti.ScambiatoreArtefatti;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.interni.InternoAcquistoArtefatto;
+import com.threeamigos.foresta.eventi.interni.InternoArtefattoSpezzato;
 import com.threeamigos.foresta.eventi.interni.InternoIncantatura;
 import com.threeamigos.foresta.eventi.interni.InternoVenditaArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
@@ -55,7 +56,7 @@ class CommercioDelGruppoTest {
         for (Class<?> classe : new Class<?>[] {NotificaApprovazioneAcquistoArtefatto.class, NotificaRifiutoAcquistoArtefatto.class,
                 NotificaApprovazioneVenditaArtefatto.class, NotificaRifiutoVenditaArtefatto.class, NotificaApprovazioneIncantatura.class,
                 NotificaRifiutoIncantatura.class, NotificaAvvisoIncantatura.class, NotificaApprovazioneAcquistoConsumabile.class,
-                NotificaRifiutoAcquistoConsumabile.class, NotificaTestoFrase.class}) {
+                NotificaRifiutoAcquistoConsumabile.class, NotificaTestoFrase.class, InternoArtefattoSpezzato.class}) {
             ascolta(classe);
         }
     }
@@ -233,6 +234,7 @@ class CommercioDelGruppoTest {
         Cassa.addMonete(100000);
         assertFalse(CommercioDelGruppo.incanta(gruppo, banco, "").isPresent());
         assertNotNull(ultimo(NotificaAvvisoIncantatura.class));
+        assertNotNull(ultimo(InternoArtefattoSpezzato.class), "lo conta il trofeo Hacker");
         assertNull(ultimo(NotificaApprovazioneIncantatura.class));
         // la spada, il libro e i due ingredienti del Core Dump
         assertEquals(4, gruppo.getInventario().size());

@@ -30,7 +30,7 @@ Le dipendenze sono transitive: un modulo vede anche quello che vedono i moduli d
 
 ### Il commercio del gruppo: `CommercioDelGruppo`
 
-Dopo `registrati()` ascolta gli eventi del commercio (`InternoAcquistoArtefatto`, `InternoVenditaArtefatto`, `InternoIncantatura`, `ComandoAcquistoConsumabile`) e li gestisce con il pattern **richiesta e verdetto**: la UI manda l'intenzione, il commercio verifica (fondi, peso, regole del negozio) e pubblica un'**approvazione** o un **rifiuto con il motivo**; solo dopo l'approvazione l'oggetto si sposta. Le funzioni: `prezzoAcquisto`, `prezzoVendita`, `costoFusione` (la fusione è scontata come un acquisto), `vendePreziosi` (un prezioso vale quanto il livello del mondo), `vende` e `incanta`.
+Dopo `registrati()` ascolta gli eventi del commercio (`InternoAcquistoArtefatto`, `InternoVenditaArtefatto`, `InternoIncantatura`, `ComandoAcquistoConsumabile`) e li gestisce con il pattern **richiesta e verdetto**: la UI manda l'intenzione, il commercio verifica (fondi, peso, regole del negozio) e pubblica un'**approvazione** o un **rifiuto con il motivo**; solo dopo l'approvazione l'oggetto si sposta. Le funzioni: `prezzoAcquisto`, `prezzoVendita`, `costoFusione` (la fusione è scontata come un acquisto), `vendePreziosi` (un prezioso vale quanto il livello del mondo), `vende` e `incanta`. Quando la fusione con il libro che riprogramma spezza l'artefatto negli ingredienti del Core Dump, `incanta` pubblica anche `InternoArtefattoSpezzato` (lo conta il trofeo Hacker).
 
 ### I magazzini: `MagazziniDeiNegozi`
 

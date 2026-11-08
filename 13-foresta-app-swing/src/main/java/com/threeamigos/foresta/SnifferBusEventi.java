@@ -97,6 +97,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(InternoPuntiEsperienzaAssegnati.class, this::onEventoPuntiEsperienzaAssegnati);
         BusEventi.iscriviti(InternoEremitiIncontrati.class, this::onEventoEremitiIncontrati);
         BusEventi.iscriviti(InternoSpadaNascostaImpugnata.class, this::onEventoSpadaNascostaImpugnata);
+        BusEventi.iscriviti(InternoArtefattoSpezzato.class, this::onEventoArtefattoSpezzato);
         BusEventi.iscriviti(InternoAmiciziaStretta.class, this::onEventoAmiciziaStretta);
         BusEventi.iscriviti(InternoCorruzioneRiuscita.class, this::onEventoCorruzioneRiuscita);
         BusEventi.iscriviti(InternoScheletroRisvegliato.class, this::onEventoScheletroRisvegliato);
@@ -509,6 +510,10 @@ public class SnifferBusEventi {
 
     private void onEventoSpadaNascostaImpugnata(InternoSpadaNascostaImpugnata evento) {
         Logger.log(() -> headerEvento(evento) + "La spada normalmente nascosta è stata impugnata");
+    }
+
+    private void onEventoArtefattoSpezzato(InternoArtefattoSpezzato evento) {
+        Logger.log(() -> headerEvento(evento) + "L'incantatore ha spezzato un artefatto in ingredienti del Core Dump");
     }
 
     private void onEventoAmiciziaStretta(InternoAmiciziaStretta evento) {

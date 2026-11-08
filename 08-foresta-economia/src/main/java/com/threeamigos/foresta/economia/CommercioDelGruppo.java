@@ -16,6 +16,7 @@ import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.interni.InternoAcquistoArtefatto;
+import com.threeamigos.foresta.eventi.interni.InternoArtefattoSpezzato;
 import com.threeamigos.foresta.eventi.interni.InternoIncantatura;
 import com.threeamigos.foresta.eventi.interni.InternoVenditaArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.*;
@@ -169,6 +170,7 @@ public final class CommercioDelGruppo {
 			List<Artefatto> restituiti = RegoleIncantatura.riprogramma(banco);
 			Cassa.subMonete(costo);
 			restituiti.forEach(gruppo::addArtefatto);
+			BusEventi.pubblica(new InternoArtefattoSpezzato());
 			BusEventi.pubblica(new NotificaAvvisoIncantatura(ProduttoreDiArtefattiCasuale.erroreDiRiprogrammazione()));
 			return Optional.empty();
 		}

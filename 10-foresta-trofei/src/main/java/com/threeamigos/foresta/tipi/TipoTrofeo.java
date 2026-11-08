@@ -55,6 +55,7 @@ public enum TipoTrofeo {
 	ENCICLOPEDISTA(CategoriaTrofeo.VARIE),
 	VERO_ROMPISCATOLE(CategoriaTrofeo.VARIE),
 	TROVAROBE(CategoriaTrofeo.VARIE),
+	HACKER(CategoriaTrofeo.VARIE),
 
 	PERDIGIORNO(CategoriaTrofeo.SPECIALE);
 

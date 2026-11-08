@@ -77,7 +77,10 @@ public enum RegolaTrofeo {
 	ENCICLOPEDISTA(TrofeoEnciclopedista::new),
 	// La spada normalmente nascosta, quando un personaggio la equipaggia (vedi IntermezzoSpadaNascosta)
 	TROVAROBE(() -> new TrofeoAContatore<>(TipoTrofeo.TROVAROBE,
-			InternoSpadaNascostaImpugnata.class, evento -> 1, 1));
+			InternoSpadaNascostaImpugnata.class, evento -> 1, 1)),
+	// L'incantatore, con il libro che riprogramma sul banco, spezza un artefatto nell'artefatto base e negli ingredienti del Core Dump
+	HACKER(() -> new TrofeoAContatore<>(TipoTrofeo.HACKER,
+			InternoArtefattoSpezzato.class, evento -> 1, 1));
 
 	private final Supplier<Trofeo> supplier;
 
