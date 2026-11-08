@@ -40,7 +40,7 @@ public final class SchermateSenzaPartita {
 	 */
 	public static final int RAGGIO_ALONE = 6;
 	// La classifica: dove si ferma la prima riga e quanto distano le righe
-	public static final int QUOTA_CLASSIFICA = 100;
+	public static final int QUOTA_CLASSIFICA = 40;
 	public static final int RIGA_CLASSIFICA = 50;
 	// A sinistra e a destra della classifica e dei trofei
 	public static final int MARGINE = 50;

@@ -31,6 +31,7 @@ public final class SituazioniDellaUI {
 	private int scontriVisti;
 	private boolean oggettoTrovato;
 	private StatoDelloSchermo schermata = StatoDelloSchermo.IN_GIOCO;
+	private boolean puntiAbilitaDaSpendere;
 	private boolean joystickSullaMappa;
 	private boolean mappaPiuGrandeDelloSchermo;
 
@@ -89,6 +90,13 @@ public final class SituazioniDellaUI {
 		mappaPiuGrandeDelloSchermo = mappaPiuGrande;
 	}
 
+	/**
+	 * Se qualcuno del gruppo ha punti abilità da spendere (conta solo con l'inventario aperto).
+	 */
+	public synchronized void segnaPuntiAbilita(boolean daSpendere) {
+		puntiAbilitaDaSpendere = daSpendere;
+	}
+
 	public synchronized void segnaNuovaLocazione() {
 		oggettoTrovato = false;
 		combattimentoAperto = false;
@@ -129,6 +137,9 @@ public final class SituazioniDellaUI {
 		}
 		if (schermata == StatoDelloSchermo.INVENTARIO) {
 			situazioni.add(Situazione.INVENTARIO_APERTO);
+			if (puntiAbilitaDaSpendere) {
+				situazioni.add(Situazione.PUNTI_ABILITA_DA_SPENDERE);
+			}
 		}
 		if (schermata == StatoDelloSchermo.MAPPA) {
 			if (joystickSullaMappa) {

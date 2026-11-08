@@ -203,7 +203,7 @@ public abstract class ForestaUI implements Temporizzabile {
 		BusEventi.iscriviti(InternoRichiestaRefreshUI.class, e -> rinfresca());
 		BusEventi.iscriviti(InternoRichiestaReinizializzazioneUI.class, e -> {
 			// Si ricomincia: il fumetto aperto si chiude senza segnare nulla, e la schermata di gioco ricomparirà
-			schermo.getTutor().chiudi();
+			schermo.getTutor().chiudiEDimentica();
 			situazioni.segnaFuoriDalGioco();
 			schermo.reinizializza();
 			schermo.iniziaGioco();
@@ -321,6 +321,7 @@ public abstract class ForestaUI implements Temporizzabile {
 		}
 		boolean missioneAttiva = !vistaPartita.getMissioniAttive().isEmpty();
 		StatoDelloSchermo schermata = schermo.getStato();
+		situazioni.segnaPuntiAbilita(schermata == StatoDelloSchermo.INVENTARIO && isQualcunoConPuntiAbilita());
 		boolean laMappa = schermata == StatoDelloSchermo.MAPPA;
 		situazioni.segnaLaSchermata(schermata, laMappa && schermo.mappaConJoystick(), laMappa && schermo.mappaPiuGrandeDelloSchermo());
 		boolean aperto = schermo.getTutor().aggiorna(situazioni.correnti(ComandiPossibili.getComandi(), missioneAttiva, schermo.getTutor().isDito(),
@@ -340,6 +341,19 @@ public abstract class ForestaUI implements Temporizzabile {
 	/**
 	 * Se qualcuno del gruppo è ferito e c'è una pozione di salute (piccola o grande) da dargli: letto dalla vista della partita, non da un evento.
 	 */
+	private boolean isQualcunoConPuntiAbilita() {
+		VistaGruppoGiocatore gruppo = vistaPartita.getGruppoGiocatore();
+		if (gruppo == null) {
+			return false;
+		}
+		for (VistaPersonaggio personaggio : gruppo.getPersonaggiVivi()) {
+			if (personaggio.getPuntiAbilitaDisponibili() > 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private boolean isQualcunoFeritoConUnaPozione() {
 		VistaGruppoGiocatore gruppo = vistaPartita.getGruppoGiocatore();
 		if (gruppo == null || gruppo.getPozioniSalute() + gruppo.getPozioniSaluteGrande() <= 0) {
@@ -381,7 +395,7 @@ public abstract class ForestaUI implements Temporizzabile {
 
 			case INTRO:
 				// Richiama la schermata o animazione di introduzione
-				schermo.getTutor().chiudi();
+				schermo.getTutor().chiudiEDimentica();
 				situazioni.segnaFuoriDalGioco();
 				schermo.avviaIntro();
 				// La prima schermata (loghi o classifica) deve restare per un periodo intero

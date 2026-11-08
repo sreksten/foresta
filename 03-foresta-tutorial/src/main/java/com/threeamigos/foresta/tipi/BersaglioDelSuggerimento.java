@@ -35,6 +35,8 @@ public enum BersaglioDelSuggerimento {
 	ICONA_DELLA_MAPPA(Comando.MAPPA),
 	/** L'interruttore dell'aiuto (il punto interrogativo) */
 	ICONA_DELL_AIUTO(Comando.AIUTO, Comando.NO_AIUTO),
+	/** L'icona che apre l'elenco di quello che si può lanciare: incantesimi e abilità innate. */
+	ICONA_DEGLI_INCANTESIMI(Comando.INCANTESIMO),
 	ICONA_DELLA_CORRUZIONE(Comando.CORRUZIONE),
 	ICONA_DELL_AMICIZIA(Comando.AMICIZIA),
 	ICONA_DELL_ACCAMPAMENTO(Comando.ACCAMPAMENTO),

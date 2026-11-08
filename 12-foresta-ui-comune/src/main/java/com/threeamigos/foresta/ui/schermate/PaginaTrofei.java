@@ -114,7 +114,7 @@ public final class PaginaTrofei {
 			y += titolo.getAltezza() + SPAZIO_DOPO_IL_TITOLO;
 		}
 		List<Voce> voci = new ArrayList<>();
-		for (TipoTrofeo tipo : TipoTrofeo.perTipologia()) {
+		for (TipoTrofeo tipo : TipoTrofeo.values()) {
 			boolean vinto = vistaPartita.isTrofeoVinto(tipo);
 			int obiettivo = vistaPartita.getObiettivoTrofeo(tipo);
 			int progresso = vinto ? obiettivo : vistaPartita.getProgressoTrofeo(tipo);

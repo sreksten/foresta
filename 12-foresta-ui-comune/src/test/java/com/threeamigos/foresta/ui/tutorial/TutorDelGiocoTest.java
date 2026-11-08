@@ -32,6 +32,35 @@ class TutorDelGiocoTest {
 	}
 
 	@Test
+	void unSuggerimentoLasciatoAMetaRiprendeDallaPaginaACuiEraArrivato() {
+		TutorDelGioco tutor = tutor();
+		EnumSet<Situazione> situazioni = EnumSet.of(Situazione.ICONE_DI_MOVIMENTO_PRESENTI);
+		FumettoDelTutorial primo = tutor.aggiorna(situazioni, SI).orElseThrow(AssertionError::new);
+		assertEquals(TipoSuggerimento.MOVIMENTO_E_MAPPA, primo.getSuggerimento());
+		assertFalse(tutor.pollice(), "va alla seconda pagina");
+		assertFalse(tutor.pollice(), "va alla terza pagina");
+		assertEquals(3, primo.getPagina());
+		// Si apre la mappa o l'inventario: il fumetto si chiude senza essere letto; tornando riparte da dove era
+		tutor.chiudi();
+		assertFalse(RegistroSuggerimenti.isVisto(TipoSuggerimento.MOVIMENTO_E_MAPPA));
+		FumettoDelTutorial secondo = tutor.aggiorna(situazioni, SI).orElseThrow(AssertionError::new);
+		assertEquals(3, secondo.getPagina());
+		// Letto fino in fondo non si ricorda più niente
+		assertTrue(tutor.pollice());
+		assertTrue(RegistroSuggerimenti.isVisto(TipoSuggerimento.MOVIMENTO_E_MAPPA));
+	}
+
+	@Test
+	void cambiandoPartitaSiRipartDaCapo() {
+		TutorDelGioco tutor = tutor();
+		EnumSet<Situazione> situazioni = EnumSet.of(Situazione.ICONE_DI_MOVIMENTO_PRESENTI);
+		tutor.aggiorna(situazioni, SI);
+		tutor.pollice();
+		tutor.chiudiEDimentica();
+		assertEquals(1, tutor.aggiorna(situazioni, SI).orElseThrow(AssertionError::new).getPagina());
+	}
+
+	@Test
 	void senzaIlToolkitCheLoSaDisegnareNonSiApreNiente() {
 		TutorDelGioco tutor = new TutorDelGioco();
 		assertFalse(tutor.aggiorna(EnumSet.of(Situazione.PRIMA_SCHERMATA_DI_GIOCO), SI).isPresent());

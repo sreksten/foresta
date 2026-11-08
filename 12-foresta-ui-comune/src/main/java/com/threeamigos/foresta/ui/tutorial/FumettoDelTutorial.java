@@ -17,8 +17,16 @@ public final class FumettoDelTutorial {
 	private int pagina = 1;
 
 	FumettoDelTutorial(TipoSuggerimento suggerimento, boolean dito) {
+		this(suggerimento, dito, 1);
+	}
+
+	/**
+	 * @param pagina da quale pagina si riparte (da 1): una già letta prima di lasciare la schermata non si rilegge
+	 */
+	FumettoDelTutorial(TipoSuggerimento suggerimento, boolean dito, int pagina) {
 		this.suggerimento = suggerimento;
 		this.dito = dito;
+		this.pagina = Math.max(1, Math.min(pagina, Math.max(1, suggerimento.getNumeroPagine())));
 	}
 
 	public TipoSuggerimento getSuggerimento() {

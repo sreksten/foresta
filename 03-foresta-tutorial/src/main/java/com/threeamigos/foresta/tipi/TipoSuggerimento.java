@@ -34,9 +34,13 @@ public enum TipoSuggerimento {
 	TATTICHE(Situazione.TATTICHE_DISPONIBILI, BersaglioDelSuggerimento.ICONA_DELL_INVENTARIO),
 	// Si dà aprendo l'inventario: la prima pagina parla delle due liste, la seconda delle icone delle altre pagine
 	INVENTARIO(Situazione.INVENTARIO_APERTO, BersaglioDelSuggerimento.SCHERMATA, BersaglioDelSuggerimento.ICONE_DELLE_PAGINE),
+	// Nell'inventario, quando qualcuno ha punti abilità: gli attributi primari in arancione si aumentano con un doppio click
+	PUNTI_ABILITA(Situazione.PUNTI_ABILITA_DA_SPENDERE, BersaglioDelSuggerimento.SCHERMATA),
 	CORRUZIONE(Situazione.AVVERSARIO_CORROMPIBILE, BersaglioDelSuggerimento.ICONA_DELLA_CORRUZIONE),
 	AMICIZIA(Situazione.AVVERSARIO_AMICHEVOLE, BersaglioDelSuggerimento.ICONA_DELL_AMICIZIA),
-	INCANTESIMI(Situazione.INCANTESIMO_LANCIABILE, BersaglioDelSuggerimento.RIQUADRO_DEGLI_INCANTESIMI_E_DELLE_POZIONI),
+	// La prima pagina parla dell'icona che apre l'elenco (incantesimi e abilità innate), la seconda del riquadro con le scorte
+	INCANTESIMI(Situazione.INCANTESIMO_LANCIABILE, BersaglioDelSuggerimento.ICONA_DEGLI_INCANTESIMI,
+			BersaglioDelSuggerimento.RIQUADRO_DEGLI_INCANTESIMI_E_DELLE_POZIONI),
 	BOTTEGHE(Situazione.INGRESSO_IN_BOTTEGA, BersaglioDelSuggerimento.ICONE_DELLE_BOTTEGHE),
 	ACCAMPAMENTO(Situazione.NOTTE, BersaglioDelSuggerimento.ICONA_DELL_ACCAMPAMENTO),
 	GESTI_SUL_TOCCO(Situazione.DITO_SULLO_SCHERMO, BersaglioDelSuggerimento.BARRA_DELLE_ICONE);

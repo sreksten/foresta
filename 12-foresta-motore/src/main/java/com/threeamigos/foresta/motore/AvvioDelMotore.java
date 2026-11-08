@@ -61,8 +61,9 @@ public final class AvvioDelMotore {
 		// Trofei e bestiario valgono da una partita all'altra: si rileggono una volta sola, all'avvio
 		RegistroTrofei.impostaGestoreTrofei(new GestoreTrofeiSuFile());
 		RegistroBestiario.impostaGestoreBestiario(new GestoreBestiarioSuFile());
-		// Anche il tutorial vale da una partita all'altra: i suggerimenti già visti non si rivedono, finché non lo si ripristina
-		RegistroSuggerimenti.impostaGestore(new GestoreSuggerimentiSuFile());
+		// Il tutorial NON si salva su file finché lo si collauda (decisione dell'utente): si ricorda in memoria quel che si è visto durante la partita
+		// e a ogni avvio ricomincia da capo. Per farlo valere da una partita all'altra, come trofei e bestiario:
+		// RegistroSuggerimenti.impostaGestore(new GestoreSuggerimentiSuFile());
 
 		automa = new Automa(nuovoTemporizzatore(), new GestoreSalvataggiSuFile(), gestorePunteggi);
 		if (!linguaDecisa) {

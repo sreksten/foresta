@@ -115,6 +115,18 @@ class SituazioniDellaUITest {
 	}
 
 	@Test
+	void iPuntiAbilitaSiDicononSoloNellInventario() {
+		SituazioniDellaUI ui = new SituazioniDellaUI();
+		ui.segnaSchermataDiGioco();
+		ui.segnaPuntiAbilita(true);
+		assertFalse(correnti(ui).contains(Situazione.PUNTI_ABILITA_DA_SPENDERE), "sulla schermata di gioco non si parla di punti abilità");
+		ui.segnaLaSchermata(StatoDelloSchermo.INVENTARIO, false, false);
+		assertTrue(correnti(ui).contains(Situazione.PUNTI_ABILITA_DA_SPENDERE));
+		ui.segnaPuntiAbilita(false);
+		assertFalse(correnti(ui).contains(Situazione.PUNTI_ABILITA_DA_SPENDERE));
+	}
+
+	@Test
 	void leIconeDiMostriPozioniBottegheEAccampamento() {
 		SituazioniDellaUI ui = new SituazioniDellaUI();
 		ui.segnaSchermataDiGioco();

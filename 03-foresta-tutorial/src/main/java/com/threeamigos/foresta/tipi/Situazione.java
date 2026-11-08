@@ -23,6 +23,8 @@ public enum Situazione {
 	MAPPA_PIU_GRANDE_DELLO_SCHERMO,
 	/** Si è aperto l'inventario del gruppo. */
 	INVENTARIO_APERTO,
+	/** Si è aperto l'inventario e qualcuno del gruppo ha punti abilità da spendere. */
+	PUNTI_ABILITA_DA_SPENDERE,
 	/** Ci sono le quattro icone di movimento (nord, est, sud, ovest). */
 	ICONE_DI_MOVIMENTO_PRESENTI,
 	/** Si apre il combattimento. */

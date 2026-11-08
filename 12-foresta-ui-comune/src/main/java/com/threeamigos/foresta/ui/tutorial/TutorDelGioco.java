@@ -4,6 +4,8 @@ import com.threeamigos.foresta.tipi.Situazione;
 import com.threeamigos.foresta.tipi.TipoSuggerimento;
 import com.threeamigos.foresta.tutorial.RegistroSuggerimenti;
 
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -24,6 +26,8 @@ public final class TutorDelGioco {
 	static final long MEZZO_PERIODO_DEL_LAMPEGGIO_MS = 400L;
 
 	private FumettoDelTutorial fumetto;
+	// A che pagina si era arrivati in un suggerimento lasciato a metà (si è cambiata schermata): non si tiene su disco, ma finché si gioca si riparte da lì
+	private final Map<TipoSuggerimento, Integer> pagineRaggiunte = new EnumMap<>(TipoSuggerimento.class);
 	private boolean dito;
 	private boolean abilitato;
 
@@ -77,7 +81,7 @@ public final class TutorDelGioco {
 		}
 		for (TipoSuggerimento suggerimento : RegistroSuggerimenti.candidati(situazioni)) {
 			if (suggerimento.getNumeroPagine() > 0 && apribile.test(suggerimento)) {
-				fumetto = new FumettoDelTutorial(suggerimento, dito);
+				fumetto = new FumettoDelTutorial(suggerimento, dito, pagineRaggiunte.getOrDefault(suggerimento, 1));
 				return Optional.of(fumetto);
 			}
 		}
@@ -97,6 +101,7 @@ public final class TutorDelGioco {
 			return false;
 		}
 		RegistroSuggerimenti.visto(fumetto.getSuggerimento());
+		pagineRaggiunte.remove(fumetto.getSuggerimento());
 		fumetto = null;
 		return true;
 	}
@@ -106,6 +111,7 @@ public final class TutorDelGioco {
 	 */
 	public synchronized void annulla() {
 		RegistroSuggerimenti.setAttivo(false);
+		pagineRaggiunte.clear();
 		fumetto = null;
 	}
 
@@ -124,9 +130,21 @@ public final class TutorDelGioco {
 	}
 
 	/**
-	 * Chiude il fumetto senza segnare nulla (si cambia partita, o la UI si reinizializza): il suggerimento si riproporrà.
+	 * Chiude il fumetto senza segnarlo letto (si è lasciata la sua schermata): il suggerimento si riproporrà tornando, dalla pagina a cui era arrivato.
 	 */
 	public synchronized void chiudi() {
+		if (fumetto != null) {
+			pagineRaggiunte.put(fumetto.getSuggerimento(), fumetto.getPagina());
+		}
+		fumetto = null;
+	}
+
+	/**
+	 * Chiude il fumetto e dimentica a che pagina erano i suggerimenti lasciati a metà (si cambia partita, o la UI si reinizializza): ripartiranno
+	 * dall'inizio.
+	 */
+	public synchronized void chiudiEDimentica() {
+		pagineRaggiunte.clear();
 		fumetto = null;
 	}
 }

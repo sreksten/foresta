@@ -11,6 +11,7 @@ import com.threeamigos.foresta.ui.componenti.ContenutoDiColonna;
 import com.threeamigos.foresta.ui.componenti.ContenutoDiColonna.Elemento;
 import com.threeamigos.foresta.ui.immagini.ImmagineDiPixel;
 import com.threeamigos.foresta.ui.testo.LayoutDelTestoGrande;
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,6 +37,8 @@ public final class IntroDelGioco {
 	private static final double SECONDI_DISSOLVENZA = 1;
 	private static final double SECONDI_LOGHI = 3;
 	private static final double SECONDI_CLASSIFICA = 5;
+	/** Lo spazio fra il titolo della classifica e la prima riga */
+	private static final int SPAZIO_DOPO_IL_TITOLO_DELLA_CLASSIFICA = 24;
 	// Il secondo fotogramma più lento che si accetta: dopo una pausa lunga lo scorrimento non salta
 	private static final double SECONDI_FOTOGRAMMA_MASSIMI = 0.1;
 	public static final String RISORSA_LOGO_3AM = "Logo3AM.png";
@@ -187,19 +190,23 @@ public final class IntroDelGioco {
 	}
 
 	/**
-	 * La classifica in un contenuto, nell'alfabeto grande: il nome a sinistra, il punteggio a destra, una riga ogni {@link SchermateSenzaPartita#RIGA_CLASSIFICA}
+	 * La classifica in un contenuto, nell'alfabeto grande: il titolo («intrepidi avventurieri») centrato in cima, poi il nome a sinistra e il punteggio a
+	 * destra, una riga ogni {@link SchermateSenzaPartita#RIGA_CLASSIFICA}
 	 */
 	public static ContenutoDiColonna classifica(GestorePunteggi gestorePunteggi, int width) {
 		int righe = gestorePunteggi.getConteggio();
 		List<Elemento> elementi = new ArrayList<>();
+		ImmagineDiPixel titolo = LayoutDelTestoGrande.immagine(TestiDellaUI.get("TITOLO_CLASSIFICA"), Math.max(1, width - 2 * SchermateSenzaPartita.MARGINE), true);
+		elementi.add(Elemento.testoGrande(titolo, SchermateSenzaPartita.MARGINE, 0));
+		int cimaDelleRighe = titolo.getAltezza() + SPAZIO_DOPO_IL_TITOLO_DELLA_CLASSIFICA;
 		for (int posizione = 0; posizione < righe; posizione++) {
 			Punteggio punteggio = gestorePunteggi.getPunteggio(posizione);
-			int y = posizione * SchermateSenzaPartita.RIGA_CLASSIFICA;
+			int y = cimaDelleRighe + posizione * SchermateSenzaPartita.RIGA_CLASSIFICA;
 			elementi.add(Elemento.testoGrande(riga(punteggio.getNome()), SchermateSenzaPartita.MARGINE, y));
 			String valore = String.valueOf(punteggio.getPunteggio());
 			elementi.add(Elemento.testoGrande(riga(valore), width - SchermateSenzaPartita.MARGINE - LayoutDelTestoGrande.larghezza(valore), y));
 		}
-		return new ContenutoDiColonna(width, righe * SchermateSenzaPartita.RIGA_CLASSIFICA, elementi);
+		return new ContenutoDiColonna(width, cimaDelleRighe + righe * SchermateSenzaPartita.RIGA_CLASSIFICA, elementi);
 	}
 
 	private static ImmagineDiPixel riga(String testo) {
