@@ -126,6 +126,13 @@ public final class MappaATuttoSchermo implements Finestra {
 		return altezzaMappa() < height;
 	}
 
+	/**
+	 * Se la mappa è più grande dello spazio che ha sullo schermo (per vederla tutta bisogna spostarla).
+	 */
+	public boolean isPiuGrandeDelloSchermo() {
+		return dimensioneMappaX() > width || dimensioneMappaY() > altezzaMappa();
+	}
+
 	private int dimensioneMappaX() {
 		return vistaPartita.getMappa().getDimensioneX() * larghezzaIcona;
 	}

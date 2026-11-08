@@ -2,6 +2,7 @@ package com.threeamigos.foresta.ui.tutorial;
 
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.Situazione;
+import com.threeamigos.foresta.tipi.StatoDelloSchermo;
 
 import java.util.Collection;
 import java.util.EnumSet;
@@ -29,6 +30,9 @@ public final class SituazioniDellaUI {
 	private boolean combattimentoAperto;
 	private int scontriVisti;
 	private boolean oggettoTrovato;
+	private StatoDelloSchermo schermata = StatoDelloSchermo.IN_GIOCO;
+	private boolean joystickSullaMappa;
+	private boolean mappaPiuGrandeDelloSchermo;
 
 	/**
 	 * Si sta scegliendo la classe del personaggio (a inizio partita, prima della schermata di gioco), o si ha finito.
@@ -75,6 +79,16 @@ public final class SituazioniDellaUI {
 		oggettoTrovato = true;
 	}
 
+	/**
+	 * Quale schermata si vede. Se è la mappa a tutto schermo, dice anche se ha il joystick virtuale e se è più grande dello spazio che ha sullo
+	 * schermo (negli altri casi i due valori non contano).
+	 */
+	public synchronized void segnaLaSchermata(StatoDelloSchermo nuova, boolean mappaConJoystick, boolean mappaPiuGrande) {
+		schermata = nuova;
+		joystickSullaMappa = mappaConJoystick;
+		mappaPiuGrandeDelloSchermo = mappaPiuGrande;
+	}
+
 	public synchronized void segnaNuovaLocazione() {
 		oggettoTrovato = false;
 		combattimentoAperto = false;
@@ -112,6 +126,17 @@ public final class SituazioniDellaUI {
 		}
 		if (comandi.contains(Comando.MAPPA)) {
 			situazioni.add(Situazione.ICONA_DELLA_MAPPA_PRESENTE);
+		}
+		if (schermata == StatoDelloSchermo.INVENTARIO) {
+			situazioni.add(Situazione.INVENTARIO_APERTO);
+		}
+		if (schermata == StatoDelloSchermo.MAPPA) {
+			if (joystickSullaMappa) {
+				situazioni.add(Situazione.JOYSTICK_SULLA_MAPPA);
+			}
+			if (mappaPiuGrandeDelloSchermo) {
+				situazioni.add(Situazione.MAPPA_PIU_GRANDE_DELLO_SCHERMO);
+			}
 		}
 		if (comandi.containsAll(MOVIMENTO)) {
 			situazioni.add(Situazione.ICONE_DI_MOVIMENTO_PRESENTI);

@@ -11,6 +11,7 @@ import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.GeneratoreArtefatti;
 import com.threeamigos.foresta.intermezzi.IntermezzoLibroTecnico;
+import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.locazioni.FabbricaLocazioni;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.locazioni.Locazione;
@@ -78,6 +79,7 @@ public class CostruttoreDellaForesta {
 		RegistroArtefatti.reimposta();
 		Statistiche.reimposta();
 		IntermezzoLibroTecnico.reimposta();
+		RaccoltaBottino.reimposta();
 		// Quello che la partita precedente aveva guadagnato per i trofei e non aveva ancora consolidato non vale per questa
 		RegistroTrofei.scartaIlProgressoInSospeso();
 		// Gli intermezzi già visti e le notizie sono di una partita: la nuova ricomincia da capo (l'intro, le prime visite)

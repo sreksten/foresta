@@ -15,6 +15,7 @@ import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzatore;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.FaseDiGioco;
 import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.StatoDelloSchermo;
 import com.threeamigos.foresta.tipi.TipoFinestra;
 import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.ui.barra.ComandiPossibili;
@@ -81,7 +82,7 @@ public abstract class ForestaUI implements Temporizzabile {
 		BusEventi.iscriviti(NotificaGlobale.class, e -> schermo.notificaAnnuncioGlobale(e.getEtichetta(), e.getMessaggio()));
 		BusEventi.iscriviti(InternoTrofeoAcquisito.class,
 				e -> schermo.notificaAnnuncioGlobale(TestiDellaUI.get("TROFEO_VINTO"), e.getTrofeo().getNome()));
-		// Il nome della voce, che per chi ha due forme le dice tutte e due ("Mago e Maga")
+		// Il nome della voce, che per chi ha due forme le dice tutte e due ("Maga e Mago")
 		BusEventi.iscriviti(InternoVoceDelBestiarioSbloccata.class,
 				e -> schermo.notificaAnnuncioGlobale(TestiDellaUI.get("NUOVA_VOCE"), e.getVoce().getNomeDellaVoce()));
 		BusEventi.iscriviti(InternoAggiornamentoComandiDisponibili.class, e -> {
@@ -319,6 +320,9 @@ public abstract class ForestaUI implements Temporizzabile {
 			return;
 		}
 		boolean missioneAttiva = !vistaPartita.getMissioniAttive().isEmpty();
+		StatoDelloSchermo schermata = schermo.getStato();
+		boolean laMappa = schermata == StatoDelloSchermo.MAPPA;
+		situazioni.segnaLaSchermata(schermata, laMappa && schermo.mappaConJoystick(), laMappa && schermo.mappaPiuGrandeDelloSchermo());
 		boolean aperto = schermo.getTutor().aggiorna(situazioni.correnti(ComandiPossibili.getComandi(), missioneAttiva, schermo.getTutor().isDito(),
 				isQualcunoFeritoConUnaPozione()), schermo::isApribile).isPresent();
 		if (aperto) {

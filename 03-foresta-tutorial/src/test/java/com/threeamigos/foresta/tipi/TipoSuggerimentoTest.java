@@ -53,13 +53,21 @@ class TipoSuggerimentoTest {
 	void ognuniPaginaPuntaAQuelloDiCuiParla() {
 		// La pagina sulla mappa punta alla mappa, non alle frecce; quella sull'aiuto al punto interrogativo
 		assertEquals(BersaglioDelSuggerimento.ICONE_DI_MOVIMENTO, TipoSuggerimento.MOVIMENTO_E_MAPPA.getBersaglio(1));
-		assertEquals(BersaglioDelSuggerimento.ICONA_DELLA_MAPPA, TipoSuggerimento.MOVIMENTO_E_MAPPA.getBersaglio(2));
+		assertEquals(BersaglioDelSuggerimento.RIQUADRO_DELLA_MAPPA, TipoSuggerimento.MOVIMENTO_E_MAPPA.getBersaglio(2));
+		assertEquals(BersaglioDelSuggerimento.ICONA_DELLA_MAPPA, TipoSuggerimento.MOVIMENTO_E_MAPPA.getBersaglio(3));
 		assertEquals(BersaglioDelSuggerimento.BARRA_DELLE_ICONE, TipoSuggerimento.BARRA_DELLE_ICONE.getBersaglio(1));
 		assertEquals(BersaglioDelSuggerimento.ICONA_DELL_AIUTO, TipoSuggerimento.BARRA_DELLE_ICONE.getBersaglio(2));
 		// Le pagine oltre l'ultimo bersaglio ripetono l'ultimo; senza bersagli per pagina vale sempre lo stesso
 		assertEquals(BersaglioDelSuggerimento.ICONA_DELLA_MAPPA, TipoSuggerimento.MOVIMENTO_E_MAPPA.getBersaglio(5));
 		assertEquals(BersaglioDelSuggerimento.ICONA_DELLA_MAPPA, TipoSuggerimento.LUOGHI.getBersaglio(4));
 		assertEquals(TipoSuggerimento.COMBATTIMENTO.getBersaglio(), TipoSuggerimento.COMBATTIMENTO.getBersaglio(2));
+	}
+
+	@Test
+	void ilJoystickELInventarioHannoIlLoroBersaglio() {
+		assertEquals(BersaglioDelSuggerimento.JOYSTICK_VIRTUALE, TipoSuggerimento.JOYSTICK_DELLA_MAPPA.getBersaglio());
+		assertEquals(BersaglioDelSuggerimento.SCHERMATA, TipoSuggerimento.INVENTARIO.getBersaglio(1));
+		assertEquals(BersaglioDelSuggerimento.ICONE_DELLE_PAGINE, TipoSuggerimento.INVENTARIO.getBersaglio(2));
 	}
 
 	@Test

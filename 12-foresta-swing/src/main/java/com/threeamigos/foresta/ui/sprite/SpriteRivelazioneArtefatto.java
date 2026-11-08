@@ -12,6 +12,7 @@ import com.threeamigos.foresta.ui.immagini.IconeAwt;
 import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
 import com.threeamigos.foresta.tipi.MappaBottinoImmagine;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
+import com.threeamigos.foresta.ui.testo.FontTool;
 import com.threeamigos.foresta.ui.sprite.RivelazioneDellArtefatto.Cerchio;
 import com.threeamigos.foresta.ui.sprite.RivelazioneDellArtefatto.Fotogramma;
 import com.threeamigos.foresta.ui.sprite.RivelazioneDellArtefatto.Pannello;
@@ -269,7 +270,11 @@ public class SpriteRivelazioneArtefatto implements SpriteInterface, CodaDelleRiv
 			g.setColor(conAlfa(new Color(pannello.rgbDelBordo), pannello.alfaDelBordo));
 			g.drawRoundRect(0, 0, immagine.getWidth() - 1, immagine.getHeight() - 1, 12, 12);
 			for (Riga riga : pannello.getRighe()) {
-				g.drawImage(ImageCache.get(riga.getTesto(), font, riga.getColore(), riga.getLarghezzaMassima()), riga.getX(), riga.getY(), null);
+				int yRiga = riga.getY();
+				for (String parte : FontTool.split(font, riga.getTesto(), riga.getLarghezzaMassima())) {
+					g.drawImage(ImageCache.get(parte, font, riga.getColore()), riga.getXDellaParte(FontTool.getWidth(font, parte)), yRiga, null);
+					yRiga += font.getHeight();
+				}
 			}
 		} finally {
 			g.dispose();

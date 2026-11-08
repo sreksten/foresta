@@ -17,6 +17,12 @@ public enum Situazione {
 	BARRA_DELLE_ICONE_VISIBILE,
 	/** C'è l'icona della mappa. */
 	ICONA_DELLA_MAPPA_PRESENTE,
+	/** Si è aperta la mappa a tutto schermo e ha il joystick virtuale (per chi non ha un mouse). */
+	JOYSTICK_SULLA_MAPPA,
+	/** Si è aperta la mappa a tutto schermo ed è più grande dello spazio che ha sullo schermo: per vederla tutta bisogna spostarla. */
+	MAPPA_PIU_GRANDE_DELLO_SCHERMO,
+	/** Si è aperto l'inventario del gruppo. */
+	INVENTARIO_APERTO,
 	/** Ci sono le quattro icone di movimento (nord, est, sud, ovest). */
 	ICONE_DI_MOVIMENTO_PRESENTI,
 	/** Si apre il combattimento. */

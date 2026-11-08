@@ -195,7 +195,7 @@ public final class RivelazioneDellArtefatto {
 	}
 
 	/**
-	 * Una riga del pannello: del testo, anche a capo entro la sua larghezza massima (le righe dentro sono allineate a sinistra), che sta centrato nel pannello
+	 * Una riga del pannello: del testo, anche a capo entro la sua larghezza massima (le righe dentro sono centrate nel blocco), che sta centrato nel pannello
 	 */
 	public static final class Riga {
 		private final String testo;
@@ -244,6 +244,11 @@ public final class RivelazioneDellArtefatto {
 
 		public int getY() {
 			return y;
+		}
+
+		/** Dove comincia, relativo al pannello, una delle righe a capo di questa riga se è larga {@code larghezzaDellaParte}: centrata nel blocco */
+		public int getXDellaParte(int larghezzaDellaParte) {
+			return x + (larghezza - larghezzaDellaParte) / 2;
 		}
 	}
 

@@ -67,7 +67,9 @@ public final class RaccoltaBottino {
 				return false;
 			}
 		} else if (oggetto instanceof Cofano) {
-			apri((Cofano) oggetto, gruppo);
+			if (!apri((Cofano) oggetto, gruppo, azione)) {
+				return false;
+			}
 		} else if (oggetto instanceof Moneta) {
 			Cassa.addMonete(oggetto.getQuantita());
 		} else if (oggetto instanceof Corona || oggetto instanceof PietraPreziosa) {
@@ -103,8 +105,54 @@ public final class RaccoltaBottino {
 		return true;
 	}
 
-	// Il gruppo apre il cofano: per ogni cofano trovato un esito a caso (vedi Cofano)
-	private static void apri(Cofano cofano, GruppoGiocatore gruppo) {
+	/**
+	 * Un mucchio di cofani aperto a metà: se l'artefatto trovato in uno può andare a più di un personaggio, l'apertura si ferma finché il giocatore non
+	 * sceglie (Stato.SCELTA_DESTINATARIO_OGGETTO), e poi riprende dal cofano dopo. Il motore richiama {@link #raccogli} con la scelta, e qui si ricorda dove si
+	 * era arrivati.
+	 */
+	private static final class AperturaDelCofano {
+		private final Cofano cofano;
+		// Quale cofano del mucchio si apre adesso (da 0)
+		private int prossimo;
+		// L'artefatto trovato che aspetta di sapere chi lo prende
+		private Artefatto inAttesa;
+
+		private AperturaDelCofano(Cofano cofano) {
+			this.cofano = cofano;
+		}
+	}
+
+	private static AperturaDelCofano apertura;
+
+	/**
+	 * Dimentica un'apertura a metà (si carica un'altra partita o se ne comincia una nuova).
+	 */
+	public static void reimposta() {
+		apertura = null;
+	}
+
+	/**
+	 * L'artefatto che aspetta di sapere chi lo prende: quello che porta il bottino o, per un cofano aperto a metà, quello appena trovato dentro.
+	 */
+	public static Optional<Artefatto> artefattoDaAssegnare(Bottino oggetto) {
+		if (apertura != null && apertura.cofano == oggetto && apertura.inAttesa != null) {
+			return Optional.of(apertura.inAttesa);
+		}
+		return oggetto.getArtefatto();
+	}
+
+	// Il gruppo apre il cofano: per ogni cofano trovato un esito a caso (vedi Cofano). Un artefatto trovato segue la strada di tutti gli altri
+	// (vedi consegnaArtefatto): se lo può prendere uno solo, lo prende; se più d'uno, si ferma e restituisce false finché il giocatore non
+	// sceglie, e allora si riprende dal cofano dopo. azione è la scelta, e vale solo per l'artefatto che aspettava.
+	private static boolean apri(Cofano cofano, GruppoGiocatore gruppo, Comando azione) {
+		AperturaDelCofano corrente = apertura != null && apertura.cofano == cofano ? apertura : new AperturaDelCofano(cofano);
+		apertura = corrente;
+		if (corrente.inAttesa != null) {
+			if (!consegnaArtefatto(gruppo, azione, corrente.inAttesa)) {
+				return false;
+			}
+			corrente.inAttesa = null;
+		}
 		TipoLocazione tipoLocazione = Foresta.getLocazioneDelGruppo();
 		int min;
 		int max;
@@ -117,24 +165,34 @@ public final class RaccoltaBottino {
 			max = 8;
 		}
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < cofano.getQuantita(); i++) {
+		boolean soggettoDetto = false;
+		for (int i = corrente.prossimo; i < cofano.getQuantita(); i++) {
 			tipo = Dado.tira(ContestoLancio.COFANO_ESITO, min, max);
-			// Di rado, al posto dell'esito solito, una pergamena o un artefatto casuale, che vanno nel gruppo
+			// Di rado, al posto dell'esito solito, una pergamena o un artefatto casuale
 			Artefatto trovato = Cofano.artefattoRaro();
 			// "Aprendo il cofano, " o "Aprendo il secondo forziere, ": con più cofani si dice quale
 			boolean cofanoOForziere = Dado.tira(2) == 1;
 			sb.append(Testi.formatta("messaggi_motore", (cofano.getQuantita() > 1 ? "RaccoltaBottino.apre.n." : "RaccoltaBottino.apre.") + (cofanoOForziere ? "cofano" : "forziere"),
 					Lingue.corrente().ordinale(i + 1, Genere.MASCHILE, false)));
 			// In italiano il soggetto si dice una volta ("Aprendo il cofano, il gruppo trova... Aprendo il secondo, trova..."); in inglese ogni volta
-			if (i == 0 || Boolean.parseBoolean(Testi.formatta("messaggi_motore", "RaccoltaBottino.soggettoOgniVolta"))) {
+			if (!soggettoDetto || Boolean.parseBoolean(Testi.formatta("messaggi_motore", "RaccoltaBottino.soggettoOgniVolta"))) {
 				sb.append(gruppo.chi()).append(' ');
+				soggettoDetto = true;
 			}
 			if (trovato != null) {
-				gruppo.addArtefatto(trovato);
+				sb.append(Testi.formatta("messaggi_motore", "RaccoltaBottino.trovaArtefatto", trovato.getNomeCompleto()));
+				// Il racconto fin qui esce prima, perché chi lo prende (o la scelta) viene dopo; il cofano dopo ricomincia con il suo "Aprendo..."
+				BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
+				sb.setLength(0);
+				soggettoDetto = false;
 				registraArtefattoOttenuto(gruppo, trovato);
 				BusEventi.pubblica(new NotificaArtefattoTrovato(trovato, Statistiche.getLivello()));
 				LibroTecnico.di(trovato).ifPresent(IntermezzoLibroTecnico::trovato);
-				sb.append(Testi.formatta("messaggi_motore", "RaccoltaBottino.trovaArtefatto", trovato.getNomeCompleto()));
+				corrente.prossimo = i + 1;
+				if (!consegnaArtefatto(gruppo, null, trovato)) {
+					corrente.inAttesa = trovato;
+					return false;
+				}
 			} else if (tipo == 0) {
 				sb.append(Testi.formatta("messaggi_motore", "RaccoltaBottino.nulla"));
 			} else if (tipo == 1) {
@@ -164,11 +222,15 @@ public final class RaccoltaBottino {
 				sb.append(Testi.formatta("messaggi_motore", "RaccoltaBottino.preziosi"));
 				Cassa.addPreziosi(Dado.tira(5, 10));
 			}
-			if (i < cofano.getQuantita() - 1) {
+			if (sb.length() > 0 && i < cofano.getQuantita() - 1) {
 				sb.append(' ');
 			}
 		}
-		BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
+		if (sb.length() > 0) {
+			BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
+		}
+		apertura = null;
+		return true;
 	}
 
 	/**

@@ -156,7 +156,7 @@ class CaratteristicheDiClasseTest {
 		assertEquals(TipoPersonaggio.CANTASTORIE, TipoPersonaggio.BARDO.getFormaFemminile());
 		assertEquals(TipoPersonaggio.SACERDOTESSA, TipoPersonaggio.SACERDOTE.getFormaFemminile());
 		assertNull(TipoPersonaggio.GOBLIN.getFormaFemminile());
-		assertEquals("Mago e Maga", TipoPersonaggio.MAGA.getNomeDellaVoce());
+		assertEquals("Maga e Mago", TipoPersonaggio.MAGA.getNomeDellaVoce());
 		assertEquals("Goblin", TipoPersonaggio.GOBLIN.getNomeDellaVoce());
 	}
 
@@ -165,7 +165,7 @@ class CaratteristicheDiClasseTest {
 		Testi.impostaLingua("en");
 		try {
 			assertEquals("Elf", TipoPersonaggio.ELFA.getNomeDellaVoce(), "elfo ed elfa hanno lo stesso nome: ne basta uno");
-			assertEquals("Wizard and Sorceress", TipoPersonaggio.MAGA.getNomeDellaVoce());
+			assertEquals("Sorceress and Wizard", TipoPersonaggio.MAGA.getNomeDellaVoce());
 			assertEquals("Goblin", TipoPersonaggio.GOBLIN.getNomeDellaVoce());
 		} finally {
 			Testi.impostaLingua(null);

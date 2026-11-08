@@ -40,23 +40,23 @@ public enum TipoPersonaggio {
 	TROLL(CategoriaPersonaggio.UMANOIDE, CategoriaPersonaggio.GIGANTESCO),
 	VIVERNA(CategoriaPersonaggio.BESTIA, CategoriaPersonaggio.DRACONICO, CategoriaPersonaggio.VOLANTE),
 
-	BARDO(CategoriaPersonaggio.UMANOIDE),
-	CANTASTORIE(CategoriaPersonaggio.UMANOIDE),
-	ELFA(CategoriaPersonaggio.UMANOIDE),
-	ELFO(CategoriaPersonaggio.UMANOIDE),
 	GUERRIERA(CategoriaPersonaggio.UMANOIDE),
 	GUERRIERO(CategoriaPersonaggio.UMANOIDE),
 	LADRA(CategoriaPersonaggio.UMANOIDE),
 	LADRO(CategoriaPersonaggio.UMANOIDE),
+	BARDO(CategoriaPersonaggio.UMANOIDE),
+	CANTASTORIE(CategoriaPersonaggio.UMANOIDE),
+	ELFA(CategoriaPersonaggio.UMANOIDE),
+	ELFO(CategoriaPersonaggio.UMANOIDE),
 	MAGA(CategoriaPersonaggio.UMANOIDE),
 	MAGO(CategoriaPersonaggio.UMANOIDE),
-	OMBRAFIAMMA(CategoriaPersonaggio.UMANOIDE),
-	SACERDOTE(CategoriaPersonaggio.UMANOIDE),
 	SACERDOTESSA(CategoriaPersonaggio.UMANOIDE),
+	SACERDOTE(CategoriaPersonaggio.UMANOIDE),
 	CHIERICA(CategoriaPersonaggio.UMANOIDE),
 	CHIERICO(CategoriaPersonaggio.UMANOIDE),
 	DRUIDA(CategoriaPersonaggio.UMANOIDE),
 	DRUIDO(CategoriaPersonaggio.UMANOIDE),
+	OMBRAFIAMMA(CategoriaPersonaggio.UMANOIDE),
 	// Come il guerriero, ma solo maschio e con il berserk più precoce e più forte; non si sceglie, non si recluta
 	VICHINGO(CategoriaPersonaggio.UMANOIDE),
 
@@ -416,8 +416,8 @@ public enum TipoPersonaggio {
 	}
 
 	/**
-	 * Il nome della voce del bestiario: quello della classe, e se il ruolo ha due forme anche quello della femminile ("Mago e Maga",
-	 * "Wizard and Sorceress"); se le due forme hanno lo stesso nome in quella lingua ("Elf") ne basta uno.
+	 * Il nome della voce del bestiario: quello della femminile e della classe, nell'ordine delle icone della scelta della classe ("Maga e Mago",
+	 * "Sorceress and Wizard"); se le due forme hanno lo stesso nome in quella lingua ("Elf") ne basta uno.
 	 */
 	public String getNomeDellaVoce() {
 		TipoPersonaggio ruolo = getRuolo();
@@ -425,7 +425,7 @@ public enum TipoPersonaggio {
 		if (femminile == null || ruolo.getNome().equals(femminile.getNome())) {
 			return ruolo.getNome();
 		}
-		return Lingue.corrente().elenco(Arrays.asList(ruolo.getNome(), femminile.getNome()));
+		return Lingue.corrente().elenco(Arrays.asList(femminile.getNome(), ruolo.getNome()));
 	}
 
 	/**

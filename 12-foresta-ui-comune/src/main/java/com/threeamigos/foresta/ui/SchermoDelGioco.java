@@ -17,6 +17,7 @@ import com.threeamigos.foresta.modellodati.TatticaMD;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 import com.threeamigos.foresta.tipi.BersaglioDelSuggerimento;
 import com.threeamigos.foresta.tipi.StatoDelloSchermo;
+import com.threeamigos.foresta.ui.componenti.JoystickVirtuale;
 import com.threeamigos.foresta.tipi.TipoSuggerimento;
 import com.threeamigos.foresta.ui.tutorial.DisposizioneDelFumetto;
 import com.threeamigos.foresta.ui.tutorial.TutorDelGioco;
@@ -457,6 +458,10 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 			}
 		}
 		stato = nuovo;
+		// Ogni schermata ha i suoi suggerimenti (l'inventario, la mappa...): si guarda se ce n'è uno da dare appena si apre
+		if (ricontrollaIlTutorial != null) {
+			ricontrollaIlTutorial.run();
+		}
 	}
 
 	/**
@@ -1112,8 +1117,38 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	}
 
 	private boolean isSchermataDelSuggerimento(TipoSuggerimento suggerimento) {
-		StatoDelloSchermo corrente = stato;
-		return suggerimento == TipoSuggerimento.SCELTA_DELLA_CLASSE ? corrente == StatoDelloSchermo.SCELTA_DELLA_CLASSE : corrente == StatoDelloSchermo.IN_GIOCO;
+		return stato == schermataDelSuggerimento(suggerimento);
+	}
+
+	/**
+	 * La schermata in cui si dà un suggerimento: quasi tutti sulla schermata di gioco, gli altri nella schermata di cui parlano.
+	 */
+	private static StatoDelloSchermo schermataDelSuggerimento(TipoSuggerimento suggerimento) {
+		switch (suggerimento) {
+			case SCELTA_DELLA_CLASSE:
+				return StatoDelloSchermo.SCELTA_DELLA_CLASSE;
+			case JOYSTICK_DELLA_MAPPA:
+			case TRASCINARE_LA_MAPPA:
+				return StatoDelloSchermo.MAPPA;
+			case INVENTARIO:
+				return StatoDelloSchermo.INVENTARIO;
+			default:
+				return StatoDelloSchermo.IN_GIOCO;
+		}
+	}
+
+	/**
+	 * Se la mappa a tutto schermo ha il joystick virtuale.
+	 */
+	public boolean mappaConJoystick() {
+		return mappaATuttoSchermo().getModello().getJoystick() != null;
+	}
+
+	/**
+	 * Se la mappa a tutto schermo è più grande dello spazio che ha: va trascinata per vederla tutta.
+	 */
+	public boolean mappaPiuGrandeDelloSchermo() {
+		return mappaATuttoSchermo().getModello().isPiuGrandeDelloSchermo();
 	}
 
 	private boolean isBersaglioVisibile(BersaglioDelSuggerimento bersaglio) {
@@ -1121,8 +1156,12 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 			case RIQUADRI:
 			case RIQUADRO_DEL_COMBATTIMENTO:
 			case RIQUADRO_DELLE_MISSIONI:
+			case RIQUADRO_DELLA_MAPPA:
 			case RIQUADRO_DEGLI_INCANTESIMI_E_DELLE_POZIONI:
+			case SCHERMATA:
 				return true;
+			case JOYSTICK_VIRTUALE:
+				return mappaConJoystick();
 			case BARRA_DELLE_ICONE:
 				return !barraIcone().iconeVisibili.isEmpty();
 			default:
@@ -1155,6 +1194,12 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 				return getArea(riquadroCombattimento());
 			case RIQUADRO_DELLE_MISSIONI:
 				return getArea(riquadroMissioni());
+			case RIQUADRO_DELLA_MAPPA:
+				return disposizione.getMappa();
+			case SCHERMATA:
+				return new Area(0, 0, disposizione.getLarghezzaTotale(), disposizione.getAltezzaTotale());
+			case JOYSTICK_VIRTUALE:
+				return areaDelJoystick();
 			case RIQUADRO_DEGLI_INCANTESIMI_E_DELLE_POZIONI:
 				return getArea(riquadroIncantesimiEPozioni());
 			case BARRA_DELLE_ICONE:
@@ -1162,6 +1207,12 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 			default:
 				return areaDelleIcone(bersaglio);
 		}
+	}
+
+	private Area areaDelJoystick() {
+		JoystickVirtuale joystick = mappaATuttoSchermo().getModello().getJoystick();
+		int raggio = JoystickVirtuale.RAGGIO;
+		return new Area(joystick.getCentroX() - raggio, joystick.getCentroY() - raggio, 2 * raggio, 2 * raggio);
 	}
 
 	private Area areaDelleIcone(BersaglioDelSuggerimento bersaglio) {

@@ -1210,7 +1210,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 */
 	private List<Comando> comandiDestinatarioOggetto() {
 		Bottino oggetto = locazioneCorrente.getOggetto();
-		Optional<Artefatto> artefatto = oggetto == null ? Optional.empty() : oggetto.getArtefatto();
+		Optional<Artefatto> artefatto = oggetto == null ? Optional.empty() : RaccoltaBottino.artefattoDaAssegnare(oggetto);
 		if (artefatto.isPresent()) {
 			return RaccoltaBottino.candidati(gruppo, artefatto.get());
 		}

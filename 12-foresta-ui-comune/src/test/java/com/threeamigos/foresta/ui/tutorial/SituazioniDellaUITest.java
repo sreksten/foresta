@@ -2,6 +2,7 @@ package com.threeamigos.foresta.ui.tutorial;
 
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.Situazione;
+import com.threeamigos.foresta.tipi.StatoDelloSchermo;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -83,6 +84,34 @@ class SituazioniDellaUITest {
 		ui.segnaSchermataDiGioco();
 		assertFalse(correnti(ui, Comando.NORD).contains(Situazione.ICONA_DELLA_MAPPA_PRESENTE));
 		assertTrue(correnti(ui, Comando.MAPPA).contains(Situazione.ICONA_DELLA_MAPPA_PRESENTE));
+	}
+
+	@Test
+	void ilJoystickEMappaGrandeSiDiconoSoloSullaMappa() {
+		SituazioniDellaUI ui = new SituazioniDellaUI();
+		ui.segnaSchermataDiGioco();
+		// Sulla schermata di gioco la mappa non c'è: non si parla né del joystick né di trascinare
+		ui.segnaLaSchermata(StatoDelloSchermo.IN_GIOCO, true, true);
+		Set<Situazione> inGioco = correnti(ui, Comando.MAPPA);
+		assertFalse(inGioco.contains(Situazione.JOYSTICK_SULLA_MAPPA));
+		assertFalse(inGioco.contains(Situazione.MAPPA_PIU_GRANDE_DELLO_SCHERMO));
+		ui.segnaLaSchermata(StatoDelloSchermo.MAPPA, true, true);
+		Set<Situazione> sullaMappa = correnti(ui);
+		assertTrue(sullaMappa.contains(Situazione.JOYSTICK_SULLA_MAPPA));
+		assertTrue(sullaMappa.contains(Situazione.MAPPA_PIU_GRANDE_DELLO_SCHERMO));
+		ui.segnaLaSchermata(StatoDelloSchermo.MAPPA, false, false);
+		Set<Situazione> senza = correnti(ui);
+		assertFalse(senza.contains(Situazione.JOYSTICK_SULLA_MAPPA));
+		assertFalse(senza.contains(Situazione.MAPPA_PIU_GRANDE_DELLO_SCHERMO));
+	}
+
+	@Test
+	void l_inventarioAperto() {
+		SituazioniDellaUI ui = new SituazioniDellaUI();
+		ui.segnaSchermataDiGioco();
+		assertFalse(correnti(ui).contains(Situazione.INVENTARIO_APERTO));
+		ui.segnaLaSchermata(StatoDelloSchermo.INVENTARIO, false, false);
+		assertTrue(correnti(ui).contains(Situazione.INVENTARIO_APERTO));
 	}
 
 	@Test

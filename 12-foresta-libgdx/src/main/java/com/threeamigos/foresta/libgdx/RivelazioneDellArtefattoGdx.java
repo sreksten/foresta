@@ -211,7 +211,7 @@ public final class RivelazioneDellArtefattoGdx implements CodaDelleRivelazioni.I
 		for (Riga riga : righe) {
 			int yRiga = y + riga.getY();
 			for (String parte : FontTool.split(medio.getFont(), riga.getTesto(), riga.getLarghezzaMassima())) {
-				medio.disegna(batch, parte, x + riga.getX(), yRiga, TestoGdx.coloreConAlfa(riga.getColore(), opacita), 1f);
+				medio.disegna(batch, parte, x + riga.getXDellaParte(FontTool.getWidth(medio.getFont(), parte)), yRiga, TestoGdx.coloreConAlfa(riga.getColore(), opacita), 1f);
 				yRiga += medio.getFont().getHeight();
 			}
 		}

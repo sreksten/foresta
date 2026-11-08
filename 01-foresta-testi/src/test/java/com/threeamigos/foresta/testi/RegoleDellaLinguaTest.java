@@ -127,6 +127,9 @@ class RegoleDellaLinguaTest {
 		assertEquals("A", IT.elenco(Arrays.asList("A")));
 		assertEquals("A e B", IT.elenco(Arrays.asList("A", "B")));
 		assertEquals("A, B e C", IT.elenco(Arrays.asList("A", "B", "C")));
+		assertEquals("Elfa ed Elfo", IT.elenco(Arrays.asList("Elfa", "Elfo")));
+		assertEquals("Maga, Elfa ed Elfo", IT.elenco(Arrays.asList("Maga", "Elfa", "Elfo")));
+		assertEquals("Elfa e Mago", IT.elenco(Arrays.asList("Elfa", "Mago")));
 		assertEquals("Il goblin", IT.inizialeMaiuscola("il goblin"));
 	}
 

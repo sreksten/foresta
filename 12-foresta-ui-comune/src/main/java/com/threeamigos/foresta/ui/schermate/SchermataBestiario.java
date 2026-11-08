@@ -42,7 +42,7 @@ public abstract class SchermataBestiario implements Finestra {
 	 * Quanti sottotitoli scherzosi ci sono nei testi della UI (BESTIARIO_SOTTOTITOLO_1...): a ogni apertura se ne sceglie uno a caso.
 	 */
 	public static final int NUMERO_SOTTOTITOLI = 6;
-	public static final int SPAZIO_SOPRA_IL_SOTTOTITOLO = 2;
+	public static final int SPAZIO_SOPRA_IL_SOTTOTITOLO = 6;
 	public static final int SPAZIO_FRA_I_PANNELLI = 30;
 	// Lascia libere le frecce a destra di un pannello
 	private static final int SPAZIO_PER_LE_FRECCE = 24;

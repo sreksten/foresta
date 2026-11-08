@@ -16,7 +16,7 @@ le forme: **Mago e Maga sono una voce sola** (`TipoPersonaggio.getRuolo`), che s
 | Chi può entrare nel gruppo (si sceglie a inizio partita o si recluta in locanda) | `TipoPersonaggio.isCompagno()` |
 | Chi ha una voce (l'uno o l'altro) | `TipoPersonaggio.hasVoceNelBestiario()` |
 | L'elenco delle voci, una per ruolo, nell'ordine dell'enum | `TipoPersonaggio.getVociDelBestiario()` |
-| La classe al femminile di un ruolo (Maga per Mago) e il nome della voce ("Mago e Maga") | `getFormaFemminile()`, `getNomeDellaVoce()` |
+| La classe al femminile di un ruolo (Maga per Mago) e il nome della voce ("Maga e Mago") | `getFormaFemminile()`, `getNomeDellaVoce()` |
 | La descrizione, una per ruolo | `tipo_personaggio_it.properties`, voce `DESCRIZIONE` (sul maschile), letta da `getDescrizione()` |
 
 Non hanno una voce i non combattenti (locandiere, armaiolo, alchimista, venditore di pergamene, incantatore, moglie del bardo, bardo delle locande, capitano delle
@@ -126,4 +126,4 @@ davvero, quindi ogni voce si può sbloccare), `ScenarioBestiarioTest` (sblocchi,
 - Avvisare il giocatore quando una voce si sblocca (l'evento `InternoVoceDelBestiarioSbloccata` c'è già, la UI non lo usa).
 - Mostrare nella scheda quanti ne ha sconfitti e incontrati, e gli incantesimi dei mostri con un repertorio (`getRepertorioIncantesimi`).
 - Se i non combattenti o l'`OMBRAFIAMMA` dovranno avere una voce, e come si sbloccano.
-- Il nome della voce per i ruoli con due forme è "Mago e Maga": decidere se va bene.
+- Il nome della voce per i ruoli con due forme è "Maga e Mago" (prima il femminile, come le icone della scelta della classe): decidere se va bene.

@@ -17,11 +17,19 @@ public enum BersaglioDelSuggerimento {
 	RIQUADRI,
 	RIQUADRO_DEL_COMBATTIMENTO,
 	RIQUADRO_DELLE_MISSIONI,
+	/** Il riquadro della mappa, quello piccolo (la mappa a tutto schermo si apre con l'icona). */
+	RIQUADRO_DELLA_MAPPA,
 	RIQUADRO_DEGLI_INCANTESIMI_E_DELLE_POZIONI,
+	/** Tutto lo schermo, per le pagine che parlano della schermata intera e non di un punto. */
+	SCHERMATA,
+	/** Il disco del joystick virtuale sulla mappa a tutto schermo. */
+	JOYSTICK_VIRTUALE,
 	/** La barra delle icone intera. */
 	BARRA_DELLE_ICONE,
 	ICONE_DI_MOVIMENTO(Comando.NORD, Comando.EST, Comando.SUD, Comando.OVEST),
 	ICONA_DELL_INVENTARIO(Comando.INVENTARIO),
+	/** Le icone che dall'inventario aprono le altre pagine: trofei, tattiche, bestiario e grimorio. */
+	ICONE_DELLE_PAGINE(Comando.MOSTRA_TROFEI, Comando.MOSTRA_TATTICHE, Comando.MOSTRA_BESTIARIO, Comando.MOSTRA_GRIMORIO),
 	ICONE_DELLE_POZIONI(Comando.POZIONE_SALUTE, Comando.POZIONE_SALUTE_GRANDE),
 	ICONE_DI_COMBATTIMENTO(Comando.COMBATTIMENTO, Comando.SINGOLO_ATTACCO, Comando.FUGA, Comando.PASSA_INOSSERVATO),
 	ICONA_DELLA_MAPPA(Comando.MAPPA),

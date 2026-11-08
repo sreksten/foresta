@@ -63,7 +63,7 @@ public class IntermezzoIntroduttivo implements Intermezzo {
 								.poi(Tappa.inSecondi(2).verso(0.62, 0.61)))
 						.conBattuta(BattutaIntermezzo.di("eremita", Testi.formatta("intermezzi", "IntermezzoIntroduttivo.3")).daSecondo(2))
 						.conBattuta(BattutaIntermezzo.di("eroe", ProduttoreDiFrasiDelMondoCasuale.presentazioneDelProtagonista(eroe)));
-		finale.conBattuta(BattutaIntermezzo.di("eremita", Testi.formatta("intermezzi", "IntermezzoIntroduttivo.5")).perSecondi(4));
+		finale.conBattuta(BattutaIntermezzo.di("eremita", Testi.formatta("intermezzi", "IntermezzoIntroduttivo.5")).perSecondi(7));
 		if (GruppoGiocatore.getIstanza().getCapo().getClasse() == TipoPersonaggio.OMBRAFIAMMA) {
 			finale.conBattuta(BattutaIntermezzo.di("eremita", Testi.formatta("intermezzi", "IntermezzoIntroduttivo.6")));
 		}

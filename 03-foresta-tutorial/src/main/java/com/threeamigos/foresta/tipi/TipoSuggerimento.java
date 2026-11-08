@@ -17,8 +17,12 @@ public enum TipoSuggerimento {
 	PRIMI_PASSI(Situazione.PRIMA_SCHERMATA_DI_GIOCO, BersaglioDelSuggerimento.RIQUADRI),
 	// La prima pagina parla della barra, la seconda del punto interrogativo
 	BARRA_DELLE_ICONE(Situazione.BARRA_DELLE_ICONE_VISIBILE, BersaglioDelSuggerimento.BARRA_DELLE_ICONE, BersaglioDelSuggerimento.ICONA_DELL_AIUTO),
-	// La prima pagina parla delle frecce, la seconda dell'icona della mappa
-	MOVIMENTO_E_MAPPA(Situazione.ICONE_DI_MOVIMENTO_PRESENTI, BersaglioDelSuggerimento.ICONE_DI_MOVIMENTO, BersaglioDelSuggerimento.ICONA_DELLA_MAPPA),
+	// La prima pagina parla delle frecce, la seconda del riquadro della mappa, la terza dell'icona che apre la mappa a tutto schermo
+	MOVIMENTO_E_MAPPA(Situazione.ICONE_DI_MOVIMENTO_PRESENTI, BersaglioDelSuggerimento.ICONE_DI_MOVIMENTO, BersaglioDelSuggerimento.RIQUADRO_DELLA_MAPPA,
+			BersaglioDelSuggerimento.ICONA_DELLA_MAPPA),
+	// Questi due si danno aprendo la mappa a tutto schermo (vedi SchermoDelGioco.isSchermataDelSuggerimento)
+	JOYSTICK_DELLA_MAPPA(Situazione.JOYSTICK_SULLA_MAPPA, BersaglioDelSuggerimento.JOYSTICK_VIRTUALE),
+	TRASCINARE_LA_MAPPA(Situazione.MAPPA_PIU_GRANDE_DELLO_SCHERMO, BersaglioDelSuggerimento.SCHERMATA),
 	// I tipi di luogo: più pagine del solito, perché sono tanti e chi comincia non sa dove andare (vedi PAGINE_MASSIME)
 	LUOGHI(Situazione.ICONA_DELLA_MAPPA_PRESENTE, BersaglioDelSuggerimento.ICONA_DELLA_MAPPA),
 	COMBATTIMENTO(Situazione.COMBATTIMENTO_APERTO, BersaglioDelSuggerimento.RIQUADRO_DEL_COMBATTIMENTO),
@@ -28,6 +32,8 @@ public enum TipoSuggerimento {
 	MISSIONI(Situazione.MISSIONE_ATTIVA, BersaglioDelSuggerimento.RIQUADRO_DELLE_MISSIONI),
 	// Le tattiche si aprono dall'inventario: il suggerimento punta alla sua icona, perché uno sia curioso di entrarci
 	TATTICHE(Situazione.TATTICHE_DISPONIBILI, BersaglioDelSuggerimento.ICONA_DELL_INVENTARIO),
+	// Si dà aprendo l'inventario: la prima pagina parla delle due liste, la seconda delle icone delle altre pagine
+	INVENTARIO(Situazione.INVENTARIO_APERTO, BersaglioDelSuggerimento.SCHERMATA, BersaglioDelSuggerimento.ICONE_DELLE_PAGINE),
 	CORRUZIONE(Situazione.AVVERSARIO_CORROMPIBILE, BersaglioDelSuggerimento.ICONA_DELLA_CORRUZIONE),
 	AMICIZIA(Situazione.AVVERSARIO_AMICHEVOLE, BersaglioDelSuggerimento.ICONA_DELL_AMICIZIA),
 	INCANTESIMI(Situazione.INCANTESIMO_LANCIABILE, BersaglioDelSuggerimento.RIQUADRO_DEGLI_INCANTESIMI_E_DELLE_POZIONI),

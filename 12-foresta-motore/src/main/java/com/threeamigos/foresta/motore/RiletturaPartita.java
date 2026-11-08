@@ -3,6 +3,7 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.intermezzi.IntermezzoLibroTecnico;
+import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
@@ -35,5 +36,6 @@ public final class RiletturaPartita {
 		LocazioneCorrente.set(CostruttoreDellaForesta.costruisciIstanza(Foresta.getPosizioneDelGruppo()));
 		RegistroMissioni.aggiornaDopoRilettura();
 		IntermezzoLibroTecnico.reimposta();
+		RaccoltaBottino.reimposta();
 	}
 }

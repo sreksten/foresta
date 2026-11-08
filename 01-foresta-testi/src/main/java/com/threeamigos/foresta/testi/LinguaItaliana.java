@@ -95,7 +95,9 @@ public final class LinguaItaliana implements RegoleDellaLingua {
 
 	@Override
 	public String elenco(List<String> elementi) {
-		return Elenchi.unisci(elementi, ", ", " e ", " e ");
+		// Davanti a una parola che comincia per E la congiunzione è "ed" ("Elfa ed Elfo")
+		String congiunzione = !elementi.isEmpty() && elementi.get(elementi.size() - 1).toLowerCase(Locale.ROOT).startsWith("e") ? " ed " : " e ";
+		return Elenchi.unisci(elementi, ", ", congiunzione, congiunzione);
 	}
 
 	@Override
