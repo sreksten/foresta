@@ -642,7 +642,7 @@ Non ha senso importare: posizione e distanza, mischia contro distanza, linea di 
   - **Idra e Minotauro Gigante fisici (novembre 2026).** Il Minotauro Gigante non sa magie e l'Idra due (Veleno e Acqua, rare); per restare boss la loro salute, precisione e danni fisici sono stati alzati (Idra 850/1,2/2,8, Minotauro Gigante 950/1,2/2,8): a livello 8 contro cinque personaggi vincono il 94% e il 91% dei gruppi, contro quattro il 65% e l'86%.
   - **Danno ripartito (novembre 2026).** `TestScontriDiGruppo` non applicava la ripartizione per posizione delle pergamene a più bersagli; ora sì. Contro i boss (bersagli singoli) non cambia niente; contro Troll e Goblin con 3 pergamene di Fuoco i round passano da 1,0–1,5 a 1,7–3,6 e la vittoria resta al 100%.
   - **Da bilanciare.** Mago e Sacerdote sono i bersagli preferiti dei mostri e muoiono presto; l'Eremita resta il killer dei livelli bassi.
-- **La portata di Terremoto, Tempesta e Terrore** (`PortataAzione.di`, 2026-11-08): sono `GRUPPO_ALLEATI`, come il Grido di battaglia, ma colpiscono gli avversari (la Tempesta anche i compagni di chi la lancia) e il riquadro destro li descrive così. Il selettore è solo un test di esistenza, quindi il comportamento non cambia; ma nella schermata una voce con quelle azioni offre la rosa «Alleati» invece di «Avversari». Da decidere se spostarle su `GRUPPO_AVVERSARI`, come Nebbia e Nega magia.
+- **La portata di Terremoto, Tempesta e Terrore** (`PortataAzione.di`): erano `GRUPPO_ALLEATI`, come il Grido di battaglia, ma colpiscono gli avversari e il riquadro destro li descrive così; il selettore è solo un test di esistenza, quindi il comportamento non cambiava, ma nella schermata una voce con quelle azioni offriva la rosa «Alleati». Dal 2026-11-08 sono `GRUPPO_AVVERSARI`, come Nebbia e Nega magia (la Tempesta colpisce anche i compagni di chi la lancia, ma è degli avversari che il selettore verifica la presenza).
 
 ## 10. Da fare / idee aperte
 
@@ -853,7 +853,7 @@ Ogni valore dichiara la sua **portata** (§11.2), le **rose che accetta** e i su
 | | `INCANTESIMO_DEL_REPERTORIO`: un malefico qualsiasi, **Morte e Silenzio compresi**, solo per i mostri | un avversario | come l'attacco |
 | Incantesimi globali | `NEBBIA`, `NEGA_MAGIA` | tutti gli avversari | test di esistenza |
 | | `GRIDO_DI_BATTAGLIA` | tutto il gruppo | test di esistenza |
-| | `TERREMOTO`, `TEMPESTA`, `TERRORE` | tutti gli avversari (`TEMPESTA` colpisce anche i compagni di chi la lancia); nel codice hanno però la portata `GRUPPO_ALLEATI`, vedi §9 | test di esistenza |
+| | `TERREMOTO`, `TEMPESTA`, `TERRORE` | tutti gli avversari (`TEMPESTA` colpisce anche i compagni di chi la lancia) | test di esistenza |
 | Innato | `DARDO_ARCANO` | un avversario | come l'attacco |
 | Abilità innate (Sacerdote) | `LUCE_DIVINA` (danno sacro a più avversari, il doppio ai non morti); `ALBA_SACRA` è fra i benefici | un avversario | come l'attacco |
 | Abilità innate (Ladro) | `ATTACCO_ALLE_SPALLE` | un avversario | come l'attacco |
@@ -1030,11 +1030,13 @@ dal nono; le bestie e i bruti restano bruti.
 | Ruolo | Tattica |
 | :--- | :--- |
 | **Guerriero** | Si cura da solo sotto il 30% (pozione della Salute); finisce i feriti (sotto il 50%); poi i maghi nemici; poi il primo. |
-| **Ladro** | Si cura da solo sotto il 30%; i feriti, poi chi ha meno salute. |
+| **Ladro** | Si cura da solo sotto il 30%; l'Attacco alle spalle sul più forte (il livello più alto; vuole almeno tre personaggi nel gruppo, altrimenti si passa alla voce dopo); i feriti (sotto il 50%), poi chi ha meno salute. |
 | **Mago** | Pozioni della Salute (25%) e della Magia (sotto 20 di MAGIA); Silenzio sui maghi nemici (60%); sui feriti (sotto il 40%) l'incantesimo più economico che basta, il dardo arcano, l'attacco; poi contro il più forte l'incantesimo più adatto (se rende più dell'attacco), il dardo. |
 | **Elfo** | Come il guerriero per le cure; dardo arcano e incantesimo solo dove rendono più dell'attacco; i maghi nemici per primi. |
-| **Sacerdote** | Cura gli altri (anche gli ospiti) sotto il 40%; risuscita i caduti; Alba sacra se almeno due alleati hanno uno stato da togliere (`STATO_NEGATIVO`, non contano ISPIRATO e BERSERK) e sono passati almeno tre round dall'ultima volta (`ROUND_DALL_ULTIMO_USO`); pozione della Magia; poi colpisce il più ferito. |
+| **Sacerdote** | Cura gli altri (anche gli ospiti) sotto il 40%; risuscita i caduti; Alba sacra se almeno due alleati hanno uno stato da togliere (`STATO_NEGATIVO`, non contano ISPIRATO e BERSERK) e sono passati almeno tre round dall'ultima volta (`ROUND_DALL_ULTIMO_USO`); pozione della Magia; la Luce divina sui non morti avversari; poi colpisce il più ferito. |
 | **Bardo** | Pozione (25%); canto curativo sotto il 60%; canto di valore a chi non è ispirato; Urlo della Banshee o canto ipnotico contro più di un avversario; poi colpisce il più ferito. |
+| **Chierico** | Pozione di salute (30%, anche per gli altri); Imposizione delle mani su chi ha meno del 50% di salute; Scacciare i non morti; pozione della Magia (sotto 15); Martello sacro sul più forte (il livello più alto), o l'attacco; poi colpisce il più ferito. |
+| **Druido** | Pozione di salute (30%); Rigenerazione su chi sta sotto il 70%; Pelle di corteccia al gruppo; pozione della Magia (sotto 20); Radici e Sciame contro gli avversari; poi l'incantesimo più adatto (se rende più dell'attacco) o il bastone sul più ferito. |
 
 **Le pozioni** sono quattro azioni (Salute e Magia, normale e grande, ognuna beve solo la sua): le predefinite hanno due voci per tipo, la prima con la grande quando manca molto (sotto la metà della soglia), la seconda con la normale e, se non ce n'è, la grande.
 

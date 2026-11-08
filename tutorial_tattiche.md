@@ -18,12 +18,12 @@ Controllato il 2026-11-08 contro `08-foresta-tattiche`, `06-foresta-combattiment
 - le esclusioni della schermata (`BozzaTattica.predicatiAmmessi`: niente astuzia né intelligenza; `filtriAmmessi`: su «Se stesso» niente classe, categoria, livello rispetto al mio e debole all'azione; `ordinamentiAmmessi`: «chi mi ha attaccato per ultimo» e «l'ultimo scelto» solo fra gli avversari) sono quelle descritte in §11.15;
 - i testi del riquadro destro (`testo_tattica_it.properties`, chiavi `spiega.…`) coprono tutti i valori di rose, filtri, ordinamenti, predicati e **tutte e 40** le azioni.
 
-**Corretto il 2026-11-08 (punti 1 e 2), da fare il resto:**
+**Corretto il 2026-11-08 (punti 1-4), da fare solo la verifica delle fasce dei mostri:**
 
 1. **Le azioni (§11.9).** *Corretto: la tabella ha ora le 40 azioni e i requisiti delle nuove (incantesimi globali e abilità innate).* Il documento dice «Sono ventiquattro» e ne elenca meno; `TipoAzione` ne ha **40**. Non compare in nessuno dei tre documenti nessuna di queste 15: `NEBBIA`, `NEGA_MAGIA`, `GRIDO_DI_BATTAGLIA`, `TERREMOTO`, `TEMPESTA`, `TERRORE`, `ATTACCO_ALLE_SPALLE`, `MARTELLO_SACRO`, `SCACCIARE_I_NON_MORTI`, `IMPOSIZIONE_DELLE_MANI`, `RADICI`, `SCIAME`, `PELLE_DI_CORTECCIA`, `RIGENERAZIONE`. `LUCE_DIVINA` è citata solo in §11.3, non nella tabella. Per ognuna vanno aggiunti nella tabella il gruppo, la portata, le rose accettate, i requisiti e chi la sa fare (`RegistroTattiche.azioniPossibili`). Le azioni di chierico e druido (`SCACCIARE_I_NON_MORTI`, `IMPOSIZIONE_DELLE_MANI`, `RADICI`, `SCIAME`, `PELLE_DI_CORTECCIA`, `RIGENERAZIONE`) sono le abilità innate di `personaggi_giocabili.md`.
 2. **Dove sta la schermata (§11.15).** *Corretto.* Il paragrafo attribuisce la logica a `DisplayableCanvasTattiche` e `CasellaADiscesa` in `12-foresta-swing`. Oggi quelle classi disegnano; la logica è in `EditorDelleTattiche` e `MenuADiscesa` (`12-foresta-ui-comune`) e libGDX ha `SchermataTatticheGdx`. `tattiche_internals.md` lo dice già, il documento principale no.
-3. **La portata di Terremoto, Tempesta e Terrore.** Nel codice (`PortataAzione.di`) sono `GRUPPO_ALLEATI`, ma colpiscono gli avversari: nella schermata una voce con queste azioni offre la rosa «Alleati» invece di «Avversari». Il comportamento non cambia (il selettore è solo un test di esistenza), ma per il giocatore è fuorviante, e il tutorial dovrà evitare di mostrarlo come esempio. Annotato in §9 del documento delle tattiche; da decidere se spostarle su `GRUPPO_AVVERSARI`.
-4. **Non verificato:** le tattiche predefinite di §11.16 contro `TatticheBase` e `RegistroTattiche.predefinitaDelGiocabile`; i test sulle tattiche non sono stati rilanciati per questo controllo.
+3. **La portata di Terremoto, Tempesta e Terrore.** *Corretta il 2026-11-08.* Nel codice (`PortataAzione.di`) erano `GRUPPO_ALLEATI`, ma colpiscono gli avversari: nella schermata una voce con queste azioni offriva la rosa «Alleati» invece di «Avversari». Ora sono `GRUPPO_AVVERSARI`, come Nebbia e Nega magia.
+4. **Le tattiche predefinite dei giocabili (§11.16).** *Controllate contro `TatticheBase` il 2026-11-08 e corrette.* Mancavano nella tabella il Chierico e il Druido; per il Ladro l'Attacco alle spalle sul più forte; per il Sacerdote la Luce divina sui non morti. **Non controllate** le tattiche dei mostri a fasce di astuzia (stessa sezione).
 
 ## 3. Come spiegare le tattiche
 
@@ -91,5 +91,5 @@ Ogni passo compila, si prova e si rivede prima del commit.
 - Decidere se le quattro lezioni si danno una per apertura (proposta) o tutte alla prima.
 - Decidere se la ricetta guidata entra nella prima versione.
 - Un riquadro «glossario» sempre a portata di mano (una pagina che elenca rosa, filtri, ordinamenti, condizioni, azioni) oltre al tutorial: forse inutile, il riquadro destro già fa questo lavoro.
-- Verificare le predefinite di §11.16 contro il codice (sezione 2, punto 4) e decidere la portata di Terremoto, Tempesta e Terrore (punto 3).
+- Verificare contro `TatticheBase.deiMostri` le fasce di astuzia dei mostri di §11.16 (sezione 2, punto 4).
 - Un trofeo o un cenno quando il giocatore salva la prima tattica personalizzata?

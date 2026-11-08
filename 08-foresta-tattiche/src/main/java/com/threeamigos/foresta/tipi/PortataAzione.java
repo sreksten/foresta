@@ -78,9 +78,6 @@ public enum PortataAzione {
 			case CANTO_DI_VALORE:
 			case PELLE_DI_CORTECCIA:
 			case GRIDO_DI_BATTAGLIA:
-			case TERREMOTO:
-			case TEMPESTA:
-			case TERRORE:
 				return GRUPPO_ALLEATI;
 			case CANTO_CURATIVO:
 			case IMPOSIZIONE_DELLE_MANI:
@@ -98,6 +95,10 @@ public enum PortataAzione {
 			case SCIAME:
 			case NEBBIA:
 			case NEGA_MAGIA:
+			// Colpiscono gli avversari (la Tempesta anche i compagni di chi la lancia, ma è degli avversari che il selettore verifica la presenza)
+			case TERREMOTO:
+			case TEMPESTA:
+			case TERRORE:
 				return GRUPPO_AVVERSARI;
 			// L'ultima azione rimasta è il cambio d'arma (CAMBIA_ARMA): non ha un bersaglio, ha un'arma
 			default:
