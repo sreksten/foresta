@@ -642,6 +642,7 @@ Non ha senso importare: posizione e distanza, mischia contro distanza, linea di 
   - **Idra e Minotauro Gigante fisici (novembre 2026).** Il Minotauro Gigante non sa magie e l'Idra due (Veleno e Acqua, rare); per restare boss la loro salute, precisione e danni fisici sono stati alzati (Idra 850/1,2/2,8, Minotauro Gigante 950/1,2/2,8): a livello 8 contro cinque personaggi vincono il 94% e il 91% dei gruppi, contro quattro il 65% e l'86%.
   - **Danno ripartito (novembre 2026).** `TestScontriDiGruppo` non applicava la ripartizione per posizione delle pergamene a più bersagli; ora sì. Contro i boss (bersagli singoli) non cambia niente; contro Troll e Goblin con 3 pergamene di Fuoco i round passano da 1,0–1,5 a 1,7–3,6 e la vittoria resta al 100%.
   - **Da bilanciare.** Mago e Sacerdote sono i bersagli preferiti dei mostri e muoiono presto; l'Eremita resta il killer dei livelli bassi.
+- **La portata di Terremoto, Tempesta e Terrore** (`PortataAzione.di`, 2026-11-08): sono `GRUPPO_ALLEATI`, come il Grido di battaglia, ma colpiscono gli avversari (la Tempesta anche i compagni di chi la lancia) e il riquadro destro li descrive così. Il selettore è solo un test di esistenza, quindi il comportamento non cambia; ma nella schermata una voce con quelle azioni offre la rosa «Alleati» invece di «Avversari». Da decidere se spostarle su `GRUPPO_AVVERSARI`, come Nebbia e Nega magia.
 
 ## 10. Da fare / idee aperte
 
@@ -840,7 +841,7 @@ degli avversari e dei miei compagni.
 ### 11.9 Le azioni: l'elenco
 
 Le azioni sono un enumerato `TipoAzione` con il **nome piatto**, uno per incantesimo (`FULMINE`, non `INCANTESIMO` con un parametro): così una voce si legge come la si pensa, `SU AVVERSARI [STATO BAGNATO] → FULMINE`.
-Ogni valore dichiara la sua **portata** (§11.2), le **rose che accetta** e i suoi **requisiti**. Sono ventiquattro:
+Ogni valore dichiara la sua **portata** (§11.2), le **rose che accetta** e i suoi **requisiti**. Sono quaranta:
 
 | Gruppo | `TipoAzione` | Portata | Rose accettate |
 | :--- | :--- | :--- | :--- |
@@ -850,7 +851,18 @@ Ogni valore dichiara la sua **portata** (§11.2), le **rose che accetta** e i su
 | | `SILENZIO` | un avversario | come l'attacco |
 | Incantesimo "del repertorio" | `INCANTESIMO_DI_DANNO` (parametro: criterio, §11.10): i sette elementali, per i miei | un avversario | come l'attacco |
 | | `INCANTESIMO_DEL_REPERTORIO`: un malefico qualsiasi, **Morte e Silenzio compresi**, solo per i mostri | un avversario | come l'attacco |
+| Incantesimi globali | `NEBBIA`, `NEGA_MAGIA` | tutti gli avversari | test di esistenza |
+| | `GRIDO_DI_BATTAGLIA` | tutto il gruppo | test di esistenza |
+| | `TERREMOTO`, `TEMPESTA`, `TERRORE` | tutti gli avversari (`TEMPESTA` colpisce anche i compagni di chi la lancia); nel codice hanno però la portata `GRUPPO_ALLEATI`, vedi §9 | test di esistenza |
 | Innato | `DARDO_ARCANO` | un avversario | come l'attacco |
+| Abilità innate (Sacerdote) | `LUCE_DIVINA` (danno sacro a più avversari, il doppio ai non morti); `ALBA_SACRA` è fra i benefici | un avversario | come l'attacco |
+| Abilità innate (Ladro) | `ATTACCO_ALLE_SPALLE` | un avversario | come l'attacco |
+| Abilità innate (Chierico) | `MARTELLO_SACRO` | un avversario | come l'attacco |
+| | `SCACCIARE_I_NON_MORTI` | tutti gli avversari | test di esistenza |
+| | `IMPOSIZIONE_DELLE_MANI` | un alleato | come `CANTO_CURATIVO` |
+| Abilità innate (Druido) | `RADICI` (danno di Terra), `SCIAME` (danno di Veleno) | tutti gli avversari | test di esistenza |
+| | `PELLE_DI_CORTECCIA` | tutto il gruppo | test di esistenza |
+| | `RIGENERAZIONE` | un alleato | come `CANTO_CURATIVO` |
 | Benefici | `RESURREZIONE` | un alleato caduto | `ALLEATI_CADUTI` |
 | | `ALBA_SACRA` | tutto il gruppo | il selettore è solo un test di esistenza |
 | Canti | `CANTO_CURATIVO` | un alleato | `SE_STESSO`, `ALLEATI`, `OSPITI`, `ALLEATI_E_OSPITI` |
@@ -867,6 +879,8 @@ Escluse (§5): fuga, corruzione, amicizia, passare inosservati. **Non c'è un'az
   silenziato); `MORTE` vuole un bersaglio vivo.
 - **`DARDO_ARCANO`, canti:** la `MAGIA`, e la classe che li sa (Mago, Maga, Elfo, Elfa; Bardo, Cantastorie, il bardo della locanda). `CANTO_CURATIVO` vuole qualcuno ferito, `CANTO_IPNOTICO` e `URLO_DELLA_BANSHEE` avversari vivi
   non già `SPAVENTATO` o `CONFUSO`, e l'Urlo che il gruppo l'abbia imparato.
+- **Incantesimi globali (`NEBBIA`, `NEGA_MAGIA`, `GRIDO_DI_BATTAGLIA`, `TERREMOTO`, `TEMPESTA`, `TERRORE`):** la pergamena della classe, la `MAGIA` e non essere `SILENZIATO`; non hanno un bersaglio, quindi si lanciano solo se nel campo c'è chi ne risente (`IncantesimoGlobale.serve`: la Nebbia non si lancia se gli avversari sono già nella nebbia o immuni; Nega magia se nessuno è un incantatore non già colpito; il Grido di battaglia se tutti ce l'hanno già; il Terremoto se nessuno è in campo o sono tutti immuni; il Terrore se sono già tutti spaventati o immuni; la Tempesta se i compagni da colpire sarebbero più degli avversari).
+- **Abilità innate:** la classe che le sa (`RegistroTattiche.azioniPossibili`, `AbilitaInnate.puoUsare`: classe, `MAGIA` dove costano, ricarica, non essere `SILENZIATO`). Poi, in più: `LUCE_DIVINA`, `MARTELLO_SACRO` e `DARDO_ARCANO` vogliono un bersaglio che non sia immune al loro danno; `ATTACCO_ALLE_SPALLE` non costa `MAGIA` e vuole almeno tre personaggi vivi nel gruppo (due distraggono); `SCACCIARE_I_NON_MORTI` un non morto avversario da scacciare; `IMPOSIZIONE_DELLE_MANI` un bersaglio ferito; `RIGENERAZIONE` un bersaglio ferito che non si rigeneri già; `RADICI` e `SCIAME` un avversario in campo; `PELLE_DI_CORTECCIA` almeno un alleato in campo senza la pelle.
 - **`ALBA_SACRA`:** è un'abilità innata (Sacerdote, Sacerdotessa), niente pergamene; vuole almeno un alleato con uno stato diverso da `ISPIRATO` (i modificatori temporanei non si leggono dal personaggio).
 - **`RESURREZIONE`:** la pergamena, la `MAGIA`, un compagno caduto (non in panchina).
 - **Pozioni:** una del tipo nel gruppo; la Salute vuole un ferito, la Magia chi non ha la `MAGIA` piena.
@@ -975,7 +989,7 @@ delle simulazioni agiscono con le stesse tattiche del gioco**, non più con una 
 
 ### 11.15 La schermata del giocatore
 
-(`ui/tattiche/DisplayableCanvasTattiche` e `CasellaADiscesa`, in `12-foresta-swing`; `tattiche/modifica/BozzaTattica` e `TestoTattica`, in `08-foresta-tattiche`; `DisplayableCanvasTatticheTest`, `BozzaTatticaTest`, `ScenarioSchermataTatticheTest`). Si apre dall'inventario con l'icona `MOSTRA_TATTICHE` (stato `Stato.TATTICHE`, come la pagina dei trofei) e si lascia con `ANNULLA`. I comandi della barra sono i personaggi permanenti del gruppo, anche i caduti
+(la logica è in `ui/schermate/EditorDelleTattiche` e `MenuADiscesa`, in `12-foresta-ui-comune`, uguale per ogni toolkit; la disegnano `ui/tattiche/DisplayableCanvasTattiche` e `CasellaADiscesa` in `12-foresta-swing` e `SchermataTatticheGdx` in `12-foresta-libgdx`; `tattiche/modifica/BozzaTattica` e `TestoTattica`, in `08-foresta-tattiche`; `DisplayableCanvasTatticheTest`, `BozzaTatticaTest`, `ScenarioSchermataTatticheTest`). Si apre dall'inventario con l'icona `MOSTRA_TATTICHE` (stato `Stato.TATTICHE`, come la pagina dei trofei) e si lascia con `ANNULLA`. I comandi della barra sono i personaggi permanenti del gruppo, anche i caduti
 (non gli ospiti e chi è a tempo); il capo ha lo sfondo rosso. Due colonne con la cornice dell'inventario e il personaggio al centro:
 
 - **A sinistra la tattica**, un `ComponenteScorrevole` ricostruito a ogni disegno. Ogni voce ha una riga di intestazione (numero, **nome**; a destra su, giù, togli) e sotto il corpo: la riga della rosa e dell'ordinamento, i suoi **filtri** (`con`), le **condizioni** (`se`, con i filtri di `QUANTI` più indentati) e le **azioni** (`fai`); in coda a ogni gruppo una riga "(aggiungi...)" con un
