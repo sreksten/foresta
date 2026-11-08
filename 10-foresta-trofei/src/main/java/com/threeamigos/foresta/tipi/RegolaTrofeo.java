@@ -6,6 +6,7 @@ import com.threeamigos.foresta.trofei.Trofeo;
 import com.threeamigos.foresta.trofei.TrofeoPerdigiorno;
 
 import com.threeamigos.foresta.artefatti.Artefatto;
+import com.threeamigos.foresta.missioni.incarichi.IlTorneo;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoConsumabile;
@@ -27,6 +28,12 @@ public enum RegolaTrofeo {
 	// La missione La sfida dei campioni, una sola per partita (vedi LaSfidaDeiCampioni nel catalogo delle missioni)
 	RE_DI_CARTA_FORBICI_E_SASSO(() -> new TrofeoAContatore<>(TipoTrofeo.RE_DI_CARTA_FORBICI_E_SASSO,
 			InternoMissioneCompletata.class, evento -> evento.getMissione().getClasse() == MissionePredefinita.LA_SFIDA_DEI_CAMPIONI ? 1 : 0, 1)),
+	// I cinque tornei della missione IL_TORNEO (le righe di TORNEO in missioni.txt): il trofeo è del torneo vinto, a missione completata (borsa riscossa in città)
+	ROSA_APPASSITA(() -> torneo(TipoTrofeo.ROSA_APPASSITA, "ROSA_APPASSITA")),
+	INCANTATORE_SUPREMO(() -> torneo(TipoTrofeo.INCANTATORE_SUPREMO, "GIOSTRA_DEGLI_INCANTATORI")),
+	BOCCALE_ROVESCIATO(() -> torneo(TipoTrofeo.BOCCALE_ROVESCIATO, "BOCCALE_ROVESCIATO")),
+	CAVOLO_D_ORO(() -> torneo(TipoTrofeo.CAVOLO_D_ORO, "CAVOLO_D_ORO")),
+	TRE_CAMPANE(() -> torneo(TipoTrofeo.TRE_CAMPANE, "TRE_CAMPANE")),
 	// Chi viene respinto dall'oste per mancanza di monete non mangia, e non conta
 	SBEVAZZONE(() -> new TrofeoAContatore<>(TipoTrofeo.SBEVAZZONE,
 			InternoPastoConsumatoInLocanda.class, evento -> 1, 100)),
@@ -132,6 +139,11 @@ public enum RegolaTrofeo {
 
 	private static TipoConsumabile consumabileComprato(NotificaApprovazioneAcquistoConsumabile evento) {
 		return evento.getEventoRichiestaAcquistoConsumabile().getTipoConsumabile();
+	}
+
+	private static Trofeo torneo(TipoTrofeo tipo, String chiave) {
+		return new TrofeoAContatore<>(tipo, InternoMissioneCompletata.class,
+				evento -> evento.getMissione() instanceof IlTorneo && chiave.equals(((IlTorneo) evento.getMissione()).getTorneo().getChiave()) ? 1 : 0, 1);
 	}
 
 	private static Trofeo boss(TipoTrofeo tipo, TipoPersonaggio classe) {

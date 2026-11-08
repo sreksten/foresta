@@ -58,6 +58,37 @@ class BarraIconeAiutoTest {
     }
 
     @Test
+    void conUnSuggerimentoApertoLeIconeNonRispondono() {
+        DisplayableCanvasBarraIcone barra = new DisplayableCanvasBarraIcone(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE,
+                0, ALTEZZA_SCHERMO - 70, LARGHEZZA_SCHERMO, 70, new VistaPartitaMotore());
+        ComandiPossibili.set(Arrays.asList(Comando.NORD, Comando.SUD));
+        barra.impostaAzioni();
+        boolean[] suggerimentoAperto = {true};
+        barra.setBloccata(() -> suggerimentoAperto[0]);
+        barra.esegui(Comando.NORD);
+        barra.esegui(Comando.NO_AIUTO);
+        assertTrue(comandiMandati.isEmpty(), "le icone si vedono ma non rispondono finché il suggerimento è aperto");
+        assertTrue(aiutiMandati.isEmpty());
+        suggerimentoAperto[0] = false;
+        barra.esegui(Comando.NORD);
+        assertEquals(1, comandiMandati.size());
+    }
+
+    @Test
+    void conUnSuggerimentoApertoLIconaSottoIlMouseNonSiIllumina() {
+        DisplayableCanvasBarraIcone barra = new DisplayableCanvasBarraIcone(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE,
+                0, ALTEZZA_SCHERMO - 70, LARGHEZZA_SCHERMO, 70, new VistaPartitaMotore());
+        ComandiPossibili.set(Arrays.asList(Comando.NORD, Comando.SUD));
+        barra.impostaAzioni();
+        Area primo = barra.rettangoloDisegnato(0);
+        // Le coordinate del mouse sono relative alla barra
+        barra.processaMovimento(primo.getX() + primo.getLarghezza() / 2, primo.getY() + primo.getAltezza() / 2);
+        assertTrue(barra.isDaEvidenziare(0), "senza blocco l'icona sotto il mouse si illumina");
+        barra.setBloccata(() -> true);
+        assertFalse(barra.isDaEvidenziare(0), "con un suggerimento aperto no");
+    }
+
+    @Test
     void lInterruttoreMostraCosaFaIlClickELoStatoNonArrivaAlGioco() {
         // Given
         DisplayableCanvasBarraIcone barra = new DisplayableCanvasBarraIcone(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE,

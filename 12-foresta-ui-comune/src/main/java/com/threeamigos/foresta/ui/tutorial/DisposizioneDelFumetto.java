@@ -46,7 +46,15 @@ public final class DisposizioneDelFumetto {
 	}
 
 	/**
-	 * L'angolo in alto a sinistra del fumetto. Per un bersaglio alto più di un terzo dello schermo sta di fianco; altrimenti sopra se il bersaglio è
+	 * L'angolo in alto a sinistra del fumetto, sempre nello stesso punto: al centro dello schermo. Da pagina a pagina e da suggerimento a suggerimento
+	 * il fumetto non si muove; cambia solo dove punta la coda ({@link #puntaVerso}).
+	 */
+	public static Punto posizioneFissa(int larghezza, int altezza, int larghezzaSchermo, int altezzaSchermo) {
+		return new Punto(dentro((larghezzaSchermo - larghezza) / 2, larghezza, larghezzaSchermo), dentro((altezzaSchermo - altezza) / 2, altezza, altezzaSchermo));
+	}
+
+	/**
+	 * L'angolo in alto a sinistra del fumetto vicino al bersaglio (non lo usa più nessuno: oggi il fumetto sta fermo, vedi {@link #posizioneFissa}). Per un bersaglio alto più di un terzo dello schermo sta di fianco; altrimenti sopra se il bersaglio è
 	 * nella metà bassa dello schermo e sotto se è in quella alta (e se lì non c'è posto, dall'altra parte), poi a sinistra e a destra; sempre
 	 * centrato su di lui e senza coprirlo né uscire dallo schermo. Se non c'è posto da nessuna parte (un bersaglio enorme) sta dove si può, dentro
 	 * lo schermo.

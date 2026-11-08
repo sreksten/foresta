@@ -29,7 +29,12 @@ public enum TipoTrofeo {
 	COME_LA_IMPAGLIO(CategoriaTrofeo.UCCISIONE),
 
 	CACCIATORE_DI_TAGLIE(CategoriaTrofeo.MISSIONE),
-	RE_DI_CARTA_FORBICI_E_SASSO(CategoriaTrofeo.MISSIONE),
+	RE_DI_CARTA_FORBICI_E_SASSO(CategoriaTrofeo.TORNEO),
+	ROSA_APPASSITA(CategoriaTrofeo.TORNEO),
+	INCANTATORE_SUPREMO(CategoriaTrofeo.TORNEO),
+	BOCCALE_ROVESCIATO(CategoriaTrofeo.TORNEO),
+	CAVOLO_D_ORO(CategoriaTrofeo.TORNEO),
+	TRE_CAMPANE(CategoriaTrofeo.TORNEO),
 
 	RAPINATORE(CategoriaTrofeo.BOTTINO),
 	LADRO_DI_PREZIOSI(CategoriaTrofeo.BOTTINO),

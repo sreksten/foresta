@@ -8,6 +8,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DisposizioneDelFumettoTest {
 
+	@Test
+	void ilFumettoStaSempreAlCentroQualunqueSiaIlBersaglio() {
+		Punto fisso = DisposizioneDelFumetto.posizioneFissa(300, 120, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO);
+		assertEquals((LARGHEZZA_SCHERMO - 300) / 2, fisso.x);
+		assertEquals((ALTEZZA_SCHERMO - 120) / 2, fisso.y);
+		// Un fumetto più grande dello schermo resta dentro, con il margine
+		Punto enorme = DisposizioneDelFumetto.posizioneFissa(LARGHEZZA_SCHERMO + 500, ALTEZZA_SCHERMO + 500, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO);
+		assertEquals(DisposizioneDelFumetto.MARGINE, enorme.x);
+		assertEquals(DisposizioneDelFumetto.MARGINE, enorme.y);
+	}
+
+
 	private static final int LARGHEZZA_SCHERMO = 1000;
 	private static final int ALTEZZA_SCHERMO = 800;
 

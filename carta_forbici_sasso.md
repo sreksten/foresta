@@ -103,7 +103,7 @@ conta fra quelle del torneo.
 missione è una `ConLeggendario`); se il catalogo è finito, uno costruito al volo, un anello di livello del mondo + 2
 (`LaSfidaDeiCampioni.costruisciUnLeggendario`, con un nome di `sfide.txt`, `NOME_LEGGENDARIO_DEI_CAMPIONI`).
 
-**Il trofeo.** `RE_DI_CARTA_FORBICI_E_SASSO` (supertipo `MISSIONE`) si vince completando la missione.
+**Il trofeo.** `RE_DI_CARTA_FORBICI_E_SASSO` (categoria `TORNEO`) si vince completando la missione.
 
 ## 4. I testi
 

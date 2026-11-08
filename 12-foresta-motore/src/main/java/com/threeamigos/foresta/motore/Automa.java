@@ -28,6 +28,7 @@ import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
 import com.threeamigos.foresta.locazioni.Bottega;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.mappa.Foresta;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.Passo;
@@ -53,6 +54,7 @@ import com.threeamigos.foresta.tattiche.RegistroTattiche;
 import com.threeamigos.foresta.tattiche.TatticheDeiPersonaggi;
 import com.threeamigos.foresta.testi.PrecaricatoreDeiTesti;
 import com.threeamigos.foresta.testi.Testi;
+import com.threeamigos.foresta.tutorial.PilotaggioDelTutorial;
 import com.threeamigos.foresta.tutorial.RegistroSuggerimenti;
 import com.threeamigos.foresta.tipi.*;
 import com.threeamigos.foresta.trofei.RegistroTrofei;
@@ -1519,6 +1521,51 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		return Esito.FERMATI;
 	}
 
+	/**
+	 * Se il tutorial sta pilotando i primi turni e quel viaggio finirebbe su un luogo che non è né un bosco né una radura, di che luogo si tratta.
+	 */
+	private Optional<TipoLocazione> destinazioneVietataDalTutorial(int passi) {
+		if (!PilotaggioDelTutorial.pilotaQuestoTurno()) {
+			return Optional.empty();
+		}
+		int dx = 0;
+		int dy = 0;
+		int massimo;
+		switch (direzione) {
+			case NORD:
+				dy = -1;
+				massimo = Foresta.getMaxPassiNord();
+				break;
+			case EST:
+				dx = 1;
+				massimo = Foresta.getMaxPassiEst();
+				break;
+			case SUD:
+				dy = 1;
+				massimo = Foresta.getMaxPassiSud();
+				break;
+			default:
+				dx = -1;
+				massimo = Foresta.getMaxPassiOvest();
+				break;
+		}
+		int fatti = Math.min(passi, massimo);
+		CoordinateMD posizione = Foresta.getPosizioneDelGruppo();
+		TipoLocazione arrivo = Foresta.getLocazione(posizione.getX() + dx * fatti, posizione.getY() + dy * fatti);
+		return arrivo == TipoLocazione.BOSCO || arrivo == TipoLocazione.RADURA ? Optional.empty() : Optional.of(arrivo);
+	}
+
+	/**
+	 * Il luogo a parole, con l'articolo: «un tempio», «la città di Nyena».
+	 */
+	private static String descrizioneDelLuogo(TipoLocazione luogo) {
+		String nomeProprio = luogo.getNomeProprio();
+		if (nomeProprio != null) {
+			return nomeProprio;
+		}
+		return Testi.get("messaggi_motore", "Automa.tutorialLuogo." + luogo.name()).orElseGet(() -> Testi.formatta("messaggi_motore", "Automa.tutorialLuogo.ALTRO"));
+	}
+
 	private Esito gestisciComandoInStatoSceltaPassi(Comando comando) {
 		if (comando == Comando.ANNULLA) {
 			// Scegliere la direzione ha solo memorizzato il campo direzione, che verrà
@@ -1532,6 +1579,15 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			return Esito.FERMATI;
 		}
 		int passi = comando.ordinal() - Comando.NUMERO_1.ordinal() + 1;
+		// Nei primi turni, che il tutorial pilota, non ci si infila in un tempio, in una locanda o in una grotta: il viaggio finirebbe fuori dalla
+		// sequenza che il tutorial ha preparato. Si dice dove sarebbe andato e si torna alla scelta della direzione
+		Optional<TipoLocazione> vietata = destinazioneVietataDalTutorial(passi);
+		if (vietata.isPresent()) {
+			// Con la finestra del tutorial, che si nota, e non con il testo che scorre
+			BusEventi.pubblica(new NotificaMessaggioDelTutorial(TipoSuggerimento.NON_ANCORA_IL_MOMENTO, descrizioneDelLuogo(vietata.get())));
+			stato = Stato.ATTESA_DIREZIONE;
+			return Esito.CONTINUA_CON_INGRESSO;
+		}
 		switch (direzione) {
 			case NORD:
 				Foresta.muoveNord(passi);

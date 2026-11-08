@@ -15,6 +15,10 @@ public enum CategoriaTrofeo {
 	 */
 	MISSIONE,
 	/**
+	 * Le competizioni vinte: i cinque tornei (uno per torneo) e la sfida dei campioni a carta, forbici e sasso
+	 */
+	TORNEO,
+	/**
 	 * Avversari sconfitti
 	 */
 	UCCISIONE,

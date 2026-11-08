@@ -25,7 +25,9 @@ import com.threeamigos.foresta.interfacce.GestoreBestiario;
 import com.threeamigos.foresta.interfacce.GestoreTrofei;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.missioni.incarichi.IlTorneo;
 import com.threeamigos.foresta.modellodati.BestiarioMD;
+import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.modellodati.TrofeiMD;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.RegolaTrofeo;
@@ -255,6 +257,36 @@ class RegistroTrofeiTest {
         fineLocazione();
         assertEquals(2, RegistroTrofei.getProgresso(TipoTrofeo.CACCIATORE_DI_TAGLIE));
         assertEquals(1, RegistroTrofei.getProgresso(TipoTrofeo.RE_DI_CARTA_FORBICI_E_SASSO));
+        assertEquals(0, RegistroTrofei.getProgresso(TipoTrofeo.ROSA_APPASSITA));
+
+        BusEventi.pubblica(new InternoMissioneCompletata(torneo("GIOSTRA_DEGLI_INCANTATORI")));
+        fineLocazione();
+        assertTrue(RegistroTrofei.isVinto(TipoTrofeo.INCANTATORE_SUPREMO));
+        assertFalse(RegistroTrofei.isVinto(TipoTrofeo.ROSA_APPASSITA), "ogni torneo ha il suo trofeo");
+        assertFalse(RegistroTrofei.isVinto(TipoTrofeo.BOCCALE_ROVESCIATO));
+
+        for (String chiave : new String[]{"ROSA_APPASSITA", "BOCCALE_ROVESCIATO", "CAVOLO_D_ORO", "TRE_CAMPANE"}) {
+            BusEventi.pubblica(new InternoMissioneCompletata(torneo(chiave)));
+        }
+        fineLocazione();
+        assertTrue(RegistroTrofei.isVinto(TipoTrofeo.ROSA_APPASSITA));
+        assertTrue(RegistroTrofei.isVinto(TipoTrofeo.BOCCALE_ROVESCIATO));
+        assertTrue(RegistroTrofei.isVinto(TipoTrofeo.CAVOLO_D_ORO));
+        assertTrue(RegistroTrofei.isVinto(TipoTrofeo.TRE_CAMPANE));
+    }
+
+    private static IlTorneo torneo(String chiave) {
+        String riga;
+        do {
+            riga = ProduttoreDiMissioniCasuale.rigaDiMissioni("TORNEO");
+        } while (!riga.contains("CHIAVE=" + chiave + ";"));
+        String scelta = riga;
+        // Il torneo fissa la sua riga alla prima lettura (parametro): qui gliela si dà già scelta
+        return new IlTorneo() {
+            {
+                parametro(TORNEO, () -> scelta);
+            }
+        };
     }
 
     @Test

@@ -24,18 +24,40 @@ public enum TipoSuggerimento {
 	JOYSTICK_DELLA_MAPPA(Situazione.JOYSTICK_SULLA_MAPPA, BersaglioDelSuggerimento.JOYSTICK_VIRTUALE),
 	TRASCINARE_LA_MAPPA(Situazione.MAPPA_PIU_GRANDE_DELLO_SCHERMO, BersaglioDelSuggerimento.SCHERMATA),
 	// I tipi di luogo: più pagine del solito, perché sono tanti e chi comincia non sa dove andare (vedi PAGINE_MASSIME)
-	LUOGHI(Situazione.ICONA_DELLA_MAPPA_PRESENTE, BersaglioDelSuggerimento.ICONA_DELLA_MAPPA),
+	LUOGHI(Situazione.ICONA_DELLA_MAPPA_PRESENTE, BersaglioDelSuggerimento.RIQUADRO_DELLA_MAPPA),
 	COMBATTIMENTO(Situazione.COMBATTIMENTO_APERTO, BersaglioDelSuggerimento.RIQUADRO_DEL_COMBATTIMENTO),
 	OGGETTO_TROVATO(Situazione.OGGETTO_TROVATO, BersaglioDelSuggerimento.ICONA_DELL_INVENTARIO),
 	POZIONI(Situazione.FERITO_CON_UNA_POZIONE, BersaglioDelSuggerimento.ICONE_DELLE_POZIONI),
+	// La prima volta che un effetto di stato si applica, in pieno combattimento: il combattimento si ferma finché non si legge
+	EFFETTI_DI_STATO(Situazione.EFFETTO_DI_STATO_APPLICATO, BersaglioDelSuggerimento.RIQUADRO_DEL_COMBATTIMENTO),
+	// La prima reazione elementale: un effetto di stato più un certo tipo di attacco fanno più danni
+	REAZIONI_ELEMENTALI(Situazione.REAZIONE_ELEMENTALE_SCATENATA, BersaglioDelSuggerimento.RIQUADRO_DEL_COMBATTIMENTO),
+	// A fine combattimento, se qualcuno è caduto: la prima pagina parla del gruppo, la seconda dell'incantesimo, la terza dell'icona che lo lancia
+	RESURREZIONE(Situazione.PERSONAGGIO_CADUTO, BersaglioDelSuggerimento.RIQUADRO_DEL_GRUPPO, BersaglioDelSuggerimento.RIQUADRO_DEGLI_INCANTESIMI_E_DELLE_POZIONI,
+			BersaglioDelSuggerimento.ICONA_DEGLI_INCANTESIMI),
 	SCELTE_IN_COMBATTIMENTO(Situazione.SCELTE_IN_COMBATTIMENTO, BersaglioDelSuggerimento.ICONE_DI_COMBATTIMENTO),
 	MISSIONI(Situazione.MISSIONE_ATTIVA, BersaglioDelSuggerimento.RIQUADRO_DELLE_MISSIONI),
+	// L'ultimo della prima locazione: letto come ci si muove, per i prossimi passi si va verso i boschi e le radure; punta le frecce. Sta dopo gli altri nell'ordine
+	// dell'enum, così se più d'uno scatta insieme viene per ultimo
+	AVANZA_VERSO_I_BOSCHI(Situazione.MOVIMENTO_SPIEGATO, BersaglioDelSuggerimento.ICONE_DI_MOVIMENTO),
 	// Le tattiche si aprono dall'inventario: il suggerimento punta alla sua icona, perché uno sia curioso di entrarci
 	TATTICHE(Situazione.TATTICHE_DISPONIBILI, BersaglioDelSuggerimento.ICONA_DELL_INVENTARIO),
 	// Si dà aprendo l'inventario: la prima pagina parla delle due liste, la seconda delle icone delle altre pagine
 	INVENTARIO(Situazione.INVENTARIO_APERTO, BersaglioDelSuggerimento.SCHERMATA, BersaglioDelSuggerimento.ICONE_DELLE_PAGINE),
 	// Nell'inventario, quando qualcuno ha punti abilità: gli attributi primari in arancione si aumentano con un doppio click
 	PUNTI_ABILITA(Situazione.PUNTI_ABILITA_DA_SPENDERE, BersaglioDelSuggerimento.SCHERMATA),
+	// La schermata delle tattiche, spiegata tutta alla prima apertura (vedi tutorial_tattiche.md): leggere una tattica (pagine 1-5: l'ordine, le icone e i
+	// colori, il riquadro della spiegazione), su chi, quali e quale (6-8), quando e che cosa (9-10), provare e confermare (11-12). Dodici pagine, come
+	// l'elenco dei luoghi è una deroga alla regola delle tre
+	SCHERMATA_DELLE_TATTICHE(Situazione.TATTICHE_APERTE,
+			BersaglioDelSuggerimento.LISTA_DELLE_TATTICHE, BersaglioDelSuggerimento.LISTA_DELLE_TATTICHE, BersaglioDelSuggerimento.LISTA_DELLE_TATTICHE,
+			BersaglioDelSuggerimento.LISTA_DELLE_TATTICHE, BersaglioDelSuggerimento.SPIEGAZIONE_DELLE_TATTICHE,
+			BersaglioDelSuggerimento.LISTA_DELLE_TATTICHE, BersaglioDelSuggerimento.LISTA_DELLE_TATTICHE, BersaglioDelSuggerimento.LISTA_DELLE_TATTICHE,
+			BersaglioDelSuggerimento.LISTA_DELLE_TATTICHE, BersaglioDelSuggerimento.LISTA_DELLE_TATTICHE,
+			BersaglioDelSuggerimento.PULSANTI_DELLE_TATTICHE, BersaglioDelSuggerimento.LISTA_DELLE_TATTICHE),
+	// Non scatta da una situazione: il motore lo chiede (NotificaMessaggioDelTutorial) quando rifiuta un viaggio che finirebbe in un luogo non ancora per
+	// il giocatore («Non è ancora il momento di visitare {0}»); punta alle frecce, per scegliere un'altra direzione
+	NON_ANCORA_IL_MOMENTO(Situazione.MESSAGGIO_DEL_MOTORE, BersaglioDelSuggerimento.ICONE_DI_MOVIMENTO),
 	CORRUZIONE(Situazione.AVVERSARIO_CORROMPIBILE, BersaglioDelSuggerimento.ICONA_DELLA_CORRUZIONE),
 	AMICIZIA(Situazione.AVVERSARIO_AMICHEVOLE, BersaglioDelSuggerimento.ICONA_DELL_AMICIZIA),
 	// La prima pagina parla dell'icona che apre l'elenco (incantesimi e abilità innate), la seconda del riquadro con le scorte
@@ -47,9 +69,9 @@ public enum TipoSuggerimento {
 
 	/**
 	 * Il massimo di pagine che un suggerimento può avere. Di norma sono al massimo {@value #PAGINE_NORMALI} (oltre, il concetto si spezza in due
-	 * suggerimenti); l'elenco dei luoghi ne ha di più, perché i tipi di luogo sono tanti e fanno capire dove andare.
+	 * suggerimenti); l'elenco dei luoghi e la schermata delle tattiche ne hanno di più, perché i tipi di luogo sono tanti e fanno capire dove andare.
 	 */
-	public static final int PAGINE_MASSIME = 6;
+	public static final int PAGINE_MASSIME = 12;
 	/** Il massimo di pagine di un suggerimento che non sia l'elenco dei luoghi. */
 	public static final int PAGINE_NORMALI = 3;
 
@@ -94,6 +116,22 @@ public enum TipoSuggerimento {
 			pagine++;
 		}
 		return pagine;
+	}
+
+	/**
+	 * Il titolo di una pagina (da 1), se ne ha uno: va in una riga in cima, accanto all'icona (vedi {@link #getIcona}). Sta nel file dei testi,
+	 * alla voce {@code PAGINA_n.TITOLO}.
+	 */
+	public java.util.Optional<String> getTitolo(int pagina) {
+		return Testi.testo(this, "PAGINA_" + pagina + ".TITOLO");
+	}
+
+	/**
+	 * L'icona di una pagina (da 1), se ne ha una: il nome della locazione (una costante di TipoLocazione, per esempio {@code LOCANDA}) di cui la pagina
+	 * parla, di cui la UI disegna la tessera che ha sulla mappa. Sta nel file dei testi, alla voce {@code PAGINA_n.ICONA}.
+	 */
+	public java.util.Optional<String> getIcona(int pagina) {
+		return Testi.testo(this, "PAGINA_" + pagina + ".ICONA");
 	}
 
 	/**

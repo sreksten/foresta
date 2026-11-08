@@ -8,6 +8,7 @@ import com.threeamigos.foresta.motore.StatoDelMotore;
 import com.threeamigos.foresta.motore.VistaPartitaMotore;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
+import com.threeamigos.foresta.ui.tutorial.FumettoDelTutorial;
 import com.threeamigos.foresta.tipi.Situazione;
 import com.threeamigos.foresta.tipi.TipoSuggerimento;
 import com.threeamigos.foresta.tutorial.RegistroSuggerimenti;
@@ -97,6 +98,24 @@ class DisplayableCanvasTutorialTest {
 		assertFalse(canvas.getSchermo().getTutor().isAperto());
 		assertTrue(RegistroSuggerimenti.isVisto(TipoSuggerimento.PRIMI_PASSI));
 		assertFalse(haIlBordoGiallo(disegna()));
+	}
+
+	@Test
+	void andandoNellaMappaEtornandoIlSuggerimentoRiparteDallaPaginaACuiEra() {
+		EnumSet<Situazione> movimento = EnumSet.of(Situazione.ICONE_DI_MOVIMENTO_PRESENTI);
+		assertEquals(TipoSuggerimento.MOVIMENTO_E_MAPPA, canvas.getSchermo().getTutor().aggiorna(movimento, SI).get().getSuggerimento());
+		canvas.getSchermo().pollicePremuto();
+		assertEquals(2, canvas.getSchermo().getTutor().getFumetto().get().getPagina());
+		// Si apre la mappa a tutto schermo: il fumetto non si vede e, a fotogramma finito, si chiude senza essere segnato letto
+		canvas.getSchermo().mappa();
+		disegna();
+		assertFalse(canvas.getSchermo().getTutor().isAperto());
+		assertFalse(RegistroSuggerimenti.isVisto(TipoSuggerimento.MOVIMENTO_E_MAPPA));
+		// Si torna al gioco: il suggerimento si riapre dalla seconda pagina, non dalla prima
+		canvas.getSchermo().iniziaGioco();
+		FumettoDelTutorial riaperto = canvas.getSchermo().getTutor().aggiorna(movimento, SI).orElseThrow(AssertionError::new);
+		assertEquals(TipoSuggerimento.MOVIMENTO_E_MAPPA, riaperto.getSuggerimento());
+		assertEquals(2, riaperto.getPagina());
 	}
 
 	@Test

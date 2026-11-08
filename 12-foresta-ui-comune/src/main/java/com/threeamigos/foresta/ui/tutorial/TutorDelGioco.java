@@ -4,6 +4,8 @@ import com.threeamigos.foresta.tipi.Situazione;
 import com.threeamigos.foresta.tipi.TipoSuggerimento;
 import com.threeamigos.foresta.tutorial.RegistroSuggerimenti;
 
+import com.threeamigos.foresta.strumenti.logger.Logger;
+
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
@@ -82,10 +84,26 @@ public final class TutorDelGioco {
 		for (TipoSuggerimento suggerimento : RegistroSuggerimenti.candidati(situazioni)) {
 			if (suggerimento.getNumeroPagine() > 0 && apribile.test(suggerimento)) {
 				fumetto = new FumettoDelTutorial(suggerimento, dito, pagineRaggiunte.getOrDefault(suggerimento, 1));
+				Logger.log(() -> "Tutorial: apre " + suggerimento + ", pagina " + fumetto.getPagina() + " di " + fumetto.getNumeroPagine());
 				return Optional.of(fumetto);
 			}
 		}
 		return Optional.empty();
+	}
+
+	/**
+	 * Dice subito una cosa con la finestra del tutorial (vedi NotificaMessaggioDelTutorial), qualunque cosa sia già stata vista: apre il messaggio, che ha una
+	 * pagina sola, con i valori dei suoi segnaposto. Non fa niente se il toolkit non sa mostrare i suggerimenti o il tutorial è spento.
+	 *
+	 * @return il fumetto aperto, se si è aperto
+	 */
+	public synchronized Optional<FumettoDelTutorial> mostra(TipoSuggerimento suggerimento, java.util.List<String> parametri) {
+		if (!abilitato || !RegistroSuggerimenti.isAttivo()) {
+			return Optional.empty();
+		}
+		fumetto = new FumettoDelTutorial(suggerimento, dito, parametri);
+		Logger.log(() -> "Tutorial: dice " + suggerimento + " " + parametri);
+		return Optional.of(fumetto);
 	}
 
 	/**
@@ -98,10 +116,12 @@ public final class TutorDelGioco {
 			return false;
 		}
 		if (fumetto.prossimaPagina()) {
+			Logger.log(() -> "Tutorial: " + fumetto.getSuggerimento() + ", pagina " + fumetto.getPagina());
 			return false;
 		}
 		RegistroSuggerimenti.visto(fumetto.getSuggerimento());
 		pagineRaggiunte.remove(fumetto.getSuggerimento());
+		Logger.log(() -> "Tutorial: letto " + fumetto.getSuggerimento());
 		fumetto = null;
 		return true;
 	}
@@ -130,11 +150,19 @@ public final class TutorDelGioco {
 	}
 
 	/**
-	 * Chiude il fumetto senza segnarlo letto (si è lasciata la sua schermata): il suggerimento si riproporrà tornando, dalla pagina a cui era arrivato.
+	 * Chiude il fumetto perché si è lasciata la sua schermata. Se ha più pagine ed era arrivato all'ultima è letto (l'ultima pagina è quella che manda a
+	 * fare la cosa che ha spiegato, per esempio ad aprire la mappa: chi ci va l'ha capita; un suggerimento di una pagina sola, invece, non si sa se sia letto); altrimenti non si segna letto e si riproporrà tornando, dalla
+	 * pagina a cui era arrivato.
 	 */
 	public synchronized void chiudi() {
 		if (fumetto != null) {
-			pagineRaggiunte.put(fumetto.getSuggerimento(), fumetto.getPagina());
+			Logger.log(() -> "Tutorial: chiude " + fumetto.getSuggerimento() + " alla pagina " + fumetto.getPagina() + " (si è lasciata la sua schermata)");
+			if (fumetto.getNumeroPagine() > 1 && fumetto.isUltimaPagina()) {
+				RegistroSuggerimenti.visto(fumetto.getSuggerimento());
+				pagineRaggiunte.remove(fumetto.getSuggerimento());
+			} else {
+				pagineRaggiunte.put(fumetto.getSuggerimento(), fumetto.getPagina());
+			}
 		}
 		fumetto = null;
 	}

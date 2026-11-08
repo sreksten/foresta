@@ -20,7 +20,7 @@ Dipende da `09-foresta-missioni` (e per transitività da quasi tutto il dominio:
 
 ### I trofei
 
-`TipoTrofeo` elenca i trofei che il giocatore può vincere (33), a differenza delle missioni non scadono mai e, una volta vinto, un trofeo non si perde più. Hanno una `CategoriaTrofeo`; nella pagina dei trofei compaiono nell'ordine in cui sono dichiarati nell'enum. Il nome e la descrizione stanno in `tipo_trofeo_<lingua>.properties` (`COSTANTE.NOME`, `COSTANTE.DESCRIZIONE`).
+`TipoTrofeo` elenca i trofei che il giocatore può vincere (38), a differenza delle missioni non scadono mai e, una volta vinto, un trofeo non si perde più. Hanno una `CategoriaTrofeo` (`SPECIALE`, `MISSIONE`, `TORNEO`, `UCCISIONE`, `BOTTINO`, `ACQUISTO`, `DIPLOMAZIA`, `VARIE`); nella pagina dei trofei compaiono nell'ordine in cui sono dichiarati nell'enum. Il nome e la descrizione stanno in `tipo_trofeo_<lingua>.properties` (`COSTANTE.NOME`, `COSTANTE.DESCRIZIONE`).
 
 ### I trigger
 
@@ -28,6 +28,7 @@ Dipende da `09-foresta-missioni` (e per transitività da quasi tutto il dominio:
 - **`TrofeoAContatore<E>`** vince accumulando, partita dopo partita, quanto vale un certo evento interno fino a una soglia: `new TrofeoAContatore<>(tipo, ClasseEvento.class, evento -> 1 o 0, obiettivo)` (i pasti in locanda, i goblin sconfitti, le amicizie strette…). Un obiettivo 1 è un trofeo «una volta sola».
 - **`TrofeoEnciclopedista`**: si vince quando tutte le voci del bestiario sono sbloccate; guarda il bestiario, non il progresso accumulato.
 - **`TrofeoPerdigiorno`**: vinto quando sono stati vinti tutti gli altri; non conta nessun evento, guarda solo il registro.
+- **I trofei dei tornei** (categoria `TORNEO`, che comprende anche `RE_DI_CARTA_FORBICI_E_SASSO`, la sfida dei campioni): uno per ognuno dei cinque tornei della missione `IL_TORNEO` (`ROSA_APPASSITA`, `INCANTATORE_SUPREMO` per la giostra degli incantatori, `BOCCALE_ROVESCIATO`, `CAVOLO_D_ORO`, `TRE_CAMPANE`). Ciascuno è un `TrofeoAContatore` su `InternoMissioneCompletata` che conta 1 solo se la missione è un `IlTorneo` la cui riga (`TorneoRichiesto.getChiave()`, la `CHIAVE=` in `missioni.txt`) è quella del suo torneo, quindi si vince a missione completata, con la borsa riscossa in città. Un torneo nuovo in `missioni.txt` vuole un trofeo nuovo.
 - **`RegolaTrofeo`** elenca i trofei esistenti con il loro trigger: una voce con lo stesso nome della costante di `TipoTrofeo`.
 
 ### `RegistroTrofei`

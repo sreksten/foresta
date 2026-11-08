@@ -16,6 +16,7 @@ public enum BersaglioDelSuggerimento {
 	/** Tutti i riquadri della schermata di gioco. */
 	RIQUADRI,
 	RIQUADRO_DEL_COMBATTIMENTO,
+	RIQUADRO_DEL_GRUPPO,
 	RIQUADRO_DELLE_MISSIONI,
 	/** Il riquadro della mappa, quello piccolo (la mappa a tutto schermo si apre con l'icona). */
 	RIQUADRO_DELLA_MAPPA,
@@ -24,6 +25,12 @@ public enum BersaglioDelSuggerimento {
 	SCHERMATA,
 	/** Il disco del joystick virtuale sulla mappa a tutto schermo. */
 	JOYSTICK_VIRTUALE,
+	/** Nella schermata delle tattiche, la colonna a sinistra con le regole della tattica. */
+	LISTA_DELLE_TATTICHE,
+	/** Nella schermata delle tattiche, la colonna a destra che spiega l'elemento sotto il mouse. */
+	SPIEGAZIONE_DELLE_TATTICHE,
+	/** Nella schermata delle tattiche, i pulsanti Sì, No e Predefinita. */
+	PULSANTI_DELLE_TATTICHE,
 	/** La barra delle icone intera. */
 	BARRA_DELLE_ICONE,
 	ICONE_DI_MOVIMENTO(Comando.NORD, Comando.EST, Comando.SUD, Comando.OVEST),

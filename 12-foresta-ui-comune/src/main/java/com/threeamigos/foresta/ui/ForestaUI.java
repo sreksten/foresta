@@ -16,6 +16,8 @@ import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.FaseDiGioco;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.StatoDelloSchermo;
+import com.threeamigos.foresta.tipi.TipoSuggerimento;
+import com.threeamigos.foresta.tutorial.RegistroSuggerimenti;
 import com.threeamigos.foresta.tipi.TipoFinestra;
 import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.ui.barra.ComandiPossibili;
@@ -101,11 +103,23 @@ public abstract class ForestaUI implements Temporizzabile {
 			}
 		});
 		BusEventi.iscriviti(InternoNotificaViaFumettoATempo.class, e -> schermo.notificaFumetto(e.getTesto(), e.getCoordinateFumetto()));
-		BusEventi.iscriviti(NotificaInterazionePersonaggio.class, e -> schermo.aggiungiInterazione(e.getPersonaggio(), e.getTipoInterazione()));
+		BusEventi.iscriviti(NotificaInterazionePersonaggio.class, e -> {
+			schermo.aggiungiInterazione(e.getPersonaggio(), e.getTipoInterazione());
+			// La prima reazione elementale si spiega subito, nel mezzo dello scontro
+			situazioni.segnaReazioneScatenata();
+			aggiornaIlTutorial();
+		});
 		BusEventi.iscriviti(NotificaReazioneDiClassePersonaggio.class, e -> schermo.aggiungiTestoSulPersonaggio(e.getPersonaggio(),
 				TestoReazioneDiClasse.di(e.getTipoDanno(), e.getMoltiplicatore()), TestoReazioneDiClasse.colore(e.getMoltiplicatore())));
 		BusEventi.iscriviti(NotificaColpoMancato.class, e -> schermo.aggiungiColpoMancato(e.getPersonaggio()));
 		BusEventi.iscriviti(NotificaTestoFrase.class, e -> schermo.notifica(e.getMessaggio()));
+		BusEventi.iscriviti(NotificaMessaggioDelTutorial.class, e -> {
+			// Il motore vuole che la cosa si noti: la finestra del tutorial, come i suggerimenti (e come loro tiene occupata la UI finché non si legge)
+			if (schermo.getTutor().mostra(e.getSuggerimento(), e.getParametri()).isPresent()) {
+				BusEventi.pubblica(new InternoUiOccupata());
+				rinfresca();
+			}
+		});
 		BusEventi.iscriviti(InternoMostraFinestraStato.class, e -> mostraFinestra(TipoFinestra.STATO));
 		BusEventi.iscriviti(InternoMostraFinestraStatistiche.class, e -> mostraFinestra(TipoFinestra.STATISTICHE));
 		BusEventi.iscriviti(InternoMostraFinestraIncantesimiEPozioni.class, e -> mostraFinestra(TipoFinestra.INCANTESIMI_E_POZIONI));
@@ -181,6 +195,8 @@ public abstract class ForestaUI implements Temporizzabile {
 			schermo.primoPiano(TipoFinestra.STATO);
 			schermo.getRiquadroCombattimento().setVisible(false);
 			situazioni.segnaCombattimentoChiuso();
+			// Finito lo scontro: se qualcuno è caduto, è il momento di dire che si può riportare in vita
+			aggiornaIlTutorial();
 		});
 		BusEventi.iscriviti(InternoSfidaCartaForbiciSasso.class, e -> {
 			schermo.getRiquadroSfida().aggiorna(e.getMossaDelGiocatore(), e.getMossaDellAvversario(), e.getPunteggioDelGiocatore(),
@@ -322,6 +338,8 @@ public abstract class ForestaUI implements Temporizzabile {
 		boolean missioneAttiva = !vistaPartita.getMissioniAttive().isEmpty();
 		StatoDelloSchermo schermata = schermo.getStato();
 		situazioni.segnaPuntiAbilita(schermata == StatoDelloSchermo.INVENTARIO && isQualcunoConPuntiAbilita());
+		situazioni.segnaQualcunoCaduto(isQualcunoCaduto());
+		situazioni.segnaMovimentoSpiegato(RegistroSuggerimenti.isVisto(TipoSuggerimento.MOVIMENTO_E_MAPPA));
 		boolean laMappa = schermata == StatoDelloSchermo.MAPPA;
 		situazioni.segnaLaSchermata(schermata, laMappa && schermo.mappaConJoystick(), laMappa && schermo.mappaPiuGrandeDelloSchermo());
 		boolean aperto = schermo.getTutor().aggiorna(situazioni.correnti(ComandiPossibili.getComandi(), missioneAttiva, schermo.getTutor().isDito(),
@@ -341,6 +359,22 @@ public abstract class ForestaUI implements Temporizzabile {
 	/**
 	 * Se qualcuno del gruppo è ferito e c'è una pozione di salute (piccola o grande) da dargli: letto dalla vista della partita, non da un evento.
 	 */
+	/**
+	 * Se qualcuno del gruppo (anche chi si è unito per un po', come un goblin corrotto) è caduto: letto dalla vista della partita.
+	 */
+	private boolean isQualcunoCaduto() {
+		VistaGruppoGiocatore gruppo = vistaPartita.getGruppoGiocatore();
+		if (gruppo == null) {
+			return false;
+		}
+		for (VistaPersonaggio personaggio : gruppo.getPersonaggi()) {
+			if (!personaggio.isVivo()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private boolean isQualcunoConPuntiAbilita() {
 		VistaGruppoGiocatore gruppo = vistaPartita.getGruppoGiocatore();
 		if (gruppo == null) {
@@ -459,6 +493,9 @@ public abstract class ForestaUI implements Temporizzabile {
 			case AGGIUNTA:
 			case RINFORZO:
 				schermo.aggiungiEffettoDiStato(evento.getPersonaggio(), evento.getEffetto(), DoomdarkColorModel.Color.YELLOW);
+				// Il primo effetto di stato si spiega subito, nel mezzo dello scontro
+				situazioni.segnaEffettoDiStatoApplicato();
+				aggiornaIlTutorial();
 				break;
 			case DECADIMENTO:
 				// Solo la durata scende di un turno: nessuno sprite, altrimenti si duplicherebbe quello già mostrato per

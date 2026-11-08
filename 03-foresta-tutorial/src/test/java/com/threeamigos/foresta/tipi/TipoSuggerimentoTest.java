@@ -22,7 +22,7 @@ class TipoSuggerimentoTest {
 			Testi.impostaLingua(lingua);
 			for (TipoSuggerimento suggerimento : TipoSuggerimento.values()) {
 				int pagine = suggerimento.getNumeroPagine();
-				int massime = suggerimento == TipoSuggerimento.LUOGHI ? TipoSuggerimento.PAGINE_MASSIME : TipoSuggerimento.PAGINE_NORMALI;
+				int massime = isCheEccedeLeTrePagine(suggerimento) ? TipoSuggerimento.PAGINE_MASSIME : TipoSuggerimento.PAGINE_NORMALI;
 				assertTrue(pagine >= 1 && pagine <= massime, suggerimento + " in " + lingua + ": " + pagine);
 				for (int pagina = 1; pagina <= pagine; pagina++) {
 					assertFalse(suggerimento.getPagina(pagina, false).trim().isEmpty(), suggerimento + " pagina " + pagina);
@@ -32,14 +32,20 @@ class TipoSuggerimentoTest {
 		}
 	}
 
+	/** L'elenco dei luoghi e la schermata delle tattiche sono le sole eccezioni alla regola delle tre pagine */
+	private static boolean isCheEccedeLeTrePagine(TipoSuggerimento suggerimento) {
+		return suggerimento == TipoSuggerimento.LUOGHI || suggerimento == TipoSuggerimento.SCHERMATA_DELLE_TATTICHE;
+	}
+
 	@Test
-	void soloLElencoDeiLuoghiHaPiuDiTrePagine() {
+	void soloLElencoDeiLuoghiELaSchermataDelleTatticheHannoPiuDiTrePagine() {
 		for (TipoSuggerimento suggerimento : TipoSuggerimento.values()) {
-			if (suggerimento != TipoSuggerimento.LUOGHI) {
+			if (!isCheEccedeLeTrePagine(suggerimento)) {
 				assertTrue(suggerimento.getNumeroPagine() <= TipoSuggerimento.PAGINE_NORMALI, suggerimento.name());
 			}
 		}
 		assertTrue(TipoSuggerimento.LUOGHI.getNumeroPagine() > TipoSuggerimento.PAGINE_NORMALI);
+		assertTrue(TipoSuggerimento.SCHERMATA_DELLE_TATTICHE.getNumeroPagine() > TipoSuggerimento.PAGINE_NORMALI);
 	}
 
 	@Test
@@ -59,7 +65,7 @@ class TipoSuggerimentoTest {
 		assertEquals(BersaglioDelSuggerimento.ICONA_DELL_AIUTO, TipoSuggerimento.BARRA_DELLE_ICONE.getBersaglio(2));
 		// Le pagine oltre l'ultimo bersaglio ripetono l'ultimo; senza bersagli per pagina vale sempre lo stesso
 		assertEquals(BersaglioDelSuggerimento.ICONA_DELLA_MAPPA, TipoSuggerimento.MOVIMENTO_E_MAPPA.getBersaglio(5));
-		assertEquals(BersaglioDelSuggerimento.ICONA_DELLA_MAPPA, TipoSuggerimento.LUOGHI.getBersaglio(4));
+		assertEquals(BersaglioDelSuggerimento.RIQUADRO_DELLA_MAPPA, TipoSuggerimento.LUOGHI.getBersaglio(4));
 		assertEquals(TipoSuggerimento.COMBATTIMENTO.getBersaglio(), TipoSuggerimento.COMBATTIMENTO.getBersaglio(2));
 	}
 

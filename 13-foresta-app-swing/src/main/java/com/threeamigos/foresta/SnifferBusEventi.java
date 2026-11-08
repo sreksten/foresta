@@ -98,6 +98,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(InternoEremitiIncontrati.class, this::onEventoEremitiIncontrati);
         BusEventi.iscriviti(InternoSpadaNascostaImpugnata.class, this::onEventoSpadaNascostaImpugnata);
         BusEventi.iscriviti(InternoArtefattoSpezzato.class, this::onEventoArtefattoSpezzato);
+        BusEventi.iscriviti(NotificaMessaggioDelTutorial.class, this::onEventoMessaggioDelTutorial);
         BusEventi.iscriviti(InternoAmiciziaStretta.class, this::onEventoAmiciziaStretta);
         BusEventi.iscriviti(InternoCorruzioneRiuscita.class, this::onEventoCorruzioneRiuscita);
         BusEventi.iscriviti(InternoScheletroRisvegliato.class, this::onEventoScheletroRisvegliato);
@@ -510,6 +511,10 @@ public class SnifferBusEventi {
 
     private void onEventoSpadaNascostaImpugnata(InternoSpadaNascostaImpugnata evento) {
         Logger.log(() -> headerEvento(evento) + "La spada normalmente nascosta è stata impugnata");
+    }
+
+    private void onEventoMessaggioDelTutorial(NotificaMessaggioDelTutorial evento) {
+        Logger.log(() -> headerEvento(evento) + "Messaggio del tutorial: " + evento.getSuggerimento() + " " + evento.getParametri());
     }
 
     private void onEventoArtefattoSpezzato(InternoArtefattoSpezzato evento) {

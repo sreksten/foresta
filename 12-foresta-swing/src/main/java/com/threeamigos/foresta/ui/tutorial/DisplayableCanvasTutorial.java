@@ -4,12 +4,15 @@ import com.threeamigos.foresta.tipi.TipoIcona;
 import com.threeamigos.foresta.ui.Area;
 import com.threeamigos.foresta.ui.Punto;
 import com.threeamigos.foresta.ui.SchermoDelGioco;
+import com.threeamigos.foresta.ui.LivelloDiZoom;
+import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
 import com.threeamigos.foresta.ui.immagini.IconeAwt;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.sprite.DescrizioneFumetto;
 import com.threeamigos.foresta.ui.sprite.SpriteFumetto;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
+import com.threeamigos.foresta.ui.testo.FontTool;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -28,6 +31,9 @@ public class DisplayableCanvasTutorial {
 
 	private static final Color COLORE_DEL_BORDO = new Color(255, 215, 0);
 	private static final int SPESSORE_DEL_BORDO = 3;
+	/** Fra l'icona e il titolo, e fra la riga dell'intestazione e il testo */
+	private static final int SPAZIO_FRA_ICONA_E_TITOLO = 8;
+	private static final int SPAZIO_SOTTO_L_INTESTAZIONE = 4;
 
 	private final SchermoDelGioco<?, ?, ?, ?> schermo;
 	// La nuvola costruita, finché il testo e la larghezza non cambiano
@@ -65,7 +71,7 @@ public class DisplayableCanvasTutorial {
 		costruisciLaNuvola(fumetto, larghezzaMassima(larghezzaSchermo));
 		int larghezza = DisposizioneDelFumetto.larghezza(larghezzaDelTesto, lato);
 		int altezza = DisposizioneDelFumetto.altezza(altezzaDelTesto, lato);
-		Punto posizione = DisposizioneDelFumetto.posizione(bersaglio, larghezza, altezza, larghezzaSchermo, altezzaSchermo);
+		Punto posizione = DisposizioneDelFumetto.posizioneFissa(larghezza, altezza, larghezzaSchermo, altezzaSchermo);
 
 		// La coda sotto la nuvola, perché il bordo della nuvola la copra
 		Punto punta = DisposizioneDelFumetto.puntaVerso(bersaglio);
@@ -100,14 +106,41 @@ public class DisplayableCanvasTutorial {
 	 */
 	private void costruisciLaNuvola(FumettoDelTutorial fumetto, int larghezzaMassima) {
 		String testo = fumetto.getTesto();
-		String chiave = testo + '|' + larghezzaMassima;
+		Optional<String> titolo = fumetto.getTitolo();
+		java.util.List<String> risorseDelleIcone = fumetto.getRisorseDelleIcone();
+		String chiave = testo + '|' + larghezzaMassima + '|' + titolo.orElse("") + '|' + risorseDelleIcone;
 		if (chiave.equals(chiaveDellaNuvola)) {
 			return;
 		}
 		DoomdarkFont font = DoomdarkFont.medio();
-		DescrizioneFumetto dati = new DescrizioneFumetto(testo, larghezzaMassima, font);
+		// L'intestazione, se c'è: l'icona (la tessera che quel luogo ha sulla mappa) e il titolo accanto, in cima; il testo scende sotto di lei
+		java.util.List<BufferedImage> icone = new java.util.ArrayList<>();
+		for (String risorsa : risorseDelleIcone) {
+			icone.add(BufferedImageBuilder.buildBufferedImage(risorsa, LivelloDiZoom.valore()));
+		}
+		java.awt.Image immagineDelTitolo = titolo.isPresent() ? ImageCache.get(titolo.get(), font, DoomdarkColorModel.Color.BLACK) : null;
+		int larghezzaIcone = 0;
+		int altezzaIcone = 0;
+		for (BufferedImage icona : icone) {
+			larghezzaIcone += icona.getWidth() + (larghezzaIcone > 0 ? SPAZIO_FRA_ICONA_E_TITOLO : 0);
+			altezzaIcone = Math.max(altezzaIcone, icona.getHeight());
+		}
+		int larghezzaTitolo = immagineDelTitolo == null ? 0 : Math.max(1, FontTool.getWidth(font, titolo.get()));
+		boolean conIntestazione = !icone.isEmpty() || immagineDelTitolo != null;
+		int altezzaIntestazione = !conIntestazione ? 0 : Math.max(altezzaIcone, immagineDelTitolo == null ? 0 : font.getHeight()) + SPAZIO_SOTTO_L_INTESTAZIONE;
+		int larghezzaIntestazione = larghezzaIcone + (!icone.isEmpty() && immagineDelTitolo != null ? SPAZIO_FRA_ICONA_E_TITOLO : 0) + larghezzaTitolo;
+		DescrizioneFumetto dati = new DescrizioneFumetto(testo, larghezzaMassima, font, larghezzaIntestazione, altezzaIntestazione);
 		nuvola = new BufferedImage(dati.getLarghezza(), dati.getAltezza(), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D graphics = nuvola.createGraphics();
+		int altezzaDellaRiga = altezzaIntestazione - SPAZIO_SOTTO_L_INTESTAZIONE;
+		int x = DescrizioneFumetto.SMUSSAMENTO_BORDO;
+		for (BufferedImage icona : icone) {
+			graphics.drawImage(icona, x, DescrizioneFumetto.SMUSSAMENTO_BORDO + (altezzaDellaRiga - icona.getHeight()) / 2, null);
+			x += icona.getWidth() + SPAZIO_FRA_ICONA_E_TITOLO;
+		}
+		if (immagineDelTitolo != null) {
+			graphics.drawImage(immagineDelTitolo, x, DescrizioneFumetto.SMUSSAMENTO_BORDO + (altezzaDellaRiga - font.getHeight()) / 2, null);
+		}
 		for (DescrizioneFumetto.Riga riga : dati.getRighe()) {
 			graphics.drawImage(ImageCache.get(riga.getTesto(), font, DoomdarkColorModel.Color.BLACK), riga.getX(), riga.getY(), null);
 		}

@@ -8,6 +8,7 @@ import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.Punto;
 import com.threeamigos.foresta.ui.sprite.DescrizioneFumetto;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
+import com.threeamigos.foresta.ui.testo.FontTool;
 import com.threeamigos.foresta.ui.tutorial.DisposizioneDelFumetto;
 import com.threeamigos.foresta.ui.tutorial.FumettoDelTutorial;
 
@@ -22,6 +23,9 @@ final class TutorialGdx {
 
 	private static final Color COLORE_DEL_BORDO = new Color(1f, 215f / 255f, 0f, 1f);
 	private static final int SPESSORE_DEL_BORDO = 3;
+	/** Fra l'icona e il titolo, e fra la riga dell'intestazione e il testo */
+	private static final int SPAZIO_FRA_ICONA_E_TITOLO = 8;
+	private static final int SPAZIO_SOTTO_L_INTESTAZIONE = 4;
 
 	private final SchermoGdx schermo;
 	private final ImmaginiGdx immagini;
@@ -57,13 +61,40 @@ final class TutorialGdx {
 		}
 
 		int larghezzaMassima = Math.min(larghezzaSchermo - 4 * DisposizioneDelFumetto.MARGINE, Math.max(larghezzaSchermo / 3, 300));
-		DescrizioneFumetto dati = new DescrizioneFumetto(fumetto.getTesto(), larghezzaMassima, testo.getFont());
+		// L'intestazione, se c'è: l'icona (la tessera che quel luogo ha sulla mappa) e il titolo accanto, in cima; il testo scende sotto di lei
+		Optional<String> titolo = fumetto.getTitolo();
+		java.util.List<String> risorseDelleIcone = fumetto.getRisorseDelleIcone();
+		float zoom = (float) LivelloDiZoom.valore();
+		int larghezzaIcone = 0;
+		int altezzaIcone = 0;
+		for (String risorsa : risorseDelleIcone) {
+			larghezzaIcone += immagini.larghezza(risorsa, zoom) + (larghezzaIcone > 0 ? SPAZIO_FRA_ICONA_E_TITOLO : 0);
+			altezzaIcone = Math.max(altezzaIcone, immagini.altezza(risorsa, zoom));
+		}
+		int larghezzaTitolo = titolo.isPresent() ? Math.max(1, FontTool.getWidth(testo.getFont(), titolo.get())) : 0;
+		boolean conIntestazione = !risorseDelleIcone.isEmpty() || titolo.isPresent();
+		int altezzaDellaRiga = Math.max(altezzaIcone, titolo.isPresent() ? testo.getFont().getHeight() : 0);
+		int altezzaIntestazione = conIntestazione ? altezzaDellaRiga + SPAZIO_SOTTO_L_INTESTAZIONE : 0;
+		int larghezzaIntestazione = larghezzaIcone + (!risorseDelleIcone.isEmpty() && titolo.isPresent() ? SPAZIO_FRA_ICONA_E_TITOLO : 0) + larghezzaTitolo;
+		DescrizioneFumetto dati = new DescrizioneFumetto(fumetto.getTesto(), larghezzaMassima, testo.getFont(), larghezzaIntestazione, altezzaIntestazione);
 		int larghezza = DisposizioneDelFumetto.larghezza(dati.getLarghezza(), latoDelPulsante);
 		int altezza = DisposizioneDelFumetto.altezza(dati.getAltezza(), latoDelPulsante);
-		Punto posizione = DisposizioneDelFumetto.posizione(bersaglio, larghezza, altezza, larghezzaSchermo, altezzaSchermo);
+		Punto posizione = DisposizioneDelFumetto.posizioneFissa(larghezza, altezza, larghezzaSchermo, altezzaSchermo);
 		Punto punta = DisposizioneDelFumetto.puntaVerso(bersaglio);
 		NuvolaDiFumettoGdx.disegna(batch, immagini, testo, dati, DoomdarkColorModel.Color.BLACK, posizione.x, posizione.y + altezza, larghezza, altezza,
 				punta.x, punta.y, 1f);
+		if (conIntestazione) {
+			int x = posizione.x + DescrizioneFumetto.SMUSSAMENTO_BORDO;
+			int y = posizione.y + DescrizioneFumetto.SMUSSAMENTO_BORDO;
+			batch.setColor(Color.WHITE);
+			for (String risorsa : risorseDelleIcone) {
+				immagini.disegna(batch, risorsa, x, y + (altezzaDellaRiga - immagini.altezza(risorsa, zoom)) / 2, zoom);
+				x += immagini.larghezza(risorsa, zoom) + SPAZIO_FRA_ICONA_E_TITOLO;
+			}
+			if (titolo.isPresent()) {
+				testo.disegna(batch, titolo.get(), x, y + (altezzaDellaRiga - testo.getFont().getHeight()) / 2, TestoGdx.coloreConAlfa(DoomdarkColorModel.Color.BLACK, 1f), 1f);
+			}
+		}
 
 		Area areaPollice = DisposizioneDelFumetto.pollice(posizione, larghezza, altezza, latoDelPulsante);
 		Area areaAnnulla = DisposizioneDelFumetto.annulla(posizione, larghezza, altezza, latoDelPulsante);

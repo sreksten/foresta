@@ -1,6 +1,6 @@
 # Il tutorial delle tattiche
 
-Stato: **piano** (2026-11-08). Nessuna riga di codice è stata scritta. Il documento dice che cosa c'è già, che cosa nel documento delle tattiche non torna col codice, come si vuole spiegare le tattiche a chi gioca per la prima volta e che cosa serve per farlo. Il disegno generale dei suggerimenti è in [`tutorial.md`](tutorial.md); le tattiche sono descritte in [`tattiche_di_combattimento_automatiche.md`](tattiche_di_combattimento_automatiche.md) (il documento principale, la schermata del giocatore è in §11.15) e in [`tattiche_internals.md`](tattiche_internals.md) (il codice); il modulo è in [`08-foresta-tattiche.md`](08-foresta-tattiche.md).
+Stato: **le quattro lezioni sono scritte** (2026-11-08), in un solo suggerimento di dodici pagine, `SCHERMATA_DELLE_TATTICHE`, che si apre alla prima apertura della schermata (decisione dell'utente: nessuno entra quattro volte in quella schermata); la ricetta guidata (§3.4) resta da fare, e le lezioni vanno viste in Swing e libGDX. Prima era un piano. Il documento dice che cosa c'è già, che cosa nel documento delle tattiche non torna col codice, come si vuole spiegare le tattiche a chi gioca per la prima volta e che cosa serve per farlo. Il disegno generale dei suggerimenti è in [`tutorial.md`](tutorial.md); le tattiche sono descritte in [`tattiche_di_combattimento_automatiche.md`](tattiche_di_combattimento_automatiche.md) (il documento principale, la schermata del giocatore è in §11.15) e in [`tattiche_internals.md`](tattiche_internals.md) (il codice); il modulo è in [`08-foresta-tattiche.md`](08-foresta-tattiche.md).
 
 ## 1. Da dove si parte
 
@@ -79,6 +79,13 @@ Una per apertura della schermata, per non sommergere chi non conosce il gioco; o
 6. Aggiornare `tutorial.md` (nuove righe del §4 e dei documenti collegati), `03-foresta-tutorial.md` (il conteggio dei suggerimenti) e questo documento.
 
 Ogni passo compila, si prova e si rivede prima del commit.
+
+## 5 bis. Quel che è stato fatto (2026-11-08)
+
+- `Situazione.TATTICHE_APERTE` e `TipoSuggerimento.SCHERMATA_DELLE_TATTICHE` (dodici pagine, deroga alla regola delle tre come per `LUOGHI`: `PAGINE_MASSIME` sale a 12; le pagine 3 e 4 spiegano le icone per spostare e togliere una voce, il tasto «Nuova voce» e i colori), che `SchermoDelGioco` dà nello stato `TATTICHE`.
+- Tre bersagli nuovi, `LISTA_DELLE_TATTICHE`, `SPIEGAZIONE_DELLE_TATTICHE` e `PULSANTI_DELLE_TATTICHE`; le aree le dà `EditorDelleTattiche` (`getAreaDellaLista`, `getAreaDellaSpiegazione`, `getAreaDeiPulsanti`): la lista e la spiegazione sono le due colonne della cornice, i pulsanti l'area che contiene Sì, No e Predefinita. Non c'è ancora un bersaglio per «la prima voce» o per «il numero della voce».
+- I testi, in italiano e in inglese, con le parole della schermata («voce», «su», «con», «se», «fai»; niente «rosa»).
+- La spiegazione a destra di una voce (`TestoTattica.spiegazione`) è riscritta come un discorso («Guarda tra i nemici. Tiene solo chi rispetta tutti questi requisiti: … Se ne restano più di uno, sceglie quello con meno salute. Poi prova a fare: …») invece del vecchio «su: … fa: …», che ripeteva la riga a sinistra; fuori dalla voce, le spiegazioni degli elementi non parlano più di «rosa».
 
 ## 6. Osservazioni
 

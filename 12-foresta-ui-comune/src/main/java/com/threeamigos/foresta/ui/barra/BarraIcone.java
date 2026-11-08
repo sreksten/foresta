@@ -160,6 +160,10 @@ public class BarraIcone implements Finestra {
 	// Il gesto in corso: se la pressione ha fermato le icone in movimento (e allora non è un tocco) e l'icona premuta
 	private boolean fermatoInMovimento = false;
 	private Comando comandoPremuto = null;
+	/**
+	 * Se i comandi sono bloccati (finché un suggerimento del tutorial è aperto le icone non rispondono): lo dice chi la usa
+	 */
+	private java.util.function.BooleanSupplier bloccata = () -> false;
 
 	protected final VistaPartita vistaPartita;
 
@@ -499,7 +503,8 @@ public class BarraIcone implements Finestra {
 	 */
 	public boolean isDaEvidenziare(int indice) {
 		IconaVisibile icona = iconeVisibili.get(indice);
-		return !icona.isInRicarica() && ComandiPossibili.getRicarica(icona.comando) == null && isSottoIlCursore(rettangoloDisegnato(indice));
+		return !bloccata.getAsBoolean() && !icona.isInRicarica() && ComandiPossibili.getRicarica(icona.comando) == null
+				&& isSottoIlCursore(rettangoloDisegnato(indice));
 	}
 
 	private boolean isSottoIlCursore(Area disegnato) {
@@ -689,9 +694,20 @@ public class BarraIcone implements Finestra {
 	}
 
 	/**
+	 * Chi decide quando le icone non rispondono (vedi {@link #esegui}).
+	 */
+	public void setBloccata(java.util.function.BooleanSupplier bloccata) {
+		this.bloccata = bloccata;
+	}
+
+	/**
 	 * Il click su un'icona: l'interruttore accende e spegne l'aiuto, le altre mandano il comando al gioco.
 	 */
 	public void esegui(Comando azione) {
+		if (bloccata.getAsBoolean()) {
+			// Un suggerimento del tutorial è aperto: prima si legge, poi si clicca (le icone si vedono, ma non rispondono)
+			return;
+		}
 		if (ComandiPossibili.getRicarica(azione) != null) {
 			// In ricarica: l'icona si vede, ma non si può dare il comando
 			return;

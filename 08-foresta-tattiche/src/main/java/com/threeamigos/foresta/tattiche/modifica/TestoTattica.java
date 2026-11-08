@@ -185,18 +185,37 @@ public final class TestoTattica {
 		if (voce.getCondizioni().isEmpty()) {
 			righe.add(testo("spiegazione.SEMPRE"));
 		} else {
+			List<String> condizioni = new ArrayList<>();
 			for (PredicatoMD condizione : voce.getCondizioni()) {
-				righe.add(testo("spiegazione.SE", predicato(condizione)));
+				condizioni.add(predicato(condizione));
+			}
+			righe.add(testo("spiegazione.SE", String.join(testo("spiegazione.E"), condizioni)));
+		}
+		SelettoreMD selettore = voce.getSelettore();
+		if (selettore != null) {
+			righe.add(testo("frase.rosa." + selettore.getTipoRosa().name()));
+			if (!selettore.getFiltri().isEmpty()) {
+				righe.add(testo("spiegazione.FILTRI", filtri(selettore.getFiltri())));
+			}
+			if (selettore.getOrdinamento() != null && selettore.getTipoRosa() != TipoRosa.SE_STESSO) {
+				righe.add(testo("spiegazione.ORDINAMENTO", fraseDellOrdinamento(selettore.getOrdinamento())));
 			}
 		}
-		if (voce.getSelettore() != null) {
-			righe.add(testo("spiegazione.SU", selettore(voce.getSelettore())));
-		}
+		boolean prima = true;
 		for (AzioneMD azione : voce.getAzioni()) {
-			righe.add(testo("spiegazione.FA", azione(azione)));
+			righe.add(testo(prima ? "spiegazione.PRIMA_AZIONE" : "spiegazione.ALTRA_AZIONE", azione(azione)));
+			prima = false;
 		}
 		righe.add(testo("spiegazione.REGOLA"));
 		return righe;
+	}
+
+	/**
+	 * Come sceglie un ordinamento, a parole che stanno in una frase («sceglie quello con meno salute»)
+	 */
+	private static String fraseDellOrdinamento(OrdinamentoMD ordinamento) {
+		String danno = ordinamento.getTipoDanno() == null ? testo("frase.TIPO_DANNO_QUALSIASI") : ordinamento.getTipoDanno().getNome().toLowerCase(Locale.ROOT);
+		return testo("frase.ordinamento." + ordinamento.getTipoOrdinamento().name(), danno);
 	}
 
 	// ================================================================ le spiegazioni degli elementi (riquadro destro della schermata)

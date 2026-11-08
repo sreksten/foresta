@@ -58,6 +58,17 @@ public final class DescrizioneFumetto {
 	 * @param larghezzaMassima la larghezza massima della nuvola: il testo va a capo entro quella meno i bordi (la nuvola può risultare più stretta)
 	 */
 	public DescrizioneFumetto(String testo, int larghezzaMassima, DoomdarkFont font) {
+		this(testo, larghezzaMassima, font, 0, 0);
+	}
+
+	/**
+	 * Con una riga di intestazione in cima (per esempio un'icona e un titolo, che disegna chi usa la nuvola) larga e alta quanto detto: il testo scende
+	 * della sua altezza e la nuvola è larga almeno quanto lei. Le righe del testo vanno a capo come sempre.
+	 *
+	 * @param larghezzaIntestazione 0 se non c'è
+	 * @param altezzaIntestazione   0 se non c'è
+	 */
+	public DescrizioneFumetto(String testo, int larghezzaMassima, DoomdarkFont font, int larghezzaIntestazione, int altezzaIntestazione) {
 		this.testo = testo;
 		this.font = font;
 		List<String> parti = FontTool.split(font, testo, larghezzaMassima - 2 * SMUSSAMENTO_BORDO);
@@ -67,15 +78,15 @@ public final class DescrizioneFumetto {
 		int passo = font.getAltezzaDelCorpo() + Math.max(font.getRigheInCima(), righeInFondo);
 		int piuLarga = 0;
 		List<Riga> composte = new ArrayList<>();
-		int y = SMUSSAMENTO_BORDO;
+		int y = SMUSSAMENTO_BORDO + altezzaIntestazione;
 		for (String parte : parti) {
 			piuLarga = Math.max(piuLarga, Math.max(1, FontTool.getWidth(font, parte)));
 			composte.add(new Riga(parte, SMUSSAMENTO_BORDO, y));
 			y += passo;
 		}
-		this.larghezza = piuLarga + 2 * SMUSSAMENTO_BORDO;
+		this.larghezza = Math.max(piuLarga, larghezzaIntestazione) + 2 * SMUSSAMENTO_BORDO;
 		// L'ultima riga è intera, le altre avanzano di un passo
-		this.altezza = 2 * SMUSSAMENTO_BORDO + (parti.size() - 1) * passo + font.getHeight();
+		this.altezza = 2 * SMUSSAMENTO_BORDO + altezzaIntestazione + (parti.size() - 1) * passo + font.getHeight();
 		this.righe = Collections.unmodifiableList(composte);
 	}
 

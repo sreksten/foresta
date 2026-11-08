@@ -501,6 +501,10 @@ public enum TipoEvento {
      */
     INTERNO_ARTEFATTO_SPEZZATO,
     /**
+     * Il motore chiede alla UI di dire una cosa con la finestra del tutorial (per esempio che non è ancora il momento di visitare un luogo)
+     */
+    NOTIFICA_MESSAGGIO_DEL_TUTORIAL,
+    /**
      * Il motore chiede alla UI di portare in primo piano il riquadro dello stato del gruppo
      */
     INTERNO_MOSTRA_FINESTRA_STATO,

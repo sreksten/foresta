@@ -74,6 +74,36 @@ class PilotaggioDelTutorialTest {
 	}
 
 	@Test
+	void neiPrimiTurniNonCiSiInfilaInUnTempioMaSiTornaAllaSceltaDellaDirezione() {
+		try (PartitaDiTest partita = partita(31)) {
+			partita.eventi().ascolta(com.threeamigos.foresta.eventi.notifiche.NotificaMessaggioDelTutorial.class);
+			com.threeamigos.foresta.modellodati.CoordinateMD citta = com.threeamigos.foresta.mappa.Foresta.getPosizioneDelGruppo();
+			Comando verso = citta.getY() > 1 ? Comando.NORD : Comando.SUD;
+			com.threeamigos.foresta.modellodati.CoordinateMD tempio = new com.threeamigos.foresta.modellodati.CoordinateMD(citta.getX(),
+					citta.getY() + (verso == Comando.NORD ? -1 : 1));
+			com.threeamigos.foresta.mappa.Foresta.costruisciLocazione(tempio, TipoLocazione.TEMPIO);
+			partita.comando(Comando.ESCI_DA_CITTA);
+			partita.assertStato(Stato.SCELTA_DIREZIONE);
+
+			// Col tutorial che pilota il viaggio finirebbe in un tempio: si rifiuta, si dice perché e si sceglie di nuovo la direzione
+			partita.comando(verso).comando(Comando.NUMERO_1);
+			assertEquals(citta, com.threeamigos.foresta.mappa.Foresta.getPosizioneDelGruppo());
+			partita.assertStato(Stato.SCELTA_DIREZIONE);
+			// Lo dice con la finestra del tutorial: il motore ne manda la richiesta, con il luogo
+			com.threeamigos.foresta.eventi.notifiche.NotificaMessaggioDelTutorial messaggio =
+					partita.eventi().ultimo(com.threeamigos.foresta.eventi.notifiche.NotificaMessaggioDelTutorial.class);
+			assertNotNull(messaggio);
+			assertEquals(TipoSuggerimento.NON_ANCORA_IL_MOMENTO, messaggio.getSuggerimento());
+			assertEquals(java.util.Collections.singletonList("un tempio"), messaggio.getParametri());
+
+			// A tutorial spento si va dove si vuole
+			RegistroSuggerimenti.setAttivo(false);
+			partita.comando(verso).comando(Comando.NUMERO_1);
+			assertEquals(tempio, com.threeamigos.foresta.mappa.Foresta.getPosizioneDelGruppo());
+		}
+	}
+
+	@Test
 	void iPrimiCinquePassiHannoIlMostroDelTutorialUnoSolo() {
 		try (PartitaDiTest partita = partita(31)) {
 			Dado.impostaTruccatore(new PilotaggioDelTutorial(null));
@@ -217,15 +247,15 @@ class PilotaggioDelTutorialTest {
 	}
 
 	@Test
-	void ilPrimoScontroEQuelloConLoScheletroNonSiPossonoPerdere() {
+	void arpiaChimeraDragoEScheletroNonSiPossonoPerdere() {
 		try (PartitaDiTest partita = partita(35)) {
 			Dado.impostaTruccatore(new PilotaggioDelTutorial(null));
 			// Passo 0, l'arpia: nessun colpo a segno
 			alPasso(0);
 			assertEquals(0, colpiDelMostroASegno());
-			// Passo 1, la chimera drago: non è protetta
+			// Passo 1, la chimera drago: protetta
 			alPasso(1);
-			assertTrue(colpiDelMostroASegno() > 0);
+			assertEquals(0, colpiDelMostroASegno());
 			// Passo 2, lo scheletro: protetto
 			alPasso(2);
 			assertEquals(0, colpiDelMostroASegno());
@@ -247,7 +277,7 @@ class PilotaggioDelTutorialTest {
 			// Passo 1, la chimera drago: passare inosservati riesce sempre (un tiro di 1 è sotto qualunque probabilità)
 			alPasso(1);
 			assertEquals(1, pilota.lancio(ContestoLancio.PASSAGGIO_INOSSERVATO, 1, 100).getAsInt());
-			assertFalse(pilota.lancio(ContestoLancio.TATTICA_DEI_MOSTRI, 1, 100).isPresent());
+			assertEquals(100, pilota.lancio(ContestoLancio.TATTICA_DEI_MOSTRI, 1, 100).getAsInt());
 			// Passo 3, il goblin: la corruzione riesce (il tiro più alto supera la soglia)
 			alPasso(3);
 			assertEquals(10, pilota.lancio(ContestoLancio.CORRUZIONE, 1, 10).getAsInt());

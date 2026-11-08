@@ -12,6 +12,7 @@ import com.threeamigos.foresta.tattiche.modifica.TestoTattica;
 import com.threeamigos.foresta.tipi.*;
 import com.threeamigos.foresta.ui.Area;
 import com.threeamigos.foresta.ui.Finestra;
+import com.threeamigos.foresta.ui.tutorial.DisposizioneDelFumetto;
 import com.threeamigos.foresta.ui.Finestra.MovimentoRotella;
 import com.threeamigos.foresta.ui.Finestra.Tasto;
 import com.threeamigos.foresta.ui.Misura;
@@ -1230,6 +1231,37 @@ public final class EditorDelleTattiche {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Dove sta la colonna con le regole della tattica, nelle coordinate dello schermo (per il tutorial).
+	 */
+	public Area getAreaDellaLista() {
+		return new Area(schermata.xMinimaZonaSinistra + Finestra.SPACING, SchermataDiScambio.DIMENSIONE_BORDO_INTERNO + 2 * Finestra.SPACING,
+				schermata.larghezzaDisponibileInRiquadroInventario(), schermata.altezzaDisponibileInRiquadroInventario());
+	}
+
+	/**
+	 * Dove sta la colonna che spiega l'elemento sotto il mouse (per il tutorial).
+	 */
+	public Area getAreaDellaSpiegazione() {
+		return new Area(schermata.xMinimaZonaDestra + Finestra.SPACING, SchermataDiScambio.DIMENSIONE_BORDO_INTERNO + 2 * Finestra.SPACING,
+				schermata.larghezzaDisponibileInRiquadroInventario(), schermata.altezzaDisponibileInRiquadroInventario());
+	}
+
+	/**
+	 * Dove stanno Sì, No e Predefinita (per il tutorial): l'area che li contiene, quelli che ci sono; se la colonna centrale non è ancora stata
+	 * disegnata, tutta la colonna centrale.
+	 */
+	public Area getAreaDeiPulsanti() {
+		Area totale = null;
+		for (Area area : new Area[] {areaSi, areaNo, areaPredefinita}) {
+			if (area != null) {
+				totale = totale == null ? area : DisposizioneDelFumetto.unione(totale, area);
+			}
+		}
+		return totale != null ? totale : new Area(schermata.xMinimaZonaCentrale, SchermataDiScambio.DIMENSIONE_BORDO_INTERNO + 2 * Finestra.SPACING,
+				schermata.xMassimaZonaCentrale - schermata.xMinimaZonaCentrale, schermata.altezzaDisponibileInRiquadroInventario());
 	}
 
 	public BozzaTattica getBozza() {

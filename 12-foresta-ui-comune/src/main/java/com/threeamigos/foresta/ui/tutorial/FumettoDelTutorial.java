@@ -15,9 +15,20 @@ public final class FumettoDelTutorial {
 	private final boolean dito;
 	private final long apertoAlleNs = System.nanoTime();
 	private int pagina = 1;
+	// I valori dei segnaposto {0}, {1}... del testo, per i messaggi che il motore chiede di dire (vuoto per un suggerimento che scatta da solo)
+	private final java.util.List<String> parametri;
 
 	FumettoDelTutorial(TipoSuggerimento suggerimento, boolean dito) {
 		this(suggerimento, dito, 1);
+	}
+
+	/**
+	 * Un messaggio che il motore ha chiesto di dire: una sola pagina, il cui testo ha dei segnaposto.
+	 */
+	FumettoDelTutorial(TipoSuggerimento suggerimento, boolean dito, java.util.List<String> parametri) {
+		this.suggerimento = suggerimento;
+		this.dito = dito;
+		this.parametri = parametri;
 	}
 
 	/**
@@ -26,6 +37,7 @@ public final class FumettoDelTutorial {
 	FumettoDelTutorial(TipoSuggerimento suggerimento, boolean dito, int pagina) {
 		this.suggerimento = suggerimento;
 		this.dito = dito;
+		this.parametri = java.util.Collections.emptyList();
 		this.pagina = Math.max(1, Math.min(pagina, Math.max(1, suggerimento.getNumeroPagine())));
 	}
 
@@ -59,7 +71,55 @@ public final class FumettoDelTutorial {
 	 * Il testo della pagina in cui siamo, nella lingua in uso e nella variante per il dito se il gioco si sta giocando con il dito.
 	 */
 	public String getTesto() {
-		return suggerimento.getPagina(pagina, dito);
+		String testo = suggerimento.getPagina(pagina, dito);
+		for (int i = 0; i < parametri.size(); i++) {
+			testo = testo.replace("{" + i + "}", parametri.get(i));
+		}
+		return testo;
+	}
+
+	/**
+	 * Il titolo della pagina in cui siamo, se ne ha uno (sta in cima, accanto all'icona).
+	 */
+	public java.util.Optional<String> getTitolo() {
+		return suggerimento.getTitolo(pagina);
+	}
+
+	/**
+	 * Le risorse delle immagini dell'intestazione della pagina in cui siamo, una accanto all'altra (vuoto se non ne ha): la tessera che un luogo ha sulla
+	 * mappa, oppure una delle quattro frecce blu degli elenchi che si scorrono.
+	 */
+	public java.util.List<String> getRisorseDelleIcone() {
+		java.util.Optional<String> nomi = suggerimento.getIcona(pagina);
+		if (!nomi.isPresent()) {
+			return java.util.Collections.emptyList();
+		}
+		java.util.List<String> risorse = new java.util.ArrayList<>();
+		for (String nome : nomi.get().split(",")) {
+			String risorsa = risorsaDellIcona(nome.trim());
+			if (risorsa != null) {
+				risorse.add(risorsa);
+			}
+		}
+		return risorse;
+	}
+
+	/**
+	 * Il nome di un'icona nei testi: una costante di TipoLocazione (la sua tessera) o FRECCIA_SU, FRECCIA_GIU, FRECCIA_SINISTRA, FRECCIA_DESTRA.
+	 */
+	static String risorsaDellIcona(String nome) {
+		switch (nome) {
+			case "FRECCIA_SU":
+				return com.threeamigos.foresta.ui.immagini.NomiDelleImmagini.FRECCIA_SU;
+			case "FRECCIA_GIU":
+				return com.threeamigos.foresta.ui.immagini.NomiDelleImmagini.FRECCIA_GIU;
+			case "FRECCIA_SINISTRA":
+				return com.threeamigos.foresta.ui.immagini.NomiDelleImmagini.FRECCIA_SINISTRA;
+			case "FRECCIA_DESTRA":
+				return com.threeamigos.foresta.ui.immagini.NomiDelleImmagini.FRECCIA_DESTRA;
+			default:
+				return com.threeamigos.foresta.ui.immagini.NomiDelleImmagini.tessera(com.threeamigos.foresta.tipi.TipoLocazione.valueOf(nome));
+		}
 	}
 
 	/**

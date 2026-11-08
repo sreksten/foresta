@@ -17,6 +17,7 @@ import com.threeamigos.foresta.modellodati.TatticaMD;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 import com.threeamigos.foresta.tipi.BersaglioDelSuggerimento;
 import com.threeamigos.foresta.tipi.StatoDelloSchermo;
+import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.ui.componenti.JoystickVirtuale;
 import com.threeamigos.foresta.tipi.TipoSuggerimento;
 import com.threeamigos.foresta.ui.tutorial.DisposizioneDelFumetto;
@@ -98,6 +99,8 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	// I suggerimenti del tutorial: finché un fumetto è aperto la UI è occupata e il motore aspetta
 	private final TutorDelGioco tutor = new TutorDelGioco();
 	private Runnable ricontrollaIlTutorial;
+	// Se all'ultimo fotogramma c'era un annuncio (o una rivelazione): quando finisce si ricontrolla il tutorial, anche se gli sprite non finiscono mai
+	private boolean annunciInCorso;
 	// La prossima intro deve partire dalla classifica invece che dai loghi (vedi mostraPunteggi)
 	private boolean introDallaClassifica;
 
@@ -649,6 +652,8 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	 * Aggiorna la barra delle icone con i comandi possibili.
 	 */
 	public void impostaAzioniIcone() {
+		// Finché un suggerimento è aperto le icone non rispondono: la gente non deve cliccare a caso prima di aver letto
+		barraIcone().setBloccata(this::isTutorialVisibile);
 		barraIcone().impostaAzioni();
 		ridisegna();
 	}
@@ -1113,7 +1118,24 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	 * aspetta che compaia, invece di puntare a niente.
 	 */
 	public boolean isApribile(TipoSuggerimento suggerimento) {
-		return isSchermataDelSuggerimento(suggerimento) && isBersaglioVisibile(suggerimento.getBersaglio());
+		if (!isSchermataDelSuggerimento(suggerimento)) {
+			return false;
+		}
+		if (isOccupataDaAltro()) {
+			Logger.log(() -> "Tutorial: " + suggerimento + " aspetta, c'è un annuncio (in corso: " + (annuncioAttivo != null) + ", in coda: "
+					+ codaAnnunci.size() + ", rimandati: " + annunciRimandati.size() + ", rivelazioni: " + rivelazioni.isOccupata() + ")");
+			return false;
+		}
+		return isBersaglioVisibile(suggerimento.getBersaglio());
+	}
+
+	/**
+	 * Se c'è un annuncio globale in corso, in coda o rimandato (per esempio quello della missione principale, che il fumetto coprirebbe), o una
+	 * rivelazione: il tutorial aspetta che finisca (vedi {@link #fineFotogramma}, che lo ricontrolla). Gli sprite no: in un combattimento ce ne sono
+	 * sempre, e un suggerimento sugli effetti di stato non si aprirebbe mai.
+	 */
+	private boolean isOccupataDaAltro() {
+		return annuncioAttivo != null || !codaAnnunci.isEmpty() || !annunciRimandati.isEmpty() || rivelazioni.isOccupata();
 	}
 
 	private boolean isSchermataDelSuggerimento(TipoSuggerimento suggerimento) {
@@ -1132,6 +1154,8 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 				return StatoDelloSchermo.MAPPA;
 			case INVENTARIO:
 				return StatoDelloSchermo.INVENTARIO;
+			case SCHERMATA_DELLE_TATTICHE:
+				return StatoDelloSchermo.TATTICHE;
 			default:
 				return StatoDelloSchermo.IN_GIOCO;
 		}
@@ -1155,10 +1179,14 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 		switch (bersaglio) {
 			case RIQUADRI:
 			case RIQUADRO_DEL_COMBATTIMENTO:
+			case RIQUADRO_DEL_GRUPPO:
 			case RIQUADRO_DELLE_MISSIONI:
 			case RIQUADRO_DELLA_MAPPA:
 			case RIQUADRO_DEGLI_INCANTESIMI_E_DELLE_POZIONI:
 			case SCHERMATA:
+			case LISTA_DELLE_TATTICHE:
+			case SPIEGAZIONE_DELLE_TATTICHE:
+			case PULSANTI_DELLE_TATTICHE:
 				return true;
 			case JOYSTICK_VIRTUALE:
 				return mappaConJoystick();
@@ -1192,6 +1220,8 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 						getArea(riquadroMissioni()));
 			case RIQUADRO_DEL_COMBATTIMENTO:
 				return getArea(riquadroCombattimento());
+			case RIQUADRO_DEL_GRUPPO:
+				return getArea(riquadroGruppo());
 			case RIQUADRO_DELLE_MISSIONI:
 				return getArea(riquadroMissioni());
 			case RIQUADRO_DELLA_MAPPA:
@@ -1200,6 +1230,12 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 				return new Area(0, 0, disposizione.getLarghezzaTotale(), disposizione.getAltezzaTotale());
 			case JOYSTICK_VIRTUALE:
 				return areaDelJoystick();
+			case LISTA_DELLE_TATTICHE:
+				return schermataTattiche().getEditor().getAreaDellaLista();
+			case SPIEGAZIONE_DELLE_TATTICHE:
+				return schermataTattiche().getEditor().getAreaDellaSpiegazione();
+			case PULSANTI_DELLE_TATTICHE:
+				return schermataTattiche().getEditor().getAreaDeiPulsanti();
 			case RIQUADRO_DEGLI_INCANTESIMI_E_DELLE_POZIONI:
 				return getArea(riquadroIncantesimiEPozioni());
 			case BARRA_DELLE_ICONE:
@@ -1218,10 +1254,13 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	private Area areaDelleIcone(BersaglioDelSuggerimento bersaglio) {
 		BarraIcone barra = barraIcone();
 		Area totale = null;
-		for (BarraIcone.IconaVisibile icona : barra.iconeVisibili) {
+		for (int i = 0; i < barra.iconeVisibili.size(); i++) {
+			BarraIcone.IconaVisibile icona = barra.iconeVisibili.get(i);
 			if (bersaglio.getIcone().contains(icona.comando)) {
-				Area r = new Area(barra.getOffsetX() + icona.rettangolo.getX(), barra.getOffsetY() + icona.rettangolo.getY(),
-						icona.rettangolo.getLarghezza(), icona.rettangolo.getAltezza());
+				// Dove l'icona è disegnata adesso, non dove sta a riposo: nel dock passandoci sopra le icone si ingrandiscono e si spostano
+				Area disegnata = barra.rettangoloDisegnato(i);
+				Area r = new Area(barra.getOffsetX() + disegnata.getX(), barra.getOffsetY() + disegnata.getY(),
+						disegnata.getLarghezza(), disegnata.getAltezza());
 				totale = totale == null ? r : DisposizioneDelFumetto.unione(totale, r);
 			}
 		}
@@ -1243,10 +1282,18 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 			tutor.chiudi();
 		}
 		boolean occupataOra = !sprite.isEmpty() || annuncioAttivo != null || !codaAnnunci.isEmpty() || rivelazioni.isOccupata() || tutor.isAperto();
-		if (uiOccupata && !occupataOra) {
+		boolean appenaLibera = uiOccupata && !occupataOra;
+		if (appenaLibera) {
 			BusEventi.pubblica(new InternoUiInattiva());
 		}
 		uiOccupata = occupataOra;
+		// Finiti gli annunci che il suggerimento aspettava, o tutto quel che teneva occupata la UI: il suggerimento può aprirsi
+		boolean annunciOra = isOccupataDaAltro();
+		boolean annunciFiniti = annunciInCorso && !annunciOra;
+		annunciInCorso = annunciOra;
+		if ((appenaLibera || annunciFiniti) && ricontrollaIlTutorial != null) {
+			ricontrollaIlTutorial.run();
+		}
 	}
 
 	/**

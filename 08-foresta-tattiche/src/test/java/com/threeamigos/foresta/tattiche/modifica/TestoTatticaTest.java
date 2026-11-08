@@ -30,6 +30,18 @@ class TestoTatticaTest {
     }
 
     @Test
+    void laSpiegazioneDiUnaVoceSiLeggeComeUnDiscorso() {
+        VoceMD voce = com.threeamigos.foresta.tattiche.TatticheBase.deiGiocabili(com.threeamigos.foresta.tipi.TipoPersonaggio.GUERRIERO).getVoci().get(2);
+        assertEquals(java.util.Arrays.asList(
+                "Vale sempre, appena si può fare.",
+                "Guarda tra i nemici.",
+                "Tiene solo chi rispetta tutti questi requisiti: salute in percentuale minore di 50.",
+                "Se ne restano più di uno, sceglie quello con meno salute.",
+                "Poi prova a fare: Attacco fisico.",
+                "Se nessuna azione riesce, salta questa voce e passa a quella dopo."), TestoTattica.spiegazione(voce));
+    }
+
+    @Test
     void ogniElementoHaUnaSpiegazione() {
         for (com.threeamigos.foresta.tipi.TipoRosa t : com.threeamigos.foresta.tipi.TipoRosa.values()) {
             assertFalse(TestoTattica.spiega(t).isEmpty(), t.name());

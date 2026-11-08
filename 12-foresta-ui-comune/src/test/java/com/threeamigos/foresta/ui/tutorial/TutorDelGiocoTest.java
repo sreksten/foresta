@@ -38,16 +38,59 @@ class TutorDelGiocoTest {
 		FumettoDelTutorial primo = tutor.aggiorna(situazioni, SI).orElseThrow(AssertionError::new);
 		assertEquals(TipoSuggerimento.MOVIMENTO_E_MAPPA, primo.getSuggerimento());
 		assertFalse(tutor.pollice(), "va alla seconda pagina");
-		assertFalse(tutor.pollice(), "va alla terza pagina");
-		assertEquals(3, primo.getPagina());
+		assertEquals(2, primo.getPagina());
 		// Si apre la mappa o l'inventario: il fumetto si chiude senza essere letto; tornando riparte da dove era
 		tutor.chiudi();
 		assertFalse(RegistroSuggerimenti.isVisto(TipoSuggerimento.MOVIMENTO_E_MAPPA));
 		FumettoDelTutorial secondo = tutor.aggiorna(situazioni, SI).orElseThrow(AssertionError::new);
-		assertEquals(3, secondo.getPagina());
+		assertEquals(2, secondo.getPagina());
 		// Letto fino in fondo non si ricorda più niente
+		assertFalse(tutor.pollice());
 		assertTrue(tutor.pollice());
 		assertTrue(RegistroSuggerimenti.isVisto(TipoSuggerimento.MOVIMENTO_E_MAPPA));
+	}
+
+	@Test
+	void lasciandoLaSchermataSullUltimaPaginaIlSuggerimentoEraLetto() {
+		TutorDelGioco tutor = tutor();
+		EnumSet<Situazione> situazioni = EnumSet.of(Situazione.ICONE_DI_MOVIMENTO_PRESENTI);
+		tutor.aggiorna(situazioni, SI);
+		tutor.pollice();
+		tutor.pollice();
+		assertTrue(tutor.getFumetto().get().isUltimaPagina());
+		// L'ultima pagina manda ad aprire la mappa: chi ci va l'ha capita, e tornando il suggerimento non si riapre
+		tutor.chiudi();
+		assertTrue(RegistroSuggerimenti.isVisto(TipoSuggerimento.MOVIMENTO_E_MAPPA));
+		assertFalse(tutor.aggiorna(situazioni, SI).filter(f -> f.getSuggerimento() == TipoSuggerimento.MOVIMENTO_E_MAPPA).isPresent());
+	}
+
+	@Test
+	void unMessaggioDelMotoreSiApreSubitoConIlSuoLuogoQualunqueCosaSiaGiaVista() {
+		TutorDelGioco tutor = tutor();
+		RegistroSuggerimenti.visto(TipoSuggerimento.NON_ANCORA_IL_MOMENTO);
+		FumettoDelTutorial messaggio = tutor.mostra(TipoSuggerimento.NON_ANCORA_IL_MOMENTO, java.util.Collections.singletonList("un tempio"))
+				.orElseThrow(AssertionError::new);
+		assertTrue(messaggio.getTesto().contains("un tempio"), messaggio.getTesto());
+		assertFalse(messaggio.getTesto().contains("{0}"));
+		assertTrue(messaggio.isUltimaPagina(), "una pagina sola: il pollice lo chiude");
+		assertTrue(tutor.pollice());
+		assertFalse(tutor.isAperto());
+		// A tutorial spento non dice niente
+		tutor.annulla();
+		assertFalse(tutor.mostra(TipoSuggerimento.NON_ANCORA_IL_MOMENTO, java.util.Collections.singletonList("una grotta")).isPresent());
+	}
+
+	@Test
+	void ogniPaginaDeiLuoghiParlaDiUnSoloLuogoConIlSuoTitoloELaSuaTessera() {
+		TutorDelGioco tutor = tutor();
+		FumettoDelTutorial fumetto = tutor.aggiorna(EnumSet.of(Situazione.ICONA_DELLA_MAPPA_PRESENTE), SI).orElseThrow(AssertionError::new);
+		assertEquals(TipoSuggerimento.LUOGHI, fumetto.getSuggerimento());
+		java.util.Set<String> risorse = new java.util.HashSet<>();
+		do {
+			assertTrue(fumetto.getTitolo().isPresent(), "pagina " + fumetto.getPagina() + ": manca il titolo");
+			assertEquals(1, fumetto.getRisorseDelleIcone().size(), "pagina " + fumetto.getPagina() + ": manca la tessera");
+			assertTrue(risorse.add(fumetto.getRisorseDelleIcone().get(0)), "ogni pagina ha la sua tessera: " + fumetto.getRisorseDelleIcone().get(0));
+		} while (!tutor.pollice() && fumetto.getPagina() > 0 && tutor.isAperto());
 	}
 
 	@Test

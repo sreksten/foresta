@@ -127,6 +127,44 @@ class SituazioniDellaUITest {
 	}
 
 	@Test
+	void unEffettoDiStatoEUnaReazioneSiDiconoPerLaLocazioneInCorso() {
+		SituazioniDellaUI ui = new SituazioniDellaUI();
+		ui.segnaSchermataDiGioco();
+		assertFalse(correnti(ui).contains(Situazione.EFFETTO_DI_STATO_APPLICATO));
+		ui.segnaEffettoDiStatoApplicato();
+		ui.segnaReazioneScatenata();
+		Set<Situazione> s = correnti(ui);
+		assertTrue(s.contains(Situazione.EFFETTO_DI_STATO_APPLICATO));
+		assertTrue(s.contains(Situazione.REAZIONE_ELEMENTALE_SCATENATA));
+		ui.segnaNuovaLocazione();
+		assertFalse(correnti(ui).contains(Situazione.EFFETTO_DI_STATO_APPLICATO));
+		assertFalse(correnti(ui).contains(Situazione.REAZIONE_ELEMENTALE_SCATENATA));
+	}
+
+	@Test
+	void dopoIlMovimentoSiDiceDiAndareVersoIBoschiSoloConLeFreccePresenti() {
+		SituazioniDellaUI ui = new SituazioniDellaUI();
+		ui.segnaSchermataDiGioco();
+		assertFalse(correnti(ui, Comando.NORD, Comando.EST, Comando.SUD, Comando.OVEST).contains(Situazione.MOVIMENTO_SPIEGATO));
+		ui.segnaMovimentoSpiegato(true);
+		assertTrue(correnti(ui, Comando.NORD, Comando.EST, Comando.SUD, Comando.OVEST).contains(Situazione.MOVIMENTO_SPIEGATO));
+		assertFalse(correnti(ui, Comando.NORD).contains(Situazione.MOVIMENTO_SPIEGATO), "senza tutte le frecce non c'è dove andare");
+	}
+
+	@Test
+	void unCadutoSiDiceSoloAFineCombattimento() {
+		SituazioniDellaUI ui = new SituazioniDellaUI();
+		ui.segnaSchermataDiGioco();
+		ui.segnaQualcunoCaduto(true);
+		ui.segnaCombattimentoAperto();
+		assertFalse(correnti(ui).contains(Situazione.PERSONAGGIO_CADUTO), "durante lo scontro no");
+		ui.segnaCombattimentoChiuso();
+		assertTrue(correnti(ui).contains(Situazione.PERSONAGGIO_CADUTO));
+		ui.segnaQualcunoCaduto(false);
+		assertFalse(correnti(ui).contains(Situazione.PERSONAGGIO_CADUTO));
+	}
+
+	@Test
 	void leIconeDiMostriPozioniBottegheEAccampamento() {
 		SituazioniDellaUI ui = new SituazioniDellaUI();
 		ui.segnaSchermataDiGioco();

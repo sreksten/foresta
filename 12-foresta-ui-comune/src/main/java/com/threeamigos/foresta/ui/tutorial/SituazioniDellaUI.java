@@ -32,6 +32,10 @@ public final class SituazioniDellaUI {
 	private boolean oggettoTrovato;
 	private StatoDelloSchermo schermata = StatoDelloSchermo.IN_GIOCO;
 	private boolean puntiAbilitaDaSpendere;
+	private boolean qualcunoCaduto;
+	private boolean movimentoSpiegato;
+	private boolean effettoDiStatoApplicato;
+	private boolean reazioneScatenata;
 	private boolean joystickSullaMappa;
 	private boolean mappaPiuGrandeDelloSchermo;
 
@@ -91,13 +95,43 @@ public final class SituazioniDellaUI {
 	}
 
 	/**
+	 * Se un personaggio del gruppo è caduto (il suggerimento sulla Resurrezione scatta quando il combattimento è finito).
+	 */
+	public synchronized void segnaQualcunoCaduto(boolean caduto) {
+		qualcunoCaduto = caduto;
+	}
+
+	/**
 	 * Se qualcuno del gruppo ha punti abilità da spendere (conta solo con l'inventario aperto).
 	 */
 	public synchronized void segnaPuntiAbilita(boolean daSpendere) {
 		puntiAbilitaDaSpendere = daSpendere;
 	}
 
+	/**
+	 * Se il giocatore ha già letto come ci si muove: dopo, sul gioco con le frecce di movimento, si dice di andare verso i boschi.
+	 */
+	public synchronized void segnaMovimentoSpiegato(boolean spiegato) {
+		movimentoSpiegato = spiegato;
+	}
+
+	/**
+	 * Un effetto di stato è stato applicato (vale per questa locazione, poi si dimentica).
+	 */
+	public synchronized void segnaEffettoDiStatoApplicato() {
+		effettoDiStatoApplicato = true;
+	}
+
+	/**
+	 * Si è scatenata una reazione elementale (vale per questa locazione, poi si dimentica).
+	 */
+	public synchronized void segnaReazioneScatenata() {
+		reazioneScatenata = true;
+	}
+
 	public synchronized void segnaNuovaLocazione() {
+		effettoDiStatoApplicato = false;
+		reazioneScatenata = false;
 		oggettoTrovato = false;
 		combattimentoAperto = false;
 	}
@@ -135,6 +169,9 @@ public final class SituazioniDellaUI {
 		if (comandi.contains(Comando.MAPPA)) {
 			situazioni.add(Situazione.ICONA_DELLA_MAPPA_PRESENTE);
 		}
+		if (schermata == StatoDelloSchermo.TATTICHE) {
+			situazioni.add(Situazione.TATTICHE_APERTE);
+		}
 		if (schermata == StatoDelloSchermo.INVENTARIO) {
 			situazioni.add(Situazione.INVENTARIO_APERTO);
 			if (puntiAbilitaDaSpendere) {
@@ -151,6 +188,9 @@ public final class SituazioniDellaUI {
 		}
 		if (comandi.containsAll(MOVIMENTO)) {
 			situazioni.add(Situazione.ICONE_DI_MOVIMENTO_PRESENTI);
+			if (movimentoSpiegato) {
+				situazioni.add(Situazione.MOVIMENTO_SPIEGATO);
+			}
 		}
 		if (combattimentoAperto) {
 			situazioni.add(Situazione.COMBATTIMENTO_APERTO);
@@ -163,6 +203,15 @@ public final class SituazioniDellaUI {
 		}
 		if (comandi.contains(Comando.COMBATTIMENTO) && (comandi.contains(Comando.FUGA) || comandi.contains(Comando.PASSA_INOSSERVATO))) {
 			situazioni.add(Situazione.SCELTE_IN_COMBATTIMENTO);
+		}
+		if (effettoDiStatoApplicato) {
+			situazioni.add(Situazione.EFFETTO_DI_STATO_APPLICATO);
+		}
+		if (reazioneScatenata) {
+			situazioni.add(Situazione.REAZIONE_ELEMENTALE_SCATENATA);
+		}
+		if (qualcunoCaduto && !combattimentoAperto) {
+			situazioni.add(Situazione.PERSONAGGIO_CADUTO);
 		}
 		if (missioneAttiva) {
 			situazioni.add(Situazione.MISSIONE_ATTIVA);

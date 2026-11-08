@@ -134,10 +134,10 @@ public final class PilotaggioDelTutorial implements TruccatoreDiDadi {
 	}
 
 	/**
-	 * I passi in cui il giocatore non può perdere: il primo scontro (l'arpia) e quello con lo scheletro. Con la chimera drago non è protetto.
+	 * I passi in cui il giocatore non può perdere: l'arpia, la chimera drago (se decide di combatterla, il tutorial deve poter finire) e lo scheletro.
 	 */
 	private static boolean isPassoProtetto(int passo) {
-		return MOSTRI_DEI_PRIMI_TURNI[passo] == TipoPersonaggio.ARPIA || MOSTRI_DEI_PRIMI_TURNI[passo] == TipoPersonaggio.SCHELETRO;
+		return passo != PASSO_DEL_GOBLIN && passo != PASSO_DEL_FOLLETTO;
 	}
 
 	/**
@@ -188,7 +188,7 @@ public final class PilotaggioDelTutorial implements TruccatoreDiDadi {
 			// Un mostro solo, per spiegare una cosa alla volta
 			case NUMERO_MOSTRI:
 				return OptionalInt.of(1);
-			// Il primo scontro (l'arpia) e quello con lo scheletro non si possono perdere: i mostri non colpiscono e non lanciano incantesimi
+			// L'arpia, la chimera drago e lo scheletro non si possono perdere: i mostri non colpiscono e non lanciano incantesimi
 			// (un tiro di 100 non va mai a segno, e non fa valere nessuna voce con una probabilità sotto il 100)
 			case COLPO_DEI_MOSTRI:
 			case TATTICA_DEI_MOSTRI:

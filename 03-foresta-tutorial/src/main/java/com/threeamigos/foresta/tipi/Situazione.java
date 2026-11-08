@@ -23,6 +23,12 @@ public enum Situazione {
 	MAPPA_PIU_GRANDE_DELLO_SCHERMO,
 	/** Si è aperto l'inventario del gruppo. */
 	INVENTARIO_APERTO,
+	/** Non scatta mai da sola: è l'innesco dei messaggi che il motore chiede alla UI di dire con la finestra del tutorial (vedi NotificaMessaggioDelTutorial). */
+	MESSAGGIO_DEL_MOTORE,
+	/** Il giocatore ha già letto come ci si muove e ci sono le frecce di movimento: è l'ultimo consiglio della prima locazione, su dove andare. */
+	MOVIMENTO_SPIEGATO,
+	/** Si è aperta la schermata delle tattiche di un personaggio. */
+	TATTICHE_APERTE,
 	/** Si è aperto l'inventario e qualcuno del gruppo ha punti abilità da spendere. */
 	PUNTI_ABILITA_DA_SPENDERE,
 	/** Ci sono le quattro icone di movimento (nord, est, sud, ovest). */
@@ -35,6 +41,12 @@ public enum Situazione {
 	FERITO_CON_UNA_POZIONE,
 	/** In combattimento ci sono più comandi del solo attacco semplice (la fuga, il combattimento a round...). */
 	SCELTE_IN_COMBATTIMENTO,
+	/** Un effetto di stato è stato applicato (a chiunque) in questa locazione. */
+	EFFETTO_DI_STATO_APPLICATO,
+	/** Si è scatenata una reazione elementale in questa locazione. */
+	REAZIONE_ELEMENTALE_SCATENATA,
+	/** Un personaggio del gruppo è caduto e il combattimento è finito. */
+	PERSONAGGIO_CADUTO,
 	/** C'è una missione da mostrare nel riquadro delle missioni. */
 	MISSIONE_ATTIVA,
 	/** Si sono visti due scontri con la tattica che agisce da sola: ora si può dire che si cambia (dall'inventario). */
