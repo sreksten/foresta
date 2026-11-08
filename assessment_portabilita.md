@@ -137,7 +137,7 @@ Bozze scritte da Claude il 2026-11-01 (passo 2); spuntare `[x]` quando rivisto. 
 - [ ] `tipo_ordinamento_en.properties` (08-foresta-tattiche)
 - [ ] `tipo_predicato_en.properties` (08-foresta-tattiche)
 - [ ] `tipo_rosa_en.properties` (08-foresta-tattiche)
-- [ ] `tipo_trofeo_en.properties` (10-foresta-trofei): nomi adattati, non tradotti (Perdigiorno→Idler, Ammazzagoblin→Goblin slayer, Trafficone→Tinkerer, Trovarobe→Scavenger, Sbevazzone→Tippler, Vero Rompiscatole→Real Pain in the Neck, Più grosso è, più rumore fa→The Bigger They Are, the Louder They Fall…)
+- [ ] `tipo_trofeo_en.properties` (10-foresta-trofei): nomi adattati, non tradotti (Perdigiorno→Idler, Ammazzagoblin→Goblin slayer, Trafficone→Tinkerer, Trovarobe→Scavenger, Come la impaglio?→How Do I Stuff It?, Sbevazzone→Tippler, Vero Rompiscatole→Real Pain in the Neck, Più grosso è, più rumore fa→The Bigger They Are, the Louder They Fall…)
 - [ ] `storia_en.properties` (12-foresta-motore): la frase finale dell'introduzione («…a dreadful dive known as») prosegue col nome del gioco
 - [ ] `descrizione_personaggio_en.properties` (05-foresta-personaggi): la frase della scheda; `tipo_personaggio_en` ha ora anche `NOME_SINGOLARE`/`NOME_PLURALE`/`PRONOME` (nomi in-game, pronomi He/She/It); `tipo_bottino_en`/`_en_GB` (08-foresta-bottino): nomi e articoli degli oggetti trovati («suit of armor», «a pair of greaves»)
 - [ ] `generatore_artefatti_en`/`_en_GB`, `nomi_artefatti_en`/`_en_GB`, `tattiche_base_en`/`_en_GB`, `direzioni_en`, `linea_temporale_en`, `gruppo_en`; le aggiunte a `testo_tattica_en` (problemi di una voce)

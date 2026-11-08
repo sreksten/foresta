@@ -41,6 +41,12 @@ public enum RegolaTrofeo {
 			InternoScheletroRisvegliato.class, evento -> 1, 1)),
 	AMMAZZAGOBLIN(() -> new TrofeoAContatore<>(TipoTrofeo.AMMAZZAGOBLIN,
 			InternoAvversarioSconfitto.class, evento -> evento.getClasse() == TipoPersonaggio.GOBLIN ? 1 : 0, 100)),
+	// Il minotauro gigante conta come un minotauro
+	MATADOR(() -> new TrofeoAContatore<>(TipoTrofeo.MATADOR,
+			InternoAvversarioSconfitto.class,
+			evento -> evento.getClasse() == TipoPersonaggio.MINOTAURO || evento.getClasse() == TipoPersonaggio.MINOTAURO_GIGANTE ? 1 : 0, 100)),
+	COME_LA_IMPAGLIO(() -> new TrofeoAContatore<>(TipoTrofeo.COME_LA_IMPAGLIO,
+			InternoAvversarioSconfitto.class, evento -> evento.getClasse() == TipoPersonaggio.CHIMERA_DRAGO ? 1 : 0, 100)),
 	AMICO_DI_TUTTI(() -> new TrofeoAContatore<>(TipoTrofeo.AMICO_DI_TUTTI,
 			InternoAmiciziaStretta.class, evento -> 1, 100)),
 	// Conta le corruzioni riuscite, una per volta, comunque sia composto il gruppo avversario

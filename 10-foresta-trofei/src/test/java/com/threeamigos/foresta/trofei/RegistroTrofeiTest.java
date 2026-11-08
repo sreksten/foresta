@@ -293,6 +293,18 @@ class RegistroTrofeiTest {
     }
 
     @Test
+    void ilMatadorContaIMinotauriAncheGiganti() {
+        BusEventi.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.MINOTAURO));
+        BusEventi.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.MINOTAURO_GIGANTE));
+        BusEventi.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GOBLIN));
+        BusEventi.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.CHIMERA_DRAGO));
+        fineLocazione();
+        assertEquals(2, RegistroTrofei.getProgresso(TipoTrofeo.MATADOR));
+        assertEquals(1, RegistroTrofei.getProgresso(TipoTrofeo.COME_LA_IMPAGLIO), "solo le chimere drago");
+        assertFalse(RegistroTrofei.isVinto(TipoTrofeo.MATADOR));
+    }
+
+    @Test
     void iBossSiVinconoSconfiggendoliUnaVolta() {
         TipoTrofeo[] trofei = {TipoTrofeo.UCCIDI_IL_DRAGO, TipoTrofeo.UCCIDI_LA_STREGA, TipoTrofeo.UCCIDI_IL_LICH,
                 TipoTrofeo.UCCIDI_L_IDRA, TipoTrofeo.UCCIDI_IL_MINOTAURO_GIGANTE};

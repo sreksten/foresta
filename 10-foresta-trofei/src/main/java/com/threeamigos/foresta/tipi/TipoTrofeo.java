@@ -25,6 +25,8 @@ public enum TipoTrofeo {
 	UCCIDI_IL_DRAGO(CategoriaTrofeo.UCCISIONE),
 
 	AMMAZZAGOBLIN(CategoriaTrofeo.UCCISIONE),
+	MATADOR(CategoriaTrofeo.UCCISIONE),
+	COME_LA_IMPAGLIO(CategoriaTrofeo.UCCISIONE),
 
 	CACCIATORE_DI_TAGLIE(CategoriaTrofeo.MISSIONE),
 	RE_DI_CARTA_FORBICI_E_SASSO(CategoriaTrofeo.MISSIONE),

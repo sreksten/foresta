@@ -20,7 +20,7 @@ Dipende da `09-foresta-missioni` (e per transitività da quasi tutto il dominio:
 
 ### I trofei
 
-`TipoTrofeo` elenca i trofei che il giocatore può vincere (31), a differenza delle missioni non scadono mai e, una volta vinto, un trofeo non si perde più. Hanno una `CategoriaTrofeo`; nella pagina dei trofei compaiono nell'ordine in cui sono dichiarati nell'enum. Il nome e la descrizione stanno in `tipo_trofeo_<lingua>.properties` (`COSTANTE.NOME`, `COSTANTE.DESCRIZIONE`).
+`TipoTrofeo` elenca i trofei che il giocatore può vincere (33), a differenza delle missioni non scadono mai e, una volta vinto, un trofeo non si perde più. Hanno una `CategoriaTrofeo`; nella pagina dei trofei compaiono nell'ordine in cui sono dichiarati nell'enum. Il nome e la descrizione stanno in `tipo_trofeo_<lingua>.properties` (`COSTANTE.NOME`, `COSTANTE.DESCRIZIONE`).
 
 ### I trigger
 
