@@ -16,6 +16,7 @@ import com.threeamigos.foresta.modellodati.MessaggioMD;
 import com.threeamigos.foresta.modellodati.TatticaMD;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 import com.threeamigos.foresta.tipi.BersaglioDelSuggerimento;
+import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.StatoDelloSchermo;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.ui.componenti.JoystickVirtuale;
@@ -1153,6 +1154,8 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 			case TRASCINARE_LA_MAPPA:
 				return StatoDelloSchermo.MAPPA;
 			case INVENTARIO:
+			case ATTRIBUTI:
+			case PUNTI_ABILITA:
 				return StatoDelloSchermo.INVENTARIO;
 			case SCHERMATA_DELLE_TATTICHE:
 				return StatoDelloSchermo.TATTICHE;
@@ -1239,7 +1242,8 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 			case RIQUADRO_DEGLI_INCANTESIMI_E_DELLE_POZIONI:
 				return getArea(riquadroIncantesimiEPozioni());
 			case BARRA_DELLE_ICONE:
-				return disposizione.getBarra();
+				// Alla scelta della classe le icone non stanno dov'è la barra durante il gioco: la barra sono le icone che si vedono
+				return stato == StatoDelloSchermo.SCELTA_DELLA_CLASSE ? unione(areeDelleIcone(c -> true), disposizione.getBarra()) : disposizione.getBarra();
 			default:
 				return areaDelleIcone(bersaglio);
 		}
@@ -1252,19 +1256,55 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	}
 
 	private Area areaDelleIcone(BersaglioDelSuggerimento bersaglio) {
-		BarraIcone barra = barraIcone();
+		return unione(areeDelleIcone(bersaglio.getIcone()::contains), disposizione.getBarra());
+	}
+
+	/**
+	 * Il rettangolo che contiene tutti quelli dati, o quello di riserva se non ce n'è nessuno.
+	 */
+	private static Area unione(List<Area> aree, Area diRiserva) {
 		Area totale = null;
+		for (Area r : aree) {
+			totale = totale == null ? r : DisposizioneDelFumetto.unione(totale, r);
+		}
+		return totale != null ? totale : diRiserva;
+	}
+
+	/**
+	 * Dove sono disegnate adesso le icone della barra che passano il filtro, una per una: nel dock passandoci sopra si ingrandiscono e si spostano, quindi
+	 * non stanno dov'erano a riposo.
+	 */
+	private List<Area> areeDelleIcone(java.util.function.Predicate<Comando> filtro) {
+		BarraIcone barra = barraIcone();
+		List<Area> aree = new ArrayList<>();
 		for (int i = 0; i < barra.iconeVisibili.size(); i++) {
 			BarraIcone.IconaVisibile icona = barra.iconeVisibili.get(i);
-			if (bersaglio.getIcone().contains(icona.comando)) {
-				// Dove l'icona è disegnata adesso, non dove sta a riposo: nel dock passandoci sopra le icone si ingrandiscono e si spostano
+			if (filtro.test(icona.comando)) {
 				Area disegnata = barra.rettangoloDisegnato(i);
-				Area r = new Area(barra.getOffsetX() + disegnata.getX(), barra.getOffsetY() + disegnata.getY(),
-						disegnata.getLarghezza(), disegnata.getAltezza());
-				totale = totale == null ? r : DisposizioneDelFumetto.unione(totale, r);
+				aree.add(new Area(barra.getOffsetX() + disegnata.getX(), barra.getOffsetY() + disegnata.getY(),
+						disegnata.getLarghezza(), disegnata.getAltezza()));
 			}
 		}
-		return totale != null ? totale : disposizione.getBarra();
+		return aree;
+	}
+
+	/**
+	 * I rettangoli da bordare per un suggerimento: le icone a cui punta, una per una (così il bordo segue il dock che si ingrandisce, vedi
+	 * {@link ContornoDiRettangoli}), o l'area intera se punta a un riquadro o alla barra.
+	 */
+	public List<Area> getAreeDaBordare(BersaglioDelSuggerimento bersaglio) {
+		List<Area> icone = null;
+		if (!bersaglio.getIcone().isEmpty()) {
+			// Se le icone non ci sono più (la barra è cambiata mentre il fumetto era aperto) non si borda niente: meglio che una striscia sulla barra
+			return areeDelleIcone(bersaglio.getIcone()::contains);
+		} else if (bersaglio == BersaglioDelSuggerimento.BARRA_DELLE_ICONE) {
+			// La barra intera sono le sue icone, in ogni schermata (la scelta della classe, il gioco, l'inventario)
+			icone = areeDelleIcone(c -> true);
+		}
+		if (icone != null && !icone.isEmpty()) {
+			return icone;
+		}
+		return java.util.Collections.singletonList(getAreaDelBersaglio(bersaglio));
 	}
 
 	/**

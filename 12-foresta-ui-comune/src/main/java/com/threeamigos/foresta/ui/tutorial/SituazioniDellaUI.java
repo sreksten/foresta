@@ -39,6 +39,8 @@ public final class SituazioniDellaUI {
 	private boolean reazioneScatenata;
 	private boolean joystickSullaMappa;
 	private boolean mappaPiuGrandeDelloSchermo;
+	// I fatti che solo il motore conosce (vedi NotificaMessaggioDelTutorial): restano finché il loro suggerimento non è stato visto
+	private final Set<Situazione> dalMotore = EnumSet.noneOf(Situazione.class);
 
 	/**
 	 * Si sta scegliendo la classe del personaggio (a inizio partita, prima della schermata di gioco), o si ha finito.
@@ -103,7 +105,8 @@ public final class SituazioniDellaUI {
 	}
 
 	/**
-	 * Se qualcuno del gruppo ha punti abilità da spendere (conta solo con l'inventario aperto).
+	 * Se qualcuno del gruppo ha punti abilità da spendere (è salito di livello): sulla schermata di gioco lo dice il livello salito, nell'inventario come
+	 * si spendono.
 	 */
 	public synchronized void segnaPuntiAbilita(boolean daSpendere) {
 		puntiAbilitaDaSpendere = daSpendere;
@@ -136,6 +139,14 @@ public final class SituazioniDellaUI {
 	 */
 	public synchronized void segnaReazioneScatenata() {
 		reazioneScatenata = true;
+	}
+
+	/**
+	 * Il motore dice che è successa una cosa che la UI non vede (per esempio il recupero di salute e magia fra le locazioni): vale finché il suggerimento
+	 * che la spiega non è stato visto (poi non scatta più comunque).
+	 */
+	public synchronized void segnaDalMotore(Situazione situazione) {
+		dalMotore.add(situazione);
 	}
 
 	public synchronized void segnaNuovaLocazione() {
@@ -185,8 +196,13 @@ public final class SituazioniDellaUI {
 		if (schermata == StatoDelloSchermo.INVENTARIO) {
 			situazioni.add(Situazione.INVENTARIO_APERTO);
 			if (puntiAbilitaDaSpendere) {
+				// Prima gli attributi, poi come si spendono i punti
+				situazioni.add(Situazione.ATTRIBUTI_DA_INTRODURRE);
 				situazioni.add(Situazione.PUNTI_ABILITA_DA_SPENDERE);
 			}
+		}
+		if (schermata == StatoDelloSchermo.IN_GIOCO && puntiAbilitaDaSpendere) {
+			situazioni.add(Situazione.PUNTI_ABILITA_DISPONIBILI);
 		}
 		if (schermata == StatoDelloSchermo.MAPPA) {
 			if (joystickSullaMappa) {
@@ -259,6 +275,7 @@ public final class SituazioniDellaUI {
 		if (dito) {
 			situazioni.add(Situazione.DITO_SULLO_SCHERMO);
 		}
+		situazioni.addAll(dalMotore);
 		return situazioni;
 	}
 }

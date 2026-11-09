@@ -9,6 +9,7 @@ import com.threeamigos.foresta.ui.Punto;
 import com.threeamigos.foresta.ui.sprite.DescrizioneFumetto;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.FontTool;
+import com.threeamigos.foresta.ui.tutorial.ContornoDiRettangoli;
 import com.threeamigos.foresta.ui.tutorial.DisposizioneDelFumetto;
 import com.threeamigos.foresta.ui.tutorial.FumettoDelTutorial;
 
@@ -57,7 +58,7 @@ final class TutorialGdx {
 		FumettoDelTutorial fumetto = aperto.get();
 		Area bersaglio = schermo.getAreaDelBersaglio(fumetto.getBersaglio());
 		if (schermo.getTutor().isBordoAcceso()) {
-			disegnaIlBordo(batch, bersaglio);
+			disegnaIlBordo(batch, schermo.getAreeDaBordare(fumetto.getBersaglio()));
 		}
 
 		int larghezzaMassima = Math.min(larghezzaSchermo - 4 * DisposizioneDelFumetto.MARGINE, Math.max(larghezzaSchermo / 3, 300));
@@ -105,16 +106,10 @@ final class TutorialGdx {
 		annulla = areaAnnulla;
 	}
 
-	private void disegnaIlBordo(Batch batch, Area b) {
-		int s = SPESSORE_DEL_BORDO;
-		int x = b.getX() - s;
-		int y = b.getY() - s;
-		int l = b.getLarghezza() + 2 * s;
-		int a = b.getAltezza() + 2 * s;
-		immagini.riempi(batch, x, y, l, s, COLORE_DEL_BORDO);
-		immagini.riempi(batch, x, y + a - s, l, s, COLORE_DEL_BORDO);
-		immagini.riempi(batch, x, y, s, a, COLORE_DEL_BORDO);
-		immagini.riempi(batch, x + l - s, y, s, a, COLORE_DEL_BORDO);
+	private void disegnaIlBordo(Batch batch, java.util.List<Area> bersagli) {
+		for (Area segmento : ContornoDiRettangoli.segmenti(bersagli, SPESSORE_DEL_BORDO, SPESSORE_DEL_BORDO)) {
+			immagini.riempi(batch, segmento.getX(), segmento.getY(), segmento.getLarghezza(), segmento.getAltezza(), COLORE_DEL_BORDO);
+		}
 	}
 
 	/**

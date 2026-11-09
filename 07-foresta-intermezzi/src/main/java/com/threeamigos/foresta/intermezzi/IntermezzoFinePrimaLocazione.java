@@ -5,6 +5,7 @@ import com.threeamigos.foresta.tipi.Verso;
 import com.threeamigos.foresta.tipi.Animazione;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -14,10 +15,10 @@ import java.util.List;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
- * Intermezzo di prova per il checkpoint {@link MomentoIntermezzo#LOCAZIONE_COMPLETATA}:
- * copia spudorata di {@link IntermezzoIntroduttivo}, con l'unica differenza che l'eremita
- * dà al gruppo incantesimi e pozioni (la consegna la fa il motore, che conosce gli oggetti) e
- * gli augura buona fortuna. Scatta alla prima fine locazione della partita e non si ripete più.
+ * L'eremita che dà al gruppo incantesimi e pozioni (la consegna la fa il motore, che conosce gli oggetti) e gli augura buona fortuna: copia
+ * spudorata di {@link IntermezzoIntroduttivo}. Scatta all'inizio della seconda locazione della partita ({@link MomentoIntermezzo#INIZIO_LOCAZIONE},
+ * con un turno già giocato) e non si ripete più: a fine della prima locazione il tutorial spiega ancora l'oggetto trovato, il recupero e il movimento,
+ * e l'eremita li coprirebbe.
  */
 public class IntermezzoFinePrimaLocazione implements Intermezzo {
 
@@ -28,7 +29,7 @@ public class IntermezzoFinePrimaLocazione implements Intermezzo {
 
 	@Override
 	public boolean deveScattare(MomentoIntermezzo momento) {
-		return momento == MomentoIntermezzo.LOCAZIONE_COMPLETATA;
+		return momento == MomentoIntermezzo.INIZIO_LOCAZIONE && Statistiche.getTurniGiocati() >= 1;
 	}
 
 	@Override
@@ -55,7 +56,8 @@ public class IntermezzoFinePrimaLocazione implements Intermezzo {
 								.poi(Tappa.inSecondi(2).verso(0.62, 0.61)))
 						// L'eremita dà al gruppo incantesimi e pozioni (li consegna il motore) e poi gli augura buona fortuna
 						.conBattuta(BattutaIntermezzo.di("eremita", Testi.formatta("intermezzi", "IntermezzoFinePrimaLocazione.1")).daSecondo(2).perSecondi(5))
-						.conBattuta(BattutaIntermezzo.di("eremita", Testi.formatta("intermezzi", "IntermezzoFinePrimaLocazione.2")));
+						.conBattuta(BattutaIntermezzo.di("eremita", Testi.formatta("intermezzi",
+								capo.getSesso() == Personaggio.Sesso.MASCHIO ? "IntermezzoFinePrimaLocazione.M" : "IntermezzoFinePrimaLocazione.F")));
 		pagineIntermezzo.add(finale);
 		return pagineIntermezzo;
 	}

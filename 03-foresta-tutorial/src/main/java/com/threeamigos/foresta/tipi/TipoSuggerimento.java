@@ -15,6 +15,8 @@ public enum TipoSuggerimento {
 
 	SCELTA_DELLA_CLASSE(Situazione.SCELTA_DELLA_CLASSE, BersaglioDelSuggerimento.BARRA_DELLE_ICONE),
 	PRIMI_PASSI(Situazione.PRIMA_SCHERMATA_DI_GIOCO, BersaglioDelSuggerimento.RIQUADRI),
+	// I riquadri prima della barra: il benvenuto, poi il riquadro delle missioni (e come si scorre), e solo dopo la barra delle icone sotto
+	MISSIONI(Situazione.MISSIONE_ATTIVA, BersaglioDelSuggerimento.RIQUADRO_DELLE_MISSIONI),
 	// La prima pagina parla della barra, la seconda del punto interrogativo
 	BARRA_DELLE_ICONE(Situazione.BARRA_DELLE_ICONE_VISIBILE, BersaglioDelSuggerimento.BARRA_DELLE_ICONE, BersaglioDelSuggerimento.ICONA_DELL_AIUTO),
 	// Il primo scontro e quel che ne viene, nell'ordine: lo scontro (un attacco alla volta), l'effetto di stato del secondo colpo, il combattimento
@@ -25,7 +27,11 @@ public enum TipoSuggerimento {
 	// Il primo scontro si fa un attacco alla volta, senza l'icona del combattimento automatico: compare quando l'effetto di stato è arrivato, e questo la
 	// spiega subito dopo aver letto quello (vedi PilotaggioDelTutorial.isCombattimentoAutomaticoVietato)
 	COMBATTIMENTO_AUTOMATICO(Situazione.COMBATTIMENTO_AUTOMATICO_DISPONIBILE, BersaglioDelSuggerimento.ICONA_DEL_COMBATTIMENTO_AUTOMATICO),
-	OGGETTO_TROVATO(Situazione.OGGETTO_TROVATO, BersaglioDelSuggerimento.ICONA_DELL_INVENTARIO),
+	// La prima pagina dice dell'oggetto e di chi lo prende (punta il gruppo: a fine scontro la barra non ha ancora le icone, e il suggerimento deve aprirsi
+	// prima dell'eremita), la seconda che può andare nell'inventario (punta la sua icona)
+	OGGETTO_TROVATO(Situazione.OGGETTO_TROVATO, BersaglioDelSuggerimento.RIQUADRO_DEL_GRUPPO, BersaglioDelSuggerimento.ICONA_DELL_INVENTARIO),
+	// Un personaggio è salito di livello: la prima pagina mostra il riquadro del gruppo, dove si vede, la seconda l'icona che apre l'inventario, dove si spende il punto
+	LIVELLO_SALITO(Situazione.PUNTI_ABILITA_DISPONIBILI, BersaglioDelSuggerimento.RIQUADRO_DEL_GRUPPO, BersaglioDelSuggerimento.ICONA_DELL_INVENTARIO),
 	// La prima pagina parla delle frecce, la seconda del riquadro della mappa, la terza dell'icona che apre la mappa a tutto schermo
 	MOVIMENTO_E_MAPPA(Situazione.ICONE_DI_MOVIMENTO_PRESENTI, BersaglioDelSuggerimento.ICONE_DI_MOVIMENTO, BersaglioDelSuggerimento.RIQUADRO_DELLA_MAPPA,
 			BersaglioDelSuggerimento.ICONA_DELLA_MAPPA),
@@ -41,14 +47,19 @@ public enum TipoSuggerimento {
 	RESURREZIONE(Situazione.PERSONAGGIO_CADUTO, BersaglioDelSuggerimento.RIQUADRO_DEL_GRUPPO, BersaglioDelSuggerimento.RIQUADRO_DEGLI_INCANTESIMI_E_DELLE_POZIONI,
 			BersaglioDelSuggerimento.ICONA_DEGLI_INCANTESIMI),
 	SCELTE_IN_COMBATTIMENTO(Situazione.SCELTE_IN_COMBATTIMENTO, BersaglioDelSuggerimento.ICONE_DI_COMBATTIMENTO),
-	MISSIONI(Situazione.MISSIONE_ATTIVA, BersaglioDelSuggerimento.RIQUADRO_DELLE_MISSIONI),
 	// L'ultimo della prima locazione: letto come ci si muove, per i prossimi passi si va verso i boschi e le radure; punta le frecce. Sta dopo gli altri nell'ordine
 	// dell'enum, così se più d'uno scatta insieme viene per ultimo
 	AVANZA_VERSO_I_BOSCHI(Situazione.MOVIMENTO_SPIEGATO, BersaglioDelSuggerimento.ICONE_DI_MOVIMENTO),
+	// Il recupero fra le locazioni: il motore dice quando è avvenuto (NotificaMessaggioDelTutorial), la prima volta che qualcuno era ferito o aveva speso
+	// magia; viene dopo il movimento e il consiglio dei boschi. Punta alle barre del gruppo
+	RECUPERO_FRA_LOCAZIONI(Situazione.RECUPERO_FRA_LOCAZIONI, BersaglioDelSuggerimento.RIQUADRO_DEL_GRUPPO),
 	// Le tattiche si aprono dall'inventario: il suggerimento punta alla sua icona, perché uno sia curioso di entrarci
 	TATTICHE(Situazione.TATTICHE_DISPONIBILI, BersaglioDelSuggerimento.ICONA_DELL_INVENTARIO),
 	// Si dà aprendo l'inventario: la prima pagina parla delle due liste, la seconda delle icone delle altre pagine
 	INVENTARIO(Situazione.INVENTARIO_APERTO, BersaglioDelSuggerimento.SCHERMATA, BersaglioDelSuggerimento.ICONE_DELLE_PAGINE),
+	// Nell'inventario, quando qualcuno ha punti abilità, prima di dire come si spendono: che cosa sono gli attributi (primari e secondari) e che gli artefatti
+	// li aumentano
+	ATTRIBUTI(Situazione.ATTRIBUTI_DA_INTRODURRE, BersaglioDelSuggerimento.SCHERMATA, BersaglioDelSuggerimento.SCHERMATA),
 	// Nell'inventario, quando qualcuno ha punti abilità: gli attributi primari in arancione si aumentano con un doppio click
 	PUNTI_ABILITA(Situazione.PUNTI_ABILITA_DA_SPENDERE, BersaglioDelSuggerimento.SCHERMATA),
 	// La schermata delle tattiche, spiegata tutta alla prima apertura (vedi tutorial_tattiche.md): leggere una tattica (pagine 1-5: l'ordine, le icone e i
@@ -62,9 +73,6 @@ public enum TipoSuggerimento {
 			BersaglioDelSuggerimento.PULSANTI_DELLE_TATTICHE, BersaglioDelSuggerimento.LISTA_DELLE_TATTICHE),
 	// Non scatta da una situazione: il motore lo chiede (NotificaMessaggioDelTutorial) quando rifiuta un viaggio che finirebbe in un luogo non ancora per
 	// il giocatore («Non è ancora il momento di visitare {0}»); punta alle frecce, per scegliere un'altra direzione
-	// Non scatta da una situazione: il motore lo chiede (NotificaMessaggioDelTutorial) la prima volta che, cambiando locazione, qualcuno recupera salute o magia;
-	// punta alle barre del gruppo
-	RECUPERO_FRA_LOCAZIONI(Situazione.RECUPERO_FRA_LOCAZIONI, BersaglioDelSuggerimento.RIQUADRO_DEL_GRUPPO),
 	NON_ANCORA_IL_MOMENTO(Situazione.MESSAGGIO_DEL_MOTORE, BersaglioDelSuggerimento.ICONE_DI_MOVIMENTO),
 	CORRUZIONE(Situazione.AVVERSARIO_CORROMPIBILE, BersaglioDelSuggerimento.ICONA_DELLA_CORRUZIONE),
 	AMICIZIA(Situazione.AVVERSARIO_AMICHEVOLE, BersaglioDelSuggerimento.ICONA_DELL_AMICIZIA),

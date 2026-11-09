@@ -149,7 +149,11 @@ class IntermezziInScenaTest {
         assertFalse(introduzione.deveScattare(MomentoIntermezzo.INIZIO_LOCAZIONE));
         controlla(introduzione.getPagine());
         IntermezzoFinePrimaLocazione fine = new IntermezzoFinePrimaLocazione();
-        assertTrue(fine.deveScattare(MomentoIntermezzo.LOCAZIONE_COMPLETATA));
+        // L'eremita arriva all'inizio della seconda locazione: non alla prima, non a fine locazione
+        assertFalse(fine.deveScattare(MomentoIntermezzo.INIZIO_LOCAZIONE));
+        Statistiche.incrementaTurniGiocati();
+        assertTrue(fine.deveScattare(MomentoIntermezzo.INIZIO_LOCAZIONE));
+        assertFalse(fine.deveScattare(MomentoIntermezzo.LOCAZIONE_COMPLETATA));
         assertFalse(fine.deveScattare(MomentoIntermezzo.INIZIO_GIOCO));
         controlla(fine.getPagine());
         // Un eroe senza nome proprio si chiama con la classe, e l'Ombrafiamma ha una battuta in più

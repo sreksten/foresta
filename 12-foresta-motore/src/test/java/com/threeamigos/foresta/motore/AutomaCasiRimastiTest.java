@@ -102,6 +102,9 @@ class AutomaCasiRimastiTest {
         partita.assertStato(Stato.IN_LOCAZIONE);
         partita.comando(Comando.ESCI_DA_CITTA);
         partita.assertStato(Stato.SCELTA_DIREZIONE);
+        // L'eremita arriva all'inizio della seconda locazione: qui si provano gli intermezzi di prova, e lui li precederebbe
+        com.threeamigos.foresta.intermezzi.RegistroIntermezzi.segnaScattato(com.threeamigos.foresta.intermezzi.FabbricaIntermezzi.crea(
+                com.threeamigos.foresta.tipi.TipoIntermezzo.INTERMEZZO_FINE_PRIMA_LOCAZIONE));
         return partita;
     }
 
@@ -273,7 +276,7 @@ class AutomaCasiRimastiTest {
 
     @Test
     void conLaUiOccupataUnIntermezzoAspettaECheLaUiTorniInattiva() {
-        try (PartitaDiTest partita = partitaFuoriDallaCitta(101)) {
+        try (PartitaDiTest partita = partitaFuoriDallaCitta(104)) {
             partita.nonSaltareIntermezzi();
             // La UI che torna inattiva senza che nessuno l'aspetti non cambia niente
             partita.pubblica(new InternoUiInattiva());

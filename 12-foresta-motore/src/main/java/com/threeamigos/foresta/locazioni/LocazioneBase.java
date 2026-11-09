@@ -1148,13 +1148,14 @@ public abstract class LocazioneBase implements Locazione {
 		if (statoLocazione != StatoLocazione.IN_COMBATTIMENTO) {
 			comandiPossibili.add(Comando.MAPPA);
 		}
-		if (qualcunoPuoAgire && gruppo.getPozioniSalute() > 0) {
+		// Le pozioni piccole compaiono solo se servono, come a fine locazione (vedi Automa): se nessuno è ferito, o ha perso magia, berne una la sprecherebbe
+		if (qualcunoPuoAgire && gruppo.isPozioneSaluteUtilizzabile()) {
 			comandiPossibili.add(Comando.POZIONE_SALUTE);
 		}
 		if (qualcunoPuoAgire && gruppo.getPozioniSaluteGrande() > 0) {
 			comandiPossibili.add(Comando.POZIONE_SALUTE_GRANDE);
 		}
-		if (qualcunoPuoAgire && gruppo.getPozioniMagia() > 0) {
+		if (qualcunoPuoAgire && gruppo.isPozioneMagiaUtilizzabile()) {
 			comandiPossibili.add(Comando.POZIONE_MAGIA);
 		}
 		if (qualcunoPuoAgire && gruppo.getPozioniMagiaGrande() > 0) {

@@ -25,12 +25,16 @@ public enum Situazione {
 	INVENTARIO_APERTO,
 	/** Non scatta mai da sola: è l'innesco dei messaggi che il motore chiede alla UI di dire con la finestra del tutorial (vedi NotificaMessaggioDelTutorial). */
 	MESSAGGIO_DEL_MOTORE,
-	/** Non scatta mai da sola: il motore la usa per dire che fra una locazione e l'altra il gruppo ha recuperato salute e magia (vedi NotificaMessaggioDelTutorial). */
+	/** Il motore dice che fra una locazione e l'altra il gruppo ha recuperato salute e magia (vedi NotificaMessaggioDelTutorial): la UI la tiene finché il suggerimento non è visto. */
 	RECUPERO_FRA_LOCAZIONI,
 	/** Il giocatore ha già letto come ci si muove e ci sono le frecce di movimento: è l'ultimo consiglio della prima locazione, su dove andare. */
 	MOVIMENTO_SPIEGATO,
 	/** Si è aperta la schermata delle tattiche di un personaggio. */
 	TATTICHE_APERTE,
+	/** Sulla schermata di gioco qualcuno del gruppo ha punti abilità da spendere (è salito di livello). */
+	PUNTI_ABILITA_DISPONIBILI,
+	/** Si è aperto l'inventario e qualcuno del gruppo ha punti abilità da spendere: prima di dire come si spendono si dice che cosa sono gli attributi. */
+	ATTRIBUTI_DA_INTRODURRE,
 	/** Si è aperto l'inventario e qualcuno del gruppo ha punti abilità da spendere. */
 	PUNTI_ABILITA_DA_SPENDERE,
 	/** Ci sono le quattro icone di movimento (nord, est, sud, ovest). */
@@ -39,7 +43,7 @@ public enum Situazione {
 	COMBATTIMENTO_APERTO,
 	/** Il gruppo ha trovato un oggetto. */
 	OGGETTO_TROVATO,
-	/** Qualcuno del gruppo è ferito e c'è una pozione di salute da dargli. */
+	/** Qualcuno del gruppo ha meno di metà della salute e c'è una pozione di salute da dargli. */
 	FERITO_CON_UNA_POZIONE,
 	/** In combattimento ci sono più comandi del solo attacco semplice (la fuga, il combattimento a round...). */
 	SCELTE_IN_COMBATTIMENTO,

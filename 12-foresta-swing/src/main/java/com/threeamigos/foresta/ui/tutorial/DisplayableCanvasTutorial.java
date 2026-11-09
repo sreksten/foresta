@@ -14,7 +14,6 @@ import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.FontTool;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -62,7 +61,7 @@ public class DisplayableCanvasTutorial {
 		FumettoDelTutorial fumetto = aperto.get();
 		Area bersaglio = schermo.getAreaDelBersaglio(fumetto.getBersaglio());
 		if (schermo.getTutor().isBordoAcceso()) {
-			disegnaIlBordo(g, bersaglio);
+			disegnaIlBordo(g, schermo.getAreeDaBordare(fumetto.getBersaglio()));
 		}
 
 		BufferedImage iconaPollice = IconeAwt.icona(TipoIcona.SI);
@@ -92,13 +91,11 @@ public class DisplayableCanvasTutorial {
 		return Math.min(larghezzaSchermo - 4 * DisposizioneDelFumetto.MARGINE, Math.max(larghezzaSchermo / 3, 300));
 	}
 
-	private void disegnaIlBordo(Graphics2D g, Area bersaglio) {
-		java.awt.Stroke precedente = g.getStroke();
+	private void disegnaIlBordo(Graphics2D g, java.util.List<Area> bersagli) {
 		g.setColor(COLORE_DEL_BORDO);
-		g.setStroke(new BasicStroke(SPESSORE_DEL_BORDO));
-		g.drawRect(bersaglio.getX() - SPESSORE_DEL_BORDO, bersaglio.getY() - SPESSORE_DEL_BORDO,
-				bersaglio.getLarghezza() + 2 * SPESSORE_DEL_BORDO, bersaglio.getAltezza() + 2 * SPESSORE_DEL_BORDO);
-		g.setStroke(precedente);
+		for (Area segmento : ContornoDiRettangoli.segmenti(bersagli, SPESSORE_DEL_BORDO, SPESSORE_DEL_BORDO)) {
+			g.fillRect(segmento.getX(), segmento.getY(), segmento.getLarghezza(), segmento.getAltezza());
+		}
 	}
 
 	/**

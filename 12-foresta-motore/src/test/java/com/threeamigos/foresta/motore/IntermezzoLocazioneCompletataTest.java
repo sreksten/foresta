@@ -19,8 +19,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Verifica il checkpoint {@link MomentoIntermezzo#LOCAZIONE_COMPLETATA} (gestione_missioni.md, punto 1):
- * l'intermezzo di prova scatta alla prima fine locazione della partita e non si ripete più.
+ * L'intermezzo dell'eremita (INTERMEZZO_FINE_PRIMA_LOCAZIONE): scatta all'inizio della seconda locazione della partita
+ * ({@link MomentoIntermezzo#INIZIO_LOCAZIONE}) e non si ripete più; con lui si provano anche l'attesa della UI e il ritorno al gioco.
  */
 class IntermezzoLocazioneCompletataTest {
 
@@ -36,16 +36,19 @@ class IntermezzoLocazioneCompletataTest {
 
 			partita.comando(Comando.ESCI_DA_CITTA);
 			partita.assertStato(Stato.SCELTA_DIREZIONE);
+			assertEquals(0, contaBattutaEremita(partita),
+					"a fine della prima locazione l'eremita non c'è ancora: c'è il tutorial");
 
+			AutomaCasiRimastiTest.camminaUnPasso(partita);
 			assertEquals(1, contaBattutaEremita(partita),
-					"alla prima fine locazione l'intermezzo deve comparire una volta sola");
+					"all'inizio della seconda locazione l'intermezzo deve comparire una volta sola");
 			assertTrue(ModelloDati.getIstanza().getIntermezziMD()
 							.isScattato(TipoIntermezzo.INTERMEZZO_FINE_PRIMA_LOCAZIONE.name()),
 					"il registro deve ricordare che l'intermezzo e' scattato");
 
 			// Da questo momento in poi il checkpoint non troverebbe piu' nulla da mostrare: non si ripete
-			assertNull(RegistroIntermezzi.getProssimoIntermezzo(MomentoIntermezzo.LOCAZIONE_COMPLETATA),
-					"a una successiva fine locazione l'intermezzo non deve scattare di nuovo");
+			assertNull(RegistroIntermezzi.getProssimoIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE),
+					"all'inizio di una locazione successiva l'intermezzo non deve scattare di nuovo");
 		}
 	}
 
@@ -65,6 +68,7 @@ class IntermezzoLocazioneCompletataTest {
 			int pozioni = gruppo.getPozioniSalute();
 
 			partita.comando(Comando.ESCI_DA_CITTA);
+			AutomaCasiRimastiTest.camminaUnPasso(partita);
 
 			int perElemento = CostantiMotore.DOTAZIONE_EREMITA_INCANTESIMI_PER_ELEMENTO;
 			assertEquals(aria + perElemento, gruppo.getIncantesimi(TipoIncantesimo.ARIA));
@@ -73,7 +77,7 @@ class IntermezzoLocazioneCompletataTest {
 			assertEquals(pozioni + CostantiMotore.DOTAZIONE_EREMITA_POZIONI_SALUTE, gruppo.getPozioniSalute());
 
 			// L'intermezzo non si ripete, e nemmeno la dotazione
-			assertNull(RegistroIntermezzi.getProssimoIntermezzo(MomentoIntermezzo.LOCAZIONE_COMPLETATA));
+			assertNull(RegistroIntermezzi.getProssimoIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE));
 			assertEquals(pozioni + CostantiMotore.DOTAZIONE_EREMITA_POZIONI_SALUTE, gruppo.getPozioniSalute());
 		}
 	}
@@ -90,9 +94,10 @@ class IntermezzoLocazioneCompletataTest {
 					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			partita.assertStato(Stato.IN_LOCAZIONE);
 
+			partita.comando(Comando.ESCI_DA_CITTA);
 			partita.pubblica(new InternoUiOccupata());
 
-			partita.comando(Comando.ESCI_DA_CITTA);
+			AutomaCasiRimastiTest.camminaUnPasso(partita);
 
 			assertEquals(0, contaBattutaEremita(partita),
 					"l'intermezzo non deve comparire finché la UI è occupata");
@@ -122,6 +127,7 @@ class IntermezzoLocazioneCompletataTest {
 			partita.nonSaltareIntermezzi();
 
 			partita.comando(Comando.ESCI_DA_CITTA);
+			AutomaCasiRimastiTest.camminaUnPasso(partita);
 			partita.assertStato(Stato.INTERMEZZO);
 
 			partita.pubblica(new InternoUiOccupata());
@@ -129,7 +135,7 @@ class IntermezzoLocazioneCompletataTest {
 				partita.comando(Comando.PERGAMENA);
 			}
 
-			partita.assertStato(Stato.SCELTA_DIREZIONE);
+			assertNotEquals(Stato.ATTESA_UI_PER_INTERMEZZO, partita.stato(), "finito l'intermezzo non si aspetta la UI");
 			assertEquals(1, partita.eventi().tutti(InternoMostraSchermataGioco.class).size(),
 					"la UI deve tornare al gioco una volta sola");
 		}

@@ -16,6 +16,7 @@ import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.FaseDiGioco;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.StatoDelloSchermo;
+import com.threeamigos.foresta.tipi.Situazione;
 import com.threeamigos.foresta.tipi.TipoSuggerimento;
 import com.threeamigos.foresta.tutorial.RegistroSuggerimenti;
 import com.threeamigos.foresta.tipi.TipoFinestra;
@@ -114,6 +115,13 @@ public abstract class ForestaUI implements Temporizzabile {
 		BusEventi.iscriviti(NotificaColpoMancato.class, e -> schermo.aggiungiColpoMancato(e.getPersonaggio()));
 		BusEventi.iscriviti(NotificaTestoFrase.class, e -> schermo.notifica(e.getMessaggio()));
 		BusEventi.iscriviti(NotificaMessaggioDelTutorial.class, e -> {
+			if (e.getSuggerimento().getInnesco() != Situazione.MESSAGGIO_DEL_MOTORE) {
+				// Un fatto che solo il motore conosce (il recupero fra le locazioni): diventa una situazione, e il suggerimento viene al suo turno,
+				// nell'ordine dell'enum, invece di passare davanti a quelli già in attesa
+				situazioni.segnaDalMotore(e.getSuggerimento().getInnesco());
+				aggiornaIlTutorial();
+				return;
+			}
 			// Il motore vuole che la cosa si noti: la finestra del tutorial, come i suggerimenti (e come loro tiene occupata la UI finché non si legge)
 			if (schermo.getTutor().mostra(e.getSuggerimento(), e.getParametri()).isPresent()) {
 				BusEventi.pubblica(new InternoUiOccupata());
@@ -337,7 +345,7 @@ public abstract class ForestaUI implements Temporizzabile {
 		}
 		boolean missioneAttiva = !vistaPartita.getMissioniAttive().isEmpty();
 		StatoDelloSchermo schermata = schermo.getStato();
-		situazioni.segnaPuntiAbilita(schermata == StatoDelloSchermo.INVENTARIO && isQualcunoConPuntiAbilita());
+		situazioni.segnaPuntiAbilita(isQualcunoConPuntiAbilita());
 		situazioni.segnaQualcunoCaduto(isQualcunoCaduto());
 		situazioni.segnaMovimentoSpiegato(RegistroSuggerimenti.isVisto(TipoSuggerimento.MOVIMENTO_E_MAPPA));
 		situazioni.segnaOggettoSpiegato(RegistroSuggerimenti.isVisto(TipoSuggerimento.OGGETTO_TROVATO));
@@ -395,7 +403,8 @@ public abstract class ForestaUI implements Temporizzabile {
 			return false;
 		}
 		for (VistaPersonaggio personaggio : gruppo.getPersonaggiVivi()) {
-			if (personaggio.getSalute() < personaggio.getSaluteMassima()) {
+			// Il suggerimento sulle pozioni quando serve davvero: sotto metà della salute (una graffiatura non vale una pozione)
+			if (2 * personaggio.getSalute() < personaggio.getSaluteMassima()) {
 				return true;
 			}
 		}

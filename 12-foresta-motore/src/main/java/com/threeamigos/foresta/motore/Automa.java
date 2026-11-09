@@ -1531,7 +1531,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	/**
-	 * Se il tutorial sta pilotando i primi turni e quel viaggio finirebbe su un luogo che non è né un bosco né una radura, di che luogo si tratta.
+	 * Se il tutorial sta pilotando i primi turni e quel viaggio finirebbe su un luogo che non è né un bosco né una radura, di che luogo si tratta (i passi
+	 * possibili si fermano già sulla prima casella che non è un bosco o una radura: vedi Foresta.getMaxPassiNord).
 	 */
 	private Optional<TipoLocazione> destinazioneVietataDalTutorial(int passi) {
 		if (!PilotaggioDelTutorial.pilotaQuestoTurno()) {
