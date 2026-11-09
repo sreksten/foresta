@@ -3,10 +3,13 @@ package com.threeamigos.foresta.ui.tutorial;
 import com.threeamigos.foresta.ui.Area;
 import com.threeamigos.foresta.ui.Punto;
 
+import java.util.List;
+
 /**
  * Dove sta il fumetto del tutorial e i suoi due pulsanti, senza toolkit: il fumetto sta dalla parte dello schermo dove c'è più posto rispetto al
  * bersaglio, centrato su di lui, senza uscire dallo schermo; il pollice (avanti, «ho capito») sta in basso a destra, l'annulla (spegne il tutorial)
- * alla sua sinistra. La punta della coda va al centro del bersaglio.
+ * alla sua sinistra. La punta della coda va al centro del bersaglio. Dice anche come è fatto il bordo che lampeggia intorno al bersaglio (i segmenti da
+ * riempire e il loro colore), uguale in ogni toolkit.
  *
  * @author Stefano Reksten
  */
@@ -16,6 +19,10 @@ public final class DisposizioneDelFumetto {
 	public static final int MARGINE = 8;
 	/** Lo spazio fra il fumetto e il bersaglio, perché la coda si veda */
 	public static final int DISTANZA_DAL_BERSAGLIO = 14;
+	/** Il colore del bordo intorno al bersaglio, in RGB (oro): ogni toolkit lo converte nel suo */
+	public static final int COLORE_DEL_BORDO_RGB = 0xFFD700;
+	/** Lo spessore del bordo intorno al bersaglio, che è anche quanto sta lontano dal bersaglio */
+	public static final int SPESSORE_DEL_BORDO = 3;
 
 	private DisposizioneDelFumetto() {
 	}
@@ -29,6 +36,20 @@ public final class DisposizioneDelFumetto {
 		int destra = Math.max(a.getX() + a.getLarghezza(), b.getX() + b.getLarghezza());
 		int sotto = Math.max(a.getY() + a.getAltezza(), b.getY() + b.getAltezza());
 		return new Area(x, y, destra - x, sotto - y);
+	}
+
+	/**
+	 * La larghezza massima del testo nel fumetto: un terzo dello schermo (almeno 300 pixel), ma mai più dello schermo meno i margini.
+	 */
+	public static int larghezzaMassima(int larghezzaSchermo) {
+		return Math.min(larghezzaSchermo - 4 * MARGINE, Math.max(larghezzaSchermo / 3, 300));
+	}
+
+	/**
+	 * I segmenti del bordo intorno ai rettangoli del bersaglio (vedi {@link ContornoDiRettangoli}), da riempire con {@link #COLORE_DEL_BORDO_RGB}.
+	 */
+	public static List<Area> segmentiDelBordo(List<Area> bersagli) {
+		return ContornoDiRettangoli.segmenti(bersagli, SPESSORE_DEL_BORDO, SPESSORE_DEL_BORDO);
 	}
 
 	/**

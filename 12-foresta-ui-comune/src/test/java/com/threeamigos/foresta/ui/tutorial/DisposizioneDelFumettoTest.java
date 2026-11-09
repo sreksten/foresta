@@ -109,4 +109,20 @@ class DisposizioneDelFumettoTest {
 		assertEquals(120, punta.x);
 		assertEquals(210, punta.y);
 	}
+
+	@Test
+	void laLarghezzaMassimaEUnTerzoDelloSchermoMaAlmeno300PixelEMaiOltreLoSchermo() {
+		assertEquals(400, DisposizioneDelFumetto.larghezzaMassima(1200));
+		assertEquals(300, DisposizioneDelFumetto.larghezzaMassima(600));
+		assertEquals(250 - 4 * DisposizioneDelFumetto.MARGINE, DisposizioneDelFumetto.larghezzaMassima(250));
+	}
+
+	@Test
+	void ilBordoStaIntornoAlBersaglioConLoSpessoreDelBordo() {
+		java.util.List<Area> segmenti = DisposizioneDelFumetto.segmentiDelBordo(java.util.Collections.singletonList(new Area(10, 20, 30, 40)));
+		assertEquals(4, segmenti.size());
+		for (Area segmento : segmenti) {
+			assertEquals(DisposizioneDelFumetto.SPESSORE_DEL_BORDO, Math.min(segmento.getLarghezza(), segmento.getAltezza()));
+		}
+	}
 }
