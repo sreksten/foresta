@@ -57,4 +57,4 @@ Chi lo aggiorna è il motore; le tattiche lo leggono e basta.
 ## Osservazioni
 
 - Il quadro delle regole e delle interazioni è in [`motore_di_gioco.md`](motore_di_gioco.md) §7 e [`interazioni_effetti_di_stato.md`](interazioni_effetti_di_stato.md); le debolezze di classe in [`debolezze_e_resistenze.md`](debolezze_e_resistenze.md).
-- `CalcolatoreCombattimento` è molto lungo e tutto statico: i test ne coprono i casi (11 file di test nel modulo), e ritarare il bilanciamento passa soprattutto dalle costanti di `05-foresta-personaggi`.
+- `CalcolatoreCombattimento` è molto lungo e tutto statico: i test ne coprono i casi (18 file di test nel modulo), e ritarare il bilanciamento passa soprattutto dalle costanti di `05-foresta-personaggi`.

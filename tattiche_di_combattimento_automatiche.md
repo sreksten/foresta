@@ -658,7 +658,7 @@ Le altre cose da fare sono in §8.
 
 ## 11. Il modello dati delle tattiche
 
-Qui sta il **modello** (come sono fatte una tattica, una voce, un bersaglio) e come lo usano il motore e la schermata. Le classi stanno nel pacchetto `…/tattiche` (i tipi, che servono anche alla UI, in `…/tipi`: `TipoAzione` in `06-foresta-combattimento`, gli altri in `08-foresta-tattiche`).
+Qui sta il **modello** (come sono fatte una tattica, una voce, un bersaglio) e come lo usano il motore e la schermata. I dati stanno nel pacchetto `…/modellodati` e la logica in `…/tattiche`, tutti e due in `08-foresta-tattiche` (i tipi, che servono anche alla UI, in `…/tipi`: `TipoAzione` in `06-foresta-combattimento`, gli altri in `08-foresta-tattiche`).
 
 ### 11.1 Principi
 
@@ -926,12 +926,12 @@ Il registro delle decisioni (§7.7) riporta i danni attesi confrontati ("PIU_ADA
 
 ### 11.11 Dove stanno i dati e la logica
 
-Le classi che descrivono una tattica sono **dati puri**: immutabili, fatti solo di enumerati (`tipi`), numeri e liste. Stanno nel pacchetto **`…/tattiche`** (modulo `08-foresta-tattiche`), accanto alla logica, con il suffisso `MD` come il resto del modello dati
+Le classi che descrivono una tattica sono **dati puri**: immutabili, fatti solo di enumerati (`tipi`), numeri e liste. Stanno nel pacchetto **`…/modellodati`** del modulo `08-foresta-tattiche` (la logica è nel pacchetto `tattiche` dello stesso modulo), con il suffisso `MD` come il resto del modello dati
 (`TatticaMD`, `VoceMD`, `SelettoreMD`, `FiltroMD`, `OrdinamentoMD`, `PredicatoMD`, `AzioneMD`). Il motivo è che la stessa classe serve a tre cose: la **UI** le legge e le modifica (può importare `modellodati` e `tipi`, non il motore né il dominio), il **salvataggio**
-le scrive con il personaggio (`PersonaggioMD`, §11.12) e il **motore** le valuta. Il modulo `10-foresta-modellodati` non vede il motore, e quindi nemmeno `tattiche`: dipendono solo da `tipi` e fra loro.
+le scrive con il personaggio (`PersonaggioMD`, §11.12) e il **motore** le valuta. Il modulo `10-foresta-modellodati` dipende da `08-foresta-tattiche` (per mettere insieme i dati e salvarli) e non vede il motore: i dati dipendono solo da `tipi` e fra loro.
 
-La **logica** sta in `…/tattiche`: le rose (`Rosa`, `Rose`), `Filtri`, `Ordinamenti`, `Predicati`, `Selettori` (applica un `SelettoreMD`), `Requisiti`, `SceltaIncantesimo`, `Astuzia`, `Valutatore`, il `ContestoTattico` e i risultati (`RisultatoSelezione`, `Decisione`). Non la
-può importare la UI: sta in `12-foresta-motore`, che non vede `12-foresta-swing`.
+La **logica** sta in `…/tattiche` (modulo `08-foresta-tattiche`): le rose (`Rosa`, `Rose`), `Filtri`, `Ordinamenti`, `Predicati`, `Selettori` (applica un `SelettoreMD`), `Requisiti`, `SceltaIncantesimo`, `Astuzia`, `Valutatore`, il `ContestoTattico` e i risultati (`RisultatoSelezione`, `Decisione`). La UI
+ne usa solo i dati, i tipi e la bozza (`tattiche.modifica`); la valutazione la chiama il motore dal round di combattimento (il compilatore non lo impedisce, perché `12-foresta-ui-comune` dipende dal modulo: è una convenzione).
 
 Il valutatore e il contesto: `Valutatore.decidi` (la prima voce eseguibile; ripiego sull'attacco fisico al primo avversario) restituisce una `Decisione` (azione, bersaglio, perché). Il `Selettore` accetta un'`Ammissione`: restano nella rosa solo i candidati su cui un'azione della voce si può fare, e i filtri che dipendono dall'azione la valutano per quella che si farebbe su ciascuno.
 `Requisiti` dice quando si può fare ciascuna azione, con il motivo del no; `Astuzia` calcola l'astuzia (§4); `SceltaIncantesimo` e `CriterioIncantesimo` scelgono l'incantesimo (§11.10), con `CalcolatoreCombattimento.dannoAtteso` e `dannoAttesoDellaMischia` (senza dadi).

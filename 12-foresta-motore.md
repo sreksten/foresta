@@ -6,26 +6,26 @@ Sta in cima alla catena delle regole (sotto c'è solo il contratto verso la UI) 
 
 ## Dipendenze
 
-**Dichiarate nel pom:** `11-foresta-motore-api`, `05-foresta-personaggi`, `07-foresta-poteri`, `06-foresta-combattimento`, `08-foresta-tattiche`, `02-foresta-mappa`.
+**Dichiarate nel pom:** `03-foresta-tutorial`, `11-foresta-motore-api`, `05-foresta-personaggi`, `07-foresta-poteri`, `06-foresta-combattimento`, `08-foresta-tattiche`, `02-foresta-mappa`.
 
-**Lo dichiarano:** `13-foresta-app-swing`.
+**Lo dichiarano:** `13-foresta-app-swing`, `13-foresta-app-libgdx`.
 
 Le dipendenze sono transitive: un modulo vede anche quello che vedono i moduli da cui dipende, quindi il compilatore garantisce la separazione fra i moduli che non si raggiungono.
 
-Dichiara `11-foresta-motore-api` (i contratti con la UI e per transitività il dominio: trofei, missioni, bottino, intermezzi, economia, mondo, bestiario…) e direttamente personaggi, poteri, combattimento, tattiche e mappa, i moduli di cui usa le classi in modo diretto. Nessun modulo di regole lo conosce: **il motore è il solo a vedere tutto**.
+Dichiara `11-foresta-motore-api` (i contratti con la UI e per transitività il dominio: trofei, missioni, bottino, intermezzi, economia, mondo, bestiario…) e direttamente personaggi, poteri, combattimento, tattiche, mappa e tutorial, i moduli di cui usa le classi in modo diretto (del tutorial, il registro dei suggerimenti e l'evento `NotificaMessaggioDelTutorial`, che pubblica l'`Automa`). Nessun modulo di regole lo conosce: **il motore è il solo a vedere tutto**.
 
 ## Funzionamento
 
 ### L'`Automa`: la macchina a stati
 
-`Automa` (circa 2400 righe) è una macchina a stati finiti **reattiva, senza ciclo di gioco**: avanza solo in risposta a due stimoli, i comandi del giocatore (`processaComando`) e gli impulsi del temporizzatore (`tick`, che arriva come `Comando.TIMER`: per esempio un round di combattimento al secondo). Implementa `ControlloreDiGioco`.
+`Automa` (circa 2600 righe) è una macchina a stati finiti **reattiva, senza ciclo di gioco**: avanza solo in risposta a due stimoli, i comandi del giocatore (`processaComando`) e gli impulsi del temporizzatore (`tick`, che arriva come `Comando.TIMER`: per esempio un round di combattimento al secondo). Implementa `ControlloreDiGioco`.
 
-Ogni `Stato` (51) ha due gestori: uno di ingresso, per quando ci si arriva senza un comando, e uno di comando, per quando il giocatore sceglie qualcosa. I gestori impostano il nuovo stato, pubblicano le conseguenze sul bus e dicono se fermarsi in attesa o proseguire da soli con una transizione automatica. **Non esiste una tabella centrale delle transizioni**: le regole «da quale stato a quale» stanno nei metodi `entraInStato…` e `gestisciComandoInStato…`. Gli stati si raggruppano così:
+Ogni `Stato` (54) ha due gestori: uno di ingresso, per quando ci si arriva senza un comando, e uno di comando, per quando il giocatore sceglie qualcosa. I gestori impostano il nuovo stato, pubblicano le conseguenze sul bus e dicono se fermarsi in attesa o proseguire da soli con una transizione automatica. **Non esiste una tabella centrale delle transizioni**: le regole «da quale stato a quale» stanno nei metodi `entraInStato…` e `gestisciComandoInStato…`. Gli stati si raggruppano così:
 
 | Gruppo | Stati |
 | :--- | :--- |
 | avvio | `LOGO_INIZIALE`, `INTRO`, nome, sesso e classe del personaggio, `PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE`, `INIZIO_GIOCO` |
-| ciclo di una locazione | `INIZIO_LOCAZIONE`, `INTERMEZZO`, `PREPARAZIONE_LOCAZIONE`, `IN_LOCAZIONE`, `IN_COMBATTIMENTO`, `FINE_LOCAZIONE` (e `…_2`), `ATTESA_DIREZIONE`, `SCELTA_DIREZIONE`, `SCELTA_PASSI` |
+| ciclo di una locazione | `INIZIO_LOCAZIONE`, `INTERMEZZO` (e `ATTESA_UI_PER_INTERMEZZO`), `PREPARAZIONE_LOCAZIONE`, `IN_LOCAZIONE`, `INGRESSO_NEGOZIO`, `IN_COMBATTIMENTO`, `ATTESA_RISPOSTA_MISSIONE`, `FINE_LOCAZIONE` (e `…_2`), `ATTESA_DIREZIONE`, `SCELTA_DIREZIONE`, `SCELTA_PASSI`, `ACCAMPAMENTO` |
 | scelte | personaggio (automatica, qualsiasi, manuale), destinatario di un oggetto, incantesimo da lanciare, sì/no, risposta a una missione, pozioni, resurrezione (formulante, bersaglio, esecuzione) |
 | schermate | `INVENTARIO`, `TROFEI`, `BESTIARIO`, `GRIMORIO`, `TATTICHE`, `MAPPA`, `INGRESSO_NEGOZIO`, `ACCAMPAMENTO`, `SELEZIONE_SALVATAGGIO_DA_SCRIVERE`, `CONFERMA_USCITA` |
 | fine partita | `GIOCO_PERSO`, `GIOCO_VINTO`, `STATISTICHE`, `ATTESA_NOME_PUNTEGGI` → di nuovo `INTRO` |
@@ -53,11 +53,11 @@ Gli scambi di artefatti hanno automi propri: `AutomaInventario` (fra il gruppo e
 
 ### Verso la UI
 
-`VistaPartitaMotore` è l'implementazione di `VistaPartita`: non tiene stato, a ogni chiamata delega ai gruppi correnti e alle classi statiche, così vale anche dopo una partita nuova o riletta. `StrumentiDiSviluppoMotore` implementa gli strumenti della finestra di prova; `DotazioneDiProva` dà al gruppo in modalità di prova scorte abbondanti, la Falce del Tristo Mietitore, due spade che mettono un modificatore sul bersaglio e la mappa scoperta. `Notizie` è la facciata su `NotizieMD`: gli ultimi messaggi li prende dal bus, le notizie da chi le produce. `Racconto` ha l'introduzione e i finali (i testi stanno in `storia_<lingua>.properties`), che il motore dà alla UI così ogni piattaforma racconta la stessa storia. `TestoAvvisoDiFusione` scrive gli avvisi dell'incantatore.
+`VistaPartitaMotore` è l'implementazione di `VistaPartita`: non tiene stato, a ogni chiamata delega ai gruppi correnti e alle classi statiche, così vale anche dopo una partita nuova o riletta. `StrumentiDiSviluppoMotore` implementa gli strumenti della finestra di prova; `DotazioneDiProva` dà al gruppo in modalità di prova scorte abbondanti, la Falce del Tristo Mietitore, due spade che mettono un modificatore sul bersaglio e la mappa scoperta. `Notizie` (in `02-foresta-notizie`) è la facciata su `NotizieMD`: gli ultimi messaggi li prende dal bus, le notizie da chi le produce. `Racconto` ha l'introduzione e i finali (i testi stanno in `storia_<lingua>.properties`), che il motore dà alla UI così ogni piattaforma racconta la stessa storia. `TestoAvvisoDiFusione` scrive gli avvisi dell'incantatore.
 
 ### I salvataggi su file
 
-Le implementazioni su file delle interfacce del contratto (e `GestoreSuggerimentiSuFile`, il file `tutorial` della cartella `.foresta`: se il tutorial è acceso e quali suggerimenti sono visti, vale da una partita all'altra come il bestiario; `AvvioDelMotore` lo passa a `RegistroSuggerimenti`): `GestoreSalvataggiSuFile` (quattro slot a mano più il salvataggio automatico, un file `<slot>.TXT` per slot, scritto su un file temporaneo che prende il posto del vecchio solo se completo), `GestorePunteggiSuFile` (la classifica dei migliori dieci, `forestaHS`; la `Classifica` con le sue regole è in `01-foresta-punteggi`, qui solo quando leggerla e scriverla), `GestoreTrofeiSuFile` e `GestoreBestiarioSuFile`. La base `GestoreSuFile` scrive nella cartella `.foresta` dell'utente, o in quella che indica la piattaforma (su Android e iOS è uno spazio privato dell'app), con `java.io.File` e non con `java.nio.file`. `SalvataggioInMemoria` è la rete di sicurezza: l'ultimo stato a fine locazione, tenuto solo in memoria, come ultima riga dell'elenco da cui si carica.
+Le implementazioni su file delle interfacce del contratto (e `GestoreSuggerimentiSuFile`, il file `tutorial` della cartella `.foresta`: se il tutorial è acceso e quali suggerimenti sono visti, vale da una partita all'altra come il bestiario; oggi però `AvvioDelMotore` non lo passa a `RegistroSuggerimenti`: la riga è commentata, perché il tutorial non si salva finché si collauda): `GestoreSalvataggiSuFile` (quattro slot a mano più il salvataggio automatico, un file `<slot>.TXT` per slot, scritto su un file temporaneo che prende il posto del vecchio solo se completo), `GestorePunteggiSuFile` (la classifica dei migliori dieci, `forestaHS`; la `Classifica` con le sue regole è in `01-foresta-punteggi`, qui solo quando leggerla e scriverla), `GestoreTrofeiSuFile` e `GestoreBestiarioSuFile`. La base `GestoreSuFile` scrive nella cartella `.foresta` dell'utente, o in quella che indica la piattaforma (su Android e iOS è uno spazio privato dell'app), con `java.io.File` e non con `java.nio.file`. `SalvataggioInMemoria` è la rete di sicurezza: l'ultimo stato a fine locazione, tenuto solo in memoria, come ultima riga dell'elenco da cui si carica.
 
 ### I testi e gli intermezzi del motore
 

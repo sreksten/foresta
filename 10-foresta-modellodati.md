@@ -41,7 +41,7 @@ I **trofei** e il **bestiario** non sono qui: non appartengono a una partita ma 
 
 ### `installa()`: dire alle parti dove stanno i loro dati
 
-Le parti statiche (`Foresta`, `GruppoGiocatore`, `Statistiche`, `LineaTemporale`, `RegistroPersonaggi`, `RegistroArtefatti`, `RegistroMissioni`, `MagazziniDeiNegozi`, `Cassa`, `RegistroIntermezzi`, `TatticheDeiPersonaggi`, `CantiImparati`) **non conoscono il modello dati**: è `ModelloDati.installa()` a installare in ciascuna un fornitore (`setFornitoreDiDati(() -> getIstanza().getXxxMD())`). Il fornitore va chiamato a ogni uso, perché `ModelloDati.setIstanza(...)` sostituisce l'istanza quando si carica un salvataggio, e i fornitori puntano sempre a quella in corso.
+Le parti statiche (`Foresta`, `GruppoGiocatore`, `Statistiche`, `LineaTemporale`, `RegistroPersonaggi`, `RegistroArtefatti`, `RegistroMissioni`, `MagazziniDeiNegozi`, `Cassa`, `RegistroIntermezzi`, `TatticheDeiPersonaggi`, `CantiImparati`, `Notizie`) **non conoscono il modello dati**: è `ModelloDati.installa()` a installare in ciascuna un fornitore (`setFornitoreDiDati(() -> getIstanza().getXxxMD())`). Il fornitore va chiamato a ogni uso, perché `ModelloDati.setIstanza(...)` sostituisce l'istanza quando si carica un salvataggio, e i fornitori puntano sempre a quella in corso.
 
 L'installazione è **esplicita**: la chiama `Main` come prima cosa, e `PartitaDiTest` a ogni partita di prova; un test che usa una di quelle parti senza passare da lì la chiama lui. Chi usa una parte prima dell'installazione riceve un `IllegalStateException` esplicito («Nessuno ha detto alla mappa dove sono i suoi dati…»). Richiamarla non fa danni.
 

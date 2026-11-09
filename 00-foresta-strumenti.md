@@ -40,7 +40,7 @@ Un testo che costa costruirlo si passa come fornitore, `Logger.log(() -> "Colpo 
 
 ### La modalità di prova: `ModalitaDiProva` e `TrucchiDiSviluppo`
 
-`ModalitaDiProva` è un semplice interruttore, acceso dall'argomento di avvio `MODALITA_DI_PROVA` (vedi `Main`). Con la modalità accesa il gioco regala monete, pergamene e pozioni a volontà, svela la mappa e mette in campo artefatti potenti; senza, la partita parte come per un giocatore vero.
+`ModalitaDiProva` è un semplice interruttore, acceso dall'argomento di avvio `MODALITA_DI_PROVA` (lo legge `OpzioniDiAvvio`, in `12-foresta-ui-comune`). Con la modalità accesa il gioco regala monete, pergamene e pozioni a volontà, svela la mappa e mette in campo artefatti potenti; senza, la partita parte come per un giocatore vero.
 
 `TrucchiDiSviluppo` è il `TruccatoreDiDadi` della finestra di prova: per ogni `ContestoLancio` tiene **un trucco permanente** con il numero voluto (o l'elemento voluto, per i contesti che scelgono). Un trucco il cui valore non è fra quelli possibili in quel lancio (un 5 per un lancio da 1 a 3) non si applica e quel lancio va al caso. Lo stato può essere letto e scritto da qualunque thread. Il resto è nella [guida agli strumenti di prova](strumenti_di_prova.md).
 

@@ -38,7 +38,7 @@ Trentaquattro **reazioni**. Ognuna è dichiarata con cinque dati:
 4. gli **stati rimossi** al difensore;
 5. gli **stati applicati** al difensore.
 
-Esempi: `CONGELAMENTO` (gelo su un bagnato: perde `BAGNATO`, riceve `CONGELATO`), `RAFFREDDAMENTO` (aria su un bagnato: perde `BAGNATO`, riceve `RAFFREDDATO`: tre turni, e a ogni turno una volta su due starnutisce e perde il turno), `ESTINZIONE` (acqua su un bruciato: perde `BRUCIATO` e `BAGNATO`), `ESPLOSIONE_DI_GAS` (veleno su un bruciato). **L'ordine di dichiarazione è l'ordine in cui le reazioni si applicano**, per stato; il calcolo del danno le prova in sequenza (`CalcolatoreCombattimento.interazioniAttive`). Sono scritte qui, e non solo nel calcolo del danno, perché le usano sia il calcolo vero sia le tattiche, che guardano gli stati causabili (`CalcolatoreCombattimento.statiCausabili`).
+Esempi: `CONGELAMENTO` (gelo su un bagnato: perde `BAGNATO`, riceve `CONGELATO`), `RAFFREDDAMENTO` (aria su un bagnato: perde `BAGNATO`, riceve `RAFFREDDATO`: tre turni, e a ogni turno una volta su due starnutisce e perde il turno), `ESTINZIONE` (acqua su un bruciato: perde `BRUCIATO` e `BAGNATO`), `ESPLOSIONE_DI_GAS` (veleno su un bruciato). **L'ordine di dichiarazione è l'ordine in cui le reazioni si applicano**, per stato; il calcolo del danno le prova in sequenza (`CalcolatoreCombattimento.interazioniAttive`). Sono scritte qui, e non solo nel calcolo del danno, perché le usa il calcolo vero e le userebbero le tattiche, che per ora non guardano ancora gli stati causabili (`CalcolatoreCombattimento.statiCausabili` c'è, ma lo chiama solo il calcolatore stesso).
 
 Due metodi rendono particolari alcune reazioni:
 

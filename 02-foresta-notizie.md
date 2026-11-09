@@ -29,7 +29,7 @@ Stanno nel pacchetto `modellodati`, come quelli di ogni parte:
 `Notizie` è una classe di soli metodi statici, nel pacchetto `notizie`. Il dato non lo possiede: lo chiede a ogni uso a un fornitore (`setFornitoreDiDati`), che installa `ModelloDati.installa()` e che punta sempre al modello dati in corso, perché cambia quando si carica un salvataggio. Senza fornitore lancia un `IllegalStateException` esplicito.
 
 - **I messaggi** li prende dal bus: `registrati()` si iscrive a `NotificaTestoFrase` e `NotificaTestoParagrafo`. Sono centinaia i punti del gioco che le pubblicano, e lo storico è proprio quel che il giocatore ha visto, quindi ascoltarle è la scelta giusta. `registrati()` va chiamato una volta sola, prima che il gioco pubblichi notifiche (lo fa `StatoDelMotore.registraComponenti()`).
-- **Le notizie** le riceve da chi le produce: `aggiungiNotizia`, chiamata da `Locanda` nel motore. Nessun altro le ascolta. Vanno in testa e le più vecchie oltre il limite si scartano.
+- **Le notizie** le riceve da chi le produce: `aggiungiNotizia`, chiamata dalle locazioni del motore che le producono (`Locanda`, `Citta`). Nessun altro le ascolta. Vanno in testa e le più vecchie oltre il limite si scartano.
 - **La lettura**: `getUltimiMessaggi()` serve all'`Automa` per ripopolare il pannello dopo un caricamento (`InternoCaricamentoCompletato`), `getUltimeNotizie()` alla UI, che la legge da `VistaPartita` per il notiziario e per la mappa a tutto schermo.
 
 ### Chi produce le notizie

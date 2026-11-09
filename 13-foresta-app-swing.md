@@ -35,7 +35,7 @@ Si iscrive a tutti i tipi di evento del bus e ne scrive una riga nel log, con il
 
 Stanno qui i test che il compilatore non può far stare più in basso, in due gruppi:
 
-- **le regole sul codice, che leggono i sorgenti dei moduli** (con `SorgentiDelProgetto`, che sale fino alla cartella che contiene i moduli, partendo da quella da cui gira il test): `DipendenzeDalToolkitGraficoTest` (nessuno fuori da `12-foresta-swing` usa `java.awt`, `javax.swing`, `javax.imageio`, `javax.sound`), `ConvenzioniDiPortabilitaTest` (il motore non chiude il processo, niente chiamate dipendenti dalla lingua del dispositivo senza `Locale`, i testi del log passati come fornitore), `CostantiDegliEventiTest` (ogni evento usa la costante del suo `TipoEvento`), `RiferimentiAlleImmaginiTest`;
+- **le regole sul codice, che leggono i sorgenti dei moduli** (con `SorgentiDelProgetto`, che sale fino alla cartella che contiene i moduli, partendo da quella da cui gira il test): `DipendenzeDalToolkitGraficoTest` (nessuno fuori da `12-foresta-swing` usa `java.awt`, `javax.swing`, `javax.imageio`, `javax.sound`, e nessuno fuori dai due moduli libGDX usa `com.badlogic`), `ConvenzioniDiLocalizzazioneTest` (le stringhe italiane nel codice si contano contro una base di partenza), `ConvenzioniDiPortabilitaTest` (il motore non chiude il processo, niente chiamate dipendenti dalla lingua del dispositivo senza `Locale`, i testi del log passati come fornitore), `CostantiDegliEventiTest` (ogni evento usa la costante del suo `TipoEvento`), `RiferimentiAlleImmaginiTest`;
 - **i test che usano motore e UI insieme**: le schermate (bestiario, commerciante, doppio click dello scambiatore), i riquadri, la barra delle icone, il canvas, le tattiche, la finestra di prova, i font.
 
 ## Osservazioni

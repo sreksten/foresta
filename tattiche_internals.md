@@ -14,19 +14,20 @@ Le tattiche attraversano più moduli (la separazione la garantisce il compilator
 | :--- | :--- | :--- |
 | `06-foresta-combattimento` | `tipi` | Le azioni: `TipoAzione` (che cosa si può fare in uno scontro, poteri compresi) ed `EsitoAzione` |
 | `08-foresta-tattiche` | `tipi` | Gli altri **enumerati**: `TipoRosa`, `PortataAzione` (su che cosa agisce ogni azione e da quali rose pesca: `PortataAzione.di(azione)`), `TipoFiltro`, `TipoOrdinamento`, `TipoPredicato`, `TipoConfronto`, `CriterioIncantesimo`, `TipoParametro`, e `CostantiTattiche`. Solo nomi, descrizioni e regole di compatibilità; nessuna logica di gioco |
-| `08-foresta-tattiche` | `tattiche` | I **dati** (suffisso `MD`): `TatticaMD`, `VoceMD`, `SelettoreMD`, `FiltroMD`, `OrdinamentoMD`, `PredicatoMD`, `AzioneMD`, e `FormatoTattiche` per il salvataggio. Immutabili, con la lettura e la scrittura |
-| `08-foresta-tattiche` | `eventi.*` | `ComandoImpostaTattica` (UI → motore), `RichiestaAperturaTattiche` (motore → UI), `InternoDecisioneTattica` (la spiegazione di una decisione) |
-| `12-foresta-motore` | `tattiche` | La **logica**: `Valutatore`, `ContestoTattico`, `Decisione`, `RisultatoSelezione`, `EsecutoreTattiche`, `RegistroTattiche`, `TatticheBase` |
+| `08-foresta-tattiche` | `modellodati` | I **dati** (suffisso `MD`): `TatticaMD`, `TatticheMD`, `VoceMD`, `SelettoreMD`, `FiltroMD`, `OrdinamentoMD`, `PredicatoMD`, `AzioneMD`, e `FormatoTattiche` per il salvataggio. Immutabili, con la lettura e la scrittura |
+| `08-foresta-tattiche` | `eventi.*` | `ComandoImpostaTattica` (UI → motore), `RichiestaAperturaTattiche` (motore → UI), `InternoDecisioneTattica` (la spiegazione di una decisione), `InternoRichiestaAperturaFinestraCombattimento` |
+| `08-foresta-tattiche` | `tattiche` | La **logica**: `Valutatore`, `ContestoTattico`, `Decisione`, `RisultatoSelezione`, `EsecutoreTattiche`, `RegistroTattiche`, `TatticheBase` (le tattiche dei mostri) e `TatticheDeiPersonaggi` (la tattica di ogni personaggio, legata al suo `uuid`) |
 | | `tattiche.rose` | `Rosa` e una classe per ogni `TipoRosa`; `Rose` le trova |
 | | `tattiche.valutazione` | `Selettori`, `Filtri`, `Ordinamenti`, `Predicati`, `Requisiti`, `SceltaIncantesimo`, `Astuzia` |
-| | `combattimento` | `StatoDelCombattimento` (la memoria dello scontro) e `CalcolatoreCombattimento` (i danni attesi) |
 | | `tattiche.modifica` | `BozzaTattica` (la tattica in modifica), `TestoTattica` (i testi, da `testo_tattica_it.properties`) |
+| `06-foresta-combattimento` | `combattimento` | `StatoDelCombattimento` (la memoria dello scontro) e `CalcolatoreCombattimento` (i danni attesi) |
+| `12-foresta-motore` | `locazioni` | `LocazioneBase` (il round di combattimento, che chiama l'`EsecutoreTattiche`) e `Automa` |
 | `12-foresta-ui-comune` | `ui.schermate` | `EditorDelleTattiche` (la schermata senza disegno: righe, click, colonna centrale, spiegazione), `MenuADiscesa` (i menu) |
 | `12-foresta-swing` | `ui.tattiche` | `DisplayableCanvasTattiche` (il disegno della schermata), `CasellaADiscesa` (il disegno dei menu) |
 | `12-foresta-libgdx` | — | `SchermataTatticheGdx` (il disegno in libGDX) |
 
 La regola che ne discende: **i dati non sanno niente del motore** (`VoceMD` non può chiedere se un'azione si può fare) e **la UI non vede il motore** (lavora sui dati
-`*MD` e sugli enumerati, e parla per eventi). Chi valuta è sempre una classe di `12-foresta-motore`.
+`*MD` e sugli enumerati, e parla per eventi). Chi valuta è sempre una classe di `08-foresta-tattiche`, che il motore chiama dal round di combattimento (`LocazioneBase`).
 
 ## 2. Il quadro d'insieme
 
@@ -71,7 +72,7 @@ Ogni azione dichiara la sua **portata**, cioè su che cosa agisce, e quindi come
 | Portata | Selettore | Azioni |
 | :--- | :--- | :--- |
 | `AVVERSARIO` | sceglie il bersaglio fra gli avversari | `ATTACCO_FISICO`, gli incantesimi di classe (`ARIA`…`SILENZIO`) e `LUCE_DIVINA` (un'abilità del Sacerdote), `INCANTESIMO_DI_DANNO`, `INCANTESIMO_DEL_REPERTORIO`, `DARDO_ARCANO` |
-| `ALLEATO` | sceglie il bersaglio fra gli alleati (anche chi decide) | `CANTO_CURATIVO`, le quattro pozioni |
+| `ALLEATO` | sceglie il bersaglio fra gli alleati (anche chi decide) | `CANTO_CURATIVO`, le cinque pozioni (salute, magia, salute grande, magia grande, panacea) |
 | `ALLEATO_CADUTO` | sceglie il bersaglio fra i caduti | `RESURREZIONE` |
 | `GRUPPO_ALLEATI` | è solo un test di esistenza | `ALBA_SACRA`, `CANTO_DI_VALORE` |
 | `GRUPPO_AVVERSARI` | è solo un test di esistenza | `CANTO_IPNOTICO`, `URLO_DELLA_BANSHEE` |
@@ -81,7 +82,7 @@ Tutte le azioni di una **stessa voce** devono avere la stessa portata (lo contro
 quali rose può pescare il bersaglio: per esempio un attacco dei miei non colpisce gli ospiti, un attacco di un mostro sì. Le rose sono dati della
 portata (`PortataAzione.roseAmmesse`, due insiemi per costante: per i miei e per i mostri).
 
-`TipoAzione.di(ClasseIncantesimo)` e `getClasseIncantesimo()` fanno da ponte fra l'azione e l'incantesimo (`di(null)` dà null). `INCANTESIMO_DI_DANNO` e `INCANTESIMO_DEL_REPERTORIO`
+`TipoAzione.di(TipoIncantesimo)` e `getClasseIncantesimo()` fanno da ponte fra l'azione e l'incantesimo (`di(null)` dà null). `INCANTESIMO_DI_DANNO` e `INCANTESIMO_DEL_REPERTORIO`
 non hanno una classe fissa: sono due azioni "a criterio" che il valutatore trasforma in quella dell'incantesimo scelto (§8).
 
 ### 3.2 `TipoRosa`
@@ -109,7 +110,7 @@ sia quello giusto, la lettura del salvataggio sa quale campo guardare, la UI sa 
 
 `TipoConfronto` ha tre valori (`MINORE`, `UGUALE`, `MAGGIORE`); "almeno" e "al massimo" si ottengono con la **negazione** (`NON MINORE`, `NON MAGGIORE`).
 
-## 4. I dati (`10-foresta-modellodati`)
+## 4. I dati (pacchetto `modellodati` di `08-foresta-tattiche`; `10-foresta-modellodati` li mette insieme per salvarli)
 
 ```
 TatticaMD ── lista di ──► VoceMD ──┬── SelettoreMD ──┬── TipoRosa

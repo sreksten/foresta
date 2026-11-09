@@ -26,7 +26,7 @@ Le dipendenze sono transitive: un modulo vede anche quello che vedono i moduli d
 | :--- | :--- |
 | `TipoArtefatto` | i 24 tipi: armi (spada, mazza, ascia, spadone, falce, lancia, bastone magico, libro magico), difese (scudo, elmo, armatura, veste, maschera, schinieri), accessori (anello, talismano, ninnolo), **ingredienti magici** (pergamena, gemma, monile, gingillo, sigillo) e due oggetti speciali dei cofani, `AGGIORNAMENTO` e `RIPROGRAMMAZIONE` |
 | `CategoriaArtefatto` | raggruppa i tipi che seguono le stesse regole: le armi colpiscono, le armature proteggono, gli ingredienti si fondono |
-| `TipoSlotArtefatto` | dove lo porta un personaggio: testa, volto, corpo, mano principale, mano secondaria, entrambe le mani, gambe, accessorio |
+| `TipoSlotArtefatto` | dove lo porta un personaggio: testa, volto, corpo, mano principale, mano secondaria, entrambe le mani, gambe, accessorio, e il «nucleo» (`NUCLEO`: gli ingredienti magici, che stanno sempre nell'inventario del gruppo): 9 valori |
 | `TipoCardinalitaArtefatto` | si conta per pezzo singolo o per paio (gli schinieri) |
 | `TipoRaritaArtefatto` | comune, raro, leggendario: decide quanti effetti (incantamenti più modificatori) può avere — livello −1, livello, livello +1 — fino al tetto di 3, 4 e 5 |
 | `GradoIncantamento` | minore, medio, maggiore: bonus fisso (5, 10, 15) e coefficiente (5%, 10%, 20%); il grado dipende dal livello |

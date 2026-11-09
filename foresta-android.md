@@ -38,7 +38,7 @@ Provato su un **Realme Pad (RMP2103)**: un tablet da 10,4″, 2000×1200, Androi
 
 ## Osservazioni
 
-- Nei moduli non-Swing non ci sono import di `java.awt`, `java.time`, `java.nio.file` né `javax.*` (945 file): il compilatore Android li ha accettati tutti.
+- Nei moduli non-Swing non ci sono import di `java.awt`, `java.time`, `java.nio.file` né `javax.*`: il compilatore Android li ha accettati tutti.
 - **Precisione delle coordinate delle texture**: lo shader predefinito di libGDX è `mediump`, che sulle GPU Mali è a 16 bit e al bordo delle immagini degli atlanti fa leggere la riga rossa di separazione; per questo si usa `SpriteBatchDiPrecisioneAltaGdx` (vedi `12-foresta-libgdx.md`).
 - Il Realme Pad è un tablet, non un telefono: non dice niente sul layout da telefono (rapporto 1,67 contro circa 2,2). Con `adb shell wm size` si può far fingere allo schermo una forma più stretta.
 
@@ -46,5 +46,5 @@ Provato su un **Realme Pad (RMP2103)**: un tablet da 10,4″, 2000×1200, Androi
 
 - Provare il tocco e una partita intera (salvataggio, caricamento, inventario, mappa, combattimento, tastiera di sistema).
 - Riportare `minSdk` a 24 verificando con lint le API usate.
-- La firma dell'app e il pacchetto per lo store (Fase 7, punto 5), le icone, il nome, schermo sempre acceso e margini di sicurezza (notch).
+- La firma dell'app e il pacchetto per lo store (Fase 7, punto 5), le icone, il nome e i margini di sicurezza (notch); lo schermo sempre acceso c'è già (`useWakelock` in `AndroidLauncher`).
 - Il layout per telefono (Fase 6).

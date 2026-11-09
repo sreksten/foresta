@@ -4,7 +4,7 @@ Stato: **le quattro lezioni sono scritte** (2026-11-08), in un solo suggerimento
 
 ## 1. Da dove si parte
 
-- Oggi c'è **un solo suggerimento** sulle tattiche, `TATTICHE` (riga 9 di `tutorial.md`, §4): scatta dopo due scontri visti, punta l'icona dell'inventario e dice che «da lì puoi cambiarla per ognuno». Non entra mai nella schermata delle tattiche, e nessun suggerimento si apre in quella schermata: `SchermoDelGioco.schermataDelSuggerimento` conosce solo la scelta della classe, la mappa, l'inventario e la schermata di gioco.
+- All'origine c'era **un solo suggerimento** sulle tattiche, `TATTICHE` (riga 9 di `tutorial.md`, §4): scatta dopo due scontri visti, punta l'icona dell'inventario e dice che «da lì puoi cambiarla per ognuno». Non entrava nella schermata delle tattiche. Oggi ce n'è anche un secondo, `SCHERMATA_DELLE_TATTICHE` (dodici pagine, le quattro lezioni: `Situazione.TATTICHE_APERTE`), che si apre alla prima apertura della schermata (`SchermoDelGioco.schermataDelSuggerimento` conosce anche `StatoDelloSchermo.TATTICHE`).
 - La schermata delle tattiche si apre dall'inventario con l'icona `MOSTRA_TATTICHE` (stato `StatoDelloSchermo.TATTICHE`). La logica è in `EditorDelleTattiche` e `MenuADiscesa` (`12-foresta-ui-comune`), i gemelli sono `DisplayableCanvasTattiche` (Swing) e `SchermataTatticheGdx` (libGDX), che disegnano soltanto.
 - La schermata ha **a sinistra** la lista delle voci (ognuna con il suo numero, che la accende o la spegne, e il nome, che la ripiega), **al centro** il personaggio con le frecce, **Sì**, **No** e **Predefinita**, **a destra** il riquadro che spiega l'elemento sotto il mouse e come si legge la voce. Il riquadro destro è la parte più utile per chi impara: il tutorial deve insegnare a usarlo.
 
@@ -62,6 +62,8 @@ Una per apertura della schermata, per non sommergere chi non conosce il gioco; o
 
 ## 4. Che cosa serve nel codice
 
+**Stato (2026-11-08):** fatti la schermata per il suggerimento (`TATTICHE_APERTE`), i nuovi bersagli con le aree dell'editor (`LISTA_DELLE_TATTICHE`, `SPIEGAZIONE_DELLE_TATTICHE`, `PULSANTI_DELLE_TATTICHE`) e le lezioni, in **un solo suggerimento** di dodici pagine (la deroga al limite di tre pagine, come `LUOGHI`). Restano la ricetta guidata e provare le lezioni nei due toolkit. Quel che segue è il piano di partenza.
+
 - **Una schermata per suggerimento.** `schermataDelSuggerimento` accetta `StatoDelloSchermo.TATTICHE`, e `SituazioniDellaUI` riceve `Situazione.TATTICHE_APERTE` (e una per lezione, o un contatore di aperture).
 - **Nuovi bersagli** (`BersaglioDelSuggerimento`): la lista delle voci, la prima voce, il numero della voce, il riquadro della spiegazione, i pulsanti Sì/No/Predefinita, la riga «aggiungi». Le aree le fornisce `EditorDelleTattiche` (oggi non le espone); `SchermoDelGioco.getAreaDelBersaglio` le chiede a lui. Se una riga non c'è (voce ripiegata, lista scorsa) si ripiega sulla colonna intera, come fa `areaDelleIcone`.
 - **Tre suggerimenti separati** per le lezioni 2-4 (invece di una sola lista di pagine) o una deroga al limite di tre pagine come per `LUOGHI`: propongo i suggerimenti separati.
@@ -95,7 +97,7 @@ Ogni passo compila, si prova e si rivede prima del commit.
 
 ## 7. Da fare / idee aperte
 
-- Decidere se le quattro lezioni si danno una per apertura (proposta) o tutte alla prima.
+- ~~Decidere se le quattro lezioni si danno una per apertura o tutte alla prima.~~ Deciso (2026-11-08): tutte alla prima apertura, in un solo suggerimento.
 - Decidere se la ricetta guidata entra nella prima versione.
 - Un riquadro «glossario» sempre a portata di mano (una pagina che elenca rosa, filtri, ordinamenti, condizioni, azioni) oltre al tutorial: forse inutile, il riquadro destro già fa questo lavoro.
 - Verificare contro `TatticheBase.deiMostri` le fasce di astuzia dei mostri di §11.16 (sezione 2, punto 4).

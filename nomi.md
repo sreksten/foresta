@@ -53,7 +53,7 @@ sacerdotessa, che vengono da `NOME_SACERDOTE` e `NOME_SACERDOTESSA`.
 
 ## 3. Generazione
 
-In `Foresta.reimposta()`, dopo `resetProduzioni()`, in quest'ordine e **senza altri reset in mezzo**:
+In `CostruttoreDellaForesta.reimposta()` (la mappa la genera `GeneratoreDellaForesta`, che chiama `PopolatoreDelMondo`), dopo `resetProduzioni()`, in quest'ordine e **senza altri reset in mezzo**:
 
 1. i 21 locandieri (le 4 locande delle città più `max(compagni disponibili, (DIMENSIONE_X + DIMENSIONE_Y) / 4)` = 17), con
    `ProduttoreDiLocandeCasuale.getDatiLocanda`, che pesca tutto insieme: **non va richiamato a partita avviata** (vedi il suo

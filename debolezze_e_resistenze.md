@@ -9,7 +9,7 @@ Le interazioni con gli *stati* del difensore (un bagnato e il fulmine) sono un'a
 ## 1. Il modello
 
 - Una **tabella `tipo di danno → moltiplicatore`** per ogni categoria e per ogni classe (`CategoriaPersonaggio` e
-- TipoPersonaggio`). I tipi che mancano valgono 1.
+  `TipoPersonaggio`). I tipi che mancano valgono 1.
 - Il moltiplicatore di un personaggio (`Personaggio.getMoltiplicatoreDannoSubito(tipoDanno)`) è il **prodotto** del valore della sua
   classe e di quelli delle sue categorie. Per esempio un Fantasma è NON_MORTO (necrotico ×0,5) e anche, per la sua classe, necrotico ×0:
   il risultato è ×0.
@@ -69,9 +69,12 @@ Le altre categorie (umanoide, bestia, draconico, gigantesco, ibrido) non hanno r
 | **Necromante** | sacro ×1,25 | necrotico ×0,5 | | vive di energia necrotica, ma è vivo: la luce sacra lo ferisce di più |
 | **Strega** | fuoco ×1,5 | maledizione ×0,5 | | "al rogo"; le maledizioni sono il suo mestiere |
 | **Folletto** | tagliente ×1,25, perforante ×1,25 | | | teme il ferro (le fate e i folletti soffrono il "ferro freddo") |
+| **Arpia** | | | aria (agli incantesimi) | vive nell'aria |
+| **Chierico, Chierica** | | necrotico ×0,75, maledizione ×0,75 | | serve il sacro e ne è protetto |
+| **Druido, Druida** | fuoco ×1,25, tagliente ×1,1 | acqua ×0,75, terra ×0,75, veleno ×0,75 | | vive di terra, acqua e veleni, ma soffre il fuoco e le lame |
 
-Senza voci particolari: Arpia, Centauro, Eremita, Gigante, Goblin, Hobgoblin, Minotauro, Minotauro Gigante, Titano
-(per ora le sole regole sono quelle delle loro categorie), i personaggi giocanti, altri comprimari o comparse.
+Senza voci particolari: Centauro, Eremita, Gigante, Goblin, Hobgoblin, Minotauro, Minotauro Gigante, Titano
+(per ora le sole regole sono quelle delle loro categorie), i personaggi giocanti che non sono Chierico né Druido (Guerriero, Ladro, Mago, Elfo, Bardo, Sacerdote), altri comprimari o comparse.
 
 ## Osservazioni
 

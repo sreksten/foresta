@@ -7,7 +7,7 @@ la descrizione, le abilità innate, le forze e le debolezze che si sono scoperte
 
 ## 1. Le voci
 
-Sono **32**: i 24 mostri più i ruoli di chi si sceglie o si recluta (Guerriero, Ladro, Mago, Elfo, Bardo, Sacerdote, Chierico, Druido). Il ruolo vale per tutte e due
+Sono **33**: i 25 mostri più i ruoli di chi si sceglie o si recluta (Guerriero, Ladro, Mago, Elfo, Bardo, Sacerdote, Chierico, Druido). Il ruolo vale per tutte e due
 le forme: **Mago e Maga sono una voce sola** (`TipoPersonaggio.getRuolo`), che si ricorda con la classe al maschile.
 
 | Cosa | Dove |
@@ -96,7 +96,7 @@ La scheda di una voce aperta, dall'alto:
 - `BestiarioMD` (`modellodati`, sul modello di `TrofeiMD`, fuori da `ModelloDati` e mai reimpostato): le voci sbloccate (per ruolo) e, per ruolo, le chiavi delle
   caratteristiche scoperte. Nel file `bestiario` di `~/.foresta/` una riga per voce che ha qualcosa da dire: `RUOLO|sbloccata|chiave§chiave`. Una riga di una
   classe che non esiste più si salta; un file rovinato si mette da parte (`bestiario.rovinato`).
-- `GestoreBestiario` (`11-foresta-motore-api`), `GestoreBestiarioSuFile` (`salvataggi`, passato a `RegistroBestiario.impostaGestoreBestiario` da `Main`); nei test
+- `GestoreBestiario` (`06-foresta-bestiario`), `GestoreBestiarioSuFile` (`salvataggi`, passato a `RegistroBestiario.impostaGestoreBestiario` da `Main`); nei test
   `GestoreBestiarioInMemoria`, collegato a `PartitaDiTest` (ogni test riparte con il bestiario vuoto).
 - Il trofeo **Enciclopedista** (`TipoTrofeo.ENCICLOPEDISTA`, `TrofeoEnciclopedista`) si vince con tutte le voci da scoprire sbloccate (25: i personaggi giocabili, noti da sempre, non si contano). Il progresso non è quello del registro dei
   trofei (che si perde se il gruppo muore nella locazione) ma quanto sa il bestiario; si controlla a fine locazione, come gli altri. Il Perdigiorno, che chiede tutti gli

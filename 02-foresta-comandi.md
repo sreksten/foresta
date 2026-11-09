@@ -8,7 +8,7 @@ Il **vocabolario di tutto ciò che il giocatore può comandare**: l'enum `Comand
 
 **Dichiarate nel pom:** `01-foresta-eventi`, `01-foresta-testi`.
 
-**Lo dichiarano:** `07-foresta-poteri`, `06-foresta-bestiario`, `10-foresta-trofei`.
+**Lo dichiarano:** `07-foresta-poteri`, `06-foresta-bestiario`, `03-foresta-tutorial`, `10-foresta-trofei`.
 
 Le dipendenze sono transitive: un modulo vede anche quello che vedono i moduli da cui dipende, quindi il compilatore garantisce la separazione fra i moduli che non si raggiungono.
 

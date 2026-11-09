@@ -95,7 +95,7 @@ Prima di disegnare schermate serve il punto d'ingresso, perché il motore parta 
 
 1. **`FitViewport` a risoluzione virtuale fissa** (quella del layout scelto). Le coordinate di riquadri e schermate si riusano quasi tutte; sul telefono il gioco appare scalato.
 2. **Riquadri** nell'ordine in cui servono per vedere una partita: Locazione, Gruppo, Testo (ridotto), Mappa (come tile), Missioni, Incantesimi e pozioni, Statistiche; poi Combattimento e Sfida.
-3. **Barra icone**: la classica (`DisplayableCanvasBarraIcone`). La versione dock si ingrandisce sotto il cursore e non ha senso sul tocco.
+3. **Barra icone**: il modello è comune (`BarraIcone`, `BarraIconeDock`) e libGDX la disegna con `BarraIconeGdx`. Il Dock (il default, anche su Android) si ingrandisce sotto il cursore o sotto il dito appoggiato e si sgonfia quando si alza.
 4. **Sprite e fumetti**: prima quelli che usano solo `drawImage` e alpha; poi `SpriteEffetto` (`SrcIn`) e `SpriteInDissolvenza` (sfocatura), da rifare con shader o precalcolati; `SpriteRivelazioneArtefatto` (forme e gradiente radiale) per ultimo.
 5. **Traduzione degli eventi**: fatta una volta per tutte e due, in `ForestaUI` (modulo comune).
 
@@ -122,8 +122,8 @@ Nell'ordine, dalla più semplice alla più pesante:
 2. Mappa a tutto schermo e Notiziario.
 3. Intermezzo (fumetti e animazioni).
 4. Inventario, Commerciante, Incantatore, Scambiatore consumabili (famiglia `DisplayableCanvasScambiatore`: un comportamento comune va nella classe base).
-5. **Tattiche** (`DisplayableCanvasTattiche`, 1.203 righe) per ultime: menu a discesa (`CasellaADiscesa`: la logica è ora `MenuADiscesa` nel comune, il disegno resta per toolkit), liste scorrevoli, modifiche multiple. La logica sta già in `08-foresta-tattiche` (`BozzaTattica`, `TestoTattica`).
-6. **Logo** (`TracciatoreLogo`, 1.443 righe): **fatto**. La logica (contorni, corridori, fasi) è in `AnimazioneDelLogo` nel modulo comune, `TracciatoreLogo` resta la veste Swing e `LogoInizialeGdx` quella libGDX (vedi sopra, decisione 7). I gradienti radiali delle nuvole in `CloudGenerator` si precalcolano in una texture.
+5. **Tattiche** (`DisplayableCanvasTattiche`, 1.203 righe allora, oggi circa 210: la logica è nel comune) per ultime: menu a discesa (`CasellaADiscesa`: la logica è ora `MenuADiscesa` nel comune, il disegno resta per toolkit), liste scorrevoli, modifiche multiple. La logica sta già in `08-foresta-tattiche` (`BozzaTattica`, `TestoTattica`).
+6. **Logo** (`TracciatoreLogo`, 1.443 righe allora, oggi circa 450): **fatto**. La logica (contorni, corridori, fasi) è in `AnimazioneDelLogo` nel modulo comune, `TracciatoreLogo` resta la veste Swing e `LogoInizialeGdx` quella libGDX (vedi sopra, decisione 7). I gradienti radiali delle nuvole in `CloudGenerator` si precalcolano in una texture.
 
 La finestra di prova (`FinestraDiProva`) si porta anche lei (decisione del 2026-11-06), ma solo per il desktop.
 
@@ -176,19 +176,19 @@ Da estrarre **componente per componente, quando lo si porta** (si separa il mode
 | Classe | Logica che si può portare in comune | Resta nel toolkit |
 | :--- | :--- | :--- |
 | `ScorrimentoVerticale`, `ComponenteScorrevole` | il modello dello scorrimento e dell'albero di nodi (altezze, offset, hit-test, stato aperto/chiuso) | disegno dei nodi e delle freccine |
-| `DisplayableCanvasBarraIcone` e `…Dock` | elenco delle icone, rettangoli, scorrimento e tocco, profilo di ingrandimento del Dock, posizione del cartiglio | disegno delle icone e dei bordi |
+| `DisplayableCanvasBarraIcone` e `…Dock` | **fatto**: `BarraIcone` e `BarraIconeDock` (elenco delle icone, rettangoli, scorrimento e tocco, profilo di ingrandimento del Dock, posizione del cartiglio) | disegno delle icone e dei bordi |
 | `Cartiglio` | calcolo della posizione e del testo | disegno |
-| `TipoIcona`, `MappaBottinoImmagine`, `MappaPersonaggioImmagine`, `VersiDeiPersonaggi` | le tabelle comando/classe/oggetto → nome della risorsa e il verso (`serveSpecchiare`) | caricamento dell'immagine nel toolkit e lo specchio |
-| `SfondoARiempimento` | la maschera dell'interno della cornice e l'interpolazione dei colori, su `ImmagineDiPixel` | la composizione dell'immagine finale |
+| `TipoIcona`, `MappaBottinoImmagine`, `MappaPersonaggioImmagine`, `VersiDeiPersonaggi` | **fatto per `TipoIcona` e `VersiDeiPersonaggi`** (nel comune); le due `Mappa…Immagine` restano in Swing: le tabelle comando/classe/oggetto → nome della risorsa e il verso (`serveSpecchiare`) | caricamento dell'immagine nel toolkit e lo specchio |
+| `SfondoARiempimento` | **fatto** (nel comune): la maschera dell'interno della cornice e l'interpolazione dei colori, su `ImmagineDiPixel` | la composizione dell'immagine finale |
 | `ImageCache` | l'elenco dei file, le chiavi, le regole della cache e delle composizioni | il tipo dell'immagine e la cache viva (libGDX libera le texture a mano) |
 | `DoomdarkTextProducer`, `TestoGrande` | la divisione in righe e l'impaginazione (già in `FontTool`) | la produzione dell'immagine (`IndexColorModel`, `ConvolveOp`) |
 | `DisplayableCanvas` | **fatto**: `SchermoDelGioco` (stati, pila, code degli effetti, sprite in vita, contesto del router) e `DisposizioneDelloSchermo` (coordinate) | `JPanel`, disegno, eventi di Swing |
 | `ForestaSwing` | **fatto**: `ForestaUI` (la traduzione degli eventi del bus, il temporizzatore della UI, le fasi di gioco), `DisposizioneDelloSchermo.dimensioniDelloSchermo` | `JFrame`, il logo, il thread di Swing |
 | Riquadri e schermate | il contenuto da mostrare (testi, elenchi, ordinamenti, stato del mouse), le coordinate | `Graphics2D` |
 | `DisplayableCanvasTattiche`, `CasellaADiscesa` | **fatto**: `EditorDelleTattiche` e `MenuADiscesa` (stato della modifica, righe, selezione, click) | il disegno |
-| Sprite (`SpriteBase`, `SpriteATempo`, fumetti, annunci…) | tempi, traiettorie, dissolvenza, `CoordinateFumetto` | disegno e filtri (`SrcIn`, sfocatura) |
+| Sprite (`SpriteBase`, `SpriteATempo`, fumetti, annunci…) | **fatto**: `ModelloDelloSprite` (tempi, traiettorie, dissolvenza), le `Descrizione…` e `CoordinateFumetto` | disegno e filtri (`SrcIn`, sfocatura) |
 | `TracciatoreLogo` | **fatto**: `AnimazioneDelLogo` (geometria e animazione del tracciato), `ContorniDelLogo`, `TorciaDelLogo`, `ScieDelLogo`, `TestaDellaCometa`, `LogoIniziale` | i tratti disegnati (Swing: `Graphics2D`; libGDX: texture riscritte dai pixel) |
-| `CloudGenerator` | geometria e animazione delle nuvole | il disegno |
+| `CloudGenerator` | **fatto**: `GeneratoreDiNuvole`, `Nuvola` e `GestoreNuvole` (comune; geometria e animazione delle nuvole) | il disegno |
 | `Prompt` | **fatto**: `CampoDiTesto` (chi aspetta la risposta, invio, Esc, caratteri ammessi) | il campo di testo |
 
 ## Osservazioni

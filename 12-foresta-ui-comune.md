@@ -8,7 +8,7 @@ Non usa `java.awt`, Swing, `javax.imageio` né libGDX: lo controlla `DipendenzeD
 
 **Dichiarate nel pom:** `11-foresta-motore-api`, `08-foresta-tattiche`, `03-foresta-tutorial`.
 
-**Lo dichiarano:** `12-foresta-swing`.
+**Lo dichiarano:** `12-foresta-swing`, `12-foresta-libgdx`.
 
 ## Funzionamento
 
@@ -54,7 +54,7 @@ Come si rifà un atlante: si aggiunge o si cambia il file in `sorgenti-immagini/
 
 ### Il riquadro del gruppo
 
-`RiquadroGruppo` è il modello del riquadro con lo stato dei personaggi (nome, salute, magia, livello, coraggio, valore, stanchezza, carisma; gli ospiti col nome e la salute): le colonne dei valori (calcolate sulla larghezza del glifo `9` del font medio), i blocchi di tre righe, quali blocchi si vedono con la lista scorsa, i colori (giallo per un valore fissato, verde o rosso se i modificatori temporanei lo alzano o lo abbassano, grigio scuro per i caduti) e lo scorrimento (rotella e trascinamento). `voci()` restituisce le scritte da disegnare come `VoceDiTesto` (testo, posizione, colore, allineamento a destra, larghezza massima se va a capo): chi disegna le mette come vuole. `PosizioneDellIntestazione` dà la posizione dell'intestazione dei riquadri (centrata sul bordo della cornice, con l'ombra). Gli sprite delle variazioni (numeri che salgono) restano in Swing finché non si portano gli sprite.
+`RiquadroGruppo` è il modello del riquadro con lo stato dei personaggi (nome, salute, magia, livello, coraggio, valore, stanchezza, carisma; gli ospiti col nome e la salute): le colonne dei valori (calcolate sulla larghezza del glifo `9` del font medio), i blocchi di tre righe, quali blocchi si vedono con la lista scorsa, i colori (giallo per un valore fissato, verde o rosso se i modificatori temporanei lo alzano o lo abbassano, grigio scuro per i caduti) e lo scorrimento (rotella e trascinamento). `voci()` restituisce le scritte da disegnare come `VoceDiTesto` (testo, posizione, colore, allineamento a destra, larghezza massima se va a capo): chi disegna le mette come vuole. `PosizioneDellIntestazione` dà la posizione dell'intestazione dei riquadri (centrata sul bordo della cornice, con l'ombra). Gli sprite delle variazioni (numeri che salgono) li crea questo modello e li pubblica come `InternoCreazioneSprite…`; li disegnano i toolkit (`SpriteBase` in Swing, `SpriteGdx` in libGDX).
 
 ### Le statistiche, gli incantesimi e le pozioni, il combattimento
 
@@ -120,5 +120,5 @@ Le finestre e l'input (`Finestra`, `TipoFinestra`, `Orientamento`), lo scorrimen
 
 ## Da fare / idee aperte
 
-- Estrarre da Swing la logica che non disegna di `ScorrimentoVerticale`, `SfondoARiempimento`, le tabelle di `TipoIcona`, `MappaBottinoImmagine`, `MappaPersonaggioImmagine` e `VersiDeiPersonaggi`, dei riquadri, della barra icone, del canvas e dei sprite (vedi l'elenco in `porting_libGDX.md`).
+- Estratta dal Swing quasi tutta la logica che non disegna (`SfondoARiempimento`, `TipoIcona`, `VersiDeiPersonaggi`, i riquadri, la barra icone, il canvas e gli sprite). Restano in `12-foresta-swing` `ScorrimentoVerticale`, `ComponenteScorrevole` (che è la veste Swing del modello comune `ElencoScorrevole`) e le due mappe `MappaBottinoImmagine` e `MappaPersonaggioImmagine` (le immagini di ogni oggetto e classe); il piano è in `porting_libGDX.md`.
 - I loghi nella radice di `img/` e i font restano file a sé (il logo si traccia, i font hanno già la loro griglia).

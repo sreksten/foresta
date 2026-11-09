@@ -10,7 +10,7 @@
 
 **Solo per i test:** `05-foresta-personaggi`.
 
-**Lo dichiarano:** `09-foresta-missioni`, `10-foresta-modellodati`, `12-foresta-motore`, `12-foresta-swing`.
+**Lo dichiarano:** `09-foresta-missioni`, `10-foresta-modellodati`, `12-foresta-motore`, `12-foresta-ui-comune`.
 
 Le dipendenze sono transitive: un modulo vede anche quello che vedono i moduli da cui dipende, quindi il compilatore garantisce la separazione fra i moduli che non si raggiungono.
 
@@ -29,7 +29,7 @@ Tutto è **immutabile** e fatto solo di enumerati, numeri e liste (nel pacchetto
 - **`AzioneMD`**: il tipo (`TipoAzione`, che sta in `06-foresta-combattimento`) e i parametri di quelle che li hanno (il criterio di scelta dell'incantesimo, se rinunciare quando l'attacco con le armi rende di più, il tipo di danno dell'arma voluta).
 - **`TatticheMD`** tiene le tattiche di tutta la partita, ognuna con l'`uuid` del personaggio; `FormatoTattiche` descrive il formato di salvataggio a righe (`TATTICA`, `VOCE`, `SELETTORE`, `FILTRO`, `PREDICATO`, `AZIONE`). La rilettura usa le stesse fabbriche che controllano gli elementi, quindi un salvataggio incoerente è rifiutato.
 
-Le enum (nel pacchetto `tipi`): `TipoRosa` (se stesso, alleati, alleati caduti, avversari, ospiti e le combinazioni), `TipoFiltro` (salute, magia, livello, classe, categoria, stato, magico, debole o immune a…, il capo, l'ultimo scelto, chi mi ha attaccato per ultimo, l'arma che dà…), `TipoOrdinamento` (primo, a caso, meno/più salute, livello, più debole o resistente a, ultimo attaccante…), `TipoPredicato`, `TipoConfronto` (minore, uguale, maggiore), `TipoParametro`, `CriterioIncantesimo` (a caso, più potente, più adatto, più adatto esperto) e `PortataAzione` (su che cosa agisce un'azione, e quindi da quali rose il suo selettore può pescare).
+Le enum (nel pacchetto `tipi`): `TipoRosa` (se stesso, alleati, alleati caduti, avversari, ospiti e le combinazioni), `TipoFiltro` (salute, magia, livello, classe, categoria, stato, magico, debole o immune a…, il capo, l'ultimo scelto, chi mi ha attaccato per ultimo, l'arma che dà…), `TipoOrdinamento` (primo, a caso, meno/più salute, livello, più debole o resistente a, ultimo attaccante…), `TipoPredicato`, `TipoConfronto` (minore, uguale, maggiore), `TipoParametro`, `CriterioIncantesimo` (a caso, più potente, più adatto, più adatto esperto, più economico che basta) e `PortataAzione` (su che cosa agisce un'azione, e quindi da quali rose il suo selettore può pescare).
 
 ### La logica (`tattiche`)
 
@@ -43,7 +43,7 @@ Le enum (nel pacchetto `tipi`): `TipoRosa` (se stesso, alleati, alleati caduti, 
 
 ### Le tattiche di partenza
 
-- **`TatticheBase`** (500 righe) le scrive come dati: per i mostri una lista per classe divisa in **fasce di astuzia** — bruto (sotto 12: istinto, colpisce chi lo ha colpito o a caso), astuto (da 12: finisce i feriti, cerca un incantatore), esperto (da 20: sceglie l'incantesimo più adatto alle debolezze del bersaglio), stratega (da 31: Colpo di Morte sul quasi caduto, Silenzio sull'incantatore con più magia) — e per i personaggi giocabili un ruolo (il guerriero e il ladro curano se stessi e colpiscono i feriti; maghi ed elfi zittiscono e usano il dardo arcano; il sacerdote cura, risuscita, toglie gli stati; il bardo canta).
+- **`TatticheBase`** (circa 550 righe) le scrive come dati: per i mostri una lista per classe divisa in **fasce di astuzia** — bruto (sotto 12: istinto, colpisce chi lo ha colpito o a caso), astuto (da 12: finisce i feriti, cerca un incantatore), esperto (da 20: sceglie l'incantesimo più adatto alle debolezze del bersaglio), stratega (da 31: Colpo di Morte sul quasi caduto, Silenzio sull'incantatore con più magia) — e per i personaggi giocabili un ruolo (il guerriero e il ladro curano se stessi e colpiscono i feriti; maghi ed elfi zittiscono e usano il dardo arcano; il sacerdote cura, risuscita, toglie gli stati; il bardo canta).
 - **`RegistroTattiche`** dà la tattica di una classe: quella che qualcuno le ha registrato, altrimenti la «tattica di oggi», la trasposizione voce per voce di come i mostri sceglievano prima delle tattiche.
 
 ### I contratti per la UI

@@ -20,7 +20,7 @@ Dipende da `05-foresta-personaggi`: le voci sono ruoli di `TipoPersonaggio`, e l
 
 ### Le voci e le caratteristiche
 
-Una **voce** è un ruolo (`TipoPersonaggio.getRuolo()`): Mago e Maga sono la stessa voce. Sono 32: i 24 mostri più i ruoli di chi si sceglie o si recluta (Guerriero, Ladro, Mago, Elfo, Bardo, Sacerdote, Chierico, Druido). Hanno una voce solo le classi per cui `hasVoceNelBestiario()` è vero (i non combattenti, il viandante e l'ombrafiamma no, perché non si sconfiggono né si reclutano).
+Una **voce** è un ruolo (`TipoPersonaggio.getRuolo()`): Mago e Maga sono la stessa voce. Sono 33: i 25 mostri più i ruoli di chi si sceglie o si recluta (Guerriero, Ladro, Mago, Elfo, Bardo, Sacerdote, Chierico, Druido). Hanno una voce solo le classi per cui `hasVoceNelBestiario()` è vero (i non combattenti, il viandante e l'ombrafiamma no, perché non si sconfiggono né si reclutano).
 
 Le **caratteristiche** scoperte si ricordano per chiave (`DANNO:FUOCO`, `INCANTESIMO:MORTE`, `EFFETTO:SANGUINAMENTO`): non il loro contenuto, che lo sa `TipoPersonaggio`, ma il fatto che il giocatore l'ha vista. Si scoprono **indipendentemente dalla voce** (un colpo di fuoco su una classe dice come reagisce al fuoco anche se non l'hai ancora sconfitta) ma la voce le mostra solo da sbloccata.
 

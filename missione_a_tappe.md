@@ -34,7 +34,7 @@ Una variante, **le chiavi**: un'ispezione rivela i posti di due o tre custodi sp
 ## 3. Quello che manca
 
 1. **Una grammatica per catene di lunghezza variabile.** `IndagineRichiesta` ha `INDIZIO_1..3` scritti nel codice, solo luogo e testo, e finisce sempre nella scelta del colpevole. Servono tappe tipizzate, con scena, guardia facoltativa e segnaposto per il nome del posto successivo (§5).
-2. **Una scena d'intermezzo per chi cerca.** `ScenaFraCompagni` lancia un'eccezione con meno di due personaggi: a inizio partita il gruppo ne ha uno. Serve una scena per 1-5 personaggi (nuova, o `ScenaFraCompagni` generalizzata).
+2. **Una scena d'intermezzo per chi cerca.** `ScenaFraCompagni` all'origine lanciava un'eccezione con meno di due personaggi, e a inizio partita il gruppo ne ha uno: ora accetta da uno a cinque personaggi (vedi la voce spuntata del §5).
 3. **Un solo claim per missione** (`LOCAZIONE_OCCUPATA`): va bene per una catena, un posto alla volta; le chiavi in parallelo richiedono figlie, una per custode.
 4. **Il tempo.** Una catena di 4 tappe lontane costa giorni (il gioco finisce al giorno 40). `RegistroMissioni.cerca` esplora attorno a una casella a caso: serve poterla ancorare alla tappa precedente, perché la catena resti vicina.
 5. **Il diario degli indizi.** Il riquadro delle missioni mostra la descrizione; le informazioni raccolte vanno elencate lì (come fa `LIndagine`), ma con 4-5 tappe il testo si allunga.
@@ -117,7 +117,7 @@ RICORDO=Qui l'apprendista Cleofe cercò un ingrediente che non si può comprare.
 
 ## 6. Gli intermezzi
 
-Per ogni tappa una scena in due momenti, costruita da `SCENA_n`: la **narrazione** ("Il gruppo si muove fra i muri crollati…"), la **battuta del capo** e quella di un **compagno**, se c'è; poi una pagina con l'**informazione** scoperta. Serve una scena per 1-5 personaggi (§3.2): quella dei compagni (`ScenaFraCompagni.in`) richiede almeno due personaggi. Lo sfondo è la classe del posto; l'oggetto trovato può essere un'immagine esistente (una pergamena) finché non ne esiste una nuova.
+Per ogni tappa una scena in due momenti, costruita da `SCENA_n`: la **narrazione** ("Il gruppo si muove fra i muri crollati…"), la **battuta del capo** e quella di un **compagno**, se c'è; poi una pagina con l'**informazione** scoperta. Serve una scena per 1-5 personaggi (§3.2): quella dei compagni (`ScenaFraCompagni.in`) accetta anche un solo personaggio (solo `parlaIlSecondo` ne chiede due). Lo sfondo è la classe del posto; l'oggetto trovato può essere un'immagine esistente (una pergamena) finché non ne esiste una nuova.
 
 Le scene scattano a `INIZIO_LOCAZIONE` (prima di un eventuale combattimento) o a `LOCAZIONE_COMPLETATA` (dopo la guardia), come tutti gli intermezzi di passo (vedi [`gestione_missioni.md`](gestione_missioni.md) §5).
 

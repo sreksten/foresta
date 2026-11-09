@@ -8,7 +8,7 @@
 
 **Dichiarate nel pom:** `10-foresta-trofei`, `09-foresta-missioni`, `08-foresta-bottino`, `05-foresta-personaggi`, `01-foresta-punteggi`, `02-foresta-notizie`, `01-foresta-eventi`, `10-foresta-modellodati`.
 
-**Lo dichiarano:** `12-foresta-motore`, `12-foresta-swing`.
+**Lo dichiarano:** `12-foresta-motore`, `12-foresta-ui-comune`.
 
 Le dipendenze sono transitive: un modulo vede anche quello che vedono i moduli da cui dipende, quindi il compilatore garantisce la separazione fra i moduli che non si raggiungono.
 
@@ -40,7 +40,7 @@ Il bus è in `01-foresta-eventi`; qui stanno gli eventi del **ciclo di vita** e 
 | `notifiche` | motore → UI, «è successo» | fine gioco, errore di caricamento, raccolta degli oggetti, statistiche e punteggi di fine gioco, `NotificaUscitaDalGioco` |
 | `interni` | tecnici | `InternoFaseDiGioco`, `InternoAggiornamentoComandiDisponibili`, logo iniziale e UI pronta, caricamento completato, UI occupata/inattiva |
 
-`InternoFaseDiGioco` porta una `FaseDiGioco` (`LOGO_INIZIALE`, `INTRO`, `NOME_PERSONAGGIO`, `SESSO_PERSONAGGIO`, `CLASSE_PERSONAGGIO`, `SALVATAGGIO_DA_SCRIVERE`): le fasi in cui la UI deve cambiare schermata o animazione, una piccola parte degli stati dell'`Automa`, che la UI non conosce. `NotificaUscitaDalGioco` è il modo in cui **il motore non chiude mai il processo**: la piattaforma si iscrive e decide come terminare (sul desktop `Main` chiama `System.exit`, su Android si chiude l'attività, su iOS si torna alla schermata iniziale); lo controlla `ConvenzioniDiPortabilitaTest`.
+`InternoFaseDiGioco` porta una `FaseDiGioco` (`LOGO_INIZIALE`, `INTRO`, `LINGUA`, `NOME_PERSONAGGIO`, `SESSO_PERSONAGGIO`, `CLASSE_PERSONAGGIO`, `SALVATAGGIO_DA_SCRIVERE`): le fasi in cui la UI deve cambiare schermata o animazione, una piccola parte degli stati dell'`Automa`, che la UI non conosce. `NotificaUscitaDalGioco` è il modo in cui **il motore non chiude mai il processo**: la piattaforma si iscrive e decide come terminare (sul desktop `Main` chiama `System.exit`, su Android si chiude l'attività, su iOS si torna alla schermata iniziale); lo controlla `ConvenzioniDiPortabilitaTest`.
 
 Alcuni eventi `Interno…` che portano classi del dominio (le parti di uno scambio, il banco di lavoro) stanno nel modulo del motore, e quelli con sprite e fumetti in quello dell'interfaccia: il pacchetto è lo stesso, il modulo è diverso.
 

@@ -44,7 +44,7 @@ Per non riscrivere ogni volta ingressi e dialoghi ci sono gli strumenti di scena
 `Intermezzo` è un'interfaccia: `getId`, `deveScattare(momento)` (l'innesco), `getPagine()`, e per i casi particolari `isRipetibile` (scatta ogni volta che l'innesco lo chiede), `isDiRipiego` (scatta solo se non scatta nessun altro), `getSecondiPerPagina` (le pagine avanzano al click e, di norma, da sole dopo 8 secondi) e `segnaScattato`. A differenza di una missione non ha progressi: una volta mostrato non si ripete (salvo i ripetibili).
 
 - `MomentoIntermezzo` elenca i punti in cui l'automa controlla: inizio gioco, inizio locazione, locazione completata, ingresso in locanda in città, ingresso da alchimista, armaiolo, venditore di pergamene o incantatore.
-- `TipoIntermezzo` elenca gli intermezzi fissi (introduttivo, fine della prima locazione, locanda prima visita e visite successive, Urlo della Banshee, spada nascosta, riprogrammazione, libro tecnico, accampamento, eremita rompiscatole, gli ingressi nei negozi e le notti nei negozi e nella locanda). **L'ordine dell'enum è la priorità** con cui `RegistroIntermezzi` sceglie quale scatta per primo in un momento.
+- `TipoIntermezzo` elenca gli intermezzi fissi (introduttivo, fine della prima locazione, locanda prima visita e visite successive, Urlo della Banshee, spada nascosta, riprogrammazione, libro tecnico, accampamento, eremita rompiscatole, gli ingressi nei negozi e le notti nei negozi). **L'ordine dell'enum è la priorità** con cui `RegistroIntermezzi` sceglie quale scatta per primo in un momento.
 - **`RegistroIntermezzi`** è la facciata su `IntermezziMD`: sceglie il prossimo intermezzo da mostrare e ricorda gli identificativi di quelli già scattati (`IntermezziMD`, che `ModelloDati` salva; il dato lo prende da chi lo custodisce, `setFornitoreDiDati`).
 - **`FabbricaIntermezzi`** costruisce l'intermezzo di ogni `TipoIntermezzo`. Quelli di questo modulo si registrano da soli; quelli che hanno bisogno delle missioni li registra chi li conosce con `FabbricaIntermezzi.registra`.
 - **`FonteDiIntermezzi`**: chi ha intermezzi suoi oltre a quelli fissi — le missioni, con gli intermezzi dei loro passi. Gli intermezzi non sanno che esistono: è chi sta sopra a dirlo al registro (`RegistroIntermezzi.aggiungiFonte`).
@@ -53,7 +53,7 @@ Gli intermezzi concreti qui sono quelli che non hanno bisogno delle missioni: `I
 
 ### I contratti per la UI
 
-`NotificaPaginaIntermezzo` (una pagina da mostrare a tutto schermo finché non arriva la successiva), `InternoFumettoSuccessivo` (salta al fumetto successivo) e `InternoCreazioneFumetto` (per mettere a punto come si spezza il testo delle battute). `Animazione` nomina le animazioni fornite dalla UI; l'associazione con la classe che le disegna sta in `ui.AnimazioniIntermezzo`.
+`NotificaPaginaIntermezzo` (una pagina da mostrare a tutto schermo finché non arriva la successiva), `InternoFumettoSuccessivo` (salta al fumetto successivo) e `InternoCreazioneFumetto` (per mettere a punto come si spezza il testo delle battute). `Animazione` nomina le animazioni fornite dalla UI; l'associazione con la classe che le disegna sta in `ui.schermate.AnimazioniIntermezzo` (in `12-foresta-swing`).
 
 ## Osservazioni
 

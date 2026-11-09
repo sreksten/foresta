@@ -11,10 +11,11 @@ Gli intermezzi stanno nel modulo `07-foresta-intermezzi` (il meccanismo, gli str
 - **gli intermezzi fissi che hanno bisogno delle missioni**: li registra `intermezzi/IntermezziDelMotore` (in `12-foresta-motore`) con `FabbricaIntermezzi.registra`: gli epiloghi delle missioni (`IntermezzoEremitaRompiscatole`, `IntermezzoUrloDellaBanshee`, che stanno in `09-foresta-missioni`). Quelli che guardano l'ora o il livello del mondo (`IntermezzoNonChiudeteMai`, `IntermezzoSpadaNascosta`) stanno nel modulo, che vede `06-foresta-statistiche`;
 - **i dati**: `IntermezziMD` lo dà `ModelloDati` con `RegistroIntermezzi.setFornitoreDiDati`.
 
-Ci sono due momenti di innesco (enum `MomentoIntermezzo`):
+Ci sono otto momenti di innesco (enum `MomentoIntermezzo`); i due principali:
 
 - **`INIZIO_GIOCO`**: una volta sola, all'inizio di una partita nuova, subito dopo la creazione del personaggio e **prima** dei controlli delle missioni. È il posto degli intermezzi d'apertura: le notifiche delle missioni non si sovrappongono all'intermezzo. Caricando un salvataggio non scatta.
 - **`INIZIO_LOCAZIONE`**: all'arrivo in una nuova locazione, dopo i controlli delle missioni e gli eventi del tempo, prima che la locazione venga costruita e descritta. Se la partita è persa, nessun intermezzo parte.
+- **Gli altri sei**: `LOCAZIONE_COMPLETATA` (alla fine di una locazione, dopo il controllo delle missioni `POST_LOCAZIONE`) e `INGRESSO_LOCANDA_IN_CITTA`, `INGRESSO_ALCHIMISTA`, `INGRESSO_ARMAIOLO`, `INGRESSO_VENDITORE_DI_PERGAMENE` e `INGRESSO_INCANTATORE` (quando il gruppo entra nella locanda o in un negozio di città, nello stato `INGRESSO_NEGOZIO`, prima che il giocatore agisca).
 
 ---
 
@@ -120,7 +121,7 @@ public List<PaginaIntermezzo> getPagine() {
 }
 ```
 
-È la stessa scena dell'`IntermezzoDiProva`: aprila con l'anteprima per vederla girare.
+È la scena dell'esempio: dopo aver aggiunto la costante e la classe aprila con l'anteprima per vederla girare.
 
 Le pagine vengono costruite **quando l'intermezzo scatta**, quindi possono dipendere dalla partita: il nome e la classe del protagonista, chi c'è nel gruppo, quale città è stata distrutta, eccetera. Se un intermezzo restituisce una lista vuota viene saltato, ma risulta comunque scattato.
 
@@ -165,7 +166,7 @@ Un'immagine si indica con `ImmagineIntermezzo`:
 | :--- | :--- | :--- |
 | Personaggio | `ImmagineIntermezzo.personaggio(TipoPersonaggio.X)` oppure la scorciatoia `ElementoIntermezzo.personaggio(id, classe, x, y)` | Le stesse immagini delle locazioni |
 | Illustrazione di una locazione | `ImmagineIntermezzo.locazione(TipoLocazione.X)` | Adatta come sfondo |
-| Risorsa qualsiasi | `ImmagineIntermezzo.risorsa("intermezzi/Tramonto.png")` | Percorso relativo a `12-foresta-swing/src/main/resources/com/threeamigos/foresta/img/`; quelle in `locazioni/`, `personaggi/` e `oggetti/` sono a metà risoluzione e si ingrandiscono con lo zoom |
+| Risorsa qualsiasi | `ImmagineIntermezzo.risorsa("intermezzi/Tramonto.png")` | Percorso relativo a `img/` (in `12-foresta-ui-comune`, dentro gli atlanti: vedi `12-foresta-ui-comune.md`; l'esempio è inventato); quelle in `locazioni/`, `personaggi/` e `oggetti/` sono a metà risoluzione e si ingrandiscono con lo zoom |
 | Sprite sheet | `ImmagineIntermezzo.spriteSheet("intermezzi/Pipistrello.png", colonne, righe, fotogrammiAlSecondo)` | Vedi sotto |
 | Animazione via codice | `ImmagineIntermezzo.animazione(Animazione.X)` | Vedi §8 |
 
@@ -398,5 +399,5 @@ Gli errori (immagini mancanti, caratteri non supportati nei fumetti) vengono sta
 - **Prova sempre con l'anteprima**, anche con classi e nomi diversi (`--classe`, `--nome`): nomi lunghi allungano i fumetti, e classi diverse hanno immagini di larghezza diversa.
 - **Lascia spazio sopra i personaggi** che parlano: il fumetto va sopra la loro testa. Con i personaggi a y = 0.7 c'è spazio per 3-4 righe.
 - **Tieni le pagine brevi**: il giocatore può saltarle con un click. Le informazioni importanti per il gioco vanno anche nel testo normale o nelle missioni, non solo in un intermezzo.
-- **Due momenti di innesco per ora** (`INIZIO_GIOCO` e `INIZIO_LOCAZIONE`). Altri momenti, per esempio dentro una locazione con i mostri già presenti, si aggiungono all'enum `MomentoIntermezzo` e a un punto di controllo nell'automa.
+- **Otto momenti di innesco** (`MomentoIntermezzo`). Altri momenti, per esempio dentro una locazione con i mostri già presenti, si aggiungono all'enum `MomentoIntermezzo` e a un punto di controllo nell'automa.
 - **Se il timer scatta nello stesso istante di un click** la pagina può avanzare di due. Succede solo se i due eventi cadono a pochi millesimi di secondo l'uno dall'altro.

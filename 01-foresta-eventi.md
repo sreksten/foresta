@@ -29,14 +29,14 @@ Dipende da `00-foresta-strumenti` per due cose: `ThreadPrincipale` (la consegna 
 
 Ogni evento estende `EventoBase`, che porta un `TipoEvento` e un `uuid` generato solo alla prima richiesta (gli eventi sono centinaia a ogni locazione e quasi nessuno lo chiede).
 
-`TipoEvento` elenca **tutti** gli eventi del gioco, anche quelli definiti in altri moduli (129 costanti), divisi in quattro famiglie:
+`TipoEvento` elenca **tutti** gli eventi del gioco, anche quelli definiti in altri moduli (134 costanti), divisi in quattro famiglie:
 
 | Famiglia | Direzione | Significato | Costanti |
 | :--- | :--- | :--- | ---: |
 | `COMANDO_…` | UI → motore | il giocatore ha scelto qualcosa | 9 |
-| `NOTIFICA_…` | motore → UI | è successo qualcosa (un fatto compiuto) | 45 |
-| `RICHIESTA_…` | motore → UI | mostra una schermata o chiedi un input | 16 |
-| `INTERNO_…` | tecnici | coordinamento fra le parti | 59 |
+| `NOTIFICA_…` | motore → UI | è successo qualcosa (un fatto compiuto) | 48 |
+| `RICHIESTA_…` | motore → UI | mostra una schermata o chiedi un input | 17 |
+| `INTERNO_…` | tecnici | coordinamento fra le parti | 60 |
 
 La regola, controllata da `CostantiDegliEventiTest` in `13-foresta-app-swing`, è che ogni classe di evento usi la costante col suo nome. Gli eventi non portano classi del dominio, ma viste in sola lettura, identificativi e dati: così la UI non può modificare lo stato se non con un comando.
 

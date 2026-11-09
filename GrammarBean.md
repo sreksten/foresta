@@ -108,8 +108,8 @@ GrammarBean bean = new GrammarBean(
 | `boolean canProduce(String)` | Se la produzione può ancora produrre in questo ciclo: esiste e ha alternative. Diventa falso quando una produzione one-shot si esaurisce, e con lei quelle che la usavano soltanto (la cascata, §4.7), fino al prossimo `reset()`. Serve a sapere che una serie senza ripetizioni è finita prima che `produce()` lanci l'eccezione. |
 | `void setRootNode(String)` | Cambia la radice. Lancia `IllegalArgumentException` se il nome non è una produzione definita. |
 | `String getRootNode()` | La radice corrente. Di default è **la prima produzione dichiarata nel file**. |
-| `void setProductionMode(ProductionModeEnum)` | `RANDOM` (default), `FIRST`, `LAST`. |
-| `ProductionModeEnum getProductionMode()` | Il modo corrente. |
+| `void setProductionMode(TipoModalitaProduzioneTesti)` | `CASUALE` (default), `PRIMO`, `ULTIMO`. |
+| `TipoModalitaProduzioneTesti getProductionMode()` | Il modo corrente. |
 | `static void resetStaticProductions()` | Restituisce tutte le sezioni statiche (§4.12): ciò che è stato consumato torna disponibile, e ogni grammatica che ne include una ricostruisce le proprie produzioni al prossimo uso. Da chiamare a inizio partita. |
 | `void addFixedProduction(String nome, String valore)` | Pre-imposta il valore che un riferimento `[*nome]` restituirà, prima di chiamare `produce()`. |
 
@@ -134,9 +134,9 @@ un'istanza sola.
 
 ### Modi di produzione
 
-`FIRST` e `LAST` rendono la generazione **completamente deterministica**: sono pensati per i
-test e per ispezionare una grammatica, non per il gioco. `RANDOM` è l'unico modo che usa i
-pesi; con `FIRST`/`LAST` i pesi sono **ignorati** (l'alternativa è scelta per posizione).
+`PRIMO` e `ULTIMO` rendono la generazione **completamente deterministica**: sono pensati per i
+test e per ispezionare una grammatica, non per il gioco. `CASUALE` è l'unico modo che usa i
+pesi; con `PRIMO`/`ULTIMO` i pesi sono **ignorati** (l'alternativa è scelta per posizione).
 
 ---
 
@@ -1067,7 +1067,7 @@ for (int i = 0; i < 100; i++) {
 ### Ispezionare una grammatica in modo deterministico
 
 ```java
-bean.setProductionMode(ProductionModeEnum.FIRST);
+bean.setProductionMode(TipoModalitaProduzioneTesti.PRIMO);
 System.out.println(bean.produce());
 ```
 
@@ -1089,8 +1089,7 @@ for (int i = 0; i < 100_000; i++) {
 
 | Messaggio | Causa |
 | :--- | :--- |
-| `Production X already found.` | Nome di produzione duplicato |
-| `Production X does not produce anything.` | Produzione senza figli |
+| `Production X is repeated.` | Nome di produzione duplicato |
 | `Missing parent production.` | Riga indentata senza header che la precede |
 | `Malformed #include, expected #include <file>` | Direttiva senza `<...>`, con le virgolette o col nome vuoto (§4.11) |
 | `Invalid file name in #include: 'x' (…)` | Nome assoluto, con `..`, `.`, `\` o segmenti vuoti (§4.11) |
@@ -1175,7 +1174,7 @@ il codice precedente, dove falliscono: verificano la correzione, non la descrivo
 - **Javadoc di qualità inusuale**: quasi ogni metodo privato spiega non solo cosa fa, ma
   perché è fatto così, incluse le proprietà scomode (asimmetria dei cicli, mancanza di
   escape per `^`).
-- **Copertura di test ampia**: 161 test che coprono anche i casi limite fastidiosi
+- **Copertura di test ampia**: 258 test che coprono anche i casi limite fastidiosi
   (ricorsione, cicli, span quotati annidati, cascata one-shot, pesi frazionari).
 - **Pulizia automatica degli spazi** che rende le alternative vuote realmente usabili senza
   sporcare ogni template.
