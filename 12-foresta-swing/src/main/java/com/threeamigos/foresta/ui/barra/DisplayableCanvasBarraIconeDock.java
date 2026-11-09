@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.ui.barra;
 
 import com.threeamigos.foresta.interfacce.VistaPartita;
+import com.threeamigos.foresta.tipi.Orientamento;
 import com.threeamigos.foresta.ui.immagini.IconeAwt;
 
 import java.awt.*;
@@ -13,8 +14,8 @@ public class DisplayableCanvasBarraIconeDock extends BarraIconeDock implements B
 
 	private final DisegnoBarraIcone disegno = new DisegnoBarraIcone(this);
 
-	public DisplayableCanvasBarraIconeDock(int offsetX, int offsetY, int larghezza, int altezza, VistaPartita vistaPartita) {
-		super(offsetX, offsetY, larghezza, altezza, IconeAwt.getLarghezzaMassima(), IconeAwt.getAltezzaMassima(), vistaPartita);
+	public DisplayableCanvasBarraIconeDock(Orientamento orientamento, int offsetX, int offsetY, int larghezza, int altezza, VistaPartita vistaPartita) {
+		super(orientamento, offsetX, offsetY, larghezza, altezza, IconeAwt.getLarghezzaMassima(), IconeAwt.getAltezzaMassima(), vistaPartita);
 	}
 
 	@Override

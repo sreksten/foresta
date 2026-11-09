@@ -137,7 +137,7 @@ Il gioco resta orizzontale. Prima prova, **fatta in Swing e in libGDX** (argomen
 | Altezza | 656 | 656 − 64 − 4 = **588** |
 | Rapporto | 1,74 | **2,06** |
 
-Il rapporto 2,06 è vicino a quello dei telefoni (circa 2,2), quindi le bande nere ai lati quasi spariscono, e il vincolo dell'altezza passa da 656 a 588 px: la scala su un iPhone 15 (852×393) sale da 0,60 a circa 0,67 e le icone da 64 diventano circa 43 pt. Con il layout attuale, non ancora a tile, la prova Swing dà una finestra di 1094×732 (1022+72 per 804−72). Il Dock resta solo orizzontale e non ha senso sul tocco.
+Il rapporto 2,06 è vicino a quello dei telefoni (circa 2,2), quindi le bande nere ai lati quasi spariscono, e il vincolo dell'altezza passa da 656 a 588 px: la scala su un iPhone 15 (852×393) sale da 0,60 a circa 0,67 e le icone da 64 diventano circa 43 pt. Con il layout attuale, non ancora a tile, la prova Swing dà una finestra di 1094×732 (1022+72 per 804−72). Il Dock funziona in entrambi gli orientamenti ed è acceso anche su Android: col dito le icone si ingrandiscono mentre il dito è appoggiato sulla barra e si sgonfiano quando si alza.
 
 - Per tenere la scala sopra 0,7 resta l'idea di abbassare i tile (gruppo più basso, mappa a 248).
 - **iPad**: entra a scala circa 1,0 con qualunque delle due disposizioni.

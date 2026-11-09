@@ -60,7 +60,11 @@ class BarraIconeScorrimentoTest {
 
     private class DockDiProva extends DisplayableCanvasBarraIconeDock {
         DockDiProva() {
-            super(0, 0, LARGHEZZA, ALTEZZA, new VistaPartitaMotore());
+            this(com.threeamigos.foresta.tipi.Orientamento.ORIZZONTALE, LARGHEZZA, ALTEZZA);
+        }
+
+        DockDiProva(com.threeamigos.foresta.tipi.Orientamento orientamento, int larghezza, int altezza) {
+            super(orientamento, 0, 0, larghezza, altezza, new VistaPartitaMotore());
         }
 
         @Override
@@ -621,5 +625,70 @@ class BarraIconeScorrimentoTest {
         barra.processaRilascio(xSeconda, 35, Tasto.SINISTRO);
         assertEquals(1, comandiMandati.size());
         assertEquals(barra.iconeVisibili.get(1).comando, comandiMandati.get(0).getComando());
+    }
+
+    /** L'effetto del Dock cresce e si sgonfia in tempo reale (120 ms): si aspetta che sia finito */
+    private static void aspettaLEffettoDelDock() {
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    @Test
+    void inVerticaleIlDockIngrandisceLIconaSottoIlCursoreVersoSinistra() {
+        // Given: la colonna a destra dello schermo, con tre comandi e l'aiuto
+        DockDiProva dock = new DockDiProva(com.threeamigos.foresta.tipi.Orientamento.VERTICALE, 72, 400);
+        imposta(dock, 3);
+        assertFalse(dock.isScorrevole());
+        Area seconda = dock.iconeVisibili.get(1).rettangolo;
+        int y = seconda.getY() + seconda.getAltezza() / 2;
+        // When: il cursore si ferma sulla seconda icona
+        dock.processaMovimento(36, y);
+        aspettaLEffettoDelDock();
+        lasciaPassare(dock, 16);
+        // Then: è la più grande, poggia sul lato destro della sua posizione di base e cresce verso sinistra, fuori dalla barra
+        Area ingrandita = dock.rettangoloDisegnato(1);
+        assertTrue(ingrandita.getAltezza() > seconda.getAltezza(), "ingrandita: " + ingrandita);
+        assertTrue(ingrandita.getLarghezza() > seconda.getLarghezza());
+        assertEquals(seconda.getX() + seconda.getLarghezza(), ingrandita.getX() + ingrandita.getLarghezza(), "poggia a destra");
+        assertTrue(ingrandita.getX() < 0, "esce dalla barra verso sinistra");
+        for (int i = 0; i < dock.iconeVisibili.size(); i++) {
+            assertTrue(dock.rettangoloDisegnato(i).getAltezza() <= ingrandita.getAltezza(), "nessuna è più grande di quella sotto il cursore");
+        }
+        // Le icone restano in fila lungo l'altezza, senza sovrapporsi, e l'icona sotto il cursore gli resta sotto
+        for (int i = 0; i + 1 < dock.iconeVisibili.size(); i++) {
+            Area a = dock.rettangoloDisegnato(i);
+            Area b = dock.rettangoloDisegnato(i + 1);
+            assertTrue(a.getY() + a.getAltezza() <= b.getY(), a + " e " + b);
+        }
+        assertTrue(ingrandita.contiene(36, y));
+        // La parte che esce a sinistra è della barra, e si tocca
+        assertTrue(dock.contiene(-5, y), "l'icona ingrandita esce a sinistra della barra");
+        assertFalse(dock.contiene(-80, y));
+    }
+
+    @Test
+    void colDitoIlDockSiIngrandisceFinchéIlDitoÈAppoggiatoESiSgonfiaQuandoSiAlza() {
+        DockDiProva dock = new DockDiProva(com.threeamigos.foresta.tipi.Orientamento.VERTICALE, 72, 400);
+        dock.setAreaSensibileLarga(true);
+        imposta(dock, 3);
+        Area seconda = dock.iconeVisibili.get(1).rettangolo;
+        int y = seconda.getY() + seconda.getAltezza() / 2;
+        // Il dito si appoggia: niente movimento prima, il dito non ha un cursore che passa sopra
+        dock.processaPressione(36, y, Tasto.SINISTRO);
+        aspettaLEffettoDelDock();
+        lasciaPassare(dock, 16);
+        assertTrue(dock.rettangoloDisegnato(1).getAltezza() > seconda.getAltezza(), "col dito appoggiato l'icona si ingrandisce");
+        // Il dito si alza: il comando si esegue e le icone tornano della loro misura
+        dock.processaRilascio(36, y, Tasto.SINISTRO);
+        assertEquals(1, comandiMandati.size());
+        assertEquals(dock.iconeVisibili.get(1).comando, comandiMandati.get(0).getComando());
+        aspettaLEffettoDelDock();
+        lasciaPassare(dock, 16);
+        for (int i = 0; i < dock.iconeVisibili.size(); i++) {
+            assertEquals(dock.iconeVisibili.get(i).rettangolo.getAltezza(), dock.rettangoloDisegnato(i).getAltezza(), "icona " + i + " sgonfiata");
+        }
     }
 }

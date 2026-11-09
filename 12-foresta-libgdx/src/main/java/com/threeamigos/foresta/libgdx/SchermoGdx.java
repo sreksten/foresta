@@ -76,7 +76,7 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 	private final TutorialGdx tutorial;
 
 	/**
-	 * @param barraDock vero per la barra delle icone che si ingrandisce sotto il cursore (solo in orizzontale)
+	 * @param barraDock vero per la barra delle icone che si ingrandisce sotto il cursore o il dito
 	 */
 	public SchermoGdx(DisposizioneDelloSchermo disposizione, boolean barraDock, GestorePunteggi gestorePunteggi, VistaPartita vistaPartita,
 					  ImmaginiGdx immagini, TestoGdx piccolo, TestoGdx medio, Camera camera, Viewport viewport) {

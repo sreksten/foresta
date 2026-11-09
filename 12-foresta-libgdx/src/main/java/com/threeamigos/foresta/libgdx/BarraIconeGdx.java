@@ -34,7 +34,7 @@ public final class BarraIconeGdx {
 	private final float zoom = (float) LivelloDiZoom.valore();
 
 	/**
-	 * @param dock se vera la barra si ingrandisce sotto il cursore come il Dock (solo orizzontale)
+	 * @param dock se vera la barra si ingrandisce sotto il cursore come il Dock, in entrambi gli orientamenti
 	 */
 	public BarraIconeGdx(Orientamento orientamento, boolean dock, int x, int y, int larghezza, int altezza, VistaPartita vistaPartita, ImmaginiGdx immagini,
 						 TestoGdx piccolo, TestoGdx medio) {
@@ -44,8 +44,8 @@ public final class BarraIconeGdx {
 		this.cartiglio = new CartiglioGdx(immagini, medio);
 		int larghezzaIcona = Math.round(icone.larghezza() * zoom);
 		int altezzaIcona = Math.round(icone.altezza() * zoom);
-		this.modello = dock && orientamento == Orientamento.ORIZZONTALE
-				? new BarraIconeDock(x, y, larghezza, altezza, larghezzaIcona, altezzaIcona, vistaPartita)
+		this.modello = dock
+				? new BarraIconeDock(orientamento, x, y, larghezza, altezza, larghezzaIcona, altezzaIcona, vistaPartita)
 				: new BarraIcone(orientamento, x, y, larghezza, altezza, larghezzaIcona, altezzaIcona, vistaPartita);
 	}
 

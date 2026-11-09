@@ -83,8 +83,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	/**
 	 * @param larghezza  la larghezza della finestra, barra delle icone compresa
 	 * @param altezza    l'altezza della finestra, barra delle icone compresa
-	 * @param barraDock  vero per la barra delle icone che si ingrandisce sotto il cursore (DisplayableCanvasBarraIconeDock), solo in
-	 *                   orientamento orizzontale; altrimenti la barra classica
+	 * @param barraDock  vero per la barra delle icone che si ingrandisce sotto il cursore (DisplayableCanvasBarraIconeDock), in
+	 *                   entrambi gli orientamenti; altrimenti la barra classica
 	 * @param vistaPartita lo stato della partita da mostrare, in sola lettura: lo ricevono tutti i riquadri
 	 */
 	public DisplayableCanvas(Orientamento orientamento, int larghezza, int altezza, boolean barraDock, GestorePunteggi gestorePunteggi,
@@ -125,8 +125,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		alchimista = new DisplayableCanvasScambiatoreConsumabili(larghezzaContenuto, altezzaContenuto, vistaPartita);
 		incantatore = new DisplayableCanvasIncantatore(larghezzaContenuto, altezzaContenuto, vistaPartita);
 		Area barra = disposizione.getBarra();
-		barraIcone = barraDock && orientamento == Orientamento.ORIZZONTALE
-				? new DisplayableCanvasBarraIconeDock(barra.getX(), barra.getY(), barra.getLarghezza(), barra.getAltezza(), vistaPartita)
+		barraIcone = barraDock
+				? new DisplayableCanvasBarraIconeDock(orientamento, barra.getX(), barra.getY(), barra.getLarghezza(), barra.getAltezza(), vistaPartita)
 				: new DisplayableCanvasBarraIcone(orientamento == Orientamento.ORIZZONTALE ? ORIENTAMENTO_ORIZZONTALE : ORIENTAMENTO_VERTICALE,
 				barra.getX(), barra.getY(), barra.getLarghezza(), barra.getAltezza(), vistaPartita);
 

@@ -17,6 +17,18 @@ import com.threeamigos.foresta.tipi.Orientamento;
  */
 public class AndroidLauncher extends AndroidApplication {
 
+    // Le scelte di avvio che sul desktop vengono dagli argomenti (OpzioniDiAvvio): su Android non ci sono argomenti, e si decidono qui
+    /** La lingua non e' decisa in anticipo: una partita nuova la chiede */
+    private static final boolean LINGUA_DECISA = false;
+    /** La barra delle icone si ingrandisce sotto il dito, come il Dock (false: la barra classica fissa) */
+    private static final boolean BARRA_DOCK = true;
+    /** Il joystick a schermo sulla mappa non si chiede: col dito lo accende comunque ForestaLibGDX */
+    private static final boolean JOYSTICK_VIRTUALE = false;
+    /** Il logo iniziale si mostra */
+    private static final boolean SALTA_LOGO = false;
+    /** Si gioca con il dito */
+    private static final boolean TOCCO_RICHIESTO = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,9 +48,9 @@ public class AndroidLauncher extends AndroidApplication {
 
         EsecutoreGdx esecutore = new EsecutoreGdx();
         // Il motore chiede di uscire con NotificaUscitaDalGioco: si chiude l'applicazione
-        AvvioDelMotore motore = new AvvioDelMotore(esecutore, e -> Gdx.app.exit(), false);
+        AvvioDelMotore motore = new AvvioDelMotore(esecutore, e -> Gdx.app.exit(), LINGUA_DECISA);
         ForestaLibGDX foresta = new ForestaLibGDX(Orientamento.VERTICALE, esecutore, motore.getControlloreDiGioco(), motore.getGestorePunteggi(),
-                motore.getVistaPartita(), AvvioDelMotore.nuovoTemporizzatore(), false, false, false, true);
+                motore.getVistaPartita(), AvvioDelMotore.nuovoTemporizzatore(), BARRA_DOCK, JOYSTICK_VIRTUALE, SALTA_LOGO, TOCCO_RICHIESTO);
 
         AndroidApplicationConfiguration configurazione = new AndroidApplicationConfiguration();
         configurazione.useImmersiveMode = true;

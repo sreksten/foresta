@@ -405,7 +405,10 @@ public class BarraIcone implements Finestra {
 				: new Area(-larghezzaIcona, 0, larghezza + larghezzaIcona, lunghezzaUtile());
 	}
 
-	private int asse(int x, int y) {
+	/**
+	 * La coordinata lungo la barra: la x in orizzontale, la y in verticale.
+	 */
+	protected int asse(int x, int y) {
 		return orizzontale ? x : y;
 	}
 

@@ -26,7 +26,7 @@ public final class OpzioniDiAvvio {
 	private boolean saltaLogo;
 	// Con LINGUA=<codice> la lingua è decisa e una partita nuova non la chiede
 	private boolean linguaDecisa;
-	// La barra delle icone che si ingrandisce sotto il cursore, come il Dock di macOS (solo in orizzontale); con BARRACLASSICA la barra fissa
+	// La barra delle icone che si ingrandisce sotto il cursore, come il Dock di macOS (in entrambi gli orientamenti); con BARRACLASSICA la barra fissa
 	private boolean barraDock = true;
 	// Il joystick a schermo sulla mappa a tutto schermo, per i dispositivi senza mouse (qui, per provarlo)
 	private boolean joystickVirtuale;

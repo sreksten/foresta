@@ -125,4 +125,52 @@ class DisplayableCanvasTutorialTest {
 		assertFalse(canvas.getSchermo().getTutor().isAperto());
 		assertFalse(RegistroSuggerimenti.isAttivo());
 	}
+
+	@Test
+	void nellaBarraVerticaleIlBordoSegueLIconaIngranditaDalDock() throws InterruptedException {
+		// Given: la barra a destra, come il Dock, con alcune icone, e il suggerimento sulla barra aperto
+		canvas = new DisplayableCanvas(com.threeamigos.foresta.tipi.Orientamento.VERTICALE, 1024, 768, true,
+				new GestorePunteggiInMemoria(), new VistaPartitaMotore());
+		canvas.setSize(1024, 768);
+		canvas.getSchermo().iniziaGioco();
+		com.threeamigos.foresta.ui.barra.BarraIcone barra = canvas.getSchermo().barraIcone();
+		assertTrue(barra instanceof com.threeamigos.foresta.ui.barra.BarraIconeDock);
+		com.threeamigos.foresta.ui.barra.ComandiPossibili.set(java.util.Arrays.asList(com.threeamigos.foresta.tipi.Comando.NORD,
+				com.threeamigos.foresta.tipi.Comando.SUD, com.threeamigos.foresta.tipi.Comando.EST));
+		try {
+			barra.impostaAzioni();
+			assertTrue(canvas.getSchermo().getTutor().aggiorna(EnumSet.of(Situazione.BARRA_DELLE_ICONE_VISIBILE),
+					s -> s == TipoSuggerimento.BARRA_DELLE_ICONE).isPresent());
+			java.util.List<Area> aRiposo = canvas.getSchermo().getAreeDaBordare(com.threeamigos.foresta.tipi.BersaglioDelSuggerimento.BARRA_DELLE_ICONE);
+			int sinistraARiposo = Integer.MAX_VALUE;
+			for (Area area : aRiposo) {
+				sinistraARiposo = Math.min(sinistraARiposo, area.getX());
+			}
+			// When: il cursore si ferma sulla seconda icona e l'effetto finisce di crescere
+			Area seconda = barra.iconeVisibili.get(1).rettangolo;
+			barra.processaMovimento(seconda.getX() + seconda.getLarghezza() / 2, seconda.getY() + seconda.getAltezza() / 2);
+			Thread.sleep(200);
+			disegna();
+			// Then: le aree da bordare sono le icone come sono disegnate adesso, una per una, e la seconda sporge a sinistra delle altre
+			java.util.List<Area> ingrandite = canvas.getSchermo().getAreeDaBordare(com.threeamigos.foresta.tipi.BersaglioDelSuggerimento.BARRA_DELLE_ICONE);
+			assertEquals(barra.iconeVisibili.size(), ingrandite.size());
+			Area ingrandita = barra.rettangoloDisegnato(1);
+			assertEquals(barra.getOffsetX() + ingrandita.getX(), ingrandite.get(1).getX());
+			assertTrue(ingrandite.get(1).getX() < sinistraARiposo, "l'icona ingrandita sporge verso il contenuto");
+			// E il bordo giallo, disegnato da ContornoDiRettangoli, la segue: a sinistra della barra a riposo c'è del giallo. Il bordo lampeggia: si
+			// ridisegna finché non è acceso (al più un secondo, più di un periodo intero)
+			boolean gialloFuoriDallaBarra = false;
+			int y = ingrandite.get(1).getY() + ingrandite.get(1).getAltezza() / 2;
+			long fine = System.currentTimeMillis() + 1000;
+			while (!gialloFuoriDallaBarra && System.currentTimeMillis() < fine) {
+				BufferedImage immagine = disegna();
+				for (int x = ingrandite.get(1).getX() - 10; x < sinistraARiposo - 3; x++) {
+					gialloFuoriDallaBarra |= x >= 0 && immagine.getRGB(x, y) == COLORE_DEL_BORDO;
+				}
+			}
+			assertTrue(gialloFuoriDallaBarra, "il bordo del tutorial segue l'icona ingrandita");
+		} finally {
+			com.threeamigos.foresta.ui.barra.ComandiPossibili.reimposta();
+		}
+	}
 }
