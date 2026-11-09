@@ -50,6 +50,8 @@
         <libgdx.version>1.14.2</libgdx.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <!-- Vuota se jacoco non prepara il suo agente: surefire la usa in @{argLine} -->
+        <argLine></argLine>
     </properties>
 
     <dependencies>
@@ -67,6 +69,11 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
+                <configuration>
+                    <!-- @{argLine} è l'agente di jacoco; lo stack delle eccezioni si tiene sempre, anche quando la JVM lo ometterebbe dopo molte
+                         ripetizioni: GiocoACasoTest riconosce le eccezioni note proprio dallo stack -->
+                    <argLine>@{argLine} -XX:-OmitStackTraceInFastThrow</argLine>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
