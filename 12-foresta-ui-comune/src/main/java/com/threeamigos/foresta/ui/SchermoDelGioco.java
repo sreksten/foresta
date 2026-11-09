@@ -1341,8 +1341,14 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 		uiOccupata = occupataOra;
 	}
 
+	/**
+	 * Sprite e rivelazioni si animano solo sulla schermata di gioco: altrove restano fermi e non tengono occupata la UI. Se no la dotazione
+	 * dell'eremita, i cui sprite nascono mentre si apre il suo intermezzo, terrebbe in attesa per sempre l'intermezzo successivo dello stesso
+	 * momento (la prima visita alla locanda), che a sua volta tiene lontana la schermata di gioco.
+	 */
 	private boolean isUiOccupataOra() {
-		return !sprite.isEmpty() || annuncioAttivo != null || !codaAnnunci.isEmpty() || rivelazioni.isOccupata() || tutor.isAperto();
+		boolean siAnimano = stato == StatoDelloSchermo.IN_GIOCO;
+		return (siAnimano && (!sprite.isEmpty() || rivelazioni.isOccupata())) || annuncioAttivo != null || !codaAnnunci.isEmpty() || tutor.isAperto();
 	}
 
 	/**
