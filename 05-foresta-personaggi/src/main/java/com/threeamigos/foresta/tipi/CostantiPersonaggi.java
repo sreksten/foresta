@@ -905,7 +905,7 @@ public final class CostantiPersonaggi {
     public static final int EREMITA_MAX_NUMERO = 1;
     public static final int EREMITA_PUNTI_ESPERIENZA = 15;
 
-    public static final int EREMITA_SALUTE_BASE = 200;
+    public static final int EREMITA_SALUTE_BASE = 120;
     public static final int EREMITA_MAGIA_BASE = 20;
     public static final int EREMITA_LIVELLAMENTO_MAGIA = 10;
     public static final double EREMITA_MOLTIPLICATORE_CARICO = 0.8;
@@ -1166,7 +1166,7 @@ public final class CostantiPersonaggi {
     public static final int OMBRANERA_MAX_FORTUNA = 20;
     public static final int OMBRANERA_PUNTI_ESPERIENZA = 40;
 
-    public static final int OMBRANERA_SALUTE_BASE = 750;
+    public static final int OMBRANERA_SALUTE_BASE = 220;
     public static final int OMBRANERA_MAGIA_BASE = 40;
     public static final int OMBRANERA_LIVELLAMENTO_MAGIA = 20;
     public static final double OMBRANERA_MOLTIPLICATORE_CARICO = 0.0;
@@ -1183,7 +1183,7 @@ public final class CostantiPersonaggi {
     public static final double OMBRANERA_MOLTIPLICATORE_VALORE = 0.3;
     public static final double OMBRANERA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
     public static final double OMBRANERA_MOLTIPLICATORE_STANCHEZZA = 0.0;
-    public static final double OMBRANERA_MOLTIPLICATORE_DANNI_MAGICI = 2.6;
+    public static final double OMBRANERA_MOLTIPLICATORE_DANNI_MAGICI = 1.6;
     public static final double OMBRANERA_MOLTIPLICATORE_DANNI_FISICI = 1.0;
     public static final double OMBRANERA_MOLTIPLICATORE_RECUPERO_FISICO = 0.0;
     public static final double OMBRANERA_MOLTIPLICATORE_RECUPERO_MAGICO = 1.8;

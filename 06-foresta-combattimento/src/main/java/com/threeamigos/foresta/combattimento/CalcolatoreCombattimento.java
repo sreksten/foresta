@@ -674,7 +674,7 @@ public class CalcolatoreCombattimento {
             // --- TRAGUARDO 1: Stato dell'arma Principale (es. TAGLIENTE ➔ SANGUINAMENTO) ---
             if (!immuneATipoDannoBase && tipoDanno.hasEffettiDiStato()) {
                 double probStatoFisico = percentualeControForza(dannoMitigato, difensore) + (attaccante.get(TipoAttributo.FURIA) * 2.0d);
-                if (Dado.tira(100) <= probStatoFisico * fattoreEffetti(difensore, tipoDanno)) {
+                if (Dado.tira(ContestoLancio.EFFETTO_DI_STATO_DELL_ARMA, 100) <= probStatoFisico * fattoreEffetti(difensore, tipoDanno)) {
                     TipoEffettoDiStato effettoFisico = effettoDiStatoCasuale(tipoDanno);
                     dannoRisultante.addEffettoDiStato(effettoFisico, calcolaDurataStato(difensore, effettoFisico),
                             calcolaDannoPeriodico(attaccante, difensore, effettoFisico));

@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.tutorial;
 
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
+import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.RegoleEquipaggiamento;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
@@ -29,27 +30,39 @@ import java.util.OptionalInt;
  */
 public final class PilotaggioDelTutorial implements TruccatoreDiDadi {
 
-	/** Il mostro di ogni turno, dal primo: l'arpia, la chimera drago, lo scheletro, il goblin e il folletto. */
-	private static final TipoPersonaggio[] MOSTRI_DEI_PRIMI_TURNI = {
-			TipoPersonaggio.ARPIA, TipoPersonaggio.CHIMERA_DRAGO, TipoPersonaggio.SCHELETRO, TipoPersonaggio.GOBLIN, TipoPersonaggio.FOLLETTO};
+	/** Il mostro di ogni turno, dal primo: l'arpia, il goblin e il folletto. */
+	private static final TipoPersonaggio[] MOSTRI_DEI_PRIMI_TURNI = {TipoPersonaggio.ARPIA, TipoPersonaggio.GOBLIN, TipoPersonaggio.FOLLETTO};
 
 	/**
 	 * Il suggerimento che sblocca ogni passo dopo il primo: il passo n comincia quando si è visto il suggerimento n-1 di questa tabella (e tutti i
 	 * precedenti). Visti tutti, la sequenza è finita.
 	 */
-	public static final TipoSuggerimento[] SUGGERIMENTI_CHE_SBLOCCANO = {TipoSuggerimento.COMBATTIMENTO, TipoSuggerimento.SCELTE_IN_COMBATTIMENTO,
-			TipoSuggerimento.OGGETTO_TROVATO, TipoSuggerimento.CORRUZIONE, TipoSuggerimento.AMICIZIA};
+	public static final TipoSuggerimento[] SUGGERIMENTI_CHE_SBLOCCANO = {TipoSuggerimento.COMBATTIMENTO, TipoSuggerimento.CORRUZIONE, TipoSuggerimento.AMICIZIA};
 
 	/** Dopo tanti turni giocati il tutorial non pilota più, qualunque cosa abbia visto il giocatore (non resta fermo a ripetere un passo per sempre) */
 	public static final int TURNI_MASSIMI = 8;
 
-	private static final int PASSO_DELLA_CHIMERA_DRAGO = 1;
-	private static final int PASSO_DEL_GOBLIN = 3;
-	private static final int PASSO_DEL_FOLLETTO = 4;
+	private static final int PASSO_DEL_GOBLIN = 1;
+	private static final int PASSO_DEL_FOLLETTO = 2;
 	private static final int PASSO_DA_CALCOLARE = -1;
+
+	/**
+	 * Quanti attacchi il giocatore fa al massimo nel primo scontro senza il combattimento automatico, se l'effetto di stato non arriva (un'arma che non ne
+	 * lascia): poi l'icona torna comunque.
+	 */
+	public static final int ATTACCHI_PRIMA_DEL_COMBATTIMENTO_AUTOMATICO = 4;
+	private static final double SALUTE_MINIMA_PERCHE_L_ARPIA_COLPISCA = 0.75;
 
 	// Il passo della locazione in corso, fissato all'inizio della locazione (vedi iniziaLocazione)
 	private static volatile int passoDellaLocazione = PASSO_DA_CALCOLARE;
+
+	// Il primo scontro, un attacco alla volta: quanti colpi con un'arma che può lasciare un effetto di stato sono stati tirati (il primo non ne lascia, il
+	// secondo sì), se l'effetto c'è stato e quanti attacchi ha fatto il giocatore. Si azzerano a ogni locazione
+	private static volatile int colpiConEffettoTirati;
+	private static volatile boolean effettoDiStatoLasciato;
+	private static volatile int attacchiDelGiocatore;
+	// Quanti colpi dei mostri sono stati tirati nel primo scontro: uno va a vuoto, uno colpisce (vedi lancio)
+	private static volatile int colpiDeiMostriTirati;
 
 	private final TruccatoreDiDadi prioritario;
 
@@ -69,6 +82,7 @@ public final class PilotaggioDelTutorial implements TruccatoreDiDadi {
 		// deve far saltare un passo intero
 		int precedente = passoDellaLocazione == PASSO_DA_CALCOLARE ? 0 : passoDellaLocazione;
 		passoDellaLocazione = Math.min(calcolaIlPasso(), precedente + 1);
+		azzeraIlPrimoScontro();
 	}
 
 	/**
@@ -76,6 +90,38 @@ public final class PilotaggioDelTutorial implements TruccatoreDiDadi {
 	 */
 	public static void ricomincia() {
 		passoDellaLocazione = PASSO_DA_CALCOLARE;
+		azzeraIlPrimoScontro();
+	}
+
+	private static void azzeraIlPrimoScontro() {
+		colpiConEffettoTirati = 0;
+		effettoDiStatoLasciato = false;
+		attacchiDelGiocatore = 0;
+		colpiDeiMostriTirati = 0;
+	}
+
+	/**
+	 * Il giocatore ha scelto un attacco singolo (lo chiama {@code LocazioneBase}): serve a non lasciarlo senza il combattimento automatico per sempre.
+	 */
+	/** Se il capo ha ancora almeno i tre quarti della salute: finché è così, nel primo scontro l'arpia lo può colpire */
+	private static boolean isCapoInSalute() {
+		Personaggio capo = GruppoGiocatore.getIstanza().getCapo();
+		return capo.getSalute() >= SALUTE_MINIMA_PERCHE_L_ARPIA_COLPISCA * capo.getSaluteMassima();
+	}
+
+	public static void registraUnAttaccoDelGiocatore() {
+		attacchiDelGiocatore++;
+	}
+
+	/**
+	 * Se nel primo scontro l'icona del combattimento automatico non c'è ancora: il giocatore attacca un colpo alla volta, il primo senza effetti di stato e il
+	 * secondo con uno, che il tutorial spiega (vedi {@code tutorial.md} §4 ter) e interrompe lo scontro; l'icona compare quando l'effetto è arrivato, e il
+	 * suggerimento che la spiega subito dopo aver letto quello. Se l'effetto non arriva l'icona torna dopo
+	 * {@value #ATTACCHI_PRIMA_DEL_COMBATTIMENTO_AUTOMATICO} attacchi.
+	 */
+	public static boolean isCombattimentoAutomaticoVietato() {
+		return isPrimoScontro() && !effettoDiStatoLasciato && !RegistroSuggerimenti.isVisto(TipoSuggerimento.EFFETTI_DI_STATO)
+				&& attacchiDelGiocatore < ATTACCHI_PRIMA_DEL_COMBATTIMENTO_AUTOMATICO;
 	}
 
 	/**
@@ -134,13 +180,6 @@ public final class PilotaggioDelTutorial implements TruccatoreDiDadi {
 	}
 
 	/**
-	 * I passi in cui il giocatore non può perdere: l'arpia, la chimera drago (se decide di combatterla, il tutorial deve poter finire) e lo scheletro.
-	 */
-	private static boolean isPassoProtetto(int passo) {
-		return passo != PASSO_DEL_GOBLIN && passo != PASSO_DEL_FOLLETTO;
-	}
-
-	/**
 	 * L'oggetto che il tutorial vuole far trovare, se lo pilota: il primo che il giocatore trova è un'arma che il capo del gruppo può impugnare, perché
 	 * il suggerimento sull'inventario abbia qualcosa da equipaggiare (e non una gemma a caso). Vale finché quel suggerimento non è stato visto. La
 	 * mazza prima di tutto: contro lo scheletro, le ossa si spezzano a bastonate. Un mago o un druido trovano un bastone magico, un bardo una spada.
@@ -188,14 +227,27 @@ public final class PilotaggioDelTutorial implements TruccatoreDiDadi {
 			// Un mostro solo, per spiegare una cosa alla volta
 			case NUMERO_MOSTRI:
 				return OptionalInt.of(1);
-			// L'arpia, la chimera drago e lo scheletro non si possono perdere: i mostri non colpiscono e non lanciano incantesimi
-			// (un tiro di 100 non va mai a segno, e non fa valere nessuna voce con una probabilità sotto il 100)
-			case COLPO_DEI_MOSTRI:
+			// L'arpia, nel primo scontro, non lancia incantesimi (un tiro di 100 non fa valere nessuna voce con una probabilità sotto il 100)
 			case TATTICA_DEI_MOSTRI:
-				return isPassoProtetto(passo) ? OptionalInt.of(100) : OptionalInt.empty();
-			// Davanti alla chimera drago conviene non farsi vedere: passare inosservati riesce sempre
-			case PASSAGGIO_INOSSERVATO:
-				return passo == PASSO_DELLA_CHIMERA_DRAGO ? OptionalInt.of(1) : OptionalInt.empty();
+				return isPrimoScontro() ? OptionalInt.of(max) : OptionalInt.empty();
+			// ...e colpisce ogni tanto, ma piano: un colpo sì e uno no, finché il capo ha almeno il 75% della salute; sotto, non colpisce più. Così si vede
+			// che si può restare feriti, ma il primo scontro non si perde
+			case COLPO_DEI_MOSTRI:
+				if (!isPrimoScontro()) {
+					return OptionalInt.empty();
+				}
+				return colpiDeiMostriTirati++ % 2 == 1 && isCapoInSalute() ? OptionalInt.of(min) : OptionalInt.of(max);
+			// Il primo scontro, un attacco alla volta: il primo colpo (con un'arma che può lasciare un effetto di stato) non ne lascia, il secondo sì, perché
+			// il tutorial lo spieghi mentre lo scontro è fermo; dopo averlo letto torna il caso
+			case EFFETTO_DI_STATO_DELL_ARMA:
+				if (!isPrimoScontro() || RegistroSuggerimenti.isVisto(TipoSuggerimento.EFFETTI_DI_STATO)) {
+					return OptionalInt.empty();
+				}
+				if (colpiConEffettoTirati++ == 0) {
+					return OptionalInt.of(max);
+				}
+				effettoDiStatoLasciato = true;
+				return OptionalInt.of(min);
 			// Il goblin si corrompe (il dado supera la soglia)
 			case CORRUZIONE:
 				return passo == PASSO_DEL_GOBLIN ? OptionalInt.of(max) : OptionalInt.empty();

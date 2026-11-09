@@ -34,7 +34,7 @@ public enum MissionePredefinita {
 	SCONFIGGI_IL_LICH,
 	SCONFIGGI_LA_STREGA,
 
-	// Scatta alla fine della prima locazione.
+	// Scatta al completamento della prima locanda nel bosco (le cittadine non contano), che conta già.
 	NESSUN_BOCCALE_LASCIATO_INDIETRO(true),
 
 	// Scatta al primo incontro con un Eremita, appena descritta la locazione. Conta l'incontro, non come va a finire.

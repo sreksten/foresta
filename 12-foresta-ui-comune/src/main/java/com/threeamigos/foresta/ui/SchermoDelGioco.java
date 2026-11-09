@@ -1281,19 +1281,28 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 		if (tutor.isAperto() && !isTutorialVisibile()) {
 			tutor.chiudi();
 		}
-		boolean occupataOra = !sprite.isEmpty() || annuncioAttivo != null || !codaAnnunci.isEmpty() || rivelazioni.isOccupata() || tutor.isAperto();
+		// Finiti gli annunci che il suggerimento aspettava, o tutto quel che teneva occupata la UI: il suggerimento può aprirsi. Lo si controlla PRIMA di
+		// dire all'Automa che la UI è libera: se no l'Automa parte subito con l'intermezzo (l'eremita, a fine locazione), la schermata cambia e il suggerimento
+		// (per esempio «hai trovato un oggetto») si apre solo dopo
+		boolean annunciOra = isOccupataDaAltro();
+		boolean annunciFiniti = annunciInCorso && !annunciOra;
+		annunciInCorso = annunciOra;
+		boolean occupataOra = isUiOccupataOra();
 		boolean appenaLibera = uiOccupata && !occupataOra;
+		if ((appenaLibera || annunciFiniti) && ricontrollaIlTutorial != null) {
+			ricontrollaIlTutorial.run();
+			// Se il suggerimento si è aperto, la UI è ancora occupata
+			occupataOra = isUiOccupataOra();
+			appenaLibera = uiOccupata && !occupataOra;
+		}
 		if (appenaLibera) {
 			BusEventi.pubblica(new InternoUiInattiva());
 		}
 		uiOccupata = occupataOra;
-		// Finiti gli annunci che il suggerimento aspettava, o tutto quel che teneva occupata la UI: il suggerimento può aprirsi
-		boolean annunciOra = isOccupataDaAltro();
-		boolean annunciFiniti = annunciInCorso && !annunciOra;
-		annunciInCorso = annunciOra;
-		if ((appenaLibera || annunciFiniti) && ricontrollaIlTutorial != null) {
-			ricontrollaIlTutorial.run();
-		}
+	}
+
+	private boolean isUiOccupataOra() {
+		return !sprite.isEmpty() || annuncioAttivo != null || !codaAnnunci.isEmpty() || rivelazioni.isOccupata() || tutor.isAperto();
 	}
 
 	/**

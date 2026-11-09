@@ -97,6 +97,14 @@ public final class DisegnoDiContenutoGdx {
 	}
 
 	/**
+	 * Prepara la texture di un elemento che la vuole fatta (con l'alone, sagomata, specchiata) prima che serva, per non avere uno scatto quando compare.
+	 * Va chiamato sul thread di GL.
+	 */
+	public void precarica(Elemento e) {
+		immagine(e);
+	}
+
+	/**
 	 * La texture di un testo grande (per chi la vuole disegnare a fette)
 	 */
 	public TextureRegion testoGrande(Elemento e) {

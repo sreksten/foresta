@@ -34,6 +34,7 @@ public final class SituazioniDellaUI {
 	private boolean puntiAbilitaDaSpendere;
 	private boolean qualcunoCaduto;
 	private boolean movimentoSpiegato;
+	private boolean oggettoSpiegato;
 	private boolean effettoDiStatoApplicato;
 	private boolean reazioneScatenata;
 	private boolean joystickSullaMappa;
@@ -116,6 +117,14 @@ public final class SituazioniDellaUI {
 	}
 
 	/**
+	 * Se il giocatore ha già letto che cosa fare di un oggetto trovato: finché non l'ha letto, e un oggetto è stato trovato in questa locazione, non si
+	 * parla di spostarsi.
+	 */
+	public synchronized void segnaOggettoSpiegato(boolean spiegato) {
+		oggettoSpiegato = spiegato;
+	}
+
+	/**
 	 * Un effetto di stato è stato applicato (vale per questa locazione, poi si dimentica).
 	 */
 	public synchronized void segnaEffettoDiStatoApplicato() {
@@ -166,7 +175,8 @@ public final class SituazioniDellaUI {
 		if (!comandi.isEmpty()) {
 			situazioni.add(Situazione.BARRA_DELLE_ICONE_VISIBILE);
 		}
-		if (comandi.contains(Comando.MAPPA)) {
+		// I tipi di luogo si spiegano dopo aver detto come ci si muove e che cos'è la mappa
+		if (comandi.contains(Comando.MAPPA) && movimentoSpiegato) {
 			situazioni.add(Situazione.ICONA_DELLA_MAPPA_PRESENTE);
 		}
 		if (schermata == StatoDelloSchermo.TATTICHE) {
@@ -186,7 +196,8 @@ public final class SituazioniDellaUI {
 				situazioni.add(Situazione.MAPPA_PIU_GRANDE_DELLO_SCHERMO);
 			}
 		}
-		if (comandi.containsAll(MOVIMENTO)) {
+		// Il primo scontro viene prima: finché non si è letto cosa fare dell'oggetto trovato, non si parla di spostarsi
+		if (comandi.containsAll(MOVIMENTO) && (oggettoSpiegato || !oggettoTrovato)) {
 			situazioni.add(Situazione.ICONE_DI_MOVIMENTO_PRESENTI);
 			if (movimentoSpiegato) {
 				situazioni.add(Situazione.MOVIMENTO_SPIEGATO);
@@ -203,6 +214,9 @@ public final class SituazioniDellaUI {
 		}
 		if (comandi.contains(Comando.COMBATTIMENTO) && (comandi.contains(Comando.FUGA) || comandi.contains(Comando.PASSA_INOSSERVATO))) {
 			situazioni.add(Situazione.SCELTE_IN_COMBATTIMENTO);
+		}
+		if (comandi.contains(Comando.COMBATTIMENTO)) {
+			situazioni.add(Situazione.COMBATTIMENTO_AUTOMATICO_DISPONIBILE);
 		}
 		if (effettoDiStatoApplicato) {
 			situazioni.add(Situazione.EFFETTO_DI_STATO_APPLICATO);

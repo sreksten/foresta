@@ -14,6 +14,7 @@ import com.threeamigos.foresta.ui.testo.LayoutDelTestoGrande;
 import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,6 +31,9 @@ public final class IntroDelGioco {
 	public static final int FASCIA = 40;
 	// Il logo della Foresta segue la storia a questa distanza sotto l'ultima riga, e si ferma al suo posto quando ci arriva
 	private static final int MARGINE_LOGHI = 20;
+	// Il logo della Foresta non si pianta di colpo: quando la storia lo porterebbe a questa distanza dal suo posto comincia a rallentare, con una frenata
+	// costante, e si ferma quando la storia è salita di altrettanto oltre il suo posto (vedi frenata)
+	static final int DISTANZA_DI_FRENATA = 50;
 	// Il logo 3AM sta in basso a destra, a questa distanza dai due bordi
 	private static final int MARGINE_LOGO_3AM = 20;
 	// Fra una riga e l'altra della storia, oltre all'altezza di riga normale: un terzo dell'altezza delle lettere
@@ -266,6 +270,33 @@ public final class IntroDelGioco {
 		return new Misura((int) Math.round(m.larghezza * zoom), (int) Math.round(m.altezza * zoom));
 	}
 
+	/**
+	 * Di quanto il logo della Foresta sta sotto al suo posto, data la distanza a cui lo terrebbe la storia (negativa se l'ha già superato). Lontano dal
+	 * posto il logo la segue; da {@link #DISTANZA_DI_FRENATA} pixel in poi rallenta con una frenata costante: la sua velocità cala da quella della storia a
+	 * zero, e si ferma quando la storia ha superato il suo posto di altrettanto. La curva è (d + L)² / 4L, che si raccorda alla retta d = d senza scatti di
+	 * velocità. Durante la frenata il logo resta sotto a dove lo terrebbe la storia, mai a ridosso della sua ultima riga.
+	 */
+	static int frenata(int distanza) {
+		if (distanza >= DISTANZA_DI_FRENATA) {
+			return distanza;
+		}
+		if (distanza <= -DISTANZA_DI_FRENATA) {
+			return 0;
+		}
+		double dentro = distanza + DISTANZA_DI_FRENATA;
+		return (int) Math.round(dentro * dentro / (4.0 * DISTANZA_DI_FRENATA));
+	}
+
+	/**
+	 * I due loghi come l'intro li disegna, per prepararne le immagini (con l'alone, che costa) prima che servano: la misura e il posto non contano, l'immagine
+	 * si riconosce dalla risorsa e dal raggio dell'alone.
+	 */
+	public static List<Elemento> loghiDaPrecaricare() {
+		return Arrays.asList(
+				Elemento.immagineConAlone(RISORSA_LOGO_FORESTA, 1, 1, SchermateSenzaPartita.RAGGIO_ALONE, 0, 0),
+				Elemento.immagineConAlone(RISORSA_LOGO_3AM, 1, 1, SchermateSenzaPartita.RAGGIO_ALONE, 0, 0));
+	}
+
 	private Quadro storia(double secondi) {
 		if (colonna == null) {
 			contenuto = contenutoDellaStoria();
@@ -282,8 +313,8 @@ public final class IntroDelGioco {
 		Misura logoForesta = conLoZoom(RISORSA_LOGO_FORESTA);
 		int cimaFerma = height / 3 - logoForesta.altezza / 2;
 		int cimaConLaStoria = colonna.getFondo() + MARGINE_LOGHI;
-		boolean fermo = cimaConLaStoria <= cimaFerma;
-		int cimaLogo = Math.max(cimaFerma, cimaConLaStoria);
+		int cimaLogo = cimaFerma + frenata(cimaConLaStoria - cimaFerma);
+		boolean fermo = cimaLogo <= cimaFerma;
 		if (secondiLoghi < 0 && fermo) {
 			secondiLoghi = 0;
 		}

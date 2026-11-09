@@ -251,7 +251,7 @@ public abstract class LocazioneBase implements Locazione {
 	 */
 	public static final Set<TipoPersonaggio> MOSTRI_ESCLUSI_A_INIZIO_PARTITA = Collections.unmodifiableSet(EnumSet.of(
 			TipoPersonaggio.CENTAURO, TipoPersonaggio.CHIMERA_DRAGO, TipoPersonaggio.GIGANTE,
-			TipoPersonaggio.MINOTAURO, TipoPersonaggio.TITANO, TipoPersonaggio.TROLL));
+			TipoPersonaggio.MINOTAURO, TipoPersonaggio.OMBRA_NERA, TipoPersonaggio.TITANO, TipoPersonaggio.TROLL));
 
 	/**
 	 * I mostri che si possono incontrare in una locazione, dato il livello del capo del gruppo: durante l'inizio
@@ -1113,7 +1113,10 @@ public abstract class LocazioneBase implements Locazione {
 			if (statoLocazione != StatoLocazione.IN_COMBATTIMENTO) {
 				comandiPossibili.add(Comando.SINGOLO_ATTACCO);
 			}
-			comandiPossibili.add(Comando.COMBATTIMENTO);
+			// Il primo scontro del tutorial si fa un attacco alla volta, finché non si è visto cosa sono gli effetti di stato
+			if (!PilotaggioDelTutorial.isCombattimentoAutomaticoVietato()) {
+				comandiPossibili.add(Comando.COMBATTIMENTO);
+			}
 		}
 		// Se stiamo combattendo possiamo interrompere la schermaglia (non quella che prosegue da sola perché nessuno può agire)
 		if (statoLocazione == StatoLocazione.IN_COMBATTIMENTO && !mischiaForzata) {
@@ -1673,6 +1676,7 @@ public abstract class LocazioneBase implements Locazione {
 	 * finché il piano non torna a un mio personaggio.
 	 */
 	private Optional<Stato> eseguiSingoloAttacco() {
+		PilotaggioDelTutorial.registraUnAttaccoDelGiocatore();
 		// Se starnutisce l'attacco non parte, ma il turno passa
 		Optional<Stato> fine = starnutisce(combattente) ? Optional.<Stato>empty() : attaccaConLeArmi(combattente);
 		if (fine.isPresent()) {

@@ -39,6 +39,8 @@ public enum BersaglioDelSuggerimento {
 	ICONE_DELLE_PAGINE(Comando.MOSTRA_TROFEI, Comando.MOSTRA_TATTICHE, Comando.MOSTRA_BESTIARIO, Comando.MOSTRA_GRIMORIO),
 	ICONE_DELLE_POZIONI(Comando.POZIONE_SALUTE, Comando.POZIONE_SALUTE_GRANDE),
 	ICONE_DI_COMBATTIMENTO(Comando.COMBATTIMENTO, Comando.SINGOLO_ATTACCO, Comando.FUGA, Comando.PASSA_INOSSERVATO),
+	/** L'icona del combattimento automatico. */
+	ICONA_DEL_COMBATTIMENTO_AUTOMATICO(Comando.COMBATTIMENTO),
 	ICONA_DELLA_MAPPA(Comando.MAPPA),
 	/** L'interruttore dell'aiuto (il punto interrogativo) */
 	ICONA_DELL_AIUTO(Comando.AIUTO, Comando.NO_AIUTO),

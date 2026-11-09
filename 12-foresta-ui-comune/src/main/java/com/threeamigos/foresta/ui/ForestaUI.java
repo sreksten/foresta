@@ -340,6 +340,7 @@ public abstract class ForestaUI implements Temporizzabile {
 		situazioni.segnaPuntiAbilita(schermata == StatoDelloSchermo.INVENTARIO && isQualcunoConPuntiAbilita());
 		situazioni.segnaQualcunoCaduto(isQualcunoCaduto());
 		situazioni.segnaMovimentoSpiegato(RegistroSuggerimenti.isVisto(TipoSuggerimento.MOVIMENTO_E_MAPPA));
+		situazioni.segnaOggettoSpiegato(RegistroSuggerimenti.isVisto(TipoSuggerimento.OGGETTO_TROVATO));
 		boolean laMappa = schermata == StatoDelloSchermo.MAPPA;
 		situazioni.segnaLaSchermata(schermata, laMappa && schermo.mappaConJoystick(), laMappa && schermo.mappaPiuGrandeDelloSchermo());
 		boolean aperto = schermo.getTutor().aggiorna(situazioni.correnti(ComandiPossibili.getComandi(), missioneAttiva, schermo.getTutor().isDito(),
@@ -414,8 +415,14 @@ public abstract class ForestaUI implements Temporizzabile {
 					? RiquadroCombattimento.testoDellAzione(evento.getAzione(), evento.getPersonaggio(), evento.getBersaglio())
 					: RiquadroCombattimento.azionePredefinita(evento.getBersaglio()));
 		}
+		boolean primaVolta = !combattimento.isVisibile();
 		combattimento.setVisible(true);
 		rinfresca();
+		if (primaVolta) {
+			// Anche un attacco singolo apre il riquadro: il tutorial dello scontro punta lì
+			situazioni.segnaCombattimentoAperto();
+			aggiornaIlTutorial();
+		}
 	}
 
 	private void gestisciEventoFaseDiGioco(InternoFaseDiGioco evento) {

@@ -35,6 +35,8 @@ public enum ContestoLancio {
     AMICIZIA("Amicizia", false),
     /** Il tiro (da 1 a 100) che fa scattare la sfida a carta, forbici e sasso dopo un'amicizia: scatta se non supera la percentuale. */
     SFIDA_CARTA_FORBICI_SASSO("Sfida a carta", false),
+    /** Il tiro (da 1 a 100) con cui l'arma di chi colpisce lascia un effetto di stato sul bersaglio (per esempio il sanguinamento): riesce se non supera la probabilità. */
+    EFFETTO_DI_STATO_DELL_ARMA("Effetto di stato dell'arma", false),
     /** Il tipo di oggetto che una locazione lascia da trovare, scelto fra quelli che può avere. */
     TIPO_OGGETTO_TROVATO("Tipo di oggetto trovato", true);
 

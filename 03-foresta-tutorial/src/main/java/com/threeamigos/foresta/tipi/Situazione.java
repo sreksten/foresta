@@ -25,6 +25,8 @@ public enum Situazione {
 	INVENTARIO_APERTO,
 	/** Non scatta mai da sola: è l'innesco dei messaggi che il motore chiede alla UI di dire con la finestra del tutorial (vedi NotificaMessaggioDelTutorial). */
 	MESSAGGIO_DEL_MOTORE,
+	/** Non scatta mai da sola: il motore la usa per dire che fra una locazione e l'altra il gruppo ha recuperato salute e magia (vedi NotificaMessaggioDelTutorial). */
+	RECUPERO_FRA_LOCAZIONI,
 	/** Il giocatore ha già letto come ci si muove e ci sono le frecce di movimento: è l'ultimo consiglio della prima locazione, su dove andare. */
 	MOVIMENTO_SPIEGATO,
 	/** Si è aperta la schermata delle tattiche di un personaggio. */
@@ -41,6 +43,8 @@ public enum Situazione {
 	FERITO_CON_UNA_POZIONE,
 	/** In combattimento ci sono più comandi del solo attacco semplice (la fuga, il combattimento a round...). */
 	SCELTE_IN_COMBATTIMENTO,
+	/** C'è l'icona del combattimento automatico (le tattiche che agiscono da sole, un turno dopo l'altro, finché lo scontro non è finito). */
+	COMBATTIMENTO_AUTOMATICO_DISPONIBILE,
 	/** Un effetto di stato è stato applicato (a chiunque) in questa locazione. */
 	EFFETTO_DI_STATO_APPLICATO,
 	/** Si è scatenata una reazione elementale in questa locazione. */

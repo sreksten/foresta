@@ -65,11 +65,13 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 
 	@Override
 	public void controllaPostLocazione() {
-		// Il giocatore inizia sempre nel bosco, non può essere in una locanda alla fine del primo turno
+		// La missione comincia quando si completa la prima locanda; quella locanda conta già
 		if (!isCompleta() && !isAttiva()) {
+			if (contaLocandeVisitate() == 0) {
+				return;
+			}
 			BusEventi.pubblica(new NotificaTestoParagrafo(ProduttoreDiMissioniCasuale.testoDellaMissione("NESSUN_BOCCALE_LASCIATO_INDIETRO_INIZIO", "PARAM_DESCRIZIONE", descrizioneBase())));
 			attivaMissione();
-			return;
 		}
 		if (isCompleta()) {
 			return;

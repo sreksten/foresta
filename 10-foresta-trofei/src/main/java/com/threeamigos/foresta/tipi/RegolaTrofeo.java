@@ -25,6 +25,9 @@ public enum RegolaTrofeo {
 	// Per ora contano tutte le missioni completate, anche le secondarie
 	CACCIATORE_DI_TAGLIE(() -> new TrofeoAContatore<>(TipoTrofeo.CACCIATORE_DI_TAGLIE,
 			InternoMissioneCompletata.class, evento -> 1, 50)),
+	// Il Giro delle Sette Chiese, una sola per partita (vedi IlGiroDelleSetteChiese nel catalogo delle missioni)
+	PELLEGRINO(() -> new TrofeoAContatore<>(TipoTrofeo.PELLEGRINO,
+			InternoMissioneCompletata.class, evento -> evento.getMissione().getClasse() == MissionePredefinita.IL_GIRO_DELLE_SETTE_CHIESE ? 1 : 0, 1)),
 	// La missione La sfida dei campioni, una sola per partita (vedi LaSfidaDeiCampioni nel catalogo delle missioni)
 	RE_DI_CARTA_FORBICI_E_SASSO(() -> new TrofeoAContatore<>(TipoTrofeo.RE_DI_CARTA_FORBICI_E_SASSO,
 			InternoMissioneCompletata.class, evento -> evento.getMissione().getClasse() == MissionePredefinita.LA_SFIDA_DEI_CAMPIONI ? 1 : 0, 1)),

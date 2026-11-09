@@ -494,6 +494,7 @@ public class FinestraDiProva {
                     return strumenti.getOggettiSpeciali().toArray();
                 case COLPO_DEI_MOSTRI:
                 case TATTICA_DEI_MOSTRI:
+                case EFFETTO_DI_STATO_DELL_ARMA:
                 case PASSAGGIO_INOSSERVATO:
                 case SFIDA_CARTA_FORBICI_SASSO:
                     return numeri(1, 100);

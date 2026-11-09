@@ -10,9 +10,9 @@ import com.threeamigos.foresta.ui.testo.LayoutDelTestoGrande;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Il disegno con Graphics2D degli elementi di un {@link ContenutoDiColonna} (le schermate a tutto schermo: bestiario, intro, messaggi…). Le immagini che non
@@ -22,8 +22,9 @@ public final class DisegnoDiContenutoAwt {
 
 	// Le immagini degli elementi che non sono testo, preparate una volta per elemento (le sagome, gli specchi e gli aloni costano a ogni fotogramma)
 	private final Map<Elemento, Image> pronte = new IdentityHashMap<>();
-	// Le immagini per risorsa: sono poche, e le stesse a ogni fotogramma anche se gli elementi che le chiedono sono nuovi
-	private final Map<String, Image> immaginiPerChiave = new HashMap<>();
+	// Le immagini per risorsa: sono poche, e le stesse a ogni fotogramma anche se gli elementi che le chiedono sono nuovi. Sono di tutti i disegni, così si
+	// possono preparare prima (vedi precaricaILoghi) in un altro thread
+	private static final Map<String, Image> immaginiPerChiave = new ConcurrentHashMap<>();
 
 	/**
 	 * Disegna gli elementi del contenuto con il suo angolo in alto a sinistra in (x0, y0)
@@ -102,6 +103,16 @@ public final class DisegnoDiContenutoAwt {
 				}
 				g.setComposite(composito);
 				break;
+		}
+	}
+
+	/**
+	 * Prepara le immagini dei due loghi dell'intro (con l'alone, che costa) prima che l'intro parta, per non avere uno scatto quando compaiono. Si può
+	 * chiamare da un altro thread, dopo il caricamento delle immagini e quando lo zoom è stabilito.
+	 */
+	public static void precaricaILoghi() {
+		for (Elemento logo : IntroDelGioco.loghiDaPrecaricare()) {
+			immaginiPerChiave.computeIfAbsent(chiaveDellImmagine(logo), k -> preparaLImmagine(logo));
 		}
 	}
 

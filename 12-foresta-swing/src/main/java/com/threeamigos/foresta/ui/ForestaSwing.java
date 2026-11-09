@@ -9,6 +9,7 @@ import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzatore;
 import com.threeamigos.foresta.tipi.Orientamento;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
+import com.threeamigos.foresta.ui.schermate.DisegnoDiContenutoAwt;
 import com.threeamigos.foresta.ui.schermate.MisureDelleImmaginiAwt;
 import com.threeamigos.foresta.ui.sfx.PannelloLogoIniziale;
 import com.threeamigos.foresta.ui.sfx.TracciatoreLogo;
@@ -117,6 +118,8 @@ public class ForestaSwing extends ForestaUI {
 		temporizzatore.inizia(TracciatoreLogo.INTERVALLO_FOTOGRAMMA_MS);
 		Thread caricamento = new Thread(() -> {
 			ImageCache.init();
+			// I loghi dell'intro, con l'alone, si preparano ora: all'intro non devono costare uno scatto
+			DisegnoDiContenutoAwt.precaricaILoghi();
 			SwingUtilities.invokeLater(this::completaInterfacciaUtente);
 		}, "Precaricamento immagini");
 		caricamento.setDaemon(true);

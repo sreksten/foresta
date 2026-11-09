@@ -64,6 +64,10 @@ public final class SchermataIntroOutroGdx implements SchermateIntroOutro {
 		};
 		this.schermate = new SchermateSenzaPartita(width, height, vistaPartita, misure);
 		this.intro = new IntroDelGioco(width, height, gestorePunteggi, vistaPartita, misure);
+		// I loghi con l'alone si preparano ora, prima che l'intro parta: se no costano uno scatto quando compaiono
+		for (Elemento logo : IntroDelGioco.loghiDaPrecaricare()) {
+			disegno.precarica(logo);
+		}
 	}
 
 	public void resettaSequenza() {

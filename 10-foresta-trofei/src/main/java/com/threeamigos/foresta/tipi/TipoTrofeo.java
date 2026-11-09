@@ -18,17 +18,17 @@ import java.util.List;
  */
 public enum TipoTrofeo {
 
+	AMMAZZAGOBLIN(CategoriaTrofeo.UCCISIONE),
+	MATADOR(CategoriaTrofeo.UCCISIONE),
+	COME_LA_IMPAGLIO(CategoriaTrofeo.UCCISIONE),
 	UCCIDI_IL_MINOTAURO_GIGANTE(CategoriaTrofeo.UCCISIONE),
 	UCCIDI_L_IDRA(CategoriaTrofeo.UCCISIONE),
 	UCCIDI_LA_STREGA(CategoriaTrofeo.UCCISIONE),
 	UCCIDI_IL_LICH(CategoriaTrofeo.UCCISIONE),
 	UCCIDI_IL_DRAGO(CategoriaTrofeo.UCCISIONE),
 
-	AMMAZZAGOBLIN(CategoriaTrofeo.UCCISIONE),
-	MATADOR(CategoriaTrofeo.UCCISIONE),
-	COME_LA_IMPAGLIO(CategoriaTrofeo.UCCISIONE),
-
 	CACCIATORE_DI_TAGLIE(CategoriaTrofeo.MISSIONE),
+	PELLEGRINO(CategoriaTrofeo.MISSIONE),
 	RE_DI_CARTA_FORBICI_E_SASSO(CategoriaTrofeo.TORNEO),
 	ROSA_APPASSITA(CategoriaTrofeo.TORNEO),
 	INCANTATORE_SUPREMO(CategoriaTrofeo.TORNEO),

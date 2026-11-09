@@ -17,6 +17,15 @@ public enum TipoSuggerimento {
 	PRIMI_PASSI(Situazione.PRIMA_SCHERMATA_DI_GIOCO, BersaglioDelSuggerimento.RIQUADRI),
 	// La prima pagina parla della barra, la seconda del punto interrogativo
 	BARRA_DELLE_ICONE(Situazione.BARRA_DELLE_ICONE_VISIBILE, BersaglioDelSuggerimento.BARRA_DELLE_ICONE, BersaglioDelSuggerimento.ICONA_DELL_AIUTO),
+	// Il primo scontro e quel che ne viene, nell'ordine: lo scontro (un attacco alla volta), l'effetto di stato del secondo colpo, il combattimento
+	// automatico, l'oggetto trovato; solo dopo si parla di spostarsi (le icone di movimento aspettano l'oggetto: vedi SituazioniDellaUI)
+	COMBATTIMENTO(Situazione.COMBATTIMENTO_APERTO, BersaglioDelSuggerimento.RIQUADRO_DEL_COMBATTIMENTO),
+	// La prima volta che un effetto di stato si applica, in pieno combattimento: il combattimento si ferma finché non si legge
+	EFFETTI_DI_STATO(Situazione.EFFETTO_DI_STATO_APPLICATO, BersaglioDelSuggerimento.RIQUADRO_DEL_COMBATTIMENTO),
+	// Il primo scontro si fa un attacco alla volta, senza l'icona del combattimento automatico: compare quando l'effetto di stato è arrivato, e questo la
+	// spiega subito dopo aver letto quello (vedi PilotaggioDelTutorial.isCombattimentoAutomaticoVietato)
+	COMBATTIMENTO_AUTOMATICO(Situazione.COMBATTIMENTO_AUTOMATICO_DISPONIBILE, BersaglioDelSuggerimento.ICONA_DEL_COMBATTIMENTO_AUTOMATICO),
+	OGGETTO_TROVATO(Situazione.OGGETTO_TROVATO, BersaglioDelSuggerimento.ICONA_DELL_INVENTARIO),
 	// La prima pagina parla delle frecce, la seconda del riquadro della mappa, la terza dell'icona che apre la mappa a tutto schermo
 	MOVIMENTO_E_MAPPA(Situazione.ICONE_DI_MOVIMENTO_PRESENTI, BersaglioDelSuggerimento.ICONE_DI_MOVIMENTO, BersaglioDelSuggerimento.RIQUADRO_DELLA_MAPPA,
 			BersaglioDelSuggerimento.ICONA_DELLA_MAPPA),
@@ -25,11 +34,7 @@ public enum TipoSuggerimento {
 	TRASCINARE_LA_MAPPA(Situazione.MAPPA_PIU_GRANDE_DELLO_SCHERMO, BersaglioDelSuggerimento.SCHERMATA),
 	// I tipi di luogo: più pagine del solito, perché sono tanti e chi comincia non sa dove andare (vedi PAGINE_MASSIME)
 	LUOGHI(Situazione.ICONA_DELLA_MAPPA_PRESENTE, BersaglioDelSuggerimento.RIQUADRO_DELLA_MAPPA),
-	COMBATTIMENTO(Situazione.COMBATTIMENTO_APERTO, BersaglioDelSuggerimento.RIQUADRO_DEL_COMBATTIMENTO),
-	OGGETTO_TROVATO(Situazione.OGGETTO_TROVATO, BersaglioDelSuggerimento.ICONA_DELL_INVENTARIO),
 	POZIONI(Situazione.FERITO_CON_UNA_POZIONE, BersaglioDelSuggerimento.ICONE_DELLE_POZIONI),
-	// La prima volta che un effetto di stato si applica, in pieno combattimento: il combattimento si ferma finché non si legge
-	EFFETTI_DI_STATO(Situazione.EFFETTO_DI_STATO_APPLICATO, BersaglioDelSuggerimento.RIQUADRO_DEL_COMBATTIMENTO),
 	// La prima reazione elementale: un effetto di stato più un certo tipo di attacco fanno più danni
 	REAZIONI_ELEMENTALI(Situazione.REAZIONE_ELEMENTALE_SCATENATA, BersaglioDelSuggerimento.RIQUADRO_DEL_COMBATTIMENTO),
 	// A fine combattimento, se qualcuno è caduto: la prima pagina parla del gruppo, la seconda dell'incantesimo, la terza dell'icona che lo lancia
@@ -57,6 +62,9 @@ public enum TipoSuggerimento {
 			BersaglioDelSuggerimento.PULSANTI_DELLE_TATTICHE, BersaglioDelSuggerimento.LISTA_DELLE_TATTICHE),
 	// Non scatta da una situazione: il motore lo chiede (NotificaMessaggioDelTutorial) quando rifiuta un viaggio che finirebbe in un luogo non ancora per
 	// il giocatore («Non è ancora il momento di visitare {0}»); punta alle frecce, per scegliere un'altra direzione
+	// Non scatta da una situazione: il motore lo chiede (NotificaMessaggioDelTutorial) la prima volta che, cambiando locazione, qualcuno recupera salute o magia;
+	// punta alle barre del gruppo
+	RECUPERO_FRA_LOCAZIONI(Situazione.RECUPERO_FRA_LOCAZIONI, BersaglioDelSuggerimento.RIQUADRO_DEL_GRUPPO),
 	NON_ANCORA_IL_MOMENTO(Situazione.MESSAGGIO_DEL_MOTORE, BersaglioDelSuggerimento.ICONE_DI_MOVIMENTO),
 	CORRUZIONE(Situazione.AVVERSARIO_CORROMPIBILE, BersaglioDelSuggerimento.ICONA_DELLA_CORRUZIONE),
 	AMICIZIA(Situazione.AVVERSARIO_AMICHEVOLE, BersaglioDelSuggerimento.ICONA_DELL_AMICIZIA),

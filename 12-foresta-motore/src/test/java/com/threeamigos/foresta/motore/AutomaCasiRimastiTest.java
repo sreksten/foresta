@@ -297,7 +297,7 @@ class AutomaCasiRimastiTest {
 
     @Test
     void gliIntermezziSenzaPagineSiSaltano() {
-        try (PartitaDiTest partita = partitaFuoriDallaCitta(102)) {
+        try (PartitaDiTest partita = partitaFuoriDallaCitta(112)) {
             partita.nonSaltareIntermezzi();
             RegistroIntermezzi.aggiungiFonte(FonteDiProva.ISTANZA);
             FonteDiProva.ISTANZA.coda.add(new IntermezzoDiProva("PROVA_VUOTO", Collections.emptyList(), 8));

@@ -104,14 +104,13 @@ class PilotaggioDelTutorialTest {
 	}
 
 	@Test
-	void iPrimiCinquePassiHannoIlMostroDelTutorialUnoSolo() {
+	void iPrimiTrePassiHannoIlMostroDelTutorialUnoSolo() {
 		try (PartitaDiTest partita = partita(31)) {
 			Dado.impostaTruccatore(new PilotaggioDelTutorial(null));
-			TipoPersonaggio[] attesi = {TipoPersonaggio.ARPIA, TipoPersonaggio.CHIMERA_DRAGO, TipoPersonaggio.SCHELETRO, TipoPersonaggio.GOBLIN,
-					TipoPersonaggio.FOLLETTO};
+			TipoPersonaggio[] attesi = {TipoPersonaggio.ARPIA, TipoPersonaggio.GOBLIN, TipoPersonaggio.FOLLETTO};
 			for (int passo = 0; passo < attesi.length; passo++) {
 				alPasso(passo);
-				// Qualunque sia il caso: la chimera drago non è fra quelli ammessi all'inizio, e l'incontro c'è sempre
+				// Qualunque sia il caso, l'incontro c'è sempre
 				for (int prova = 0; prova < 30; prova++) {
 					List<Personaggio> mostri = incontro();
 					assertEquals(1, mostri.size(), "passo " + passo);
@@ -134,14 +133,14 @@ class PilotaggioDelTutorialTest {
 			PilotaggioDelTutorial.iniziaLocazione();
 			assertEquals(TipoPersonaggio.ARPIA, PilotaggioDelTutorial.mostroDelTurno().get());
 			// Conta l'ordine: il secondo senza il primo non basta
-			RegistroSuggerimenti.visto(TipoSuggerimento.SCELTE_IN_COMBATTIMENTO);
+			RegistroSuggerimenti.visto(TipoSuggerimento.CORRUZIONE);
 			PilotaggioDelTutorial.iniziaLocazione();
 			assertEquals(TipoPersonaggio.ARPIA, PilotaggioDelTutorial.mostroDelTurno().get());
 			RegistroSuggerimenti.visto(TipoSuggerimento.COMBATTIMENTO);
 			PilotaggioDelTutorial.iniziaLocazione();
-			assertEquals(TipoPersonaggio.CHIMERA_DRAGO, PilotaggioDelTutorial.mostroDelTurno().get());
+			assertEquals(TipoPersonaggio.GOBLIN, PilotaggioDelTutorial.mostroDelTurno().get());
 			PilotaggioDelTutorial.iniziaLocazione();
-			assertEquals(TipoPersonaggio.SCHELETRO, PilotaggioDelTutorial.mostroDelTurno().get());
+			assertEquals(TipoPersonaggio.FOLLETTO, PilotaggioDelTutorial.mostroDelTurno().get());
 		}
 	}
 
@@ -150,15 +149,15 @@ class PilotaggioDelTutorialTest {
 		try (PartitaDiTest partita = partita(38)) {
 			Dado.impostaTruccatore(new PilotaggioDelTutorial(null));
 			alPasso(0);
-			assertEquals(0, colpiDelMostroASegno());
+			assertTrue(colpiDelMostroASegno() > 0);
 			// Durante lo scontro con l'arpia il giocatore legge la spiegazione del combattimento: la protezione non cade
 			RegistroSuggerimenti.visto(TipoSuggerimento.COMBATTIMENTO);
 			assertEquals(TipoPersonaggio.ARPIA, PilotaggioDelTutorial.mostroDelTurno().get());
 			assertTrue(PilotaggioDelTutorial.isPrimoScontro());
-			assertEquals(100, new PilotaggioDelTutorial(null).lancio(ContestoLancio.COLPO_DEI_MOSTRI, 1, 100).getAsInt());
+			assertTrue(new PilotaggioDelTutorial(null).lancio(ContestoLancio.COLPO_DEI_MOSTRI, 1, 100).isPresent());
 			// Alla locazione dopo, il passo è avanzato
 			PilotaggioDelTutorial.iniziaLocazione();
-			assertEquals(TipoPersonaggio.CHIMERA_DRAGO, PilotaggioDelTutorial.mostroDelTurno().get());
+			assertEquals(TipoPersonaggio.GOBLIN, PilotaggioDelTutorial.mostroDelTurno().get());
 			assertFalse(PilotaggioDelTutorial.isPrimoScontro());
 		}
 	}
@@ -170,10 +169,10 @@ class PilotaggioDelTutorialTest {
 			PilotaggioDelTutorial.ricomincia();
 			PilotaggioDelTutorial.iniziaLocazione();
 			RegistroSuggerimenti.visto(TipoSuggerimento.COMBATTIMENTO);
-			RegistroSuggerimenti.visto(TipoSuggerimento.SCELTE_IN_COMBATTIMENTO);
-			RegistroSuggerimenti.visto(TipoSuggerimento.OGGETTO_TROVATO);
-			// ...ma nessun passo si salta: arpia, chimera drago, scheletro, goblin
-			TipoPersonaggio[] attesi = {TipoPersonaggio.CHIMERA_DRAGO, TipoPersonaggio.SCHELETRO, TipoPersonaggio.GOBLIN};
+			RegistroSuggerimenti.visto(TipoSuggerimento.CORRUZIONE);
+			RegistroSuggerimenti.visto(TipoSuggerimento.AMICIZIA);
+			// ...ma nessun passo si salta: arpia, goblin, folletto
+			TipoPersonaggio[] attesi = {TipoPersonaggio.GOBLIN, TipoPersonaggio.FOLLETTO};
 			for (TipoPersonaggio mostro : attesi) {
 				PilotaggioDelTutorial.iniziaLocazione();
 				assertEquals(mostro, PilotaggioDelTutorial.mostroDelTurno().get());
@@ -184,7 +183,7 @@ class PilotaggioDelTutorialTest {
 	@Test
 	void finitaLaSequenzaIlTutorialNonDecideNiente() {
 		try (PartitaDiTest partita = partita(39)) {
-			alPasso(5);
+			alPasso(3);
 			assertFalse(PilotaggioDelTutorial.pilotaQuestoTurno());
 			assertFalse(new PilotaggioDelTutorial(null).lancio(ContestoLancio.NUMERO_MOSTRI, 1, 3).isPresent());
 		}
@@ -247,21 +246,48 @@ class PilotaggioDelTutorialTest {
 	}
 
 	@Test
-	void arpiaChimeraDragoEScheletroNonSiPossonoPerdere() {
+	void l_arpiaFeriscePianoEIlPrimoScontroNonSiPerde() {
 		try (PartitaDiTest partita = partita(35)) {
 			Dado.impostaTruccatore(new PilotaggioDelTutorial(null));
-			// Passo 0, l'arpia: nessun colpo a segno
+			// Passo 0, l'arpia: un colpo sì e uno no, finché il capo è in salute
 			alPasso(0);
+			int asegno = colpiDelMostroASegno();
+			assertTrue(asegno > 100 && asegno < 200, "circa metà dei colpi: " + asegno);
+			// ...ma sotto i tre quarti della salute non colpisce più: il primo scontro non si perde
+			Personaggio capo = GruppoGiocatore.getIstanza().getCapo();
+			capo.addSalute(-(capo.getSalute() - capo.getSaluteMassima() / 2));
 			assertEquals(0, colpiDelMostroASegno());
-			// Passo 1, la chimera drago: protetta
+			// Passo 1, il goblin: non è protetto
+			capo.addSalute(capo.getSaluteMassima());
 			alPasso(1);
-			assertEquals(0, colpiDelMostroASegno());
-			// Passo 2, lo scheletro: protetto
-			alPasso(2);
-			assertEquals(0, colpiDelMostroASegno());
-			// Passo 3, il goblin: non è protetto
-			alPasso(3);
-			assertTrue(colpiDelMostroASegno() > 0);
+			assertTrue(colpiDelMostroASegno() > 100);
+		}
+	}
+
+	@Test
+	void ilPrimoColpoConLArmaNonLasciaEffettiDiStatoEIlSecondoSi() {
+		try (PartitaDiTest partita = partita(43)) {
+			PilotaggioDelTutorial pilota = new PilotaggioDelTutorial(null);
+			alPasso(0);
+			assertTrue(PilotaggioDelTutorial.isCombattimentoAutomaticoVietato());
+			assertEquals(100, pilota.lancio(ContestoLancio.EFFETTO_DI_STATO_DELL_ARMA, 1, 100).getAsInt());
+			assertTrue(PilotaggioDelTutorial.isCombattimentoAutomaticoVietato());
+			// Il secondo sì: e quando l'effetto è arrivato l'icona del combattimento automatico torna
+			assertEquals(1, pilota.lancio(ContestoLancio.EFFETTO_DI_STATO_DELL_ARMA, 1, 100).getAsInt());
+			assertFalse(PilotaggioDelTutorial.isCombattimentoAutomaticoVietato());
+			// Letto il tutorial degli effetti di stato, i dadi tornano al caso
+			RegistroSuggerimenti.visto(TipoSuggerimento.EFFETTI_DI_STATO);
+			assertFalse(pilota.lancio(ContestoLancio.EFFETTO_DI_STATO_DELL_ARMA, 1, 100).isPresent());
+			// Se l'effetto non arriva mai, l'icona torna dopo qualche attacco
+			alPasso(0);
+			for (int i = 0; i < PilotaggioDelTutorial.ATTACCHI_PRIMA_DEL_COMBATTIMENTO_AUTOMATICO; i++) {
+				assertTrue(PilotaggioDelTutorial.isCombattimentoAutomaticoVietato(), "attacco " + i);
+				PilotaggioDelTutorial.registraUnAttaccoDelGiocatore();
+			}
+			assertFalse(PilotaggioDelTutorial.isCombattimentoAutomaticoVietato());
+			// Dal secondo scontro in poi l'icona c'è sempre
+			alPasso(1);
+			assertFalse(PilotaggioDelTutorial.isCombattimentoAutomaticoVietato());
 		}
 	}
 
@@ -272,18 +298,14 @@ class PilotaggioDelTutorialTest {
 			// Passo 0, l'arpia: niente incantesimi (una voce con una probabilità sotto il 100 non vale), niente di altro
 			alPasso(0);
 			assertEquals(100, pilota.lancio(ContestoLancio.TATTICA_DEI_MOSTRI, 1, 100).getAsInt());
-			assertFalse(pilota.lancio(ContestoLancio.PASSAGGIO_INOSSERVATO, 1, 100).isPresent());
 			assertFalse(pilota.lancio(ContestoLancio.CORRUZIONE, 1, 10).isPresent());
-			// Passo 1, la chimera drago: passare inosservati riesce sempre (un tiro di 1 è sotto qualunque probabilità)
+			// Passo 1, il goblin: la corruzione riesce (il tiro più alto supera la soglia)
 			alPasso(1);
-			assertEquals(1, pilota.lancio(ContestoLancio.PASSAGGIO_INOSSERVATO, 1, 100).getAsInt());
-			assertEquals(100, pilota.lancio(ContestoLancio.TATTICA_DEI_MOSTRI, 1, 100).getAsInt());
-			// Passo 3, il goblin: la corruzione riesce (il tiro più alto supera la soglia)
-			alPasso(3);
+			assertFalse(pilota.lancio(ContestoLancio.TATTICA_DEI_MOSTRI, 1, 100).isPresent());
 			assertEquals(10, pilota.lancio(ContestoLancio.CORRUZIONE, 1, 10).getAsInt());
 			assertFalse(pilota.lancio(ContestoLancio.AMICIZIA, 1, 20).isPresent());
-			// Passo 4, il folletto: l'amicizia riesce (il tiro più basso è sotto il carisma) e non c'è la sfida a carta, forbici e sasso
-			alPasso(4);
+			// Passo 2, il folletto: l'amicizia riesce (il tiro più basso è sotto il carisma) e non c'è la sfida a carta, forbici e sasso
+			alPasso(2);
 			assertEquals(1, pilota.lancio(ContestoLancio.AMICIZIA, 1, 20).getAsInt());
 			assertEquals(100, pilota.lancio(ContestoLancio.SFIDA_CARTA_FORBICI_SASSO, 1, 100).getAsInt());
 			assertFalse(pilota.lancio(ContestoLancio.CORRUZIONE, 1, 10).isPresent());

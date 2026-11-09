@@ -4,6 +4,7 @@ import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.Misura;
+import com.threeamigos.foresta.ui.componenti.ContenutoDiColonna;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -95,7 +96,7 @@ class IntroDelGiocoTest {
 			}
 			int cima = foresta.getElemento().getY();
 			int fondo = quadro.getColonna().getFondo();
-			if (cima > cimaFerma()) {
+			if (cima > cimaFerma() + 3 * IntroDelGioco.DISTANZA_DI_FRENATA) {
 				visto = true;
 				// Sta sotto l'ultima riga della storia, sempre alla stessa distanza, e sale con lei
 				assertEquals(fondo + 20, cima, "mentre sale sta attaccato alla storia");
@@ -154,7 +155,7 @@ class IntroDelGiocoTest {
 			if (foresta != null && foresta.getElemento().getY() <= cimaFerma() && fondoAlloStop == Integer.MIN_VALUE) {
 				fondoAlloStop = quadro.getColonna().getFondo();
 			}
-			if (fondoAlloStop != Integer.MIN_VALUE && quadro.getColonna().getFondo() < fondoAlloStop - 100) {
+			if (fondoAlloStop != Integer.MIN_VALUE && quadro.getColonna().getFondo() < fondoAlloStop - 20) {
 				return;
 			}
 		}
@@ -184,6 +185,46 @@ class IntroDelGiocoTest {
 			for (IntroDelGioco.Logo logo : intro.avanzaDi(PASSO).getLoghi()) {
 				assertTrue(logo.getOpacita() > 0f && logo.getOpacita() <= 1f, "opacità " + logo.getOpacita());
 			}
+		}
+	}
+
+	@Test
+	void ilLogoDellaForestaFrenaPianoPianoInveceDiFermarsiDiBotto() {
+		int frenata = IntroDelGioco.DISTANZA_DI_FRENATA;
+		// Lontano dal posto segue la storia alla stessa distanza; passata la frenata è fermo
+		assertEquals(500, IntroDelGioco.frenata(500));
+		assertEquals(frenata, IntroDelGioco.frenata(frenata));
+		assertEquals(0, IntroDelGioco.frenata(-frenata));
+		assertEquals(0, IntroDelGioco.frenata(-3 * frenata));
+		// La storia sale di un pixel alla volta: il logo prima la segue, poi sale sempre meno (mai di più di un pixel, mai a scatti) fino a fermarsi
+		int precedente = IntroDelGioco.frenata(3 * frenata);
+		int salitiNellaPrimaMeta = 0;
+		int salitiNellaSecondaMeta = 0;
+		for (int distanza = 3 * frenata - 1; distanza >= -3 * frenata; distanza--) {
+			int corrente = IntroDelGioco.frenata(distanza);
+			int passo = precedente - corrente;
+			assertTrue(passo >= 0 && passo <= 1, "passo " + passo + " a distanza " + distanza);
+			assertTrue(corrente >= distanza, "il logo non sale oltre la storia: " + corrente + " a " + distanza);
+			if (distanza < frenata && distanza >= 0) {
+				salitiNellaPrimaMeta += passo;
+			} else if (distanza < 0 && distanza >= -frenata) {
+				salitiNellaSecondaMeta += passo;
+			}
+			precedente = corrente;
+		}
+		assertEquals(0, precedente);
+		assertTrue(salitiNellaPrimaMeta > salitiNellaSecondaMeta, "rallenta: " + salitiNellaPrimaMeta + " pixel nella prima metà, " + salitiNellaSecondaMeta + " nella seconda");
+		assertTrue(salitiNellaSecondaMeta > 0, "e si ferma piano piano, non di botto");
+	}
+
+	@Test
+	void iLoghiDaPrecaricareSonoIDueDellIntroConAlone() {
+		List<ContenutoDiColonna.Elemento> loghi = IntroDelGioco.loghiDaPrecaricare();
+		assertEquals(2, loghi.size());
+		assertEquals(IntroDelGioco.RISORSA_LOGO_FORESTA, loghi.get(0).getRisorsa());
+		assertEquals(IntroDelGioco.RISORSA_LOGO_3AM, loghi.get(1).getRisorsa());
+		for (ContenutoDiColonna.Elemento logo : loghi) {
+			assertEquals(SchermateSenzaPartita.RAGGIO_ALONE, logo.getRaggioDellAlone());
 		}
 	}
 }

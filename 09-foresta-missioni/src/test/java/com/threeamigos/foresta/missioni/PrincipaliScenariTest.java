@@ -163,14 +163,19 @@ class PrincipaliScenariTest {
     @Test
     void ilFegatoContaLeLocandeUnaAdUna() {
         NessunBoccaleLasciatoIndietro boccali = daRegistro(NessunBoccaleLasciatoIndietro.class);
-        boccali.controllaPostLocazione();
-        assertTrue(boccali.isAttiva());
         List<CoordinateMD> locande = caselle(TipoLocazione.LOCANDA);
         for (int x = 0; locande.size() < 10; x++) {
             CoordinateMD nuova = new CoordinateMD(x, 0);
             Foresta.impostaLocazione(nuova, TipoLocazione.LOCANDA);
             locande.add(nuova);
         }
+        // Senza una locanda completata la missione non parte; con la prima, parte e quella locanda conta già
+        boccali.controllaPostLocazione();
+        assertFalse(boccali.isAttiva());
+        Foresta.getLocazioneMD(locande.get(0)).aggiungiProprieta(Locande.LOCANDA_VISITATA, "SI");
+        boccali.controllaPostLocazione();
+        assertTrue(boccali.isAttiva());
+        assertTrue(boccali.getDescrizione().contains("Ne mancano nove"), boccali.getDescrizione());
         for (int i = 0; i < 9; i++) {
             Foresta.getLocazioneMD(locande.get(i)).aggiungiProprieta(Locande.LOCANDA_VISITATA, "SI");
         }

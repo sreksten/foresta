@@ -1396,12 +1396,21 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			}
 		}
 
+		// Il tutorial lo dice la prima volta che qualcuno è ferito o ha speso della magia: fra una locazione e l'altra si riprende un po' (dopo il recupero,
+		// perché si vedano le barre risalire)
+		boolean daRecuperare = gruppo.getPersonaggiVivi().stream()
+				.anyMatch(p -> p.getSalute() < p.getSaluteMassima() || p.getMagia() < p.getMagiaMassima());
+
 		// Aumentiamo la stanchezza, e fra una locazione e l'altra si riprende un po' di salute e di magia
 		for (Personaggio personaggioCorrente : gruppo.getPersonaggiVivi()) {
 			personaggioCorrente.riduciModificatori(UnitaDurataModificatore.LOCAZIONI);
 			personaggioCorrente.addStanchezza(1);
 			personaggioCorrente.addSalute(personaggioCorrente.getRigenerazioneSalute());
 			personaggioCorrente.addMagia(personaggioCorrente.getRigenerazioneMagia());
+		}
+
+		if (daRecuperare && RegistroSuggerimenti.isAttivo() && RegistroSuggerimenti.isMostrabile() && !RegistroSuggerimenti.isVisto(TipoSuggerimento.RECUPERO_FRA_LOCAZIONI)) {
+			BusEventi.pubblica(new NotificaMessaggioDelTutorial(TipoSuggerimento.RECUPERO_FRA_LOCAZIONI));
 		}
 
 		// Anche i modificatori a tempo degli ospiti vulnerabili scadono

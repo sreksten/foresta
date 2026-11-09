@@ -82,8 +82,36 @@ class SituazioniDellaUITest {
 	void l_iconaDellaMappaSiLeggeDallaBarra() {
 		SituazioniDellaUI ui = new SituazioniDellaUI();
 		ui.segnaSchermataDiGioco();
+		ui.segnaMovimentoSpiegato(true);
 		assertFalse(correnti(ui, Comando.NORD).contains(Situazione.ICONA_DELLA_MAPPA_PRESENTE));
 		assertTrue(correnti(ui, Comando.MAPPA).contains(Situazione.ICONA_DELLA_MAPPA_PRESENTE));
+	}
+
+	@Test
+	void ILuoghiAspettanoCheSiSiaSpiegatoIlMovimento() {
+		SituazioniDellaUI ui = new SituazioniDellaUI();
+		ui.segnaSchermataDiGioco();
+		assertFalse(correnti(ui, Comando.MAPPA).contains(Situazione.ICONA_DELLA_MAPPA_PRESENTE));
+	}
+
+	@Test
+	void ilMovimentoAspettaL_oggettoTrovatoSeCeStato() {
+		SituazioniDellaUI ui = new SituazioniDellaUI();
+		ui.segnaSchermataDiGioco();
+		Comando[] frecce = {Comando.NORD, Comando.EST, Comando.SUD, Comando.OVEST};
+		assertTrue(correnti(ui, frecce).contains(Situazione.ICONE_DI_MOVIMENTO_PRESENTI), "senza oggetti non c'è niente da aspettare");
+		ui.segnaOggettoTrovato();
+		assertFalse(correnti(ui, frecce).contains(Situazione.ICONE_DI_MOVIMENTO_PRESENTI));
+		ui.segnaOggettoSpiegato(true);
+		assertTrue(correnti(ui, frecce).contains(Situazione.ICONE_DI_MOVIMENTO_PRESENTI));
+	}
+
+	@Test
+	void l_iconaDelCombattimentoAutomaticoSiLeggeDallaBarra() {
+		SituazioniDellaUI ui = new SituazioniDellaUI();
+		ui.segnaSchermataDiGioco();
+		assertFalse(correnti(ui, Comando.SINGOLO_ATTACCO).contains(Situazione.COMBATTIMENTO_AUTOMATICO_DISPONIBILE));
+		assertTrue(correnti(ui, Comando.SINGOLO_ATTACCO, Comando.COMBATTIMENTO).contains(Situazione.COMBATTIMENTO_AUTOMATICO_DISPONIBILE));
 	}
 
 	@Test
