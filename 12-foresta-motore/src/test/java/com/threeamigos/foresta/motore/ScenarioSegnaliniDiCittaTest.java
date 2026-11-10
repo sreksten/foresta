@@ -53,6 +53,7 @@ class ScenarioSegnaliniDiCittaTest {
     private static NonSparateSulPianista conIlBardoInViaggio(PartitaDiTest partita) {
         NonSparateSulPianista pianista = trova(NonSparateSulPianista.class);
         CoordinateMD locanda = unaLocanda();
+        partita.conosceAltreDueLocande();
         Foresta.setPosizioneDelGruppo(locanda);
         Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locande.LOCANDA_VISITE, "2");
         pianista.controllaPreLocazione();

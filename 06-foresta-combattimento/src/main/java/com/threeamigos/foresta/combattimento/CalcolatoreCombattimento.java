@@ -671,9 +671,12 @@ public class CalcolatoreCombattimento {
         if (dannoTotaleCombinato > 0.0d) {
             Logger.log("Applicazione stati nativi per arma ibrida");
 
-            // --- TRAGUARDO 1: Stato dell'arma Principale (es. TAGLIENTE ➔ SANGUINAMENTO) ---
+            // --- TRAGUARDO 1: Stato dell'arma Principale (es. TAGLIENTE ➔ SANGUINAMENTO, GELO ➔ CONGELATO) ---
+            // Con un'arma conta la FURIA di chi colpisce, con un incantesimo la sua INTELLIGENZA pesata dal POTERE_MAGICO
             if (!immuneATipoDannoBase && tipoDanno.hasEffettiDiStato()) {
-                double probStatoFisico = percentualeControForza(dannoMitigato, difensore) + (attaccante.get(TipoAttributo.FURIA) * 2.0d);
+                double contributoDellAttaccante = isIncantesimo(arma) ? contributoMagico(attaccante)
+                        : attaccante.get(TipoAttributo.FURIA) * 2.0d;
+                double probStatoFisico = percentualeControForza(dannoMitigato, difensore) + contributoDellAttaccante;
                 if (Dado.tira(ContestoLancio.EFFETTO_DI_STATO_DELL_ARMA, 100) <= probStatoFisico * fattoreEffetti(difensore, tipoDanno)) {
                     TipoEffettoDiStato effettoFisico = effettoDiStatoCasuale(tipoDanno);
                     dannoRisultante.addEffettoDiStato(effettoFisico, calcolaDurataStato(difensore, effettoFisico),
@@ -701,8 +704,7 @@ public class CalcolatoreCombattimento {
                         // colpisce, cioè la sua INTELLIGENZA pesata dal POTERE_MAGICO (100 = nessun bastone o libro).
                         // La riserva di Magia non conta: un guerriero senza mana con INTELLIGENZA 10 aggiunge 10 punti,
                         // un mago con INTELLIGENZA 20 e un bastone +20% ne aggiunge 24.
-                        double contributoMagico = attaccante.get(TipoAttributo.INTELLIGENZA) * attaccante.getPotereMagico() / 100.0d;
-                        double probStatoMagico = percentualeControForza(dannoQuestoIncantamentoProc, difensore) + contributoMagico;
+                        double probStatoMagico = percentualeControForza(dannoQuestoIncantamentoProc, difensore) + contributoMagico(attaccante);
                         if (Dado.tira(100) <= probStatoMagico * fattoreEffetti(difensore, elemento)) {
                             TipoEffettoDiStato effettoMagico = effettoDiStatoCasuale(elemento);
                             dannoRisultante.addEffettoDiStato(effettoMagico, calcolaDurataStato(difensore, effettoMagico),
@@ -719,8 +721,7 @@ public class CalcolatoreCombattimento {
             // di chi colpisce pesata dal POTERE_MAGICO
             if (!immuneATipoDannoBase) {
                 for (ModificatoreAttributoMD modificatore : arma.getModificatoriSulBersaglio()) {
-                    double contributoMagico = attaccante.get(TipoAttributo.INTELLIGENZA) * attaccante.getPotereMagico() / 100.0d;
-                    double probModificatore = percentualeControForza(dannoTotaleCombinato, difensore) + contributoMagico;
+                    double probModificatore = percentualeControForza(dannoTotaleCombinato, difensore) + contributoMagico(attaccante);
                     if (Dado.tira(100) <= probModificatore * fattoreEffetti(difensore, tipoDanno)) {
                         dannoRisultante.addModificatoreDaAggiungere(modificatore.suPortatore());
                         Logger.log(() -> "L'arma applica il modificatore: " + modificatore.getTipoAttributo() + " " + modificatore.getQuantita());
@@ -763,6 +764,14 @@ public class CalcolatoreCombattimento {
             danno = danno * 0.5d;
         }
         return danno;
+    }
+
+    /**
+     * Quanto chi colpisce con la magia aggiunge alla probabilità che scattino stati e modificatori: la sua INTELLIGENZA pesata
+     * dal POTERE_MAGICO (100 = nessun bastone o libro). Vale per gli incantesimi, gli incantamenti e i modificatori sul bersaglio.
+     */
+    private static double contributoMagico(Personaggio attaccante) {
+        return attaccante.get(TipoAttributo.INTELLIGENZA) * attaccante.getPotereMagico() / 100.0d;
     }
 
     /**

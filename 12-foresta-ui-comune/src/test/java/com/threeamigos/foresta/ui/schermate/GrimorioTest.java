@@ -100,7 +100,9 @@ class GrimorioTest {
 		int effetto = scheda.indexOf(TipoIncantesimo.ACQUA.getEffetto().substring(0, 20));
 		assertTrue(effetto >= 0 && effetto < scheda.indexOf("Colpisce"), "prima la descrizione, poi la portata");
 		assertTrue(scheda.indexOf("Danni base") < scheda.indexOf("Costo di lancio"), "i danni base prima dei costi");
-		assertTrue(scheda.contains("Costo di lancio: 1 Magia."));
+		// L'Acqua colpisce più bersagli: il costo è per bersaglio (45 di danno, 4); la Resurrezione ne ha uno solo
+		assertTrue(scheda.contains("Costo di lancio: 4 Magia per bersaglio."), scheda);
+		assertTrue(testo(ContenutiDelGrimorio.scheda(TipoIncantesimo.RESURREZIONE, LARGHEZZA, MISURE)).contains("Costo di lancio: 15 Magia."));
 	}
 
 	@Test

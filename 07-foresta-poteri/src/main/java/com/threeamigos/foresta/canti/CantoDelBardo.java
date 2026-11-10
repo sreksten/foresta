@@ -46,12 +46,13 @@ public final class CantoDelBardo {
 	}
 
 	/**
-	 * @return true se il personaggio è vivo, sa cantare quel canto, non è {@code SILENZIATO}, ha la Magia per cantarlo e non è in ricarica
+	 * @return true se il personaggio è vivo, sa cantare quel canto, non è {@code SILENZIATO}, ha la Magia per cantarlo almeno a un personaggio
+	 * e non è in ricarica
 	 */
 	public static boolean puoCantare(Personaggio personaggio, TipoCanto tipo) {
 		return personaggio.isVivo() && conosciutoDa(personaggio.getClasse(), tipo)
 				&& !personaggio.hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO)
-				&& personaggio.getMagia() >= tipo.getCostoLancio()
+				&& personaggio.getMagia() >= tipo.getCostoPerBersaglio()
 				&& !isInRicarica(personaggio, tipo);
 	}
 

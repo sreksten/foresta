@@ -8,29 +8,30 @@ package com.threeamigos.foresta.tipi;
 public final class CostantiCanti {
 
     /**
-     * I canti innati del Bardo e della Cantastorie (vedi personaggi_giocabili.md): costano Magia, non consumano pergamene
+     * I canti innati del Bardo e della Cantastorie (vedi personaggi_giocabili.md): costano Magia, non consumano pergamene. Nessuno fa danno,
+     * quindi costano COSTO_LANCIO_SENZA_DANNI per ogni personaggio che toccano (vedi CostantiIncantesimi.costoPerBersaglio)
      */
-    public static final int CANTO_CURATIVO_COSTO_LANCIO = 6;
+    public static final int CANTO_CURATIVO_COSTO_LANCIO = CostantiIncantesimi.COSTO_LANCIO_SENZA_DANNI;
 
     /**
      * La ricarica di ogni canto: i turni (round completi di combattimento, o passi fra una locazione e l'altra) che devono passare prima di
      * poterlo cantare di nuovo; uno in più della durata di quel che dà, per non poterlo rinnovare di continuo.
-     * Il canto curativo cura più dell'imposizione delle mani del chierico, e quindi costa di più e ha la stessa ricarica
+     * Il canto curativo cura più dell'imposizione delle mani del chierico, con la stessa ricarica
      */
     public static final int CANTO_CURATIVO_RICARICA = 4;
 
-    public static final int CANTO_IPNOTICO_COSTO_LANCIO = 3;
+    public static final int CANTO_IPNOTICO_COSTO_LANCIO = CostantiIncantesimi.COSTO_LANCIO_SENZA_DANNI;
 
     /** SPAVENTATO e CONFUSO durano al più 3 turni */
     public static final int CANTO_IPNOTICO_RICARICA = 4;
 
-    public static final int CANTO_DI_VALORE_COSTO_LANCIO = 5;
+    public static final int CANTO_DI_VALORE_COSTO_LANCIO = CostantiIncantesimi.COSTO_LANCIO_SENZA_DANNI;
 
     /**
-     * L'Urlo della Banshee, il canto ipnotico potenziato: costa di più, la SOGGEZIONE del cantore vale di più contro il CORAGGIO
+     * L'Urlo della Banshee, il canto ipnotico potenziato: la SOGGEZIONE del cantore vale di più contro il CORAGGIO
      * di chi ascolta, e chi cede prende SPAVENTATO e CONFUSO insieme
      */
-    public static final int CANTO_URLO_DELLA_BANSHEE_COSTO_LANCIO = 6;
+    public static final int CANTO_URLO_DELLA_BANSHEE_COSTO_LANCIO = CostantiIncantesimi.COSTO_LANCIO_SENZA_DANNI;
 
     /** Più forte del canto ipnotico, e quindi si ricarica più lentamente */
     public static final int CANTO_URLO_DELLA_BANSHEE_RICARICA = 5;

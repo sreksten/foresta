@@ -76,11 +76,21 @@ public final class CatalogoLeggendari {
 	}
 
 	/**
-	 * Le chiavi dei pezzi del set, in ordine di tipo (le armi, poi lo scudo, l'elmo...); vuoto per un set che non c'è.
+	 * Le chiavi dei pezzi del set, in ordine di tipo (le armi, poi lo scudo, l'elmo...), anche quelli di bottino; vuoto per un set
+	 * che non c'è.
 	 */
 	public static Set<String> getPezzi(String chiave) {
 		carica();
 		return pezzi.getOrDefault(chiave, Collections.emptySet());
+	}
+
+	/**
+	 * Quanti pezzi del set bastano per completarlo (vedi SetLeggendario.getPezziRichiesti); 0 per un set che non c'è.
+	 */
+	public static int getPezziRichiesti(String chiave) {
+		carica();
+		SetLeggendario trovato = set.get(chiave);
+		return trovato == null ? 0 : trovato.getPezziRichiesti(getPezzi(chiave).size());
 	}
 
 	private static synchronized void carica() {
@@ -116,15 +126,7 @@ public final class CatalogoLeggendari {
 			if (tuttiILeggendari.put(leggendario.getChiave(), leggendario) != null) {
 				throw new IllegalStateException("Leggendario ripetuto: " + leggendario.getChiave());
 			}
-			String chiaveSet = leggendario.getSet();
-			if (chiaveSet == null) {
-				continue;
-			}
-			if (!tuttiISet.containsKey(chiaveSet)) {
-				throw new IllegalStateException(leggendario.getChiave() + " è di un set che non c'è: " + chiaveSet);
-			}
-			pezziDeiSet.computeIfAbsent(chiaveSet, k -> new LinkedHashSet<>()).add(leggendario.getChiave());
-			aggiungiSlot(slotDeiSet.computeIfAbsent(chiaveSet, k -> EnumSet.noneOf(TipoSlotArtefatto.class)), leggendario);
+			aggiungiAlSet(leggendario, tuttiISet, pezziDeiSet, slotDeiSet);
 		}
 		Map<String, OggettoLeggendario> tuttiIBottini = new HashMap<>();
 		for (String riga : righeDeiBottini) {
@@ -132,17 +134,23 @@ public final class CatalogoLeggendari {
 			if (tuttiILeggendari.containsKey(leggendario.getChiave()) || tuttiIBottini.put(leggendario.getChiave(), leggendario) != null) {
 				throw new IllegalStateException("Leggendario ripetuto: " + leggendario.getChiave());
 			}
-			if (leggendario.getSet() != null) {
-				throw new IllegalStateException(leggendario.getChiave() + " è di bottino e non può far parte di un set");
-			}
+			// Anche un leggendario di bottino può essere un pezzo di un set: lo dà una missione invece di una leggenda
+			aggiungiAlSet(leggendario, tuttiISet, pezziDeiSet, slotDeiSet);
 		}
-		for (String chiaveSet : tuttiISet.keySet()) {
-			if (pezziDeiSet.getOrDefault(chiaveSet, Collections.emptySet()).size() < 2) {
+		Map<String, OggettoLeggendario> tuttiIPezzi = new HashMap<>(tuttiILeggendari);
+		tuttiIPezzi.putAll(tuttiIBottini);
+		for (Map.Entry<String, SetLeggendario> voce : tuttiISet.entrySet()) {
+			String chiaveSet = voce.getKey();
+			int quanti = pezziDeiSet.getOrDefault(chiaveSet, Collections.emptySet()).size();
+			if (quanti < SetLeggendario.PEZZI_MINIMI) {
 				throw new IllegalStateException("Il set " + chiaveSet + " ha meno di due pezzi");
+			}
+			if (voce.getValue().getPezziRichiesti(quanti) > quanti) {
+				throw new IllegalStateException("Il set " + chiaveSet + " chiede più pezzi di quanti ne ha");
 			}
 			// In ordine di tipo, così i testi elencano i pezzi sempre allo stesso modo
 			Set<String> inOrdine = pezziDeiSet.get(chiaveSet).stream()
-					.sorted(Comparator.comparing((String pezzo) -> tuttiILeggendari.get(pezzo).getTipo().ordinal())
+					.sorted(Comparator.comparing((String pezzo) -> tuttiIPezzi.get(pezzo).getTipo().ordinal())
 							.thenComparing(pezzo -> pezzo))
 					.collect(Collectors.toCollection(LinkedHashSet::new));
 			pezziDeiSet.put(chiaveSet, Collections.unmodifiableSet(inOrdine));
@@ -154,15 +162,37 @@ public final class CatalogoLeggendari {
 	}
 
 	/**
+	 * Se il leggendario è il pezzo di un set, lo aggiunge ai pezzi di quel set, controllando che il set ci sia e che il pezzo si
+	 * possa indossare con gli altri (vedi {@link #aggiungiSlot}).
+	 */
+	private static void aggiungiAlSet(OggettoLeggendario leggendario, Map<String, SetLeggendario> tuttiISet,
+									  Map<String, Set<String>> pezziDeiSet, Map<String, Set<TipoSlotArtefatto>> slotDeiSet) {
+		String chiaveSet = leggendario.getSet();
+		if (chiaveSet == null) {
+			return;
+		}
+		if (!tuttiISet.containsKey(chiaveSet)) {
+			throw new IllegalStateException(leggendario.getChiave() + " è di un set che non c'è: " + chiaveSet);
+		}
+		pezziDeiSet.computeIfAbsent(chiaveSet, k -> new LinkedHashSet<>()).add(leggendario.getChiave());
+		aggiungiSlot(slotDeiSet.computeIfAbsent(chiaveSet, k -> EnumSet.noneOf(TipoSlotArtefatto.class)), leggendario,
+				tuttiISet.get(chiaveSet).isCompletabileInParte());
+	}
+
+	/**
 	 * Aggiunge lo slot del leggendario a quelli già occupati dal suo set, controllando che si possano indossare
 	 * insieme: niente pergamene e simili, che non si indossano, e un solo pezzo per slot (l'arma a due mani le
-	 * occupa entrambe); gli accessori sono quanti si vuole.
+	 * occupa entrambe); gli accessori sono quanti si vuole. Un set che si completa con una parte dei suoi pezzi può
+	 * averne più d'uno nello stesso slot (più armi, di cui se ne impugna una sola): lì si controlla solo che si indossino.
 	 */
-	private static void aggiungiSlot(Set<TipoSlotArtefatto> occupati, OggettoLeggendario leggendario) {
+	private static void aggiungiSlot(Set<TipoSlotArtefatto> occupati, OggettoLeggendario leggendario, boolean completabileInParte) {
 		TipoSlotArtefatto slot = leggendario.getTipo().getSlotArtefatto();
 		String errore = leggendario.getChiave() + " non si può indossare con gli altri pezzi del set " + leggendario.getSet();
 		if (slot == TipoSlotArtefatto.NUCLEO) {
 			throw new IllegalStateException(leggendario.getChiave() + " non si indossa: non può far parte del set " + leggendario.getSet());
+		}
+		if (completabileInParte) {
+			return;
 		}
 		if (slot == TipoSlotArtefatto.ENTRAMBE_LE_MANI) {
 			if (occupati.contains(TipoSlotArtefatto.MANO_PRINCIPALE) || occupati.contains(TipoSlotArtefatto.MANO_SECONDARIA)

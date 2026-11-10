@@ -60,7 +60,7 @@ public class AttaccoAlleSpalle implements Abilita {
 				utilizzatore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA),
 				bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE))));
 		AttaccoConLeArmi.alleSpalle(utilizzatore, bersaglio);
-		utilizzatore.subMagia(getCostoLancio());
+		paga(utilizzatore, 1);
 		return true;
 	}
 }

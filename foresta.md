@@ -112,7 +112,7 @@ Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbrevia
 
 - **Java 8** (`maven.compiler.source/target = 1.8`), build **Maven**, sorgenti in UTF-8.
 - **Swing/AWT/Java2D** per la grafica del desktop, senza librerie esterne, e **libGDX** (1.14.2) per la versione libGDX e per Android; il motore e i moduli sotto la UI non usano nessuna libreria grafica. Android si costruisce con Gradle (`foresta-android/`), fuori da Maven.
-- **JUnit 5** per i test e **JaCoCo** per la copertura. `mvn test` esegue la suite: al 2026-11-09 sono 3633 test, tutti verdi (31 saltati), distribuiti sui moduli. I test di scenario guidano partite intere senza UI (`PartitaDiTest`).
+- **JUnit 5** per i test e **JaCoCo** per la copertura. `mvn test` esegue la suite: al 2026-11-10 sono 3655 test, tutti verdi (37 saltati), distribuiti sui moduli. I test di scenario guidano partite intere senza UI (`PartitaDiTest`).
 - I salvataggi usano un formato testo proprietario a campi separati da `|` (`Serializzabile`), senza versione: la compatibilità con i salvataggi vecchi non è un obiettivo.
 - Al 2026-11-09: 1059 file e circa 133.000 righe di codice (il motore ne ha 10.500, `12-foresta-ui-comune` 24.500, Swing 9.400, libGDX 6.600), più 596 file e circa 89.500 righe di test.
 

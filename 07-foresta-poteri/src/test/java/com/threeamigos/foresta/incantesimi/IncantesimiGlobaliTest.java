@@ -108,7 +108,8 @@ class IncantesimiGlobaliTest {
         assertTrue(haIlModificatore(primo, Nebbia.NOTA));
         assertTrue(haIlModificatore(secondo, Nebbia.NOTA));
         assertTrue(primo.get(TipoAttributo.PRECISIONE) < precisioneDelPrimo);
-        assertEquals(magiaPrima - TipoIncantesimo.NEBBIA.getCostoLancio(), mago.getMagia());
+        // Si paga per ogni avversario toccato
+        assertEquals(magiaPrima - 2 * TipoIncantesimo.NEBBIA.getCostoPerBersaglio(), mago.getMagia());
         assertTrue(frasi.get(0).contains("nebbia fitta"), frasi.toString());
         assertTrue(StatoDelCombattimento.getIstanza().haLanciatoUnIncantesimo(mago));
         assertEquals(0, new Nebbia(3).getDanni());
@@ -156,7 +157,7 @@ class IncantesimiGlobaliTest {
         assertTrue(haIlModificatore(strega, NegaMagia.NOTA));
         assertTrue(haIlModificatore(goblin, NegaMagia.NOTA));
         assertTrue(strega.getPotereMagico() < potereDellaStrega);
-        assertEquals(magiaPrima - TipoIncantesimo.NEGA_MAGIA.getCostoLancio(), mago.getMagia());
+        assertEquals(magiaPrima - 2 * TipoIncantesimo.NEGA_MAGIA.getCostoPerBersaglio(), mago.getMagia());
         assertTrue(frasi.get(0).contains("spegne la magia"), frasi.toString());
         assertEquals(0, new NegaMagia(3).getDanni());
     }
@@ -211,7 +212,8 @@ class IncantesimiGlobaliTest {
         assertFalse(haIlModificatore(nemico, GridoDiBattaglia.NOTA));
         assertEquals(coraggioPrima + 6, compagno.get(TipoAttributo.CORAGGIO));
         assertEquals(valorePrima + 6, compagno.get(TipoAttributo.VALORE));
-        assertEquals(magiaPrima - TipoIncantesimo.GRIDO_DI_BATTAGLIA.getCostoLancio(), mago.getMagia());
+        // Si paga per ogni compagno vivo incoraggiato: il mago e il compagno
+        assertEquals(magiaPrima - 2 * TipoIncantesimo.GRIDO_DI_BATTAGLIA.getCostoPerBersaglio(), mago.getMagia());
         assertTrue(frasi.stream().anyMatch(f -> f.contains("grido di battaglia")), frasi.toString());
         assertTrue(StatoDelCombattimento.getIstanza().haLanciatoUnIncantesimo(mago));
     }
@@ -249,7 +251,8 @@ class IncantesimiGlobaliTest {
         assertTrue(caduti > 0 && caduti < feriti, "qualcuno cade, non tutti: " + caduti + " su " + feriti);
         assertTrue(debole.isFuoriCombattimento(), "il più debole non regge il colpo");
         assertFalse(debole.hasEffettoDiStato(TipoEffettoDiStato.ATTERRATO));
-        assertEquals(magiaPrima - TipoIncantesimo.TERREMOTO.getCostoLancio(), mago.getMagia());
+        // Dodici titani e il goblin
+        assertEquals(magiaPrima - (titani.size() + 1) * TipoIncantesimo.TERREMOTO.getCostoPerBersaglio(), mago.getMagia());
         assertTrue(frasi.get(0).contains("la terra trema"), frasi.toString());
     }
 
@@ -352,6 +355,25 @@ class IncantesimiGlobaliTest {
         assertFalse(tempesta.serve(java.util.Arrays.asList(mago, compagno), java.util.Arrays.asList(goblin, altro)));
     }
 
+    // --- Costo per bersaglio
+
+    @Test
+    void conPocaMagiaUnIncantesimoGlobaleToccaSoloIBersagliCheSiPossonoPagare() {
+        Personaggio primo = nemico(TipoPersonaggio.TITANO, 20);
+        Personaggio secondo = nemico(TipoPersonaggio.TITANO, 20);
+        Personaggio terzo = nemico(TipoPersonaggio.TITANO, 20);
+        int costo = TipoIncantesimo.NEBBIA.getCostoPerBersaglio();
+        // La Magia per due bersagli e un poco di più, non abbastanza per il terzo
+        mago.subMagia(mago.getMagia() - (2 * costo + 1));
+
+        FabbricaIncantesimi.crea(TipoIncantesimo.NEBBIA, 3).formula(mago, null, avversari);
+
+        assertTrue(haIlModificatore(primo, Nebbia.NOTA));
+        assertTrue(haIlModificatore(secondo, Nebbia.NOTA));
+        assertFalse(haIlModificatore(terzo, Nebbia.NOTA));
+        assertEquals(1, mago.getMagia());
+    }
+
     // --- Terrore
 
     @Test
@@ -368,6 +390,9 @@ class IncantesimiGlobaliTest {
         };
         avversari.aggiungiPersonaggio(immune);
         Personaggio gargoyle = nemico(TipoPersonaggio.GARGOYLE, 5);
+        // Quarantadue avversari a 5 l'uno: il mago deve avere la Magia per toccarli tutti
+        mago.addMagiaMassima(1000, "prova");
+        mago.addMagia(1000);
         int magiaPrima = mago.getMagia();
 
         FabbricaIncantesimi.crea(TipoIncantesimo.TERRORE, 10).formula(mago, null, avversari);
@@ -378,7 +403,7 @@ class IncantesimiGlobaliTest {
         assertFalse(gargoyle.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO));
         assertTrue(frasi.stream().anyMatch(f -> f.endsWith(" resiste al terrore.")), frasi.toString());
         assertTrue(frasi.stream().anyMatch(f -> f.startsWith("Il terrore non ha effetto su ")), frasi.toString());
-        assertEquals(magiaPrima - TipoIncantesimo.TERRORE.getCostoLancio(), mago.getMagia());
+        assertEquals(magiaPrima - (titani.size() + 2) * TipoIncantesimo.TERRORE.getCostoPerBersaglio(), mago.getMagia());
         assertEquals(0, new Terrore(3).getDanni());
     }
 

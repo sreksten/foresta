@@ -373,7 +373,7 @@ public class TestLogoramentoInizioPartita {
                 }
                 StringBuilder sb = new StringBuilder(String.format("%-13s magia %3d int %2d:", classe, m.getMagia(), m.get(TipoAttributo.INTELLIGENZA)));
                 for (TipoIncantesimo ci : TipoIncantesimo.values()) {
-                    if (ci.getCategoriaIncantesimo() != CategoriaIncantesimo.MALEFICO || ci.getCostoLancio() > m.getMagia()) {
+                    if (ci.getCategoriaIncantesimo() != CategoriaIncantesimo.MALEFICO || ci.getCostoPerBersaglio() > m.getMagia()) {
                         continue;
                     }
                     com.threeamigos.foresta.incantesimi.IncantesimoMalefico inc =
@@ -479,7 +479,7 @@ public class TestLogoramentoInizioPartita {
                 } else if (CombatSimulatorMatrix.conviene(pg, bersaglio)) {
                     DardoArcano dardo = new DardoArcano(pg);
                     colpisci(pg, bersaglio, dardo, 1.0d);
-                    pg.subMagia(dardo.getCostoLancio());
+                    pg.subMagia(dardo.getCostoPerBersaglio());
                 } else {
                     for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(pg)) {
                         Personaggio vivo = r.primoAvversarioVivo();

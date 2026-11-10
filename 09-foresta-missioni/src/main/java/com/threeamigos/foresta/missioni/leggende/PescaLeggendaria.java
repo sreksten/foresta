@@ -95,14 +95,13 @@ public final class PescaLeggendaria {
 
 	/**
 	 * I set cominciati, dal più vicino a essere completo (la quota di pezzi già usciti più alta; a parità, quello a cui
-	 * ne mancano meno, poi per chiave).
+	 * ne mancano meno, poi per chiave). Non contano i set che si completano con una parte dei pezzi (PEZZI=: non serve
+	 * trovarli tutti) né quelli i cui pezzi mancanti sono tutti di bottino, che nessuna leggenda racconta.
 	 */
 	public static List<SetLeggendario> setCominciati(Set<String> giaPescati) {
 		return CatalogoLeggendari.getTuttiISet().values().stream()
-				.filter(set -> {
-					long usciti = usciti(set, giaPescati);
-					return usciti > 0 && usciti < CatalogoLeggendari.getPezzi(set.getChiave()).size();
-				})
+				.filter(set -> !set.isCompletabileInParte())
+				.filter(set -> usciti(set, giaPescati) > 0 && !pezziMancanti(set, giaPescati).isEmpty())
 				.sorted(Comparator.comparingDouble((SetLeggendario set) -> -quota(set, giaPescati))
 						.thenComparingInt(set -> pezziMancanti(set, giaPescati).size())
 						.thenComparing(SetLeggendario::getChiave))
@@ -127,7 +126,8 @@ public final class PescaLeggendaria {
 		if (leggendario.getSet() == null) {
 			return Optional.empty();
 		}
-		return CatalogoLeggendari.getSet(leggendario.getSet()).flatMap(set -> {
+		// Per un set che si completa con una parte dei pezzi "ne mancano ancora due" non sarebbe vero
+		return CatalogoLeggendari.getSet(leggendario.getSet()).filter(set -> !set.isCompletabileInParte()).flatMap(set -> {
 			Set<String> pezzi = CatalogoLeggendari.getPezzi(set.getChiave());
 			long usciti = pezzi.stream().filter(pezzo -> !pezzo.equals(leggendario.getChiave()) && giaPescati.contains(pezzo)).count();
 			if (usciti == 0) {
@@ -141,9 +141,13 @@ public final class PescaLeggendaria {
 		});
 	}
 
+	/**
+	 * I pezzi del set che una leggenda può ancora raccontare: non già pescati e non di bottino.
+	 */
 	private static List<String> pezziMancanti(SetLeggendario set, Set<String> giaPescati) {
 		List<String> mancanti = new ArrayList<>(CatalogoLeggendari.getPezzi(set.getChiave()));
 		mancanti.removeAll(giaPescati);
+		mancanti.retainAll(CatalogoLeggendari.getTuttiILeggendari().keySet());
 		return mancanti;
 	}
 

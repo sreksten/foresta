@@ -107,13 +107,13 @@ public class CombatSimulatorMatrix {
                         ? (IncantesimoMalefico) FabbricaIncantesimi.crea(pergamene.getIncantesimo(), pg.getLivello())
                         : null;
                 Personaggio primoVivo = bersaglioVivo(mostri, 0);
-                if (incantesimo != null && pg.getMagia() >= incantesimo.getCostoLancio()) {
+                if (incantesimo != null && pg.getMagia() >= incantesimo.getCostoPerBersaglio()) {
                     pergameneRimaste--;
                     lancia(pg, incantesimo, mostri, statistichePg);
                 } else if (primoVivo != null && conviene(pg, primoVivo)) {
                     DardoArcano dardo = new DardoArcano(pg);
                     attacca(pg, primoVivo, new FaseDiAttacco(dardo, 1.0d), statistichePg);
-                    pg.subMagia(dardo.getCostoLancio());
+                    pg.subMagia(dardo.getCostoPerBersaglio());
                 } else {
                     for (int b = 0; b < bersagli; b++) {
                         // Come nel gioco, la seconda arma colpisce lo stesso bersaglio della prima,
@@ -194,7 +194,7 @@ public class CombatSimulatorMatrix {
         for (Personaggio bersaglio : bersagli) {
             attacca(pg, bersaglio, new FaseDiAttacco(incantesimo, 1.0d), statistiche);
         }
-        pg.subMagia(incantesimo.getCostoLancio());
+        pg.subMagia(incantesimo.getCostoPerBersaglio());
     }
 
     /**

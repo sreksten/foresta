@@ -777,7 +777,7 @@ final class GiocatoreAutomatico {
 			pozioniComprate++;
 		}
 		boolean qualcunoPuoRisuscitare = gruppo.getPersonaggiVivi().stream()
-				.anyMatch(p -> p.getMagiaMassima() >= TipoIncantesimo.RESURREZIONE.getCostoLancio());
+				.anyMatch(p -> p.getMagiaMassima() >= TipoIncantesimo.RESURREZIONE.getCostoPerBersaglio());
 		if (gruppo.getNumeroPersonaggi() > 1 && qualcunoPuoRisuscitare
 				&& gruppo.getIncantesimi(TipoIncantesimo.RESURREZIONE) == 0
 				&& puoSpendere(gruppo, TipoIncantesimo.RESURREZIONE.getCostoAcquisto(), riserva)) {
@@ -1199,7 +1199,7 @@ final class GiocatoreAutomatico {
 			azione.danno = Math.min(saluteAvversari[primo], mischia(attore, bersaglio));
 			for (TipoIncantesimo classe : INCANTESIMI_DI_DANNO) {
 				Incantesimo incantesimo = FabbricaIncantesimi.crea(classe, attore.getLivello());
-				if (pergamene.get(classe) <= 0 || magia < incantesimo.getCostoLancio() || !(incantesimo instanceof Arma)) {
+				if (pergamene.get(classe) <= 0 || magia < incantesimo.getCostoPerBersaglio() || !(incantesimo instanceof Arma)) {
 					continue;
 				}
 				double danno = dannoIncantesimo(attore, avversari, saluteAvversari, classe, false);
@@ -1221,8 +1221,7 @@ final class GiocatoreAutomatico {
 		}
 
 		private static double costoDardo(Personaggio attore) {
-			return attore.getClasse().name().startsWith("MAG")
-					? CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_MAGO : CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_ELFO;
+			return com.threeamigos.foresta.abilita.CostoDelleAbilita.di(TipoAbilita.DARDO_ARCANO, attore);
 		}
 
 		/**
@@ -1240,7 +1239,7 @@ final class GiocatoreAutomatico {
 			if (azione.classe != null) {
 				pergamene.put(azione.classe, pergamene.get(azione.classe) - 1);
 				dannoIncantesimo(attore, avversari, salute, azione.classe, true);
-				return azione.classe.getCostoLancio();
+				return azione.classe.getCostoPerBersaglio();
 			}
 			salute[primo] -= atteso(attore, avversari.get(primo), new DardoArcano(attore), 1.0d, "DARDO");
 			return costoDardo(attore);
@@ -1364,7 +1363,7 @@ final class GiocatoreAutomatico {
 			List<TipoIncantesimo> possibili = new ArrayList<>();
 			for (TipoIncantesimo classe : TipoIncantesimo.values()) {
 				if (classe.getCategoriaIncantesimo() == CategoriaIncantesimo.MALEFICO
-						&& classe.getCostoLancio() <= magia && classe != TipoIncantesimo.MORTE) {
+						&& classe.getCostoPerBersaglio() <= magia && classe != TipoIncantesimo.MORTE) {
 					possibili.add(classe);
 				}
 			}
@@ -1391,7 +1390,7 @@ final class GiocatoreAutomatico {
 					magico = Math.max(magico, fisico);
 				}
 			}
-			return new double[]{(2 * magico + fisico) / 3, 2.0d * scelto.getCostoLancio() / 3};
+			return new double[]{(2 * magico + fisico) / 3, 2.0d * scelto.getCostoPerBersaglio() / 3};
 		}
 
 		private static int primoVivo(double[] salute) {

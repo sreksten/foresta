@@ -11,6 +11,7 @@ import com.threeamigos.foresta.gruppi.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoCanto;
 import com.threeamigos.foresta.testi.Testi;
+import java.util.List;
 
 /**
  * Il canto che rafforza il gruppo: tutti i personaggi vivi del gruppo diventano ISPIRATI, con coraggio e precisione
@@ -43,10 +44,12 @@ public class CantoDiValore implements Canto {
 	@Override
 	public boolean canta(Personaggio cantore, Gruppo gruppo, Gruppo gruppoAvversario) {
 		AnnuncioDellAzione.azione(cantore, null, TipoAzione.CANTO_DI_VALORE);
-		cantore.subMagia(getCostoLancio());
+		// Si paga per ogni compagno vivo ispirato: con poca Magia il canto ne raggiunge solo i primi
+		List<Personaggio> ispirati = soloIPagabili(cantore, gruppo.getPersonaggiVivi());
+		paga(cantore, ispirati.size());
 		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "CantoDiValore.1", cantore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
-		for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
+		for (Personaggio personaggio : ispirati) {
 			personaggio.addEffettoDiStato(TipoEffettoDiStato.ISPIRATO, CostantiCanti.CANTO_DI_VALORE_DURATA, 0, getIntensita());
 		}
 		return true;

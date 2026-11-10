@@ -29,14 +29,16 @@ class ScenarioSorteggioDegliIncarichiTest {
     private static final String GIRO = "GIRO_DI_AFFIDAMENTO";
 
     /**
-     * Una partita col sorteggio acceso, il gruppo a Fleena: leggende, falce e negozi, che si offrirebbero nello stesso sorteggio degli
-     * incarichi, sono rimandati.
+     * Una partita col sorteggio acceso, il gruppo a Fleena: leggende, falce, negozi, missioni del sacerdote e Non sparate sul pianista,
+     * che si offrirebbero nello stesso sorteggio degli incarichi, sono rimandati.
      */
     private static PartitaDiTest aFleena(long seme) {
         PartitaDiTest partita = PartitaDiTest.nuova(seme).conSorteggioDegliIncarichi();
         partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_FLEENA));
         for (Missione missione : RegistroMissioni.getTutteLeMissioni()) {
-            if (missione instanceof LaLeggenda || missione instanceof LaFalceDelTristoMietitore || missione instanceof IlNegozio) {
+            if (missione instanceof LaLeggenda || missione instanceof LaFalceDelTristoMietitore || missione instanceof IlNegozio
+                    || missione instanceof com.threeamigos.foresta.missioni.storie.RecuperoDelSacerdote
+                    || missione instanceof com.threeamigos.foresta.missioni.storie.NonSparateSulPianista) {
                 missione.aggiungiProprieta("DISPONIBILE_DALLE", String.valueOf(Long.MAX_VALUE));
             }
         }
@@ -105,8 +107,10 @@ class ScenarioSorteggioDegliIncarichiTest {
         try (PartitaDiTest partita = aFleena(7)) {
             List<IncaricoInCitta> incarichi = incarichiInAttesa();
             incarichi.forEach(i -> i.aggiungiProprieta(GIRO, "0"));
-            // I negozi, le leggende e la falce, rimandati, aspettano di offrirsi come gli altri: contano anche loro per chiudere il giro
-            RegistroMissioni.getTutteLeMissioni().stream().filter(m -> m instanceof IlNegozio || m instanceof LaLeggenda || m instanceof LaFalceDelTristoMietitore)
+            // I negozi, le leggende, la falce, le missioni del sacerdote e il pianista, rimandati, aspettano di offrirsi come gli altri: contano anche loro per chiudere il giro
+            RegistroMissioni.getTutteLeMissioni().stream().filter(m -> m instanceof IlNegozio || m instanceof LaLeggenda || m instanceof LaFalceDelTristoMietitore
+                            || m instanceof com.threeamigos.foresta.missioni.storie.RecuperoDelSacerdote
+                            || m instanceof com.threeamigos.foresta.missioni.storie.NonSparateSulPianista)
                     .forEach(m -> m.aggiungiProprieta(GIRO, "0"));
             assertEquals("1", controllaLaVisita(incarichi).ottieniProprieta(GIRO), "nel giro 0 non restava niente da affidare");
         }
@@ -117,7 +121,9 @@ class ScenarioSorteggioDegliIncarichiTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(7)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_FLEENA));
             for (Missione missione : RegistroMissioni.getTutteLeMissioni()) {
-                if (missione instanceof LaLeggenda || missione instanceof LaFalceDelTristoMietitore || missione instanceof IlNegozio) {
+                if (missione instanceof LaLeggenda || missione instanceof LaFalceDelTristoMietitore || missione instanceof IlNegozio
+                    || missione instanceof com.threeamigos.foresta.missioni.storie.RecuperoDelSacerdote
+                    || missione instanceof com.threeamigos.foresta.missioni.storie.NonSparateSulPianista) {
                     missione.aggiungiProprieta("DISPONIBILE_DALLE", String.valueOf(Long.MAX_VALUE));
                 }
             }

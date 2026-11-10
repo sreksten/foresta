@@ -34,7 +34,7 @@ class SilenzioTest {
     void ilComandoEIlPrezzoSonoQuelliDelSilenzio() {
         assertEquals(TipoIncantesimo.SILENZIO, ComandiAssociati.incantesimo(Comando.SILENZIO));
         assertEquals(5, TipoIncantesimo.SILENZIO.getCostoAcquisto());
-        assertEquals(CostantiIncantesimi.INCANTESIMO_SILENZIO_COSTO_LANCIO, TipoIncantesimo.SILENZIO.getCostoLancio());
+        assertEquals(CostantiIncantesimi.INCANTESIMO_SILENZIO_COSTO_LANCIO, TipoIncantesimo.SILENZIO.getCostoPerBersaglio());
         assertEquals(TipoIncantesimo.SILENZIO, FabbricaIncantesimi.crea(TipoIncantesimo.SILENZIO, 1).getClasse());
     }
 

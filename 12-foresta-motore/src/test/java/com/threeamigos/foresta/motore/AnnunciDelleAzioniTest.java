@@ -136,7 +136,7 @@ class AnnunciDelleAzioniTest {
         int magia = mago.getMagia();
         assertTrue(new DardoArcano(mago).usa(mago, compagni, avversari));
         assertNotNull(annuncio().getBersaglio(), "anche con molti bersagli possibili il dardo ne ha uno");
-        assertEquals(magia - TipoAbilita.DARDO_ARCANO.getCostoLancio(), mago.getMagia());
+        assertEquals(magia - TipoAbilita.DARDO_ARCANO.getCostoPerBersaglio(), mago.getMagia());
     }
 
     @Test

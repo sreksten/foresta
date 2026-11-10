@@ -30,7 +30,7 @@ public enum TipoAbilita {
 	ALBA_SACRA(CostantiAbilitaInnate.ABILITA_ALBA_SACRA_COSTO_LANCIO, CostantiAbilitaInnate.ABILITA_ALBA_SACRA_RICARICA),
 	LUCE_DIVINA(CostantiAbilitaInnate.ABILITA_LUCE_DIVINA_COSTO_LANCIO, CostantiAbilitaInnate.ABILITA_LUCE_DIVINA_RICARICA),
 	// Del mago e dell'elfo
-	DARDO_ARCANO(CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_MAGO, CostantiAbilitaInnate.DARDO_ARCANO_RICARICA),
+	DARDO_ARCANO(CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO, CostantiAbilitaInnate.DARDO_ARCANO_RICARICA),
 	// Del ladro
 	ATTACCO_ALLE_SPALLE(CostantiAbilitaInnate.ABILITA_ATTACCO_ALLE_SPALLE_COSTO_LANCIO, CostantiAbilitaInnate.ABILITA_ATTACCO_ALLE_SPALLE_RICARICA);
 
@@ -58,9 +58,10 @@ public enum TipoAbilita {
 	}
 
 	/**
-	 * I punti di Magia che costa usarla, per chi la usa con il costo base (quello del Mago per il dardo arcano).
+	 * I punti di Magia che costa usarla per ogni bersaglio (vedi CostantiIncantesimi.costoPerBersaglio). Il dardo arcano, il cui danno dipende da
+	 * chi lo lancia, qui ha quello del Mago al primo livello: il costo vero lo dà l'abilità costruita per chi la usa (vedi CostoDelleAbilita).
 	 */
-	public int getCostoLancio() {
+	public int getCostoPerBersaglio() {
 		return costoLancio;
 	}
 

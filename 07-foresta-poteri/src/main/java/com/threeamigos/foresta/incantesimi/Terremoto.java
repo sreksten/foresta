@@ -40,12 +40,11 @@ public class Terremoto extends IncantesimoMaleficoImpl implements IncantesimoGlo
 	}
 
 	@Override
-	protected void formulaGlobale(Personaggio formulante, Gruppo gruppoAvversario) {
+	protected void formulaGlobale(Personaggio formulante, List<Personaggio> bersagli) {
 		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "Terremoto.1", formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
-		// Si guarda l'elenco com'era all'inizio: chi cade per il colpo non conta più
-		List<Personaggio> colpiti = new ArrayList<>(gruppoAvversario.getPersonaggiVivi());
-		for (Personaggio avversario : colpiti) {
+		// L'elenco è quello di inizio incantesimo (vedi bersagliGlobali): chi cade per il colpo non conta più
+		for (Personaggio avversario : bersagli) {
 			int salutePrima = avversario.getSalute();
 			colpisci(formulante, avversario);
 			if (avversario.getSalute() < salutePrima && !avversario.isFuoriCombattimento()

@@ -129,6 +129,14 @@ class ScenariDiPassoTest {
         NonSparateSulPianista bardo = registra(new NonSparateSulPianista(), "BARDO");
         Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locande.LOCANDA_VISITE, "9");
         Foresta.setPosizioneDelGruppo(locanda);
+        // Il locandiere chiede del bardo in una locanda del racconto: il gruppo deve conoscere almeno altre due locande
+        assertFalse(LocandaDelRacconto.isQui());
+        for (TipoLocazione citta : new TipoLocazione[] {TipoLocazione.CITTA_NYENA, TipoLocazione.CITTA_MALGAARD}) {
+            Foresta.getLocazioneMD(Foresta.getCoordinateLocazioneUnica(citta)).aggiungiProprieta(Locande.LOCANDA_VISITE, "1");
+        }
+        assertTrue(LocandaDelRacconto.isQui());
+        // Qui si provano i passi del bardo, non la scelta fra le missioni pronte nella locanda del racconto
+        SceltaDegliIncarichi.setSorteggioAttivo(false);
         bardo.controllaPreLocazione();
         assertNotNull(bardo.getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE));
         assertTrue(bardo.staPerAffidareIlBardo());

@@ -72,6 +72,13 @@ SPADA_LEGGENDARIA$
     LEGGENDA=Chi viene colpito inciampa nei lacci delle scarpe, trova sempre il lato sbagliato del tetto e perde ogni scommessa.;\
     LEGGENDA=A chi la impugna, invece, non succede mai niente. Per questo nessuno ha voluto spiegare la cosa a RomyJona.
 
+    TIPO=SPADA;NOME=la Spada del Sacrestano Manesco;CHIAVE=SPADA_DEL_SACRESTANO;BREVE=la Spada del Sacrestano Manesco;SET=SANTA_IGNORANZA;\
+    DESCRIZIONE=che suona le campane in testa ai non morti;LIVELLO=5;DANNI=17;COSTO=60;PESO=2;\
+    MOD=SOGGEZIONE +3;MOD=PRECISIONE +3;INCANTAMENTO=SACRO 18 0.25 Rintocco a Morto;\
+    LEGGENDA=C'era un sacrestano che suonava le campane così forte da svegliare i morti.;\
+    LEGGENDA=I morti, svegliati, venivano a lamentarsi, e lui li rimandava a dormire a colpi di spada.;\
+    LEGGENDA=Ogni colpo fa din, e chi lo prende non si rialza più, nemmeno per la messa.
+
 SPADONE_LEGGENDARIO$
     TIPO=SPADONE;NOME=lo Spadone del Gigante Distratto;CHIAVE=SPADONE_DEL_GIGANTE;BREVE=lo Spadone del Gigante Distratto;\
     DESCRIZIONE=che per un gigante era uno stuzzicadenti;LIVELLO=5;DANNI=26;COSTO=60;PESO=6;\
@@ -79,6 +86,13 @@ SPADONE_LEGGENDARIO$
     LEGGENDA=Il gigante Brontolone usava questo spadone come stuzzicadenti.;\
     LEGGENDA=Un giorno lo perse fra gli alberi e non se ne accorse nemmeno.;\
     LEGGENDA=Per un uomo è uno spadone che spacca le montagne. Per un gigante, una scheggia.
+
+    TIPO=SPADONE;NOME=il Crocione Ignorantone;CHIAVE=CROCIONE_IGNORANTONE;BREVE=il Crocione Ignorantone;SET=SANTA_IGNORANZA;\
+    DESCRIZIONE=che benedice a mazzate;LIVELLO=5;DANNI=26;COSTO=60;PESO=7;\
+    MOD=FORZA +40%;MOD=CORAGGIO +20%;INCANTAMENTO=SACRO 18 0.25 Benedizione a Due Mani;\
+    LEGGENDA=Un frate grande e grosso, dai modi spicci, non aveva pazienza per le prediche lunghe.;\
+    LEGGENDA=Si fece forgiare una croce da impugnare a due mani, e con quella benediva i non morti: una benedizione per testa.;\
+    LEGGENDA=Non è elegante, non è gentile, ma i non morti che incontra non si lamentano mai due volte.
 
 // ---------------------------------------------------------------------------------------------
 // I leggendari di bottino: stessa riga degli altri, ma nessuna leggenda li racconta e non si pescano. Li lascia un avversario
@@ -95,6 +109,24 @@ LEGGENDARIO_DI_BOTTINO$
     LEGGENDA=Il Tristo Mietitore non si è mai concesso un giorno di ferie, e la sua falce non ha mai avuto bisogno di una passata di cote.;\
     LEGGENDA=Chi ne viene sfiorato si sente addosso un'ombra, e chi è già in ombra non fa a tempo a stupirsene.;\
     LEGGENDA=Dicono che i caduti si rialzino al suo passaggio, per qualche giorno, a dare una mano con il raccolto.
+
+    TIPO=SPADA;NOME=la Spada dell'Acquasantiera Traboccante;CHIAVE=SPADA_DELL_ACQUASANTIERA;BREVE=la Spada dell'Acquasantiera Traboccante;SET=SANTA_IGNORANZA;\
+    DESCRIZIONE=che sgocciola acqua santa dappertutto, anche sui tappeti;LIVELLO=5;DANNI=17;COSTO=60;PESO=2;\
+    MOD=SAGGEZZA +2;MOD=VALORE +2;INCANTAMENTO=SACRO 18 0.25 Spruzzo Benedetto;\
+    LEGGENDA=Don Arcangelo, per fare prima, benedisse la spada del campanaro immergendola nell'acquasantiera.;\
+    LEGGENDA=Da quel giorno la spada non ha più smesso di sgocciolare, e in chiesa si entra in barca.
+
+    TIPO=BASTONE_MAGICO;NOME=il Bastone del Santone Brontolone;CHIAVE=BASTONE_DEL_SANTONE;BREVE=il Bastone del Santone Brontolone;SET=SANTA_IGNORANZA;\
+    DESCRIZIONE=che benedice e intanto si lamenta;LIVELLO=5;DANNI=8;COSTO=60;PESO=2;\
+    MOD=POTERE_MAGICO +30%;MOD=RIGENERAZIONE_MAGIA +2;INCANTAMENTO=SACRO 18 0.25 Benedizione Brontolona;\
+    LEGGENDA=Un santone si lamentava di tutto: del tempo, dei pellegrini, delle zanzare e dei miracoli fatti male dagli altri.;\
+    LEGGENDA=Un giorno il suo bastone, che non ne poteva più, se ne andò da solo. A forza di sentirlo, però, aveva imparato a brontolare anche lui.
+
+    TIPO=SCHINIERI;NOME=gli Schinieri del Pellegrino Scalzo;CHIAVE=SCHINIERI_DEL_PELLEGRINO;PLURALE=SI;BREVE=gli Schinieri del Pellegrino Scalzo;SET=SANTA_IGNORANZA;\
+    DESCRIZIONE=che camminano sulla terra consacrata anche quando non ce n'è;LIVELLO=5;COSTO=60;PESO=3;\
+    MOD=SAGGEZZA +3;MOD=PARATA +20%;INCANTAMENTO=GELO 12 0.15 Passo nella Neve;\
+    LEGGENDA=Un pellegrino fece voto di andare scalzo a tutti i santuari della Foresta.;\
+    LEGGENDA=I fedeli gli regalarono questi schinieri benedetti, che lui non porta mai: con i voti non si sa mai.
 
 MAZZA_LEGGENDARIA$
     TIPO=MAZZA;NOME=la Mazza dell'Oste Furioso;CHIAVE=MAZZA_DELL_OSTE;BREVE=la Mazza dell'Oste Furioso;SET=RECUPERO_CREDITI;\
@@ -127,6 +159,13 @@ BASTONE_MAGICO_LEGGENDARIO$
     LEGGENDA=L'arcimago Fumagallo sapeva tutti gli incantesimi del mondo. Il problema era ricordarseli.;\
     LEGGENDA=Così li chiuse tutti nel suo bastone, e poi dimenticò dove aveva messo il bastone.;\
     LEGGENDA=Chi lo trova, dicono, si ricorda di cose che non ha mai imparato.
+
+    TIPO=BASTONE_MAGICO;NOME=il Pastorale del Pastore Smarrito;CHIAVE=PASTORALE_DEL_PASTORE;BREVE=il Pastorale del Pastore Smarrito;SET=SANTA_IGNORANZA;\
+    DESCRIZIONE=che le pecore le ha perse ma i non morti li trova sempre;LIVELLO=5;DANNI=8;COSTO=60;PESO=2;\
+    MOD=POTERE_MAGICO +30%;MOD=SAGGEZZA +3;INCANTAMENTO=SACRO 18 0.25 Richiamo del Gregge;\
+    LEGGENDA=Un pastore aveva perso tutte le sue pecore, e girava per la Foresta a chiamarle con il suo pastorale.;\
+    LEGGENDA=Le pecore non tornarono, ma arrivarono scheletri, spettri e fantasmi, convinti che chiamasse loro.;\
+    LEGGENDA=Il pastore li benedisse uno per uno, e da allora il pastorale non ha più smesso di brillare.
 
 LIBRO_MAGICO_LEGGENDARIO$
     TIPO=LIBRO_MAGICO;NOME=il Libro delle Ricette Proibite;CHIAVE=LIBRO_DEL_CUOCO;BREVE=il Libro delle Ricette Proibite;\
@@ -306,6 +345,7 @@ SET_LEGGENDARIO$
     CHIAVE=GIOVENTU_RIBELLE;NOME=la Gioventù Ribelle;MOLTIPLICATORE=1.3
     CHIAVE=CAVALIERI_SVOGLIATI;NOME=l'Ordine dei Cavalieri Svogliati;MOLTIPLICATORE=1.4
     CHIAVE=RECUPERO_CREDITI;NOME=il Recupero Crediti;MOLTIPLICATORE=1.3
+    CHIAVE=SANTA_IGNORANZA;NOME=la Santa Ignoranza;MOLTIPLICATORE=1.4;PEZZI=2
 
 // ---------------------------------------------------------------------------------------------
 // L'introduzione della leggenda: la prima battuta del narratore, che dice di quale oggetto si parla (vedi

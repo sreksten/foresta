@@ -138,7 +138,9 @@ class IncantesimiGlobaliNelleTatticheTest {
             assertEquals(0, miei.getIncantesimi(classe), classe.name());
             assertEquals(1, annunci.size(), classe.name());
             assertNull(annunci.get(0).getBersaglio(), classe.name());
-            assertEquals(magiaPrima - classe.getCostoLancio(), mago.getMagia(), classe.name());
+            // Si paga per ogni personaggio toccato: almeno uno, e un multiplo del costo per bersaglio
+            int spesa = magiaPrima - mago.getMagia();
+            assertTrue(spesa >= classe.getCostoPerBersaglio() && spesa % classe.getCostoPerBersaglio() == 0, classe.name() + ": " + spesa);
         }
     }
 }

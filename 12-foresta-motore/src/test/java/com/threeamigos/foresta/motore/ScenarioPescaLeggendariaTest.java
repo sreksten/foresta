@@ -73,9 +73,25 @@ class ScenarioPescaLeggendariaTest {
     }
 
     @Test
+    void iSetCheSiCompletanoConUnaParteDeiPezziNonSiInseguonoEIPezziDiBottinoNonSiRaccontano() {
+        SetLeggendario santaIgnoranza = CatalogoLeggendari.getSet("SANTA_IGNORANZA").orElseThrow(AssertionError::new);
+        assertTrue(santaIgnoranza.isCompletabileInParte());
+        // Uscito il Crocione, la pesca non spinge verso gli altri pezzi del set
+        Set<String> giaPescati = new HashSet<>(Collections.singletonList("CROCIONE_IGNORANTONE"));
+        assertTrue(PescaLeggendaria.setCominciati(giaPescati).stream().noneMatch(set -> set == santaIgnoranza));
+        // E nessuna leggenda racconta un pezzo di bottino
+        for (int i = 0; i < 200; i++) {
+            PescaLeggendaria.pezzoDaRaccontare(giaPescati, PescaLeggendaria.LEGGENDE_SENZA_PEZZI_MASSIME, FA_IL_MASSIMO)
+                    .ifPresent(pezzo -> assertFalse(CatalogoLeggendari.getTuttiIBottini().containsKey(pezzo), pezzo));
+        }
+    }
+
+    @Test
     void fraPiuSetCominciatiSiPreferisceQuelloPiuVicinoAEssereCompleto() {
-        // Il set con più pezzi, quasi completo, e un altro con un pezzo solo uscito
+        // Il set con più pezzi, quasi completo, e un altro con un pezzo solo uscito; non i set che si completano con una parte dei
+        // pezzi, che la pesca non cerca di completare
         List<SetLeggendario> perPezzi = CatalogoLeggendari.getTuttiISet().values().stream()
+                .filter(set -> !set.isCompletabileInParte())
                 .sorted(Comparator.comparingInt((SetLeggendario set) -> -pezziDi(set).size()).thenComparing(SetLeggendario::getChiave))
                 .collect(Collectors.toList());
         SetLeggendario quasiCompleto = perPezzi.get(0);

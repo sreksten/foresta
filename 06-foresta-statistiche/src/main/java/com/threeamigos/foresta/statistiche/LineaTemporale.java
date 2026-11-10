@@ -174,6 +174,16 @@ public class LineaTemporale {
 		return e;
 	}
 
+	/**
+	 * Il racconto della sconfitta, a partita finita senza aver battuto il Drago: l'ultimo evento non ancora mostrato, che viene consumato, o,
+	 * se qualcuno l'ha già mostrato, l'annuncio della fine, così la partita non si chiude mai in silenzio.
+	 */
+	public static String getEventoDellaSconfitta(GruppoGiocatore gruppo) {
+		String evento = getEvento();
+		return evento != null ? evento : Testi.formatta(FILE_DEI_TESTI, "EVENTO_FINE",
+				gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA));
+	}
+
 	private static void setEvento(String evento) {
 		getLineaTemporaleMD().setEvento(evento);
 	}

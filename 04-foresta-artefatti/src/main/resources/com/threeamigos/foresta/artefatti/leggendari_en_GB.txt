@@ -49,6 +49,13 @@ SPADA_LEGGENDARIA$
     LEGGENDA=Whoever is struck trips over their shoelaces, always finds the wrong side of the roof and loses every bet.;\
     LEGGENDA=To whoever wields it, instead, nothing ever happens. That is why nobody wanted to explain the matter to RomyJona.
 
+    TIPO=SPADA;NOME=the Sword of the Brawling Sexton;CHIAVE=SPADA_DEL_SACRESTANO;BREVE=the Sword of the Brawling Sexton;SET=SANTA_IGNORANZA;\
+    DESCRIZIONE=that rings the bells on the heads of the undead;LIVELLO=5;DANNI=17;COSTO=60;PESO=2;\
+    MOD=SOGGEZIONE +3;MOD=PRECISIONE +3;INCANTAMENTO=SACRO 18 0.25 Death Knell;\
+    LEGGENDA=There once was a sexton who rang the bells so loud he woke the dead.;\
+    LEGGENDA=The dead, once awake, came to complain, and he sent them back to sleep with his sword.;\
+    LEGGENDA=Every blow goes ding, and whoever takes it never gets up again, not even for mass.
+
 SPADONE_LEGGENDARIO$
     TIPO=SPADONE;NOME=the Greatsword of the Absent-Minded Giant;CHIAVE=SPADONE_DEL_GIGANTE;BREVE=the Greatsword of the Absent-Minded Giant;\
     DESCRIZIONE=that for a giant was a toothpick;LIVELLO=5;DANNI=26;COSTO=60;PESO=6;\
@@ -56,6 +63,13 @@ SPADONE_LEGGENDARIO$
     LEGGENDA=The giant Grumbler used this greatsword as a toothpick.;\
     LEGGENDA=One day he lost it among the trees and didn't even notice.;\
     LEGGENDA=For a man it is a greatsword that splits mountains. For a giant, a splinter.
+
+    TIPO=SPADONE;NOME=the Clobbering Cross;CHIAVE=CROCIONE_IGNORANTONE;BREVE=the Clobbering Cross;SET=SANTA_IGNORANZA;\
+    DESCRIZIONE=that blesses by clobbering;LIVELLO=5;DANNI=26;COSTO=60;PESO=7;\
+    MOD=FORZA +40%;MOD=CORAGGIO +20%;INCANTAMENTO=SACRO 18 0.25 Two-Handed Blessing;\
+    LEGGENDA=A big, burly friar with blunt manners had no patience for long sermons.;\
+    LEGGENDA=He had a cross forged to be swung with both hands, and he blessed the undead with it: one blessing per head.;\
+    LEGGENDA=It is not elegant, it is not gentle, but the undead it meets never complain twice.
 
 // ---------------------------------------------------------------------------------------------
 // I leggendari di bottino: stessa riga degli altri, ma nessuna leggenda li racconta e non si pescano (vedi leggendari.txt).
@@ -69,6 +83,24 @@ LEGGENDARIO_DI_BOTTINO$
     LEGGENDA=The Grim Reaper has never taken a day off, and his scythe has never needed a pass of the whetstone.;\
     LEGGENDA=Whoever is brushed by it feels a shadow upon them, and whoever is already in shadow has no time to be surprised.;\
     LEGGENDA=They say the fallen rise at its passing, for a few days, to lend a hand with the harvest.
+
+    TIPO=SPADA;NOME=the Sword of the Overflowing Font;CHIAVE=SPADA_DELL_ACQUASANTIERA;BREVE=the Sword of the Overflowing Font;SET=SANTA_IGNORANZA;\
+    DESCRIZIONE=that drips holy water everywhere, even on the carpets;LIVELLO=5;DANNI=17;COSTO=60;PESO=2;\
+    MOD=SAGGEZZA +2;MOD=VALORE +2;INCANTAMENTO=SACRO 18 0.25 Blessed Splash;\
+    LEGGENDA=Father Arcangelo, to save time, blessed the bell-ringer's sword by dipping it in the holy water font.;\
+    LEGGENDA=From that day on the sword has never stopped dripping, and people now go to church by boat.
+
+    TIPO=BASTONE_MAGICO;NOME=the Staff of the Grumbling Holy Man;CHIAVE=BASTONE_DEL_SANTONE;BREVE=the Staff of the Grumbling Holy Man;SET=SANTA_IGNORANZA;\
+    DESCRIZIONE=that blesses and complains at the same time;LIVELLO=5;DANNI=8;COSTO=60;PESO=2;\
+    MOD=POTERE_MAGICO +30%;MOD=RIGENERAZIONE_MAGIA +2;INCANTAMENTO=SACRO 18 0.25 Grumbling Blessing;\
+    LEGGENDA=A holy man complained about everything: the weather, the pilgrims, the mosquitoes and the miracles other people botched.;\
+    LEGGENDA=One day his staff, fed up, walked off on its own. After all those years of listening, though, it had learnt to grumble too.
+
+    TIPO=SCHINIERI;NOME=the Greaves of the Barefoot Pilgrim;CHIAVE=SCHINIERI_DEL_PELLEGRINO;PLURALE=SI;BREVE=the Greaves of the Barefoot Pilgrim;SET=SANTA_IGNORANZA;\
+    DESCRIZIONE=that walk on holy ground even where there is none;LIVELLO=5;COSTO=60;PESO=3;\
+    MOD=SAGGEZZA +3;MOD=PARATA +20%;INCANTAMENTO=GELO 12 0.15 Steps in the Snow;\
+    LEGGENDA=A pilgrim vowed to walk barefoot to every shrine in the Forest.;\
+    LEGGENDA=The faithful gave him these blessed greaves, which he never wears: with vows, you never know.
 
 MAZZA_LEGGENDARIA$
     TIPO=MAZZA;NOME=the Mace of the Furious Innkeeper;CHIAVE=MAZZA_DELL_OSTE;BREVE=the Mace of the Furious Innkeeper;SET=RECUPERO_CREDITI;\
@@ -101,6 +133,13 @@ BASTONE_MAGICO_LEGGENDARIO$
     LEGGENDA=The archmage Mumblewick knew all the spells in the world. The problem was remembering them.;\
     LEGGENDA=So he locked them all in his staff, and then forgot where he had put the staff.;\
     LEGGENDA=Whoever finds it, they say, remembers things they never learned.
+
+    TIPO=BASTONE_MAGICO;NOME=the Crook of the Lost Shepherd;CHIAVE=PASTORALE_DEL_PASTORE;BREVE=the Crook of the Lost Shepherd;SET=SANTA_IGNORANZA;\
+    DESCRIZIONE=that lost its sheep but always finds the undead;LIVELLO=5;DANNI=8;COSTO=60;PESO=2;\
+    MOD=POTERE_MAGICO +30%;MOD=SAGGEZZA +3;INCANTAMENTO=SACRO 18 0.25 Call of the Flock;\
+    LEGGENDA=A shepherd had lost all his sheep, and wandered through the Forest calling them with his crook.;\
+    LEGGENDA=The sheep never came back, but skeletons, spectres and ghosts came instead, sure he was calling them.;\
+    LEGGENDA=The shepherd blessed them one by one, and since then the crook has never stopped shining.
 
 LIBRO_MAGICO_LEGGENDARIO$
     TIPO=LIBRO_MAGICO;NOME=the Book of Forbidden Recipes;CHIAVE=LIBRO_DEL_CUOCO;BREVE=the Book of Forbidden Recipes;\
@@ -274,6 +313,7 @@ SET_LEGGENDARIO$
     CHIAVE=GIOVENTU_RIBELLE;NOME=the Rebel Youth;MOLTIPLICATORE=1.3
     CHIAVE=CAVALIERI_SVOGLIATI;NOME=the Order of the Listless Knights;MOLTIPLICATORE=1.4
     CHIAVE=RECUPERO_CREDITI;NOME=the Debt Collection;MOLTIPLICATORE=1.3
+    CHIAVE=SANTA_IGNORANZA;NOME=the Holy Ignorance;MOLTIPLICATORE=1.4;PEZZI=2
 
 // ---------------------------------------------------------------------------------------------
 // L'introduzione della leggenda: la prima battuta del narratore, che dice di quale oggetto si parla. DELL_OGGETTO e L_OGGETTO li fissa il

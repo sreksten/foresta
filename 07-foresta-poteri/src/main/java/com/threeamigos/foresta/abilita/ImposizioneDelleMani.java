@@ -63,7 +63,7 @@ public class ImposizioneDelleMani implements Abilita {
 		AnnuncioDellAzione.azione(utilizzatore, bersaglio, TipoAzione.IMPOSIZIONE_DELLE_MANI);
 		int saluteInizio = bersaglio.getSalute();
 		bersaglio.addSalute(getCura());
-		utilizzatore.subMagia(getCostoLancio());
+		paga(utilizzatore, 1);
 		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "ImposizioneDelleMani.2", nome, bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE), (bersaglio.getSalute() - saluteInizio))));
 		return true;
 	}

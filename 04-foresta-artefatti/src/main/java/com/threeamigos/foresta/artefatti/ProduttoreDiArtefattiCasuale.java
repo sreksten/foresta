@@ -3,6 +3,8 @@ package com.threeamigos.foresta.artefatti;
 import com.threeamigos.foresta.testi.CaricatoreDiGrammatiche;
 import com.threeamigos.foresta.testi.GrammaticaNonValidaException;
 import com.threeamigos.foresta.testi.GrammaticaPigra;
+import com.threeamigos.foresta.testi.GrammarBean;
+import com.threeamigos.foresta.tipi.TipoModalitaProduzioneTesti;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,14 +93,14 @@ public final class ProduttoreDiArtefattiCasuale {
 	}
 
 	/**
-	 * Tutti i set leggendari di LEGGENDARI.txt (vedi SetLeggendario), in ordine casuale.
+	 * Tutti i set leggendari di LEGGENDARI.txt (vedi SetLeggendario), nell'ordine del file.
 	 */
 	public static List<String> tuttiISetLeggendari() {
 		return tutteLeRigheLeggendarie(SET_LEGGENDARIO);
 	}
 
 	/**
-	 * Tutti i libri tecnici di LEGGENDARI.txt (vedi LibroTecnico), in ordine casuale.
+	 * Tutti i libri tecnici di LEGGENDARI.txt (vedi LibroTecnico), nell'ordine del file.
 	 */
 	public static List<String> tuttiILibriTecnici() {
 		return tutteLeRigheLeggendarie(LIBRO_TECNICO);
@@ -132,13 +134,24 @@ public final class ProduttoreDiArtefattiCasuale {
 	}
 
 	/**
-	 * Tutte le righe di una produzione one-shot di LEGGENDARI.txt: si pescano finché ce ne sono.
+	 * Tutte le righe di una produzione one-shot di LEGGENDARI.txt, nell'ordine del file: si pescano finché ce ne sono, sempre la prima
+	 * (TipoModalitaProduzioneTesti.PRIMO). Pescarle a caso consumerebbe un tiro del dado del gioco per riga, e il catalogo si legge una
+	 * volta sola per esecuzione (e di nuovo a ogni cambio di lingua): due partite con lo stesso seme non sarebbero più uguali, a seconda
+	 * che il catalogo fosse già stato letto o no.
 	 */
 	private static synchronized List<String> tutteLeRigheLeggendarie(String produzione) {
 		List<String> righe = new ArrayList<>();
-		LEGGENDARI.get().reset();
-		while (LEGGENDARI.get().canProduce(produzione)) {
-			righe.add(String.join(" ", LEGGENDARI.get().produce(produzione)).trim());
+		GrammarBean grammatica = LEGGENDARI.get();
+		TipoModalitaProduzioneTesti modalita = grammatica.getProductionMode();
+		grammatica.setProductionMode(TipoModalitaProduzioneTesti.PRIMO);
+		try {
+			grammatica.reset();
+			while (grammatica.canProduce(produzione)) {
+				righe.add(String.join(" ", grammatica.produce(produzione)).trim());
+			}
+		} finally {
+			grammatica.setProductionMode(modalita);
+			grammatica.reset();
 		}
 		return righe;
 	}

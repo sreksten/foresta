@@ -35,7 +35,7 @@ public final class AbilitaInnate {
 	 */
 	public static boolean conosciutaDaPerMagia(TipoPersonaggio classe) {
 		for (TipoAbilita tipo : TipoAbilita.values()) {
-			if (tipo.getCostoLancio() > 0 && conosciutaDa(classe, tipo)) {
+			if (tipo.getCostoPerBersaglio() > 0 && conosciutaDa(classe, tipo)) {
 				return true;
 			}
 		}
@@ -81,12 +81,13 @@ public final class AbilitaInnate {
 	}
 
 	/**
-	 * @return true se il personaggio è vivo, conosce quell'abilità, non è {@code SILENZIATO}, ha la Magia per usarla e non è in ricarica
+	 * @return true se il personaggio è vivo, conosce quell'abilità, non è {@code SILENZIATO}, ha la Magia per usarla almeno su un bersaglio e
+	 * non è in ricarica
 	 */
 	public static boolean puoUsare(Personaggio personaggio, TipoAbilita tipo) {
 		return personaggio.isVivo() && conosciutaDa(personaggio.getClasse(), tipo)
 				&& !personaggio.hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO)
-				&& personaggio.getMagia() >= CostoDelleAbilita.di(tipo, personaggio.getClasse())
+				&& personaggio.getMagia() >= CostoDelleAbilita.di(tipo, personaggio)
 				&& !isInRicarica(personaggio, tipo);
 	}
 

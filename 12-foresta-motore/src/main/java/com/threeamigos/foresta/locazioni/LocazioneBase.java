@@ -720,7 +720,7 @@ public abstract class LocazioneBase implements Locazione {
 					Personaggio formulante = gruppo.getFormulante();
 					TipoIncantesimo tipoIncantesimo = ComandiAssociati.incantesimo(azione);
 					incantesimo = FabbricaIncantesimi.crea(tipoIncantesimo, formulante.getLivello());
-					if (formulante.getMagia() < incantesimo.getCostoLancio()) {
+					if (formulante.getMagia() < incantesimo.getCostoPerBersaglio()) {
 
 						// Non si dovrebbe più riuscire a entrare in questo ramo perché la scelta degli incantesimi è già stata filtrata
 						String sb = Testi.formatta("messaggi_motore", "LocazioneBase.livelloDiMagia", formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA));

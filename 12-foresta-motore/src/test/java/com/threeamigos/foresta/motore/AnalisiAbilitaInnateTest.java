@@ -514,13 +514,13 @@ class AnalisiAbilitaInnateTest {
                 String note = "";
                 if (classe == TipoPersonaggio.CHIERICO) {
                     ImposizioneDelleMani im = new ImposizioneDelleMani(pg);
-                    int lanci = pg.getMagiaMassima() / im.getCostoLancio();
+                    int lanci = pg.getMagiaMassima() / im.getCostoPerBersaglio();
                     note = String.format("imposizione: cura %d (=%d%% della salute) x %d lanci a magia piena = %d salute (%d volte la salute)",
                             im.getCura(), 100 * im.getCura() / pg.getSaluteMassima(), lanci, lanci * im.getCura(),
                             lanci * im.getCura() / pg.getSaluteMassima());
                 } else if (classe == TipoPersonaggio.DRUIDO) {
                     Rigenerazione ri = new Rigenerazione(pg);
-                    int lanci = pg.getMagiaMassima() / ri.getCostoLancio();
+                    int lanci = pg.getMagiaMassima() / ri.getCostoPerBersaglio();
                     int perTurno = ri.getCuraPerTurno(pg);
                     note = String.format("rigenerazione su se stesso: %d/turno x4 = %d, %d lanci a magia piena; pelle (5): %d lanci",
                             perTurno, 4 * perTurno, lanci, pg.getMagiaMassima() / 5);

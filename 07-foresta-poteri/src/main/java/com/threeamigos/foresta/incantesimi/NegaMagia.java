@@ -40,10 +40,10 @@ public class NegaMagia extends IncantesimoMaleficoImpl implements IncantesimoGlo
 	}
 
 	@Override
-	protected void formulaGlobale(Personaggio formulante, Gruppo gruppoAvversario) {
+	protected void formulaGlobale(Personaggio formulante, List<Personaggio> bersagli) {
 		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "NegaMagia.1", formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
-		for (Personaggio avversario : gruppoAvversario.getPersonaggiVivi()) {
+		for (Personaggio avversario : bersagli) {
 			if (avversario.isImmuneAIncantesimo(getClasse())) {
 				BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "NegaMagia.2", avversario.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE))));
 				continue;

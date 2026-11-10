@@ -647,7 +647,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	@Override
 	public boolean puoFormulare(TipoIncantesimo tipoIncantesimo) {
-		return getMagia() >= tipoIncantesimo.getCostoLancio() && !hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO);
+		return getMagia() >= tipoIncantesimo.getCostoPerBersaglio() && !hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO);
 	}
 
 	// CARICO MASSIMO

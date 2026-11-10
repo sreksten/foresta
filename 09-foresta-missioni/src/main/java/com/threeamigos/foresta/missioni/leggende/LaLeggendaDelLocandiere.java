@@ -1,25 +1,19 @@
 package com.threeamigos.foresta.missioni.leggende;
 
-import com.threeamigos.foresta.intermezzi.Locande;
+import com.threeamigos.foresta.missioni.LocandaDelRacconto;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.ScenaInLocanda;
-import com.threeamigos.foresta.mappa.Foresta;
-import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
-import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.List;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
-import com.threeamigos.foresta.testi.Testi;
 
 /**
- * Il locandiere di una locanda racconta la leggenda di un oggetto leggendario (vedi LaLeggenda), ma solo dalla
- * terza visita a quella locanda in poi: alla prima e alla seconda c'è già l'intermezzo della locanda.
+ * Il locandiere di una locanda racconta la leggenda di un oggetto leggendario (vedi LaLeggenda), in una locanda del racconto (vedi
+ * LocandaDelRacconto: dalla terza locanda conosciuta, alla seconda visita a una locanda nel bosco o dopo), al posto della recensione
+ * della locanda. Nel sorteggio delle missioni concorre con Non sparate sul pianista e le missioni del sacerdote.
  */
 public class LaLeggendaDelLocandiere extends LaLeggenda {
-
-	// Le visite precedenti alla locanda sono già contate quando si entra
-	private static final int VISITE_PRECEDENTI = 2;
 
 	public LaLeggendaDelLocandiere() {
 		super(MissionePredefinita.LA_LEGGENDA_DEL_LOCANDIERE);
@@ -27,12 +21,7 @@ public class LaLeggendaDelLocandiere extends LaLeggenda {
 
 	@Override
 	protected boolean isPostoDelRacconto() {
-		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-		if (Foresta.getLocazioneDelGruppo() != TipoLocazione.LOCANDA) {
-			return false;
-		}
-		String visite = Foresta.getLocazioneMD(Foresta.getPosizioneDelGruppo()).ottieniProprieta(Locande.LOCANDA_VISITE);
-		return visite != null && Integer.parseInt(visite) >= VISITE_PRECEDENTI;
+		return LocandaDelRacconto.isQui();
 	}
 
 	@Override

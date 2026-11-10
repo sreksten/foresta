@@ -67,7 +67,7 @@ class CodaDiCoperturaTest {
         int conCostoDiLancio = 0;
         for (TipoIncantesimo tipo : TipoIncantesimo.values()) {
             assertTrue(tipo.getCostoAcquisto() > 0, tipo.name());
-            assertTrue(tipo.getCostoLancio() > 0, tipo.name());
+            assertTrue(tipo.getCostoPerBersaglio() > 0, tipo.name());
             conCostoDiLancio++;
         }
         assertEquals(TipoIncantesimo.values().length, conCostoDiLancio);

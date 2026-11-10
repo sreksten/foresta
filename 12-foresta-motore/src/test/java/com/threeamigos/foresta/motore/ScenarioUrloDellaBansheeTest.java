@@ -53,6 +53,7 @@ class ScenarioUrloDellaBansheeTest {
     /** Il gruppo riporta a casa il bardo. */
     private static TipoLocazione riportaACasaIlBardo(PartitaDiTest partita, CoordinateMD locanda) {
         NonSparateSulPianista pianista = pianista();
+        partita.conosceAltreDueLocande();
         Foresta.setPosizioneDelGruppo(locanda);
         Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locande.LOCANDA_VISITE, "2");
         pianista.controllaPreLocazione();

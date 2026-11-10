@@ -19,6 +19,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Sacerdote;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.CostantiAbilitaInnate;
+import com.threeamigos.foresta.tipi.CostantiIncantesimi;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
@@ -110,15 +111,19 @@ class AbilitaInnateTest {
     }
 
     @Test
-    void ilCostoDelDardoArcanoDipendeDallaClasse() {
-        assertEquals(CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_MAGO, CostoDelleAbilita.di(TipoAbilita.DARDO_ARCANO, TipoPersonaggio.MAGO));
-        assertEquals(CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_MAGO, CostoDelleAbilita.di(TipoAbilita.DARDO_ARCANO, TipoPersonaggio.MAGA));
-        assertEquals(CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_ELFO, CostoDelleAbilita.di(TipoAbilita.DARDO_ARCANO, TipoPersonaggio.ELFO));
-        assertEquals(TipoAbilita.RADICI.getCostoLancio(), CostoDelleAbilita.di(TipoAbilita.RADICI, TipoPersonaggio.DRUIDO));
+    void ilCostoDelDardoArcanoSegueIlSuoDanno() {
+        // Il danno base diviso 10: 20 per il Mago (2); per l'Elfo 15 al primo livello (1) e 15 + 4 per livello in più al quinto (31, quindi 3)
+        assertEquals(2, CostoDelleAbilita.di(TipoAbilita.DARDO_ARCANO, new Mago("Merlino", 1)));
+        assertEquals(2, CostoDelleAbilita.di(TipoAbilita.DARDO_ARCANO, new com.threeamigos.foresta.personaggi.Maga("LeFey", 6)));
+        assertEquals(1, CostoDelleAbilita.di(TipoAbilita.DARDO_ARCANO, new Elfo("Legolas", 1)));
+        assertEquals(3, CostoDelleAbilita.di(TipoAbilita.DARDO_ARCANO, new Elfo("Legolas", 5)));
+        // Radici: 40 di danno, 4 per bersaglio
+        assertEquals(4, CostoDelleAbilita.di(TipoAbilita.RADICI, new Druido("Panoramix", 1)));
+        assertEquals(TipoAbilita.RADICI.getCostoPerBersaglio(), CostoDelleAbilita.di(TipoAbilita.RADICI, new Druido("Panoramix", 1)));
         for (TipoAbilita tipo : TipoAbilita.values()) {
-            assertTrue(tipo.getCostoLancio() >= 0 && tipo.getRicarica() > 0, tipo.name());
+            assertTrue(tipo.getCostoPerBersaglio() >= 0 && tipo.getRicarica() > 0, tipo.name());
             // Solo l'attacco alle spalle del ladro non costa Magia
-            assertEquals(tipo == TipoAbilita.ATTACCO_ALLE_SPALLE, tipo.getCostoLancio() == 0, tipo.name());
+            assertEquals(tipo == TipoAbilita.ATTACCO_ALLE_SPALLE, tipo.getCostoPerBersaglio() == 0, tipo.name());
             assertNotNull(tipo.getTipoAzione());
         }
     }
@@ -234,7 +239,7 @@ Personaggio scheletroAlleato = nelGruppo(FabbricaPersonaggi.crea(TipoPersonaggio
         Personaggio chierico = nelGruppo(new Chierico("Fra Tuck", 8));
         ScacciareINonMorti abilita = (ScacciareINonMorti) FabbricaAbilita.crea(TipoAbilita.SCACCIARE_I_NON_MORTI, chierico);
         assertEquals(TipoAbilita.SCACCIARE_I_NON_MORTI, abilita.getTipo());
-        assertEquals(TipoAbilita.SCACCIARE_I_NON_MORTI.getCostoLancio(), abilita.getCostoLancio());
+        assertEquals(TipoAbilita.SCACCIARE_I_NON_MORTI.getCostoPerBersaglio(), abilita.getCostoPerBersaglio());
         assertFalse(abilita.usa(chierico, gruppo, avversari), "nessun non morto");
         Personaggio goblin = avversario(TipoPersonaggio.GOBLIN);
         assertFalse(abilita.usa(chierico, gruppo, avversari), "i goblin non sono non morti");
@@ -370,8 +375,8 @@ Personaggio scheletroAlleato = nelGruppo(FabbricaPersonaggi.crea(TipoPersonaggio
         avversario(TipoPersonaggio.TITANO);
         Abilita dardoMago = FabbricaAbilita.crea(TipoAbilita.DARDO_ARCANO, mago);
         Abilita dardoElfo = FabbricaAbilita.crea(TipoAbilita.DARDO_ARCANO, elfo);
-        assertEquals(CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_MAGO, dardoMago.getCostoLancio());
-        assertEquals(CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_ELFO, dardoElfo.getCostoLancio());
+        assertEquals(((DardoArcano) dardoMago).getDanni() / CostantiIncantesimi.COSTO_LANCIO_DIVISORE_DANNI, dardoMago.getCostoPerBersaglio());
+        assertEquals(((DardoArcano) dardoElfo).getDanni() / CostantiIncantesimi.COSTO_LANCIO_DIVISORE_DANNI, dardoElfo.getCostoPerBersaglio());
         assertTrue(((DardoArcano) dardoMago).getDanni() != ((DardoArcano) dardoElfo).getDanni() || true);
         assertTrue(dardoMago.usa(mago, gruppo, avversari));
         elfo.addMagia(100000);
@@ -432,7 +437,7 @@ Personaggio scheletroAlleato = nelGruppo(FabbricaPersonaggi.crea(TipoPersonaggio
         assertTrue(AbilitaInnate.abilitaUtili(chierico, gruppo, avversari).contains(TipoAbilita.SCACCIARE_I_NON_MORTI));
         // Il dardo arcano della maga e le cure su chi non si può curare
         Personaggio maga = nelGruppo(new com.threeamigos.foresta.personaggi.Maga("LeFey", 8));
-        assertEquals(CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_MAGO, FabbricaAbilita.crea(TipoAbilita.DARDO_ARCANO, maga).getCostoLancio());
+        assertEquals(CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO, FabbricaAbilita.crea(TipoAbilita.DARDO_ARCANO, maga).getCostoPerBersaglio());
         Personaggio scheletroAlleato = nelGruppo(FabbricaPersonaggi.crea(TipoPersonaggio.SCHELETRO, 3));
         scheletroAlleato.subSalute(scheletroAlleato.getSalute() / 2, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
         assertFalse(FabbricaAbilita.crea(TipoAbilita.IMPOSIZIONE_DELLE_MANI, chierico).usaSu(chierico, scheletroAlleato, gruppo, avversari));

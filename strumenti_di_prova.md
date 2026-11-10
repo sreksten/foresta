@@ -86,7 +86,7 @@ senza guardare le condizioni che il passo si dà da sé (visita tranquilla, paus
 del passo si eseguono come sempre, quindi gli intermezzi e il resto partono normalmente. La richiesta non si salva e vale una volta
 sola. Finché la missione non è partita davvero (cioè attiva) lo stato resta "partenza forzata".
 Per sapere dove si offre una missione c'è un elenco fisso in `StrumentiDiSviluppoMotore`: quelle di locanda sono scritte a mano, quelle
-del bosco pure (oggi `IlViandante` e `IlViaggioDiOlaf`), le altre sono città se sono un `IncaricoInCitta` (o la leggenda dell'armaiolo e la lealtà).
+del bosco pure (oggi `IlViandante` e `IlViaggioDiOlaf`), le altre sono città se sono un `IncaricoInCitta` (o la leggenda dell'armaiolo, la falce del Tristo Mietitore, la lealtà e le tre missioni del sacerdote, che forzate partono in città anche fuori dal loro ordine).
 Una missione il cui primo passo non è la condizione che la fa partire davvero, come `IlViandante` (prima fissa i suoi parametri e poi
 aspetta il bosco e il giorno), chiede nella condizione del passo giusto `isInLuogoDellaPartenzaForzata()`: da lì, forzata, parte
 al primo bosco anche il primo giorno.

@@ -39,13 +39,19 @@ public class Tempesta extends IncantesimoMaleficoImpl implements IncantesimoGlob
 	}
 
 	@Override
-	protected void formulaGlobale(Personaggio formulante, Gruppo gruppoAvversario) {
+	protected List<Personaggio> bersagliGlobali(Personaggio formulante, Gruppo gruppoAvversario) {
+		// Prima gli avversari, poi i compagni: se la Magia non basta per tutti, la tempesta risparmia gli ultimi
+		List<Personaggio> colpiti = super.bersagliGlobali(formulante, gruppoAvversario);
+		colpiti.addAll(compagniDi(formulante));
+		return colpiti;
+	}
+
+	@Override
+	protected void formulaGlobale(Personaggio formulante, List<Personaggio> bersagli) {
 		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "Tempesta.1", formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
-		// Si guardano gli elenchi com'erano all'inizio: chi cade per un fulmine non conta più
-		List<Personaggio> colpiti = new ArrayList<>(gruppoAvversario.getPersonaggiVivi());
-		colpiti.addAll(compagniDi(formulante));
-		for (Personaggio colpito : colpiti) {
+		// L'elenco è quello di inizio incantesimo (vedi bersagliGlobali): chi cade per un fulmine non conta più
+		for (Personaggio colpito : bersagli) {
 			colpisci(formulante, colpito);
 		}
 	}

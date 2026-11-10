@@ -8,13 +8,15 @@ package com.threeamigos.foresta.tipi;
 public enum PortataIncantesimo {
 
 	/**
-	 * Un effetto su tutta la locazione o su chi lo formula, senza bersagli (al momento non ne esistono: un
-	 * NegaMagia, un AccresciForza, "fino alla fine del turno gli attacchi sono ridotti del X%"...). Va scritto
-	 * ridefinendo IncantesimoMaleficoImpl.formulaGlobale. Morte non può mai esserlo.
+	 * Un effetto su tutta la locazione, senza un bersaglio scelto: agisce su ogni avversario vivo (Nebbia, Nega magia,
+	 * Terremoto, Terrore), su tutti tranne chi lo formula (Tempesta, che colpisce anche i compagni) o su tutto il gruppo di
+	 * chi lo formula (Grido di battaglia, benefico). Un incantesimo malefico lo scrive ridefinendo
+	 * IncantesimoMaleficoImpl.formulaGlobale. Morte non può mai esserlo.
 	 */
 	GLOBALE,
 	/**
-	 * Colpisce tutti i personaggi vivi del gruppo avversario.
+	 * Colpisce tutti i personaggi vivi del gruppo avversario. L'unico incantesimo con questa portata, Silenzio, ridefinisce
+	 * la scelta e ne silenzia uno solo (Silenzio.scegliBersaglio).
 	 */
 	GRUPPO,
 	/**

@@ -63,7 +63,7 @@ public class CantoCurativo implements Canto {
 		AnnuncioDellAzione.azione(cantore, bersaglio, TipoAzione.CANTO_CURATIVO);
 		int saluteInizio = bersaglio.getSalute();
 		bersaglio.addSalute(getCura());
-		cantore.subMagia(getCostoLancio());
+		paga(cantore, 1);
 		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "CantoCurativo.2", nomeCantore, bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE), (bersaglio.getSalute() - saluteInizio))));
 		return true;
 	}

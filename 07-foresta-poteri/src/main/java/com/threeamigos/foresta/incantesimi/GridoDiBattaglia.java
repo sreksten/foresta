@@ -64,11 +64,13 @@ public class GridoDiBattaglia implements IncantesimoGlobale {
 	public void formula(Personaggio formulante, Personaggio personaggioBersaglio, Gruppo gruppoBersaglio) {
 		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "GridoDiBattaglia.1", formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
-		for (Personaggio personaggio : gruppoBersaglio.getPersonaggiVivi()) {
+		// Si paga per ogni compagno vivo incoraggiato: con poca Magia il grido ne raggiunge solo i primi
+		List<Personaggio> incoraggiati = soloIPagabili(formulante, gruppoBersaglio.getPersonaggiVivi());
+		for (Personaggio personaggio : incoraggiati) {
 			personaggio.addModificatore(modificatore(TipoAttributo.CORAGGIO, getPuntiCoraggio()));
 			personaggio.addModificatore(modificatore(TipoAttributo.VALORE, getPuntiValore()));
 		}
-		formulante.subMagia(getCostoLancio());
+		paga(formulante, incoraggiati.size());
 		StatoDelCombattimento.getIstanza().registraIncantesimoLanciato(formulante);
 	}
 

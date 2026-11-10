@@ -4271,4 +4271,132 @@ IL_VIAGGIO_DI_OLAF_RICOMPENSA
 IL_VIAGGIO_DI_OLAF_UN_LEGGENDARIO
     a legendary item
 
+// ---------------------------------------------------------------------------------------------
+// The priest's recovery missions (RecuperoDelSacerdote): who tells the story
+RECUPERO_DEL_SACERDOTE_SACERDOTE
+    the priest
+
+RECUPERO_DEL_SACERDOTE_SACERDOTESSA
+    the priestess
+
+// The holy water sword (LaSpadaDellAcquasantiera)
+LA_SPADA_DELL_ACQUASANTIERA_TITOLO
+    The holy water sword
+
+LA_SPADA_DELL_ACQUASANTIERA_SCENA_1
+    My children, I have a confession to make. Father Arcangelo, our parish priest, wanted to bless the bell-ringer's sword, and to save time he dipped the whole thing in the holy water font.
+
+LA_SPADA_DELL_ACQUASANTIERA_SCENA_2
+    Since that day the sword has never stopped dripping holy water. The sacristy is flooded, and on Sundays the faithful come to mass by boat.
+
+LA_SPADA_DELL_ACQUASANTIERA_SCENA_3
+    And you want us to dry it?
+
+LA_SPADA_DELL_ACQUASANTIERA_SCENA_4
+    No, no! We gave it to a peddler to take far away, but a band of goblins stole it from him: they mistook it for a fountain.
+
+LA_SPADA_DELL_ACQUASANTIERA_SCENA_5
+    Now they keep it in a cave nearby, where they have opened a laundry. I'll mark the cave on your map: take it back, before the goblins get too clean.
+
+LA_SPADA_DELL_ACQUASANTIERA_SCENA_6
+    Let's go and do the goblins' laundry.
+
+LA_SPADA_DELL_ACQUASANTIERA_DESCRIZIONE
+    %PARAM_SACERDOTE% asks you to take back a sword that drips holy water from the goblins in the cave marked on the map.
+
+LA_SPADA_DELL_ACQUASANTIERA_POSTO_SEGNATO
+    %PARAM_SACERDOTE% marks the cave of the laundry goblins on the map.
+
+LA_SPADA_DELL_ACQUASANTIERA_NOME_DEL_CAPO
+    Stainbuster
+    Bleachy
+    Softener
+
+LA_SPADA_DELL_ACQUASANTIERA_RICORDO
+    Here %PARAM_CAPO% and his goblins did their washing with a blessed sword.
+
+LA_SPADA_DELL_ACQUASANTIERA_CONSEGNA
+    %PARAM_SACERDOTE% did warn you: keep %PARAM_OGGETTO% by all means, but for heaven's sake don't bring it back to church. It is still dripping.
+
+// The holy man's staff (IlBastoneDelSantone)
+IL_BASTONE_DEL_SANTONE_TITOLO
+    The holy man's staff
+
+IL_BASTONE_DEL_SANTONE_SCENA_1
+    Do you know the holy man of the hermitage? He complains about everything: the weather, the pilgrims, the mosquitoes and the miracles other people botch.
+
+IL_BASTONE_DEL_SANTONE_SCENA_2
+    One day his staff, fed up, walked off on its own. Just like that, without a word.
+
+IL_BASTONE_DEL_SANTONE_SCENA_3
+    A staff that walks off on its own?
+
+IL_BASTONE_DEL_SANTONE_SCENA_4
+    Now it is in some ruins nearby, where a ghost uses it as a walking stick. But it has learned to grumble too, and the ghost can no longer haunt in peace.
+
+IL_BASTONE_DEL_SANTONE_SCENA_5
+    The ghost came here in person to complain, imagine that. Go and take it back, then come back here and tell me: I'll mark the ruins on your map.
+
+IL_BASTONE_DEL_SANTONE_SCENA_6
+    Let's go and free the ghost from the staff.
+
+IL_BASTONE_DEL_SANTONE_DESCRIZIONE
+    %PARAM_SACERDOTE% asks you to take the holy man's staff back from the ghost in the ruins marked on the map, and to come back and report.
+
+IL_BASTONE_DEL_SANTONE_POSTO_SEGNATO
+    %PARAM_SACERDOTE% marks the ruins of the annoyed ghost on the map.
+
+IL_BASTONE_DEL_SANTONE_NOME_DEL_CAPO
+    Moaner
+    Sulky
+    Sighful
+
+IL_BASTONE_DEL_SANTONE_SCONFITTI
+    %PARAM_CAPO% vanishes with a sigh of relief. Among the rubble the staff keeps grumbling: time to go back and report.
+
+IL_BASTONE_DEL_SANTONE_RICORDO
+    Here the ghost %PARAM_CAPO% went for walks with a grumbling staff.
+
+IL_BASTONE_DEL_SANTONE_CONSEGNA
+    %PARAM_SACERDOTE% shakes their head: the holy man has sent word that he does not want it back. Keep %PARAM_OGGETTO%, so at least it grumbles at you.
+
+// The pilgrim's greaves (GliSchinieriDelPellegrino)
+GLI_SCHINIERI_DEL_PELLEGRINO_TITOLO
+    The pilgrim's greaves
+
+GLI_SCHINIERI_DEL_PELLEGRINO_SCENA_1
+    There is a pilgrim who vowed to walk barefoot to every shrine in the Forest. Bare feet, winter and summer.
+
+GLI_SCHINIERI_DEL_PELLEGRINO_SCENA_2
+    The faithful took pity on him and gave him a pair of blessed greaves. He doesn't wear them: he says the vow says nothing about greaves, but you never know. So he drags them along in a sack.
+
+GLI_SCHINIERI_DEL_PELLEGRINO_SCENA_3
+    And what does that have to do with us?
+
+GLI_SCHINIERI_DEL_PELLEGRINO_SCENA_4
+    He got lost in a wood nearby: I'll mark the place on your map. Find him and take him to the nearest city, before he wears his feet out.
+
+GLI_SCHINIERI_DEL_PELLEGRINO_SCENA_5
+    Let's go and look for the pilgrim.
+
+GLI_SCHINIERI_DEL_PELLEGRINO_DESCRIZIONE
+    %PARAM_SACERDOTE% asks you to find the barefoot pilgrim lost in the wood marked on the map, and to take him to the nearest city.
+
+GLI_SCHINIERI_DEL_PELLEGRINO_POSTO_SEGNATO
+    %PARAM_SACERDOTE% marks on the map the wood where the pilgrim got lost.
+
+GLI_SCHINIERI_DEL_PELLEGRINO_NOME
+    Callisto
+    Goodfoot
+    Old Heel
+
+GLI_SCHINIERI_DEL_PELLEGRINO_TROVATO
+    Here is %PARAM_PELLEGRINO%, sitting on a rock rubbing his feet, with a clinking sack beside him. He joins the party as far as the nearest city.
+
+GLI_SCHINIERI_DEL_PELLEGRINO_RICORDO
+    Here the party found %PARAM_PELLEGRINO%, the barefoot pilgrim.
+
+GLI_SCHINIERI_DEL_PELLEGRINO_CONSEGNA
+    In the city %PARAM_PELLEGRINO% says goodbye to the party and leaves them %PARAM_OGGETTO%: “I go barefoot anyway.”
+
 #include_static <nomi_en.txt>

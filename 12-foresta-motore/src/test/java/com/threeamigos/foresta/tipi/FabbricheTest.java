@@ -59,7 +59,7 @@ class FabbricheTest {
         for (TipoIncantesimo classe : TipoIncantesimo.values()) {
             assertNotNull(FabbricaIncantesimi.crea(classe, 1), classe.name());
             classe.getCostoAcquisto();
-            classe.getCostoLancio();
+            classe.getCostoPerBersaglio();
         }
     }
 

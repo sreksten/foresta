@@ -955,7 +955,7 @@ public final class CostantiPersonaggi {
     public static final double FANTASMA_MOLTIPLICATORE_VALORE = 0.4;
     public static final double FANTASMA_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.9;
     public static final double FANTASMA_MOLTIPLICATORE_STANCHEZZA = 0.0;
-    public static final double FANTASMA_MOLTIPLICATORE_DANNI_MAGICI = 1.3;
+    public static final double FANTASMA_MOLTIPLICATORE_DANNI_MAGICI = 1.2;
     public static final double FANTASMA_MOLTIPLICATORE_DANNI_FISICI = 0.2;
     public static final double FANTASMA_MOLTIPLICATORE_RECUPERO_FISICO = 0.0;
     public static final double FANTASMA_MOLTIPLICATORE_RECUPERO_MAGICO = 1.2;
@@ -1183,7 +1183,7 @@ public final class CostantiPersonaggi {
     public static final double OMBRANERA_MOLTIPLICATORE_VALORE = 0.3;
     public static final double OMBRANERA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
     public static final double OMBRANERA_MOLTIPLICATORE_STANCHEZZA = 0.0;
-    public static final double OMBRANERA_MOLTIPLICATORE_DANNI_MAGICI = 1.6;
+    public static final double OMBRANERA_MOLTIPLICATORE_DANNI_MAGICI = 1.4;
     public static final double OMBRANERA_MOLTIPLICATORE_DANNI_FISICI = 1.0;
     public static final double OMBRANERA_MOLTIPLICATORE_RECUPERO_FISICO = 0.0;
     public static final double OMBRANERA_MOLTIPLICATORE_RECUPERO_MAGICO = 1.8;
@@ -1247,7 +1247,7 @@ public final class CostantiPersonaggi {
     public static final double SPETTRO_MOLTIPLICATORE_VALORE = 0.2;
     public static final double SPETTRO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
     public static final double SPETTRO_MOLTIPLICATORE_STANCHEZZA = 0.0;
-    public static final double SPETTRO_MOLTIPLICATORE_DANNI_MAGICI = 1.4;
+    public static final double SPETTRO_MOLTIPLICATORE_DANNI_MAGICI = 1.3;
     public static final double SPETTRO_MOLTIPLICATORE_DANNI_FISICI = 0.3;
     public static final double SPETTRO_MOLTIPLICATORE_RECUPERO_FISICO = 0.0;
     public static final double SPETTRO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.4;
@@ -1279,7 +1279,7 @@ public final class CostantiPersonaggi {
     public static final double SPIRITO_MOLTIPLICATORE_VALORE = 0.9;
     public static final double SPIRITO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.0;
     public static final double SPIRITO_MOLTIPLICATORE_STANCHEZZA = 0.0;
-    public static final double SPIRITO_MOLTIPLICATORE_DANNI_MAGICI = 1.4;
+    public static final double SPIRITO_MOLTIPLICATORE_DANNI_MAGICI = 1.3;
     public static final double SPIRITO_MOLTIPLICATORE_DANNI_FISICI = 0.2;
     public static final double SPIRITO_MOLTIPLICATORE_RECUPERO_FISICO = 0.0;
     public static final double SPIRITO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.4;

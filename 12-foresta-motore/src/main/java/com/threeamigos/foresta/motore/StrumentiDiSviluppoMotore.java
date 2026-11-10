@@ -51,10 +51,15 @@ public class StrumentiDiSviluppoMotore implements StrumentiDiSviluppo {
             MissionePredefinita.IL_VIANDANTE,
             MissionePredefinita.IL_VIAGGIO_DI_OLAF);
 
+    // Le missioni che si offrono in città senza essere incarichi; quelle del sacerdote si offrono anche nelle locande del racconto, ma
+    // forzate partono in città, e saltano l'ordine in cui si offrono (spada, bastone, schinieri)
     private static final Set<MissionePredefinita> IN_CITTA_SENZA_INCARICO = EnumSet.of(
             MissionePredefinita.LA_LEGGENDA_DEL_NEGOZIANTE,
             MissionePredefinita.LA_FALCE_DEL_TRISTO_MIETITORE,
-            MissionePredefinita.LA_LEALTA);
+            MissionePredefinita.LA_LEALTA,
+            MissionePredefinita.LA_SPADA_DELL_ACQUASANTIERA,
+            MissionePredefinita.IL_BASTONE_DEL_SANTONE,
+            MissionePredefinita.GLI_SCHINIERI_DEL_PELLEGRINO);
 
     // Dove parte ogni missione: non cambia mai, e per saperlo di un incarico serve costruirlo
     private static final Map<MissionePredefinita, Optional<DovePartono>> DOVE_PARTONO = new ConcurrentHashMap<>();

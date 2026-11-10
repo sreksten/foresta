@@ -14,6 +14,7 @@ import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.CostantiAbilitaInnate;
+import com.threeamigos.foresta.tipi.CostantiIncantesimi;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -119,9 +120,9 @@ class AnalisiDanniAbilitaInnateTest {
         out.printf("%-26s | %6d | %6d%n", "Sciame (Druido)", CostantiAbilitaInnate.ABILITA_SCIAME_DANNI,
                 CostantiAbilitaInnate.ABILITA_SCIAME_COSTO_LANCIO);
         out.printf("%-26s | %6d | %6d%n", "Dardo arcano (Mago)", CostantiAbilitaInnate.DARDO_ARCANO_DANNI_MAGO,
-                CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_MAGO);
+                CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO);
         out.printf("%-26s | %6d | %6d%n", "Dardo arcano (Elfo)", CostantiAbilitaInnate.DARDO_ARCANO_DANNI_ELFO,
-                CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_ELFO);
+                CostantiIncantesimi.costoPerBersaglio(CostantiAbilitaInnate.DARDO_ARCANO_DANNI_ELFO));
         out.printf("%-26s | %6d | %6d%n", "Martello sacro (Chierico)", CostantiAbilitaInnate.ABILITA_MARTELLO_SACRO_DANNI,
                 CostantiAbilitaInnate.ABILITA_MARTELLO_SACRO_COSTO_LANCIO);
         out.printf("%-26s | %6s | %6d%n", "Attacco alle spalle (Ladro)", "armi x2", CostantiAbilitaInnate.ABILITA_ATTACCO_ALLE_SPALLE_COSTO_LANCIO);
@@ -164,7 +165,7 @@ class AnalisiDanniAbilitaInnateTest {
                     }
                     Personaggio pg = FabbricaPersonaggi.crea(c.classe, 7);
                     lanci.append(String.format(java.util.Locale.ROOT, " %s: %d", c.nome.replaceAll(" \\(.*", ""),
-                            (int) (magiaA7 / ((com.threeamigos.foresta.abilita.Abilita) c.costruttore.apply(pg)).getCostoLancio())));
+                            (int) (magiaA7 / ((com.threeamigos.foresta.abilita.Abilita) c.costruttore.apply(pg)).getCostoPerBersaglio())));
                 }
             }
             out.printf("%s%n", lanci);
@@ -271,7 +272,7 @@ class AnalisiDanniAbilitaInnateTest {
                     danni[b] += CalcolatoreCombattimento.calcolaDannoRisultante(attaccante, bersaglio, abilita).getDanno();
                     salute[b] += bersaglio.getSaluteMassima();
                     if (b == 0) {
-                        costo += abilita instanceof com.threeamigos.foresta.abilita.Abilita ? ((com.threeamigos.foresta.abilita.Abilita) abilita).getCostoLancio() : 0;
+                        costo += abilita instanceof com.threeamigos.foresta.abilita.Abilita ? ((com.threeamigos.foresta.abilita.Abilita) abilita).getCostoPerBersaglio() : 0;
                     }
                 }
             }

@@ -2,6 +2,10 @@ package com.threeamigos.foresta.tipi;
 
 /**
  * I valori di bilanciamento degli incantesimi: i costi di acquisto e di lancio, i danni di ognuno, e i fattori dei colpi a più bersagli.
+ * <p>
+ * Il costo di lancio è <b>per bersaglio</b> (vedi {@link #costoPerBersaglio}): chi lancia paga per ogni personaggio che l'incantesimo
+ * colpisce davvero, e se la Magia non basta per tutti ne colpisce solo quanti ne può pagare. Fa eccezione la Resurrezione, che ha
+ * un costo proprio.
  *
  * @author Stefano Reksten
  */
@@ -22,35 +26,45 @@ public final class CostantiIncantesimi {
     public static final double INCANTESIMO_FATTORE_DANNI = 1.0;
 
     /**
+     * Il costo di lancio per bersaglio di chi fa danno: il danno base diviso per questo valore (parte intera)
+     */
+    public static final int COSTO_LANCIO_DIVISORE_DANNI = 10;
+
+    /**
+     * Il costo di lancio per bersaglio di chi non fa danno (incantesimi, abilità e canti che danno o tolgono stati, curano, proteggono)
+     */
+    public static final int COSTO_LANCIO_SENZA_DANNI = 5;
+
+    /**
      * Incantesimi
      */
     public static final int INCANTESIMO_ACQUA_COSTO_ACQUISTO = 5;
 
-    public static final int INCANTESIMO_ACQUA_COSTO_LANCIO = 1;
+    public static final int INCANTESIMO_ACQUA_COSTO_LANCIO = costoPerBersaglio(CostantiIncantesimi.INCANTESIMO_ACQUA_DANNI);
 
     public static final int INCANTESIMO_ACQUA_DANNI = 45;
 
     public static final int INCANTESIMO_ARIA_COSTO_ACQUISTO = 5;
 
-    public static final int INCANTESIMO_ARIA_COSTO_LANCIO = 1;
+    public static final int INCANTESIMO_ARIA_COSTO_LANCIO = costoPerBersaglio(CostantiIncantesimi.INCANTESIMO_ARIA_DANNI);
 
     public static final int INCANTESIMO_ARIA_DANNI = 35;
 
     public static final int INCANTESIMO_FULMINE_COSTO_ACQUISTO = 15;
 
-    public static final int INCANTESIMO_FULMINE_COSTO_LANCIO = 10;
+    public static final int INCANTESIMO_FULMINE_COSTO_LANCIO = costoPerBersaglio(CostantiIncantesimi.INCANTESIMO_FULMINE_DANNI);
 
     public static final int INCANTESIMO_FULMINE_DANNI = 100;
 
     public static final int INCANTESIMO_FUOCO_COSTO_ACQUISTO = 5;
 
-    public static final int INCANTESIMO_FUOCO_COSTO_LANCIO = 3;
+    public static final int INCANTESIMO_FUOCO_COSTO_LANCIO = costoPerBersaglio(CostantiIncantesimi.INCANTESIMO_FUOCO_DANNI);
 
     public static final int INCANTESIMO_FUOCO_DANNI = 50;
 
     public static final int INCANTESIMO_MORTE_COSTO_ACQUISTO = 5;
 
-    public static final int INCANTESIMO_MORTE_COSTO_LANCIO = 5;
+    public static final int INCANTESIMO_MORTE_COSTO_LANCIO = COSTO_LANCIO_SENZA_DANNI;
 
     public static final int INCANTESIMO_MORTE_DANNI = 0;
 
@@ -61,7 +75,7 @@ public final class CostantiIncantesimi {
 
     public static final int INCANTESIMO_NEBBIA_COSTO_ACQUISTO = 10;
 
-    public static final int INCANTESIMO_NEBBIA_COSTO_LANCIO = 5;
+    public static final int INCANTESIMO_NEBBIA_COSTO_LANCIO = COSTO_LANCIO_SENZA_DANNI;
 
     /**
      * La nebbia toglie questa percentuale (negativa) di PRECISIONE a ogni avversario, per INCANTESIMO_NEBBIA_DURATA turni
@@ -72,7 +86,7 @@ public final class CostantiIncantesimi {
 
     public static final int INCANTESIMO_NEGA_MAGIA_COSTO_ACQUISTO = 12;
 
-    public static final int INCANTESIMO_NEGA_MAGIA_COSTO_LANCIO = 6;
+    public static final int INCANTESIMO_NEGA_MAGIA_COSTO_LANCIO = COSTO_LANCIO_SENZA_DANNI;
 
     /**
      * La nega magia toglie questi punti (negativi) di POTERE_MAGICO a ogni avversario, per INCANTESIMO_NEGA_MAGIA_DURATA turni: il potere magico
@@ -84,7 +98,7 @@ public final class CostantiIncantesimi {
 
     public static final int INCANTESIMO_GRIDO_DI_BATTAGLIA_COSTO_ACQUISTO = 12;
 
-    public static final int INCANTESIMO_GRIDO_DI_BATTAGLIA_COSTO_LANCIO = 6;
+    public static final int INCANTESIMO_GRIDO_DI_BATTAGLIA_COSTO_LANCIO = COSTO_LANCIO_SENZA_DANNI;
 
     /**
      * Il grido di battaglia dà a ogni personaggio vivo del gruppo, per INCANTESIMO_GRIDO_DI_BATTAGLIA_DURATA turni, un numero fisso di punti in più di CORAGGIO e di VALORE
@@ -99,7 +113,7 @@ public final class CostantiIncantesimi {
 
     public static final int INCANTESIMO_TERREMOTO_COSTO_ACQUISTO = 12;
 
-    public static final int INCANTESIMO_TERREMOTO_COSTO_LANCIO = 8;
+    public static final int INCANTESIMO_TERREMOTO_COSTO_LANCIO = costoPerBersaglio(CostantiIncantesimi.INCANTESIMO_TERREMOTO_DANNI);
 
     /**
      * Il danno base del terremoto, che colpisce tutti gli avversari per intero (non è ripartito per posizione): per questo è più basso di quello
@@ -114,7 +128,7 @@ public final class CostantiIncantesimi {
 
     public static final int INCANTESIMO_TEMPESTA_COSTO_ACQUISTO = 15;
 
-    public static final int INCANTESIMO_TEMPESTA_COSTO_LANCIO = 10;
+    public static final int INCANTESIMO_TEMPESTA_COSTO_LANCIO = costoPerBersaglio(CostantiIncantesimi.INCANTESIMO_TEMPESTA_DANNI);
 
     /**
      * Il danno base della tempesta, che colpisce per intero tutti gli avversari e anche tutti i compagni di chi la lancia (tranne lui)
@@ -123,33 +137,44 @@ public final class CostantiIncantesimi {
 
     public static final int INCANTESIMO_TERRORE_COSTO_ACQUISTO = 12;
 
-    public static final int INCANTESIMO_TERRORE_COSTO_LANCIO = 8;
+    public static final int INCANTESIMO_TERRORE_COSTO_LANCIO = COSTO_LANCIO_SENZA_DANNI;
 
     public static final int INCANTESIMO_RESURREZIONE_COSTO_ACQUISTO = 15;
 
+    /**
+     * L'unico costo di lancio che non segue la regola dei danni: la Resurrezione ha sempre un bersaglio solo e costa questo
+     */
     public static final int INCANTESIMO_RESURREZIONE_COSTO_LANCIO = 15;
 
     public static final int INCANTESIMO_SILENZIO_COSTO_ACQUISTO = 5;
 
-    public static final int INCANTESIMO_SILENZIO_COSTO_LANCIO = 5;
+    public static final int INCANTESIMO_SILENZIO_COSTO_LANCIO = COSTO_LANCIO_SENZA_DANNI;
 
     public static final int INCANTESIMO_TERRA_COSTO_ACQUISTO = 5;
 
-    public static final int INCANTESIMO_TERRA_COSTO_LANCIO = 2;
+    public static final int INCANTESIMO_TERRA_COSTO_LANCIO = costoPerBersaglio(CostantiIncantesimi.INCANTESIMO_TERRA_DANNI);
 
     public static final int INCANTESIMO_TERRA_DANNI = 50;
 
     public static final int INCANTESIMO_GELO_COSTO_ACQUISTO = 5;
 
-    public static final int INCANTESIMO_GELO_COSTO_LANCIO = 2;
+    public static final int INCANTESIMO_GELO_COSTO_LANCIO = costoPerBersaglio(CostantiIncantesimi.INCANTESIMO_GELO_DANNI);
 
     public static final int INCANTESIMO_GELO_DANNI = 50;
 
     public static final int INCANTESIMO_VELENO_COSTO_ACQUISTO = 5;
 
-    public static final int INCANTESIMO_VELENO_COSTO_LANCIO = 2;
+    public static final int INCANTESIMO_VELENO_COSTO_LANCIO = costoPerBersaglio(CostantiIncantesimi.INCANTESIMO_VELENO_DANNI);
 
     public static final int INCANTESIMO_VELENO_DANNI = 50;
+
+    /**
+     * Il costo di lancio per bersaglio di un potere (incantesimo, abilità, canto) che fa quel danno base: il danno diviso per
+     * COSTO_LANCIO_DIVISORE_DANNI, o COSTO_LANCIO_SENZA_DANNI se non fa danno
+     */
+    public static int costoPerBersaglio(int danni) {
+        return danni > 0 ? danni / COSTO_LANCIO_DIVISORE_DANNI : COSTO_LANCIO_SENZA_DANNI;
+    }
 
     private CostantiIncantesimi() {
     }

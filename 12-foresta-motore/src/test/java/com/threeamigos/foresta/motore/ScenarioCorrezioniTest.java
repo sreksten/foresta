@@ -182,12 +182,12 @@ class ScenarioCorrezioniTest {
 		Incantesimo resurrezione = FabbricaIncantesimi.crea(TipoIncantesimo.RESURREZIONE, 5);
 		int prima = mago.getMagia();
 		resurrezione.formula(mago, compagno, null);
-		assertEquals(prima - resurrezione.getCostoLancio(), mago.getMagia());
+		assertEquals(prima - resurrezione.getCostoPerBersaglio(), mago.getMagia());
 
 		Incantesimo morte = FabbricaIncantesimi.crea(TipoIncantesimo.MORTE, 5);
 		prima = mago.getMagia();
 		morte.formula(mago, new Troll(1), null);
-		assertEquals(prima - morte.getCostoLancio(), mago.getMagia());
+		assertEquals(prima - morte.getCostoPerBersaglio(), mago.getMagia());
 	}
 
 	@Test

@@ -604,4 +604,265 @@ class AnalisiNonMortiInizioPartitaTest {
 		pg.addMagia(pg.getMagiaMassima());
 		return pg;
 	}
+
+	// --- Tre personaggi contro due Ombre Nere
+
+	/** Come è finito uno scontro di un gruppo di tre */
+	static class EsitoDelTrio {
+		boolean vittoria;
+		int caduti;
+		int round;
+		int lanciDegliAvversari;
+	}
+
+	/**
+	 * Tre personaggi (un capo e due compagni, ogni trio di classi diverse) contro due Ombre Nere dello stesso livello, con il costo di lancio
+	 * per bersaglio: quante volte il gruppo vince con il capo vivo, quanti dei suoi cadono, quanti incantesimi lanciano le Ombre.
+	 */
+	@Disabled("Da eseguire manualmente: tre personaggi contro due Ombre Nere")
+	@Test
+	void treControDueOmbreNere() {
+		final int iterazioni = 200;
+		PrintStream out = System.out;
+		Logger.impostaDestinazione(DestinazioneDiLog.NESSUNA);
+		System.setOut(NULL_STREAM);
+		try {
+			for (int livello : new int[] {1, 3, 5}) {
+				nuovaPartita();
+				Personaggio ombra = FabbricaPersonaggi.crea(TipoPersonaggio.OMBRA_NERA, livello);
+				out.printf(Locale.ROOT, "%n== Livello %d: Ombra Nera con salute %d, magia %d, bersagli %d ==%n", livello, ombra.getSaluteMassima(),
+						ombra.getMagiaMassima(), ombra.getBersagli());
+				java.util.Map<String, double[]> perTrio = new java.util.LinkedHashMap<>();
+				java.util.Map<TipoPersonaggio, long[]> perCapo = new java.util.EnumMap<>(TipoPersonaggio.class);
+				long vittorie = 0, scontri = 0, caduti = 0, lanci = 0, round = 0;
+				for (TipoPersonaggio capo : CAPI) {
+					List<TipoPersonaggio> altri = new java.util.ArrayList<>(CAPI);
+					altri.remove(capo);
+					for (int a = 0; a < altri.size(); a++) {
+						for (int b = a + 1; b < altri.size(); b++) {
+							long v = 0;
+							for (int i = 0; i < iterazioni; i++) {
+								EsitoDelTrio e = scontroDelTrio(Arrays.asList(capo, altri.get(a), altri.get(b)), TipoPersonaggio.OMBRA_NERA, livello);
+								v += e.vittoria ? 1 : 0;
+								caduti += e.caduti;
+								lanci += e.lanciDegliAvversari;
+								round += e.round;
+							}
+							vittorie += v;
+							scontri += iterazioni;
+							perTrio.put(capo + " + " + altri.get(a) + " + " + altri.get(b), new double[] {percentuale(v, iterazioni)});
+							perCapo.computeIfAbsent(capo, c -> new long[2]);
+							perCapo.get(capo)[0] += v;
+							perCapo.get(capo)[1] += iterazioni;
+						}
+					}
+				}
+				out.printf(Locale.ROOT, "Vittorie con il capo vivo: %.1f%% su %d scontri; caduti per scontro %.2f su 3; round %.1f; incantesimi delle due Ombre %.1f%n",
+						percentuale(vittorie, scontri), scontri, media(caduti, scontri), media(round, scontri), media(lanci, scontri));
+				out.print("Per capo:");
+				for (java.util.Map.Entry<TipoPersonaggio, long[]> e : perCapo.entrySet()) {
+					out.printf(Locale.ROOT, " %s %.0f%%", e.getKey(), percentuale(e.getValue()[0], e.getValue()[1]));
+				}
+				out.println();
+				List<java.util.Map.Entry<String, double[]>> ordinati = new java.util.ArrayList<>(perTrio.entrySet());
+				ordinati.sort((x, y) -> Double.compare(y.getValue()[0], x.getValue()[0]));
+				out.println("I cinque trii migliori:");
+				for (java.util.Map.Entry<String, double[]> e : ordinati.subList(0, 5)) {
+					out.printf(Locale.ROOT, "  %-36s %5.1f%%%n", e.getKey(), e.getValue()[0]);
+				}
+				out.println("I cinque trii peggiori:");
+				for (java.util.Map.Entry<String, double[]> e : ordinati.subList(ordinati.size() - 5, ordinati.size())) {
+					out.printf(Locale.ROOT, "  %-36s %5.1f%%%n", e.getKey(), e.getValue()[0]);
+				}
+			}
+		} finally {
+			System.setOut(out);
+			BusEventi.azzera();
+		}
+	}
+
+	/**
+	 * Le armi della Santa Ignoranza contro i non morti: tre personaggi (ogni trio di classi) contro due Ombre Nere e contro il Lich da solo,
+	 * senza armi sacre, con l'arma sacra al capo, a tutti e con il set completo (arma e schinieri del pellegrino).
+	 */
+	@Disabled("Da eseguire manualmente: le armi della Santa Ignoranza contro i non morti")
+	@Test
+	void armiDellaSantaIgnoranzaControINonMorti() {
+		final int iterazioni = 100;
+		PrintStream out = System.out;
+		Logger.impostaDestinazione(DestinazioneDiLog.NESSUNA);
+		System.setOut(NULL_STREAM);
+		List<TipoPersonaggio> incantatori = Arrays.asList(TipoPersonaggio.MAGO, TipoPersonaggio.SACERDOTE, TipoPersonaggio.DRUIDO);
+		try {
+			Object[][] prove = {{TipoPersonaggio.OMBRA_NERA, 2, 3}, {TipoPersonaggio.OMBRA_NERA, 2, 5}, {TipoPersonaggio.LICH, 1, 5}, {TipoPersonaggio.LICH, 1, 8}};
+			for (Object[] prova : prove) {
+				TipoPersonaggio avversario = (TipoPersonaggio) prova[0];
+				int quanti = (Integer) prova[1];
+				int livello = (Integer) prova[2];
+				out.printf(Locale.ROOT, "%n== %d x %s, livello %d ==%n", quanti, avversario, livello);
+				out.printf(Locale.ROOT, "%-14s %9s %9s %9s %9s %9s%n", "dotazione", "tutti", "senza inc.", "con inc.", "caduti", "round");
+				for (DotazioneSacra dotazione : DotazioneSacra.values()) {
+					long vittorie = 0, scontri = 0, vittorieSenza = 0, scontriSenza = 0, caduti = 0, round = 0;
+					for (TipoPersonaggio capo : CAPI) {
+						List<TipoPersonaggio> altri = new java.util.ArrayList<>(CAPI);
+						altri.remove(capo);
+						for (int a = 0; a < altri.size(); a++) {
+							for (int b = a + 1; b < altri.size(); b++) {
+								List<TipoPersonaggio> trio = Arrays.asList(capo, altri.get(a), altri.get(b));
+								boolean senzaIncantatori = trio.stream().noneMatch(incantatori::contains);
+								for (int i = 0; i < iterazioni; i++) {
+									EsitoDelTrio e = scontroDelTrio(trio, avversario, quanti, livello, dotazione);
+									vittorie += e.vittoria ? 1 : 0;
+									scontri++;
+									caduti += e.caduti;
+									round += e.round;
+									if (senzaIncantatori) {
+										vittorieSenza += e.vittoria ? 1 : 0;
+										scontriSenza++;
+									}
+								}
+							}
+						}
+					}
+					out.printf(Locale.ROOT, "%-14s %8.1f%% %8.1f%% %8.1f%% %9.2f %9.1f%n", dotazione, percentuale(vittorie, scontri),
+							percentuale(vittorieSenza, scontriSenza), percentuale(vittorie - vittorieSenza, scontri - scontriSenza),
+							media(caduti, scontri), media(round, scontri));
+				}
+			}
+		} finally {
+			System.setOut(out);
+			BusEventi.azzera();
+		}
+	}
+
+	/**
+	 * Uno scontro come {@link #scontro}, ma con tre personaggi (il primo è il capo: se cade la partita è persa) e senza varianti: gli avversari
+	 * agiscono con la tattica della classe e pagano i loro incantesimi come nel gioco.
+	 */
+	static EsitoDelTrio scontroDelTrio(List<TipoPersonaggio> classi, TipoPersonaggio classeAvversario, int livello) {
+		return scontroDelTrio(classi, classeAvversario, QUANTI_AVVERSARI, livello, DotazioneSacra.NESSUNA);
+	}
+
+	/**
+	 * Quante armi della Santa Ignoranza ha il gruppo: nessuna, una al capo, una a ciascuno, o a ciascuno l'arma e gli schinieri (il set
+	 * completo, con il suo moltiplicatore).
+	 */
+	enum DotazioneSacra {
+		NESSUNA, AL_CAPO, A_TUTTI, SET_COMPLETO
+	}
+
+	/**
+	 * L'arma della Santa Ignoranza che la classe sa usare: il Crocione per il Guerriero, il Pastorale per chi usa il bastone, la Spada
+	 * del Sacrestano per gli altri.
+	 */
+	private static String armaSacraPer(TipoPersonaggio classe) {
+		if (classe == TipoPersonaggio.GUERRIERO) {
+			return "CROCIONE_IGNORANTONE";
+		}
+		if (classe == TipoPersonaggio.MAGO || classe == TipoPersonaggio.SACERDOTE || classe == TipoPersonaggio.DRUIDO) {
+			return "PASTORALE_DEL_PASTORE";
+		}
+		return "SPADA_DEL_SACRESTANO";
+	}
+
+	/**
+	 * Toglie al personaggio armi e scudo e gli fa impugnare l'arma sacra della sua classe (e, con il set, indossare gli schinieri del
+	 * pellegrino al posto dei suoi).
+	 */
+	private static void armaDiSacro(Personaggio pg, int livello, boolean conGliSchinieri) {
+		for (com.threeamigos.foresta.artefatti.Artefatto pezzo : new java.util.ArrayList<>(pg.getInventario())) {
+			com.threeamigos.foresta.tipi.CategoriaArtefatto categoria = pezzo.getTipo().getCategoria();
+			if (categoria == com.threeamigos.foresta.tipi.CategoriaArtefatto.ARMA || categoria == com.threeamigos.foresta.tipi.CategoriaArtefatto.SCUDO
+					|| (conGliSchinieri && categoria == com.threeamigos.foresta.tipi.CategoriaArtefatto.SCHINIERI)) {
+				pg.removeArtefatto(pezzo);
+			}
+		}
+		pg.addArtefatto(com.threeamigos.foresta.artefatti.leggendari.CatalogoLeggendari.getLeggendario(armaSacraPer(pg.getClasse()))
+				.orElseThrow(AssertionError::new).costruisci(livello));
+		if (conGliSchinieri) {
+			pg.addArtefatto(com.threeamigos.foresta.artefatti.leggendari.CatalogoLeggendari.getLeggendario("SCHINIERI_DEL_PELLEGRINO")
+					.orElseThrow(AssertionError::new).costruisci(livello));
+		}
+	}
+
+	static EsitoDelTrio scontroDelTrio(List<TipoPersonaggio> classi, TipoPersonaggio classeAvversario, int quantiAvversari, int livello,
+									   DotazioneSacra dotazione) {
+		BusEventi.azzera();
+		BusEventi.impostaConsegna(Runnable::run);
+		nuovaPartita();
+		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
+		List<Personaggio> miei = new java.util.ArrayList<>();
+		for (int i = 0; i < classi.size(); i++) {
+			Personaggio pg = protagonista(classi.get(i), i == 0 ? "Eroe" : "Amico" + i, livello);
+			if (dotazione == DotazioneSacra.A_TUTTI || dotazione == DotazioneSacra.SET_COMPLETO || (dotazione == DotazioneSacra.AL_CAPO && i == 0)) {
+				armaDiSacro(pg, livello, dotazione == DotazioneSacra.SET_COMPLETO);
+			}
+			miei.add(pg);
+			gruppo.aggiungiPersonaggio(pg);
+		}
+		Personaggio capo = miei.get(0);
+		for (TipoIncantesimo tipo : new TipoIncantesimo[] {TipoIncantesimo.ARIA, TipoIncantesimo.ACQUA, TipoIncantesimo.TERRA}) {
+			gruppo.addIncantesimi(tipo, CostantiMotore.DOTAZIONE_EREMITA_INCANTESIMI_PER_ELEMENTO);
+		}
+		gruppo.addPozioniSalute(CostantiMotore.DOTAZIONE_EREMITA_POZIONI_SALUTE);
+		GruppoAvversario avversari = GruppoAvversario.getIstanza();
+		for (int i = 0; i < quantiAvversari; i++) {
+			Personaggio mostro = FabbricaPersonaggi.crea(classeAvversario, livello);
+			mostro.addMagia(mostro.getMagiaMassima());
+			avversari.aggiungiPersonaggio(mostro);
+		}
+		StatoDelCombattimento stato = StatoDelCombattimento.getIstanza();
+		stato.reimposta();
+		EsecutoreTattiche esecutore = new EsecutoreTattiche(gruppo, avversari, stato, (uccisore, vittima) -> {
+		});
+		EsitoDelTrio esito = new EsitoDelTrio();
+		int passi = 0;
+		while (stato.getRound() <= ROUND_MASSIMI && passi++ < ROUND_MASSIMI * 10) {
+			if (avversari.getPersonaggiVivi().isEmpty()) {
+				esito.vittoria = true;
+				break;
+			}
+			if (!capo.isVivo()) {
+				break;
+			}
+			StatoDelCombattimento.Lato lato = stato.getProssimoLato();
+			boolean fineRound;
+			if (lato == StatoDelCombattimento.Lato.AVVERSARI) {
+				Personaggio avversario = stato.getProssimoAttaccante(avversari);
+				if (avversario == null) {
+					fineRound = stato.registraAzioneSaltata(StatoDelCombattimento.Lato.AVVERSARI);
+				} else {
+					if (!isIncapaceDiAgire(avversario) && !gruppo.getPersonaggiVivi().isEmpty()) {
+						int magiaPrima = avversario.getMagia();
+						esecutore.agisci(avversario, RegistroTattiche.perClasse(avversario.getClasse()));
+						esito.lanciDegliAvversari += avversario.getMagia() < magiaPrima ? 1 : 0;
+					}
+					fineRound = stato.registraAzione(avversario);
+				}
+			} else if (lato == StatoDelCombattimento.Lato.GIOCATORE) {
+				Personaggio attore = stato.getProssimoAttaccante(gruppo);
+				if (attore == null) {
+					fineRound = stato.registraAzioneSaltata(StatoDelCombattimento.Lato.GIOCATORE);
+				} else {
+					if (!isIncapaceDiAgire(attore)) {
+						esecutore.agisci(attore, RegistroTattiche.predefinitaDelGiocabile(attore.getClasse()));
+					}
+					fineRound = stato.registraAzione(attore);
+				}
+			} else {
+				fineRound = true;
+			}
+			if (fineRound && capo.isVivo() && !avversari.getPersonaggiVivi().isEmpty()) {
+				gruppo.trascorriUnTurno();
+				for (Personaggio avversario : avversari.getPersonaggiVivi()) {
+					avversario.trascorriUnTurno();
+				}
+			}
+		}
+		esito.round = Math.max(1, stato.getRound());
+		for (Personaggio pg : miei) {
+			esito.caduti += pg.isVivo() ? 0 : 1;
+		}
+		return esito;
+	}
 }

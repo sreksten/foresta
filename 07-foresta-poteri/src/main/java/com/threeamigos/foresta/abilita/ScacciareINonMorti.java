@@ -59,10 +59,14 @@ public class ScacciareINonMorti implements Abilita {
 			return false;
 		}
 		Collections.shuffle(nonMorti, Dado.sorgente());
-		List<Personaggio> bersagli = nonMorti.subList(0, Math.min(numeroBersagli, nonMorti.size()));
+		// Fino al numero di bersagli di chi la usa, e solo quanti la sua Magia ne può pagare
+		List<Personaggio> bersagli = soloIPagabili(utilizzatore, nonMorti.subList(0, Math.min(numeroBersagli, nonMorti.size())));
+		if (bersagli.isEmpty()) {
+			return false;
+		}
 
 		AnnuncioDellAzione.azione(utilizzatore, bersagli.size() == 1 ? bersagli.get(0) : null, TipoAzione.SCACCIARE_I_NON_MORTI);
-		utilizzatore.subMagia(getCostoLancio());
+		paga(utilizzatore, bersagli.size());
 		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "ScacciareINonMorti.1", utilizzatore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 		for (Personaggio avversario : bersagli) {

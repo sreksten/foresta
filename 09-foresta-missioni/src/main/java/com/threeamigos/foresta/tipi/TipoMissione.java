@@ -38,7 +38,8 @@ public enum TipoMissione {
     MINIERA(CategoriaMissione.ACQUISIZIONE),
     /**
      * Esempio: ritrovare un amuleto o un cimelio di famiglia e riportarlo al legittimo proprietario.
-     * Coperto da: IncaricoDiCombattimento (un oggetto rubato o nascosto si recupera con una riga di INCARICO_DI_COMBATTIMENTO)
+     * Coperto da: IncaricoDiCombattimento (un oggetto rubato o nascosto si recupera con una riga di INCARICO_DI_COMBATTIMENTO),
+     * LaSpadaDellAcquasantiera, IlBastoneDelSantone (gli oggetti sacri del sacerdote, vedi RecuperoDelSacerdote)
      */
     RECUPERO(CategoriaMissione.ACQUISIZIONE),
     /**
@@ -277,7 +278,7 @@ public enum TipoMissione {
     SALVATAGGIO(CategoriaMissione.PROTEZIONE),
     /**
      * Esempio: proteggere un mercante che attraversa un passo di montagna.
-     * Coperto da: IlPellegrino, NonSparateSulPianista, IlViaggioDellaMoglie, IlRapimento
+     * Coperto da: IlPellegrino, NonSparateSulPianista, IlViaggioDellaMoglie, IlRapimento, GliSchinieriDelPellegrino
      */
     SCORTA(CategoriaMissione.PROTEZIONE),
     /**

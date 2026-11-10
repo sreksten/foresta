@@ -10,6 +10,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.gruppi.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.CostantiIncantesimi;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoAzione;
 
@@ -94,6 +95,15 @@ public abstract class AbilitaDiDanno implements Abilita, Arma {
 		return true;
 	}
 
+	/**
+	 * Come per gli incantesimi, il costo per bersaglio segue il danno base, quello di chi la usa al suo livello (il dardo arcano dell'Elfo
+	 * cresce con il livello, e con lui il costo)
+	 */
+	@Override
+	public int getCostoPerBersaglio() {
+		return CostantiIncantesimi.costoPerBersaglio(getDanni());
+	}
+
 	@Override
 	public boolean usa(Personaggio utilizzatore, Gruppo gruppo, Gruppo gruppoAvversario) {
 		return usaSu(utilizzatore, null, gruppo, gruppoAvversario);
@@ -119,6 +129,11 @@ public abstract class AbilitaDiDanno implements Abilita, Arma {
 		if (bersagli.size() > massimo) {
 			bersagli = bersagli.subList(0, massimo);
 		}
+		// Si colpiscono solo i bersagli che la Magia di chi la usa può pagare
+		bersagli = soloIPagabili(utilizzatore, bersagli);
+		if (bersagli.isEmpty()) {
+			return false;
+		}
 		AnnuncioDellAzione.azione(utilizzatore, bersagli.size() == 1 ? bersagli.get(0) : null, getTipo().getTipoAzione());
 		BusEventi.pubblica(new NotificaTestoFrase(getAnnuncio(utilizzatore, bersagli)));
 		// Il danno si ripartisce per posizione, come per gli incantesimi a più bersagli
@@ -126,7 +141,7 @@ public abstract class AbilitaDiDanno implements Abilita, Arma {
 			colpisci(utilizzatore, bersagli.get(posizione), CalcolatoreCombattimento.quotaDelDannoPerPosizione(posizione));
 		}
 		dopoIColpi(utilizzatore);
-		utilizzatore.subMagia(getCostoLancio());
+		paga(utilizzatore, bersagli.size());
 		return true;
 	}
 

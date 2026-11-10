@@ -45,6 +45,9 @@ public final class FabbricaMissioni {
 		COSTRUTTORI.put(MissionePredefinita.IL_PELLEGRINO, IlPellegrino::new);
 		COSTRUTTORI.put(MissionePredefinita.IL_RAPIMENTO, IlRapimento::new);
 		COSTRUTTORI.put(MissionePredefinita.NON_SPARATE_SUL_PIANISTA, NonSparateSulPianista::new);
+		COSTRUTTORI.put(MissionePredefinita.LA_SPADA_DELL_ACQUASANTIERA, LaSpadaDellAcquasantiera::new);
+		COSTRUTTORI.put(MissionePredefinita.IL_BASTONE_DEL_SANTONE, IlBastoneDelSantone::new);
+		COSTRUTTORI.put(MissionePredefinita.GLI_SCHINIERI_DEL_PELLEGRINO, GliSchinieriDelPellegrino::new);
 		COSTRUTTORI.put(MissionePredefinita.IL_VIAGGIO_DELLA_MOGLIE, IlViaggioDellaMoglie::new);
 		COSTRUTTORI.put(MissionePredefinita.CACCIATORE_DI_TAGLIE, CacciatoreDiTaglie::new);
 		COSTRUTTORI.put(MissionePredefinita.IL_CARTOGRAFO, IlCartografo::new);

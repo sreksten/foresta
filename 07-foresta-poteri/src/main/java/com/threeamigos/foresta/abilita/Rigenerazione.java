@@ -62,7 +62,7 @@ public class Rigenerazione implements Abilita {
 		}
 		Personaggio bersaglio = ferito.get();
 		AnnuncioDellAzione.azione(utilizzatore, bersaglio, TipoAzione.RIGENERAZIONE);
-		utilizzatore.subMagia(getCostoLancio());
+		paga(utilizzatore, 1);
 		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "Rigenerazione.2", nome,
 				bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE))));
 		bersaglio.addEffettoDiStato(TipoEffettoDiStato.RIGENERAZIONE, CostantiAbilitaInnate.ABILITA_RIGENERAZIONE_DURATA, 0,

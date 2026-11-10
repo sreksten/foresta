@@ -78,7 +78,7 @@ class IncantesimiTest {
             Incantesimo incantesimo = FabbricaIncantesimi.crea(tipo, 4);
             assertEquals(tipo, incantesimo.getClasse());
             assertEquals(4, incantesimo.getLivello());
-            assertEquals(tipo.getCostoLancio(), incantesimo.getCostoLancio());
+            assertEquals(tipo.getCostoPerBersaglio(), incantesimo.getCostoPerBersaglio());
             if (incantesimo instanceof IncantesimoMalefico) {
                 IncantesimoMalefico malefico = (IncantesimoMalefico) incantesimo;
                 assertTrue(malefico.isMagica());
@@ -173,7 +173,7 @@ class IncantesimiTest {
             }
         };
         // Nessun incantesimo del gioco è globale: si prova con la formula globale della classe base
-        incantesimo.formulaGlobale(mago, null);
+        incantesimo.formulaGlobale(mago, java.util.Collections.emptyList());
         assertTrue(frasi.get(frasi.size() - 1).contains(" formula un "), frasi.toString());
         assertEquals(magiaPrima, mago.getMagia());
     }

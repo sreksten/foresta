@@ -165,6 +165,27 @@ class StrumentiDiSviluppoMotoreTest {
     }
 
     @Test
+    void leMissioniDelSacerdoteSiForzanoInCittaAncheFuoriDallOrdine() {
+        try (PartitaDiTest partita = partitaInCitta()) {
+            partita.rimandaLeMissioniCheSiOffrono();
+            for (MissionePredefinita classe : com.threeamigos.foresta.missioni.storie.RecuperoDelSacerdote.IN_ORDINE) {
+                assertTrue(voce(DovePartono.CITTA, classe).isForzabile(), classe.name());
+            }
+            // Gli schinieri verrebbero dopo la spada e il bastone: forzati, partono lo stesso
+            MissioneAPassi schinieri = missione(MissionePredefinita.GLI_SCHINIERI_DEL_PELLEGRINO);
+            schinieri.controllaPreLocazione();
+            assertEquals("INCARICO", schinieri.getPassoCorrente());
+            strumenti.forzaPartenza(MissionePredefinita.GLI_SCHINIERI_DEL_PELLEGRINO);
+            schinieri.controllaPreLocazione();
+            assertEquals("ACCETTAZIONE", schinieri.getPassoCorrente());
+            schinieri.segnaIntermezzoPassoMostrato("INCARICO");
+            schinieri.controllaInLocazione();
+            assertEquals("in corso", voce(DovePartono.CITTA, MissionePredefinita.GLI_SCHINIERI_DEL_PELLEGRINO).getStato());
+            assertEquals("RICERCA", schinieri.getPassoCorrente());
+        }
+    }
+
+    @Test
     void ilViandanteSiForzaEIncontraSubitoEntrandoInUnBosco() {
         try (PartitaDiTest partita = partitaInCitta()) {
             MissioneAPassi viandante = missione(MissionePredefinita.IL_VIANDANTE);

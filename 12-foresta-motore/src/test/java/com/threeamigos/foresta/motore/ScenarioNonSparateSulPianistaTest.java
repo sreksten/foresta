@@ -30,8 +30,8 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Non sparate sul pianista: alla terza visita a una locanda (di città o del bosco, contate insieme) il locandiere affida al gruppo un bardo ubriaco,
- * da riportare a casa nella città più vicina.
+ * Non sparate sul pianista: in una locanda del racconto (dalla terza locanda conosciuta, di città o del bosco, alla seconda visita a una
+ * locanda nel bosco) il locandiere affida al gruppo un bardo ubriaco, da riportare a casa nella città più vicina.
  */
 class ScenarioNonSparateSulPianistaTest {
 
@@ -65,16 +65,17 @@ class ScenarioNonSparateSulPianistaTest {
     }
 
     @Test
-    void allaTerzaVisitaIlBardoSiAffidaAlGruppoEArrivaACasa() {
+    void nellaLocandaDelRaccontoIlBardoSiAffidaAlGruppoEArrivaACasa() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(151)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
             NonSparateSulPianista pianista = pianista();
             CoordinateMD locanda = unaLocandaNelBosco();
 
             entraNellaLocanda(partita, pianista, locanda, 1);
-            assertFalse(pianista.isAttiva(), "alla seconda visita il locandiere non chiede niente");
+            assertFalse(pianista.isAttiva(), "è la prima locanda che il gruppo conosce: il locandiere non chiede niente");
 
-            entraNellaLocanda(partita, pianista, locanda, 2);
+            partita.conosceAltreDueLocande();
+            entraNellaLocanda(partita, pianista, locanda, 1);
             assertTrue(pianista.isAttiva());
             assertTrue(Foresta.isLocazioneConosciuta(Foresta.getCoordinateLocazioneUnica(pianista.getCitta())),
                     "il locandiere ha detto dove abita il bardo");
@@ -120,6 +121,7 @@ class ScenarioNonSparateSulPianistaTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(152)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
             NonSparateSulPianista pianista = pianista();
+            partita.conosceAltreDueLocande();
             entraNellaLocanda(partita, pianista, unaLocandaNelBosco(), 2);
             Personaggio ugolino = pianista.getScortato().orElseThrow(AssertionError::new);
 
@@ -138,6 +140,7 @@ class ScenarioNonSparateSulPianistaTest {
             partita.gruppo().aggiungiPersonaggio(new Guerriero("Compagno", 1));
             NonSparateSulPianista pianista = pianista();
             CoordinateMD locanda = unaLocandaNelBosco();
+            partita.conosceAltreDueLocande();
             entraNellaLocanda(partita, pianista, locanda, 2);
             assertTrue(pianista.getScortato().isPresent(), "il bardo viaggia con il gruppo");
 
@@ -178,7 +181,7 @@ class ScenarioNonSparateSulPianistaTest {
     }
 
     @Test
-    void laTerzaVisitaContaTutteLeLocandeEBastaChiSiaNuova() {
+    void laLocandaDelRaccontoEDallaTerzaLocandaConosciutaAllaSecondaVisita() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(154)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
             NonSparateSulPianista pianista = pianista();
@@ -194,26 +197,31 @@ class ScenarioNonSparateSulPianistaTest {
             assertFalse(pianista.isAttiva());
             assertNull(pianista.getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE));
 
-            // In una locanda del bosco mai vista, è la terza visita in tutto: il locandiere sostituisce il benvenuto
+            // La terza locanda, alla prima visita: c'è il benvenuto della locanda, non il bardo
             Foresta.setPosizioneDelGruppo(nuova);
-            assertNull(Foresta.getLocazioneMD(nuova).ottieniProprieta(Locande.LOCANDA_VISITATA));
+            pianista.controllaPreLocazione();
+            assertFalse(pianista.staPerAffidareIlBardo());
             assertTrue(new IntermezzoLocandaPrimaVisita().deveScattare(MomentoIntermezzo.INIZIO_LOCAZIONE));
+
+            // Alla seconda visita il locandiere chiede del bardo, al posto della recensione della locanda
+            Foresta.getLocazioneMD(nuova).aggiungiProprieta(Locande.LOCANDA_VISITATA, com.threeamigos.foresta.modellodati.LocazioneMD.AFFERMATIVO);
+            Foresta.getLocazioneMD(nuova).aggiungiProprieta(Locande.LOCANDA_VISITE, "1");
             pianista.controllaPreLocazione();
             assertTrue(pianista.staPerAffidareIlBardo());
-            assertFalse(new IntermezzoLocandaPrimaVisita().deveScattare(MomentoIntermezzo.INIZIO_LOCAZIONE),
-                    "il bardo è il tema dell'incarico: niente fiaba nell'angolo");
         }
     }
 
     @Test
-    void dopoLaScenaDelLocandiereNonScattaAncheLaFiabaDelBardoNellAngolo() {
+    void dopoLaScenaDelLocandiereNonScattaAncheLaRecensioneDellaLocanda() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(156)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
+            partita.gruppo().aggiungiPersonaggio(new Guerriero("Compagno", 1));
             NonSparateSulPianista pianista = pianista();
-            CoordinateMD nuova = unaLocandaNelBosco();
-            Foresta.setPosizioneDelGruppo(nuova);
-            Foresta.getLocazioneMD(nuova).aggiungiProprieta(Locande.LOCANDA_VISITE, "2");
-            assertNull(Foresta.getLocazioneMD(nuova).ottieniProprieta(Locande.LOCANDA_VISITATA));
+            partita.conosceAltreDueLocande();
+            CoordinateMD locanda = unaLocandaNelBosco();
+            Foresta.setPosizioneDelGruppo(locanda);
+            Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locande.LOCANDA_VISITATA, com.threeamigos.foresta.modellodati.LocazioneMD.AFFERMATIVO);
+            Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locande.LOCANDA_VISITE, "1");
             pianista.controllaPreLocazione();
 
             // Come fa Automa agli intermezzi di inizio locazione: prima la scena del locandiere, e poi, se qualcosa scatta ancora, il resto
@@ -223,7 +231,7 @@ class ScenarioNonSparateSulPianistaTest {
             RegistroIntermezzi.segnaScattato(scenaDelLocandiere);
 
             Intermezzo dopo = RegistroIntermezzi.getProssimoIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE);
-            assertNull(dopo, "il locandiere ha già fatto da benvenuto: il bardo non può anche raccontare la fiaba nell'angolo (" + dopo + ")");
+            assertNull(dopo, "il locandiere ha preso il posto della recensione, che è di ripiego (" + dopo + ")");
         }
     }
 
@@ -232,6 +240,7 @@ class ScenarioNonSparateSulPianistaTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(155)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
             NonSparateSulPianista pianista = pianista();
+            partita.conosceAltreDueLocande();
             entraNellaLocanda(partita, pianista, unaLocandaNelBosco(), 2);
             assertTrue(pianista.getScortato().isPresent());
 

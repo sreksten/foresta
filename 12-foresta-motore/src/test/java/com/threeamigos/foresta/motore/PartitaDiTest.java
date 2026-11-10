@@ -480,6 +480,20 @@ final class PartitaDiTest implements AutoCloseable {
 	}
 
 	/**
+	 * Il gruppo è già entrato nelle locande di due città: la prossima locanda nel bosco, dalla seconda visita, è una locanda del racconto
+	 * (vedi LocandaDelRacconto), dove si offrono Non sparate sul pianista, la leggenda del locandiere e le missioni del sacerdote.
+	 */
+	PartitaDiTest conosceAltreDueLocande() {
+		for (TipoLocazione citta : new TipoLocazione[] {TipoLocazione.CITTA_NYENA, TipoLocazione.CITTA_MALGAARD}) {
+			com.threeamigos.foresta.modellodati.LocazioneMD sede = Foresta.getLocazioneMD(Foresta.getCoordinateLocazioneUnica(citta));
+			if (sede.ottieniProprieta(com.threeamigos.foresta.intermezzi.Locande.LOCANDA_VISITE) == null) {
+				sede.aggiungiProprieta(com.threeamigos.foresta.intermezzi.Locande.LOCANDA_VISITE, "1");
+			}
+		}
+		return this;
+	}
+
+	/**
 	 * Riapre una missione rimandata da {@link #rimandaLeMissioniCheSiOffrono()}.
 	 */
 	<T extends Missione> T rendiDisponibile(T missione) {

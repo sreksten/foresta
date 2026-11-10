@@ -118,9 +118,10 @@ public enum TipoIncantesimo {
 	}
 
 	/**
-	 * I punti di Magia che costa lanciarlo.
+	 * I punti di Magia che costa lanciarlo per ogni bersaglio che colpisce (vedi CostantiIncantesimi.costoPerBersaglio): chi lo lancia paga
+	 * questo per il numero di personaggi colpiti davvero. La Resurrezione ha un bersaglio solo e un costo proprio.
 	 */
-	public int getCostoLancio() {
+	public int getCostoPerBersaglio() {
 		return costoLancio;
 	}
 

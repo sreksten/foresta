@@ -27,7 +27,7 @@ Per esercitarsi un potere chiama direttamente le classi del combattimento: `Calc
 
 ### Gli incantesimi
 
-`Incantesimo` ha una classe (`TipoIncantesimo`), un livello, un costo di lancio in magia (lo dice il tipo) e `formula(formulante, personaggioBersaglio, gruppoBersaglio)`. `FabbricaIncantesimi` costruisce quello di ogni tipo o ne sceglie uno a caso.
+`Incantesimo` ha una classe (`TipoIncantesimo`), un livello, un costo di lancio in magia **per bersaglio** (lo dice il tipo, vedi sotto) e `formula(formulante, personaggioBersaglio, gruppoBersaglio)`. `FabbricaIncantesimi` costruisce quello di ogni tipo o ne sceglie uno a caso.
 
 - **Malefici** — aria, acqua, terra, fuoco, fulmine, gelo, veleno, morte e silenzio: estendono `IncantesimoMaleficoImpl`, che per ogni bersaglio tira per colpire e calcola il danno come per un'arma (`Silenzio` applica `SILENZIATO` senza far danno, `Morte` è il colpo di grazia).
 - **Benefici** — la `Resurrezione` (su un compagno scelto) e il `GridoDiBattaglia` (su tutto il gruppo, vedi sotto).
@@ -61,7 +61,9 @@ I valori sono in `CostantiAbilitaInnate`; `AbilitaInnateDiClasse` raccoglie nome
 
 `TipoAzione` ed `EsitoAzione` stanno nel combattimento (le usa la memoria dello scontro). Ogni abilità innata e ogni canto sa qual è la sua azione: `TipoAbilita.getTipoAzione()` e `TipoCanto.getTipoAzione()`; per gli incantesimi c'è `TipoAzione.di(TipoIncantesimo)`.
 
-`OggettoConCostoDiLancio` è il contratto comune di ciò che chi lo usa paga con la magia.
+`OggettoConCostoDiLancio` è il contratto comune di ciò che chi lo usa paga con la magia: incantesimi, abilità innate e canti.
+
+**Il costo di lancio è per bersaglio.** Ognuno ha un costo per bersaglio (`getCostoPerBersaglio`): il danno base diviso 10 (parte intera) per chi fa danno, 5 per chi non ne fa (`CostantiIncantesimi.costoPerBersaglio`, `COSTO_LANCIO_DIVISORE_DANNI`, `COSTO_LANCIO_SENZA_DANNI`). Chi lo usa paga quel costo per ogni personaggio toccato davvero: gli avversari colpiti (fino al suo `NUMERO_BERSAGLI` per i multipli, tutti per i globali; la Tempesta conta anche i compagni), i compagni curati, protetti o incoraggiati. Se la magia non basta per tutti, tocca solo i primi che può pagare (`soloIPagabili`, poi `paga`); se non basta per uno, non si può usare (`isPagabileDa`: è il controllo di `PersonaggioBase.puoFormulare`, `AbilitaInnate.puoUsare`, `CantoDelBardo.puoCantare`, dei comandi del motore e delle tattiche). Le eccezioni: la **Resurrezione** ha un costo proprio, 15, su un solo bersaglio; l'**attacco alle spalle** non costa niente; il **dardo arcano** costa quanto rende al livello di chi lo lancia (`AbilitaDiDanno.getCostoPerBersaglio`, `CostoDelleAbilita.di`): 2 al Mago, all'Elfo 1 al primo livello e 3 al quinto. Gli incantesimi globali dicono chi toccano con `IncantesimoMaleficoImpl.bersagliGlobali` e agiscono su quelli in `formulaGlobale(formulante, bersagli)`. Un mostro lancia sempre su un solo personaggio, e quindi paga un bersaglio.
 
 ## Osservazioni
 

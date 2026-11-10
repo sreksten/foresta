@@ -54,7 +54,7 @@ class DardoArcanoTest {
     }
 
     @Test
-    void alMagoRendeDiPiuECostaMenoCheAllElfo() {
+    void alMagoRendeDiPiuEIlCostoSegueIlDanno() {
         Mago mago = new Mago("Merlino", 5);
         Elfo elfo = new Elfo("Legolas", 5);
         assertEquals(CostantiAbilitaInnate.DARDO_ARCANO_DANNI_MAGO, new DardoArcano(mago).getDanni());
@@ -62,20 +62,23 @@ class DardoArcanoTest {
                 new DardoArcano(elfo).getDanni(), "il dardo dell'Elfo cresce a ogni livello oltre il primo");
         assertEquals(CostantiAbilitaInnate.DARDO_ARCANO_DANNI_ELFO, new DardoArcano(new Elfo("Legolas", 1)).getDanni());
         assertEquals(CostantiAbilitaInnate.DARDO_ARCANO_DANNI_MAGO, new DardoArcano(new Mago("Merlino", 7)).getDanni(), "quello del Mago no");
-        assertEquals(CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_MAGO, new DardoArcano(mago).getCostoLancio());
-        assertEquals(CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_ELFO, new DardoArcano(elfo).getCostoLancio());
+        // Il costo è il danno base diviso 10: 2 per il Mago, 3 per l'Elfo al quinto livello (31 di danno), 1 al primo
+        assertEquals(CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO, new DardoArcano(mago).getCostoPerBersaglio());
+        assertEquals(3, new DardoArcano(elfo).getCostoPerBersaglio());
+        assertEquals(1, new DardoArcano(new Elfo("Legolas", 1)).getCostoPerBersaglio());
         // Il Mago con il suo bastone e il suo libro: senza, dal quarto livello in poi il dardo dell'Elfo (che cresce coi livelli) lo supererebbe
         Equipaggiamento.BASTONE_LIBRO_E_VESTE.equipaggia(mago);
         assertTrue(danno(mago) > danno(elfo));
     }
 
     @Test
-    void lElfoHaBisognoDiPiuMagia() {
+    void lElfoAlQuintoLivelloHaBisognoDiPiuMagia() {
+        // Al quinto livello il dardo dell'Elfo fa più danno di quello del Mago (prima di bastone e libro), e quindi costa di più
         Elfo elfo = new Elfo("Legolas", 5);
-        elfo.subMagia(elfo.getMagia() - CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_MAGO);
+        elfo.subMagia(elfo.getMagia() - CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO);
         assertFalse(AbilitaInnate.puoUsare(elfo, TipoAbilita.DARDO_ARCANO));
         Mago mago = new Mago("Merlino", 5);
-        mago.subMagia(mago.getMagia() - CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_MAGO);
+        mago.subMagia(mago.getMagia() - CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO);
         assertTrue(AbilitaInnate.puoUsare(mago, TipoAbilita.DARDO_ARCANO));
     }
 

@@ -49,7 +49,7 @@ class RicaricaDelleAbilitaTest {
     @Test
     void ilCantoCheCuraDiPiuNonCostaDiMenoDiChiCuraDiMeno() {
         assertTrue(CostantiCanti.CANTO_CURATIVO_BASE > CostantiAbilitaInnate.ABILITA_IMPOSIZIONE_DELLE_MANI_BASE);
-        assertTrue(TipoCanto.CURATIVO.getCostoLancio() > TipoAbilita.IMPOSIZIONE_DELLE_MANI.getCostoLancio());
+        assertTrue(TipoCanto.CURATIVO.getCostoPerBersaglio() >= TipoAbilita.IMPOSIZIONE_DELLE_MANI.getCostoPerBersaglio());
     }
 
     @Test

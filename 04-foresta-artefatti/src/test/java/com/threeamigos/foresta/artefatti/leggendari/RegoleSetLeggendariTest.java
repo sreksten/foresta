@@ -130,4 +130,15 @@ class RegoleSetLeggendariTest {
             assertEquals("Set completo: Banda (bonus x2)", RegoleSetLeggendari.descrizioneSetCompleto(set), articolo);
         }
     }
+
+    @Test
+    void iTestiDeiSetSonoNellaLinguaInUso() {
+        com.threeamigos.foresta.testi.Testi.impostaLingua("en");
+        try {
+            SetLeggendario set = SetLeggendario.da("CHIAVE=A;NOME=the Gang;MOLTIPLICATORE=1.5");
+            assertEquals("Complete set: Gang (bonus x1.5)", RegoleSetLeggendari.descrizioneSetCompleto(set));
+        } finally {
+            com.threeamigos.foresta.testi.Testi.impostaLingua(null);
+        }
+    }
 }

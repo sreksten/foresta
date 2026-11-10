@@ -9,6 +9,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.tipi.TipoAzione;
 import com.threeamigos.foresta.testi.Testi;
+import java.util.List;
 
 /**
  * L'alba sacra: l'abilità innata di Sacerdote e Sacerdotessa che toglie al gruppo gli stati alterati negativi e i modificatori temporanei
@@ -36,11 +37,13 @@ public class AlbaSacra implements Abilita {
 		AnnuncioDellAzione.azione(utilizzatore, null, TipoAzione.ALBA_SACRA);
 		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "AlbaSacra.invoca", utilizzatore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
-		for (Personaggio personaggio : gruppo.getPersonaggi()) {
+		// Si paga per ogni compagno vivo toccato: con poca Magia l'alba ne raggiunge solo i primi
+		List<Personaggio> toccati = soloIPagabili(utilizzatore, gruppo.getPersonaggiVivi());
+		for (Personaggio personaggio : toccati) {
 			personaggio.rimuoviGliEffettiDiStatoNegativi();
 			personaggio.rimuoviIModificatoriTemporaneiRimovibili();
 		}
-		utilizzatore.subMagia(getCostoLancio());
+		paga(utilizzatore, toccati.size());
 		return true;
 	}
 }

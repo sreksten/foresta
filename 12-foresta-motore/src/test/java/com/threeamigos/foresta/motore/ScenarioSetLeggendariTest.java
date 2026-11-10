@@ -49,8 +49,9 @@ class ScenarioSetLeggendariTest {
         for (SetLeggendario set : CatalogoLeggendari.getTuttiISet().values()) {
             List<String> pezzi = pezziDi(set);
             assertTrue(pezzi.size() >= 2, set.getChiave());
-            // I pezzi sono proprio i leggendari che nominano il set
-            assertEquals(CatalogoLeggendari.getTuttiILeggendari().values().stream()
+            // I pezzi sono proprio i leggendari che nominano il set, anche quelli di bottino
+            assertEquals(java.util.stream.Stream.concat(CatalogoLeggendari.getTuttiILeggendari().values().stream(),
+                                    CatalogoLeggendari.getTuttiIBottini().values().stream())
                             .filter(leggendario -> set.getChiave().equals(leggendario.getSet()))
                             .map(OggettoLeggendario::getChiave).sorted().collect(Collectors.toList()),
                     pezzi.stream().sorted().collect(Collectors.toList()));
@@ -59,8 +60,10 @@ class ScenarioSetLeggendariTest {
                 assertEquals(set.getChiave(), md.getSetLeggendario());
                 assertEquals(pezzo, md.getPezzoLeggendario());
                 String descrizione = RegoleSetLeggendari.descrizioneSet(md).orElseThrow(AssertionError::new);
-                assertTrue(descrizione.startsWith("Pezzo ") && descrizione.endsWith("(bonus x" + italiano(set.getMoltiplicatore()) + ")"),
+                assertTrue(descrizione.startsWith("Pezzo ") && descrizione.endsWith("bonus x" + italiano(set.getMoltiplicatore()) + ")"),
                         descrizione);
+                // Un set che si completa con una parte dei pezzi dice quanti ne bastano
+                assertEquals(set.isCompletabileInParte(), descrizione.contains("ne bastano "), descrizione);
                 // I tipi dei pezzi, nell'ordine dei tipi
                 assertEquals(pezzi.stream().map(p -> Leggendari.con(p).getTipo().getDescrizione()).collect(Collectors.joining(", ")),
                         RegoleSetLeggendari.tipiDelSet(md).orElseThrow(AssertionError::new));

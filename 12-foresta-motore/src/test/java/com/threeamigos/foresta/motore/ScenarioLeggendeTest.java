@@ -179,7 +179,7 @@ class ScenarioLeggendeTest {
     }
 
     @Test
-    void ilLocandiereRaccontaDallaTerzaVisitaEDopoTrentaseiOreUnAltroLeggendario() {
+    void ilLocandiereRaccontaNellaLocandaDelRaccontoEDopoTrentaseiOreUnAltroLeggendario() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(42)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             LaLeggenda armaiolo = trova(LaLeggendaDelNegoziante.class);
@@ -191,13 +191,16 @@ class ScenarioLeggendeTest {
             CoordinateMD locanda = unaLocanda();
             Foresta.setPosizioneDelGruppo(locanda);
             LaLeggenda locandiere = trova(LaLeggendaDelLocandiere.class);
-            // Alla prima e alla seconda visita no
-            Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locande.LOCANDA_VISITE, "1");
+            // Alla prima visita no, e neanche alla seconda se è la prima locanda che il gruppo conosce
+            Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locande.LOCANDA_VISITE, "0");
             LineaTemporale.aggiungiOre(LaLeggenda.ORE_FRA_DUE_LEGGENDE);
             locandiere.controllaPreLocazione();
             assertNull(locandiere.getLeggendario());
-            // Alla terza sì, ma non prima di trentasei ore dall'altra leggenda
-            Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locande.LOCANDA_VISITE, "2");
+            Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locande.LOCANDA_VISITE, "1");
+            locandiere.controllaPreLocazione();
+            assertNull(locandiere.getLeggendario());
+            // Dalla terza locanda conosciuta, alla seconda visita, sì, ma non prima di trentasei ore dall'altra leggenda
+            partita.conosceAltreDueLocande();
             armaiolo.aggiungiProprieta("RACCONTATA_ALLE", String.valueOf(LineaTemporale.getGiorno() * 24L + LineaTemporale.getOra() - 1));
             locandiere.controllaPreLocazione();
             assertNull(locandiere.getLeggendario());

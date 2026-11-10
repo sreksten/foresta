@@ -357,7 +357,7 @@ I riquadri, le schermate e la barra **non sono componenti di un toolkit**: sono 
 
 ## Osservazioni
 
-- Questa guida descrive lo stato al 2026-11-09: 33 moduli Maven, 3633 test, tutti verdi (31 saltati).
+- Questa guida descrive lo stato al 2026-11-10: 33 moduli Maven, 3655 test, tutti verdi (37 saltati).
 
 ## Da fare / idee aperte
 

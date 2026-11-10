@@ -39,11 +39,11 @@ public class Terrore extends IncantesimoMaleficoImpl implements IncantesimoGloba
 	}
 
 	@Override
-	protected void formulaGlobale(Personaggio formulante, Gruppo gruppoAvversario) {
+	protected void formulaGlobale(Personaggio formulante, List<Personaggio> bersagli) {
 		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "Terrore.1", formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 		StatoDelCombattimento stato = StatoDelCombattimento.getIstanza();
-		for (Personaggio avversario : gruppoAvversario.getPersonaggiVivi()) {
+		for (Personaggio avversario : bersagli) {
 			String nome = avversario.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
 			if (avversario.isImmuneAIncantesimo(getClasse()) || avversario.isImmuneAEffetto(TipoEffettoDiStato.SPAVENTATO)) {
 				BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "Terrore.2", nome)));

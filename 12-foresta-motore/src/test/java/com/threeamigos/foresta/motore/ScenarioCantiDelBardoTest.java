@@ -100,7 +100,9 @@ class ScenarioCantiDelBardoTest {
             long colpiti = avversari.getPersonaggiVivi().stream()
                     .filter(a -> a.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO) || a.hasEffettoDiStato(TipoEffettoDiStato.CONFUSO)).count();
             assertTrue(colpiti >= 1, "almeno un avversario ha ceduto");
-            assertEquals(magia - CostantiCanti.CANTO_IPNOTICO_COSTO_LANCIO, bardo.getMagia());
+            // Si paga per ogni avversario toccato, che abbia ceduto o no
+            int spesa = magia - bardo.getMagia();
+            assertTrue(spesa >= CostantiCanti.CANTO_IPNOTICO_COSTO_LANCIO && spesa % CostantiCanti.CANTO_IPNOTICO_COSTO_LANCIO == 0, "spesa " + spesa);
         }
     }
 

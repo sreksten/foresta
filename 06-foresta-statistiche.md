@@ -39,6 +39,7 @@ Il tempo ha una **scadenza**. Il dato è `LineaTemporaleMD` (giorno e ora corren
 - fa avanzare il tempo (`aggiungiOre`, anche più di un giorno alla volta, `mattinoSeguente`, `oreFinoAlMattino`) e descrive l'ora del giorno (`getDescrizioneOraDelGiorno`);
 - applica gli **eventi del calendario** (`eventi(gruppo)`, e `eventiDiNotte(gruppo)` per l'alba dopo una notte): dal giorno **20** il Drago distrugge una città ogni cinque giorni (Ruuna al 20, Nyena al 25, Fleena al 30, Malgaard al 35) e oltre il giorno **40** il gioco è perduto (`isGiocoFinito`). La distruzione trasforma la città in rovine sulla mappa e viene raccontata con una colonna di fumo nella direzione giusta; se il gruppo è proprio in quella città, o ci ha dormito, il testo cambia (scampa per un pelo, o trova solo le rovine);
 - tiene l'ultimo evento da mostrare nel dato, così un salvataggio fatto prima di mostrarlo non lo perde; `getEvento()` lo consuma;
+- `getEventoDellaSconfitta(gruppo)` dà il racconto della sconfitta quando la partita è finita: l'evento in sospeso o, se manca, quello della fine dei giorni (l'accampamento lo usa per chiudere una partita persa senza mai annunciare un testo vuoto);
 - `setDragoSconfitto` chiude la partita con la vittoria.
 
 ### I contratti

@@ -103,7 +103,7 @@ public final class LibroTecnico {
 	}
 
 	/**
-	 * Tutti i libri tecnici, nell'ordine in cui li dà la grammatica (casuale). Si leggono una volta sola, controllando che
+	 * Tutti i libri tecnici, nell'ordine in cui li dà la grammatica (quello del file). Si leggono una volta sola, controllando che
 	 * le chiavi siano tutte diverse.
 	 */
 	public static synchronized Collection<LibroTecnico> tutti() {

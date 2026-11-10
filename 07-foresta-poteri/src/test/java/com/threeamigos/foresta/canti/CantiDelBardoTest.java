@@ -166,7 +166,7 @@ class CantiDelBardoTest {
         ferito.addSalute(100000);
         CantoCurativo canto = (CantoCurativo) FabbricaCanti.crea(TipoCanto.CURATIVO, bardo);
         assertEquals(TipoCanto.CURATIVO, canto.getTipo());
-        assertEquals(TipoCanto.CURATIVO.getCostoLancio(), canto.getCostoLancio());
+        assertEquals(TipoCanto.CURATIVO.getCostoPerBersaglio(), canto.getCostoPerBersaglio());
         assertTrue(canto.getCura() > 0);
         assertFalse(canto.canta(bardo, gruppo, avversari));
         assertTrue(frasi.get(frasi.size() - 1).contains("nessuno ha bisogno di cure"), frasi.toString());
@@ -257,7 +257,7 @@ class CantiDelBardoTest {
     void ilCantoCurativoSiRiconosceDalNomeDelTipo() {
         for (TipoCanto tipo : TipoCanto.values()) {
             assertNotNull(tipo.getTipoAzione());
-            assertTrue(tipo.getCostoLancio() > 0);
+            assertTrue(tipo.getCostoPerBersaglio() > 0);
             assertTrue(tipo.getRicarica() > 0);
             assertNotNull(tipo.getNome());
             assertNotNull(tipo.getDescrizione());

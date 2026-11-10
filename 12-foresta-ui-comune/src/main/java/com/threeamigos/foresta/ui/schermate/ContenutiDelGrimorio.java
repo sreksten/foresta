@@ -108,6 +108,16 @@ public final class ContenutiDelGrimorio {
 	/**
 	 * Il nome dell'immagine dell'icona dell'incantesimo: la stessa del suo comando
 	 */
+	/**
+	 * Il costo di lancio: per bersaglio per chi ne colpisce più d'uno (MULTIPLO e GLOBALE), intero per chi ne ha uno solo (il Silenzio,
+	 * anche se è di GRUPPO, ne silenzia uno)
+	 */
+	static String costoDiLancio(TipoIncantesimo voce) {
+		PortataIncantesimo portata = voce.getPortata();
+		boolean perBersaglio = portata == PortataIncantesimo.MULTIPLO || portata == PortataIncantesimo.GLOBALE;
+		return TestiDellaUI.get(perBersaglio ? "GRIMORIO_COSTO_DI_LANCIO_PER_BERSAGLIO" : "GRIMORIO_COSTO_DI_LANCIO", voce.getCostoPerBersaglio());
+	}
+
 	static String risorsaDellIcona(TipoIncantesimo voce) {
 		return TipoIcona.ofComando(ComandiAssociati.di(voce)).getNomeRisorsa();
 	}
@@ -146,7 +156,7 @@ public final class ContenutiDelGrimorio {
 			// La nota: i danni veri dipendono da chi lancia e da quel che porta
 			colonna.testo(righe(MEDIO, TestiDellaUI.get("GRIMORIO_DANNI_BASE_NOTA"), larghezza), MEDIO, DoomdarkColorModel.Color.MEDIUM_GRAY, 0, 2);
 		}
-		colonna.testo(righe(MEDIO, TestiDellaUI.get("GRIMORIO_COSTO_DI_LANCIO", voce.getCostoLancio()), larghezza), MEDIO,
+		colonna.testo(righe(MEDIO, costoDiLancio(voce), larghezza), MEDIO,
 				DoomdarkColorModel.Color.LIGHT_GRAY, 0, 4);
 		colonna.testo(righe(MEDIO, TestiDellaUI.get("GRIMORIO_COSTO_PERGAMENA", voce.getCostoAcquisto()), larghezza), MEDIO,
 				DoomdarkColorModel.Color.LIGHT_GRAY, 0, 4);

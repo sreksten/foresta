@@ -117,7 +117,8 @@ class SacerdoteTest {
         assertTrue(AbilitaInnate.abilitaUtili(sacerdote, gruppo, nessuno).contains(TipoAbilita.ALBA_SACRA));
         int magiaPrima = sacerdote.getMagia();
         assertTrue(FabbricaAbilita.crea(TipoAbilita.ALBA_SACRA, sacerdote).usa(sacerdote, gruppo, nessuno));
-        assertEquals(magiaPrima - CostantiAbilitaInnate.ABILITA_ALBA_SACRA_COSTO_LANCIO, sacerdote.getMagia());
+        // Si paga per ogni compagno vivo toccato: il sacerdote e il compagno
+        assertEquals(magiaPrima - 2 * CostantiAbilitaInnate.ABILITA_ALBA_SACRA_COSTO_LANCIO, sacerdote.getMagia());
         assertFalse(compagno.hasEffettoDiStato(TipoEffettoDiStato.AVVELENATO));
         assertFalse(AbilitaInnate.abilitaUtili(sacerdote, gruppo, nessuno).contains(TipoAbilita.ALBA_SACRA), "ora non serve più");
     }

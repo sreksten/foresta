@@ -1108,7 +1108,13 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		// Superato l'ultimo giorno la partita è persa subito: tornando ad ATTESA_DIREZIONE la si potrebbe ancora
 		// salvare, e la sconfitta si vedrebbe solo al passo seguente
 		if (LineaTemporale.isGiocoFinito()) {
-			BusEventi.pubblica(new NotificaTestoFrase(LineaTemporale.getEvento()));
+			// Come a fine locazione: finita con il Drago battuto è una vittoria, altrimenti si racconta la sconfitta (anche se l'evento
+			// della notte è già stato mostrato: vedi LineaTemporale.getEventoDellaSconfitta)
+			if (RegistroMissioni.getMissionePrincipale().isCompleta()) {
+				stato = Stato.GIOCO_VINTO;
+				return Esito.CONTINUA_CON_INGRESSO;
+			}
+			BusEventi.pubblica(new NotificaTestoFrase(LineaTemporale.getEventoDellaSconfitta(gruppo)));
 			stato = Stato.GIOCO_PERSO;
 			return Esito.CONTINUA_CON_INGRESSO;
 		}
@@ -1271,7 +1277,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		inOrdine.remove(TipoIncantesimo.SILENZIO);
 		inOrdine.add(0, TipoIncantesimo.SILENZIO);
 		for (TipoIncantesimo tipoIncantesimo : inOrdine) {
-			if (gruppo.getIncantesimi(tipoIncantesimo) > 0 && formulante.getMagia() >= tipoIncantesimo.getCostoLancio()) {
+			if (gruppo.getIncantesimi(tipoIncantesimo) > 0 && formulante.getMagia() >= tipoIncantesimo.getCostoPerBersaglio()) {
 				comandiPossibili.add(ComandiAssociati.di(tipoIncantesimo));
 				comandiVisibili.add(ComandiAssociati.di(tipoIncantesimo));
 			}
@@ -1376,10 +1382,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				stato = Stato.GIOCO_VINTO;
 			} else {
 				// Il tempo è finito durante la locazione (la notte in una locanda): la sconfitta si racconta qui
-				String evento = LineaTemporale.getEvento();
-				if (evento != null) {
-					BusEventi.pubblica(new NotificaTestoFrase(evento));
-				}
+				BusEventi.pubblica(new NotificaTestoFrase(LineaTemporale.getEventoDellaSconfitta(gruppo)));
 				stato = Stato.GIOCO_PERSO;
 			}
 			return Esito.CONTINUA_CON_INGRESSO;
@@ -2441,7 +2444,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 * nell'ordine del gruppo; vuota se nessuno può farlo.
 	 */
 	private List<Personaggio> trovaFormulantiResurrezione() {
-		int costoLancio = TipoIncantesimo.RESURREZIONE.getCostoLancio();
+		int costoLancio = TipoIncantesimo.RESURREZIONE.getCostoPerBersaglio();
 		List<Personaggio> formulanti = new ArrayList<>();
 		for (Personaggio personaggioCorrente : gruppo.getPersonaggiVivi()) {
 			if (personaggioCorrente.getMagia() >= costoLancio) {

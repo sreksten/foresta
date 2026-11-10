@@ -51,10 +51,14 @@ public class UrloDellaBanshee implements Canto {
 			return false;
 		}
 		Collections.shuffle(ascoltatori, Dado.sorgente());
-		List<Personaggio> bersagli = ascoltatori.subList(0, Math.min(numeroBersagli, ascoltatori.size()));
+		// Fino al numero di bersagli del cantore, e solo quanti la sua Magia ne può pagare
+		List<Personaggio> bersagli = soloIPagabili(cantore, ascoltatori.subList(0, Math.min(numeroBersagli, ascoltatori.size())));
+		if (bersagli.isEmpty()) {
+			return false;
+		}
 
 		AnnuncioDellAzione.azione(cantore, bersagli.size() == 1 ? bersagli.get(0) : null, TipoAzione.URLO_DELLA_BANSHEE);
-		cantore.subMagia(getCostoLancio());
+		paga(cantore, bersagli.size());
 		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "UrloDellaBanshee.1", cantore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 		for (Personaggio avversario : bersagli) {

@@ -223,7 +223,7 @@ public class TestScontriDiGruppo {
         }
         double conMischia = atteseMischia(chi, bersaglio);
         double conDardo = AbilitaInnate.puoUsare(chi, TipoAbilita.DARDO_ARCANO) ? atteseDardo(chi, bersaglio) : 0;
-        boolean puoPergamena = scorta[0] > 0 && chi.getMagia() >= pergamena(chi).getCostoLancio();
+        boolean puoPergamena = scorta[0] > 0 && chi.getMagia() >= pergamena(chi).getCostoPerBersaglio();
         double conPergamena = puoPergamena ? attesePergamena(chi, avversari) : 0;
         if (conPergamena > conMischia && conPergamena >= conDardo) {
             scorta[0]--;
@@ -231,7 +231,7 @@ public class TestScontriDiGruppo {
         } else if (conDardo > conMischia) {
             DardoArcano dardo = new DardoArcano(chi);
             colpisci(chi, bersaglio, dardo, 1.0d);
-            chi.subMagia(dardo.getCostoLancio());
+            chi.subMagia(dardo.getCostoPerBersaglio());
         } else {
             mischia(chi, avversari);
         }
@@ -269,7 +269,7 @@ public class TestScontriDiGruppo {
                 colpisci(formulante, bersaglio, incantesimo, quotaDellaPosizione(incantesimo, posizione));
             }
         }
-        formulante.subMagia(incantesimo.getCostoLancio());
+        formulante.subMagia(incantesimo.getCostoPerBersaglio());
     }
 
     /**

@@ -116,7 +116,7 @@ public final class Filtri {
 		TipoPersonaggio classe = candidato.getClasse();
 		if (CantoDelBardo.conosciutoDa(classe)
 				|| AbilitaInnate.conosciutaDaPerMagia(classe)) {
-			return !CantoDelBardo.cantiPossibili(candidato).isEmpty() || AbilitaInnate.abilitaPossibili(candidato).stream().anyMatch(a -> a.getCostoLancio() > 0);
+			return !CantoDelBardo.cantiPossibili(candidato).isEmpty() || AbilitaInnate.abilitaPossibili(candidato).stream().anyMatch(a -> a.getCostoPerBersaglio() > 0);
 		}
 		if (contesto.isMostro(candidato)) {
 			return candidato.isMagico() && candidato.getMagia() > 0;

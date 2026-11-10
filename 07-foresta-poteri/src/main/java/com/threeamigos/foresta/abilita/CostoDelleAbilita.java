@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.abilita;
 
-import com.threeamigos.foresta.tipi.CostantiAbilitaInnate;
+import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoAbilita;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
- * Quanto costa un'abilità innata a una data classe: uguale per tutti, tranne il dardo arcano, che costa meno al Mago (e alla Maga) che
- * all'Elfo (e all'Elfa). Il costo base, quello del Mago, lo dà {@link TipoAbilita#getCostoLancio()}.
+ * Quanto costa per ogni bersaglio un'abilità innata a un dato personaggio: per quasi tutte lo dice il tipo, ma il dardo arcano costa quanto
+ * rende, e il suo danno dipende dalla classe e (per l'Elfo) dal livello di chi lo lancia. Per questo il costo lo dà l'abilità costruita
+ * per lui (vedi {@link AbilitaDiDanno#getCostoPerBersaglio()}).
  */
 public final class CostoDelleAbilita {
 
@@ -14,12 +14,9 @@ public final class CostoDelleAbilita {
 	}
 
 	/**
-	 * I punti di Magia che costa usare quell'abilità a quella classe.
+	 * I punti di Magia che costa a quel personaggio usare quell'abilità su un bersaglio.
 	 */
-	public static int di(TipoAbilita tipo, TipoPersonaggio classe) {
-		if (tipo == TipoAbilita.DARDO_ARCANO && classe != TipoPersonaggio.MAGO && classe != TipoPersonaggio.MAGA) {
-			return CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_ELFO;
-		}
-		return tipo.getCostoLancio();
+	public static int di(TipoAbilita tipo, Personaggio personaggio) {
+		return FabbricaAbilita.crea(tipo, personaggio).getCostoPerBersaglio();
 	}
 }

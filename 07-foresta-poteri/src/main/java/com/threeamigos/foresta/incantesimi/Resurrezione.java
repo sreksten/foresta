@@ -51,8 +51,8 @@ public class Resurrezione implements Incantesimo {
 			BusEventi.pubblica(new NotificaTestoFrase(notifica));
 			personaggioBersaglio.resuscita();
 		}
-		// Come gli altri incantesimi (IncantesimoMaleficoImpl.formula), il lancio costa Magia
-		formulante.subMagia(getCostoLancio());
+		// Come gli altri incantesimi (IncantesimoMaleficoImpl.formula), il lancio costa Magia: un bersaglio, al costo proprio della Resurrezione
+		paga(formulante, 1);
 		StatoDelCombattimento.getIstanza().registraIncantesimoLanciato(formulante);
 		StatoDelCombattimento.getIstanza().registraAlleato(formulante, personaggioBersaglio);
 	}

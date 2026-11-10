@@ -15,11 +15,11 @@ public interface Abilita extends OggettoConCostoDiLancio {
 	TipoAbilita getTipo();
 
 	/**
-	 * La Magia che costa: la dice il suo tipo.
+	 * La Magia che costa per ogni bersaglio: la dice il suo tipo (un'abilità di danno la calcola dal suo danno, vedi AbilitaDiDanno).
 	 */
 	@Override
-	default int getCostoLancio() {
-		return getTipo().getCostoLancio();
+	default int getCostoPerBersaglio() {
+		return getTipo().getCostoPerBersaglio();
 	}
 
 	/**

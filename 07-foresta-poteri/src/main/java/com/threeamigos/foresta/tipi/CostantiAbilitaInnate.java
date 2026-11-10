@@ -8,9 +8,10 @@ package com.threeamigos.foresta.tipi;
 public final class CostantiAbilitaInnate {
 
     /**
-     * Le abilità innate di Chierico, Druido, Sacerdote, Mago ed Elfo (vedi TipoAbilita): costano Magia, non consumano pergamene
+     * Le abilità innate di Chierico, Druido, Sacerdote, Mago ed Elfo (vedi TipoAbilita): costano Magia, non consumano pergamene. Come gli
+     * incantesimi costano per ogni bersaglio: il danno base diviso 10, o 5 se non fanno danno (vedi CostantiIncantesimi.costoPerBersaglio)
      */
-    public static final int ABILITA_SCACCIARE_I_NON_MORTI_COSTO_LANCIO = 4;
+    public static final int ABILITA_SCACCIARE_I_NON_MORTI_COSTO_LANCIO = CostantiIncantesimi.COSTO_LANCIO_SENZA_DANNI;
 
     /**
      * La ricarica di ogni abilità: i turni (round completi di combattimento, o passi fra una locazione e l'altra) che devono passare prima di
@@ -23,7 +24,7 @@ public final class CostantiAbilitaInnate {
     /**
      * Scacciare i non morti: ognuno cede con la SOGGEZIONE del chierico contro il suo CORAGGIO, e prende SPAVENTATO
      */
-    public static final int ABILITA_IMPOSIZIONE_DELLE_MANI_COSTO_LANCIO = 5;
+    public static final int ABILITA_IMPOSIZIONE_DELLE_MANI_COSTO_LANCIO = CostantiIncantesimi.COSTO_LANCIO_SENZA_DANNI;
 
     /** Cura istantanea e discretamente potente */
     public static final int ABILITA_IMPOSIZIONE_DELLE_MANI_RICARICA = 4;
@@ -39,14 +40,14 @@ public final class CostantiAbilitaInnate {
     /**
      * Radici e Sciame: danni di Terra e di Veleno su più avversari, un poco meno di una pergamena e per un poco più di Magia
      */
-    public static final int ABILITA_RADICI_COSTO_LANCIO = 3;
+    public static final int ABILITA_RADICI_COSTO_LANCIO = CostantiIncantesimi.costoPerBersaglio(CostantiAbilitaInnate.ABILITA_RADICI_DANNI);
 
     /** Le radici immobilizzano o accecano per al più 3 turni: i mostri devono poter muoversi di nuovo prima di un altro colpo */
     public static final int ABILITA_RADICI_RICARICA = 4;
 
     public static final int ABILITA_RADICI_DANNI = 40;
 
-    public static final int ABILITA_SCIAME_COSTO_LANCIO = 3;
+    public static final int ABILITA_SCIAME_COSTO_LANCIO = CostantiIncantesimi.costoPerBersaglio(CostantiAbilitaInnate.ABILITA_SCIAME_DANNI);
 
     /** Lo sciame avvelena per 4 turni */
     public static final int ABILITA_SCIAME_RICARICA = 5;
@@ -59,7 +60,7 @@ public final class CostantiAbilitaInnate {
      * mani. Sono punti e non una percentuale perché chi non è un guerriero ha pochissima parata e resistenza magica (da 1 a 18 punti ai livelli
      * da 3 a 8): una percentuale su quei valori non cambia la probabilità di essere colpiti (vedi personaggi_giocabili.md)
      */
-    public static final int ABILITA_PELLE_DI_CORTECCIA_COSTO_LANCIO = 5;
+    public static final int ABILITA_PELLE_DI_CORTECCIA_COSTO_LANCIO = CostantiIncantesimi.COSTO_LANCIO_SENZA_DANNI;
 
     public static final double ABILITA_PELLE_DI_CORTECCIA_BASE_PARATA = 10.0;
 
@@ -74,7 +75,7 @@ public final class CostantiAbilitaInnate {
      * La rigenerazione dà RIGENERAZIONE a un personaggio per ABILITA_RIGENERAZIONE_DURATA turni: a ogni turno guarisce di
      * ABILITA_RIGENERAZIONE_BASE più questa quota della sua salute massima, aumentata dalla SAGGEZZA del druido
      */
-    public static final int ABILITA_RIGENERAZIONE_COSTO_LANCIO = 4;
+    public static final int ABILITA_RIGENERAZIONE_COSTO_LANCIO = CostantiIncantesimi.COSTO_LANCIO_SENZA_DANNI;
 
     public static final int ABILITA_RIGENERAZIONE_DURATA = 4;
 
@@ -90,7 +91,7 @@ public final class CostantiAbilitaInnate {
     /**
      * L'alba sacra del Sacerdote: toglie al gruppo gli stati alterati negativi e i modificatori temporanei.
      */
-    public static final int ABILITA_ALBA_SACRA_COSTO_LANCIO = 5;
+    public static final int ABILITA_ALBA_SACRA_COSTO_LANCIO = CostantiIncantesimi.COSTO_LANCIO_SENZA_DANNI;
 
     public static final int ABILITA_ALBA_SACRA_RICARICA = 4;
 
@@ -103,16 +104,11 @@ public final class CostantiAbilitaInnate {
 
     public static final int ABILITA_LUCE_DIVINA_DANNI = 35;
 
-    /**
-     * Il costo del Fulmine in proporzione ai danni: il Fulmine costa 10 per 100 di danno, la luce divina ne fa 35 e costa quanto basta per lo stesso rapporto,
-     * arrotondato per eccesso (3,5 → 4)
-     */
-    public static final int ABILITA_LUCE_DIVINA_COSTO_LANCIO = (int) Math.ceil(
-            (double) CostantiIncantesimi.INCANTESIMO_FULMINE_COSTO_LANCIO * ABILITA_LUCE_DIVINA_DANNI / CostantiIncantesimi.INCANTESIMO_FULMINE_DANNI);
+    public static final int ABILITA_LUCE_DIVINA_COSTO_LANCIO = CostantiIncantesimi.costoPerBersaglio(CostantiAbilitaInnate.ABILITA_LUCE_DIVINA_DANNI);
 
     /**
      * Il dardo arcano, l'incantesimo innato di Mago ed Elfo: su un solo bersaglio, per poca Magia e senza consumare
-     * pergamene. Al Mago rende di più (una pergamena di fuoco fa 50) e costa meno che all'Elfo, che è
+     * pergamene. Al Mago rende di più (una pergamena di fuoco fa 50) che all'Elfo, che è
      * un po' meno bravo con la magia e in cambio sa combattere
      */
     public static final int DARDO_ARCANO_DANNI_MAGO = 20;
@@ -125,16 +121,18 @@ public final class CostantiAbilitaInnate {
      */
     public static final int DARDO_ARCANO_DANNI_ELFO_PER_LIVELLO = 4;
 
-    public static final int DARDO_ARCANO_COSTO_LANCIO_MAGO = 4;
-
-    public static final int DARDO_ARCANO_COSTO_LANCIO_ELFO = 6;
+    /**
+     * Il costo del dardo arcano nel suo tipo (TipoAbilita): quello del Mago. Il costo vero segue il danno di chi lo lancia, al suo livello
+     * (vedi AbilitaDiDanno.getCostoPerBersaglio): l'Elfo, il cui dardo cresce con il livello, lo paga sempre di più
+     */
+    public static final int DARDO_ARCANO_COSTO_LANCIO = CostantiIncantesimi.costoPerBersaglio(CostantiAbilitaInnate.DARDO_ARCANO_DANNI_MAGO);
 
     public static final int DARDO_ARCANO_RICARICA = 2;
 
     /**
      * Il martello sacro del Chierico: un colpo di danno SACRO su un solo avversario (il doppio contro i non morti, per la regola di categoria del SACRO).
      */
-    public static final int ABILITA_MARTELLO_SACRO_COSTO_LANCIO = 3;
+    public static final int ABILITA_MARTELLO_SACRO_COSTO_LANCIO = CostantiIncantesimi.costoPerBersaglio(CostantiAbilitaInnate.ABILITA_MARTELLO_SACRO_DANNI);
 
     public static final int ABILITA_MARTELLO_SACRO_RICARICA = 2;
 

@@ -11,7 +11,7 @@ import com.threeamigos.foresta.testi.Testi;
 
 /**
  * L'abilità innata di Mago ed Elfo: un dardo di energia ARCANA su un solo bersaglio, che costa Magia ma non consuma pergamene, così chi vive di
- * magia ha sempre un modo di combattere. Al Mago rende di più e costa meno che all'Elfo (vedi {@link CostantiAbilitaInnate}); il resto lo fanno
+ * magia ha sempre un modo di combattere. Al Mago rende di più che all'Elfo (vedi {@link CostantiAbilitaInnate}), e costa quanto rende (vedi AbilitaDiDanno.getCostoPerBersaglio); il resto lo fanno
  * l'INTELLIGENZA e il moltiplicatore magico di chi lo lancia. Chi lo conosce lo dice {@link AbilitaInnate}.
  */
 public class DardoArcano extends AbilitaDiDanno {
@@ -33,11 +33,6 @@ public class DardoArcano extends AbilitaDiDanno {
 	@Override
 	public TipoAbilita getTipo() {
 		return TipoAbilita.DARDO_ARCANO;
-	}
-
-	@Override
-	public int getCostoLancio() {
-		return delMago ? CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_MAGO : CostantiAbilitaInnate.DARDO_ARCANO_COSTO_LANCIO_ELFO;
 	}
 
 	@Override

@@ -4549,4 +4549,132 @@ IL_VIAGGIO_DI_OLAF_RICOMPENSA
 IL_VIAGGIO_DI_OLAF_UN_LEGGENDARIO
     un oggetto leggendario
 
+// ---------------------------------------------------------------------------------------------
+// Le missioni di recupero del sacerdote (RecuperoDelSacerdote): chi racconta
+RECUPERO_DEL_SACERDOTE_SACERDOTE
+    il sacerdote
+
+RECUPERO_DEL_SACERDOTE_SACERDOTESSA
+    la sacerdotessa
+
+// La spada dell'acquasantiera (LaSpadaDellAcquasantiera)
+LA_SPADA_DELL_ACQUASANTIERA_TITOLO
+    La spada dell'acquasantiera
+
+LA_SPADA_DELL_ACQUASANTIERA_SCENA_1
+    Figlioli, vi devo confessare una cosa. Don Arcangelo, il parroco, voleva benedire la spada del campanaro, e per fare prima l'ha immersa tutta nell'acquasantiera.
+
+LA_SPADA_DELL_ACQUASANTIERA_SCENA_2
+    Da quel giorno la spada non smette più di sgocciolare acqua santa. La sacrestia è allagata, e alla messa della domenica i fedeli arrivano in barca.
+
+LA_SPADA_DELL_ACQUASANTIERA_SCENA_3
+    E volete che ve la asciughiamo?
+
+LA_SPADA_DELL_ACQUASANTIERA_SCENA_4
+    No, no! L'avevamo data a un ambulante perché la portasse lontano, ma una banda di goblin gliel'ha rubata: l'hanno scambiata per una fontana.
+
+LA_SPADA_DELL_ACQUASANTIERA_SCENA_5
+    Ora la tengono in una grotta qui vicino, dove hanno aperto una lavanderia. Vi segno la grotta sulla mappa: riprendetela, prima che i goblin diventino troppo puliti.
+
+LA_SPADA_DELL_ACQUASANTIERA_SCENA_6
+    Andiamo a fare il bucato ai goblin.
+
+LA_SPADA_DELL_ACQUASANTIERA_DESCRIZIONE
+    %PARAM_SACERDOTE% chiede di riprendere ai goblin della grotta segnata sulla mappa una spada che sgocciola acqua santa.
+
+LA_SPADA_DELL_ACQUASANTIERA_POSTO_SEGNATO
+    %PARAM_SACERDOTE% segna sulla mappa la grotta dei goblin lavandai.
+
+LA_SPADA_DELL_ACQUASANTIERA_NOME_DEL_CAPO
+    Smacchiatutto
+    Candeggino
+    Ammorbidente
+
+LA_SPADA_DELL_ACQUASANTIERA_RICORDO
+    Qui %PARAM_CAPO% e i suoi goblin lavavano i panni con una spada benedetta.
+
+LA_SPADA_DELL_ACQUASANTIERA_CONSEGNA
+    %PARAM_SACERDOTE% ve l'aveva detto: tenetevi pure %PARAM_OGGETTO%, ma per carità non riportatela in chiesa. Gocciola ancora.
+
+// Il bastone del santone (IlBastoneDelSantone)
+IL_BASTONE_DEL_SANTONE_TITOLO
+    Il bastone del santone
+
+IL_BASTONE_DEL_SANTONE_SCENA_1
+    Conoscete il santone dell'eremo? Si lamenta di tutto: del tempo, dei pellegrini, delle zanzare e dei miracoli fatti male dagli altri.
+
+IL_BASTONE_DEL_SANTONE_SCENA_2
+    Un giorno il suo bastone, che non ne poteva più, se n'è andato da solo. Così, senza dire niente.
+
+IL_BASTONE_DEL_SANTONE_SCENA_3
+    Un bastone che se ne va da solo?
+
+IL_BASTONE_DEL_SANTONE_SCENA_4
+    Ora sta in certe rovine qui vicino, dove un fantasma lo usa come bastone da passeggio. Ma anche lui ha imparato a brontolare, e il fantasma non riesce più a infestare in pace.
+
+IL_BASTONE_DEL_SANTONE_SCENA_5
+    È venuto il fantasma in persona a lamentarsi, figuratevi. Andate a riprenderlo, poi tornate qui a riferire: vi segno le rovine sulla mappa.
+
+IL_BASTONE_DEL_SANTONE_SCENA_6
+    Andiamo a liberare il fantasma dal bastone.
+
+IL_BASTONE_DEL_SANTONE_DESCRIZIONE
+    %PARAM_SACERDOTE% chiede di riprendere il bastone del santone al fantasma delle rovine segnate sulla mappa, e di tornare a riferire.
+
+IL_BASTONE_DEL_SANTONE_POSTO_SEGNATO
+    %PARAM_SACERDOTE% segna sulla mappa le rovine del fantasma infastidito.
+
+IL_BASTONE_DEL_SANTONE_NOME_DEL_CAPO
+    Gemebondo
+    Uggioso
+    Sospirone
+
+IL_BASTONE_DEL_SANTONE_SCONFITTI
+    %PARAM_CAPO% svanisce con un sospiro di sollievo. Fra le macerie il bastone continua a brontolare: è ora di tornare a riferire.
+
+IL_BASTONE_DEL_SANTONE_RICORDO
+    Qui il fantasma %PARAM_CAPO% passeggiava con un bastone che brontolava.
+
+IL_BASTONE_DEL_SANTONE_CONSEGNA
+    %PARAM_SACERDOTE% scuote la testa: il santone ha mandato a dire che non lo rivuole. Tenetevi %PARAM_OGGETTO%, così almeno brontola con voi.
+
+// Gli schinieri del pellegrino (GliSchinieriDelPellegrino)
+GLI_SCHINIERI_DEL_PELLEGRINO_TITOLO
+    Gli schinieri del pellegrino
+
+GLI_SCHINIERI_DEL_PELLEGRINO_SCENA_1
+    C'è un pellegrino che ha fatto voto di andare scalzo a tutti i santuari della Foresta. A piedi nudi, d'inverno e d'estate.
+
+GLI_SCHINIERI_DEL_PELLEGRINO_SCENA_2
+    I fedeli, impietositi, gli hanno regalato degli schinieri benedetti. Lui non li porta: dice che il voto non parla degli schinieri, ma non si sa mai. Così se li trascina dietro in un sacco.
+
+GLI_SCHINIERI_DEL_PELLEGRINO_SCENA_3
+    E noi che c'entriamo?
+
+GLI_SCHINIERI_DEL_PELLEGRINO_SCENA_4
+    Si è perso in un bosco qui vicino: vi segno il posto sulla mappa. Trovatelo e accompagnatelo alla città più vicina, prima che si consumi i piedi.
+
+GLI_SCHINIERI_DEL_PELLEGRINO_SCENA_5
+    Andiamo a cercare il pellegrino.
+
+GLI_SCHINIERI_DEL_PELLEGRINO_DESCRIZIONE
+    %PARAM_SACERDOTE% chiede di trovare il pellegrino scalzo che si è perso nel bosco segnato sulla mappa, e di accompagnarlo alla città più vicina.
+
+GLI_SCHINIERI_DEL_PELLEGRINO_POSTO_SEGNATO
+    %PARAM_SACERDOTE% segna sulla mappa il bosco dove si è perso il pellegrino.
+
+GLI_SCHINIERI_DEL_PELLEGRINO_NOME
+    Callisto
+    Piedebuono
+    Tallone
+
+GLI_SCHINIERI_DEL_PELLEGRINO_TROVATO
+    Ecco %PARAM_PELLEGRINO%, seduto su un sasso a massaggiarsi i piedi, con un sacco tintinnante accanto. Si unisce al gruppo fino alla città più vicina.
+
+GLI_SCHINIERI_DEL_PELLEGRINO_RICORDO
+    Qui il gruppo trovò %PARAM_PELLEGRINO%, il pellegrino scalzo.
+
+GLI_SCHINIERI_DEL_PELLEGRINO_CONSEGNA
+    In città %PARAM_PELLEGRINO% saluta il gruppo e gli lascia %PARAM_OGGETTO%: “Tanto io vado scalzo.”
+
 #include_static <nomi.txt>

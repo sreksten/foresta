@@ -34,10 +34,10 @@ public interface Incantesimo extends OggettoConCostoDiLancio {
 	int getLivello();
 
 	/**
-	 * Quanti punti di magia costa lanciarlo: lo dice il suo tipo.
+	 * Quanti punti di magia costa lanciarlo per ogni bersaglio: lo dice il suo tipo.
 	 */
 	@Override
-	default int getCostoLancio() {
-		return getClasse().getCostoLancio();
+	default int getCostoPerBersaglio() {
+		return getClasse().getCostoPerBersaglio();
 	}
 }

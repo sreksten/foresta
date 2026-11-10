@@ -89,6 +89,12 @@ public enum MissionePredefinita {
 	// Un personaggio a caso, in una città, giura di aver visto la Morte con la sua falce nelle rovine; è un necromante, e la sua falce è il premio.
 	// A una visita tranquilla; si offre una volta sola.
 	LA_FALCE_DEL_TRISTO_MIETITORE(true),
+	// Le missioni di recupero del sacerdote (RecuperoDelSacerdote): un sacerdote o una sacerdotessa, in città o in una locanda del
+	// racconto (LocandaDelRacconto), racconta la storia di un oggetto sacro della Santa Ignoranza finito nel posto sbagliato; il gruppo lo
+	// riprende e lo tiene. Nel sorteggio degli incarichi; una alla volta, in quest'ordine, e una volta sola ciascuna.
+	LA_SPADA_DELL_ACQUASANTIERA(true),
+	IL_BASTONE_DEL_SANTONE(true),
+	GLI_SCHINIERI_DEL_PELLEGRINO(true),
 
 	// I negozi: a inizio partita ogni città riceve una di queste quattro missioni, a caso; ciascuna si offre come un
 	// incarico in città (vedi sotto), ma solo nella sua città, e non si ripete. A completamento si costruisce un nuovo

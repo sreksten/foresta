@@ -16,11 +16,11 @@ public interface Canto extends OggettoConCostoDiLancio {
 	TipoCanto getTipo();
 
 	/**
-	 * La Magia che costa: la dice il suo tipo.
+	 * La Magia che costa per ogni personaggio che tocca: la dice il suo tipo.
 	 */
 	@Override
-	default int getCostoLancio() {
-		return getTipo().getCostoLancio();
+	default int getCostoPerBersaglio() {
+		return getTipo().getCostoPerBersaglio();
 	}
 
 	/**

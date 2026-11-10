@@ -100,9 +100,11 @@ class CantiDelBardoTest {
         Bardo bardo = bardo();
         assertEquals(CANTI_DI_BASE, CantoDelBardo.cantiPossibili(bardo));
 
-        // Con poca magia si canta solo quello che costa poco
+        // Con la magia per un solo bersaglio si cantano ancora tutti (costano uguale), con meno nessuno
         bardo.subMagia(bardo.getMagia() - CostantiCanti.CANTO_IPNOTICO_COSTO_LANCIO);
-        assertEquals(java.util.Collections.singletonList(TipoCanto.IPNOTICO), CantoDelBardo.cantiPossibili(bardo));
+        assertEquals(CANTI_DI_BASE, CantoDelBardo.cantiPossibili(bardo));
+        bardo.subMagia(1);
+        assertTrue(CantoDelBardo.cantiPossibili(bardo).isEmpty());
         bardo.subMagia(bardo.getMagia());
         assertTrue(CantoDelBardo.cantiPossibili(bardo).isEmpty());
 
@@ -120,9 +122,9 @@ class CantiDelBardoTest {
     @Test
     void ognuniCantoCostaLaSuaMagia() {
         Bardo bardo = bardo();
-        assertEquals(CostantiCanti.CANTO_CURATIVO_COSTO_LANCIO, FabbricaCanti.crea(TipoCanto.CURATIVO, bardo).getCostoLancio());
-        assertEquals(CostantiCanti.CANTO_IPNOTICO_COSTO_LANCIO, FabbricaCanti.crea(TipoCanto.IPNOTICO, bardo).getCostoLancio());
-        assertEquals(CostantiCanti.CANTO_DI_VALORE_COSTO_LANCIO, FabbricaCanti.crea(TipoCanto.DI_VALORE, bardo).getCostoLancio());
+        assertEquals(CostantiCanti.CANTO_CURATIVO_COSTO_LANCIO, FabbricaCanti.crea(TipoCanto.CURATIVO, bardo).getCostoPerBersaglio());
+        assertEquals(CostantiCanti.CANTO_IPNOTICO_COSTO_LANCIO, FabbricaCanti.crea(TipoCanto.IPNOTICO, bardo).getCostoPerBersaglio());
+        assertEquals(CostantiCanti.CANTO_DI_VALORE_COSTO_LANCIO, FabbricaCanti.crea(TipoCanto.DI_VALORE, bardo).getCostoPerBersaglio());
         assertInstanceOf(CantoCurativo.class, FabbricaCanti.crea(TipoCanto.CURATIVO, bardo));
         assertInstanceOf(CantoIpnotico.class, FabbricaCanti.crea(TipoCanto.IPNOTICO, bardo));
         assertInstanceOf(CantoDiValore.class, FabbricaCanti.crea(TipoCanto.DI_VALORE, bardo));
@@ -203,10 +205,9 @@ class CantiDelBardoTest {
     }
 
     @Test
-    void l_UrloDellaBansheeCostaDiPiuEUsaIlSuoCanto() {
+    void l_UrloDellaBansheeUsaIlSuoCanto() {
         Bardo bardo = bardo();
-        assertEquals(CostantiCanti.CANTO_URLO_DELLA_BANSHEE_COSTO_LANCIO, FabbricaCanti.crea(TipoCanto.URLO_DELLA_BANSHEE, bardo).getCostoLancio());
-        assertTrue(CostantiCanti.CANTO_URLO_DELLA_BANSHEE_COSTO_LANCIO > CostantiCanti.CANTO_IPNOTICO_COSTO_LANCIO);
+        assertEquals(CostantiCanti.CANTO_URLO_DELLA_BANSHEE_COSTO_LANCIO, FabbricaCanti.crea(TipoCanto.URLO_DELLA_BANSHEE, bardo).getCostoPerBersaglio());
         assertInstanceOf(UrloDellaBanshee.class, FabbricaCanti.crea(TipoCanto.URLO_DELLA_BANSHEE, bardo));
     }
 
@@ -240,7 +241,7 @@ class CantiDelBardoTest {
                 .filter(g -> g.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO) && g.hasEffettoDiStato(TipoEffettoDiStato.CONFUSO)).count();
         assertEquals(2, colpiti, "fino al numero di bersagli, ognuno con tutti e due gli stati");
         assertEquals(2, Arrays.asList(uno, due, tre).stream().filter(CantiDelBardoTest::haSpaventatoOConfuso).count(), "nessuno ha uno stato solo");
-        assertEquals(magia - CostantiCanti.CANTO_URLO_DELLA_BANSHEE_COSTO_LANCIO, bardo.getMagia());
+        assertEquals(magia - 2 * CostantiCanti.CANTO_URLO_DELLA_BANSHEE_COSTO_LANCIO, bardo.getMagia(), "si paga per i due bersagli");
     }
 
     @Test
@@ -264,6 +265,23 @@ class CantiDelBardoTest {
     }
 
     @Test
+    void conPocaMagiaIlCantoIpnoticoToccaSoloIBersagliCheSiPossonoPagare() {
+        Bardo bardo = bardo();
+        fissa(bardo, TipoAttributo.NUMERO_BERSAGLI, 3);
+        Goblin uno = new Goblin(1);
+        Goblin due = new Goblin(1);
+        Goblin tre = new Goblin(1);
+        tuttiCedono(bardo, uno, due, tre);
+        // La magia per due bersagli e un poco di più, non abbastanza per il terzo
+        bardo.subMagia(bardo.getMagia() - (2 * CostantiCanti.CANTO_IPNOTICO_COSTO_LANCIO + 1));
+
+        assertTrue(FabbricaCanti.crea(TipoCanto.IPNOTICO, bardo).canta(bardo, compagni, avversari));
+
+        assertEquals(2, Arrays.asList(uno, due, tre).stream().filter(CantiDelBardoTest::haSpaventatoOConfuso).count());
+        assertEquals(1, bardo.getMagia());
+    }
+
+    @Test
     void ilCantoIpnoticoColpisceFinoAlNumeroDiBersagli() {
         Bardo bardo = bardo();
         fissa(bardo, TipoAttributo.NUMERO_BERSAGLI, 2);
@@ -277,7 +295,7 @@ class CantiDelBardoTest {
 
         long colpiti = Arrays.asList(uno, due, tre).stream().filter(CantiDelBardoTest::haSpaventatoOConfuso).count();
         assertEquals(2, colpiti);
-        assertEquals(magia - CostantiCanti.CANTO_IPNOTICO_COSTO_LANCIO, bardo.getMagia());
+        assertEquals(magia - 2 * CostantiCanti.CANTO_IPNOTICO_COSTO_LANCIO, bardo.getMagia(), "si paga per i due bersagli");
     }
 
     @Test
@@ -357,7 +375,7 @@ class CantiDelBardoTest {
             assertEquals(CostantiCanti.CANTO_DI_VALORE_DURATA, p.getEffettiDiStato().iterator().next().getDurata());
         }
         assertFalse(morto.hasEffettoDiStato(TipoEffettoDiStato.ISPIRATO));
-        assertEquals(magia - CostantiCanti.CANTO_DI_VALORE_COSTO_LANCIO, bardo.getMagia());
+        assertEquals(magia - 2 * CostantiCanti.CANTO_DI_VALORE_COSTO_LANCIO, bardo.getMagia(), "si paga per i due vivi ispirati");
     }
 
     @Test

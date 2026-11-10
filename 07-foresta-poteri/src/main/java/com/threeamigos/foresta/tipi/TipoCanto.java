@@ -50,9 +50,9 @@ public enum TipoCanto {
 	}
 
 	/**
-	 * I punti di Magia che costa cantarlo.
+	 * I punti di Magia che costa cantarlo per ogni personaggio che il canto tocca (vedi CostantiIncantesimi.costoPerBersaglio).
 	 */
-	public int getCostoLancio() {
+	public int getCostoPerBersaglio() {
 		return costoLancio;
 	}
 
