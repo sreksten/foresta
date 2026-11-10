@@ -7,7 +7,7 @@ import com.threeamigos.foresta.testi.Testi;
  * dice quando scatta (la {@link Situazione} che lo innesca), a che cosa punta (il {@link BersaglioDelSuggerimento}) e ha le sue pagine di testo
  * (un file per lingua, {@code tipo_suggerimento_it.properties}, chiavi {@code COSTANTE.PAGINA_1}, {@code COSTANTE.PAGINA_2}...; la variante per il
  * dito è {@code COSTANTE.PAGINA_1.TOCCO}, e se manca vale quella normale). Una pagina per ogni cosa che si può fare, al massimo
- * {@value #PAGINE_NORMALI} (l'elenco dei luoghi fa eccezione, vedi {@link #PAGINE_MASSIME}). A ogni pagina può puntare qualcosa di diverso.
+ * {@value #PAGINE_NORMALI} (gli elenchi dei luoghi e delle botteghe fanno eccezione, vedi {@link #PAGINE_MASSIME}). A ogni pagina può puntare qualcosa di diverso.
  *
  * @author Stefano Reksten
  */
@@ -38,7 +38,8 @@ public enum TipoSuggerimento {
 	// Questi due si danno aprendo la mappa a tutto schermo (vedi SchermoDelGioco.isSchermataDelSuggerimento)
 	JOYSTICK_DELLA_MAPPA(Situazione.JOYSTICK_SULLA_MAPPA, BersaglioDelSuggerimento.JOYSTICK_VIRTUALE),
 	TRASCINARE_LA_MAPPA(Situazione.MAPPA_PIU_GRANDE_DELLO_SCHERMO, BersaglioDelSuggerimento.SCHERMATA),
-	// I tipi di luogo: più pagine del solito, perché sono tanti e chi comincia non sa dove andare (vedi PAGINE_MASSIME)
+	// I tipi di luogo: più pagine del solito, perché sono tanti e chi comincia non sa dove andare (vedi PAGINE_MASSIME). Le botteghe no: all'inizio stanno
+	// solo in città, e le spiega BOTTEGHE quando ci si arriva
 	LUOGHI(Situazione.ICONA_DELLA_MAPPA_PRESENTE, BersaglioDelSuggerimento.RIQUADRO_DELLA_MAPPA),
 	POZIONI(Situazione.FERITO_CON_UNA_POZIONE, BersaglioDelSuggerimento.ICONE_DELLE_POZIONI),
 	// La prima reazione elementale: un effetto di stato più un certo tipo di attacco fanno più danni
@@ -79,16 +80,18 @@ public enum TipoSuggerimento {
 	// La prima pagina parla dell'icona che apre l'elenco (incantesimi e abilità innate), la seconda del riquadro con le scorte
 	INCANTESIMI(Situazione.INCANTESIMO_LANCIABILE, BersaglioDelSuggerimento.ICONA_DEGLI_INCANTESIMI,
 			BersaglioDelSuggerimento.RIQUADRO_DEGLI_INCANTESIMI_E_DELLE_POZIONI),
+	// Arrivati in città: la prima pagina dà il benvenuto, le altre quattro (una per bottega, con la sua tessera, come l'elenco dei luoghi) dicono che cosa fa
+	// ognuna
 	BOTTEGHE(Situazione.INGRESSO_IN_BOTTEGA, BersaglioDelSuggerimento.ICONE_DELLE_BOTTEGHE),
 	ACCAMPAMENTO(Situazione.NOTTE, BersaglioDelSuggerimento.ICONA_DELL_ACCAMPAMENTO),
 	GESTI_SUL_TOCCO(Situazione.DITO_SULLO_SCHERMO, BersaglioDelSuggerimento.BARRA_DELLE_ICONE);
 
 	/**
 	 * Il massimo di pagine che un suggerimento può avere. Di norma sono al massimo {@value #PAGINE_NORMALI} (oltre, il concetto si spezza in due
-	 * suggerimenti); l'elenco dei luoghi e la schermata delle tattiche ne hanno di più, perché i tipi di luogo sono tanti e fanno capire dove andare.
+	 * suggerimenti); gli elenchi dei luoghi e delle botteghe e la schermata delle tattiche ne hanno di più.
 	 */
 	public static final int PAGINE_MASSIME = 12;
-	/** Il massimo di pagine di un suggerimento che non sia l'elenco dei luoghi. */
+	/** Il massimo di pagine di un suggerimento che non sia una delle eccezioni (luoghi, botteghe, tattiche). */
 	public static final int PAGINE_NORMALI = 3;
 
 	private final Situazione innesco;

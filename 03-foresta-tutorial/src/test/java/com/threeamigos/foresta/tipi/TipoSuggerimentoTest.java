@@ -32,19 +32,21 @@ class TipoSuggerimentoTest {
 		}
 	}
 
-	/** L'elenco dei luoghi e la schermata delle tattiche sono le sole eccezioni alla regola delle tre pagine */
+	/** L'elenco dei luoghi, quello delle botteghe e la schermata delle tattiche sono le sole eccezioni alla regola delle tre pagine */
 	private static boolean isCheEccedeLeTrePagine(TipoSuggerimento suggerimento) {
-		return suggerimento == TipoSuggerimento.LUOGHI || suggerimento == TipoSuggerimento.SCHERMATA_DELLE_TATTICHE;
+		return suggerimento == TipoSuggerimento.LUOGHI || suggerimento == TipoSuggerimento.BOTTEGHE
+				|| suggerimento == TipoSuggerimento.SCHERMATA_DELLE_TATTICHE;
 	}
 
 	@Test
-	void soloLElencoDeiLuoghiELaSchermataDelleTatticheHannoPiuDiTrePagine() {
+	void soloLuoghiBottegheELaSchermataDelleTatticheHannoPiuDiTrePagine() {
 		for (TipoSuggerimento suggerimento : TipoSuggerimento.values()) {
 			if (!isCheEccedeLeTrePagine(suggerimento)) {
 				assertTrue(suggerimento.getNumeroPagine() <= TipoSuggerimento.PAGINE_NORMALI, suggerimento.name());
 			}
 		}
 		assertTrue(TipoSuggerimento.LUOGHI.getNumeroPagine() > TipoSuggerimento.PAGINE_NORMALI);
+		assertTrue(TipoSuggerimento.BOTTEGHE.getNumeroPagine() > TipoSuggerimento.PAGINE_NORMALI);
 		assertTrue(TipoSuggerimento.SCHERMATA_DELLE_TATTICHE.getNumeroPagine() > TipoSuggerimento.PAGINE_NORMALI);
 	}
 

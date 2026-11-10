@@ -369,15 +369,20 @@ public abstract class ForestaUI implements Temporizzabile {
 	 * Se qualcuno del gruppo è ferito e c'è una pozione di salute (piccola o grande) da dargli: letto dalla vista della partita, non da un evento.
 	 */
 	/**
-	 * Se qualcuno del gruppo (anche chi si è unito per un po', come un goblin corrotto) è caduto: letto dalla vista della partita.
+	 * Se è caduto un compagno del capo (anche chi si è unito per un po', come un goblin corrotto), con il capo ancora vivo: letto dalla vista della partita.
 	 */
 	private boolean isQualcunoCaduto() {
 		VistaGruppoGiocatore gruppo = vistaPartita.getGruppoGiocatore();
 		if (gruppo == null) {
 			return false;
 		}
+		// Il suggerimento della Resurrezione vale solo per i compagni: se cade il capo la partita è persa, e lui non si può riportare in vita
+		VistaPersonaggio capo = gruppo.getCapo();
+		if (capo != null && !capo.isVivo()) {
+			return false;
+		}
 		for (VistaPersonaggio personaggio : gruppo.getPersonaggi()) {
-			if (!personaggio.isVivo()) {
+			if (personaggio != capo && !personaggio.isVivo()) {
 				return true;
 			}
 		}
