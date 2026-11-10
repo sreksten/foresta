@@ -124,7 +124,7 @@ public abstract class ForestaUI implements Temporizzabile {
 			}
 			// Il motore vuole che la cosa si noti: la finestra del tutorial, come i suggerimenti (e come loro tiene occupata la UI finché non si legge)
 			if (schermo.getTutor().mostra(e.getSuggerimento(), e.getParametri()).isPresent()) {
-				BusEventi.pubblica(new InternoUiOccupata());
+				schermo.segnalaUiOccupata();
 				rinfresca();
 			}
 		});
@@ -355,7 +355,7 @@ public abstract class ForestaUI implements Temporizzabile {
 				isQualcunoFeritoConUnaPozione()), schermo::isApribile).isPresent();
 		if (aperto) {
 			// Finché il fumetto è aperto il motore aspetta (vedi SchermoDelGioco.fineFotogramma, che avvisa quando si chiude)
-			BusEventi.pubblica(new InternoUiOccupata());
+			schermo.segnalaUiOccupata();
 		}
 		rinfresca();
 	}

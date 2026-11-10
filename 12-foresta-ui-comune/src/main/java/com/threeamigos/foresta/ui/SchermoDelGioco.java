@@ -526,7 +526,7 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 		if (!annunciRimandati.isEmpty()) {
 			codaAnnunci.addAll(annunciRimandati);
 			annunciRimandati.clear();
-			BusEventi.pubblica(new InternoUiOccupata());
+			segnalaUiOccupata();
 		}
 		ridisegna();
 	}
@@ -845,7 +845,7 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 		Area schermo = new Area(0, 0, disposizione.getLarghezzaTotale(), disposizione.getAltezzaTotale());
 		Punto destinazione = new Punto(gruppo.getX() + gruppo.getLarghezza() / 2, gruppo.getY() + gruppo.getAltezza() / 2);
 		rivelazioni.aggiungi(rivelazione(evento.getArtefatto(), evento.getLivelloMondo(), schermo, destinazione));
-		BusEventi.pubblica(new InternoUiOccupata());
+		segnalaUiOccupata();
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------------
@@ -934,7 +934,7 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	protected final void aggiungiSprite(S nuovo) {
 		if (nuovo != null) {
 			sprite.add(nuovo);
-			BusEventi.pubblica(new InternoUiOccupata());
+			segnalaUiOccupata();
 		}
 	}
 
@@ -1012,7 +1012,7 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	protected final void accodaAnnuncio(A nuovo) {
 		if (nuovo != null) {
 			codaAnnunci.add(nuovo);
-			BusEventi.pubblica(new InternoUiOccupata());
+			segnalaUiOccupata();
 		}
 	}
 
@@ -1339,6 +1339,20 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 			BusEventi.pubblica(new InternoUiInattiva());
 		}
 		uiOccupata = occupataOra;
+	}
+
+	/**
+	 * Dice all'Automa che la UI è occupata, e se lo segna: il flag {@code uiOccupata} è quel che l'Automa crede, e solo se qui lo si
+	 * sa {@link #fineFotogramma()} gli dirà {@code InternoUiInattiva} quando la UI è di nuovo libera. Se no basta uno sprite nato fuori
+	 * dalla schermata di gioco (la dotazione dell'eremita, consegnata mentre si apre il suo intermezzo), che qui non conta, perché l'Automa
+	 * resti convinto per sempre che la UI sia occupata, e l'intermezzo successivo dello stesso momento (la locanda, la città) non parta
+	 * più: nessun comando, gioco fermo. Ogni {@code InternoUiOccupata} della UI passa da qui.
+	 */
+	public final void segnalaUiOccupata() {
+		uiOccupata = true;
+		BusEventi.pubblica(new InternoUiOccupata());
+		// Al prossimo fotogramma si ricontrolla, anche su una schermata che altrimenti non si ridisegnerebbe
+		ridisegna();
 	}
 
 	/**
