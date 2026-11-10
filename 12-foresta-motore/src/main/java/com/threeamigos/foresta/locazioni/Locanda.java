@@ -12,6 +12,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoAggiornamentoComandiDisponibili;
 import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStato;
 import com.threeamigos.foresta.eventi.interni.InternoPastoConsumatoInLocanda;
+import com.threeamigos.foresta.eventi.notifiche.NotificaMessaggioDelTutorial;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneSiNo;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Testi;
+import com.threeamigos.foresta.tutorial.RegistroSuggerimenti;
 
 /**
  * La locanda, nel bosco o in città: il gruppo vi entra se ha le monete per pagare, e può mangiare, pernottare, ascoltare le notizie e le voci
@@ -238,6 +240,10 @@ public class Locanda extends LocazioneBase {
 
 				if (incontra(gruppo)) {
 					stato = StatoInLocanda.PERSONAGGIO;
+					// La prima volta il tutorial spiega che cosa vuol dire accettare, prima del sì o del no
+					if (RegistroSuggerimenti.isAttivo() && RegistroSuggerimenti.isMostrabile() && !RegistroSuggerimenti.isVisto(TipoSuggerimento.COMPAGNO_IN_LOCANDA)) {
+						BusEventi.pubblica(new NotificaMessaggioDelTutorial(TipoSuggerimento.COMPAGNO_IN_LOCANDA));
+					}
 					BusEventi.pubblica(new RichiestaSelezioneSiNo());
 					return Stato.IN_LOCAZIONE;
 				} else {

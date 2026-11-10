@@ -27,6 +27,8 @@ public enum Situazione {
 	MESSAGGIO_DEL_MOTORE,
 	/** Il motore dice che fra una locazione e l'altra il gruppo ha recuperato salute e magia (vedi NotificaMessaggioDelTutorial): la UI la tiene finché il suggerimento non è visto. */
 	RECUPERO_FRA_LOCAZIONI,
+	/** Il motore dice che in una locanda c'è qualcuno che chiede di unirsi al gruppo (vedi NotificaMessaggioDelTutorial): la UI la tiene finché il gruppo resta nella locanda. */
+	COMPAGNO_IN_LOCANDA,
 	/** Il giocatore ha già letto come ci si muove e ci sono le frecce di movimento: è l'ultimo consiglio della prima locazione, su dove andare. */
 	MOVIMENTO_SPIEGATO,
 	/** Si è aperta la schermata delle tattiche di un personaggio. */
@@ -39,6 +41,8 @@ public enum Situazione {
 	PUNTI_ABILITA_DA_SPENDERE,
 	/** Ci sono le quattro icone di movimento (nord, est, sud, ovest). */
 	ICONE_DI_MOVIMENTO_PRESENTI,
+	/** Sulla schermata di gioco la barra chiede di scegliere fra due o più personaggi (chi compie l'azione). */
+	SCELTA_DEL_PERSONAGGIO,
 	/** Si apre il combattimento. */
 	COMBATTIMENTO_APERTO,
 	/** Il gruppo ha trovato un oggetto. */

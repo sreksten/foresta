@@ -21,6 +21,9 @@ public final class SituazioniDellaUI {
 	static final int SCONTRI_PRIMA_DELLE_TATTICHE = 2;
 
 	private static final Set<Comando> MOVIMENTO = EnumSet.of(Comando.NORD, Comando.EST, Comando.SUD, Comando.OVEST);
+	private static final Set<Comando> PERSONAGGI = EnumSet.range(Comando.PERSONAGGIO_1, Comando.PERSONAGGIO_8);
+	/** Da quanti personaggi nella barra c'è una scelta da fare */
+	private static final int PERSONAGGI_PER_UNA_SCELTA = 2;
 	private static final Set<Comando> BOTTEGHE = EnumSet.of(Comando.NEGOZIO_ALCHIMISTA, Comando.NEGOZIO_ARMAIOLO,
 			Comando.NEGOZIO_VENDITORE_DI_PERGAMENE, Comando.NEGOZIO_INCANTATORE);
 
@@ -150,6 +153,8 @@ public final class SituazioniDellaUI {
 	}
 
 	public synchronized void segnaNuovaLocazione() {
+		// Chi chiedeva di unirsi al gruppo è rimasto nella locanda
+		dalMotore.remove(Situazione.COMPAGNO_IN_LOCANDA);
 		effettoDiStatoApplicato = false;
 		reazioneScatenata = false;
 		oggettoTrovato = false;
@@ -219,6 +224,10 @@ public final class SituazioniDellaUI {
 				situazioni.add(Situazione.MOVIMENTO_SPIEGATO);
 			}
 		}
+		// Nell'inventario e nelle tattiche le icone dei personaggi sfogliano le pagine: solo sul gioco chiedono chi compie l'azione
+		if (schermata == StatoDelloSchermo.IN_GIOCO && quantiPersonaggi(comandi) >= PERSONAGGI_PER_UNA_SCELTA) {
+			situazioni.add(Situazione.SCELTA_DEL_PERSONAGGIO);
+		}
 		if (combattimentoAperto) {
 			situazioni.add(Situazione.COMBATTIMENTO_APERTO);
 		}
@@ -277,5 +286,15 @@ public final class SituazioniDellaUI {
 		}
 		situazioni.addAll(dalMotore);
 		return situazioni;
+	}
+
+	private static int quantiPersonaggi(Collection<Comando> comandi) {
+		int quanti = 0;
+		for (Comando comando : comandi) {
+			if (PERSONAGGI.contains(comando)) {
+				quanti++;
+			}
+		}
+		return quanti;
 	}
 }

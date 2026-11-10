@@ -248,4 +248,27 @@ class SituazioniDellaUITest {
 		ui.segnaSchermataDiGioco();
 		assertFalse(correnti(ui, Comando.NORD, Comando.EST, Comando.SUD, Comando.OVEST).contains(Situazione.SCELTA_DELLA_CLASSE));
 	}
+
+	@Test
+	void sulGiocoDueOPiuPersonaggiNellaBarraSonoUnaScelta() {
+		SituazioniDellaUI ui = new SituazioniDellaUI();
+		ui.segnaSchermataDiGioco();
+		assertFalse(correnti(ui, Comando.PERSONAGGIO_1, Comando.ANNULLA).contains(Situazione.SCELTA_DEL_PERSONAGGIO));
+		assertTrue(correnti(ui, Comando.PERSONAGGIO_1, Comando.PERSONAGGIO_3, Comando.ANNULLA).contains(Situazione.SCELTA_DEL_PERSONAGGIO));
+		// Nell'inventario le icone dei personaggi sfogliano le pagine
+		ui.segnaLaSchermata(StatoDelloSchermo.INVENTARIO, false, false);
+		assertFalse(correnti(ui, Comando.PERSONAGGIO_1, Comando.PERSONAGGIO_2).contains(Situazione.SCELTA_DEL_PERSONAGGIO));
+	}
+
+	@Test
+	void ilCompagnoInLocandaVaViaConLaNuovaLocazione() {
+		SituazioniDellaUI ui = new SituazioniDellaUI();
+		ui.segnaSchermataDiGioco();
+		ui.segnaDalMotore(Situazione.COMPAGNO_IN_LOCANDA);
+		ui.segnaDalMotore(Situazione.RECUPERO_FRA_LOCAZIONI);
+		assertTrue(correnti(ui, Comando.SI, Comando.NO).contains(Situazione.COMPAGNO_IN_LOCANDA));
+		ui.segnaNuovaLocazione();
+		assertFalse(correnti(ui, Comando.SI, Comando.NO).contains(Situazione.COMPAGNO_IN_LOCANDA));
+		assertTrue(correnti(ui).contains(Situazione.RECUPERO_FRA_LOCAZIONI));
+	}
 }

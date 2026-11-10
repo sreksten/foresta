@@ -30,6 +30,8 @@ public enum TipoSuggerimento {
 	// La prima pagina dice dell'oggetto e di chi lo prende (punta il gruppo: a fine scontro la barra non ha ancora le icone, e il suggerimento deve aprirsi
 	// prima dell'eremita), la seconda che può andare nell'inventario (punta la sua icona)
 	OGGETTO_TROVATO(Situazione.OGGETTO_TROVATO, BersaglioDelSuggerimento.RIQUADRO_DEL_GRUPPO, BersaglioDelSuggerimento.ICONA_DELL_INVENTARIO),
+	// La prima volta che la barra chiede di scegliere fra più personaggi chi compie l'azione; dopo l'oggetto trovato, che dice già che si sceglie chi lo prende
+	SCELTA_DEL_PERSONAGGIO(Situazione.SCELTA_DEL_PERSONAGGIO, BersaglioDelSuggerimento.ICONE_DEI_PERSONAGGI),
 	// Un personaggio è salito di livello: la prima pagina mostra il riquadro del gruppo, dove si vede, la seconda l'icona che apre l'inventario, dove si spende il punto
 	LIVELLO_SALITO(Situazione.PUNTI_ABILITA_DISPONIBILI, BersaglioDelSuggerimento.RIQUADRO_DEL_GRUPPO, BersaglioDelSuggerimento.ICONA_DELL_INVENTARIO),
 	// La prima pagina parla delle frecce, la seconda del riquadro della mappa, la terza dell'icona che apre la mappa a tutto schermo
@@ -83,6 +85,9 @@ public enum TipoSuggerimento {
 	// Arrivati in città: la prima pagina dà il benvenuto, le altre quattro (una per bottega, con la sua tessera, come l'elenco dei luoghi) dicono che cosa fa
 	// ognuna
 	BOTTEGHE(Situazione.INGRESSO_IN_BOTTEGA, BersaglioDelSuggerimento.ICONE_DELLE_BOTTEGHE),
+	// La prima volta che in una locanda qualcuno chiede di unirsi al gruppo: il motore lo dice (NotificaMessaggioDelTutorial) prima di chiedere sì o no.
+	// La prima pagina dice che entra nel gruppo per sempre, la seconda che le locande costano di più ma conviene lo stesso
+	COMPAGNO_IN_LOCANDA(Situazione.COMPAGNO_IN_LOCANDA, BersaglioDelSuggerimento.ICONE_SI_NO),
 	ACCAMPAMENTO(Situazione.NOTTE, BersaglioDelSuggerimento.ICONA_DELL_ACCAMPAMENTO),
 	GESTI_SUL_TOCCO(Situazione.DITO_SULLO_SCHERMO, BersaglioDelSuggerimento.BARRA_DELLE_ICONE);
 

@@ -49,7 +49,12 @@ public enum BersaglioDelSuggerimento {
 	ICONA_DELLA_CORRUZIONE(Comando.CORRUZIONE),
 	ICONA_DELL_AMICIZIA(Comando.AMICIZIA),
 	ICONA_DELL_ACCAMPAMENTO(Comando.ACCAMPAMENTO),
-	ICONE_DELLE_BOTTEGHE(Comando.NEGOZIO_ALCHIMISTA, Comando.NEGOZIO_ARMAIOLO, Comando.NEGOZIO_VENDITORE_DI_PERGAMENE, Comando.NEGOZIO_INCANTATORE);
+	ICONE_DELLE_BOTTEGHE(Comando.NEGOZIO_ALCHIMISTA, Comando.NEGOZIO_ARMAIOLO, Comando.NEGOZIO_VENDITORE_DI_PERGAMENE, Comando.NEGOZIO_INCANTATORE),
+	/** Le icone dei personaggi del gruppo, quando la barra chiede chi compie l'azione. */
+	ICONE_DEI_PERSONAGGI(Comando.PERSONAGGIO_1, Comando.PERSONAGGIO_2, Comando.PERSONAGGIO_3, Comando.PERSONAGGIO_4, Comando.PERSONAGGIO_5,
+			Comando.PERSONAGGIO_6, Comando.PERSONAGGIO_7, Comando.PERSONAGGIO_8),
+	/** Il Sì e il No di una domanda. */
+	ICONE_SI_NO(Comando.SI, Comando.NO);
 
 	private final Set<Comando> icone;
 
