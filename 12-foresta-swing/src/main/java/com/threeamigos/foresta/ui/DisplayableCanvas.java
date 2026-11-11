@@ -131,6 +131,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		riquadroMissioni = new DisplayableCanvasRiquadroMissioni(disposizione.getMissioni().getX(), disposizione.getMissioni().getY(), vistaPartita);
 		mappaATuttoSchermo = new DisplayableCanvasMappaATuttoSchermo(larghezzaContenuto, altezzaContenuto, vistaPartita);
 		inventario = new DisplayableCanvasInventario(larghezzaContenuto, altezzaContenuto, vistaPartita);
+		// Sul telefono monete, preziosi e punti stanno in cima agli oggetti del gruppo: il riquadro delle statistiche non c'è
+		inventario.setStatisticheInTestaADestra(disposizione.isTelefono());
 		paginaTrofei = new DisplayableCanvasTrofei(larghezzaContenuto, altezzaContenuto, vistaPartita);
 		bestiario = new DisplayableCanvasBestiario(larghezzaContenuto, altezzaContenuto, vistaPartita);
 		grimorio = new DisplayableCanvasGrimorio(larghezzaContenuto, altezzaContenuto);

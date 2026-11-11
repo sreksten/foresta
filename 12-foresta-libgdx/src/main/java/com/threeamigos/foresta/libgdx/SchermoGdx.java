@@ -116,6 +116,8 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 				piccolo, medio);
 		mappaATuttoSchermo = new SchermataMappaGdx(larghezza, altezza, vistaPartita, immagini, medio, nuvole);
 		inventario = new SchermataDiScambioArtefattiGdx(larghezza, altezza, vistaPartita, immagini, piccolo, medio, TipoBottega.INVENTARIO);
+		// Sul telefono monete, preziosi e punti stanno in cima agli oggetti del gruppo: il riquadro delle statistiche non c'è
+		inventario.setStatisticheInTestaADestra(disposizione.isTelefono());
 		commerciante = new SchermataDiScambioArtefattiGdx(larghezza, altezza, vistaPartita, immagini, piccolo, medio, TipoBottega.ARMAIOLO);
 		incantatore = new SchermataDiScambioArtefattiGdx(larghezza, altezza, vistaPartita, immagini, piccolo, medio, TipoBottega.INCANTATORE);
 		alchimista = new SchermataDiScambioConsumabiliGdx(larghezza, altezza, vistaPartita, immagini, piccolo, medio);

@@ -8,8 +8,8 @@ Tutte le misure sono in pixel virtuali a zoom 2 (le immagini sono a metà risolu
 
 1. **Due layout, scelti dalla misura vera dello schermo.** Il layout di oggi (lo chiamiamo «del tablet»: mappa con la sua cornice, riquadro delle statistiche, tre riquadri impilati) resta dove ci sta; altrimenti si usa il layout «del telefono». Su Android la scelta è automatica; sul desktop si chiede con un argomento (§3).
 2. **Nel layout del telefono la mappa diventa un riquadro della pila**, come quello delle missioni, **senza la sua cornice** (`CorniceMappa.png`): la cornice è quella grande dei riquadri impilati.
-3. **Monete, preziosi e punti vanno in cima al riquadro del gruppo** (quello dei personaggi, da cui si prendono le armi e le si equipaggiano): tre righe fisse, un separatore, e sotto la lista scorrevole dei personaggi. Il riquadro delle statistiche nel layout del telefono non c'è.
-4. **Senza il riquadro delle statistiche non ci sono gli sprite delle variazioni** di monete, preziosi e punti (+3 monete…): le tre righe si aggiornano e basta.
+3. **Monete, preziosi e punti vanno in cima alla colonna «Inventario gruppo» della schermata dell'inventario** (gli oggetti del gruppo, che si prendono e si equipaggiano): tre righe fisse, un separatore, e sotto l'elenco scorrevole degli oggetti. Nella schermata di gioco non si vedono: il riquadro delle statistiche nel layout del telefono non c'è (§4.3).
+4. **Senza il riquadro delle statistiche non ci sono gli sprite delle variazioni** di monete, preziosi e punti (+3 monete…): le tre righe dell'inventario si aggiornano e basta.
 5. **Più spazio vuol dire più testo**: un telefono più largo (o più allungato) dà la larghezza in più al riquadro del testo.
 6. **Intro e outro**: lo sfondo si ritaglia (non si deforma); le scritte scorrevoli restano; il logo LaForesta si comporta come oggi; il logo 3AM sta sempre in basso a destra, attaccato agli angoli dello schermo vero.
 7. **Trofei**: i nomi vanno a capo su più righe, mai oltre il bordo dello schermo.
@@ -103,15 +103,15 @@ Oggi `RiquadroMappa` disegna 7×7 caselle da 32 pixel (224×224) dentro `Cornice
 - La finestra resta **sempre di 7×7 caselle**, come sul tablet (deciso): i 52 pixel per lato restano margine.
 - Il riquadro della mappa nella pila ha bisogno di un'**intestazione**, come gli altri (il nome con cui lo si riconosce quando sta dietro).
 
-### 4.3 Il riquadro del gruppo con monete, preziosi e punti
+### 4.3 Monete, preziosi e punti in cima agli oggetti del gruppo
 
-L'interno del riquadro è 336×256 (`RiquadroGruppo.BORDO_INTERNO` = 16).
+Sul telefono il riquadro delle statistiche non c'è, e monete, preziosi e punti **non si vedono nella schermata di gioco**: stanno in cima alla colonna destra della **schermata dell'inventario** («Inventario gruppo», gli oggetti del gruppo che si prendono e si equipaggiano). Chiarito con l'utente il 2026-11-11: una prima stesura di questo piano li metteva per errore nel riquadro Gruppo della pila.
 
-- In cima, **tre righe fisse**: monete, preziosi, punti, con l'etichetta a sinistra e il valore a destra, come oggi in `RiquadroStatistiche` (passo di 17 pixel, il corpo del font medio più uno). Sotto, un **separatore** orizzontale. Insieme prendono circa **60 pixel**.
-- Sotto, la **lista scorrevole** dei personaggi, invariata, nei pixel che restano (circa 195). Ogni personaggio occupa tre righe del font medio (72 pixel): se ne vedono **circa 2,7 per volta invece di 3,5**, e gli altri si raggiungono scorrendo. Prendere un'arma da un personaggio e darla a un altro resta come oggi.
-- Le tre righe non scorrono con la lista: il trascinamento e la rotella valgono solo sotto il separatore, e anche l'area sensibile della lista comincia lì.
-- La logica sta in `RiquadroGruppo` (modulo comune): un'opzione «con le statistiche in testa» sposta `listaY` e accorcia `listaAltezza`, e `voci()` aggiunge le tre righe e il separatore. Le etichette e i valori vengono da `RiquadroStatistiche`, che va diviso in due parti: le tre voci, comuni, e gli sprite delle variazioni, che restano solo dove c'è il riquadro (decisione 4).
-- Sul tablet niente cambia: le statistiche stanno nel loro riquadro, con gli sprite.
+- In cima alla colonna, **tre righe fisse**: monete, preziosi, punti, con l'etichetta a sinistra e il valore a destra. Sotto, il **separatore** (`Separatore.png`, 336×32, largo quanto l'interno della colonna). In tutto 3 righe del font medio, il separatore e due spazi: **112 pixel**.
+- Sotto, l'**elenco scorrevole** degli oggetti del gruppo, che comincia dopo la testata e si accorcia di altrettanto. Le tre righe non scorrono; la rotella, il trascinamento, l'oggetto sotto il mouse e l'aiuto valgono solo dentro l'elenco.
+- La logica sta in `SchermataDiScambio` (modulo comune): `setStatisticheInTestaADestra`, `testataADestra()` (le righe e il separatore come `ContenutoDiColonna`), `yElenco(boxX)` e `altezzaElenco(boxX)` (dove comincia e quanto è alto l'elenco di una colonna), che usano `dentroElenco` e `ScambioDegliArtefatti.trovaArtefatto`. Swing e libGDX disegnano l'elenco a quella quota e la testata con il loro `DisegnoDiContenuto`. L'opzione la accendono `DisplayableCanvas` e `SchermoGdx` sulla sola schermata dell'inventario, e solo sul telefono.
+- Niente sprite delle variazioni: senza il riquadro delle statistiche non nascono (decisione 4).
+- Sul tablet niente cambia: le statistiche stanno nel loro riquadro, con gli sprite, e l'inventario è come oggi.
 
 ### 4.4 Gli altri riquadri
 
@@ -123,7 +123,7 @@ L'interno del riquadro è 336×256 (`RiquadroGruppo.BORDO_INTERNO` = 16).
 ### 4.5 Il tutorial nella schermata del telefono
 
 - `BersaglioDelSuggerimento.RIQUADRO_DELLA_MAPPA` e gli altri riquadri della pila: quando un suggerimento indica un riquadro che sta dietro, va **portato davanti** prima di disegnargli il bordo intorno, altrimenti il bordo dorato circonda un riquadro coperto. Vale anche per il gruppo e le missioni, ma oggi i riquadri sono tre e la mappa non c'è.
-- I suggerimenti che parlano di **monete** devono indicare le tre righe del riquadro del gruppo, non il riquadro delle statistiche (da controllare in `SituazioniDellaUI` e `TutorDelGioco`).
+- I suggerimenti che parlano di **monete** o puntano al riquadro delle statistiche non devono puntare a un riquadro che sul telefono non c'è (da controllare in `SituazioniDellaUI`, `TutorDelGioco` e nei testi: dove si vedono le monete è l'inventario).
 - **I testi che dicono dove stanno le icone**: per esempio `SCELTA_DELLA_CLASSE.PAGINA_1` e `INVENTARIO.PAGINA_2` dicono «le icone in basso». Con la barra a destra non è vero, e succede già oggi sul tablet con `VERTICALE`. **Deciso**: i testi dicono «la barra delle icone», che vale ovunque stia la barra; niente varianti. Vanno cercati tutti (anche nelle altre lingue e nelle varianti `.TOCCO`).
 - Il fumetto (`DisposizioneDelFumetto`) si tiene già dentro lo schermo; va provato sull'area più bassa (505).
 
@@ -185,10 +185,10 @@ Ogni passo compila e passa i test, e alla fine di ognuno si guarda il risultato 
 1. **Le misure di prova**: `MisuraDelloSchermo`, `SchermoDiProva`, l'argomento `SCHERMO=` in `OpzioniDiAvvio` (con i test in `OpzioniDiAvvioTest`), la regola del §2.2 con i suoi test (la tabella del §2.3 come casi), e la finestra del §3.2 in `MainLibgdx` e in `Main`. Il layout è ancora quello di oggi: si vede solo come cambia la scala. Aggiornati `13-foresta-app-libgdx.md` e `12-foresta-ui-comune.md`. **Fatto** (2026-11-11).
 2. **La disposizione del telefono** in `DisposizioneDelloSchermo` (§4.1), con i test sulle aree (nessuna sovrapposizione fuori dalla pila, tutto dentro l'area, il testo che si allarga con lo schermo), e i due front-end che la usano; la mappa nella pila per ora con la sua cornice. **Fatto** (2026-11-11): sul telefono le statistiche non si creano; `AnteprimaSchermate` accetta `SCHERMO=`. Visto su `MINIMO`: nella locazione larga 390 i personaggi del gruppo si accalcano (cinque in 390 pixel); sui telefoni comuni (642 e più) ci stanno.
 3. **La mappa senza cornice** (§4.2) e la sua intestazione. **Fatto** (2026-11-11): cornice grande, intestazione «Mappa», finestra di 7×7 centrata (72 pixel ai lati, 32 sopra e sotto); `AnteprimaSchermate` salva anche `gioco_mappa.png`, con la mappa davanti.
-4. **Il riquadro del gruppo con le statistiche in testa** (§4.3), la divisione di `RiquadroStatistiche` e niente sprite delle variazioni nel layout del telefono.
+4. **Monete, preziosi e punti in cima agli oggetti del gruppo** nell'inventario (§4.3), e niente sprite delle variazioni nel layout del telefono. **Fatto** (2026-11-11): `RiquadroStatistiche` non è servito dividerlo, sul telefono semplicemente non si crea; `AnteprimaSchermate` apre l'inventario con lo scambio vero; test in `StatisticheInTestaAgliOggettiDelGruppoTest`.
 5. **Combattimento e sfida** (§4.4).
 6. **Intro, outro, classifica e trofei** (§5), con il test dei testi grandi che non escono dal bordo.
-7. **Il tutorial** (§4.5): i riquadri portati davanti, le monete nel gruppo, i testi per la barra verticale.
+7. **Il tutorial** (§4.5): i riquadri portati davanti, le monete nell'inventario.
 8. **Android**: la misura vera con l'area utile (§3.3), e la prova sul Realme Pad, che deve restare sul layout del tablet. Il layout del telefono si prova sul tablet fingendo un'altra misura (`adb shell wm size` e `wm density`).
 9. **Le schermate a tutto schermo** (§6), una per una, con la cornice dell'inventario tagliata nel mezzo; gli intermezzi (fumetti in proporzione allo sfondo) si possono correggere anche prima, perché è un difetto a sé.
 

@@ -202,9 +202,9 @@ public final class ScambioDegliArtefatti {
 	 */
 	public VistaArtefatto trovaArtefatto(Collection<? extends VistaArtefatto> artefatti, int boxX, int offset, int x, int y, boolean parteAttiva) {
 		int xInterno = x - (boxX + Finestra.SPACING);
-		int yInterno = y - (SchermataDiScambio.DIMENSIONE_BORDO_INTERNO + 2 * Finestra.SPACING);
+		int yInterno = y - schermata.yElenco(boxX);
 		if (xInterno < 0 || xInterno >= schermata.larghezzaDisponibileInRiquadroInventario()
-				|| yInterno < 0 || yInterno >= schermata.altezzaDisponibileInRiquadroInventario()) {
+				|| yInterno < 0 || yInterno >= schermata.altezzaElenco(boxX)) {
 			return null;
 		}
 		return costruisciElenco(artefatti, null, parteAttiva).riferimentoTitoloAllaQuota(yInterno + offset);

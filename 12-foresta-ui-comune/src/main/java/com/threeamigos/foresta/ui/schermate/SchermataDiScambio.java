@@ -125,6 +125,9 @@ public abstract class SchermataDiScambio implements Finestra {
 	 * Lo scorrimento della zona su cui è stato premuto il tasto, per il trascinamento (null se la pressione è caduta fuori)
 	 */
 	private ScorrimentoSuUnAsse scorrimentoPremuto;
+	// Sul telefono, in cima alla colonna destra dell'inventario (gli oggetti del gruppo): monete, preziosi e punti e un separatore, perché
+	// lì il riquadro delle statistiche non c'è (vedi layout_telefono.md §4.3)
+	private boolean statisticheInTestaADestra;
 
 	/**
 	 * Posizione del mouse, per evidenziare in bianco l'artefatto sotto il cursore.
@@ -179,6 +182,72 @@ public abstract class SchermataDiScambio implements Finestra {
 
 	public int altezzaDisponibileInRiquadroInventario() {
 		return altezzaCornice - 2 * (DIMENSIONE_BORDO_INTERNO + SPACING);
+	}
+
+	/**
+	 * Mette in cima alla colonna destra monete, preziosi e punti, con un separatore: l'elenco comincia sotto (sul telefono, nell'inventario)
+	 */
+	public void setStatisticheInTestaADestra(boolean statisticheInTestaADestra) {
+		this.statisticheInTestaADestra = statisticheInTestaADestra;
+	}
+
+	public boolean isStatisticheInTestaADestra() {
+		return statisticheInTestaADestra;
+	}
+
+	/**
+	 * Quanto è alta la testata con monete, preziosi e punti: tre righe, lo spazio, il separatore e lo spazio; 0 se non c'è
+	 */
+	public int altezzaTestataADestra() {
+		if (!statisticheInTestaADestra) {
+			return 0;
+		}
+		return 3 * fontHeight + SPACING + misure.immagine(NomiDelleImmagini.SEPARATORE).altezza + SPACING;
+	}
+
+	/**
+	 * La quota a cui comincia l'elenco della colonna che parte in boxX (sinistra o destra): sotto la testata, se c'è
+	 */
+	public int yElenco(int boxX) {
+		int y = DIMENSIONE_BORDO_INTERNO + 2 * SPACING;
+		return boxX == xMinimaZonaDestra ? y + altezzaTestataADestra() : y;
+	}
+
+	/**
+	 * L'altezza dell'elenco della colonna che parte in boxX: quella della cornice, meno la testata, se c'è
+	 */
+	public int altezzaElenco(int boxX) {
+		int altezza = altezzaDisponibileInRiquadroInventario();
+		return boxX == xMinimaZonaDestra ? altezza - altezzaTestataADestra() : altezza;
+	}
+
+	/**
+	 * La testata della colonna destra, come elementi nelle coordinate dello schermo: monete, preziosi e punti (l'etichetta a sinistra, il valore a destra)
+	 * e sotto il separatore. Null se non c'è (vedi {@link #setStatisticheInTestaADestra}).
+	 */
+	public ContenutoDiColonna testataADestra() {
+		if (!statisticheInTestaADestra) {
+			return null;
+		}
+		List<Elemento> elementi = new ArrayList<>();
+		DoomdarkColorModel.Color colore = DoomdarkColorModel.Color.LIGHT_GRAY;
+		int x = xMinimaZonaDestra + SPACING;
+		int xDestra = xMassimaZonaDestra - SPACING;
+		int y = DIMENSIONE_BORDO_INTERNO + 2 * SPACING;
+		String[][] righe = {
+				{TestiDellaUI.get("MONETE"), String.valueOf(vistaPartita.getCassa().getMonete())},
+				{TestiDellaUI.get("PREZIOSI"), String.valueOf(vistaPartita.getCassa().getPreziosi())},
+				{TestiDellaUI.get("PUNTI"), vistaPartita.getPuntiEsperienza() + "/" + vistaPartita.getPuntiEsperienzaPerProssimoLivello()}};
+		for (String[] riga : righe) {
+			elementi.add(Elemento.testo(Collections.singletonList(riga[0]), font, colore, x, y));
+			elementi.add(Elemento.testo(Collections.singletonList(riga[1]), font, colore, xDestra - Math.max(1, FontTool.getWidth(font, riga[1])), y));
+			y += fontHeight;
+		}
+		y += SPACING;
+		Misura separatore = misure.immagine(NomiDelleImmagini.SEPARATORE);
+		elementi.add(Elemento.immagine(NomiDelleImmagini.SEPARATORE, separatore.larghezza, separatore.altezza, false, null,
+				xMinimaZonaDestra + (xMassimaZonaDestra - xMinimaZonaDestra - separatore.larghezza) / 2, y));
+		return new ContenutoDiColonna(width, y + separatore.altezza + SPACING, elementi);
 	}
 
 	/**
@@ -373,9 +442,9 @@ public abstract class SchermataDiScambio implements Finestra {
 	 */
 	protected boolean dentroElenco(int boxX, int x, int y) {
 		int xInterno = x - (boxX + SPACING);
-		int yInterno = y - (DIMENSIONE_BORDO_INTERNO + 2 * SPACING);
+		int yInterno = y - yElenco(boxX);
 		return xInterno >= 0 && xInterno < larghezzaDisponibileInRiquadroInventario()
-				&& yInterno >= 0 && yInterno < altezzaDisponibileInRiquadroInventario();
+				&& yInterno >= 0 && yInterno < altezzaElenco(boxX);
 	}
 
 	@Override

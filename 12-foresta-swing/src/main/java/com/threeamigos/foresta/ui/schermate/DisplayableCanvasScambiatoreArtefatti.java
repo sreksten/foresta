@@ -4,6 +4,7 @@ import com.threeamigos.foresta.artefatti.VistaArtefatto;
 import com.threeamigos.foresta.artefatti.VistaScambio;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.ui.componenti.ComponenteScorrevole;
+import com.threeamigos.foresta.ui.componenti.ContenutoDiColonna;
 import com.threeamigos.foresta.ui.componenti.ElencoScorrevole;
 import com.threeamigos.foresta.ui.componenti.ScorrimentoSuUnAsse;
 import com.threeamigos.foresta.ui.componenti.ValoreDiDueTesti;
@@ -39,6 +40,8 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
     protected int yAttributi = 0;
 
     private final ScambioDegliArtefatti logica;
+    // Per la testata della colonna destra (monete, preziosi e punti), quando c'è
+    private final DisegnoDiContenutoAwt disegnoDellaTestata = new DisegnoDiContenutoAwt();
 
     DisplayableCanvasScambiatoreArtefatti(int width, int height, VistaPartita vistaPartita) {
         super(width, height, vistaPartita);
@@ -120,6 +123,10 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
 
         disegnaElenco(graphics, logica.getArtefattiDellaParteAttiva(), xMinimaZonaSinistra, scorrimentoSinistra, true);
         disegnaElenco(graphics, logica.getArtefattiDellaParteRemota(), xMinimaZonaDestra, scorrimentoDestra, false);
+        ContenutoDiColonna testata = testataADestra();
+        if (testata != null) {
+            disegnoDellaTestata.disegna(graphics, testata, 0, 0);
+        }
 
         disegnaIntestazioniInventario(graphics);
 
@@ -196,8 +203,8 @@ public abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableC
         ComponenteScorrevole<VistaArtefatto> componenteScorrevole = new ComponenteScorrevole<>(elenco, larghezzaDisponibileInRiquadroInventario(), 10, 1,
                 DisplayableCanvasScambiatoreArtefatti::immagineDelNodo);
 
-        Image image = componenteScorrevole.produci(altezzaDisponibileInRiquadroInventario(), scorrimento);
-        graphics.drawImage(image, x + SPACING, DIMENSIONE_BORDO_INTERNO + 2 * SPACING, null);
+        Image image = componenteScorrevole.produci(altezzaElenco(x), scorrimento);
+        graphics.drawImage(image, x + SPACING, yElenco(x), null);
     }
 
     /**

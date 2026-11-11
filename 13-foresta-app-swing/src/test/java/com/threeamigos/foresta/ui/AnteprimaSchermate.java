@@ -2,6 +2,8 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoErrore;
+import com.threeamigos.foresta.gruppi.GruppoGiocatore;
+import com.threeamigos.foresta.motore.AutomaInventario;
 import com.threeamigos.foresta.motore.GestorePunteggiInMemoria;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.PartitaDiAnteprima;
@@ -72,6 +74,9 @@ public final class AnteprimaSchermate {
 		// Con la mappa davanti: sul telefono è uno dei riquadri della pila
 		canvas.getSchermo().primoPiano(TipoFinestra.MAPPA);
 		salva(canvas, new File(cartella, "gioco_mappa.png"));
+		// L'inventario con lo scambio fra il capo e il gruppo, come lo apre l'automa
+		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
+		canvas.getSchermo().impostaScambioInventario(new AutomaInventario(gruppo.getCapo(), gruppo), gruppo.getCapo());
 		canvas.getSchermo().inventario();
 		salva(canvas, new File(cartella, "inventario.png"));
 		canvas.getSchermo().mappa();

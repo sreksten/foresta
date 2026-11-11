@@ -199,6 +199,10 @@ public final class SchermataDiScambioArtefattiGdx extends SchermataDiScambio {
 		}
 		disegnaElenco(batch, camera, viewport, scambioDegliArtefatti.getArtefattiDellaParteAttiva(), xMinimaZonaSinistra, scorrimentoSinistra, true);
 		disegnaElenco(batch, camera, viewport, scambioDegliArtefatti.getArtefattiDellaParteRemota(), xMinimaZonaDestra, scorrimentoDestra, false);
+		ContenutoDiColonna testata = testataADestra();
+		if (testata != null) {
+			disegno.disegna(batch, testata, 0, 0, 1f);
+		}
 		intestazione(batch, bottega.getIntestazioneSinistra(), SPACING + larghezzaCornice / 2);
 		intestazione(batch, bottega.getIntestazioneDestra(), width - SPACING - larghezzaCornice / 2);
 		if (colonna.getPersonaggio() == null) {
@@ -239,7 +243,7 @@ public final class SchermataDiScambioArtefattiGdx extends SchermataDiScambio {
 
 	private void disegnaElenco(Batch batch, Camera camera, Viewport viewport, Collection<? extends VistaArtefatto> artefatti, int x, ScorrimentoSuUnAsse scorrimento,
 							   boolean parteAttiva) {
-		int altezza = altezzaDisponibileInRiquadroInventario();
+		int altezza = altezzaElenco(x);
 		// L'elenco può essere cambiato dall'ultimo scorrimento: il limite si aggiorna e lo scorrimento resta dentro
 		VistaArtefatto evidenziato = scambioDegliArtefatti.artefattoSottoIlMouse(artefatti, x, (int) Math.round(scorrimento.getScorrimento()), parteAttiva);
 		ElencoScorrevole<VistaArtefatto> elenco = scambioDegliArtefatti.costruisciElenco(artefatti, evidenziato, parteAttiva);
@@ -247,7 +251,7 @@ public final class SchermataDiScambioArtefattiGdx extends SchermataDiScambio {
 		scorrimento.imposta(massimo > 0, massimo);
 		scorrimento.aggiorna();
 		int offset = elenco.limitaOffset(altezza, (int) Math.round(scorrimento.getScorrimento()));
-		elencoGdx.disegna(batch, camera, viewport, elenco, new Area(x + SPACING, DIMENSIONE_BORDO_INTERNO + 2 * SPACING, larghezzaDisponibileInRiquadroInventario(), altezza),
+		elencoGdx.disegna(batch, camera, viewport, elenco, new Area(x + SPACING, yElenco(x), larghezzaDisponibileInRiquadroInventario(), altezza),
 				offset);
 	}
 }
