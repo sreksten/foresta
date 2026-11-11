@@ -11,6 +11,7 @@ import com.threeamigos.foresta.ui.testo.DoomdarkFont;
 import com.threeamigos.foresta.ui.testo.FontTool;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -170,6 +171,9 @@ public class RiquadroCombattimento implements Finestra {
 	private VistaPersonaggio avversario;
 	private VistaPersonaggio chiHaDecisoLAzione;
 	private String testoAzione;
+	// Chi combatteva all'ultimo disegno: finito lo scontro il motore svuota l'ordine di combattimento, ma il riquadro può restare aperto finché il
+	// fumetto del tutorial lo indica (l'ultimo avversario morto per una reazione elementale), e deve mostrare come è finita
+	private List<VistaPersonaggio> ultimiCombattenti = Collections.emptyList();
 	private final DoomdarkFont fontMedium = DoomdarkFont.medio();
 	protected final VistaPartita vistaPartita;
 
@@ -214,6 +218,7 @@ public class RiquadroCombattimento implements Finestra {
 		if (!visible) {
 			chiHaDecisoLAzione = null;
 			testoAzione = null;
+			ultimiCombattenti = Collections.emptyList();
 		}
 	}
 
@@ -270,7 +275,11 @@ public class RiquadroCombattimento implements Finestra {
 		if (!visible) {
 			return null;
 		}
-		List<? extends VistaPersonaggio> personaggi = vistaPartita.getOrdineDiCombattimento();
+		List<? extends VistaPersonaggio> ordine = vistaPartita.getOrdineDiCombattimento();
+		if (!ordine.isEmpty()) {
+			ultimiCombattenti = new ArrayList<>(ordine);
+		}
+		List<VistaPersonaggio> personaggi = ultimiCombattenti;
 		if (personaggi.isEmpty()) {
 			return null;
 		}

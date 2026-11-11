@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
@@ -135,5 +136,21 @@ class RiquadroCombattimentoTest {
             assertTrue(r.x >= 0 && r.x + r.width <= colonnaDestraX, "non tocca la pila: " + r);
             assertTrue(r.y >= 0 && r.y + r.height <= altezza, "dentro l'altezza: " + r);
         }
+    }
+
+    @Test
+    void finitoLoScontroIlRiquadroAncoraApertoMostraChiCombattevaInveceDiRestareVuoto() {
+        // Il motore svuota l'ordine di combattimento quando lo scontro finisce, ma il riquadro resta aperto finché il fumetto del tutorial lo indica
+        List<Personaggio> ordine = new ArrayList<>(personaggi(TipoPersonaggio.BARDO, 2));
+        DisplayableCanvasRiquadroCombattimento riquadro = new DisplayableCanvasRiquadroCombattimento(LARGHEZZA, ALTEZZA, Y_PREFERITA,
+                vista(ordine, new ArrayList<>()));
+        riquadro.setVisible(true);
+        assertEquals(2, riquadro.disponi().getRighe().size());
+        ordine.clear();
+        assertEquals(2, riquadro.disponi().getRighe().size(), "le righe dell'ultimo disegno restano");
+        // Chiuso, il prossimo scontro non si porta dietro quello di prima
+        riquadro.setVisible(false);
+        riquadro.setVisible(true);
+        assertNull(riquadro.disponi());
     }
 }

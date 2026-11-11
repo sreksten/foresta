@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * L'introduzione del gioco, senza disegno: la storia sale sullo sfondo della storia, e il logo della Foresta la segue (compare sotto l'ultima riga e sale
  * con lei) finché non arriva al suo posto, dove si ferma mentre la storia continua a salire; a quel punto compare anche il logo 3AM, poi loghi e sfondo
- * spariscono insieme; la classifica sale e si ferma, poi sparisce; i trofei scorrono tutti. Poi si ricomincia. Qui c'è il tempo e che cosa si vede in ogni
+ * spariscono insieme; la classifica sale e si ferma, poi sparisce (se non ci sta sullo schermo sale fino a uscire); i trofei scorrono tutti. Poi si ricomincia. Qui c'è il tempo e che cosa si vede in ogni
  * fotogramma ({@link #avanza()}): chi disegna (Swing, libGDX) mette il {@link Quadro}.
  */
 public final class IntroDelGioco {
@@ -358,10 +358,17 @@ public final class IntroDelGioco {
 		return quadro;
 	}
 
+	/**
+	 * La classifica sale e, se ci sta tutta sullo schermo fuori dalle fasce che sfumano, si ferma in cima e poi sparisce; se non ci sta (su uno schermo
+	 * basso) continua a salire come i trofei, finché non è uscita anche l'ultima riga.
+	 */
 	private Quadro classifica(double secondi) {
 		if (colonna == null) {
 			contenuto = classifica(gestorePunteggi, width);
-			colonna = ColonnaScorrevole.dalBasso(schermo(), contenuto.getAltezza(), FASCIA).fermaA(SchermateSenzaPartita.QUOTA_CLASSIFICA);
+			colonna = ColonnaScorrevole.dalBasso(schermo(), contenuto.getAltezza(), FASCIA);
+			if (classificaFerma(contenuto.getAltezza(), height)) {
+				colonna.fermaA(SchermateSenzaPartita.QUOTA_CLASSIFICA);
+			}
 		}
 		colonna.avanza(secondi, VELOCITA);
 		if (colonna.isArrivato()) {
@@ -369,10 +376,17 @@ public final class IntroDelGioco {
 		}
 		float uscita = (float) Math.max(0, Math.min(1, (secondiFermo - SECONDI_CLASSIFICA) / SECONDI_DISSOLVENZA));
 		Quadro quadro = new Quadro(Fase.CLASSIFICA, true, 0f, colonna, contenuto, 1 - uscita, Collections.<Logo>emptyList());
-		if (uscita >= 1) {
+		if (uscita >= 1 || colonna.isUscito()) {
 			passaA(Fase.TROFEI);
 		}
 		return quadro;
+	}
+
+	/**
+	 * Se una classifica alta così, ferma alla sua quota, si vede tutta su uno schermo alto così: il fondo non deve entrare nella fascia che sfuma.
+	 */
+	static boolean classificaFerma(int altezzaDellaClassifica, int altezzaDelloSchermo) {
+		return SchermateSenzaPartita.QUOTA_CLASSIFICA + altezzaDellaClassifica <= altezzaDelloSchermo - FASCIA;
 	}
 
 	private Quadro trofei(double secondi) {

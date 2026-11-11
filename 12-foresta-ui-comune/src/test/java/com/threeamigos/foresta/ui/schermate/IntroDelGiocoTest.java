@@ -260,4 +260,43 @@ class IntroDelGiocoTest {
 		assertTrue(lunga.getElementi().get(3).getY() > corta.getElementi().get(3).getY(), "il posto dopo scende");
 		assertTrue(lunga.getAltezza() > corta.getAltezza());
 	}
+
+	private static String[] dieciNomi() {
+		String[] nomi = new String[10];
+		for (int i = 0; i < nomi.length; i++) {
+			nomi[i] = "Eroe " + i;
+		}
+		return nomi;
+	}
+
+	/** Porta l'intro alla classifica e la fa andare finché non si passa ai trofei; dice se la classifica si è mai fermata */
+	private static boolean laClassificaSiFerma(IntroDelGioco intro) {
+		intro.posizionaSuPunteggi();
+		boolean ferma = false;
+		for (int i = 0; i < 20000 && intro.getFase() == IntroDelGioco.Fase.CLASSIFICA; i++) {
+			IntroDelGioco.Quadro quadro = intro.avanzaDi(PASSO);
+			ferma |= quadro.getColonna().isArrivato();
+		}
+		assertEquals(IntroDelGioco.Fase.TROFEI, intro.getFase(), "dopo la classifica ci sono i trofei");
+		return ferma;
+	}
+
+	@Test
+	void unaClassificaCheCiStaSiFermaInCima() {
+		IntroDelGioco alta = new IntroDelGioco(LARGHEZZA, 2000, classificaCon(dieciNomi()), vista(), MISURE);
+		assertTrue(laClassificaSiFerma(alta));
+	}
+
+	@Test
+	void unaClassificaCheNonCiStaScorreFinoAUscireTutta() {
+		IntroDelGioco bassa = new IntroDelGioco(LARGHEZZA, 480, classificaCon(dieciNomi()), vista(), MISURE);
+		assertFalse(laClassificaSiFerma(bassa), "non si ferma: l'ultima riga deve passare");
+	}
+
+	@Test
+	void laClassificaSiFermaSoloSeIlFondoNonEntraNellaFasciaCheSfuma() {
+		int altezza = 600 - SchermateSenzaPartita.QUOTA_CLASSIFICA - IntroDelGioco.FASCIA;
+		assertTrue(IntroDelGioco.classificaFerma(altezza, 600));
+		assertFalse(IntroDelGioco.classificaFerma(altezza + 1, 600));
+	}
 }
