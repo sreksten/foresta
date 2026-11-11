@@ -17,7 +17,9 @@ import java.util.function.LongSupplier;
  * <li>la <b>pressione prolungata</b> ({@link #PRESSIONE_PROLUNGATA_MS} senza muoversi) fa comparire le descrizioni come se il cursore passasse sul punto
  * ({@code mosso}), e non esegue niente: il rilascio la chiude (il cursore «esce») senza nessun click e senza che le finestre abbiano mai visto la
  * pressione, perché alcune, come la barra delle icone, eseguono il comando al rilascio. Spostando il dito le descrizioni lo seguono;</li>
- * <li>un movimento sotto la soglia è tremolio del dito: non è un trascinamento.</li>
+ * <li>un movimento sotto la soglia è tremolio del dito: non è un trascinamento;</li>
+ * <li>alzato il dito, il «cursore» esce dallo schermo ({@code mouseUscito}): il dito non lascia un cursore fermo sull'ultimo punto toccato, e la barra
+ * delle icone non ne mostra il cartiglio quando lì arriva un'altra icona.</li>
  * </ul></li>
  * </ul>
  * Col mouse ({@code tocco} falso) ogni evento passa com'è e non c'è pressione prolungata: il cursore sta già sul punto.
@@ -121,9 +123,17 @@ public final class RiconoscitoreDiGesti {
 		}
 		consegnaLaPressione();
 		destinazione.rilasciato(x, y, tasto);
-		if (spostato) {
-			return;
+		if (!spostato) {
+			consegnaIlClick(x, y, tasto);
 		}
+		if (tocco) {
+			// Alzato il dito non c'è più nessun cursore sullo schermo: senza l'uscita la barra delle icone crederebbe di averlo ancora sull'ultima icona
+			// toccata, e ne mostrerebbe il cartiglio quando lì arriva un'altra icona
+			destinazione.mouseUscito(x, y);
+		}
+	}
+
+	private void consegnaIlClick(int x, int y, Finestra.Tasto tasto) {
 		long ora = orologio.getAsLong();
 		boolean secondo = conteggioDelClick == 1 && tasto == tastoDelClick && ora - istanteDelClick <= destinazione.getIntervalloDoppioClick()
 				&& Math.abs(x - xClick) <= DISTANZA_FRA_I_CLICK && Math.abs(y - yClick) <= DISTANZA_FRA_I_CLICK;

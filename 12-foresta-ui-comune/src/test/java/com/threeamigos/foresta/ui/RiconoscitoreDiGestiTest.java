@@ -146,9 +146,9 @@ class RiconoscitoreDiGestiTest {
 		assertTrue(registro.eventi.isEmpty(), "la pressione non si consegna subito");
 		assertEquals(RiconoscitoreDiGesti.PRESSIONE_PROLUNGATA_MS, pianificatore.ultimoRitardo);
 		gesti.rilasciato(10, 10, Finestra.Tasto.SINISTRO);
-		assertEquals(java.util.Arrays.asList("premuto 10,10", "rilasciato 10,10", "clic1 10,10"), registro.eventi);
+		assertEquals(java.util.Arrays.asList("premuto 10,10", "rilasciato 10,10", "clic1 10,10", "uscito 10,10"), registro.eventi);
 		pianificatore.passaIlTempo();
-		assertEquals(3, registro.eventi.size(), "rilasciato in tempo, la pressione prolungata e' annullata");
+		assertEquals(4, registro.eventi.size(), "rilasciato in tempo, la pressione prolungata e' annullata");
 	}
 
 	@Test
@@ -158,7 +158,7 @@ class RiconoscitoreDiGestiTest {
 		gesti.trascinato(14, 12);
 		assertTrue(registro.eventi.isEmpty());
 		gesti.rilasciato(14, 12, Finestra.Tasto.SINISTRO);
-		assertEquals(java.util.Arrays.asList("premuto 10,10", "rilasciato 14,12", "clic1 14,12"), registro.eventi);
+		assertEquals(java.util.Arrays.asList("premuto 10,10", "rilasciato 14,12", "clic1 14,12", "uscito 14,12"), registro.eventi);
 	}
 
 	@Test
@@ -168,9 +168,9 @@ class RiconoscitoreDiGestiTest {
 		gesti.trascinato(30, 10);
 		gesti.trascinato(50, 10);
 		gesti.rilasciato(50, 10, Finestra.Tasto.SINISTRO);
-		assertEquals(java.util.Arrays.asList("premuto 10,10", "trascinato 30,10", "trascinato 50,10", "rilasciato 50,10"), registro.eventi);
+		assertEquals(java.util.Arrays.asList("premuto 10,10", "trascinato 30,10", "trascinato 50,10", "rilasciato 50,10", "uscito 50,10"), registro.eventi);
 		pianificatore.passaIlTempo();
-		assertEquals(4, registro.eventi.size(), "muovendosi la pressione prolungata e' annullata");
+		assertEquals(5, registro.eventi.size(), "muovendosi la pressione prolungata e' annullata");
 	}
 
 	@Test
@@ -206,7 +206,7 @@ class RiconoscitoreDiGestiTest {
 		ora += 100;
 		gesti.premuto(10, 10, Finestra.Tasto.SINISTRO);
 		gesti.rilasciato(10, 10, Finestra.Tasto.SINISTRO);
-		assertEquals(java.util.Arrays.asList("premuto 10,10", "rilasciato 10,10", "clic1 10,10"), registro.eventi);
+		assertEquals(java.util.Arrays.asList("premuto 10,10", "rilasciato 10,10", "clic1 10,10", "uscito 10,10"), registro.eventi);
 	}
 
 	@Test
@@ -217,7 +217,7 @@ class RiconoscitoreDiGestiTest {
 		ora += registro.intervallo;
 		gesti.premuto(20, 12, Finestra.Tasto.SINISTRO);
 		gesti.rilasciato(20, 12, Finestra.Tasto.SINISTRO);
-		assertEquals("clic2 20,12", registro.eventi.get(registro.eventi.size() - 1));
+		assertEquals("clic2 20,12", registro.eventi.get(registro.eventi.size() - 2));
 	}
 
 	@Test
@@ -229,7 +229,7 @@ class RiconoscitoreDiGestiTest {
 		ora += registro.intervallo + 1;
 		gesti.premuto(10, 10, Finestra.Tasto.SINISTRO);
 		gesti.rilasciato(10, 10, Finestra.Tasto.SINISTRO);
-		assertEquals("clic1 10,10", registro.eventi.get(registro.eventi.size() - 1));
+		assertEquals("clic1 10,10", registro.eventi.get(registro.eventi.size() - 2));
 	}
 
 	@Test
@@ -240,7 +240,7 @@ class RiconoscitoreDiGestiTest {
 		ora += 50;
 		gesti.premuto(10 + RiconoscitoreDiGesti.DISTANZA_FRA_I_CLICK + 1, 10, Finestra.Tasto.SINISTRO);
 		gesti.rilasciato(10 + RiconoscitoreDiGesti.DISTANZA_FRA_I_CLICK + 1, 10, Finestra.Tasto.SINISTRO);
-		assertTrue(registro.eventi.get(registro.eventi.size() - 1).startsWith("clic1"));
+		assertTrue(registro.eventi.get(registro.eventi.size() - 2).startsWith("clic1"));
 	}
 
 	@Test
@@ -288,6 +288,16 @@ class RiconoscitoreDiGestiTest {
 		gesti.trascinato(12, 10);
 		gesti.trascinato(13, 11);
 		gesti.rilasciato(13, 11, Finestra.Tasto.SINISTRO);
-		assertEquals(java.util.Arrays.asList("premuto 10,10", "trascinato 12,10", "trascinato 13,11", "rilasciato 13,11", "clic1 13,11"), registro.eventi);
+		assertEquals(java.util.Arrays.asList("premuto 10,10", "trascinato 12,10", "trascinato 13,11", "rilasciato 13,11", "clic1 13,11", "uscito 13,11"),
+				registro.eventi);
+	}
+
+	@Test
+	void colMouseIlRilascioNonFaUscireIlCursore() {
+		// Il cursore del mouse resta dov'è: il cartiglio della barra deve restare
+		RiconoscitoreDiGesti gesti = mouse();
+		gesti.premuto(10, 10, Finestra.Tasto.SINISTRO);
+		gesti.rilasciato(10, 10, Finestra.Tasto.SINISTRO);
+		assertTrue(registro.eventi.stream().noneMatch(e -> e.startsWith("uscito")));
 	}
 }
