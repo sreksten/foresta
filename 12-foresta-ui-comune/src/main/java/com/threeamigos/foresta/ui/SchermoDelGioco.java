@@ -1220,8 +1220,10 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 
 	private boolean isBersaglioVisibile(BersaglioDelSuggerimento bersaglio) {
 		switch (bersaglio) {
-			case RIQUADRI:
 			case RIQUADRO_DEL_COMBATTIMENTO:
+				// Se l'ultimo avversario è morto (per esempio per una reazione elementale) il riquadro è già sparito: il suggerimento non ha più a cosa puntare
+				return riquadroCombattimento().isVisibile();
+			case RIQUADRI:
 			case RIQUADRO_DEL_GRUPPO:
 			case RIQUADRO_DELLE_MISSIONI:
 			case RIQUADRO_DELLA_MAPPA:
