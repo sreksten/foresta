@@ -6,7 +6,9 @@ import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.Misura;
+import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.componenti.ContenutoDiColonna;
+import com.threeamigos.foresta.ui.componenti.CorniceTagliata;
 import com.threeamigos.foresta.ui.componenti.ContenutoDiColonna.Elemento;
 import com.threeamigos.foresta.ui.componenti.ScorrimentoSuUnAsse;
 import com.threeamigos.foresta.ui.immagini.NomiDelleImmagini;
@@ -83,7 +85,9 @@ public abstract class SchermataDiScambio implements Finestra {
 	public final DoomdarkFont fontSmall = DoomdarkFont.piccolo();
 
 	final int larghezzaCornice;
+	// L'altezza della cornice come si disegna: quella dell'immagine, o meno se lo schermo è più basso (tagliata nel mezzo, vedi CorniceTagliata)
 	private final int altezzaCornice;
+	private final List<CorniceTagliata.Fascia> fasceDellaCornice;
 	private final MisureDelleImmagini misure;
 	/**
 	 * Usiamo l'immagine del Ladro come riferimento per disegnare il personaggio centrale della finestra di scambio
@@ -138,7 +142,7 @@ public abstract class SchermataDiScambio implements Finestra {
 
 	/**
 	 * @param larghezzaCornice la larghezza della cornice dell'inventario, già con lo zoom
-	 * @param altezzaCornice   la sua altezza
+	 * @param altezzaCornice   la sua altezza, con lo zoom: se lo schermo è più basso, la cornice si taglia nel mezzo ({@link #getFasceDellaCornice()})
 	 * @param misure           per le misure dei personaggi al centro
 	 */
 	protected SchermataDiScambio(int width, int height, VistaPartita vistaPartita, int larghezzaCornice, int altezzaCornice, MisureDelleImmagini misure) {
@@ -146,7 +150,9 @@ public abstract class SchermataDiScambio implements Finestra {
 		this.width = width;
 		this.height = height;
 		this.larghezzaCornice = larghezzaCornice;
-		this.altezzaCornice = altezzaCornice;
+		double zoom = LivelloDiZoom.valore();
+		this.fasceDellaCornice = CorniceTagliata.fasce((int) Math.round(altezzaCornice / zoom), zoom, height - SPACING);
+		this.altezzaCornice = CorniceTagliata.altezza(fasceDellaCornice);
 		this.misure = misure;
 		this.altezzaLadro = misure.personaggio(TipoPersonaggio.LADRO).altezza;
 
@@ -171,6 +177,14 @@ public abstract class SchermataDiScambio implements Finestra {
 
 	protected int offsetYZonaDestra() {
 		return (int) Math.round(scorrimentoDestra.getScorrimento());
+	}
+
+	/**
+	 * Come disegnare le due cornici (a sinistra e a destra, dalla quota {@link #SPACING}): l'immagine intera, o la sua parte di sopra e quella di sotto se
+	 * lo schermo è più basso della cornice
+	 */
+	public List<CorniceTagliata.Fascia> getFasceDellaCornice() {
+		return fasceDellaCornice;
 	}
 
 	/**

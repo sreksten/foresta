@@ -77,8 +77,8 @@ public final class SchermataTatticheGdx extends SchermataDiScambio implements Sc
 
 	public void disegna(Batch batch, Camera camera, Viewport viewport) {
 		int xCorniceDestra = width - SPACING - larghezzaCornice;
-		immagini.disegna(batch, CORNICE, SPACING, SPACING, zoom);
-		immagini.disegna(batch, CORNICE, xCorniceDestra, SPACING, zoom);
+		immagini.disegnaAFasce(batch, CORNICE, SPACING, SPACING, zoom, getFasceDellaCornice());
+		immagini.disegnaAFasce(batch, CORNICE, xCorniceDestra, SPACING, zoom, getFasceDellaCornice());
 		intestazione(batch, TestiDellaUI.get("TATTICHE_TATTICA"), SPACING + larghezzaCornice / 2);
 		intestazione(batch, TestiDellaUI.get("TATTICHE_SPIEGAZIONE"), width - SPACING - larghezzaCornice / 2);
 		if (editor.getPersonaggio() == null) {

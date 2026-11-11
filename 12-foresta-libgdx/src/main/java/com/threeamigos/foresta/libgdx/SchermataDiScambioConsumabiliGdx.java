@@ -86,8 +86,8 @@ public final class SchermataDiScambioConsumabiliGdx extends SchermataDiScambio {
 
 	public void disegna(Batch batch, Camera camera, Viewport viewport) {
 		int xCorniceDestra = width - SPACING - larghezzaCornice;
-		immagini.disegna(batch, CORNICE, SPACING, SPACING, zoom);
-		immagini.disegna(batch, CORNICE, xCorniceDestra, SPACING, zoom);
+		immagini.disegnaAFasce(batch, CORNICE, SPACING, SPACING, zoom, getFasceDellaCornice());
+		immagini.disegnaAFasce(batch, CORNICE, xCorniceDestra, SPACING, zoom, getFasceDellaCornice());
 		disegnaElenco(batch, camera, viewport, logica.getElencoGruppo(), xMinimaZonaSinistra, scorrimentoSinistra, false);
 		disegnaElenco(batch, camera, viewport, logica.getElencoVenditore(), xMinimaZonaDestra, scorrimentoDestra, true);
 		intestazione(batch, TipoBottega.ALCHIMISTA.getIntestazioneSinistra(), SPACING + larghezzaCornice / 2);

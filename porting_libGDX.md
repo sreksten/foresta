@@ -129,7 +129,7 @@ La finestra di prova (`FinestraDiProva`) si porta anche lei (decisione del 2026-
 
 ## 9. Fase 6: layout per telefono
 
-**Il piano dettagliato è in [`layout_telefono.md`](layout_telefono.md)** (2026-11-11): due layout scelti dalla misura in dp, la mappa nella pila, le statistiche nel riquadro del gruppo, le misure di prova dal desktop (`SCHERMO=`), intro, trofei e schermate a tutto schermo.
+**Il piano dettagliato è in [`layout_telefono.md`](layout_telefono.md)** (2026-11-11): due layout scelti dalla misura in dp, la mappa nella pila, monete, preziosi e punti in cima agli oggetti del gruppo nell'inventario, le misure di prova dal desktop (`SCHERMO=`), intro, trofei e schermate a tutto schermo con la cornice dell'inventario tagliata nel mezzo. **Tutti i nove passi sono fatti nel codice** (2026-11-11); restano le prove sul dispositivo (la densità del Realme Pad, la leggibilità a scala 0,71, il tocco, la tastiera).
 
 Il gioco resta orizzontale. Prima prova, **fatta in Swing e in libGDX** (argomento `VERTICALE`): la barra icone passa da orizzontale in fondo a verticale sul lato destro, e scorre in pixel su tutta la lunghezza (con rotella, trascinamento, inerzia ed elastico), con due freccine blu sovrapposte che segnalano dove c'è altro. Restano da fare il layout a tile (mappa come tile, testo ridotto) e la scelta dell'altezza target. Con le misure di lavoro (zoom 2,0) la barra tiene 64 + 4 px di spaziatura:
 

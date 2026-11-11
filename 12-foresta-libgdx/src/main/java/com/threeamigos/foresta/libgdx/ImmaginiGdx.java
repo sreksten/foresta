@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
+import com.threeamigos.foresta.ui.componenti.CorniceTagliata;
 import com.threeamigos.foresta.ui.immagini.AtlanteDiImmagini;
 
 import com.threeamigos.foresta.ui.immagini.ImmagineDiPixel;
@@ -87,6 +88,20 @@ public final class ImmaginiGdx implements Disposable {
 	public void disegna(Batch batch, String risorsa, float x, float y, float scala) {
 		TextureRegion regione = regione(risorsa);
 		batch.draw(regione, x, y, regione.getRegionWidth() * scala, regione.getRegionHeight() * scala);
+	}
+
+	/**
+	 * Disegna una cornice a fasce (vedi CorniceTagliata): intera, o la sua parte di sopra e quella di sotto attaccate, con la cima in (x, y)
+	 */
+	public void disegnaAFasce(Batch batch, String risorsa, float x, float y, float scala, List<CorniceTagliata.Fascia> fasce) {
+		int larghezza = regione(risorsa).getRegionWidth();
+		for (CorniceTagliata.Fascia fascia : fasce) {
+			if (fascia.getAltezzaSorgente() <= 0) {
+				continue;
+			}
+			batch.draw(porzione(risorsa, 0, fascia.getYSorgente(), larghezza, fascia.getAltezzaSorgente()), x, y + fascia.getYDestinazione(), larghezza * scala,
+					fascia.getAltezzaDestinazione());
+		}
 	}
 
 	/**

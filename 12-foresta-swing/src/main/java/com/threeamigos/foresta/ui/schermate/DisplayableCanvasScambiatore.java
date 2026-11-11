@@ -5,6 +5,8 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.barra.Cartiglio;
 import com.threeamigos.foresta.tipi.MappaPersonaggioImmagine;
+import com.threeamigos.foresta.ui.LivelloDiZoom;
+import com.threeamigos.foresta.ui.componenti.CorniceTagliata;
 import com.threeamigos.foresta.ui.componenti.ScorrimentoSuUnAsse;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.sprite.CoordinateFumetto;
@@ -117,9 +119,22 @@ public abstract class DisplayableCanvasScambiatore extends SchermataDiScambio {
      * Disegna le due cornici cornice dell'inventario
      */
     protected void disegnaInventario(Graphics2D graphics) {
-        graphics.drawImage(ImageCache.corniceInventario, SPACING, SPACING, null);
-        graphics.drawImage(ImageCache.corniceInventario, width - SPACING - corniceInventarioWidth, SPACING, null);
+        disegnaCornice(graphics, SPACING);
+        disegnaCornice(graphics, width - SPACING - corniceInventarioWidth);
         disegnaIntestazioniInventario(graphics);
+    }
+
+    /**
+     * Una cornice dell'inventario: intera, o tagliata nel mezzo se lo schermo è più basso (la parte di sopra e quella di sotto, vedi CorniceTagliata)
+     */
+    private void disegnaCornice(Graphics2D graphics, int x) {
+        double zoom = LivelloDiZoom.valore();
+        for (CorniceTagliata.Fascia fascia : getFasceDellaCornice()) {
+            int ySorgente = (int) Math.round(fascia.getYSorgente() * zoom);
+            int y = SPACING + fascia.getYDestinazione();
+            graphics.drawImage(ImageCache.corniceInventario, x, y, x + corniceInventarioWidth, y + fascia.getAltezzaDestinazione(),
+                    0, ySorgente, corniceInventarioWidth, ySorgente + fascia.getAltezzaDestinazione(), null);
+        }
     }
 
     /**
