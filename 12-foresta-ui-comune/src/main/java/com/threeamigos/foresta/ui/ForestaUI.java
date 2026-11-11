@@ -12,6 +12,7 @@ import com.threeamigos.foresta.modificatori.TestoDeiModificatori;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzabile;
 import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzatore;
+import com.threeamigos.foresta.tipi.BersaglioDelSuggerimento;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.FaseDiGioco;
 import com.threeamigos.foresta.tipi.TipoAttributo;
@@ -199,13 +200,15 @@ public abstract class ForestaUI implements Temporizzabile {
 			impostaAzioni(e.getPossibilita());
 			schermo.tattiche(e.getPersonaggio(), e.getTattica(), e.getTatticaPredefinita(), e.getAzioniPossibili());
 		});
-		BusEventi.iscriviti(InternoRichiestaChiusuraFinestraCombattimento.class, e -> {
+		// Se il fumetto del tutorial sta indicando il combattimento (una reazione elementale che ha ucciso l'ultimo avversario) il riquadro resta finché
+		// non lo si chiude
+		BusEventi.iscriviti(InternoRichiestaChiusuraFinestraCombattimento.class, e -> schermo.dopoIlSuggerimentoSu(BersaglioDelSuggerimento.RIQUADRO_DEL_COMBATTIMENTO, () -> {
 			schermo.primoPiano(TipoFinestra.STATO);
 			schermo.getRiquadroCombattimento().setVisible(false);
 			situazioni.segnaCombattimentoChiuso();
 			// Finito lo scontro: se qualcuno è caduto, è il momento di dire che si può riportare in vita
 			aggiornaIlTutorial();
-		});
+		}));
 		BusEventi.iscriviti(InternoSfidaCartaForbiciSasso.class, e -> {
 			schermo.getRiquadroSfida().aggiorna(e.getMossaDelGiocatore(), e.getMossaDellAvversario(), e.getPunteggioDelGiocatore(),
 					e.getPunteggioDellAvversario(), e.isInizio());

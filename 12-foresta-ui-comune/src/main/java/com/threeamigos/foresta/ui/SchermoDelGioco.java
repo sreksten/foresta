@@ -100,6 +100,8 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	// I suggerimenti del tutorial: finché un fumetto è aperto la UI è occupata e il motore aspetta
 	private final TutorDelGioco tutor = new TutorDelGioco();
 	private Runnable ricontrollaIlTutorial;
+	// Quel che aspetta che si chiuda il suggerimento aperto (la chiusura del combattimento, finito mentre il fumetto lo indicava)
+	private Runnable allaChiusuraDelSuggerimento;
 	// Se all'ultimo fotogramma c'era un annuncio (o una rivelazione): quando finisce si ricontrolla il tutorial, anche se gli sprite non finiscono mai
 	private boolean annunciInCorso;
 	// La prossima intro deve partire dalla classifica invece che dai loghi (vedi mostraPunteggi)
@@ -1139,10 +1141,34 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	 * Il giocatore ha premuto il pollice del suggerimento: avanti di una pagina, o chiuso se era l'ultima; chiuso, si guarda se ce n'è un altro.
 	 */
 	public void pollicePremuto() {
-		if (tutor.pollice() && ricontrollaIlTutorial != null) {
-			ricontrollaIlTutorial.run();
+		if (tutor.pollice()) {
+			eseguiQuelCheAspettavaIlSuggerimento();
+			if (ricontrollaIlTutorial != null) {
+				ricontrollaIlTutorial.run();
+			}
 		}
 		ridisegna();
+	}
+
+	/**
+	 * Fa l'azione adesso, oppure, se il suggerimento aperto indica quel bersaglio, appena lo si chiude: il combattimento finito mentre il fumetto lo
+	 * spiega (l'ultimo avversario morto per una reazione elementale) resta davanti finché il giocatore non ha letto, e il bordo ha ancora che cosa
+	 * circondare.
+	 */
+	public void dopoIlSuggerimentoSu(BersaglioDelSuggerimento bersaglio, Runnable azione) {
+		if (tutor.getFumetto().filter(f -> f.getBersaglio() == bersaglio).isPresent()) {
+			allaChiusuraDelSuggerimento = azione;
+		} else {
+			azione.run();
+		}
+	}
+
+	private void eseguiQuelCheAspettavaIlSuggerimento() {
+		if (allaChiusuraDelSuggerimento != null && !tutor.isAperto()) {
+			Runnable azione = allaChiusuraDelSuggerimento;
+			allaChiusuraDelSuggerimento = null;
+			azione.run();
+		}
 	}
 
 	/**
@@ -1365,6 +1391,8 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 		if (tutor.isAperto() && !isTutorialVisibile()) {
 			tutor.chiudi();
 		}
+		// Chiuso il suggerimento in un altro modo (l'annulla, o la schermata lasciata): quel che aspettava si fa adesso
+		eseguiQuelCheAspettavaIlSuggerimento();
 		// Un suggerimento che indica un riquadro della pila lo porta davanti: il bordo non deve circondare un riquadro coperto dagli altri
 		tutor.getFumetto().filter(f -> isSchermataDelSuggerimento(f.getSuggerimento())).ifPresent(f -> portaDavantiSeImpilato(f.getBersaglio()));
 		// Finiti gli annunci che il suggerimento aspettava, o tutto quel che teneva occupata la UI: il suggerimento può aprirsi. Lo si controlla PRIMA di
