@@ -26,7 +26,7 @@ adb shell monkey -p com.threeamigos.foresta -c android.intent.category.LAUNCHER 
 adb logcat --pid=$(adb shell pidof com.threeamigos.foresta)
 ```
 
-Versioni: Gradle 8.13, AGP 8.13.0, `compileSdk` 36 (libGDX 1.14 usa AndroidX e `androidx.core` 1.17 lo richiede), `targetSdk` 34, `minSdk` 26 (il piano diceva 24: per il prototipo si evitano i problemi con le API Java 8 di libreria come `String.join`; si torna a 24 dopo una verifica con lint). `AndroidX` è abilitato in `gradle.properties`.
+Versioni: Gradle 8.13, AGP 8.13.0, `compileSdk` 36 (libGDX 1.14 usa AndroidX e `androidx.core` 1.17 lo richiede), `targetSdk` 34, `minSdk` 24 (Android 7.0). `AndroidX` è abilitato in `gradle.properties`.
 
 ## L'icona
 
@@ -38,6 +38,7 @@ Provato su un **Realme Pad (RMP2103)**: un tablet da 10,4″, 2000×1200, Androi
 
 ## Osservazioni
 
+- **`minSdk` 24, verificato il 2026-11-11.** Lint (`./gradlew lintDebug`) non trova errori, ma guarda solo i sorgenti dell'app (`AndroidLauncher`), non il bytecode dei jar del gioco; quello si è controllato a parte, confrontando ogni riferimento a classi, metodi e campi dei 30 jar con `platforms/android-36/data/api-versions.xml`. Sopra la 24 escono solo cose che D8 sistema da sé, come conferma `dexdump` sull'APK: `String.join` (26) diventa un backport (`$$ExternalSyntheticBackport`), le lambda (`LambdaMetafactory`, `MethodHandles`) sono desugarate, e `ByteBuffer.clear()` con il tipo di ritorno covariante di Java 9 (in `TexturaAggiornabileGdx`: i moduli si compilano con `source`/`target` 1.8 ma senza `--release 8`) diventa `Buffer.clear()`. Sotto la 24 non si scende: gli stream e le interfacce funzionali (`java.util.function`) vengono dalla 24, e `androidx.core` di libGDX 1.14 vuole comunque almeno la 21.
 - Nei moduli non-Swing non ci sono import di `java.awt`, `java.time`, `java.nio.file` né `javax.*`: il compilatore Android li ha accettati tutti.
 - **Precisione delle coordinate delle texture**: lo shader predefinito di libGDX è `mediump`, che sulle GPU Mali è a 16 bit e al bordo delle immagini degli atlanti fa leggere la riga rossa di separazione; per questo si usa `SpriteBatchDiPrecisioneAltaGdx` (vedi `12-foresta-libgdx.md`).
 - Il Realme Pad è un tablet, non un telefono: non dice niente sul layout da telefono (rapporto 1,67 contro circa 2,2). Con `adb shell wm size` si può far fingere allo schermo una forma più stretta.
@@ -45,6 +46,5 @@ Provato su un **Realme Pad (RMP2103)**: un tablet da 10,4″, 2000×1200, Androi
 ## Da fare / idee aperte
 
 - Provare il tocco e una partita intera (salvataggio, caricamento, inventario, mappa, combattimento, tastiera di sistema).
-- Riportare `minSdk` a 24 verificando con lint le API usate.
 - La firma dell'app e il pacchetto per lo store (Fase 7, punto 5), le icone, il nome e i margini di sicurezza (notch); lo schermo sempre acceso c'è già (`useWakelock` in `AndroidLauncher`).
 - Il layout per telefono (Fase 6).

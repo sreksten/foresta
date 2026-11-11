@@ -12,9 +12,9 @@ android {
 
     defaultConfig {
         applicationId 'com.threeamigos.foresta'
-        // 26 e non 24 (come dice il piano) per il prototipo: java.util.stream e le interfacce funzionali ci sono dalla 24, ma String.join e simili
-        // dalla 26. Si torna a 24 quando si verifica con lint cosa serve davvero.
-        minSdk 26
+        // 24: java.util.stream e le interfacce funzionali ci sono dalla 24; String.join (26) e simili li riscrive D8 (backport), come le lambda.
+        // Sotto la 24 mancano gli stream, che il gioco usa ovunque (vedi foresta-android.md).
+        minSdk 24
         targetSdk 34
         versionCode 1
         versionName '0.0.1'
