@@ -31,10 +31,11 @@ class DatiDeiPersonaggiTest {
         assertTrue(TipoMotivoNelGruppo.AIUTO_GRATUITO.isATempo());
         assertTrue(TipoMotivoNelGruppo.AIUTO_MERCENARIO.isATempo());
         assertTrue(TipoMotivoNelGruppo.MIETITURA.isATempo());
-        // Lo scheletro della mietitura torna polvere quando cade, e non è stato interpellato
+        assertTrue(TipoMotivoNelGruppo.CORRUZIONE.isATempo());
+        // Lo scheletro della mietitura torna polvere quando cade, e non è stato interpellato; nemmeno chi è stato corrotto si unisce per sua scelta
         for (TipoMotivoNelGruppo motivo : TipoMotivoNelGruppo.values()) {
             assertEquals(motivo == TipoMotivoNelGruppo.MIETITURA, motivo.isLasciaSeMuore(), motivo.name());
-            assertEquals(motivo != TipoMotivoNelGruppo.MIETITURA, motivo.isEntraVolentieri(), motivo.name());
+            assertEquals(motivo != TipoMotivoNelGruppo.MIETITURA && motivo != TipoMotivoNelGruppo.CORRUZIONE, motivo.isEntraVolentieri(), motivo.name());
         }
     }
 

@@ -9,6 +9,7 @@ import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
+import com.threeamigos.foresta.tipi.TipoApproccio;
 import com.threeamigos.foresta.tipi.TipoMotivoNelGruppo;
 
 import java.util.List;
@@ -21,9 +22,15 @@ public class AiutoMercenario implements Offerta {
 
 	private Personaggio personaggio;
 	private final int costo;
+	// Perché entra nel gruppo: chi è stato corrotto non lo fa per sua scelta (vedi TipoMotivoNelGruppo.CORRUZIONE)
+	private final TipoMotivoNelGruppo motivo;
 
-	public AiutoMercenario() {
+	/**
+	 * @param approccio come il gruppo ha ottenuto l'offerta: facendo amicizia o corrompendo
+	 */
+	public AiutoMercenario(TipoApproccio approccio) {
 		costo = Dado.tira(6);
+		motivo = approccio == TipoApproccio.CORRUZIONE ? TipoMotivoNelGruppo.CORRUZIONE : TipoMotivoNelGruppo.AIUTO_MERCENARIO;
 	}
 
 	@Override
@@ -63,7 +70,7 @@ public class AiutoMercenario implements Offerta {
 	@Override
 	public void accetta(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
 		// il primo turno scatta subito
-		personaggio.setMotivoNelGruppo(TipoMotivoNelGruppo.AIUTO_MERCENARIO);
+		personaggio.setMotivoNelGruppo(motivo);
 		personaggio.setTempo(costo + 1);
 		gruppo.aggiungiPersonaggio(personaggio);
 		Cassa.subMonete(costo);

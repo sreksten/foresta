@@ -1,7 +1,10 @@
 package com.threeamigos.foresta.tutorial;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.InternoPersonaggioEntratoNelGruppo;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.personaggi.PersonaggioBase;
 import com.threeamigos.foresta.personaggi.RegoleEquipaggiamento;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
@@ -27,6 +30,10 @@ import java.util.OptionalInt;
  * non è finita: un suggerimento letto in mezzo a uno scontro non deve togliere la protezione al giocatore. Se i suggerimenti non si vedono (l'interfaccia
  * non li mostra: {@link RegistroSuggerimenti#isMostrabile}) o il passo non avanza, dopo {@link #TURNI_MASSIMI} turni il tutorial smette comunque di
  * pilotare.
+ * <p>
+ * <b>Nessuno muore nel tutorial</b>: finché pilota, il capo non scende sotto un punto ferita (per un colpo, un veleno o un incantesimo), e chi si unisce al
+ * gruppo a tempo (il goblin corrotto) resta salvo finché il suo tempo non scade, anche a tutorial finito: il giocatore non deve sprecare una resurrezione
+ * per liberarsene (vedi {@link #registrati()}).
  */
 public final class PilotaggioDelTutorial implements TruccatoreDiDadi {
 
@@ -83,6 +90,20 @@ public final class PilotaggioDelTutorial implements TruccatoreDiDadi {
 		int precedente = passoDellaLocazione == PASSO_DA_CALCOLARE ? 0 : passoDellaLocazione;
 		passoDellaLocazione = Math.min(calcolaIlPasso(), precedente + 1);
 		azzeraIlPrimoScontro();
+	}
+
+	/**
+	 * Protegge dalla morte il capo finché il tutorial pilota, e rende salvo fino alla scadenza chi entra nel gruppo a tempo mentre pilota (vedi
+	 * {@link Personaggio#isSalvoDallaMorte()}). Lo chiama {@code StatoDelMotore.registraComponenti}; dopo un {@code BusEventi.azzera()} va richiamato.
+	 */
+	public static void registrati() {
+		PersonaggioBase.impostaProtezioneDallaMorte(p -> p == GruppoGiocatore.getIstanza().getCapo() && pilotaQuestoTurno());
+		BusEventi.iscriviti(InternoPersonaggioEntratoNelGruppo.class, evento -> {
+			Personaggio personaggio = evento.getPersonaggio();
+			if (personaggio.isATempo() && pilotaQuestoTurno()) {
+				personaggio.getModelloDati().setSalvoFinoAllaScadenza(true);
+			}
+		});
 	}
 
 	/**

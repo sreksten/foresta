@@ -20,6 +20,14 @@ class ArticoliTest {
         assertEquals("negli gnomi", Articoli.conPreposizione("in", "gli gnomi"));
         assertEquals("delle stelle", Articoli.conPreposizione("di", "le stelle"));
         assertEquals("a Ruuna", Articoli.conPreposizione("a", "Ruuna"));
+        assertEquals("sul Goblin", Articoli.conPreposizione("su", "il Goblin"));
+        assertEquals("sullo Scheletro", Articoli.conPreposizione("su", "lo Scheletro"));
+        assertEquals("sulla Strega", Articoli.conPreposizione("su", "la Strega"));
+        assertEquals("sull'Arpia", Articoli.conPreposizione("su", "l'Arpia"));
+        assertEquals("sui goblin", Articoli.conPreposizione("su", "i goblin"));
+        assertEquals("sugli scheletri", Articoli.conPreposizione("su", "gli scheletri"));
+        assertEquals("sulle streghe", Articoli.conPreposizione("su", "le streghe"));
+        assertEquals("su Aldo", Articoli.conPreposizione("su", "Aldo"));
     }
 
     @Test
@@ -30,8 +38,8 @@ class ArticoliTest {
 
     @Test
     void unaPreposizioneCheNonSiArticolaEUnErrore() {
-        IllegalArgumentException errore = assertThrows(IllegalArgumentException.class, () -> Articoli.conPreposizione("su", "il monte"));
-        assertTrue(errore.getMessage().contains("su"), errore.getMessage());
+        IllegalArgumentException errore = assertThrows(IllegalArgumentException.class, () -> Articoli.conPreposizione("per", "il monte"));
+        assertTrue(errore.getMessage().contains("per"), errore.getMessage());
     }
 
     @Test

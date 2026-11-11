@@ -9,6 +9,8 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.gruppi.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
@@ -39,7 +41,8 @@ public class Resurrezione implements Incantesimo {
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 
 		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "Resurrezione.1", formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA), getClasse().getNomeSingolare(), nome)));
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA), getClasse().getNomeSingolare(),
+				Lingue.corrente().conPreposizione(Preposizione.SU, personaggioBersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)))));
 
 		if (personaggioBersaglio.isVivo()) {
             String notifica = Testi.formatta("messaggi_poteri", personaggioBersaglio.getSesso() == Personaggio.Sesso.MASCHIO ? "Resurrezione.giaVivo.M" : "Resurrezione.giaVivo.F", nome);

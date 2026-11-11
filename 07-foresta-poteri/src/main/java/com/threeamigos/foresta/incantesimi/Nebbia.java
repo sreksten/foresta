@@ -14,6 +14,8 @@ import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
 
 import java.util.List;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
@@ -51,7 +53,7 @@ public class Nebbia extends IncantesimoMaleficoImpl implements IncantesimoGlobal
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 		for (Personaggio avversario : bersagli) {
 			if (avversario.isImmuneAIncantesimo(getClasse())) {
-				BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "Nebbia.2", avversario.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE))));
+				BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "Nebbia.2", Lingue.corrente().conPreposizione(Preposizione.SU, avversario.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)))));
 				continue;
 			}
 			avversario.addModificatore(new ModificatoreAttributoMD(TipoAttributo.PRECISIONE, TipoModificatore.VARIAZIONE_PERCENTUALE,

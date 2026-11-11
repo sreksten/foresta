@@ -84,7 +84,7 @@ public final class Articoli {
 	}
 
 	/**
-	 * La preposizione "a", "di", "da" o "in" fusa con l'articolo con cui comincia il nome: "in" + "il Tempio del Sole"
+	 * La preposizione "a", "di", "da", "in" o "su" fusa con l'articolo con cui comincia il nome: "in" + "il Tempio del Sole"
 	 * fa "nel Tempio del Sole", "a" + "l'Eremo" fa "all'Eremo". Se il nome non comincia con un articolo, la
 	 * preposizione resta staccata.
 	 */
@@ -96,6 +96,7 @@ public final class Articoli {
 			case "di": radice = "de"; break;
 			case "da": radice = "da"; break;
 			case "in": radice = "ne"; break;
+			case "su": radice = "su"; break;
 			default: throw new IllegalArgumentException("Preposizione non articolabile: " + preposizione);
 		}
 		for (String[] articolo : articoli) {

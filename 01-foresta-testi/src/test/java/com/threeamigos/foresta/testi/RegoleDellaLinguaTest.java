@@ -114,6 +114,8 @@ class RegoleDellaLinguaTest {
 		assertEquals("by the ", EN.daAgente(new Nome("Dragon", "Dragons", Genere.NEUTRO, null, null, true)));
 		assertEquals("nel Tempio del Sole", IT.conPreposizione(Preposizione.IN, "il Tempio del Sole"));
 		assertEquals("all'Eremo", IT.conPreposizione(Preposizione.A, "l'Eremo"));
+		assertEquals("sull'Arpia", IT.conPreposizione(Preposizione.SU, "l'Arpia"));
+		assertEquals("sul ", IT.preposizioneArticolata(Preposizione.SU, m("Goblin"), false));
 	}
 
 	@Test
@@ -154,6 +156,7 @@ class RegoleDellaLinguaTest {
 		assertEquals("in the Temple of the Sun", EN.conPreposizione(Preposizione.IN, "the Temple of the Sun"));
 		// Un nome che comincia con l'articolo, dopo una preposizione, lo ha in minuscolo
 		assertEquals("from the Hollow Trunk", EN.conPreposizione(Preposizione.DA, "The Hollow Trunk"));
+		assertEquals("on the harpy", EN.conPreposizione(Preposizione.SU, "the harpy"));
 		assertEquals("the Wrong Turn", EN.conPreposizione(Preposizione.VICINO, "The Wrong Turn"));
 		assertEquals("three", EN.cardinale(3, Genere.NEUTRO));
 		assertEquals("15", EN.cardinale(15, Genere.NEUTRO));

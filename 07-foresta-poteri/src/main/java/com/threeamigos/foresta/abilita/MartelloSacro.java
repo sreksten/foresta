@@ -6,6 +6,8 @@ import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.tipi.TipoDanno;
 
 import java.util.List;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
@@ -45,6 +47,6 @@ public class MartelloSacro extends AbilitaDiDanno {
 	@Override
 	protected String getAnnuncio(Personaggio utilizzatore, List<Personaggio> bersagli) {
 		return Testi.formatta("messaggi_poteri", "MartelloSacro.annuncio", chi(utilizzatore),
-				bersagli.get(0).getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
+				Lingue.corrente().conPreposizione(Preposizione.SU, bersagli.get(0).getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)));
 	}
 }

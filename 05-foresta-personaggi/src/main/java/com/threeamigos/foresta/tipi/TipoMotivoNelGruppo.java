@@ -20,6 +20,11 @@ public enum TipoMotivoNelGruppo {
 	 */
 	AIUTO_MERCENARIO(true, false, true),
 	/**
+	 * Un PNG che il gruppo ha corrotto e che lo accompagna per qualche turno, gratis o pagato (vedi AiutoGratuito e AiutoMercenario
+	 * con l'approccio CORRUZIONE): non si unisce per sua scelta, per cui entrando non si dice contento.
+	 */
+	CORRUZIONE(true, false, false),
+	/**
 	 * Lo Scheletro nato dalla MIETITURA di un minion: accompagna il gruppo per qualche turno come un aiuto, ma se muore
 	 * se ne va subito, senza aspettare di essere risuscitato.
 	 */
@@ -57,7 +62,7 @@ public enum TipoMotivoNelGruppo {
 	/**
 	 * Se il personaggio entra nel gruppo per sua scelta (si unisce, si offre di accompagnarlo, accetta un
 	 * ingaggio) e quindi, entrando, può dirsi contento. Non lo è chi vi viene portato senza essere stato interpellato,
-	 * come lo Scheletro risvegliato dalla MIETITURA: per lui il testo dice soltanto che entra nel gruppo.
+	 * come lo Scheletro risvegliato dalla MIETITURA, né chi è stato corrotto: per loro il testo dice soltanto che entra nel gruppo.
 	 */
 	public boolean isEntraVolentieri() {
 		return entraVolentieri;

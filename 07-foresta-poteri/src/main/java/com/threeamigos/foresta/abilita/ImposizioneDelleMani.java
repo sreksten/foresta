@@ -12,6 +12,8 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoAbilita;
 
 import java.util.Optional;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
@@ -64,7 +66,7 @@ public class ImposizioneDelleMani implements Abilita {
 		int saluteInizio = bersaglio.getSalute();
 		bersaglio.addSalute(getCura());
 		paga(utilizzatore, 1);
-		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "ImposizioneDelleMani.2", nome, bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE), (bersaglio.getSalute() - saluteInizio))));
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "ImposizioneDelleMani.2", nome, Lingue.corrente().conPreposizione(Preposizione.SU, bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)), (bersaglio.getSalute() - saluteInizio))));
 		return true;
 	}
 }

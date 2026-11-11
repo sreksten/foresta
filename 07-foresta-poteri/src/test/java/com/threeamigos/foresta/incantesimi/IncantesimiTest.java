@@ -249,7 +249,7 @@ class IncantesimiTest {
         avversari.aggiungiPersonaggio(resistente);
         mago.addMagia(100000);
         silenzio.formula(mago, resistente, null);
-        assertTrue(frasi.stream().anyMatch(f -> f.startsWith("L'incantesimo non ha effetto su il Goblin") || f.startsWith("L'incantesimo non ha effetto su")), frasi.toString());
+        assertTrue(frasi.stream().anyMatch(f -> f.startsWith("L'incantesimo non ha effetto sul Goblin") || f.startsWith("L'incantesimo non ha effetto su")), frasi.toString());
     }
 
     // --- Morte

@@ -13,6 +13,8 @@ import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 import java.util.List;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
@@ -46,7 +48,7 @@ public class Terrore extends IncantesimoMaleficoImpl implements IncantesimoGloba
 		for (Personaggio avversario : bersagli) {
 			String nome = avversario.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
 			if (avversario.isImmuneAIncantesimo(getClasse()) || avversario.isImmuneAEffetto(TipoEffettoDiStato.SPAVENTATO)) {
-				BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "Terrore.2", nome)));
+				BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "Terrore.2", Lingue.corrente().conPreposizione(Preposizione.SU, nome))));
 				stato.registraEsitoAzione(formulante, avversario, TipoAzione.TERRORE, EsitoAzione.IMMUNE);
 			} else if (!CalcolatoreCombattimento.colpisce(formulante, avversario, getTipoDanno().getCategoriaDanno())) {
 				BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "Terrore.3", nome)));

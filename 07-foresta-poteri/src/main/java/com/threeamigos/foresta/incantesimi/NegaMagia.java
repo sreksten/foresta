@@ -8,6 +8,8 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.List;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
@@ -45,7 +47,7 @@ public class NegaMagia extends IncantesimoMaleficoImpl implements IncantesimoGlo
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
 		for (Personaggio avversario : bersagli) {
 			if (avversario.isImmuneAIncantesimo(getClasse())) {
-				BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "NegaMagia.2", avversario.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE))));
+				BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "NegaMagia.2", Lingue.corrente().conPreposizione(Preposizione.SU, avversario.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)))));
 				continue;
 			}
 			avversario.addModificatore(new ModificatoreAttributoMD(TipoAttributo.POTERE_MAGICO, TipoModificatore.VARIAZIONE_FISSA,

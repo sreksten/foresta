@@ -74,6 +74,8 @@ public final class LinguaInglese implements RegoleDellaLingua {
 				return "from";
 			case ARRIVO:
 				return "in";
+			case SU:
+				return "on";
 			default:
 				return "in";
 		}

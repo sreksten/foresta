@@ -82,6 +82,10 @@ public class PersonaggioMD implements Serializzabile {
 	 * Perché si trova nel gruppo del giocatore (se vi si trova)
 	 */
 	private TipoMotivoNelGruppo motivoNelGruppo = TipoMotivoNelGruppo.PERMANENTE;
+	/**
+	 * Se, finché resta nel gruppo a tempo, non può morire (la salute non scende sotto 1): chi si è unito durante il tutorial
+	 */
+	private boolean salvoFinoAllaScadenza;
 
 	// Le tre mappe degli attributi sono EnumMap e non HashMap: l'hash di una costante di enum cambia a ogni esecuzione,
 	// e con una HashMap lo stesso personaggio si scriverebbe nel salvataggio con gli attributi in un ordine diverso ogni
@@ -200,6 +204,14 @@ public class PersonaggioMD implements Serializzabile {
 
 	public void setMotivoNelGruppo(TipoMotivoNelGruppo motivoNelGruppo) {
 		this.motivoNelGruppo = motivoNelGruppo;
+	}
+
+	public boolean isSalvoFinoAllaScadenza() {
+		return salvoFinoAllaScadenza;
+	}
+
+	public void setSalvoFinoAllaScadenza(boolean salvoFinoAllaScadenza) {
+		this.salvoFinoAllaScadenza = salvoFinoAllaScadenza;
 	}
 
 	/**
@@ -436,7 +448,8 @@ public class PersonaggioMD implements Serializzabile {
 	}
 
 	/**
-	 * Scrive una riga con i dati del personaggio (se è vivo e, se è morto, la causa; il numero di artefatti), poi sei righe con i valori minimi,
+	 * Scrive una riga con i dati del personaggio (se è vivo e, se è morto, la causa; il numero di artefatti; perché è nel gruppo e se è
+	 * salvo fino alla scadenza), poi sei righe con i valori minimi,
 	 * i valori massimi, gli attributi, i modificatori, gli effetti di stato e le ricariche (un campo composto nome e turni per ognuna)
 	 * e infine gli artefatti.
 	 */
@@ -454,7 +467,8 @@ public class PersonaggioMD implements Serializzabile {
 				puntiAbilitaDisponibili,
 				artefatti.size(),
 				png,
-				motivoNelGruppo);
+				motivoNelGruppo,
+				salvoFinoAllaScadenza);
 
 		// Un campo composto per valore (vedi LettoreCampi.sottocampi)
 		stampaRiga(stream, valoriMinimi.entrySet().stream().map(e -> composto(e.getKey(), e.getValue())).collect(Collectors.toList()));
@@ -488,6 +502,7 @@ public class PersonaggioMD implements Serializzabile {
 		int numeroArtefatti = campi.intero();
 		png = campi.booleano();
 		motivoNelGruppo = campi.enumerato(TipoMotivoNelGruppo.class);
+		salvoFinoAllaScadenza = campi.booleano();
 
 		impostaValori(valoriMinimi, stream.readLine());
 		impostaValori(valoriMassimi, stream.readLine());

@@ -124,7 +124,7 @@ class IncantesimiGlobaliTest {
 
         assertFalse(haIlModificatore(gargoyle, Nebbia.NOTA));
         assertTrue(haIlModificatore(goblin, Nebbia.NOTA));
-        assertTrue(frasi.stream().anyMatch(f -> f.startsWith("La nebbia non ha effetto su ")), frasi.toString());
+        assertTrue(frasi.stream().anyMatch(f -> f.startsWith("La nebbia non ha effetto sul Gargoyle")), frasi.toString());
         assertFalse(new Nebbia(3).serve(Collections.emptyList(), Collections.singletonList(gargoyle)));
     }
 
@@ -169,7 +169,7 @@ class IncantesimiGlobaliTest {
         new NegaMagia(3).formula(mago, null, avversari);
 
         assertFalse(haIlModificatore(gargoyle, NegaMagia.NOTA));
-        assertTrue(frasi.stream().anyMatch(f -> f.startsWith("La nega magia non ha effetto su ")), frasi.toString());
+        assertTrue(frasi.stream().anyMatch(f -> f.startsWith("La nega magia non ha effetto sul Gargoyle")), frasi.toString());
     }
 
     @Test
@@ -402,7 +402,7 @@ class IncantesimiGlobaliTest {
         assertFalse(immune.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO));
         assertFalse(gargoyle.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO));
         assertTrue(frasi.stream().anyMatch(f -> f.endsWith(" resiste al terrore.")), frasi.toString());
-        assertTrue(frasi.stream().anyMatch(f -> f.startsWith("Il terrore non ha effetto su ")), frasi.toString());
+        assertTrue(frasi.stream().anyMatch(f -> f.startsWith("Il terrore non ha effetto sul ")), frasi.toString());
         assertEquals(magiaPrima - (titani.size() + 2) * TipoIncantesimo.TERRORE.getCostoPerBersaglio(), mago.getMagia());
         assertEquals(0, new Terrore(3).getDanni());
     }

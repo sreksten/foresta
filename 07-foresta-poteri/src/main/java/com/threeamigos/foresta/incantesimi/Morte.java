@@ -13,6 +13,8 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.EsitoAzione;
 import com.threeamigos.foresta.tipi.TipoAzione;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
@@ -67,7 +69,7 @@ public class Morte extends IncantesimoMaleficoImpl implements Incantesimo {
 		String nomeBersaglio = bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
 		StatoDelCombattimento stato = StatoDelCombattimento.getIstanza();
 		if (bersaglio.isImmuneAIncantesimo(getClasse())) {
-			BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "Morte.1", nomeBersaglio)));
+			BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "Morte.1", Lingue.corrente().conPreposizione(Preposizione.SU, nomeBersaglio))));
 			stato.registraEsitoAzione(formulante, bersaglio, TipoAzione.MORTE, EsitoAzione.IMMUNE);
 			return;
 		}

@@ -269,7 +269,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 			personaggio.getModelloDati().setPng(false);
 		}
 		// Anche chi ci sta a tempo e chi si ritrova in un gruppo ricaricato: il bestiario sblocca la voce della sua classe
-		BusEventi.pubblica(new InternoPersonaggioEntratoNelGruppo(personaggio.getClasse()));
+		BusEventi.pubblica(new InternoPersonaggioEntratoNelGruppo(personaggio));
 	}
 
 	/**

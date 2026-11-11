@@ -46,7 +46,7 @@ public final class StatoDelMotore {
 
 	/**
 	 * Fa iscrivere al bus i componenti che tengono il conto di ciò che succede in gioco: gli ultimi messaggi e notizie,
-	 * le statistiche, i trofei, il bestiario, gli artefatti, le missioni e gli intermezzi che il loro modulo non conosce. Dopo un {@code BusEventi.azzera()} va richiamato.
+	 * le statistiche, i trofei, il bestiario, gli artefatti, le missioni, gli intermezzi che il loro modulo non conosce e il tutorial (chi non può morire). Dopo un {@code BusEventi.azzera()} va richiamato.
 	 */
 	public static void registraComponenti() {
 		Notizie.registrati();
@@ -58,6 +58,7 @@ public final class StatoDelMotore {
 		RegistroMissioni.setFornitoreLocazioneCompleta(() -> LocazioneCorrente.get().isCompleta());
 		IntermezziDelMotore.registra();
 		CommercioDelGruppo.registrati();
+		PilotaggioDelTutorial.registrati();
 	}
 
 	/**

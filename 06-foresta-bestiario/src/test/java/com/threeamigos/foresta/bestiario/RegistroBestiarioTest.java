@@ -10,6 +10,7 @@ import com.threeamigos.foresta.eventi.interni.InternoSfidaVinta;
 import com.threeamigos.foresta.eventi.interni.InternoVoceDelBestiarioSbloccata;
 import com.threeamigos.foresta.interfacce.GestoreBestiario;
 import com.threeamigos.foresta.modellodati.BestiarioMD;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.tipi.CaratteristicaDiClasse;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -137,7 +138,7 @@ class RegistroBestiarioTest {
         assertTrue(annunciate.isEmpty(), "nessun annuncio: la schermata e' ancora vuota");
         assertTrue(gestore.contieneRiga("GUERRIERO|true|"), "ma si salva");
         // Quando poi entra nel gruppo la voce c'e' gia': nemmeno allora c'e' niente da annunciare
-        BusEventi.pubblica(new InternoPersonaggioEntratoNelGruppo(TipoPersonaggio.GUERRIERA));
+        BusEventi.pubblica(new InternoPersonaggioEntratoNelGruppo(FabbricaPersonaggi.modello(TipoPersonaggio.GUERRIERA)));
         assertTrue(annunciate.isEmpty());
         // Una classe senza voce nel bestiario (un non combattente) non fa niente
         assertFalse(TipoPersonaggio.MOGLIE_DEL_BARDO.hasVoceNelBestiario());
@@ -150,7 +151,7 @@ class RegistroBestiarioTest {
     void chiEntraNelGruppoHaGiaLaSuaVoceENonSiAnnuncia() {
         assertTrue(RegistroBestiario.isSbloccata(TipoPersonaggio.MAGO), "i personaggi giocabili sono noti da sempre");
 
-        BusEventi.pubblica(new InternoPersonaggioEntratoNelGruppo(TipoPersonaggio.MAGA));
+        BusEventi.pubblica(new InternoPersonaggioEntratoNelGruppo(FabbricaPersonaggi.modello(TipoPersonaggio.MAGA)));
 
         assertTrue(RegistroBestiario.isSbloccata(TipoPersonaggio.MAGO), "Mago e Maga sono la stessa voce");
         assertTrue(annunciate.isEmpty(), "non c'è niente di nuovo da annunciare");

@@ -1,10 +1,14 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.combattimento.CalcolatoreCombattimento;
+import com.threeamigos.foresta.economia.Cassa;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.locazioni.Bosco;
 import com.threeamigos.foresta.locazioni.Radura;
+import com.threeamigos.foresta.offerte.FabbricaOfferte;
+import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.strumenti.TrucchiDiSviluppo;
@@ -12,7 +16,10 @@ import com.threeamigos.foresta.strumenti.dado.ContestoLancio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.tipi.CategoriaDanno;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoApproccio;
 import com.threeamigos.foresta.tipi.TipoBottino;
+import com.threeamigos.foresta.tipi.TipoMotivoNelGruppo;
+import com.threeamigos.foresta.tipi.TipoOfferta;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoSuggerimento;
@@ -335,6 +342,70 @@ class PilotaggioDelTutorialTest {
 			RegistroSuggerimenti.ripristina();
 			RegistroSuggerimenti.setAttivo(false);
 			assertFalse(PilotaggioDelTutorial.oggettoDelTurno().isPresent());
+		}
+	}
+
+	@Test
+	void fincheIlTutorialPilotaIlCapoNonScendeSottoUnPuntoFerita() {
+		try (PartitaDiTest partita = partita(41)) {
+			alPasso(0);
+			Personaggio capo = GruppoGiocatore.getIstanza().getCapo();
+			// Un colpo che lo ucciderebbe lo lascia con un punto ferita, e così un veleno (un danno senza attaccante)
+			capo.subSalute(capo.getSalute() + 100, GruppoAvversario.getIstanza().getCapo(), Personaggio.NotificaFerite.SI, Personaggio.NotificaMorte.SI);
+			assertTrue(capo.isVivo());
+			assertEquals(1, capo.getSalute());
+			capo.subSalute(100, null, Personaggio.NotificaFerite.SI, Personaggio.NotificaMorte.SI);
+			assertTrue(capo.isVivo());
+			assertEquals(1, capo.getSalute());
+			// Finito il tutorial, il capo muore come chiunque altro
+			RegistroSuggerimenti.setAttivo(false);
+			capo.subSalute(100, null, Personaggio.NotificaFerite.SI, Personaggio.NotificaMorte.SI);
+			assertFalse(capo.isVivo());
+		}
+	}
+
+	@Test
+	void ilGoblinCorrottoNelTutorialEntraSenzaDirsiFeliceENonMuoreFincheHaTempo() {
+		try (PartitaDiTest partita = partita(42)) {
+			Dado.impostaTruccatore(new PilotaggioDelTutorial(null));
+			partita.eventi().ascolta(NotificaTestoFrase.class);
+			alPasso(1);
+			Personaggio goblin = incontro().get(0);
+			assertEquals(TipoPersonaggio.GOBLIN, goblin.getClasse());
+			Cassa.addMonete(10);
+			Offerta offerta = FabbricaOfferte.crea(TipoOfferta.AIUTO_MERCENARIO, TipoApproccio.CORRUZIONE);
+			assertTrue(offerta.isFattibile(GruppoGiocatore.getIstanza(), GruppoAvversario.getIstanza()));
+			offerta.accetta(GruppoGiocatore.getIstanza(), GruppoAvversario.getIstanza());
+
+			assertTrue(GruppoGiocatore.getIstanza().contiene(goblin));
+			assertEquals(TipoMotivoNelGruppo.CORRUZIONE, goblin.getMotivoNelGruppo());
+			assertTrue(partita.eventi().tutti(NotificaTestoFrase.class).stream().anyMatch(f -> f.getMessaggio().equals("Il Goblin entra a far parte del gruppo.")),
+					partita.eventi().tutti(NotificaTestoFrase.class).toString());
+			// Resta salvo anche a tutorial finito, finché è nel gruppo: un colpo e un veleno lo lasciano con un punto ferita
+			RegistroSuggerimenti.setAttivo(false);
+			goblin.subSalute(goblin.getSalute() + 100, null, Personaggio.NotificaFerite.SI, Personaggio.NotificaMorte.SI);
+			assertTrue(goblin.isVivo());
+			assertEquals(1, goblin.getSalute());
+		}
+	}
+
+	@Test
+	void fuoriDalTutorialChiSiUnisceATempoPuoMorire() {
+		try (PartitaDiTest partita = partita(43)) {
+			RegistroSuggerimenti.setAttivo(false);
+			GruppoAvversario avversari = GruppoAvversario.getIstanza();
+			avversari.reimposta();
+			new Bosco().crea(GruppoGiocatore.getIstanza(), avversari);
+			Personaggio aiuto = avversari.getPersonaggiVivi().get(0);
+			Cassa.addMonete(10);
+			Offerta offerta = FabbricaOfferte.crea(TipoOfferta.AIUTO_MERCENARIO, TipoApproccio.AMICIZIA);
+			assertTrue(offerta.isFattibile(GruppoGiocatore.getIstanza(), avversari));
+			offerta.accetta(GruppoGiocatore.getIstanza(), avversari);
+
+			assertEquals(TipoMotivoNelGruppo.AIUTO_MERCENARIO, aiuto.getMotivoNelGruppo());
+			assertFalse(aiuto.isSalvoDallaMorte());
+			aiuto.subSalute(aiuto.getSalute() + 100, null, Personaggio.NotificaFerite.SI, Personaggio.NotificaMorte.SI);
+			assertFalse(aiuto.isVivo());
 		}
 	}
 }

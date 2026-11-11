@@ -7,6 +7,10 @@ package com.threeamigos.foresta.testi;
 public enum Preposizione {
 	A, DI, DA, IN,
 	/**
+	 * Sopra qualcuno o qualcosa, il bersaglio di un gesto ("abbatte il martello sul goblin", "on the goblin"): in italiano è «su», in inglese «on».
+	 */
+	SU,
+	/**
 	 * Dove si arriva ("arriva a Fleena", "arrives in Fleena"): in italiano è «a», in inglese «in».
 	 */
 	ARRIVO,

@@ -122,6 +122,12 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	 */
     boolean isImmortale();
 	/**
+	 * Se adesso il personaggio non può morire: un danno che lo ucciderebbe lo lascia con un punto ferita, e lui continua a combattere. Vale
+	 * per chi si è unito al gruppo durante il tutorial finché ci resta (vedi PersonaggioMD.isSalvoFinoAllaScadenza) e per chi il motore
+	 * protegge (il capo, mentre il tutorial pilota: vedi PersonaggioBase.impostaProtezioneDallaMorte).
+	 */
+    boolean isSalvoDallaMorte();
+	/**
 	 * Se il personaggio si può curare: false per un non morto entrato nel gruppo del giocatore (lo Scheletro della
 	 * Mietitura), che le cure non guariscono. Non deve mai essere un bersaglio possibile di pozioni di salute,
 	 * canto curativo e Resurrezione: né per le tattiche né per chi sceglie a mano. Un non morto avversario resta

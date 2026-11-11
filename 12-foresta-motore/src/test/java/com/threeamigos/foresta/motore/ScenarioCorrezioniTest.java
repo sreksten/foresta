@@ -299,7 +299,7 @@ class ScenarioCorrezioniTest {
 			}
 			com.threeamigos.foresta.personaggi.Centauro centauro = new com.threeamigos.foresta.personaggi.Centauro(1);
 			for (int i = 0; i < 100; i++) {
-				com.threeamigos.foresta.offerte.Offerta offerta = com.threeamigos.foresta.offerte.FabbricaOfferte.crea(centauro.getOfferta(TipoApproccio.CORRUZIONE));
+				com.threeamigos.foresta.offerte.Offerta offerta = com.threeamigos.foresta.offerte.FabbricaOfferte.crea(centauro.getOfferta(TipoApproccio.CORRUZIONE), TipoApproccio.CORRUZIONE);
 				assertTrue(!(offerta instanceof com.threeamigos.foresta.offerte.AiutoGratuito)
 						&& !(offerta instanceof com.threeamigos.foresta.offerte.AiutoMercenario), "offerto aiuto a gruppo pieno");
 			}

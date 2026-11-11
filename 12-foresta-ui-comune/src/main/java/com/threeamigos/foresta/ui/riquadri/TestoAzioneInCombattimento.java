@@ -1,6 +1,8 @@
 package com.threeamigos.foresta.ui.riquadri;
 
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.tipi.TipoAzione;
 import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
@@ -26,7 +28,7 @@ final class TestoAzioneInCombattimento {
 			case DARDO_ARCANO:
 				return conBersaglio("AZIONE_DARDO_ARCANO", su);
 			case MARTELLO_SACRO:
-				return conBersaglio("AZIONE_MARTELLO_SACRO", su);
+				return conBersaglio("AZIONE_MARTELLO_SACRO", sopra(su));
 			case ATTACCO_ALLE_SPALLE:
 				return conBersaglio("AZIONE_ATTACCO_ALLE_SPALLE", su);
 			case RESURREZIONE:
@@ -46,7 +48,7 @@ final class TestoAzioneInCombattimento {
 			case SCACCIARE_I_NON_MORTI:
 				return TestiDellaUI.get("AZIONE_SCACCIARE_I_NON_MORTI");
 			case IMPOSIZIONE_DELLE_MANI:
-				return conBersaglio("AZIONE_IMPOSIZIONE_DELLE_MANI", su);
+				return conBersaglio("AZIONE_IMPOSIZIONE_DELLE_MANI", sopra(su));
 			case RADICI:
 				return TestiDellaUI.get("AZIONE_RADICI");
 			case SCIAME:
@@ -75,6 +77,11 @@ final class TestoAzioneInCombattimento {
 	// La frase di quell'azione: con il bersaglio ({0}, già con l'articolo) se c'è, senza altrimenti (chiave con _SU)
 	private static String conBersaglio(String chiave, String bersaglio) {
 		return bersaglio == null ? TestiDellaUI.get(chiave) : TestiDellaUI.get(chiave + "_SU", bersaglio);
+	}
+
+	// Il bersaglio di un gesto che cade su di lui, con la preposizione: "sull'arpia", "on the harpy"
+	private static String sopra(String bersaglio) {
+		return bersaglio == null ? null : Lingue.corrente().conPreposizione(Preposizione.SU, bersaglio);
 	}
 
 	/**

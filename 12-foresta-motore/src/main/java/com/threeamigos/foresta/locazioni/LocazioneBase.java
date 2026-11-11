@@ -844,7 +844,7 @@ public abstract class LocazioneBase implements Locazione {
 					BusEventi.pubblica(new InternoCorruzioneRiuscita(classiAvversariVivi()));
 					setOggetto(null);
 
-					offerta = creaOfferta(gruppoAvversario.getCapo().getOfferta(TipoApproccio.CORRUZIONE));
+					offerta = creaOfferta(gruppoAvversario.getCapo().getOfferta(TipoApproccio.CORRUZIONE), TipoApproccio.CORRUZIONE);
 					if (offerta != null && offerta.isFattibile(gruppo, gruppoAvversario)) {
 						BusEventi.pubblica(new NotificaTestoFrase(offerta.getDescrizione(gruppo, gruppoAvversario)));
 						if (offerta.isGratuita(gruppo, gruppoAvversario)) {
@@ -1647,8 +1647,8 @@ public abstract class LocazioneBase implements Locazione {
 	/**
 	 * L'offerta di quel tipo, o null se il personaggio non ne faceva.
 	 */
-	private static Offerta creaOfferta(TipoOfferta tipo) {
-		return tipo == null ? null : FabbricaOfferte.crea(tipo);
+	private static Offerta creaOfferta(TipoOfferta tipo, TipoApproccio approccio) {
+		return tipo == null ? null : FabbricaOfferte.crea(tipo, approccio);
 	}
 
 	private Optional<Stato> attaccaConLeArmi(Personaggio attore) {
@@ -2064,7 +2064,7 @@ public abstract class LocazioneBase implements Locazione {
 	 * (stato ACCETTA_OFFERTA, che chiude la locazione); senza offerta la locazione finisce.
 	 */
 	private Stato offriLAmicizia() {
-		offerta = creaOfferta(gruppoAvversario.getCapo().getOfferta(TipoApproccio.AMICIZIA));
+		offerta = creaOfferta(gruppoAvversario.getCapo().getOfferta(TipoApproccio.AMICIZIA), TipoApproccio.AMICIZIA);
 		if (offerta != null && offerta.isFattibile(gruppo, gruppoAvversario)) {
 			BusEventi.pubblica(new NotificaTestoFrase(offerta.getDescrizione(gruppo, gruppoAvversario)));
 			if (offerta.isGratuita(gruppo, gruppoAvversario)) {

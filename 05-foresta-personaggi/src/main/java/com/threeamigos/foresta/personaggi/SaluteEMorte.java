@@ -117,6 +117,10 @@ final class SaluteEMorte {
 
 		double saluteOriginale = md().get(TipoAttributo.SALUTE);
 		double salute = saluteOriginale - quantita;
+		// Chi adesso non può morire (il capo e chi si è unito durante il tutorial) resta con un punto ferita, qualunque sia il danno, e continua a combattere
+		if (salute < 1 && p.isSalvoDallaMorte()) {
+			salute = 1;
+		}
 		if (salute <= 0 && !p.isImmortale() && siArrende()) {
 			arrenditi();
 			BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(p, TipoAttributo.SALUTE, saluteOriginale, 1));

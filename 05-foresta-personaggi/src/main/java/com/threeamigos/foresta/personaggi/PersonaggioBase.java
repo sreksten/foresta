@@ -20,6 +20,7 @@ import com.threeamigos.foresta.tipi.*;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static com.threeamigos.foresta.personaggi.AttributiSecondari.*;
 
@@ -289,6 +290,21 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	public boolean isImmortale() {
 		return false;
+	}
+
+	// Chi il motore protegge dalla morte, oltre a chi è salvo fino alla scadenza: i personaggi non sanno del tutorial
+	private static volatile Predicate<Personaggio> protezioneDallaMorte = p -> false;
+
+	/**
+	 * Installa chi il motore protegge dalla morte (vedi {@link #isSalvoDallaMorte()}): il capo, mentre il tutorial pilota.
+	 */
+	public static void impostaProtezioneDallaMorte(Predicate<Personaggio> protezione) {
+		protezioneDallaMorte = protezione;
+	}
+
+	@Override
+	public boolean isSalvoDallaMorte() {
+		return md.isSalvoFinoAllaScadenza() && isATempo() || protezioneDallaMorte.test(this);
 	}
 
 	public boolean isVivo() {

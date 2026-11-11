@@ -17,6 +17,8 @@ import com.threeamigos.foresta.tipi.EsitoAzione;
 import com.threeamigos.foresta.tipi.TipoAzione;
 
 import java.util.List;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
@@ -93,13 +95,13 @@ public class Silenzio extends IncantesimoMaleficoImpl implements Incantesimo {
 		StatoDelCombattimento stato = StatoDelCombattimento.getIstanza();
 		if (bersaglio.isImmuneAIncantesimo(getClasse()) || bersaglio.isImmuneAEffetto(TipoEffettoDiStato.SILENZIATO)) {
 			Logger.log("Bersaglio immune all'incantesimo");
-			BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "Silenzio.1", nomeBersaglio)));
+			BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "Silenzio.1", Lingue.corrente().conPreposizione(Preposizione.SU, nomeBersaglio))));
 			stato.registraEsitoAzione(formulante, bersaglio, TipoAzione.SILENZIO, EsitoAzione.IMMUNE);
 			return;
 		}
 		if (!CalcolatoreCombattimento.colpisce(formulante, bersaglio, getTipoDanno().getCategoriaDanno())) {
 			Logger.log("L'incantesimo non va a segno");
-			BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "Silenzio.2", nomeBersaglio)));
+			BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_poteri", "Silenzio.2", Lingue.corrente().conPreposizione(Preposizione.SU, nomeBersaglio))));
 			stato.registraEsitoAzione(formulante, bersaglio, TipoAzione.SILENZIO, EsitoAzione.MANCATA);
 			BusEventi.pubblica(new NotificaColpoMancato(bersaglio));
 			return;
