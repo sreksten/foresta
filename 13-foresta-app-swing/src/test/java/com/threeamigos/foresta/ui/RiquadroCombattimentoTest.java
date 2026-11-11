@@ -2,6 +2,7 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.interfacce.VistaGruppo;
 import com.threeamigos.foresta.interfacce.VistaPartita;
+import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -39,6 +40,9 @@ class RiquadroCombattimentoTest {
         // Le immagini si caricano solo con uno schermo
         assumeFalse(GraphicsEnvironment.isHeadless());
         ImageCache.init();
+        // I danni chiedono al gruppo se si arrende: il gruppo deve sapere dove sono i suoi dati, anche se questo test gira da solo
+        ModelloDati.installa();
+        ModelloDati.setIstanza(new ModelloDati());
     }
 
     private static VistaPartita vista(List<Personaggio> ordine, List<Personaggio> avversari) {
@@ -66,6 +70,11 @@ class RiquadroCombattimentoTest {
     }
 
     private static DisplayableCanvasRiquadroCombattimento disegna(int amici, int nemici, String png) throws IOException {
+        return disegna(LARGHEZZA, ALTEZZA, Y_PREFERITA, amici, nemici, png);
+    }
+
+    private static DisplayableCanvasRiquadroCombattimento disegna(int larghezza, int altezza, int yPreferita, int amici, int nemici, String png)
+            throws IOException {
         List<Personaggio> miei = personaggi(TipoPersonaggio.BARDO, amici);
         List<Personaggio> loro = personaggi(TipoPersonaggio.VIVERNA, nemici);
         List<Personaggio> ordine = new ArrayList<>();
@@ -83,12 +92,12 @@ class RiquadroCombattimentoTest {
             loro.get(2).subSalute(loro.get(2).getSalute() + 10, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
         }
         DisplayableCanvasRiquadroCombattimento riquadro =
-                new DisplayableCanvasRiquadroCombattimento(LARGHEZZA, ALTEZZA, Y_PREFERITA, vista(ordine, loro));
+                new DisplayableCanvasRiquadroCombattimento(larghezza, altezza, yPreferita, vista(ordine, loro));
         riquadro.setVisible(true);
         riquadro.setCombattente(ordine.get(0));
         riquadro.setAvversario(ordine.size() > 1 ? ordine.get(1) : null);
         riquadro.setAzione(ordine.get(0), DisplayableCanvasRiquadroCombattimento.testoDellAzione(TipoAzione.CANTO_DI_VALORE, ordine.get(0), null));
-        BufferedImage immagine = new BufferedImage(LARGHEZZA, ALTEZZA, BufferedImage.TYPE_INT_RGB);
+        BufferedImage immagine = new BufferedImage(larghezza, altezza, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = immagine.createGraphics();
         riquadro.disegnaInfoCombattimento(graphics);
         graphics.dispose();
@@ -112,5 +121,19 @@ class RiquadroCombattimentoTest {
         assertTrue(grande.getRettangolo().y >= 0);
         assertTrue(grande.getRettangolo().y + grande.getRettangolo().height <= ALTEZZA, String.valueOf(grande.getRettangolo()));
         assertEquals((LARGHEZZA - grande.getRettangolo().width) / 2, grande.getRettangolo().x, "centrato");
+    }
+
+    @Test
+    void sulTelefonoMinimoStaNellaColonnaASinistraEDentroLAltezza() throws IOException {
+        // Il layout del telefono più stretto (layout_telefono.md §4.4): la colonna a sinistra comincia a 0 e la pila a 398, l'area è alta 505 e la
+        // locazione finisce a 328
+        int colonnaDestraX = 398;
+        int altezza = 505;
+        for (int[] scontro : new int[][]{{1, 1}, {5, 5}, {5, 8}}) {
+            DisplayableCanvasRiquadroCombattimento riquadro = disegna(colonnaDestraX, altezza, 328, scontro[0], scontro[1], null);
+            Rectangle r = riquadro.getRettangolo();
+            assertTrue(r.x >= 0 && r.x + r.width <= colonnaDestraX, "non tocca la pila: " + r);
+            assertTrue(r.y >= 0 && r.y + r.height <= altezza, "dentro l'altezza: " + r);
+        }
     }
 }
