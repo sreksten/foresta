@@ -7,7 +7,11 @@ import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.strumenti.temporizzatore.ThreadPrincipale;
 import com.threeamigos.foresta.ui.EsecutoreSwing;
 import com.threeamigos.foresta.ui.ForestaSwing;
+import com.threeamigos.foresta.ui.LivelloDiZoom;
+import com.threeamigos.foresta.ui.MisuraDelloSchermo;
 import com.threeamigos.foresta.ui.OpzioniDiAvvio;
+import com.threeamigos.foresta.ui.SceltaDelLayout;
+import com.threeamigos.foresta.ui.immagini.MisureDaiFile;
 import com.threeamigos.foresta.ui.sviluppo.FinestraDiProva;
 
 /**
@@ -15,7 +19,8 @@ import com.threeamigos.foresta.ui.sviluppo.FinestraDiProva;
  * collega {@link AvvioDelMotore} (lo stesso di libGDX), con il thread di Swing come thread principale; qui si aggiungono il registro
  * di tutti gli eventi, la finestra e, in modalità di prova, la finestra di prova. Motore e interfaccia dialogano solo tramite eventi.
  * <p>
- * Gli argomenti sono quelli di {@link OpzioniDiAvvio}.
+ * Gli argomenti sono quelli di {@link OpzioniDiAvvio}. Con {@code SCHERMO=} Swing non rimpicciolisce: la finestra è grande quanto l'area
+ * virtuale dello schermo simulato, senza scala, con il layout che gli tocca (vedi {@code layout_telefono.md} §3.2).
  */
 public class Main {
 
@@ -24,6 +29,11 @@ public class Main {
 		for (String sconosciuto : opzioni.getAltri()) {
 			Logger.log(() -> "Argomento sconosciuto ignorato: " + sconosciuto);
 		}
+		MisuraDelloSchermo schermo = opzioni.getSchermoDiProva();
+		SceltaDelLayout scelta = schermo == null ? null : SceltaDelLayout.per(schermo, new MisureDaiFile(), LivelloDiZoom.valore());
+		if (scelta != null) {
+			Logger.log(() -> "Schermo di prova " + schermo + ": " + scelta);
+		}
 
 		// Si registra per ascoltare qualsiasi evento venga generato
 		new SnifferBusEventi();
@@ -31,7 +41,7 @@ public class Main {
 		AvvioDelMotore motore = new AvvioDelMotore(new EsecutoreSwing(), e -> System.exit(e.getCodice()), opzioni.isLinguaDecisa());
 
 		// La finestra, quando è pronta, avvisa l'automa che può cominciare
-		new ForestaSwing(opzioni.getOrientamento(), opzioni.isTuttoSchermo(), opzioni.isSaltaLogo(), opzioni.isBarraDock(),
+		new ForestaSwing(opzioni.getOrientamento(), scelta, opzioni.isTuttoSchermo(), opzioni.isSaltaLogo(), opzioni.isBarraDock(),
 				opzioni.isJoystickVirtuale(), motore.getGestorePunteggi(), motore.getVistaPartita(), AvvioDelMotore.nuovoTemporizzatore());
 
 		if (ModalitaDiProva.isAttiva()) {

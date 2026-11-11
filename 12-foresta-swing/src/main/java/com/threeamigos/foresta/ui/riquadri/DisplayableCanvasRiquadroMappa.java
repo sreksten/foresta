@@ -27,9 +27,8 @@ public class DisplayableCanvasRiquadroMappa extends DisegnatoreMappa implements 
 
 	// La finestra, le tessere e il segnalino sono del modulo comune (RiquadroMappa); qui si blocca l'immagine della mappa già composta (vedi
 	// DisegnatoreMappa.ottieniMappaGenerale)
+	// Anche la posizione: sul telefono la mappa è impilata e la pila la sposta in verticale
 	private final RiquadroMappa modello;
-	private final int topLeftX;
-	private final int topLeftY;
 	private final int larghezzaSchermo;
 	private final int altezzaSchermo;
 
@@ -38,14 +37,16 @@ public class DisplayableCanvasRiquadroMappa extends DisegnatoreMappa implements 
 	public DisplayableCanvasRiquadroMappa(int topLeftX, int topLeftY, int larghezzaSchermo, int altezzaSchermo,
 								   VistaPartita vistaPartita) {
 		super(vistaPartita);
-		this.topLeftX = topLeftX;
-		this.topLeftY = topLeftY;
 		this.larghezzaSchermo = larghezzaSchermo;
 		this.altezzaSchermo = altezzaSchermo;
 		modello = new RiquadroMappa(topLeftX, topLeftY, LARGHEZZA_ICONA, ALTEZZA_ICONA, vistaPartita);
 		larghezzaRiquadroMappa = modello.getLatoDellaMappa();
 
 		registratiAEventi();
+	}
+
+	public RiquadroMappa getModello() {
+		return modello;
 	}
 
 	private void registratiAEventi() {
@@ -56,6 +57,8 @@ public class DisplayableCanvasRiquadroMappa extends DisegnatoreMappa implements 
 	 * Disegna la porzione di mappa attorno al gruppo.
 	 */
 	public void disegnaMappa(Graphics2D graphics) {
+		int topLeftX = modello.getTopLeftX();
+		int topLeftY = modello.getTopLeftY();
 		graphics.drawImage(ImageCache.corniceMappa, topLeftX, topLeftY, null);
 		VistaMappa mappa = vistaPartita.getMappa();
 		RiquadroMappa.Veduta veduta = modello.veduta();

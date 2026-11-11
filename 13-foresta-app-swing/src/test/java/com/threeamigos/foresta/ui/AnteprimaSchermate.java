@@ -8,8 +8,10 @@ import com.threeamigos.foresta.motore.PartitaDiAnteprima;
 import com.threeamigos.foresta.motore.StatoDelMotore;
 import com.threeamigos.foresta.motore.VistaPartitaMotore;
 import com.threeamigos.foresta.tipi.Orientamento;
+import com.threeamigos.foresta.tipi.TipoDiLayout;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
+import com.threeamigos.foresta.ui.immagini.MisureDaiFile;
 
 import javax.imageio.ImageIO;
 import java.awt.Dimension;
@@ -25,8 +27,10 @@ import java.io.IOException;
  * <p>
  * Uso, dalla radice del progetto dopo {@code mvn test-compile}:
  * <pre>
- *     java -cp ... com.threeamigos.foresta.ui.AnteprimaSchermate CARTELLA [ORIZZONTALE|VERTICALE]
+ *     java -cp ... com.threeamigos.foresta.ui.AnteprimaSchermate CARTELLA [ORIZZONTALE|VERTICALE|SCHERMO=&lt;profilo o misura&gt;]
  * </pre>
+ * Con {@code SCHERMO=} (come per {@code Main}: {@code SCHERMO=GALAXY_S24}, {@code SCHERMO=800x480}) le schermate hanno l'area virtuale e
+ * il layout di quello schermo, senza scala, come la finestra di Swing.
  * Scrive {@code gioco.png}, {@code inventario.png}, {@code mappa.png}, {@code trofei.png} e {@code bestiario.png}.
  */
 public final class AnteprimaSchermate {
@@ -36,7 +40,10 @@ public final class AnteprimaSchermate {
 
 	public static void main(String[] args) throws IOException {
 		File cartella = new File(args.length > 0 ? args[0] : ".");
-		Orientamento orientamento = args.length > 1 && args[1].equalsIgnoreCase("VERTICALE") ? Orientamento.VERTICALE : Orientamento.ORIZZONTALE;
+		OpzioniDiAvvio opzioni = OpzioniDiAvvio.leggi(args.length > 1 ? new String[]{args[1]} : new String[0]);
+		Orientamento orientamento = opzioni.getOrientamento();
+		SceltaDelLayout scelta = opzioni.getSchermoDiProva() == null ? null
+				: SceltaDelLayout.per(opzioni.getSchermoDiProva(), new MisureDaiFile(), LivelloDiZoom.valore());
 		cartella.mkdirs();
 
 		BusEventi.iscriviti(InternoErrore.class, errore -> System.err.println("ERRORE: " + errore.getMessaggio()));
@@ -48,9 +55,10 @@ public final class AnteprimaSchermate {
 		PartitaDiAnteprima.prepara(TipoPersonaggio.GUERRIERO, "Aldric",
 				TipoPersonaggio.BARDO, TipoPersonaggio.MAGO, TipoPersonaggio.LADRA, TipoPersonaggio.ELFA);
 
-		Dimension finestra = ForestaSwing.calcolaDimensioniFinestra(orientamento, false);
-		DisplayableCanvas canvas = new DisplayableCanvas(orientamento, finestra.width, finestra.height, false, new GestorePunteggiInMemoria(),
-				new VistaPartitaMotore());
+		Dimension finestra = scelta != null ? new Dimension(scelta.getAreaVirtuale().larghezza, scelta.getAreaVirtuale().altezza)
+				: ForestaSwing.calcolaDimensioniFinestra(orientamento, false);
+		DisplayableCanvas canvas = new DisplayableCanvas(scelta != null ? scelta.getTipo() : TipoDiLayout.TABLET, orientamento, finestra.width,
+				finestra.height, false, new GestorePunteggiInMemoria(), new VistaPartitaMotore());
 		canvas.setSize(finestra.width, finestra.height);
 
 		canvas.getSchermo().iniziaGioco();

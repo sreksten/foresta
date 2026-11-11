@@ -7,6 +7,7 @@ import com.threeamigos.foresta.ui.immagini.ImmagineDiPixel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Supplier;
 
 /**
  * Genera e mantiene un unico set di nuvole condiviso fra le varie viste della mappa (il riquadro della mappa e la mappa a tutto schermo), in modo che
@@ -45,6 +46,8 @@ public final class GestoreNuvole {
 		}
 	}
 
+	// Da dove viene il caso con cui nascono le nuvole: nel gioco ogni volta un altro; i test lo fissano con un seme
+	private static Supplier<Random> fonteDelCaso = Random::new;
 	private static List<Nuvola> nuvole;
 	// -1 = nessuna chiamata precedente ad aggiorna(): il prossimo impulso non fa avanzare le nuvole, si limita a registrare il timestamp.
 	private static long ultimoAggiornamentoNanos = -1;
@@ -56,6 +59,13 @@ public final class GestoreNuvole {
 	private static int altezzaIconaCanonica;
 
 	private GestoreNuvole() {
+	}
+
+	/**
+	 * Per i test: le nuvole nascono dal caso dato (con un seme, sempre le stesse); null rimette quello del gioco.
+	 */
+	public static void impostaFonteDelCaso(Supplier<Random> fonte) {
+		fonteDelCaso = fonte == null ? Random::new : fonte;
 	}
 
 	/**
@@ -121,7 +131,7 @@ public final class GestoreNuvole {
 	}
 
 	private static void genera(VistaMappa mappa, int larghezza, int altezza, int larghezzaIcona, int altezzaIcona) {
-		Random caso = new Random();
+		Random caso = fonteDelCaso.get();
 
 		// Tutta la foresta, non solo la parte conosciuta
 		int larghezzaMappa = mappa.getDimensioneX() * larghezzaIcona;

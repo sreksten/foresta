@@ -38,7 +38,7 @@ Le misure dei dispositivi sono quelle note al 2026-11 e vanno ricontrollate sui 
 | `MINIMO` | 800×480 | 1 | 800×480 | telefono | 0,95 | 842×505 | 390 |
 | `ECONOMICO` (HD+, tipo Galaxy A05) | 1600×720 | 2 | 800×360 | telefono | 0,71 | 1122×505 | 670 |
 | `GALAXY_S24` | 2340×1080 | 3 | 780×360 | telefono | 0,71 | 1094×505 | 642 |
-| `PIXEL_8` | 2400×1080 | 2,625 | 914×411 | telefono | 0,81 | 1123×505 | 671 |
+| `PIXEL_8` | 2400×1080 | 2,625 | 914×411 | telefono | 0,81 | 1122×505 | 670 |
 | `PIXEL_8_PRO` | 2992×1344 | 3 | 997×448 | telefono | 0,89 | 1124×505 | 672 |
 | `IPHONE_SE` | 1334×750 | 2 | 667×375 | telefono | 0,74 | 898×505 | 446 |
 | `IPHONE_15` | 2556×1179 | 3 | 852×393 | telefono | 0,78 | 1095×505 | 643 |
@@ -72,7 +72,7 @@ Nel codice, nel modulo comune:
 ### 3.2 Che finestra si apre
 
 - **libGDX desktop**: la finestra è grande quanto lo schermo simulato **in dp** (un dp vale circa un punto del desktop), e il gioco vi entra con la scala del §2.2. Così si vede il gioco grande più o meno come sul telefono, scritte piccole comprese.
-- **Swing**: oggi non scala niente (la finestra è grande quanto lo schermo di gioco e non si ridimensiona). Per vedere il telefono servirebbe una scala nel disegno e la stessa scala, al contrario, sulle coordinate del mouse. **Deciso**: in Swing la finestra è grande quanto l'**area virtuale** (per `PIXEL_8`, 1123×505), senza scala. Si vede che cosa sta dove, ma non quanto è piccolo: per quello c'è il telefono vero.
+- **Swing**: oggi non scala niente (la finestra è grande quanto lo schermo di gioco e non si ridimensiona). Per vedere il telefono servirebbe una scala nel disegno e la stessa scala, al contrario, sulle coordinate del mouse. **Deciso**: in Swing la finestra è grande quanto l'**area virtuale** (per `PIXEL_8`, 1122×505), senza scala. Si vede che cosa sta dove, ma non quanto è piccolo: per quello c'è il telefono vero.
 
 ### 3.3 Sul telefono vero
 
@@ -182,8 +182,8 @@ Sono disegnate per l'area di oggi (1022×732): sul telefono l'altezza è 505. Un
 
 Ogni passo compila e passa i test, e alla fine di ognuno si guarda il risultato prima di andare avanti.
 
-1. **Le misure di prova**: `MisuraDelloSchermo`, `SchermoDiProva`, l'argomento `SCHERMO=` in `OpzioniDiAvvio` (con i test in `OpzioniDiAvvioTest`), la regola del §2.2 con i suoi test (la tabella del §2.3 come casi), e la finestra del §3.2 in `MainLibgdx` e in `Main`. Il layout è ancora quello di oggi: si vede solo come cambia la scala. Aggiornati `13-foresta-app-libgdx.md` e `12-foresta-ui-comune.md`.
-2. **La disposizione del telefono** in `DisposizioneDelloSchermo` (§4.1), con i test sulle aree (nessuna sovrapposizione fuori dalla pila, tutto dentro l'area, il testo che si allarga con lo schermo), e i due front-end che la usano; la mappa nella pila per ora con la sua cornice.
+1. **Le misure di prova**: `MisuraDelloSchermo`, `SchermoDiProva`, l'argomento `SCHERMO=` in `OpzioniDiAvvio` (con i test in `OpzioniDiAvvioTest`), la regola del §2.2 con i suoi test (la tabella del §2.3 come casi), e la finestra del §3.2 in `MainLibgdx` e in `Main`. Il layout è ancora quello di oggi: si vede solo come cambia la scala. Aggiornati `13-foresta-app-libgdx.md` e `12-foresta-ui-comune.md`. **Fatto** (2026-11-11).
+2. **La disposizione del telefono** in `DisposizioneDelloSchermo` (§4.1), con i test sulle aree (nessuna sovrapposizione fuori dalla pila, tutto dentro l'area, il testo che si allarga con lo schermo), e i due front-end che la usano; la mappa nella pila per ora con la sua cornice. **Fatto** (2026-11-11): sul telefono le statistiche non si creano; `AnteprimaSchermate` accetta `SCHERMO=`. Visto su `MINIMO`: nella locazione larga 390 i personaggi del gruppo si accalcano (cinque in 390 pixel); sui telefoni comuni (642 e più) ci stanno.
 3. **La mappa senza cornice** (§4.2) e la sua intestazione.
 4. **Il riquadro del gruppo con le statistiche in testa** (§4.3), la divisione di `RiquadroStatistiche` e niente sprite delle variazioni nel layout del telefono.
 5. **Combattimento e sfida** (§4.4).

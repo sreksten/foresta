@@ -9,8 +9,12 @@ import com.threeamigos.foresta.libgdx.ForestaGdx;
 import com.threeamigos.foresta.libgdx.ForestaLibGDX;
 import com.threeamigos.foresta.motore.AvvioDelMotore;
 import com.threeamigos.foresta.strumenti.logger.Logger;
+import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.Misura;
+import com.threeamigos.foresta.ui.MisuraDelloSchermo;
 import com.threeamigos.foresta.ui.OpzioniDiAvvio;
+import com.threeamigos.foresta.ui.SceltaDelLayout;
+import com.threeamigos.foresta.ui.immagini.MisureDaiFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +32,9 @@ import java.util.Locale;
  * <p>
  * Gli argomenti sono quelli di {@link OpzioniDiAvvio} (contano tutte), più
  * {@code PAGINE_DI_PROVA} per le pagine di prova dei pezzi dell'interfaccia (<code>ForestaGdx</code>) al posto del gioco.
+ * <p>
+ * Con {@code SCHERMO=} la finestra è grande quanto lo schermo simulato in dp (un dp vale circa un punto del desktop), e il gioco ci
+ * entra con la sua scala, con il layout che gli tocca (vedi {@code layout_telefono.md}): si vede grande più o meno come sul dispositivo.
  */
 public final class MainLibgdx {
 
@@ -60,17 +67,24 @@ public final class MainLibgdx {
 			// Il motore chiede di uscire con NotificaUscitaDalGioco: qui si chiude l'applicazione, e il processo finisce con lei (i
 			// thread del motore sono demoni)
 			AvvioDelMotore motore = new AvvioDelMotore(esecutore, e -> Gdx.app.exit(), opzioni.isLinguaDecisa());
-			applicazione = new ForestaLibGDX(opzioni.getOrientamento(), esecutore, motore.getControlloreDiGioco(), motore.getGestorePunteggi(), motore.getVistaPartita(),
+			MisuraDelloSchermo schermo = opzioni.getSchermoDiProva();
+			SceltaDelLayout scelta = schermo == null ? null : SceltaDelLayout.per(schermo, new MisureDaiFile(), LivelloDiZoom.valore());
+			applicazione = new ForestaLibGDX(opzioni.getOrientamento(), scelta, esecutore, motore.getControlloreDiGioco(), motore.getGestorePunteggi(), motore.getVistaPartita(),
 					AvvioDelMotore.nuovoTemporizzatore(), opzioni.isBarraDock(), opzioni.isJoystickVirtuale(), opzioni.isSaltaLogo(), opzioni.isTocco());
 			Misura dimensioni = ForestaLibGDX.dimensioniDelloSchermo(opzioni.getOrientamento());
 			larghezza = dimensioni.larghezza;
 			altezza = dimensioni.altezza;
+			if (scelta != null) {
+				Logger.log(() -> "Schermo di prova " + schermo + ": " + scelta);
+				larghezza = (int) Math.round(schermo.getLarghezzaDp());
+				altezza = (int) Math.round(schermo.getAltezzaDp());
+			}
 		}
 
 		Lwjgl3ApplicationConfiguration configurazione = new Lwjgl3ApplicationConfiguration();
 		configurazione.setTitle("La Foresta");
 		configurazione.setWindowedMode(larghezza, altezza);
-		if (opzioni.isTuttoSchermo()) {
+		if (opzioni.isTuttoSchermo() && opzioni.getSchermoDiProva() == null) {
 			// A schermo intero con la risoluzione del desktop: il gioco resta alla sua risoluzione virtuale e si adatta con le bande nere
 			configurazione.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
 		}

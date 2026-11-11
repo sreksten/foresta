@@ -19,7 +19,9 @@ import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzatore;
 import com.threeamigos.foresta.tipi.Orientamento;
+import com.threeamigos.foresta.tipi.TipoDiLayout;
 import com.threeamigos.foresta.ui.DisposizioneDelloSchermo;
+import com.threeamigos.foresta.ui.SceltaDelLayout;
 import com.threeamigos.foresta.ui.ForestaUI;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.Misura;
@@ -51,6 +53,7 @@ public final class ForestaLibGDX extends ForestaUI implements ApplicationListene
 	private final boolean saltaLogo;
 	private final boolean toccoRichiesto;
 	private final Misura dimensioni;
+	private final TipoDiLayout tipoDiLayout;
 
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
@@ -78,9 +81,21 @@ public final class ForestaLibGDX extends ForestaUI implements ApplicationListene
 	 */
 	public ForestaLibGDX(Orientamento orientamento, EsecutoreGdx esecutore, ControlloreDiGioco controlloreDiGioco, GestorePunteggi gestorePunteggi, VistaPartita vistaPartita,
 						 Temporizzatore temporizzatore, boolean barraDock, boolean joystickVirtuale, boolean saltaLogo, boolean toccoRichiesto) {
+		this(orientamento, null, esecutore, controlloreDiGioco, gestorePunteggi, vistaPartita, temporizzatore, barraDock, joystickVirtuale, saltaLogo,
+				toccoRichiesto);
+	}
+
+	/**
+	 * @param scelta il layout per lo schermo vero o simulato (vedi SceltaDelLayout): la risoluzione virtuale è la sua area, e il FitViewport la fa
+	 *               entrare nella finestra; null per il layout di sempre
+	 */
+	public ForestaLibGDX(Orientamento orientamento, SceltaDelLayout scelta, EsecutoreGdx esecutore, ControlloreDiGioco controlloreDiGioco,
+						 GestorePunteggi gestorePunteggi, VistaPartita vistaPartita, Temporizzatore temporizzatore, boolean barraDock,
+						 boolean joystickVirtuale, boolean saltaLogo, boolean toccoRichiesto) {
 		super(vistaPartita, temporizzatore);
 		this.orientamento = orientamento;
-		this.dimensioni = dimensioniDelloSchermo(orientamento);
+		this.dimensioni = scelta != null ? scelta.getAreaVirtuale() : dimensioniDelloSchermo(orientamento);
+		this.tipoDiLayout = scelta != null ? scelta.getTipo() : TipoDiLayout.TABLET;
 		this.esecutore = esecutore;
 		this.controlloreDiGioco = controlloreDiGioco;
 		this.gestorePunteggi = gestorePunteggi;
@@ -109,7 +124,7 @@ public final class ForestaLibGDX extends ForestaUI implements ApplicationListene
 		immagini = new ImmaginiGdx();
 		piccolo = new TestoGdx(DoomdarkFont.piccolo());
 		medio = new TestoGdx(DoomdarkFont.medio());
-		DisposizioneDelloSchermo disposizione = new DisposizioneDelloSchermo(orientamento, dimensioni.larghezza, dimensioni.altezza,
+		DisposizioneDelloSchermo disposizione = new DisposizioneDelloSchermo(tipoDiLayout, orientamento, dimensioni.larghezza, dimensioni.altezza,
 				new MisureDaiFile(), LivelloDiZoom.valore());
 		schermo = new SchermoGdx(disposizione, barraDock, gestorePunteggi, vistaPartita, immagini, piccolo, medio, camera, viewport);
 		// Col dito: gesti del dito (pressione prolungata, doppio tocco più lento), area sensibile della barra più larga e joystick a schermo, perché

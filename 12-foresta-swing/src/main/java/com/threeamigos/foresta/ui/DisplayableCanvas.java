@@ -11,6 +11,7 @@ import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzatore;
 import com.threeamigos.foresta.tipi.Orientamento;
+import com.threeamigos.foresta.tipi.TipoDiLayout;
 import com.threeamigos.foresta.tipi.StatoDelloSchermo;
 import com.threeamigos.foresta.tipi.TipoFinestra;
 import com.threeamigos.foresta.tipi.TipoNegozio;
@@ -89,8 +90,16 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 */
 	public DisplayableCanvas(Orientamento orientamento, int larghezza, int altezza, boolean barraDock, GestorePunteggi gestorePunteggi,
 							 VistaPartita vistaPartita) {
+		this(TipoDiLayout.TABLET, orientamento, larghezza, altezza, barraDock, gestorePunteggi, vistaPartita);
+	}
+
+	/**
+	 * @param tipo il layout della schermata di gioco (vedi SceltaDelLayout); quello del telefono vuole la barra a destra
+	 */
+	public DisplayableCanvas(TipoDiLayout tipo, Orientamento orientamento, int larghezza, int altezza, boolean barraDock,
+							 GestorePunteggi gestorePunteggi, VistaPartita vistaPartita) {
 		super();
-		DisposizioneDelloSchermo disposizione = new DisposizioneDelloSchermo(orientamento, larghezza, altezza, new MisureDelleImmaginiAwt(),
+		DisposizioneDelloSchermo disposizione = new DisposizioneDelloSchermo(tipo, orientamento, larghezza, altezza, new MisureDelleImmaginiAwt(),
 				LivelloDiZoom.valore());
 		int larghezzaContenuto = disposizione.getLarghezzaContenuto();
 		int altezzaContenuto = disposizione.getAltezzaContenuto();
@@ -100,11 +109,13 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		riquadroIntroOutro = new DisplayableCanvasIntroOutro(larghezzaContenuto, altezzaContenuto, gestorePunteggi, vistaPartita);
 		intermezzo = new DisplayableCanvasIntermezzo(larghezzaContenuto, altezzaContenuto, riquadroIntroOutro);
 		Area mappa = disposizione.getMappa();
-		riquadroMappa = new DisplayableCanvasRiquadroMappa(mappa.getX(), mappa.getY(), larghezzaContenuto, altezzaContenuto, vistaPartita);
+		riquadroMappa = new DisplayableCanvasRiquadroMappa(disposizione.getXDellaCorniceDellaMappa(), mappa.getY(), larghezzaContenuto, altezzaContenuto, vistaPartita);
 		Area locazione = disposizione.getLocazione();
 		riquadroLocazione = new DisplayableCanvasRiquadroLocazione(locazione.getX(), locazione.getY(), locazione.getLarghezza(), vistaPartita);
 		Area statistiche = disposizione.getStatistiche();
-		riquadroStatistiche = new DisplayableCanvasRiquadroStatistiche(statistiche.getX(), statistiche.getY(), vistaPartita);
+		// Sul telefono le statistiche non ci sono, e senza riquadro non nascono neanche gli sprite delle variazioni
+		riquadroStatistiche = disposizione.isTelefono() ? null
+				: new DisplayableCanvasRiquadroStatistiche(statistiche.getX(), statistiche.getY(), vistaPartita);
 		// Centrato sul testo sotto la locazione, non sull'intero schermo
 		riquadroCombattimento = new DisplayableCanvasRiquadroCombattimento(disposizione.getColonnaDestraX(), altezzaContenuto,
 				disposizione.getYPreferitaDelCombattimento(), vistaPartita);
@@ -210,6 +221,11 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		@Override
 		protected Finestra riquadroMappa() {
 			return riquadroMappa;
+		}
+
+		@Override
+		protected RiquadroMappa modelloDellaMappa() {
+			return riquadroMappa.getModello();
 		}
 
 		@Override
@@ -421,6 +437,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			switch (finestra) {
 			case MAPPA:
 				riquadroMappa.disegnaMappa(graphics);
+				dissolviSeCoperto(graphics, finestra);
 				break;
 			case STATISTICHE:
 				riquadroStatistiche.disegnaStatistiche(graphics);

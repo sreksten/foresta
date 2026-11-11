@@ -94,11 +94,12 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 
 		introOutro = new SchermataIntroOutroGdx(larghezza, altezza, gestorePunteggi, vistaPartita, immagini, piccolo, medio);
 		intermezzo = new SchermataIntermezzoGdx(larghezza, altezza, immagini, medio, introOutro);
-		riquadroMappa = new RiquadroMappaGdx(disposizione.getMappa().getX(), disposizione.getMappa().getY(), vistaPartita, immagini, nuvole);
+		riquadroMappa = new RiquadroMappaGdx(disposizione.getXDellaCorniceDellaMappa(), disposizione.getMappa().getY(), vistaPartita, immagini, nuvole);
 		Area locazione = disposizione.getLocazione();
 		riquadroLocazione = new RiquadroLocazioneGdx(locazione.getX(), locazione.getY(), locazione.getLarghezza(), vistaPartita, immagini);
-		riquadroStatistiche = new RiquadroStatisticheGdx(disposizione.getStatistiche().getX(), disposizione.getStatistiche().getY(), vistaPartita,
-				immagini, medio);
+		// Sul telefono le statistiche non ci sono, e senza riquadro non nascono neanche gli sprite delle variazioni
+		riquadroStatistiche = disposizione.isTelefono() ? null
+				: new RiquadroStatisticheGdx(disposizione.getStatistiche().getX(), disposizione.getStatistiche().getY(), vistaPartita, immagini, medio);
 		// Centrato sul testo sotto la locazione, non sull'intero schermo
 		riquadroCombattimento = new RiquadroCombattimentoGdx(disposizione.getColonnaDestraX(), altezza, disposizione.getYPreferitaDelCombattimento(),
 				vistaPartita, immagini, medio);
@@ -260,6 +261,7 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 			switch (finestra) {
 				case MAPPA:
 					riquadroMappa.disegna(batch, camera, viewport, disposizione.getLarghezzaContenuto(), disposizione.getAltezzaContenuto());
+					dissolviSeCoperto(batch, finestra);
 					break;
 				case STATISTICHE:
 					riquadroStatistiche.disegna(batch);
@@ -353,6 +355,11 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 
 	@Override
 	protected Finestra riquadroMappa() {
+		return riquadroMappa;
+	}
+
+	@Override
+	protected RiquadroMappa modelloDellaMappa() {
 		return riquadroMappa;
 	}
 

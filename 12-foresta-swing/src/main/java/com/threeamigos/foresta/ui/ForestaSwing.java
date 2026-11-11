@@ -8,6 +8,7 @@ import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzatore;
 import com.threeamigos.foresta.tipi.Orientamento;
+import com.threeamigos.foresta.tipi.TipoDiLayout;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.schermate.DisegnoDiContenutoAwt;
 import com.threeamigos.foresta.ui.schermate.MisureDelleImmaginiAwt;
@@ -26,6 +27,8 @@ import java.awt.*;
 public class ForestaSwing extends ForestaUI {
 
 	private final Orientamento orientamento;
+	// Lo schermo simulato con SCHERMO= (vedi SceltaDelLayout), o null per lo schermo di sempre
+	private final SceltaDelLayout scelta;
 	private final boolean tuttoSchermo;
 	private final boolean saltaLogoIniziale;
 	private final boolean barraDock;
@@ -53,7 +56,17 @@ public class ForestaSwing extends ForestaUI {
 	 */
 	public ForestaSwing(Orientamento orientamento, boolean tuttoSchermo, boolean saltaLogoIniziale, boolean barraDock,
 						boolean joystickVirtuale, GestorePunteggi gestorePunteggi, VistaPartita vistaPartita, Temporizzatore temporizzatore) {
+		this(orientamento, null, tuttoSchermo, saltaLogoIniziale, barraDock, joystickVirtuale, gestorePunteggi, vistaPartita, temporizzatore);
+	}
+
+	/**
+	 * @param scelta il layout per lo schermo simulato con SCHERMO=, o null per lo schermo di sempre: Swing non rimpicciolisce, e la finestra è
+	 *               grande quanto l'area virtuale (vedi layout_telefono.md §3.2)
+	 */
+	public ForestaSwing(Orientamento orientamento, SceltaDelLayout scelta, boolean tuttoSchermo, boolean saltaLogoIniziale, boolean barraDock,
+						boolean joystickVirtuale, GestorePunteggi gestorePunteggi, VistaPartita vistaPartita, Temporizzatore temporizzatore) {
 		super(vistaPartita, temporizzatore);
+		this.scelta = scelta;
 		this.barraDock = barraDock;
 		this.joystickVirtuale = joystickVirtuale;
 		this.gestorePunteggi = gestorePunteggi;
@@ -86,7 +99,9 @@ public class ForestaSwing extends ForestaUI {
 		Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
 		jframe = new JFrame("La Foresta");
 		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Dimension dimensioniFinestra = calcolaDimensioniFinestra(orientamento, tuttoSchermo);
+		Dimension dimensioniFinestra = scelta != null
+				? new Dimension(scelta.getAreaVirtuale().larghezza, scelta.getAreaVirtuale().altezza)
+				: calcolaDimensioniFinestra(orientamento, tuttoSchermo);
 		larghezza = dimensioniFinestra.width;
 		altezza = dimensioniFinestra.height;
 
@@ -131,7 +146,8 @@ public class ForestaSwing extends ForestaUI {
 		prompt.setLocation((larghezza - prompt.getSize().width) / 2, (altezza - prompt.getSize().height) / 2);
 
 		Logger.log(() -> "Orientamento: " + orientamento);
-		displayableCanvas = new DisplayableCanvas(orientamento, larghezza, altezza, barraDock, gestorePunteggi, vistaPartita);
+		displayableCanvas = new DisplayableCanvas(scelta != null ? scelta.getTipo() : TipoDiLayout.TABLET, orientamento, larghezza, altezza, barraDock,
+				gestorePunteggi, vistaPartita);
 		displayableCanvas.setJoystickVirtuale(joystickVirtuale);
 		interfacciaCompleta(displayableCanvas.getSchermo(), prompt.getCampo());
 		interfacciaCompleta = true;

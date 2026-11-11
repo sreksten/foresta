@@ -1,6 +1,8 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.tipi.Orientamento;
+import com.threeamigos.foresta.tipi.SchermoDiProva;
+import com.threeamigos.foresta.tipi.TipoDiLayout;
 import com.threeamigos.foresta.ui.immagini.MisureDaiFile;
 import org.junit.jupiter.api.Test;
 
@@ -55,5 +57,54 @@ class DisposizioneDelloSchermoTest {
         assertEquals(d.getQuotaPila() + d.getPassoPila(), d.quotaNellaPila(1));
         int ultima = d.quotaNellaPila(DisposizioneDelloSchermo.RIQUADRI_IMPILATI - 1);
         assertTrue(ultima + d.getGruppo().getAltezza() <= d.getAltezzaContenuto());
+    }
+
+    private DisposizioneDelloSchermo delTelefono(SchermoDiProva profilo) {
+        SceltaDelLayout scelta = SceltaDelLayout.per(profilo.getMisura(), misure, ZOOM);
+        assertEquals(TipoDiLayout.TELEFONO, scelta.getTipo(), profilo.name());
+        Misura area = scelta.getAreaVirtuale();
+        return new DisposizioneDelloSchermo(TipoDiLayout.TELEFONO, Orientamento.VERTICALE, area.larghezza, area.altezza, misure, ZOOM);
+    }
+
+    @Test
+    void sulTelefonoTuttoStaNelContenutoELaColonnaASinistraNonToccaLaPila() {
+        for (SchermoDiProva profilo : SchermoDiProva.values()) {
+            if (SceltaDelLayout.per(profilo.getMisura(), misure, ZOOM).getTipo() != TipoDiLayout.TELEFONO) {
+                continue;
+            }
+            DisposizioneDelloSchermo d = delTelefono(profilo);
+            assertTrue(d.isTelefono());
+            assertEquals(4, d.getRiquadriImpilati());
+            for (Area area : new Area[]{d.getLocazione(), d.getTesto(), d.getGruppo(), d.getMappa()}) {
+                assertTrue(area.getX() >= 0 && area.getY() >= 0, profilo + ": dentro il contenuto");
+                assertTrue(area.getX() + area.getLarghezza() <= d.getLarghezzaContenuto(), profilo + ": dentro il contenuto");
+                assertTrue(area.getY() + area.getAltezza() <= d.getAltezzaContenuto(), profilo + ": dentro il contenuto");
+            }
+            assertTrue(d.getTesto().getAltezza() > 0, profilo + ": c'è posto per il testo");
+            assertTrue(d.getLocazione().getX() + d.getLocazione().getLarghezza() < d.getColonnaDestraX(), profilo.name());
+            assertTrue(d.getTesto().getX() + d.getTesto().getLarghezza() < d.getColonnaDestraX(), profilo.name());
+            // Le statistiche non ci sono; la mappa sta nella pila, come gli altri
+            assertEquals(0, d.getStatistiche().getLarghezza());
+            assertEquals(d.getGruppo(), d.getMappa());
+            // L'ultimo della pila arriva in fondo senza uscire
+            int ultima = d.quotaNellaPila(d.getRiquadriImpilati() - 1);
+            assertTrue(ultima + d.getGruppo().getAltezza() <= d.getAltezzaContenuto(), profilo.name());
+        }
+    }
+
+    @Test
+    void sulTelefonoMinimoLaColonnaASinistraELargaQuantoLaLocazioneEIlPassoDellaPilaE53() {
+        DisposizioneDelloSchermo d = delTelefono(SchermoDiProva.MINIMO);
+        assertEquals(390, d.getLocazione().getLarghezza());
+        assertEquals(4, d.getQuotaPila());
+        assertEquals(53, d.getPassoPila());
+        // Sui telefoni comuni il testo si allarga
+        assertTrue(delTelefono(SchermoDiProva.PIXEL_8).getTesto().getLarghezza() > 600);
+    }
+
+    @Test
+    void ilLayoutDelTelefonoVuoleLaBarraADestra() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new DisposizioneDelloSchermo(TipoDiLayout.TELEFONO, Orientamento.ORIZZONTALE, 1100, 505, misure, ZOOM));
     }
 }

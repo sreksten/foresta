@@ -139,7 +139,8 @@ public class RiquadroMappa implements Finestra {
 	}
 
 	protected final int topLeftX;
-	protected final int topLeftY;
+	// Sul telefono la mappa è impilata e la pila la sposta in verticale
+	protected int topLeftY;
 	protected final int larghezzaIcona;
 	protected final int altezzaIcona;
 	protected final VistaPartita vistaPartita;
@@ -162,6 +163,13 @@ public class RiquadroMappa implements Finestra {
 
 	public int getTopLeftY() {
 		return topLeftY;
+	}
+
+	/**
+	 * Sposta il riquadro in verticale: topLeftY è la nuova quota del bordo superiore della cornice
+	 */
+	public void spostaInVerticale(int topLeftY) {
+		this.topLeftY = topLeftY;
 	}
 
 	/**

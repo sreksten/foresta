@@ -22,6 +22,7 @@ class OpzioniDiAvvioTest {
         assertFalse(opzioni.isJoystickVirtuale());
         assertFalse(opzioni.isTocco());
         assertFalse(opzioni.isLinguaDecisa());
+        assertNull(opzioni.getSchermoDiProva());
         assertTrue(opzioni.getAltri().isEmpty());
     }
 
@@ -38,5 +39,24 @@ class OpzioniDiAvvioTest {
         assertEquals(Arrays.asList("Pagine_Di_Prova", "boh"), opzioni.getAltri());
         assertTrue(opzioni.haAltro("PAGINE_DI_PROVA"));
         assertFalse(opzioni.haAltro("MODALITA_DI_PROVA"));
+    }
+
+    @Test
+    void loSchermoDiProvaSiDaPerProfiloOPerMisuraEPortaConSeLaBarraADestraEIlDito() {
+        OpzioniDiAvvio profilo = OpzioniDiAvvio.leggi(new String[]{"schermo=Galaxy_S24"});
+        assertEquals(com.threeamigos.foresta.tipi.SchermoDiProva.GALAXY_S24.getMisura(), profilo.getSchermoDiProva());
+        assertEquals(Orientamento.VERTICALE, profilo.getOrientamento());
+        assertTrue(profilo.isTocco());
+
+        OpzioniDiAvvio misura = OpzioniDiAvvio.leggi(new String[]{"ORIZZONTALE", "SCHERMO=2400x1080@2.625"});
+        assertEquals(2400, misura.getSchermoDiProva().getLarghezza());
+        assertEquals(2.625, misura.getSchermoDiProva().getDensita());
+        assertEquals(Orientamento.ORIZZONTALE, misura.getOrientamento(), "un orientamento scritto vince");
+
+        OpzioniDiAvvio sbagliato = OpzioniDiAvvio.leggi(new String[]{"SCHERMO=enorme"});
+        assertNull(sbagliato.getSchermoDiProva());
+        assertEquals(Orientamento.ORIZZONTALE, sbagliato.getOrientamento());
+        assertFalse(sbagliato.isTocco());
+        assertTrue(sbagliato.getAltri().isEmpty(), "è ignorato, non passato a chi avvia");
     }
 }

@@ -108,12 +108,15 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	protected SchermoDelGioco(DisposizioneDelloSchermo disposizione, VistaPartita vistaPartita) {
 		this.disposizione = disposizione;
 		this.vistaPartita = vistaPartita;
-		// Gruppo, incantesimi e missioni sono impilati nell'ordine in cui compaiono qui. INTRO_OUTRO e MAPPA_A_TUTTO_SCHERMO non
-		// appartengono alla pila: occupano da soli tutto lo schermo e sono scelti in base allo stato.
+		// Gruppo, incantesimi e missioni (e sul telefono la mappa) sono impilati nell'ordine in cui compaiono qui. INTRO_OUTRO e
+		// MAPPA_A_TUTTO_SCHERMO non appartengono alla pila: occupano da soli tutto lo schermo e sono scelti in base allo stato. Sul telefono
+		// le statistiche non ci sono.
 		pila.add(TipoFinestra.STATO);
 		pila.add(TipoFinestra.INCANTESIMI_E_POZIONI);
 		pila.add(TipoFinestra.MAPPA);
-		pila.add(TipoFinestra.STATISTICHE);
+		if (!disposizione.isTelefono()) {
+			pila.add(TipoFinestra.STATISTICHE);
+		}
 		pila.add(TipoFinestra.GRAFICA);
 		pila.add(TipoFinestra.TESTO);
 		pila.add(TipoFinestra.MISSIONI);
@@ -179,6 +182,10 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 
 	protected abstract Finestra riquadroMappa();
 
+	/** Il modello del riquadro della mappa: sul telefono è impilato, e la pila lo sposta in verticale */
+	protected abstract RiquadroMappa modelloDellaMappa();
+
+	/** Il riquadro delle statistiche, o null sul telefono, dove non c'è */
 	protected abstract Finestra riquadroStatistiche();
 
 	protected abstract BarraIcone barraIcone();
@@ -281,15 +288,16 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 		posizionaRiquadriImpilati();
 	}
 
-	private static boolean isRiquadroImpilato(TipoFinestra finestra) {
-		return finestra == TipoFinestra.STATO || finestra == TipoFinestra.INCANTESIMI_E_POZIONI || finestra == TipoFinestra.MISSIONI;
+	private boolean isRiquadroImpilato(TipoFinestra finestra) {
+		return finestra == TipoFinestra.STATO || finestra == TipoFinestra.INCANTESIMI_E_POZIONI || finestra == TipoFinestra.MISSIONI
+				|| finestra == TipoFinestra.MAPPA && disposizione.isTelefono();
 	}
 
 	/**
 	 * I riquadri impilati nell'ordine della pila: il primo è il più in alto, l'ultimo il più in basso e davanti agli altri
 	 */
 	public List<TipoFinestra> riquadriImpilati() {
-		List<TipoFinestra> impilati = new ArrayList<>(DisposizioneDelloSchermo.RIQUADRI_IMPILATI);
+		List<TipoFinestra> impilati = new ArrayList<>(disposizione.getRiquadriImpilati());
 		for (TipoFinestra finestra : pila) {
 			if (isRiquadroImpilato(finestra)) {
 				impilati.add(finestra);
@@ -311,6 +319,9 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 					break;
 				case INCANTESIMI_E_POZIONI:
 					riquadroIncantesimiEPozioni().spostaInVerticale(y);
+					break;
+				case MAPPA:
+					modelloDellaMappa().spostaInVerticale(y);
 					break;
 				default:
 					riquadroMissioni().spostaInVerticale(y);
@@ -384,7 +395,7 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 		if (finestra == barraIcone()) {
 			return disposizione.getBarra();
 		} else if (finestra == riquadroMappa()) {
-			return disposizione.getMappa();
+			return disposizione.isTelefono() ? conQuota(disposizione.getMappa(), quotaDellImpilato(TipoFinestra.MAPPA)) : disposizione.getMappa();
 		} else if (finestra == riquadroStatistiche()) {
 			return disposizione.getStatistiche();
 		} else if (finestra == riquadroLocazione()) {
@@ -1228,7 +1239,7 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 			case RIQUADRO_DELLE_MISSIONI:
 				return getArea(riquadroMissioni());
 			case RIQUADRO_DELLA_MAPPA:
-				return disposizione.getMappa();
+				return getArea(riquadroMappa());
 			case SCHERMATA:
 				return new Area(0, 0, disposizione.getLarghezzaTotale(), disposizione.getAltezzaTotale());
 			case JOYSTICK_VIRTUALE:

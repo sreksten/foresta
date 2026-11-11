@@ -4,6 +4,7 @@ import com.threeamigos.foresta.strumenti.ModalitaDiProva;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.tipi.Orientamento;
+import com.threeamigos.foresta.tipi.SchermoDiProva;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,13 +15,20 @@ import java.util.Locale;
  * Le opzioni di avvio dalla riga di comando, uguali per Swing e libGDX (senza distinzione fra maiuscole e minuscole):
  * {@code ORIZZONTALE}, {@code VERTICALE}, {@code TUTTOSCHERMO}, {@code SALTALOGO}, {@code BARRACLASSICA}, {@code JOYSTICK_VIRTUALE}, {@code TOCCO}
  * (per provare con il mouse i gesti del dito; vale solo in libGDX, dove il dito c'è davvero sui telefoni),
- * {@code LINGUA=<codice>} ({@code it}, {@code en}, {@code en-GB}), {@code ZOOM=<numero>}, {@code MODALITA_DI_PROVA}. La lingua, lo
+ * {@code LINGUA=<codice>} ({@code it}, {@code en}, {@code en-GB}), {@code ZOOM=<numero>}, {@code MODALITA_DI_PROVA},
+ * {@code SCHERMO=<profilo>} o {@code SCHERMO=<larghezza>x<altezza>[@<densità>]} (per provare dal desktop lo schermo di un telefono o di
+ * un tablet: i profili sono quelli di {@link SchermoDiProva}; porta con sé {@code VERTICALE}, se non si scrive {@code ORIZZONTALE}, e
+ * {@code TOCCO}, perché quegli schermi si usano con il dito). La lingua, lo
  * zoom e la modalità di prova si impostano subito; gli argomenti sconosciuti restano a chi avvia ({@link #getAltri()}), che può
  * averne di suoi.
  */
 public final class OpzioniDiAvvio {
 
 	private Orientamento orientamento = Orientamento.ORIZZONTALE;
+	// Se l'orientamento è scritto negli argomenti: allora vince su quello che porta con sé SCHERMO=
+	private boolean orientamentoScritto;
+	// Lo schermo da simulare sul desktop con SCHERMO=, o null
+	private MisuraDelloSchermo schermoDiProva;
 	private boolean tuttoSchermo;
 	// Per le partite di prova: niente logo iniziale, si va dritti all'INTRO
 	private boolean saltaLogo;
@@ -45,6 +53,12 @@ public final class OpzioniDiAvvio {
 		for (String argomento : argomenti) {
 			opzioni.leggiUno(argomento);
 		}
+		if (opzioni.schermoDiProva != null) {
+			if (!opzioni.orientamentoScritto) {
+				opzioni.orientamento = Orientamento.VERTICALE;
+			}
+			opzioni.tocco = true;
+		}
 		return opzioni;
 	}
 
@@ -52,8 +66,10 @@ public final class OpzioniDiAvvio {
 		String maiuscolo = argomento.toUpperCase(Locale.ROOT);
 		if (maiuscolo.equals("ORIZZONTALE")) {
 			orientamento = Orientamento.ORIZZONTALE;
+			orientamentoScritto = true;
 		} else if (maiuscolo.equals("VERTICALE")) {
 			orientamento = Orientamento.VERTICALE;
+			orientamentoScritto = true;
 		} else if (maiuscolo.equals("TUTTOSCHERMO")) {
 			tuttoSchermo = true;
 		} else if (maiuscolo.equals("SALTALOGO")) {
@@ -74,11 +90,38 @@ public final class OpzioniDiAvvio {
 				// Anche NumberFormatException: un valore che non è un numero, o non è positivo, lascia lo zoom predefinito
 				Logger.log(() -> "Argomento ignorato, lo zoom resta " + LivelloDiZoom.valore() + ": " + argomento);
 			}
+		} else if (maiuscolo.startsWith("SCHERMO=")) {
+			leggiLoSchermo(maiuscolo.substring("SCHERMO=".length()), argomento);
 		} else if (maiuscolo.equals("MODALITA_DI_PROVA")) {
 			ModalitaDiProva.setAttiva(true);
 		} else {
 			altri.add(argomento);
 		}
+	}
+
+	private void leggiLoSchermo(String valore, String argomento) {
+		for (SchermoDiProva profilo : SchermoDiProva.values()) {
+			if (profilo.name().equals(valore)) {
+				schermoDiProva = profilo.getMisura();
+				return;
+			}
+		}
+		try {
+			schermoDiProva = MisuraDelloSchermo.leggi(valore);
+		} catch (IllegalArgumentException e) {
+			// Anche NumberFormatException: si resta sullo schermo del desktop, e nel log c'è l'elenco dei profili
+			Logger.log(() -> "Argomento ignorato, non è un profilo né una misura come 2400x1080@2.625: " + argomento);
+			for (SchermoDiProva profilo : SchermoDiProva.values()) {
+				Logger.log(() -> "  SCHERMO=" + profilo + ": " + profilo.getMisura() + ", " + profilo.getDescrizione());
+			}
+		}
+	}
+
+	/**
+	 * Lo schermo da simulare sul desktop ({@code SCHERMO=}), o null per lo schermo di sempre
+	 */
+	public MisuraDelloSchermo getSchermoDiProva() {
+		return schermoDiProva;
 	}
 
 	public Orientamento getOrientamento() {

@@ -4,12 +4,14 @@ import com.threeamigos.foresta.mappa.VistaMappa;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,9 +46,17 @@ class GestoreNuvoleTest {
         };
     }
 
+    // Con un seme le nuvole nascono sempre negli stessi posti: senza, un test che guarda dove stanno dipenderebbe dal caso
+    @BeforeEach
+    void fissaIlCaso() {
+        GestoreNuvole.azzera();
+        GestoreNuvole.impostaFonteDelCaso(() -> new Random(42));
+    }
+
     @AfterEach
     void azzera() {
         GestoreNuvole.azzera();
+        GestoreNuvole.impostaFonteDelCaso(null);
     }
 
     // La foresta (20 x 20 caselle da 8 pixel) disegnata a (120, 20): al centro dello schermo di prova

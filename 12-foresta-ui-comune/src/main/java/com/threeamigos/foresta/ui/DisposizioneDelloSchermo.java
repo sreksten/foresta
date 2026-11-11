@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.tipi.Orientamento;
+import com.threeamigos.foresta.tipi.TipoDiLayout;
 import com.threeamigos.foresta.tipi.TipoIcona;
 import com.threeamigos.foresta.ui.schermate.MisureDelleImmagini;
 
@@ -9,13 +10,19 @@ import com.threeamigos.foresta.ui.schermate.MisureDelleImmagini;
  * verticale), l'area di contenuto che resta, e in questa i riquadri della schermata di gioco. Le misure vengono dalle cornici
  * (con lo zoom): a destra la colonna con la mappa e le statistiche, allineate a destra, e sotto di loro i riquadri impilati
  * (gruppo, incantesimi e pozioni, missioni); a sinistra la locazione con il testo sotto. La usano Swing e libGDX.
+ * <p>
+ * Questo è il layout del {@link TipoDiLayout#TABLET}. In quello del {@link TipoDiLayout#TELEFONO} (vedi {@code layout_telefono.md} §4)
+ * le statistiche non ci sono (la loro area è vuota) e la mappa è il quarto riquadro della pila, che comincia in cima alla colonna a destra;
+ * la colonna a sinistra, con locazione e testo, prende tutta la larghezza che resta.
  */
 public final class DisposizioneDelloSchermo {
 
 	/** Spessore della fascia (o della colonna) della barra icone */
 	public static final int SPESSORE_BARRA_ICONE = 72;
-	/** Quanti riquadri sono impilati nella colonna a destra (gruppo, incantesimi e pozioni, missioni) */
+	/** Quanti riquadri sono impilati nella colonna a destra nel layout del tablet (gruppo, incantesimi e pozioni, missioni) */
 	public static final int RIQUADRI_IMPILATI = 3;
+	/** Quanti riquadri sono impilati nel layout del telefono: anche la mappa */
+	public static final int RIQUADRI_IMPILATI_DEL_TELEFONO = 4;
 
 	public static final String RISORSA_CORNICE_GRANDE = "fondi/CorniceGrande.png";
 	public static final String RISORSA_CORNICE_MAPPA = "fondi/CorniceMappa.png";
@@ -25,6 +32,7 @@ public final class DisposizioneDelloSchermo {
 
 	private static final int SP = Finestra.SPACING;
 
+	private final TipoDiLayout tipo;
 	private final Orientamento orientamento;
 	private final int larghezzaTotale;
 	private final int altezzaTotale;
@@ -32,6 +40,7 @@ public final class DisposizioneDelloSchermo {
 	private final int altezzaContenuto;
 	private final Area barra;
 	private final Area mappa;
+	private final int xDellaCorniceDellaMappa;
 	private final Area locazione;
 	private final Area statistiche;
 	private final Area testo;
@@ -42,6 +51,7 @@ public final class DisposizioneDelloSchermo {
 	private final int yPreferitaDelCombattimento;
 	private final int quotaPila;
 	private final int passoPila;
+	private final int riquadriImpilati;
 
 	/**
 	 * @param larghezza   la larghezza di tutto lo schermo, barra compresa
@@ -50,6 +60,21 @@ public final class DisposizioneDelloSchermo {
 	 * @param zoom        lo zoom con cui si disegnano le immagini
 	 */
 	public DisposizioneDelloSchermo(Orientamento orientamento, int larghezza, int altezza, MisureDelleImmagini misure, double zoom) {
+		this(TipoDiLayout.TABLET, orientamento, larghezza, altezza, misure, zoom);
+	}
+
+	/**
+	 * @param tipo        il layout (vedi SceltaDelLayout); quello del telefono vuole la barra a destra
+	 * @param larghezza   la larghezza di tutto lo schermo, barra compresa
+	 * @param altezza     l'altezza di tutto lo schermo, barra compresa
+	 * @param misure      le misure delle immagini, senza zoom
+	 * @param zoom        lo zoom con cui si disegnano le immagini
+	 */
+	public DisposizioneDelloSchermo(TipoDiLayout tipo, Orientamento orientamento, int larghezza, int altezza, MisureDelleImmagini misure, double zoom) {
+		if (tipo == TipoDiLayout.TELEFONO && orientamento != Orientamento.VERTICALE) {
+			throw new IllegalArgumentException("Il layout del telefono ha la barra delle icone a destra");
+		}
+		this.tipo = tipo;
 		this.orientamento = orientamento;
 		larghezzaTotale = larghezza;
 		altezzaTotale = altezza;
@@ -66,10 +91,30 @@ public final class DisposizioneDelloSchermo {
 		Misura corniceMappa = conZoom(misure, RISORSA_CORNICE_MAPPA, zoom);
 		Misura cornicePiccola = conZoom(misure, RISORSA_CORNICE_PICCOLA, zoom);
 		int altezzaLocazione = conZoom(misure, RISORSA_BOSCO, zoom).altezza;
+		// Di norma sotto l'immagine della locazione, dove ci sono i personaggi
+		yPreferitaDelCombattimento = SP + altezzaLocazione + SP;
+		colonnaDestraX = larghezzaContenuto - SP - corniceGrande.larghezza;
+		gruppo = new Area(colonnaDestraX, SP, corniceGrande.larghezza, corniceGrande.altezza);
+
+		if (tipo == TipoDiLayout.TELEFONO) {
+			// Una colonna a sinistra con locazione e testo, larga quanto resta, e a destra la pila di quattro riquadri grandi dalla cima
+			int larghezzaSinistra = colonnaDestraX - 2 * SP;
+			locazione = new Area(SP, SP, larghezzaSinistra, altezzaLocazione);
+			testo = new Area(SP, SP + altezzaLocazione + SP, larghezzaSinistra, altezzaContenuto - SP - altezzaLocazione - SP);
+			statistiche = new Area(0, 0, 0, 0);
+			incantesimi = gruppo;
+			missioni = gruppo;
+			mappa = gruppo;
+			// Per ora la mappa ha ancora la sua cornice, centrata nel posto della pila
+			xDellaCorniceDellaMappa = colonnaDestraX + (corniceGrande.larghezza - corniceMappa.larghezza) / 2;
+			riquadriImpilati = RIQUADRI_IMPILATI_DEL_TELEFONO;
+			quotaPila = SP;
+			passoPila = Math.max(0, (altezzaContenuto - quotaPila - corniceGrande.altezza) / riquadriImpilati);
+			return;
+		}
 
 		// Fino all'altezza della locazione la colonna a destra è larga quanto la mappa, quindi lo spazio per la locazione è la
 		// larghezza meno quella della mappa; il testo sotto, accanto ai riquadri impilati, è più stretto
-		colonnaDestraX = larghezzaContenuto - SP - corniceGrande.larghezza;
 		int larghezzaLocazioneDisponibile = larghezzaContenuto - 3 * SP - corniceMappa.larghezza;
 		int larghezzaTesto = colonnaDestraX - 2 * SP;
 		// Mappa e statistiche, più strette dei riquadri impilati, sono allineate a destra
@@ -77,16 +122,15 @@ public final class DisposizioneDelloSchermo {
 		int statisticheX = colonnaDestraX + corniceGrande.larghezza - cornicePiccola.larghezza;
 
 		mappa = new Area(mappaX, SP, corniceMappa.larghezza, corniceMappa.altezza);
+		xDellaCorniceDellaMappa = mappaX;
 		locazione = new Area(SP, SP, larghezzaLocazioneDisponibile, altezzaLocazione);
 		statistiche = new Area(statisticheX, SP + corniceMappa.altezza + SP, cornicePiccola.larghezza, cornicePiccola.altezza);
-		// Di norma sotto l'immagine della locazione, dove ci sono i personaggi
-		yPreferitaDelCombattimento = SP + altezzaLocazione + SP;
 		testo = new Area(SP, SP + altezzaLocazione + SP, larghezzaTesto, altezzaContenuto - SP - altezzaLocazione - SP);
-		gruppo = new Area(colonnaDestraX, SP, corniceGrande.larghezza, corniceGrande.altezza);
 		incantesimi = new Area(colonnaDestraX, SP + corniceGrande.altezza + SP, corniceGrande.larghezza, corniceGrande.altezza);
 		missioni = new Area(colonnaDestraX, SP + 2 * (corniceGrande.altezza + SP), corniceGrande.larghezza, corniceGrande.altezza);
 		quotaPila = SP + corniceMappa.altezza + SP + cornicePiccola.altezza + SP;
-		passoPila = Math.max(0, (altezzaContenuto - quotaPila - corniceGrande.altezza) / RIQUADRI_IMPILATI);
+		riquadriImpilati = RIQUADRI_IMPILATI;
+		passoPila = Math.max(0, (altezzaContenuto - quotaPila - corniceGrande.altezza) / riquadriImpilati);
 	}
 
 	/**
@@ -139,6 +183,24 @@ public final class DisposizioneDelloSchermo {
 		return new Misura((int) Math.round(misura.larghezza * zoom), (int) Math.round(misura.altezza * zoom));
 	}
 
+	public TipoDiLayout getTipo() {
+		return tipo;
+	}
+
+	public boolean isTelefono() {
+		return tipo == TipoDiLayout.TELEFONO;
+	}
+
+	/** Quanti riquadri stanno nella pila: tre sul tablet, quattro (con la mappa) sul telefono */
+	public int getRiquadriImpilati() {
+		return riquadriImpilati;
+	}
+
+	/** Dove comincia, in x, la cornice della mappa: sul telefono è centrata nel posto della pila */
+	public int getXDellaCorniceDellaMappa() {
+		return xDellaCorniceDellaMappa;
+	}
+
 	public Orientamento getOrientamento() {
 		return orientamento;
 	}
@@ -172,6 +234,7 @@ public final class DisposizioneDelloSchermo {
 		return barra;
 	}
 
+	/** Il riquadro della mappa: sul telefono, il suo posto nella pila nella prima posizione (si sposta in verticale) */
 	public Area getMappa() {
 		return mappa;
 	}
@@ -180,6 +243,7 @@ public final class DisposizioneDelloSchermo {
 		return locazione;
 	}
 
+	/** Il riquadro delle statistiche; vuoto sul telefono, dove non c'è */
 	public Area getStatistiche() {
 		return statistiche;
 	}
