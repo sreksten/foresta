@@ -118,10 +118,13 @@ public final class DisegnoDiContenutoGdx {
 	 * L'immagine di un elemento: quella della risorsa, specchiata, ridotta a una sagoma o con l'alone se serve
 	 */
 	private TextureRegion immagine(Elemento e) {
-		if (!e.isSpecchiata() && e.getSagomaRgb() == null && e.getRaggioDellAlone() == 0) {
+		// Un'immagine ingrandita (l'icona sulla scheda del grimorio) non si legge dall'atlante: con una scala dello schermo non intera il campionamento al
+		// bordo prende la linea rossa della cella accanto. Una texture sua non ha vicini
+		boolean ingrandita = e.getLarghezza() != immagini.larghezza(e.getRisorsa(), 1f) || e.getAltezza() != immagini.altezza(e.getRisorsa(), 1f);
+		if (!e.isSpecchiata() && e.getSagomaRgb() == null && e.getRaggioDellAlone() == 0 && !ingrandita) {
 			return immagini.regione(e.getRisorsa());
 		}
-		String chiave = e.getRisorsa() + "|" + e.isSpecchiata() + "|" + e.getSagomaRgb() + "|" + e.getRaggioDellAlone();
+		String chiave = e.getRisorsa() + "|" + e.isSpecchiata() + "|" + e.getSagomaRgb() + "|" + e.getRaggioDellAlone() + "|" + ingrandita;
 		return perChiave.computeIfAbsent(chiave, k -> {
 			ImmagineDiPixel pixel = AtlanteDiImmagini.cerca(e.getRisorsa());
 			if (pixel == null) {
