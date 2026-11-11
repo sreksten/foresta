@@ -94,7 +94,10 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 
 		introOutro = new SchermataIntroOutroGdx(larghezza, altezza, gestorePunteggi, vistaPartita, immagini, piccolo, medio);
 		intermezzo = new SchermataIntermezzoGdx(larghezza, altezza, immagini, medio, introOutro);
-		riquadroMappa = new RiquadroMappaGdx(disposizione.getXDellaCorniceDellaMappa(), disposizione.getMappa().getY(), vistaPartita, immagini, nuvole);
+		riquadroMappa = new RiquadroMappaGdx(disposizione.getMappa().getX(), disposizione.getMappa().getY(), vistaPartita, immagini, nuvole, medio);
+		if (disposizione.isTelefono()) {
+			riquadroMappa.nellaCorniceDellaPila(disposizione.getMappa().getLarghezza(), disposizione.getMappa().getAltezza());
+		}
 		Area locazione = disposizione.getLocazione();
 		riquadroLocazione = new RiquadroLocazioneGdx(locazione.getX(), locazione.getY(), locazione.getLarghezza(), vistaPartita, immagini);
 		// Sul telefono le statistiche non ci sono, e senza riquadro non nascono neanche gli sprite delle variazioni

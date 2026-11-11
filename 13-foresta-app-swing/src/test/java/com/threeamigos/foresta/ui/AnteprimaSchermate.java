@@ -9,6 +9,7 @@ import com.threeamigos.foresta.motore.StatoDelMotore;
 import com.threeamigos.foresta.motore.VistaPartitaMotore;
 import com.threeamigos.foresta.tipi.Orientamento;
 import com.threeamigos.foresta.tipi.TipoDiLayout;
+import com.threeamigos.foresta.tipi.TipoFinestra;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.immagini.MisureDaiFile;
@@ -31,7 +32,7 @@ import java.io.IOException;
  * </pre>
  * Con {@code SCHERMO=} (come per {@code Main}: {@code SCHERMO=GALAXY_S24}, {@code SCHERMO=800x480}) le schermate hanno l'area virtuale e
  * il layout di quello schermo, senza scala, come la finestra di Swing.
- * Scrive {@code gioco.png}, {@code inventario.png}, {@code mappa.png}, {@code trofei.png} e {@code bestiario.png}.
+ * Scrive {@code gioco.png}, {@code gioco_mappa.png} (con la mappa davanti), {@code inventario.png}, {@code mappa.png}, {@code trofei.png} e {@code bestiario.png}.
  */
 public final class AnteprimaSchermate {
 
@@ -68,6 +69,9 @@ public final class AnteprimaSchermate {
 		canvas.getSchermo().notifica("Trovate una pozione, un'antica spada e due monete d'oro. Che fortuna!");
 		canvas.getSchermo().notifica("Un lupo vi guarda dal bosco, poi se ne va: può darsi che tornerà domani.");
 		salva(canvas, new File(cartella, "gioco.png"));
+		// Con la mappa davanti: sul telefono è uno dei riquadri della pila
+		canvas.getSchermo().primoPiano(TipoFinestra.MAPPA);
+		salva(canvas, new File(cartella, "gioco_mappa.png"));
 		canvas.getSchermo().inventario();
 		salva(canvas, new File(cartella, "inventario.png"));
 		canvas.getSchermo().mappa();

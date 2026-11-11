@@ -109,7 +109,10 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		riquadroIntroOutro = new DisplayableCanvasIntroOutro(larghezzaContenuto, altezzaContenuto, gestorePunteggi, vistaPartita);
 		intermezzo = new DisplayableCanvasIntermezzo(larghezzaContenuto, altezzaContenuto, riquadroIntroOutro);
 		Area mappa = disposizione.getMappa();
-		riquadroMappa = new DisplayableCanvasRiquadroMappa(disposizione.getXDellaCorniceDellaMappa(), mappa.getY(), larghezzaContenuto, altezzaContenuto, vistaPartita);
+		riquadroMappa = new DisplayableCanvasRiquadroMappa(mappa.getX(), mappa.getY(), larghezzaContenuto, altezzaContenuto, vistaPartita);
+		if (disposizione.isTelefono()) {
+			riquadroMappa.getModello().nellaCorniceDellaPila(mappa.getLarghezza(), mappa.getAltezza());
+		}
 		Area locazione = disposizione.getLocazione();
 		riquadroLocazione = new DisplayableCanvasRiquadroLocazione(locazione.getX(), locazione.getY(), locazione.getLarghezza(), vistaPartita);
 		Area statistiche = disposizione.getStatistiche();

@@ -40,7 +40,6 @@ public final class DisposizioneDelloSchermo {
 	private final int altezzaContenuto;
 	private final Area barra;
 	private final Area mappa;
-	private final int xDellaCorniceDellaMappa;
 	private final Area locazione;
 	private final Area statistiche;
 	private final Area testo;
@@ -104,9 +103,8 @@ public final class DisposizioneDelloSchermo {
 			statistiche = new Area(0, 0, 0, 0);
 			incantesimi = gruppo;
 			missioni = gruppo;
+			// La mappa ha la cornice grande degli altri riquadri impilati (vedi RiquadroMappa.nellaCorniceDellaPila)
 			mappa = gruppo;
-			// Per ora la mappa ha ancora la sua cornice, centrata nel posto della pila
-			xDellaCorniceDellaMappa = colonnaDestraX + (corniceGrande.larghezza - corniceMappa.larghezza) / 2;
 			riquadriImpilati = RIQUADRI_IMPILATI_DEL_TELEFONO;
 			quotaPila = SP;
 			passoPila = Math.max(0, (altezzaContenuto - quotaPila - corniceGrande.altezza) / riquadriImpilati);
@@ -122,7 +120,6 @@ public final class DisposizioneDelloSchermo {
 		int statisticheX = colonnaDestraX + corniceGrande.larghezza - cornicePiccola.larghezza;
 
 		mappa = new Area(mappaX, SP, corniceMappa.larghezza, corniceMappa.altezza);
-		xDellaCorniceDellaMappa = mappaX;
 		locazione = new Area(SP, SP, larghezzaLocazioneDisponibile, altezzaLocazione);
 		statistiche = new Area(statisticheX, SP + corniceMappa.altezza + SP, cornicePiccola.larghezza, cornicePiccola.altezza);
 		testo = new Area(SP, SP + altezzaLocazione + SP, larghezzaTesto, altezzaContenuto - SP - altezzaLocazione - SP);
@@ -196,11 +193,6 @@ public final class DisposizioneDelloSchermo {
 		return riquadriImpilati;
 	}
 
-	/** Dove comincia, in x, la cornice della mappa: sul telefono è centrata nel posto della pila */
-	public int getXDellaCorniceDellaMappa() {
-		return xDellaCorniceDellaMappa;
-	}
-
 	public Orientamento getOrientamento() {
 		return orientamento;
 	}
@@ -234,7 +226,7 @@ public final class DisposizioneDelloSchermo {
 		return barra;
 	}
 
-	/** Il riquadro della mappa: sul telefono, il suo posto nella pila nella prima posizione (si sposta in verticale) */
+	/** Il riquadro della mappa: sul telefono, con la cornice grande, il suo posto nella pila nella prima posizione (si sposta in verticale) */
 	public Area getMappa() {
 		return mappa;
 	}

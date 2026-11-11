@@ -14,6 +14,7 @@ import com.threeamigos.foresta.ui.sfx.GestoreNuvole;
 import com.threeamigos.foresta.ui.sfx.NuvoleAwt;
 import com.threeamigos.foresta.ui.sprite.DescrizioneSpriteATempo;
 import com.threeamigos.foresta.ui.sprite.SpriteATempo;
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -22,8 +23,6 @@ import java.awt.image.BufferedImage;
  * La minimappa della schermata di gioco: le caselle conosciute attorno al gruppo.
  */
 public class DisplayableCanvasRiquadroMappa extends DisegnatoreMappa implements Finestra {
-
-	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_MAPPA = RiquadroMappa.BORDO_INTERNO;
 
 	// La finestra, le tessere e il segnalino sono del modulo comune (RiquadroMappa); qui si blocca l'immagine della mappa già composta (vedi
 	// DisegnatoreMappa.ottieniMappaGenerale)
@@ -59,13 +58,20 @@ public class DisplayableCanvasRiquadroMappa extends DisegnatoreMappa implements 
 	public void disegnaMappa(Graphics2D graphics) {
 		int topLeftX = modello.getTopLeftX();
 		int topLeftY = modello.getTopLeftY();
-		graphics.drawImage(ImageCache.corniceMappa, topLeftX, topLeftY, null);
+		if (modello.isNellaPila()) {
+			// Sul telefono: la cornice grande degli altri riquadri impilati, con l'intestazione
+			graphics.drawImage(ImageCache.corniceGrande, topLeftX, topLeftY, null);
+			IntestazioneRiquadro.disegna(graphics, TestiDellaUI.get("RIQUADRO_MAPPA"), topLeftX, topLeftY, ImageCache.corniceGrande.getWidth());
+		} else {
+			graphics.drawImage(ImageCache.corniceMappa, topLeftX, topLeftY, null);
+		}
 		VistaMappa mappa = vistaPartita.getMappa();
 		RiquadroMappa.Veduta veduta = modello.veduta();
 		int daX = veduta.getDaX();
 		int daY = veduta.getDaY();
-		int localXOffset = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_MAPPA;
-		int localYOffset = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_MAPPA;
+		com.threeamigos.foresta.ui.Area areaDellaMappa = modello.getAreaDellaMappa();
+		int localXOffset = areaDellaMappa.getX();
+		int localYOffset = areaDellaMappa.getY();
 
 		graphics.drawImage(ottieniMappaGenerale(),
 				localXOffset, localYOffset, localXOffset + larghezzaRiquadroMappa, localYOffset + larghezzaRiquadroMappa,
@@ -83,8 +89,7 @@ public class DisplayableCanvasRiquadroMappa extends DisegnatoreMappa implements 
 		Composite originalComposite = graphics.getComposite();
 
 		// Applica la clip: da adesso in poi si colora SOLO dentro il quadrato della mappa
-		Rectangle areaDelleNuvole = areaDelleNuvole(topLeftX, topLeftY, larghezzaRiquadroMappa);
-		graphics.clipRect(areaDelleNuvole.x, areaDelleNuvole.y, areaDelleNuvole.width, areaDelleNuvole.height);
+		graphics.clipRect(localXOffset, localYOffset, areaDellaMappa.getLarghezza(), areaDellaMappa.getAltezza());
 
 		// Imposta la trasparenza e disegna le nuvole condivise con la mappa a tutto schermo
 		graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.45f));
@@ -113,7 +118,8 @@ public class DisplayableCanvasRiquadroMappa extends DisegnatoreMappa implements 
 	}
 
 	private DescrizioneSpriteATempo variaMappa() {
+		BufferedImage cornice = modello.isNellaPila() ? ImageCache.corniceGrande : ImageCache.corniceMappa;
 		return modello.spriteDellaMappaVariata(new Misura(ImageCache.spriteMappa.getWidth(), ImageCache.spriteMappa.getHeight()),
-				new Misura(ImageCache.corniceMappa.getWidth(), ImageCache.corniceMappa.getHeight()));
+				new Misura(cornice.getWidth(), cornice.getHeight()));
 	}
 }

@@ -139,7 +139,7 @@ public class ForestaGdx extends ApplicationAdapter {
 		barraIcone.getModello().impostaAzioni();
 		paginaDegliSprite = new PaginaDegliSprite(immagini, piccolo, medio, LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE);
 		riquadroMissioni = new RiquadroMissioniGdx(MARGINE + 368 + 10, MARGINE + 288 + 10, partita, immagini, piccolo, medio);
-		riquadroMappa = new RiquadroMappaGdx(MARGINE + 2 * (368 + 10), MARGINE, partita, immagini, nuvole);
+		riquadroMappa = new RiquadroMappaGdx(MARGINE + 2 * (368 + 10), MARGINE, partita, immagini, nuvole, medio);
 		riquadroStatistiche = new RiquadroStatisticheGdx(MARGINE, MARGINE + 288 + 10, partita, immagini, medio);
 		riquadroCombattimento = new RiquadroCombattimentoGdx(LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE, Finestra.SPACING + 320 + Finestra.SPACING, partita, immagini, medio);
 		riquadroCombattimento.setVisible(true);

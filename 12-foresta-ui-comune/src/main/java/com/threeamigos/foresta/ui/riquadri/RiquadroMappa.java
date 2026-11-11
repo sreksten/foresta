@@ -18,6 +18,9 @@ import java.util.List;
  * La minimappa della schermata di gioco, senza disegno: la finestra di 7 per 7 caselle attorno al gruppo (spostata quanto serve perché non esca dalla
  * foresta), le tessere conosciute (la casella del gruppo resta vuota: il segnalino lampeggia sopra), il segnalino, gli indicatori delle caselle da
  * segnalare e l'area in cui si vedono le nuvole. {@link #veduta()} dà tutto con le posizioni a schermo.
+ * <p>
+ * Di norma la mappa sta nella sua cornice, dentro il bordo interno. Sul telefono è uno dei riquadri della pila
+ * ({@link #nellaCorniceDellaPila}): ha la cornice grande degli altri, con l'intestazione, e la finestra di 7 per 7 caselle centrata dentro.
  */
 public class RiquadroMappa implements Finestra {
 
@@ -144,6 +147,10 @@ public class RiquadroMappa implements Finestra {
 	protected final int larghezzaIcona;
 	protected final int altezzaIcona;
 	protected final VistaPartita vistaPartita;
+	// Di quanto la mappa sta più in là e più in giù dell'angolo della cornice
+	private int scostamentoX = BORDO_INTERNO;
+	private int scostamentoY = BORDO_INTERNO;
+	private boolean nellaPila;
 
 	/**
 	 * @param larghezzaIcona larghezza di una tessera della mappa, già con lo zoom
@@ -163,6 +170,27 @@ public class RiquadroMappa implements Finestra {
 
 	public int getTopLeftY() {
 		return topLeftY;
+	}
+
+	/**
+	 * La mappa sta nella pila, dentro una cornice di quella misura (la cornice grande degli altri riquadri impilati), con la finestra centrata
+	 */
+	public void nellaCorniceDellaPila(int larghezzaCornice, int altezzaCornice) {
+		nellaPila = true;
+		scostamentoX = (larghezzaCornice - LATO * larghezzaIcona) / 2;
+		scostamentoY = (altezzaCornice - LATO * altezzaIcona) / 2;
+	}
+
+	/** Se la mappa è uno dei riquadri della pila, con la cornice grande e l'intestazione */
+	public boolean isNellaPila() {
+		return nellaPila;
+	}
+
+	/**
+	 * Dove sta il quadrato della mappa sullo schermo: è anche dove si vedono le nuvole
+	 */
+	public Area getAreaDellaMappa() {
+		return new Area(topLeftX + scostamentoX, topLeftY + scostamentoY, LATO * larghezzaIcona, LATO * altezzaIcona);
 	}
 
 	/**
@@ -218,8 +246,9 @@ public class RiquadroMappa implements Finestra {
 		CoordinateMD gruppo = mappa.getPosizioneDelGruppo();
 		int daX = primaCasella(gruppo.getX(), mappa.getDimensioneX());
 		int daY = primaCasella(gruppo.getY(), mappa.getDimensioneY());
-		int xOrigine = topLeftX + BORDO_INTERNO;
-		int yOrigine = topLeftY + BORDO_INTERNO;
+		Area areaDellaMappa = getAreaDellaMappa();
+		int xOrigine = areaDellaMappa.getX();
+		int yOrigine = areaDellaMappa.getY();
 
 		List<Tessera> tessere = new ArrayList<>();
 		for (int y = daY; y < daY + LATO; y++) {
@@ -243,7 +272,7 @@ public class RiquadroMappa implements Finestra {
 				indicatori.add(new Punto(xOrigine + (x - daX) * larghezzaIcona, yOrigine + (y - daY) * altezzaIcona));
 			}
 		}
-		return new Veduta(daX, daY, tessere, segnalino, indicatori, segnaliniVisibili(), areaDelleNuvole(topLeftX, topLeftY, getLatoDellaMappa()));
+		return new Veduta(daX, daY, tessere, segnalino, indicatori, segnaliniVisibili(), areaDellaMappa);
 	}
 
 	/**

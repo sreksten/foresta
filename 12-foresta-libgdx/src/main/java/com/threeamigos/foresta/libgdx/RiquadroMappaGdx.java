@@ -12,6 +12,7 @@ import com.threeamigos.foresta.ui.Punto;
 import com.threeamigos.foresta.ui.immagini.NomiDelleImmagini;
 import com.threeamigos.foresta.ui.riquadri.RiquadroMappa;
 import com.threeamigos.foresta.ui.sfx.GestoreNuvole;
+import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 /**
  * La minimappa della schermata di gioco in libGDX: la finestra di 7 per 7 caselle, le tessere conosciute, il segnalino e gli indicatori sono del modulo
@@ -22,19 +23,23 @@ import com.threeamigos.foresta.ui.sfx.GestoreNuvole;
 public final class RiquadroMappaGdx extends RiquadroMappa {
 
 	private static final String CORNICE = "fondi/CorniceMappa.png";
+	// Sul telefono la mappa è impilata e ha la cornice grande degli altri riquadri, con l'intestazione
+	private static final String CORNICE_DELLA_PILA = "fondi/CorniceGrande.png";
 	// Quanto si scurisce una tessera già visitata: il 50% di nero
 	private static final float OSCURAMENTO_DELLE_VISITATE = 0.5f;
 	private static final float OPACITA_DELLE_NUVOLE = 0.45f;
 
 	private final ImmaginiGdx immagini;
 	private final NuvoleGdx nuvole;
+	private final TestoGdx medio;
 	private final float zoom = (float) LivelloDiZoom.valore();
 
-	public RiquadroMappaGdx(int x, int y, VistaPartita vistaPartita, ImmaginiGdx immagini, NuvoleGdx nuvole) {
+	public RiquadroMappaGdx(int x, int y, VistaPartita vistaPartita, ImmaginiGdx immagini, NuvoleGdx nuvole, TestoGdx medio) {
 		super(x, y, immagini.larghezza(NomiDelleImmagini.tessera(TipoLocazione.BOSCO), (float) LivelloDiZoom.valore()),
 				immagini.altezza(NomiDelleImmagini.tessera(TipoLocazione.BOSCO), (float) LivelloDiZoom.valore()), vistaPartita);
 		this.immagini = immagini;
 		this.nuvole = nuvole;
+		this.medio = medio;
 	}
 
 	/**
@@ -42,7 +47,13 @@ public final class RiquadroMappaGdx extends RiquadroMappa {
 	 * @param altezzaDelloSchermo   la sua altezza
 	 */
 	public void disegna(Batch batch, Camera camera, Viewport viewport, int larghezzaDelloSchermo, int altezzaDelloSchermo) {
-		immagini.disegna(batch, CORNICE, topLeftX, topLeftY, zoom);
+		if (isNellaPila()) {
+			immagini.disegna(batch, CORNICE_DELLA_PILA, topLeftX, topLeftY, zoom);
+			medio.disegnaIntestazione(batch, TestiDellaUI.get("RIQUADRO_MAPPA"), topLeftX, topLeftY,
+					immagini.larghezza(CORNICE_DELLA_PILA, zoom));
+		} else {
+			immagini.disegna(batch, CORNICE, topLeftX, topLeftY, zoom);
+		}
 		Veduta veduta = veduta();
 		for (Tessera tessera : veduta.getTessere()) {
 			String risorsa = tessera.getTipo() == TipoLocazione.BOSCO ? NomiDelleImmagini.tesseraDelBosco(tessera.getVariante())

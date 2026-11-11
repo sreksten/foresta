@@ -184,7 +184,7 @@ Ogni passo compila e passa i test, e alla fine di ognuno si guarda il risultato 
 
 1. **Le misure di prova**: `MisuraDelloSchermo`, `SchermoDiProva`, l'argomento `SCHERMO=` in `OpzioniDiAvvio` (con i test in `OpzioniDiAvvioTest`), la regola del §2.2 con i suoi test (la tabella del §2.3 come casi), e la finestra del §3.2 in `MainLibgdx` e in `Main`. Il layout è ancora quello di oggi: si vede solo come cambia la scala. Aggiornati `13-foresta-app-libgdx.md` e `12-foresta-ui-comune.md`. **Fatto** (2026-11-11).
 2. **La disposizione del telefono** in `DisposizioneDelloSchermo` (§4.1), con i test sulle aree (nessuna sovrapposizione fuori dalla pila, tutto dentro l'area, il testo che si allarga con lo schermo), e i due front-end che la usano; la mappa nella pila per ora con la sua cornice. **Fatto** (2026-11-11): sul telefono le statistiche non si creano; `AnteprimaSchermate` accetta `SCHERMO=`. Visto su `MINIMO`: nella locazione larga 390 i personaggi del gruppo si accalcano (cinque in 390 pixel); sui telefoni comuni (642 e più) ci stanno.
-3. **La mappa senza cornice** (§4.2) e la sua intestazione.
+3. **La mappa senza cornice** (§4.2) e la sua intestazione. **Fatto** (2026-11-11): cornice grande, intestazione «Mappa», finestra di 7×7 centrata (72 pixel ai lati, 32 sopra e sotto); `AnteprimaSchermate` salva anche `gioco_mappa.png`, con la mappa davanti.
 4. **Il riquadro del gruppo con le statistiche in testa** (§4.3), la divisione di `RiquadroStatistiche` e niente sprite delle variazioni nel layout del telefono.
 5. **Combattimento e sfida** (§4.4).
 6. **Intro, outro, classifica e trofei** (§5), con il test dei testi grandi che non escono dal bordo.
