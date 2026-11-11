@@ -4,7 +4,7 @@ Il prototipo Android della Foresta (Fase 7 di `porting_libGDX.md`): un progetto 
 
 ## Cosa fa e perché
 
-`AndroidLauncher` è il gemello di `MainLibgdx` (desktop): crea l'`EsecutoreGdx` (il thread di rendering è il thread principale), collega il motore con `AvvioDelMotore` e avvia `ForestaLibGDX` con la disposizione `VERTICALE` (la barra delle icone sul lato destro). L'attività è forzata in orizzontale nel manifest (`sensorLandscape`): sul telefono l'utente deve ruotare il dispositivo. Il gioco salva e scrive il log in `<user.home>/.foresta`: su Android `user.home` si punta alla cartella privata dell'app (`getFilesDir()`) prima di avviare il motore. `NotificaUscitaDalGioco` chiude l'applicazione con `Gdx.app.exit()`.
+`AndroidLauncher` è il gemello di `MainLibgdx` (desktop): crea l'`EsecutoreGdx` (il thread di rendering è il thread principale), collega il motore con `AvvioDelMotore` e avvia `ForestaLibGDX` con la disposizione `VERTICALE` (la barra delle icone sul lato destro). Il layout lo sceglie `ForestaLibGDX` in `create()` dalla misura vera dello schermo: la superficie su cui libGDX disegna (con il modo immersivo, lo schermo senza barre di sistema e senza notch) e la densità (`Gdx.graphics.getDensity()`); se lo schermo in dp contiene il layout di sempre è quello del tablet, altrimenti quello del telefono (`SceltaDelLayout`, `layout_telefono.md` §2 e §3.3). Nel log c'è la riga `Schermo …: layout …`. L'attività è forzata in orizzontale nel manifest (`sensorLandscape`): sul telefono l'utente deve ruotare il dispositivo. Il gioco salva e scrive il log in `<user.home>/.foresta`: su Android `user.home` si punta alla cartella privata dell'app (`getFilesDir()`) prima di avviare il motore. `NotificaUscitaDalGioco` chiude l'applicazione con `Gdx.app.exit()`.
 
 ## Dipendenze
 
@@ -47,4 +47,4 @@ Provato su un **Realme Pad (RMP2103)**: un tablet da 10,4″, 2000×1200, Androi
 
 - Provare il tocco e una partita intera (salvataggio, caricamento, inventario, mappa, combattimento, tastiera di sistema).
 - La firma dell'app e il pacchetto per lo store (Fase 7, punto 5), le icone, il nome e i margini di sicurezza (notch); lo schermo sempre acceso c'è già (`useWakelock` in `AndroidLauncher`).
-- Il layout per telefono (Fase 6).
+- Il layout per telefono (Fase 6): fatto, da provare sul Realme Pad (deve restare sul layout del tablet: lo dice la riga `Schermo …` del log, e dipende dalla densità che il tablet dichiara) e con `adb shell wm size` / `wm density` per fingere un telefono.

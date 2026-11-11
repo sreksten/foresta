@@ -17,10 +17,12 @@ import com.threeamigos.foresta.eventi.interni.InternoInterfacciaUtentePronta;
 import com.threeamigos.foresta.interfacce.ControlloreDiGioco;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.interfacce.VistaPartita;
+import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzatore;
 import com.threeamigos.foresta.tipi.Orientamento;
 import com.threeamigos.foresta.tipi.TipoDiLayout;
 import com.threeamigos.foresta.ui.DisposizioneDelloSchermo;
+import com.threeamigos.foresta.ui.MisuraDelloSchermo;
 import com.threeamigos.foresta.ui.SceltaDelLayout;
 import com.threeamigos.foresta.ui.ForestaUI;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
@@ -52,8 +54,10 @@ public final class ForestaLibGDX extends ForestaUI implements ApplicationListene
 	private final boolean joystickVirtuale;
 	private final boolean saltaLogo;
 	private final boolean toccoRichiesto;
-	private final Misura dimensioni;
-	private final TipoDiLayout tipoDiLayout;
+	// La risoluzione virtuale e il layout: dalla scelta data, o sul telefono e sul tablet dalla misura vera dello schermo, in create()
+	private Misura dimensioni;
+	private TipoDiLayout tipoDiLayout;
+	private final boolean sceltaData;
 
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
@@ -87,7 +91,8 @@ public final class ForestaLibGDX extends ForestaUI implements ApplicationListene
 
 	/**
 	 * @param scelta il layout per lo schermo vero o simulato (vedi SceltaDelLayout): la risoluzione virtuale è la sua area, e il FitViewport la fa
-	 *               entrare nella finestra; null per il layout di sempre
+	 *               entrare nella finestra; null per il layout di sempre sul desktop, e su Android e iOS per sceglierlo all'avvio dalla misura vera
+	 *               dello schermo (vedi {@link #sceltaDelloSchermoVero()})
 	 */
 	public ForestaLibGDX(Orientamento orientamento, SceltaDelLayout scelta, EsecutoreGdx esecutore, ControlloreDiGioco controlloreDiGioco,
 						 GestorePunteggi gestorePunteggi, VistaPartita vistaPartita, Temporizzatore temporizzatore, boolean barraDock,
@@ -96,6 +101,7 @@ public final class ForestaLibGDX extends ForestaUI implements ApplicationListene
 		this.orientamento = orientamento;
 		this.dimensioni = scelta != null ? scelta.getAreaVirtuale() : dimensioniDelloSchermo(orientamento);
 		this.tipoDiLayout = scelta != null ? scelta.getTipo() : TipoDiLayout.TABLET;
+		this.sceltaData = scelta != null;
 		this.esecutore = esecutore;
 		this.controlloreDiGioco = controlloreDiGioco;
 		this.gestorePunteggi = gestorePunteggi;
@@ -113,9 +119,30 @@ public final class ForestaLibGDX extends ForestaUI implements ApplicationListene
 		return DisposizioneDelloSchermo.dimensioniDelloSchermo(orientamento, new MisureDaiFile(), LivelloDiZoom.valore());
 	}
 
+	/**
+	 * Sul telefono e sul tablet il layout si sceglie dallo schermo vero (layout_telefono.md §3.3): la superficie su cui libGDX disegna, che con il
+	 * modo immersivo è lo schermo senza le barre di sistema e senza il notch, e la densità del dispositivo. Null sul desktop, dove resta il layout di
+	 * sempre (o quello di SCHERMO=).
+	 */
+	private static SceltaDelLayout sceltaDelloSchermoVero() {
+		Application.ApplicationType tipo = Gdx.app.getType();
+		if (tipo != Application.ApplicationType.Android && tipo != Application.ApplicationType.iOS) {
+			return null;
+		}
+		MisuraDelloSchermo schermo = new MisuraDelloSchermo(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Gdx.graphics.getDensity());
+		SceltaDelLayout scelta = SceltaDelLayout.per(schermo, new MisureDaiFile(), LivelloDiZoom.valore());
+		Logger.log(() -> "Schermo " + schermo + ": " + scelta);
+		return scelta;
+	}
+
 	@Override
 	public void create() {
 		esecutore.avviato();
+		SceltaDelLayout scelta = sceltaData ? null : sceltaDelloSchermoVero();
+		if (scelta != null) {
+			dimensioni = scelta.getAreaVirtuale();
+			tipoDiLayout = scelta.getTipo();
+		}
 		camera = new OrthographicCamera();
 		// L'asse y verso il basso, come Swing: le coordinate di riquadri e schermate si riusano tali e quali
 		camera.setToOrtho(true, dimensioni.larghezza, dimensioni.altezza);
