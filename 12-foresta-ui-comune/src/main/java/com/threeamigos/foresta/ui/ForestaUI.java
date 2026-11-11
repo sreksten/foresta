@@ -361,6 +361,10 @@ public abstract class ForestaUI implements Temporizzabile {
 	}
 
 	private void mostraFinestra(TipoFinestra finestra) {
+		// Sul telefono le statistiche non sono nella pila: il motore chiede lo stesso di mostrarle (bottino, città), e lì non c'è niente da portare davanti
+		if (!schermo.getPila().contains(finestra)) {
+			return;
+		}
 		schermo.primoPiano(finestra);
 		rinfresca();
 	}
