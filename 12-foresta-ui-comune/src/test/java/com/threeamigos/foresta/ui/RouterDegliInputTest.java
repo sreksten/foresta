@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RouterDegliInputTest {
@@ -159,6 +161,10 @@ class RouterDegliInputTest {
 	private RouterDegliInput router;
 	private Finta sotto;
 	private Finta sopra;
+	// La pila che scorre di lato, i riquadri che scorrono con lei e la zona della sua freccia (come sul telefono)
+	private PilaScorrevole pilaScorrevole;
+	private final List<Finestra> nellaPila = new ArrayList<>();
+	private Area freccia;
 
 	@BeforeEach
 	void prepara() {
@@ -170,6 +176,9 @@ class RouterDegliInputTest {
 		pila.addAll(Arrays.asList(sotto, sopra));
 		barra = null;
 		aTuttoSchermo = null;
+		pilaScorrevole = null;
+		nellaPila.clear();
+		freccia = null;
 		manuale = new Manuale();
 		router = new RouterDegliInput(new RouterDegliInput.Contesto() {
 			@Override
@@ -202,6 +211,21 @@ class RouterDegliInputTest {
 				pila.add(finestra);
 				portataDavanti = finestra;
 				return true;
+			}
+
+			@Override
+			public PilaScorrevole getPilaScorrevole() {
+				return pilaScorrevole;
+			}
+
+			@Override
+			public boolean scorreConLaPila(Finestra finestra) {
+				return nellaPila.contains(finestra);
+			}
+
+			@Override
+			public boolean isSullaFrecciaDellaPila(int x, int y) {
+				return freccia != null && freccia.contiene(x, y);
 			}
 
 			@Override
@@ -330,5 +354,66 @@ class RouterDegliInputTest {
 	void laRotellaDiChiScorreAScattiArrivaSubitoEConIlSegnoGiusto() {
 		router.rotella(60, 60, -3);
 		assertEquals(Arrays.asList("rotella 3 SU"), sopra.eventi);
+	}
+
+	/** Sopra scorre con la pila, che compattata se ne fa vedere 20 pixel */
+	private void conLaPila() {
+		pilaScorrevole = new PilaScorrevole(100);
+		nellaPila.add(sopra);
+		sopra.catturaTrascinamento = true;
+	}
+
+	@Test
+	void unTrascinamentoOrizzontaleSuUnRiquadroDellaPilaLaFaScorrereEIlRiquadroLoLascia() {
+		conLaPila();
+		router.premuto(60, 60, Finestra.Tasto.SINISTRO);
+		router.trascinato(66, 61);
+		assertEquals(0, pilaScorrevole.getScostamento(), "entro la soglia del click il gesto non è ancora di nessuno");
+		router.trascinato(75, 62);
+		// Il riquadro, che magari stava facendo scorrere la sua lista, riceve il rilascio dove si era premuto
+		assertEquals("rilascio 10,10 SINISTRO", sopra.eventi.get(sopra.eventi.size() - 1));
+		assertEquals(15, pilaScorrevole.getScostamento());
+		int eventiDelRiquadro = sopra.eventi.size();
+		router.trascinato(90, 70);
+		assertEquals(30, pilaScorrevole.getScostamento(), "da qui la pila segue il dito, anche se va un po' in verticale");
+		router.rilasciato(90, 70, Finestra.Tasto.SINISTRO);
+		assertFalse(sopra.eventi.subList(eventiDelRiquadro, sopra.eventi.size()).stream().anyMatch(e -> e.startsWith("trascinamento")
+				|| e.startsWith("rilascio")), "il riquadro non vede più il gesto");
+		pilaScorrevole.avanza(1);
+		assertEquals(80, pilaScorrevole.getScostamento(), "lasciata va fino in fondo");
+	}
+
+	@Test
+	void unTrascinamentoVerticaleSuUnRiquadroDellaPilaRestaDelRiquadro() {
+		conLaPila();
+		router.premuto(60, 60, Finestra.Tasto.SINISTRO);
+		router.trascinato(62, 75);
+		router.trascinato(90, 80);
+		router.rilasciato(90, 80, Finestra.Tasto.SINISTRO);
+		assertEquals(0, pilaScorrevole.getScostamento());
+		assertFalse(pilaScorrevole.isInMovimento());
+		assertTrue(sopra.eventi.contains("trascinamento 40,30"), "anche il pezzo orizzontale dopo resta al riquadro");
+		assertTrue(sopra.eventi.contains("rilascio 40,30 SINISTRO"));
+	}
+
+	@Test
+	void unaFinestraFuoriDallaPilaNonLaFaScorrere() {
+		conLaPila();
+		sotto.catturaTrascinamento = true;
+		router.premuto(10, 10, Finestra.Tasto.SINISTRO);
+		router.trascinato(40, 10);
+		router.rilasciato(40, 10, Finestra.Tasto.SINISTRO);
+		assertEquals(0, pilaScorrevole.getScostamento());
+		assertTrue(sotto.eventi.contains("trascinamento 40,10"));
+	}
+
+	@Test
+	void ilClickSullaFrecciaFaScorrereLaPilaEBastaSenzaPortareDavantiIlRiquadroSotto() {
+		conLaPila();
+		freccia = new Area(20, 20, 40, 40);
+		router.clic(30, 30, Finestra.Tasto.SINISTRO, 1);
+		assertTrue(pilaScorrevole.isInMovimento());
+		assertNull(portataDavanti, "il riquadro sotto la freccia resta dov'è");
+		assertTrue(sotto.eventi.stream().noneMatch(e -> e.startsWith("click")));
 	}
 }

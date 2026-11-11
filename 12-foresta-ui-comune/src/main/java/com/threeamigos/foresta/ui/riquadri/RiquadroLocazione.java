@@ -41,8 +41,11 @@ public abstract class RiquadroLocazione implements Finestra {
 
 	protected final int topLeftX;
 	protected final int topLeftY;
-	// La larghezza dello spazio a disposizione: lo sfondo e l'oggetto stanno al centro
+	// La larghezza dello spazio a disposizione con la pila del telefono al suo posto: lo sfondo e l'oggetto stanno al centro
 	protected final int larghezzaDisponibile;
+	// Quanto spazio in più lascia la pila del telefono quando scorre a destra: adesso e al massimo (0 sul tablet, dove la pila sta ferma)
+	private volatile int allargamento;
+	private int allargamentoMassimo;
 	protected final VistaPartita vistaPartita;
 
 	private static final int SOLLEVAMENTO_ANCORA = 8;
@@ -79,6 +82,8 @@ public abstract class RiquadroLocazione implements Finestra {
 	private final Random caso = new Random();
 	// Avversari e gruppo del giocatore: lette da chi disegna e dal thread che notifica gli eventi
 	private final Map<VistaPersonaggio, Punto> posizioni = new ConcurrentHashMap<>();
+	// Dove sta ognuno quando la pila è scorsa tutta a destra: mentre scorre, i personaggi passano da una posizione all'altra
+	private final Map<VistaPersonaggio, Punto> posizioniLarghe = new ConcurrentHashMap<>();
 	// I personaggi del gruppo che si disegnano adesso (i vivi, e gli ospiti vivi), nell'ordine: se cambiano, si ridispongono
 	private List<VistaPersonaggio> gruppoDisegnato = new ArrayList<>();
 
@@ -134,10 +139,43 @@ public abstract class RiquadroLocazione implements Finestra {
 	}
 
 	/**
+	 * Quanto spazio in più, al massimo, lascia alla locazione la pila del telefono scorsa a destra: da qui in poi ogni personaggio ha anche il posto
+	 * che gli tocca con la locazione allargata. Si dice una volta, prima di disporre i personaggi.
+	 */
+	public void setAllargamentoMassimo(int allargamentoMassimo) {
+		this.allargamentoMassimo = allargamentoMassimo;
+	}
+
+	/**
+	 * Quanto spazio in più lascia adesso alla locazione la pila del telefono (fra 0 e il massimo): i personaggi stanno fra il loro posto stretto e quello
+	 * largo in proporzione, così scivolano insieme alla pila; lo sfondo e l'oggetto restano al centro dello spazio
+	 */
+	public void setAllargamento(int allargamento) {
+		this.allargamento = Math.max(0, Math.min(allargamentoMassimo, allargamento));
+	}
+
+	/**
+	 * La larghezza dello spazio a disposizione adesso, con quel che lascia la pila
+	 */
+	protected int larghezzaAdesso() {
+		return larghezzaDisponibile + allargamento;
+	}
+
+	/**
 	 * Dove sta il personaggio (angolo in alto a sinistra della sua immagine), o null se non è in locazione
 	 */
 	protected Punto getPosizione(VistaPersonaggio personaggio) {
-		return posizioni.get(personaggio);
+		Punto stretta = posizioni.get(personaggio);
+		int quanto = allargamento;
+		if (stretta == null || quanto == 0 || allargamentoMassimo == 0) {
+			return stretta;
+		}
+		Punto larga = posizioniLarghe.get(personaggio);
+		if (larga == null) {
+			return stretta;
+		}
+		double frazione = quanto / (double) allargamentoMassimo;
+		return new Punto((int) Math.round(stretta.x + (larga.x - stretta.x) * frazione), (int) Math.round(stretta.y + (larga.y - stretta.y) * frazione));
 	}
 
 	/**
@@ -152,15 +190,20 @@ public abstract class RiquadroLocazione implements Finestra {
 	 */
 	public void assegnaCoordinateAgliAvversari() {
 		posizioni.clear();
+		posizioniLarghe.clear();
 		disposizioneAzzerata();
 		VistaGruppo gruppoAvversario = vistaPartita.getGruppoAvversario();
 		List<VistaPersonaggio> avversari = new ArrayList<>(gruppoAvversario.getPersonaggi());
 		List<Punto> dove = DisposizioneNellaLocazione.disponiAvversari(topLeftX, larghezzaDisponibile, larghezzaDelCentro(), altezzaDelloSfondo(),
 				misure(avversari));
+		List<Punto> doveLargo = DisposizioneNellaLocazione.disponiAvversari(topLeftX, larghezzaDisponibile + allargamentoMassimo, larghezzaDelCentro(),
+				altezzaDelloSfondo(), misure(avversari));
 		for (int i = 0; i < avversari.size(); i++) {
 			personaggioDisposto(avversari.get(i), Verso.DESTRA);
-			// Sparpagliati un poco verso il bordo, senza uscire dal riquadro
-			posizioni.put(avversari.get(i), new Punto(Math.max(topLeftX, dove.get(i).x - caso.nextInt(SCOSTAMENTO_CASUALE)), dove.get(i).y));
+			// Sparpagliati un poco verso il bordo, senza uscire dal riquadro: dello stesso tanto nei due posti
+			int scarto = caso.nextInt(SCOSTAMENTO_CASUALE);
+			posizioni.put(avversari.get(i), new Punto(Math.max(topLeftX, dove.get(i).x - scarto), dove.get(i).y));
+			posizioniLarghe.put(avversari.get(i), new Punto(Math.max(topLeftX, doveLargo.get(i).x - scarto), doveLargo.get(i).y));
 		}
 		// Le disposizioni sono state svuotate: anche il gruppo si dispone da capo
 		gruppoDisegnato = new ArrayList<>();
@@ -201,13 +244,17 @@ public abstract class RiquadroLocazione implements Finestra {
 		}
 		for (VistaPersonaggio vecchio : gruppoDisegnato) {
 			posizioni.remove(vecchio);
+			posizioniLarghe.remove(vecchio);
 			personaggioRimosso(vecchio);
 		}
 		List<Punto> dove = DisposizioneNellaLocazione.disponiGruppo(topLeftX, larghezzaDisponibile, larghezzaDelCentro(), altezzaDelloSfondo(),
 				misure(personaggi));
+		List<Punto> doveLargo = DisposizioneNellaLocazione.disponiGruppo(topLeftX, larghezzaDisponibile + allargamentoMassimo, larghezzaDelCentro(),
+				altezzaDelloSfondo(), misure(personaggi));
 		for (int i = 0; i < personaggi.size(); i++) {
 			personaggioDisposto(personaggi.get(i), Verso.SINISTRA);
 			posizioni.put(personaggi.get(i), dove.get(i));
+			posizioniLarghe.put(personaggi.get(i), doveLargo.get(i));
 		}
 		gruppoDisegnato = personaggi;
 	}
@@ -216,14 +263,14 @@ public abstract class RiquadroLocazione implements Finestra {
 	 * La x dello sfondo (largo <code>larghezzaSfondo</code>): al centro dello spazio a disposizione
 	 */
 	protected int xDelloSfondo(int larghezzaSfondo) {
-		return topLeftX + ((larghezzaDisponibile - larghezzaSfondo) >> 1);
+		return topLeftX + ((larghezzaAdesso() - larghezzaSfondo) >> 1);
 	}
 
 	/**
 	 * L'oggetto che si trova in locazione sta al centro dello spazio a disposizione, in basso: i lati sono dei due gruppi
 	 */
 	protected int xDelloOggetto(int larghezzaOggetto) {
-		return topLeftX + (larghezzaDisponibile - larghezzaOggetto) / 2;
+		return topLeftX + (larghezzaAdesso() - larghezzaOggetto) / 2;
 	}
 
 	protected int yDelloOggetto(int altezzaSfondo, int altezzaOggetto) {
@@ -263,7 +310,7 @@ public abstract class RiquadroLocazione implements Finestra {
 		int y = DisposizioneNellaLocazione.primoPostoLibero(occupati, xCentro, coordinate.y, misuraIcona.altezza * QUARTI_DI_ICONA_FRA_SPRITE_A_TEMPO / 4);
 		spriteATempoInVita.add(new SpriteInVita(xCentro, y, DescrizioneSpriteATempo.DURATA_IN_SECONDI));
 		return DescrizioneSpriteATempo.conVariazione(icona, misuraIcona, variazione, DoomdarkFont.medio(), xCentro, y, true, descrizione)
-				.centraEntro(xCentro, topLeftX, topLeftX + larghezzaDisponibile);
+				.centraEntro(xCentro, topLeftX, topLeftX + larghezzaAdesso());
 	}
 
 	/**
@@ -317,7 +364,7 @@ public abstract class RiquadroLocazione implements Finestra {
 		DescrizioneSpriteEffetto sprite = colore != null
 				? DescrizioneSpriteEffetto.colorato(testo, font, colore, coordinate.x, y)
 				: DescrizioneSpriteEffetto.conColoreRgb(testo, font, coloreArgb, coordinate.x, y);
-		return sprite.centraEntro(coordinate.x + immagine.larghezza / 2.0f, topLeftX, topLeftX + larghezzaDisponibile);
+		return sprite.centraEntro(coordinate.x + immagine.larghezza / 2.0f, topLeftX, topLeftX + larghezzaAdesso());
 	}
 
 	/**

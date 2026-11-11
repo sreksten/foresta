@@ -34,7 +34,8 @@ import java.io.IOException;
  * </pre>
  * Con {@code SCHERMO=} (come per {@code Main}: {@code SCHERMO=GALAXY_S24}, {@code SCHERMO=800x480}) le schermate hanno l'area virtuale e
  * il layout di quello schermo, senza scala, come la finestra di Swing.
- * Scrive {@code gioco.png}, {@code gioco_mappa.png} (con la mappa davanti), {@code inventario.png}, {@code mappa.png}, {@code trofei.png} e {@code bestiario.png}.
+ * Scrive {@code gioco.png}, {@code gioco_mappa.png} (con la mappa davanti), sul telefono {@code gioco_pila_compattata.png} (con la pila scorsa a
+ * destra), {@code inventario.png}, {@code mappa.png}, {@code trofei.png} e {@code bestiario.png}.
  */
 public final class AnteprimaSchermate {
 
@@ -74,6 +75,18 @@ public final class AnteprimaSchermate {
 		// Con la mappa davanti: sul telefono è uno dei riquadri della pila
 		canvas.getSchermo().primoPiano(TipoFinestra.MAPPA);
 		salva(canvas, new File(cartella, "gioco_mappa.png"));
+		// Sul telefono, con la pila scorsa a destra: la locazione ha più spazio per i personaggi
+		PilaScorrevole pila = canvas.getSchermo().getPilaScorrevole();
+		if (pila != null) {
+			pila.commuta();
+			pila.avanza(1);
+			// Il primo disegno dà alla locazione lo spazio della pila, il secondo lo mostra
+			salva(canvas, new File(cartella, "gioco_pila_compattata.png"));
+			salva(canvas, new File(cartella, "gioco_pila_compattata.png"));
+			// Le schermate dopo con la pila al suo posto
+			pila.espandi();
+			pila.avanza(1);
+		}
 		// L'inventario con lo scambio fra il capo e il gruppo, come lo apre l'automa
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		canvas.getSchermo().impostaScambioInventario(new AutomaInventario(gruppo.getCapo(), gruppo), gruppo.getCapo());

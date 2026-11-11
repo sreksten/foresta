@@ -34,6 +34,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Consumer;
 
 /**
  * Il canvas grafico del gioco in Swing: disegna lo schermo del gioco ({@link SchermoDelGioco}, nel modulo comune, che sa quale
@@ -441,8 +442,12 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		for (TipoFinestra finestra : schermo.getPila()) {
 			switch (finestra) {
 			case MAPPA:
-				riquadroMappa.disegnaMappa(graphics);
-				dissolviSeCoperto(graphics, finestra);
+				if (schermo.getPilaScorrevole() != null) {
+					disegnaNellaPila(graphics, finestra, riquadroMappa::disegnaMappa);
+				} else {
+					riquadroMappa.disegnaMappa(graphics);
+					dissolviSeCoperto(graphics, finestra);
+				}
 				break;
 			case STATISTICHE:
 				riquadroStatistiche.disegnaStatistiche(graphics);
@@ -454,19 +459,16 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 						inCombattimento ? riquadroCombattimento.getAvversario() : null);
 				break;
 			case STATO:
-				riquadroGruppo.disegnaStatus(graphics);
-				dissolviSeCoperto(graphics, finestra);
+				disegnaNellaPila(graphics, finestra, riquadroGruppo::disegnaStatus);
 				break;
 			case INCANTESIMI_E_POZIONI:
-				riquadroIncantesimiEPozioni.disegnaIncantesimi(graphics);
-				dissolviSeCoperto(graphics, finestra);
+				disegnaNellaPila(graphics, finestra, riquadroIncantesimiEPozioni::disegnaIncantesimi);
 				break;
 			case TESTO:
 				riquadroTesto.disegnaTesto(graphics);
 				break;
 			case MISSIONI:
-				riquadroMissioni.disegnaMissioni(graphics);
-				dissolviSeCoperto(graphics, finestra);
+				disegnaNellaPila(graphics, finestra, riquadroMissioni::disegnaMissioni);
 				break;
 			case INFO_COMBATTIMENTO:
 			case SFIDA:
@@ -476,9 +478,51 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 				throw new IllegalArgumentException();
 			}
 		}
+		disegnaLaFrecciaDellaPila(graphics);
 		riquadroCombattimento.disegnaInfoCombattimento(graphics);
 		riquadroSfida.disegna(graphics);
 		schermo.perOgniSprite(sprite -> sprite.anima(graphics));
+	}
+
+	/**
+	 * Un riquadro impilato, con la sfumatura se è coperto. Sul telefono la pila scorre di lato: il riquadro, che non lo sa, si disegna spostato di quanto
+	 * è scorsa, e né lui né la sfumatura escono dalla colonna della pila (dove c'è la barra delle icone).
+	 */
+	private void disegnaNellaPila(Graphics2D graphics, TipoFinestra finestra, Consumer<Graphics2D> disegno) {
+		if (schermo.getPilaScorrevole() == null) {
+			disegno.accept(graphics);
+			dissolviSeCoperto(graphics, finestra);
+			return;
+		}
+		Area pila = schermo.getAreaDellaPila();
+		Graphics2D g = (Graphics2D) graphics.create();
+		try {
+			g.clipRect(pila.getX(), pila.getY(), pila.getLarghezza(), pila.getAltezza());
+			// La sfumatura sta dove sta il riquadro, già spostato (getArea)
+			Graphics2D spostata = (Graphics2D) g.create();
+			try {
+				spostata.translate(schermo.getScostamentoDellaPila(), 0);
+				disegno.accept(spostata);
+			} finally {
+				spostata.dispose();
+			}
+			dissolviSeCoperto(g, finestra);
+		} finally {
+			g.dispose();
+		}
+	}
+
+	/**
+	 * Sul telefono, in alto a sinistra sulla pila, la freccia che dice da che parte la si può far scorrere
+	 */
+	private void disegnaLaFrecciaDellaPila(Graphics2D graphics) {
+		Area zona = schermo.getAreaDellaFrecciaDellaPila();
+		if (zona == null) {
+			return;
+		}
+		Image freccia = schermo.isFrecciaDellaPilaVersoDestra() ? ImageCache.componenteScorrevoleFrecciaDestra : ImageCache.componenteScorrevoleFrecciaSinistra;
+		graphics.drawImage(freccia, zona.getX() + (zona.getLarghezza() - freccia.getWidth(null)) / 2,
+				zona.getY() + (zona.getAltezza() - freccia.getHeight(null)) / 2, null);
 	}
 
 	@Override
@@ -612,8 +656,16 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		}
 		// I cartigli dell'aiuto stanno sopra tutto, anche sopra la sfera magica
 		if (stato == StatoDelloSchermo.IN_GIOCO) {
-			riquadroGruppo.disegnaAiuto(graphics, getWidth(), getHeight());
-			riquadroMissioni.disegnaAiuto(graphics, getWidth(), getHeight());
+			// I riquadri non sanno di quanto è scorsa la pila: i loro cartigli si spostano con lei
+			int scostamento = schermo.getScostamentoDellaPila();
+			Graphics2D spostata = (Graphics2D) graphics.create();
+			try {
+				spostata.translate(scostamento, 0);
+				riquadroGruppo.disegnaAiuto(spostata, getWidth() - scostamento, getHeight());
+				riquadroMissioni.disegnaAiuto(spostata, getWidth() - scostamento, getHeight());
+			} finally {
+				spostata.dispose();
+			}
 		}
 		barraIcone.disegnaAiuto(graphics, getWidth(), getHeight());
 		schermo.fineFotogramma();

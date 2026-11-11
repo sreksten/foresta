@@ -16,6 +16,8 @@ import java.util.List;
  *     <li>far catturare il trascinamento a chi lo chiede ({@link Finestra#catturaIlTrascinamento()}): finché il tasto sinistro resta premuto,
  *     trascinamento e rilascio vanno a lei, anche fuori dal suo rettangolo;</li>
  *     <li>portare davanti un riquadro impilato cliccato e non ultimo, senza altro;</li>
+ *     <li>sul telefono, far scorrere di lato la pila dei riquadri ({@link PilaScorrevole}): un trascinamento che comincia su un riquadro della pila e
+ *     diventa orizzontale prima che verticale passa alla pila, e il riquadro lo lascia; un click sulla freccia della pila la fa scorrere;</li>
  *     <li>ritardare il click singolo (175 ms col mouse, di più col dito: {@link #getIntervalloDoppioClick()}) per chi distingue il doppio click
  *     ({@link Finestra#gestisceDoppioClick()}), scartandolo se arriva il secondo e se nel frattempo la schermata è cambiata;</li>
  *     <li>dividere la rotella in passi consegnati a uno o due per fotogramma ({@link Finestra#passiPerScattoDellaRotella()}), perché lo scorrimento
@@ -75,6 +77,27 @@ public final class RouterDegliInput implements EventiDelPuntatore {
 		boolean portaInPrimoPianoSeImpilato(Finestra finestra);
 
 		/**
+		 * La pila che scorre di lato (sul telefono), o null se non c'è
+		 */
+		default PilaScorrevole getPilaScorrevole() {
+			return null;
+		}
+
+		/**
+		 * Se la finestra è uno dei riquadri che scorrono con la pila
+		 */
+		default boolean scorreConLaPila(Finestra finestra) {
+			return false;
+		}
+
+		/**
+		 * Se il punto, in coordinate dello schermo, è sulla freccia che fa scorrere la pila
+		 */
+		default boolean isSullaFrecciaDellaPila(int x, int y) {
+			return false;
+		}
+
+		/**
 		 * Che schermata si sta mostrando: se cambia mentre un click aspetta, il click non vale più
 		 */
 		Object getStato();
@@ -104,6 +127,10 @@ public final class RouterDegliInput implements EventiDelPuntatore {
 	private Finestra finestraSottoIlCursore;
 	// La finestra su cui si è premuto il tasto sinistro, se si fa trascinare
 	private Finestra finestraCheCatturaIlTrascinamento;
+	// Dove si è premuto su un riquadro della pila che scorre, finché il gesto può ancora diventare uno scorrimento della pila (null altrimenti)
+	private Punto pressioneSullaPila;
+	// Se il gesto in corso fa scorrere la pila
+	private boolean pilaPresa;
 	// Il click singolo in attesa di un secondo click
 	private Pianificatore.Pianificata clickSingoloInAttesa;
 
@@ -230,6 +257,8 @@ public final class RouterDegliInput implements EventiDelPuntatore {
 		}
 		if (tasto == Finestra.Tasto.SINISTRO) {
 			finestraCheCatturaIlTrascinamento = risultato.finestra.catturaIlTrascinamento() ? risultato.finestra : null;
+			pilaPresa = false;
+			pressioneSullaPila = contesto.getPilaScorrevole() != null && contesto.scorreConLaPila(risultato.finestra) ? new Punto(x, y) : null;
 		}
 		risultato.finestra.processaPressione(risultato.x, risultato.y, tasto);
 		contesto.ridisegna();
@@ -237,6 +266,11 @@ public final class RouterDegliInput implements EventiDelPuntatore {
 
 	@Override
 	public void trascinato(int x, int y) {
+		if (prendeLaPila(x, y)) {
+			contesto.getPilaScorrevole().trascina(x);
+			contesto.ridisegna();
+			return;
+		}
 		if (finestraCheCatturaIlTrascinamento != null) {
 			Area area = contesto.getArea(finestraCheCatturaIlTrascinamento);
 			finestraCheCatturaIlTrascinamento.processaTrascinamento(x - area.getX(), y - area.getY());
@@ -252,8 +286,49 @@ public final class RouterDegliInput implements EventiDelPuntatore {
 		contesto.ridisegna();
 	}
 
+	/**
+	 * Se il trascinamento fa scorrere la pila: lo fa già, o è cominciato su un suo riquadro e si è spostato in orizzontale oltre la soglia del click prima
+	 * che in verticale (allora il riquadro, che magari faceva scorrere la sua lista, lo lascia). Un trascinamento verticale resta del riquadro.
+	 */
+	private boolean prendeLaPila(int x, int y) {
+		if (pilaPresa) {
+			return true;
+		}
+		if (pressioneSullaPila == null) {
+			return false;
+		}
+		int dx = Math.abs(x - pressioneSullaPila.x);
+		int dy = Math.abs(y - pressioneSullaPila.y);
+		if (dx > RiconoscitoreDiGesti.SOGLIA_DI_SPOSTAMENTO && dx > dy) {
+			pilaPresa = true;
+			if (finestraCheCatturaIlTrascinamento != null) {
+				Finestra finestra = finestraCheCatturaIlTrascinamento;
+				finestraCheCatturaIlTrascinamento = null;
+				Area area = contesto.getArea(finestra);
+				finestra.processaRilascio(pressioneSullaPila.x - area.getX(), pressioneSullaPila.y - area.getY(), Finestra.Tasto.SINISTRO);
+			}
+			contesto.getPilaScorrevole().prendi(pressioneSullaPila.x);
+			pressioneSullaPila = null;
+			return true;
+		}
+		if (dy > RiconoscitoreDiGesti.SOGLIA_DI_SPOSTAMENTO) {
+			pressioneSullaPila = null;
+		}
+		return false;
+	}
+
 	@Override
 	public void rilasciato(int x, int y, Finestra.Tasto tasto) {
+		if (tasto == Finestra.Tasto.SINISTRO) {
+			pressioneSullaPila = null;
+			if (pilaPresa) {
+				pilaPresa = false;
+				contesto.getPilaScorrevole().lascia();
+				aggiornaFinestraSottoIlCursore(trova(x, y), x, y);
+				contesto.ridisegna();
+				return;
+			}
+		}
 		if (finestraCheCatturaIlTrascinamento != null && tasto == Finestra.Tasto.SINISTRO) {
 			Finestra finestra = finestraCheCatturaIlTrascinamento;
 			finestraCheCatturaIlTrascinamento = null;
@@ -279,6 +354,12 @@ public final class RouterDegliInput implements EventiDelPuntatore {
 	 */
 	@Override
 	public void clic(int x, int y, Finestra.Tasto tasto, int conteggio) {
+		// La freccia della pila sta sopra i riquadri: la fa scorrere e basta
+		if (tasto == Finestra.Tasto.SINISTRO && contesto.getPilaScorrevole() != null && contesto.isSullaFrecciaDellaPila(x, y)) {
+			contesto.getPilaScorrevole().commuta();
+			contesto.ridisegna();
+			return;
+		}
 		Risultato risultato = trova(x, y);
 		if (risultato == null) {
 			return;

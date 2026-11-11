@@ -203,6 +203,18 @@ public final class DescrizioneSpriteATempo {
 	}
 
 	/**
+	 * Sposta lo sprite (e il suo ritaglio) di tanti pixel a destra: nasce in un riquadro che chi disegna ha spostato senza che lui lo sappia (la pila
+	 * del telefono scorsa di lato)
+	 */
+	public DescrizioneSpriteATempo spostataInOrizzontale(int dx) {
+		xIniziale += dx;
+		if (ritaglio != null) {
+			ritaglio = new Area(ritaglio.getX() + dx, ritaglio.getY(), ritaglio.getLarghezza(), ritaglio.getAltezza());
+		}
+		return this;
+	}
+
+	/**
 	 * Centra lo sprite (icona e testo insieme) su quel punto, spostandolo quanto serve perché non esca dai limiti
 	 */
 	public DescrizioneSpriteATempo centraEntro(float xCentro, float limiteSinistro, float limiteDestro) {

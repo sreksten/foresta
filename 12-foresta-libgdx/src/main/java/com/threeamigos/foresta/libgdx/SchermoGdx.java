@@ -3,6 +3,7 @@ package com.threeamigos.foresta.libgdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.threeamigos.foresta.artefatti.VistaArtefatto;
 import com.threeamigos.foresta.artefatti.VistaBancoDiLavoro;
@@ -22,6 +23,7 @@ import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.Punto;
 import com.threeamigos.foresta.ui.SchermoDelGioco;
 import com.threeamigos.foresta.ui.barra.BarraIcone;
+import com.threeamigos.foresta.ui.immagini.NomiDelleImmagini;
 import com.threeamigos.foresta.ui.riquadri.*;
 import com.threeamigos.foresta.ui.schermate.*;
 import com.threeamigos.foresta.ui.sprite.DescrizioneAnnuncioGlobale;
@@ -245,9 +247,11 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 			tutorial.disegna(batch, disposizione.getLarghezzaTotale(), disposizione.getAltezzaTotale());
 		}
 		if (stato == StatoDelloSchermo.IN_GIOCO) {
-			disegnaAiuto(batch, riquadroGruppo.righeDellAiuto(), riquadroGruppo.getTopLeftX() + riquadroGruppo.getMouseX(),
+			// I riquadri non sanno di quanto è scorsa la pila: i loro cartigli si spostano con lei
+			int scostamento = getScostamentoDellaPila();
+			disegnaAiuto(batch, riquadroGruppo.righeDellAiuto(), scostamento + riquadroGruppo.getTopLeftX() + riquadroGruppo.getMouseX(),
 					riquadroGruppo.getTopLeftY() + riquadroGruppo.getMouseY());
-			disegnaAiuto(batch, riquadroMissioni.righeDellAiuto(), riquadroMissioni.getTopLeftX() + riquadroMissioni.getMouseX(),
+			disegnaAiuto(batch, riquadroMissioni.righeDellAiuto(), scostamento + riquadroMissioni.getTopLeftX() + riquadroMissioni.getMouseX(),
 					riquadroMissioni.getTopLeftY() + riquadroMissioni.getMouseY());
 		}
 		barraIcone.disegnaAiuto(batch, disposizione.getLarghezzaTotale(), disposizione.getAltezzaTotale());
@@ -265,8 +269,13 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 		for (TipoFinestra finestra : getPila()) {
 			switch (finestra) {
 				case MAPPA:
-					riquadroMappa.disegna(batch, camera, viewport, disposizione.getLarghezzaContenuto(), disposizione.getAltezzaContenuto());
-					dissolviSeCoperto(batch, finestra);
+					if (getPilaScorrevole() != null) {
+						disegnaNellaPila(batch, camera, viewport, finestra,
+								() -> riquadroMappa.disegna(batch, camera, viewport, disposizione.getLarghezzaContenuto(), disposizione.getAltezzaContenuto()));
+					} else {
+						riquadroMappa.disegna(batch, camera, viewport, disposizione.getLarghezzaContenuto(), disposizione.getAltezzaContenuto());
+						dissolviSeCoperto(batch, finestra);
+					}
 					break;
 				case STATISTICHE:
 					riquadroStatistiche.disegna(batch);
@@ -277,30 +286,69 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 							inCombattimento ? riquadroCombattimento.getAvversario() : null);
 					break;
 				case STATO:
-					riquadroGruppo.disegna(batch, camera, viewport);
-					dissolviSeCoperto(batch, finestra);
+					disegnaNellaPila(batch, camera, viewport, finestra, () -> riquadroGruppo.disegna(batch, camera, viewport));
 					break;
 				case INCANTESIMI_E_POZIONI:
-					riquadroIncantesimi.disegna(batch, camera, viewport);
-					dissolviSeCoperto(batch, finestra);
+					disegnaNellaPila(batch, camera, viewport, finestra, () -> riquadroIncantesimi.disegna(batch, camera, viewport));
 					break;
 				case TESTO:
 					riquadroTesto.disegna(batch, camera, viewport);
 					break;
 				case MISSIONI:
-					riquadroMissioni.disegna(batch, camera, viewport);
-					dissolviSeCoperto(batch, finestra);
+					disegnaNellaPila(batch, camera, viewport, finestra, () -> riquadroMissioni.disegna(batch, camera, viewport));
 					break;
 				default:
 					// Il combattimento e la sfida si disegnano dopo tutti gli altri, così nessuno li copre
 					break;
 			}
 		}
+		disegnaLaFrecciaDellaPila(batch);
 		if (riquadroCombattimento.isVisibile()) {
 			riquadroCombattimento.disegna(batch);
 		}
 		riquadroSfida.disegna(batch, camera, viewport);
 		perOgniSprite(sprite -> sprite.anima(batch, camera, viewport));
+	}
+
+	/**
+	 * Un riquadro impilato, con la sfumatura se è coperto. Sul telefono la pila scorre di lato: il riquadro, che non lo sa, si disegna spostato di quanto
+	 * è scorsa (con la matrice del batch, di cui tiene conto anche il ritaglio delle liste), e né lui né la sfumatura escono dalla colonna della pila
+	 * (dove c'è la barra delle icone).
+	 */
+	private void disegnaNellaPila(Batch batch, Camera camera, Viewport viewport, TipoFinestra finestra, Runnable disegno) {
+		if (getPilaScorrevole() == null) {
+			disegno.run();
+			dissolviSeCoperto(batch, finestra);
+			return;
+		}
+		Area pila = getAreaDellaPila();
+		if (!RitaglioGdx.entra(batch, camera, viewport, pila.getX(), pila.getY(), pila.getLarghezza(), pila.getAltezza())) {
+			return;
+		}
+		int scostamento = getScostamentoDellaPila();
+		Matrix4 matrice = batch.getTransformMatrix().cpy();
+		batch.setTransformMatrix(matrice.cpy().translate(scostamento, 0, 0));
+		try {
+			disegno.run();
+		} finally {
+			batch.setTransformMatrix(matrice);
+		}
+		// La sfumatura sta dove sta il riquadro, già spostato (getArea)
+		dissolviSeCoperto(batch, finestra);
+		RitaglioGdx.esci(batch);
+	}
+
+	/**
+	 * Sul telefono, in alto a sinistra sulla pila, la freccia che dice da che parte la si può far scorrere
+	 */
+	private void disegnaLaFrecciaDellaPila(Batch batch) {
+		Area zona = getAreaDellaFrecciaDellaPila();
+		if (zona == null) {
+			return;
+		}
+		String freccia = isFrecciaDellaPilaVersoDestra() ? NomiDelleImmagini.FRECCIA_DESTRA : NomiDelleImmagini.FRECCIA_SINISTRA;
+		immagini.disegna(batch, freccia, zona.getX() + (zona.getLarghezza() - immagini.larghezza(freccia, 1f)) / 2f,
+				zona.getY() + (zona.getAltezza() - immagini.altezza(freccia, 1f)) / 2f, 1f);
 	}
 
 	/**

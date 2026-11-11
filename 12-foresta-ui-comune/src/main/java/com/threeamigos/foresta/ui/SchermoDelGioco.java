@@ -106,10 +106,24 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	private boolean annunciInCorso;
 	// La prossima intro deve partire dalla classifica invece che dai loghi (vedi mostraPunteggi)
 	private boolean introDallaClassifica;
+	// Sul telefono la pila dei riquadri scorre di lato per lasciare spazio alla locazione (null sul tablet)
+	private final PilaScorrevole pilaScorrevole;
+	// Quando è finito l'ultimo fotogramma, per far scorrere la pila del tempo passato
+	private long ultimoFotogrammaDellaPila;
+	// La zona dove sta la freccia che fa scorrere la pila e che si tocca: sul bordo superiore del primo riquadro, come le intestazioni, subito dopo
+	// la decorazione dell'angolo
+	private static final int X_DELLA_FRECCIA_DELLA_PILA = 14;
+	private static final int LARGHEZZA_DELLA_FRECCIA_DELLA_PILA = 40;
+	private static final int ALTEZZA_DELLA_FRECCIA_DELLA_PILA = 20;
+	// La freccia si disegna sul bordo, sopra il nome del primo personaggio, ma per toccarla la zona scende un poco più giù
+	private static final int TOCCO_SOTTO_LA_FRECCIA_DELLA_PILA = 14;
+	// Il fotogramma più lento che si accetta per far scorrere la pila: dopo una pausa non salta
+	private static final double SECONDI_FOTOGRAMMA_MASSIMI = 0.1;
 
 	protected SchermoDelGioco(DisposizioneDelloSchermo disposizione, VistaPartita vistaPartita) {
 		this.disposizione = disposizione;
 		this.vistaPartita = vistaPartita;
+		pilaScorrevole = disposizione.isTelefono() ? new PilaScorrevole(disposizione.getGruppo().getLarghezza()) : null;
 		// Gruppo, incantesimi e missioni (e sul telefono la mappa) sono impilati nell'ordine in cui compaiono qui. INTRO_OUTRO e
 		// MAPPA_A_TUTTO_SCHERMO non appartengono alla pila: occupano da soli tutto lo schermo e sono scelti in base allo stato. Sul telefono
 		// le statistiche non ci sono.
@@ -132,11 +146,16 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	 */
 	protected final void prepara() {
 		posizionaRiquadriImpilati();
+		if (pilaScorrevole != null) {
+			riquadroLocazione().setAllargamentoMassimo(pilaScorrevole.getScostamentoMassimo());
+		}
 		BusEventi.iscriviti(NotificaAumentoLivelloMondo.class, e -> notifica(TestiDellaUI.get("LEVEL_UP_MONDO", e.getLivello())));
 		BusEventi.iscriviti(NotificaArtefattoTrovato.class, this::gestisciEventoArtefattoTrovato);
 		BusEventi.iscriviti(InternoCreazioneSpriteATempo.class, e -> {
 			if (stato == StatoDelloSchermo.IN_GIOCO) {
-				aggiungiSprite(sprite(e.getDescrizione()));
+				// Gli sprite che arrivano così nascono nei riquadri della pila, che non sanno di quanto è scorsa
+				DescrizioneSpriteATempo descrizione = e.getDescrizione();
+				aggiungiSprite(sprite(descrizione == null ? null : descrizione.spostataInOrizzontale(getScostamentoDellaPila())));
 			}
 		});
 		// Il riquadro del gruppo
@@ -334,6 +353,10 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 
 	private void portaDavantiSeImpilato(BersaglioDelSuggerimento bersaglio) {
 		TipoFinestra finestra = finestraDelBersaglio(bersaglio);
+		// Il suggerimento che indica la pila, o uno dei suoi riquadri, la vuole tutta: se è scorsa a destra torna al suo posto
+		if (pilaScorrevole != null && (bersaglio == BersaglioDelSuggerimento.RIQUADRI || finestra != null && isRiquadroImpilato(finestra))) {
+			pilaScorrevole.espandi();
+		}
 		if (finestra == null || !isRiquadroImpilato(finestra)) {
 			return;
 		}
@@ -426,19 +449,21 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 		if (finestra == barraIcone()) {
 			return disposizione.getBarra();
 		} else if (finestra == riquadroMappa()) {
-			return disposizione.isTelefono() ? conQuota(disposizione.getMappa(), quotaDellImpilato(TipoFinestra.MAPPA)) : disposizione.getMappa();
+			return disposizione.isTelefono() ? nellaPila(disposizione.getMappa(), TipoFinestra.MAPPA) : disposizione.getMappa();
 		} else if (finestra == riquadroStatistiche()) {
 			return disposizione.getStatistiche();
 		} else if (finestra == riquadroLocazione()) {
-			return disposizione.getLocazione();
+			// La pila che scorre a destra lascia il suo spazio alla locazione
+			Area locazione = disposizione.getLocazione();
+			return new Area(locazione.getX(), locazione.getY(), locazione.getLarghezza() + getScostamentoDellaPila(), locazione.getAltezza());
 		} else if (finestra == riquadroTesto()) {
 			return disposizione.getTesto();
 		} else if (finestra == riquadroGruppo()) {
-			return conQuota(disposizione.getGruppo(), quotaDellImpilato(TipoFinestra.STATO));
+			return nellaPila(disposizione.getGruppo(), TipoFinestra.STATO);
 		} else if (finestra == riquadroIncantesimiEPozioni()) {
-			return conQuota(disposizione.getIncantesimi(), quotaDellImpilato(TipoFinestra.INCANTESIMI_E_POZIONI));
+			return nellaPila(disposizione.getIncantesimi(), TipoFinestra.INCANTESIMI_E_POZIONI);
 		} else if (finestra == riquadroMissioni()) {
-			return conQuota(disposizione.getMissioni(), quotaDellImpilato(TipoFinestra.MISSIONI));
+			return nellaPila(disposizione.getMissioni(), TipoFinestra.MISSIONI);
 		} else if (finestra == riquadroCombattimento()) {
 			return riquadroCombattimento().getArea();
 		} else if (finestra == riquadroSfida()) {
@@ -447,8 +472,73 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 		return disposizione.getContenuto();
 	}
 
-	private static Area conQuota(Area area, int y) {
-		return new Area(area.getX(), y, area.getLarghezza(), area.getAltezza());
+	/**
+	 * Un riquadro impilato: alla quota del suo posto nella pila, e spostato a destra quanto la pila è scorsa
+	 */
+	private Area nellaPila(Area area, TipoFinestra finestra) {
+		return new Area(area.getX() + getScostamentoDellaPila(), quotaDellImpilato(finestra), area.getLarghezza(), area.getAltezza());
+	}
+
+	/**
+	 * La pila dei riquadri che scorre di lato, sul telefono; null sul tablet, dove la pila sta ferma
+	 */
+	public PilaScorrevole getPilaScorrevole() {
+		return pilaScorrevole;
+	}
+
+	/**
+	 * Di quanto la pila dei riquadri è scorsa a destra: chi disegna sposta di tanto i riquadri impilati, che non lo sanno (0 sul tablet)
+	 */
+	public int getScostamentoDellaPila() {
+		return pilaScorrevole == null ? 0 : pilaScorrevole.getScostamento();
+	}
+
+	/**
+	 * Dove si disegnano i riquadri impilati, in coordinate dello schermo: dalla colonna della pila al bordo dell'area di contenuto, perché la pila
+	 * scorsa a destra non finisca sotto la barra delle icone
+	 */
+	public Area getAreaDellaPila() {
+		return new Area(disposizione.getColonnaDestraX(), 0, disposizione.getLarghezzaContenuto() - disposizione.getColonnaDestraX(),
+				disposizione.getAltezzaContenuto());
+	}
+
+	/**
+	 * La zona della freccia che fa scorrere la pila, in alto a sinistra sulla pila, sul bordo del primo riquadro (si sposta con lei): chi disegna ci mette la freccia al centro, e un
+	 * click lì la fa scorrere. Null se la pila non scorre o non si è nella schermata di gioco.
+	 */
+	public Area getAreaDellaFrecciaDellaPila() {
+		if (pilaScorrevole == null || stato != StatoDelloSchermo.IN_GIOCO) {
+			return null;
+		}
+		return new Area(disposizione.getColonnaDestraX() + getScostamentoDellaPila() + X_DELLA_FRECCIA_DELLA_PILA, disposizione.getQuotaPila(),
+				LARGHEZZA_DELLA_FRECCIA_DELLA_PILA, ALTEZZA_DELLA_FRECCIA_DELLA_PILA);
+	}
+
+	/**
+	 * Se la freccia della pila punta a destra (la pila è espansa e si può compattare) o a sinistra (è compattata e si può riespandere)
+	 */
+	public boolean isFrecciaDellaPilaVersoDestra() {
+		return pilaScorrevole == null || pilaScorrevole.isVersoEspansa();
+	}
+
+	private boolean scorreConLaPila(Finestra finestra) {
+		for (TipoFinestra tipo : riquadriImpilati()) {
+			if (finestra(tipo) == finestra) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Fa scorrere la pila del tempo passato dall'ultimo fotogramma, e dà alla locazione lo spazio che la pila le lascia
+	 */
+	private void faiScorrereLaPila() {
+		long adesso = System.nanoTime();
+		double secondi = ultimoFotogrammaDellaPila == 0 ? 0 : Math.min(SECONDI_FOTOGRAMMA_MASSIMI, (adesso - ultimoFotogrammaDellaPila) / 1_000_000_000d);
+		ultimoFotogrammaDellaPila = adesso;
+		pilaScorrevole.avanza(secondi);
+		riquadroLocazione().setAllargamento(pilaScorrevole.getScostamento());
 	}
 
 	/**
@@ -1382,6 +1472,9 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	 * mostrare il prossimo intermezzo in attesa (se ce n'è uno).
 	 */
 	public void fineFotogramma() {
+		if (pilaScorrevole != null) {
+			faiScorrereLaPila();
+		}
 		// Alla scelta della classe l'icona sotto il mouse mostra la scheda di quella classe (se il mouse è fuori dalle icone resta l'ultima)
 		if (stato == StatoDelloSchermo.SCELTA_DELLA_CLASSE) {
 			schermataBestiario().selezionaDaComando(barraIcone().getComandoSottoIlCursore());
@@ -1512,6 +1605,23 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 					}
 				}
 				return false;
+			}
+
+			@Override
+			public PilaScorrevole getPilaScorrevole() {
+				return stato == StatoDelloSchermo.IN_GIOCO ? pilaScorrevole : null;
+			}
+
+			@Override
+			public boolean scorreConLaPila(Finestra finestra) {
+				return SchermoDelGioco.this.scorreConLaPila(finestra);
+			}
+
+			@Override
+			public boolean isSullaFrecciaDellaPila(int x, int y) {
+				Area freccia = getAreaDellaFrecciaDellaPila();
+				return freccia != null && new Area(freccia.getX(), freccia.getY(), freccia.getLarghezza(),
+						freccia.getAltezza() + TOCCO_SOTTO_LA_FRECCIA_DELLA_PILA).contiene(x, y);
 			}
 
 			@Override
