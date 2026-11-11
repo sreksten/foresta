@@ -195,23 +195,32 @@ public final class IntroDelGioco {
 
 	/**
 	 * La classifica in un contenuto, nell'alfabeto grande: il titolo («intrepidi avventurieri») centrato in cima, poi il nome a sinistra e il punteggio a
-	 * destra, una riga ogni {@link SchermateSenzaPartita#RIGA_CLASSIFICA}
+	 * destra, una riga ogni {@link SchermateSenzaPartita#RIGA_CLASSIFICA}. Un nome che non ci sta accanto al punteggio (su uno schermo stretto, o un nome
+	 * lungo) va a capo, e i posti che seguono scendono.
 	 */
 	public static ContenutoDiColonna classifica(GestorePunteggi gestorePunteggi, int width) {
 		int righe = gestorePunteggi.getConteggio();
 		List<Elemento> elementi = new ArrayList<>();
 		ImmagineDiPixel titolo = LayoutDelTestoGrande.immagine(TestiDellaUI.get("TITOLO_CLASSIFICA"), Math.max(1, width - 2 * SchermateSenzaPartita.MARGINE), true);
 		elementi.add(Elemento.testoGrande(titolo, SchermateSenzaPartita.MARGINE, 0));
-		int cimaDelleRighe = titolo.getAltezza() + SPAZIO_DOPO_IL_TITOLO_DELLA_CLASSIFICA;
+		int y = titolo.getAltezza() + SPAZIO_DOPO_IL_TITOLO_DELLA_CLASSIFICA;
 		for (int posizione = 0; posizione < righe; posizione++) {
 			Punteggio punteggio = gestorePunteggi.getPunteggio(posizione);
-			int y = cimaDelleRighe + posizione * SchermateSenzaPartita.RIGA_CLASSIFICA;
-			elementi.add(Elemento.testoGrande(riga(punteggio.getNome()), SchermateSenzaPartita.MARGINE, y));
 			String valore = String.valueOf(punteggio.getPunteggio());
-			elementi.add(Elemento.testoGrande(riga(valore), width - SchermateSenzaPartita.MARGINE - LayoutDelTestoGrande.larghezza(valore), y));
+			int larghezzaDelValore = LayoutDelTestoGrande.larghezza(valore);
+			int larghezzaDelNome = Math.max(1, width - 2 * SchermateSenzaPartita.MARGINE - larghezzaDelValore - SPAZIO_FRA_NOME_E_PUNTEGGIO);
+			List<String> righeDelNome = LayoutDelTestoGrande.righe(punteggio.getNome(), larghezzaDelNome);
+			ImmagineDiPixel nome = righeDelNome.size() <= 1 ? riga(punteggio.getNome())
+					: LayoutDelTestoGrande.immagine(punteggio.getNome(), larghezzaDelNome, false);
+			elementi.add(Elemento.testoGrande(nome, SchermateSenzaPartita.MARGINE, y));
+			elementi.add(Elemento.testoGrande(riga(valore), width - SchermateSenzaPartita.MARGINE - larghezzaDelValore, y));
+			y += SchermateSenzaPartita.RIGA_CLASSIFICA + (Math.max(1, righeDelNome.size()) - 1) * LayoutDelTestoGrande.ALTEZZA_RIGA;
 		}
-		return new ContenutoDiColonna(width, cimaDelleRighe + righe * SchermateSenzaPartita.RIGA_CLASSIFICA, elementi);
+		return new ContenutoDiColonna(width, y, elementi);
 	}
+
+	// Fra il nome più lungo e il punteggio, nella classifica
+	private static final int SPAZIO_FRA_NOME_E_PUNTEGGIO = 20;
 
 	private static ImmagineDiPixel riga(String testo) {
 		return LayoutDelTestoGrande.immagine(testo, Math.max(1, LayoutDelTestoGrande.larghezza(testo)), false);

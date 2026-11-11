@@ -44,6 +44,10 @@ public final class SchermateSenzaPartita {
 	public static final int RIGA_CLASSIFICA = 50;
 	// A sinistra e a destra della classifica e dei trofei
 	public static final int MARGINE = 50;
+	// Gli slot: la scritta in cima sta a QUOTA_DEGLI_SLOT, lo slot n a QUOTA_DEGLI_SLOT + n * PASSO_DEGLI_SLOT (meno, su uno schermo basso), cinque in tutto
+	private static final int QUOTA_DEGLI_SLOT = 50;
+	private static final int PASSO_DEGLI_SLOT = 100;
+	private static final int SLOT_A_SCHERMO = 5;
 
 	private final int width;
 	private final int height;
@@ -218,8 +222,13 @@ public final class SchermateSenzaPartita {
 		}
 	}
 
-	private static int getCoordinataY(int id) {
-		return 50 + 100 * id;
+	/**
+	 * La quota dello slot con quel numero (da 1 a 5, l'ultimo è il salvataggio automatico): uno ogni 100 pixel, o meno se lo schermo è basso (sul telefono),
+	 * perché anche l'ultimo, con la sua riga di testo grande, stia sullo schermo.
+	 */
+	int getCoordinataY(int id) {
+		int passo = Math.min(PASSO_DEGLI_SLOT, (height - QUOTA_DEGLI_SLOT - LayoutDelTestoGrande.ALTEZZA_RIGA - RAGGIO_ALONE) / SLOT_A_SCHERMO);
+		return QUOTA_DEGLI_SLOT + passo * id;
 	}
 
 	/**

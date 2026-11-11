@@ -15,6 +15,7 @@ import com.threeamigos.foresta.ui.immagini.ImmaginiAwt;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
+import com.threeamigos.foresta.ui.testo.LayoutDelTestoGrande;
 import com.threeamigos.foresta.ui.testo.TestoGrande;
 
 import java.awt.*;
@@ -71,7 +72,11 @@ public class DisplayableCanvasBestiario extends SchermataBestiario {
 		graphics.drawImage(ImageCache.ombraDelDrago, (width - ImageCache.ombraDelDrago.getWidth()) >> 1,
 				(height - ImageCache.ombraDelDrago.getHeight()) >> 1, null);
 		graphics.setComposite(normale);
-		TestoGrande.disegnaRiga(graphics, getTitolo(), getXDelTitolo(), QUOTA_TITOLO);
+		int yTitolo = QUOTA_TITOLO;
+		for (String riga : getRigheDelTitolo()) {
+			TestoGrande.disegnaRiga(graphics, riga, getXDellaRigaDelTitolo(riga), yTitolo);
+			yTitolo += LayoutDelTestoGrande.ALTEZZA_RIGA;
+		}
 		int yRiga = getQuotaDelSottotitolo();
 		for (String riga : getSottotitolo()) {
 			Image sotto = ImageCache.get(riga, DoomdarkFont.medio(), DoomdarkColorModel.Color.MEDIUM_GRAY);

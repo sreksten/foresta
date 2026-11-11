@@ -227,4 +227,37 @@ class IntroDelGiocoTest {
 			assertEquals(SchermateSenzaPartita.RAGGIO_ALONE, logo.getRaggioDellAlone());
 		}
 	}
+
+	private static GestorePunteggi classificaCon(String... nomi) {
+		return (GestorePunteggi) Proxy.newProxyInstance(IntroDelGiocoTest.class.getClassLoader(), new Class<?>[] {GestorePunteggi.class}, (proxy, metodo, argomenti) -> {
+			switch (metodo.getName()) {
+				case "getConteggio":
+					return nomi.length;
+				case "getPunteggio":
+					String nome = nomi[(Integer) argomenti[0]];
+					return new com.threeamigos.foresta.strumenti.Punteggio() {
+						@Override public String getNome() { return nome; }
+						@Override public int getPunteggio() { return 123456; }
+						@Override public String getIdPartita() { return null; }
+					};
+				default:
+					throw new UnsupportedOperationException(metodo.getName());
+			}
+		});
+	}
+
+	@Test
+	void nellaClassificaUnNomeLungoVaACapoSenzaArrivareSulPunteggioEIPostiDopoScendono() {
+		// La larghezza di contenuto del telefono più stretto (layout_telefono.md §5)
+		int larghezza = 770;
+		ContenutoDiColonna corta = IntroDelGioco.classifica(classificaCon("Aldo", "Bea"), larghezza);
+		ContenutoDiColonna lunga = IntroDelGioco.classifica(classificaCon("Bartolomeo Massimiliano Della Foresta Antica", "Bea"), larghezza);
+		// Gli elementi: il titolo, poi nome e punteggio di ogni posto
+		ContenutoDiColonna.Elemento nome = lunga.getElementi().get(1);
+		ContenutoDiColonna.Elemento punteggio = lunga.getElementi().get(2);
+		assertTrue(nome.getPixel().getAltezza() > corta.getElementi().get(1).getPixel().getAltezza(), "il nome va a capo");
+		assertTrue(nome.getX() + nome.getPixel().getLarghezza() <= punteggio.getX(), "non arriva sul punteggio");
+		assertTrue(lunga.getElementi().get(3).getY() > corta.getElementi().get(3).getY(), "il posto dopo scende");
+		assertTrue(lunga.getAltezza() > corta.getAltezza());
+	}
 }

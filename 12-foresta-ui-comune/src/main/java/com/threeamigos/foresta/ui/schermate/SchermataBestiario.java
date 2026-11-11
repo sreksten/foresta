@@ -137,7 +137,7 @@ public abstract class SchermataBestiario implements Finestra {
 	 */
 	private void impostaIlSottotitolo(String testo) {
 		sottotitolo = righeDelSottotitolo(testo, width - 2 * MARGINE);
-		impostaLeAree(cimaDelleColonne(Math.max(1, sottotitolo.size())));
+		impostaLeAree(cimaDelleColonne(Math.max(1, sottotitolo.size())) + altezzaInPiuDelTitolo());
 	}
 
 	/**
@@ -217,6 +217,27 @@ public abstract class SchermataBestiario implements Finestra {
 	}
 
 	/**
+	 * Il titolo a capo dove non sta: alla scelta della classe porta il nome del giocatore, che può essere lungo, e su uno schermo stretto non ci starebbe.
+	 * Le righe non arrivano sotto quante voci si sono sbloccate, che sta in alto a destra.
+	 */
+	public List<String> getRigheDelTitolo() {
+		int quante = FontTool.getWidth(DoomdarkFont.medio(), getQuanteSbloccate());
+		int larghezza = width - 2 * MARGINE - (quante > 0 ? 2 * (quante + Finestra.SPACING) : 0);
+		return LayoutDelTestoGrande.righe(getTitolo(), Math.max(1, larghezza));
+	}
+
+	/**
+	 * La x di una riga del titolo, centrata (la prima sta a {@link #QUOTA_TITOLO}, le altre scendono di {@link LayoutDelTestoGrande#ALTEZZA_RIGA})
+	 */
+	public int getXDellaRigaDelTitolo(String riga) {
+		return (width - LayoutDelTestoGrande.larghezza(riga)) >> 1;
+	}
+
+	private int altezzaInPiuDelTitolo() {
+		return (Math.max(1, getRigheDelTitolo().size()) - 1) * LayoutDelTestoGrande.ALTEZZA_RIGA;
+	}
+
+	/**
 	 * Le righe del sottotitolo, centrate, che cominciano a quella quota e scendono di un'altezza del font medio
 	 */
 	public List<String> getSottotitolo() {
@@ -224,7 +245,7 @@ public abstract class SchermataBestiario implements Finestra {
 	}
 
 	public int getQuotaDelSottotitolo() {
-		return QUOTA_TITOLO + LayoutDelTestoGrande.ALTEZZA_RIGA + SPAZIO_SOPRA_IL_SOTTOTITOLO;
+		return QUOTA_TITOLO + LayoutDelTestoGrande.ALTEZZA_RIGA + altezzaInPiuDelTitolo() + SPAZIO_SOPRA_IL_SOTTOTITOLO;
 	}
 
 	/**

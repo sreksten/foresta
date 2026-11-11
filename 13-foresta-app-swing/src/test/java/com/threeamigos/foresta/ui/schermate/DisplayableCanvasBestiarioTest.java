@@ -77,6 +77,27 @@ class DisplayableCanvasBestiarioTest {
 	}
 
 	@Test
+	void allaSceltaDellaClasseUnNomeLungoMandaACapoIlTitoloEAbbassaIlSottotitolo() {
+		// La larghezza di contenuto del telefono più stretto (layout_telefono.md §5.1)
+		int stretta = 770;
+		DisplayableCanvasBestiario corto = new DisplayableCanvasBestiario(stretta, 505, new VistaPartitaMotore());
+		corto.apriPerLaSceltaDellaClasse("Scegli la classe di Aldo");
+		DisplayableCanvasBestiario lungo = new DisplayableCanvasBestiario(stretta, 505, new VistaPartitaMotore());
+		lungo.apriPerLaSceltaDellaClasse("Scegli la classe di Bartolomeo Massimiliano");
+
+		assertEquals(1, corto.getRigheDelTitolo().size());
+		assertTrue(lungo.getRigheDelTitolo().size() > 1);
+		for (String riga : lungo.getRigheDelTitolo()) {
+			assertTrue(lungo.getXDellaRigaDelTitolo(riga) >= 0, "dentro lo schermo: " + riga);
+		}
+		int righeInPiu = lungo.getRigheDelTitolo().size() - 1;
+		assertEquals(corto.getQuotaDelSottotitolo() + righeInPiu * com.threeamigos.foresta.ui.testo.LayoutDelTestoGrande.ALTEZZA_RIGA,
+				lungo.getQuotaDelSottotitolo());
+		assertTrue(lungo.getAreaElenco().getY() > corto.getAreaElenco().getY(), "le colonne scendono");
+		lungo.disegna(tela());
+	}
+
+	@Test
 	void iSottotitoliStannoInUnaRigaSuUnaFinestraLargaEVannoACapoSuUnaStretta() {
 		for (String lingua : new String[] {"it", "en", "en-GB"}) {
 			com.threeamigos.foresta.testi.Testi.impostaLingua(lingua);

@@ -96,7 +96,8 @@ public final class LayoutDelTestoGrande {
 	}
 
 	/**
-	 * Le righe del testo, andando a capo fra una parola e l'altra per non superare la larghezza massima.
+	 * Le righe del testo, andando a capo fra una parola e l'altra per non superare la larghezza massima. Una parola che da sola non ci sta (su uno schermo
+	 * stretto) si spezza con un trattino all'ultimo carattere che ci sta, e prosegue sulla riga dopo.
 	 */
 	public static List<String> righe(String testo, int larghezzaMassima) {
 		List<String> righe = new ArrayList<>();
@@ -104,6 +105,15 @@ public final class LayoutDelTestoGrande {
 		StringTokenizer parole = new StringTokenizer(testo, " ");
 		while (parole.hasMoreTokens()) {
 			String parola = parole.nextToken();
+			while (larghezza(parola) > larghezzaMassima && parola.length() > 1) {
+				if (riga.length() > 0) {
+					righe.add(riga.toString());
+					riga = new StringBuilder();
+				}
+				int quanti = caratteriCheStannoColTrattino(parola, larghezzaMassima);
+				righe.add(parola.substring(0, quanti) + "-");
+				parola = parola.substring(quanti);
+			}
 			String conParola = riga.length() == 0 ? parola : riga + " " + parola;
 			if (riga.length() > 0 && larghezza(conParola) > larghezzaMassima) {
 				righe.add(riga.toString());
@@ -116,6 +126,17 @@ public final class LayoutDelTestoGrande {
 			righe.add(riga.toString());
 		}
 		return righe;
+	}
+
+	/**
+	 * Quanti caratteri della parola stanno nella larghezza con il trattino dopo: almeno uno, perché la parola si accorci comunque
+	 */
+	private static int caratteriCheStannoColTrattino(String parola, int larghezzaMassima) {
+		int quanti = 1;
+		while (quanti < parola.length() - 1 && larghezza(parola.substring(0, quanti + 1) + "-") <= larghezzaMassima) {
+			quanti++;
+		}
+		return quanti;
 	}
 
 	/**

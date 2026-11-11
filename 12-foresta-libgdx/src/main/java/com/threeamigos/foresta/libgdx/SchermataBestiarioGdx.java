@@ -82,8 +82,12 @@ public final class SchermataBestiarioGdx extends SchermataBestiario {
 		immagini.disegna(batch, OMBRA_DEL_DRAGO, (width - immagini.larghezza(OMBRA_DEL_DRAGO, zoom)) >> 1, (height - immagini.altezza(OMBRA_DEL_DRAGO, zoom)) >> 1,
 				zoom);
 		batch.setColor(precedente);
-		TextureRegion titolo = testoGrande.immagine(getTitolo(), com.threeamigos.foresta.ui.testo.LayoutDelTestoGrande.larghezza(getTitolo()), false, 0);
-		batch.draw(titolo, getXDelTitolo(), QUOTA_TITOLO);
+		int yTitolo = QUOTA_TITOLO;
+		for (String riga : getRigheDelTitolo()) {
+			TextureRegion titolo = testoGrande.immagine(riga, com.threeamigos.foresta.ui.testo.LayoutDelTestoGrande.larghezza(riga), false, 0);
+			batch.draw(titolo, getXDellaRigaDelTitolo(riga), yTitolo);
+			yTitolo += com.threeamigos.foresta.ui.testo.LayoutDelTestoGrande.ALTEZZA_RIGA;
+		}
 		DoomdarkFont font = medio.getFont();
 		int yRiga = getQuotaDelSottotitolo();
 		for (String riga : getSottotitolo()) {
