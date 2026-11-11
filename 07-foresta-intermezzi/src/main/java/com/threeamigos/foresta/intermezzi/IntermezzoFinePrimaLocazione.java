@@ -54,10 +54,11 @@ public class IntermezzoFinePrimaLocazione implements Intermezzo {
 								.conBocca(0.5, -0.15)
 								.guarda(Verso.SINISTRA)
 								.poi(Tappa.inSecondi(2).verso(0.62, 0.61)))
-						// L'eremita dà al gruppo incantesimi e pozioni (li consegna il motore) e poi gli augura buona fortuna
-						.conBattuta(BattutaIntermezzo.di("eremita", Testi.formatta("intermezzi", "IntermezzoFinePrimaLocazione.1")).daSecondo(2).perSecondi(5))
+						// L'eremita vede che l'eroe è preparato e gli dà incantesimi e pozioni (li consegna il motore), poi gli augura buona fortuna
 						.conBattuta(BattutaIntermezzo.di("eremita", Testi.formatta("intermezzi",
-								capo.getSesso() == Personaggio.Sesso.MASCHIO ? "IntermezzoFinePrimaLocazione.M" : "IntermezzoFinePrimaLocazione.F")));
+								capo.getSesso() == Personaggio.Sesso.MASCHIO ? "IntermezzoFinePrimaLocazione.1.M" : "IntermezzoFinePrimaLocazione.1.F"))
+								.daSecondo(2).perSecondi(5))
+						.conBattuta(BattutaIntermezzo.di("eremita", Testi.formatta("intermezzi", "IntermezzoFinePrimaLocazione.2")));
 		pagineIntermezzo.add(finale);
 		return pagineIntermezzo;
 	}
