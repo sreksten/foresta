@@ -56,6 +56,28 @@ class ScenaDellIntermezzoTest {
 	}
 
 	@Test
+	void suUnoSchermoDiUnAltraFormaLePosizioniStannoSullaScenaCentrata() {
+		// Lo schermo è più largo e più basso della scena su cui è composta la pagina: la scena si centra e si ritaglia sopra e sotto
+		int larghezzaSchermo = 1000;
+		int altezzaSchermo = 400;
+		ScenaDellIntermezzo suUnTelefono = new ScenaDellIntermezzo(larghezzaSchermo, altezzaSchermo, new Misura(LARGHEZZA, ALTEZZA),
+				immagine -> immagine.getTipo() == ImmagineIntermezzo.Tipo.ANIMAZIONE
+						? new Misura(FotogrammiDelFuocoDaCampo.LARGHEZZA, FotogrammiDelFuocoDaCampo.ALTEZZA) : new Misura(100, 150));
+		suUnTelefono.mostra(DatiDiProva.paginaDiIntermezzo());
+		Quadro quadro = suUnTelefono.quadroAl(1.0);
+		int scenaX = (larghezzaSchermo - LARGHEZZA) / 2;
+		int scenaY = (altezzaSchermo - ALTEZZA) / 2;
+		ScenaDellIntermezzo.Disegno guerriero = quadro.getElementi().get(0);
+		assertEquals(scenaX + (int) Math.round(0.3 * LARGHEZZA) - 50, guerriero.getX());
+		assertEquals(scenaY + (int) Math.round(0.7 * ALTEZZA) - 75, guerriero.getY());
+		// Il fumetto punta ancora alla bocca di chi parla e resta dentro lo schermo vero
+		ScenaDellIntermezzo.Fumetto fumetto = quadro.getFumetti().get(0);
+		assertTrue(fumetto.getPuntaVersoX() >= guerriero.getX() && fumetto.getPuntaVersoX() <= guerriero.getX() + guerriero.getLarghezza());
+		assertTrue(fumetto.getY() - fumetto.getDescrizione().getAltezza() >= 0 && fumetto.getY() <= altezzaSchermo);
+		assertTrue(fumetto.getX() >= 0 && fumetto.getX() + fumetto.getDescrizione().getLarghezza() <= larghezzaSchermo);
+	}
+
+	@Test
 	void ilGuerrieroEIlMagoSiGuardanoQuindiUnoDeiDueEAlContrarioDiComeEDisegnato() {
 		Quadro quadro = scena.quadroAl(1.0);
 		ScenaDellIntermezzo.Disegno guerriero = quadro.getElementi().get(0);

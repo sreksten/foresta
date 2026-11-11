@@ -147,6 +147,7 @@ Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbrevia
 | [`assessment.md`](assessment.md) | Valutazione dello stato del progetto e prossimi passi |
 | [`assessment_portabilita.md`](assessment_portabilita.md) | Cosa manca per portare il gioco su Android e iOS: testi, costanti, ciclo di vita dell'app, uscite dal processo |
 | [`porting_libGDX.md`](porting_libGDX.md) | Il piano del porting su libGDX e su Android: le fasi, le decisioni e lo stato |
+| [`layout_telefono.md`](layout_telefono.md) | Il piano del layout per telefono (Fase 6 del porting): come si sceglie il layout, la schermata di gioco, intro e trofei, le misure di prova dal desktop |
 | [`foresta-android.md`](foresta-android.md) | Il lanciatore Android (Gradle, fuori da Maven): come si costruisce e si prova, e cosa resta |
 | [`todo.md`](todo.md) | Cose da fare generali e bug noti |
 | [`revisione_documentazione.md`](revisione_documentazione.md) | Piano e avanzamento della revisione della documentazione |

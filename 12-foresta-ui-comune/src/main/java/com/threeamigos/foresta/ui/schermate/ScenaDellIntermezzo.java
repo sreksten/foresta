@@ -34,6 +34,10 @@ import java.util.function.Function;
  * Il tempo è quello reale trascorso da quando la pagina è comparsa: è lo stesso metro del timer con cui il motore fa avanzare le pagine, quindi animazioni e
  * dialoghi restano allineati alla durata della pagina anche se qualche fotogramma va perso. Quanto è grande un'immagine lo dice chi disegna (ha le immagini
  * caricate, con lo zoom): se non c'è, l'elemento non si disegna.
+ * <p>
+ * Le posizioni della pagina (elementi, punte e centri dei fumetti) sono frazioni della <b>scena</b>, un'area di misura fissa centrata sullo schermo come lo
+ * sfondo: le pagine sono composte su quella, quindi su uno schermo di un'altra forma la scena si ritaglia ai bordi (o lascia del nero) insieme allo sfondo, e
+ * personaggi, fumetti e sfondo restano allineati fra loro. I fumetti restano comunque dentro lo schermo.
  */
 public final class ScenaDellIntermezzo {
 
@@ -248,6 +252,11 @@ public final class ScenaDellIntermezzo {
 
 	private final int width;
 	private final int height;
+	// La scena su cui sono composte le pagine, centrata sullo schermo
+	private final int scenaX;
+	private final int scenaY;
+	private final int larghezzaScena;
+	private final int altezzaScena;
 	private final Function<ImmagineIntermezzo, Misura> misure;
 
 	private PaginaIntermezzo pagina;
@@ -259,12 +268,34 @@ public final class ScenaDellIntermezzo {
 	private final Map<String, Boolean> versi = new HashMap<>();
 
 	/**
+	 * Una scena grande quanto lo schermo.
+	 *
 	 * @param misure quanto è grande un'immagine così com'è disegnata (già con lo zoom), o null se non c'è
 	 */
 	public ScenaDellIntermezzo(int width, int height, Function<ImmagineIntermezzo, Misura> misure) {
+		this(width, height, new Misura(width, height), misure);
+	}
+
+	/**
+	 * @param scena  la misura su cui sono composte le pagine (vedi {@link com.threeamigos.foresta.ui.DisposizioneDelloSchermo#dimensioniDellaScena})
+	 * @param misure quanto è grande un'immagine così com'è disegnata (già con lo zoom), o null se non c'è
+	 */
+	public ScenaDellIntermezzo(int width, int height, Misura scena, Function<ImmagineIntermezzo, Misura> misure) {
 		this.width = width;
 		this.height = height;
+		this.larghezzaScena = scena.larghezza;
+		this.altezzaScena = scena.altezza;
+		this.scenaX = (width - scena.larghezza) / 2;
+		this.scenaY = (height - scena.altezza) / 2;
 		this.misure = misure;
+	}
+
+	private int xDellaScena(double frazione) {
+		return scenaX + (int) Math.round(frazione * larghezzaScena);
+	}
+
+	private int yDellaScena(double frazione) {
+		return scenaY + (int) Math.round(frazione * altezzaScena);
 	}
 
 	/**
@@ -432,8 +463,8 @@ public final class ScenaDellIntermezzo {
 		}
 		int larghezza = (int) Math.round(misura.larghezza * stato.getScala());
 		int altezza = (int) Math.round(misura.altezza * stato.getScala());
-		int x = (int) Math.round(stato.getX() * width) - larghezza / 2;
-		int y = (int) Math.round(stato.getY() * height) - altezza / 2;
+		int x = xDellaScena(stato.getX()) - larghezza / 2;
+		int y = yDellaScena(stato.getY()) - altezza / 2;
 		posizioni.put(elemento.getId(), new Area(x, y, larghezza, altezza));
 		boolean specchiato = serveSpecchiare(elemento.getImmagine(), stato);
 		versi.put(elemento.getId(), specchiato);
@@ -459,8 +490,8 @@ public final class ScenaDellIntermezzo {
 		int x;
 		int y;
 		if (battuta.hasPosizioneNuvola()) {
-			x = (int) Math.round(battuta.getNuvolaX() * width) - larghezza / 2;
-			y = (int) Math.round(battuta.getNuvolaY() * height) + altezza / 2;
+			x = xDellaScena(battuta.getNuvolaX()) - larghezza / 2;
+			y = yDellaScena(battuta.getNuvolaY()) + altezza / 2;
 		} else {
 			y = punta[1] - DISTANZA_FUMETTO_VERTICALE;
 			if (battuta.isCentrataOrizzontalmente()) {
@@ -480,7 +511,7 @@ public final class ScenaDellIntermezzo {
 	 */
 	private int[] puntaDellaBattuta(BattutaIntermezzo battuta) {
 		if (battuta.getIdElemento() == null) {
-			return new int[]{(int) Math.round(battuta.getPuntoX() * width), (int) Math.round(battuta.getPuntoY() * height)};
+			return new int[]{xDellaScena(battuta.getPuntoX()), yDellaScena(battuta.getPuntoY())};
 		}
 		Area rettangolo = posizioni.get(battuta.getIdElemento());
 		if (rettangolo == null) {
@@ -496,7 +527,7 @@ public final class ScenaDellIntermezzo {
 		if (!nuvole.containsKey(battuta)) {
 			BusEventi.pubblica(new InternoCreazioneFumetto(battuta.getTesto()));
 			DescrizioneFumetto descrizione = null;
-			int larghezzaNuvola = battuta.hasLarghezza() ? (int) Math.round(battuta.getLarghezza() * width) : width / 3;
+			int larghezzaNuvola = battuta.hasLarghezza() ? (int) Math.round(battuta.getLarghezza() * larghezzaScena) : larghezzaScena / 3;
 			try {
 				descrizione = new DescrizioneFumetto(battuta.getTesto(), larghezzaNuvola, DoomdarkFont.medio());
 			} catch (DoomdarkFont.UnsupportedCharacterException e) {

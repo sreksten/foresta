@@ -112,6 +112,15 @@ public final class DisposizioneDelloSchermo {
 	}
 
 	/**
+	 * La misura dell'area di contenuto del layout di oggi (lo schermo meno la barra delle icone): è la scena su cui sono composte le pagine degli
+	 * intermezzi (vedi ScenaDellIntermezzo), che su uno schermo di un'altra misura si centra e si ritaglia.
+	 */
+	public static Misura dimensioniDellaScena(MisureDelleImmagini misure, double zoom) {
+		Misura schermo = dimensioniDelloSchermo(Orientamento.VERTICALE, misure, zoom);
+		return new Misura(schermo.larghezza - SPESSORE_BARRA_ICONE, schermo.altezza);
+	}
+
+	/**
 	 * L'altezza dell'icona più alta (con lo zoom), dalle misure degli sfondi delle icone.
 	 */
 	public static int altezzaMassimaDelleIcone(MisureDelleImmagini misure, double zoom) {

@@ -9,6 +9,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.threeamigos.foresta.intermezzi.ImmagineIntermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.ui.Area;
+import com.threeamigos.foresta.ui.DisposizioneDelloSchermo;
+import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.Misura;
 import com.threeamigos.foresta.ui.Punto;
 import com.threeamigos.foresta.ui.immagini.FotogrammiDelFuocoDaCampo;
@@ -49,7 +51,8 @@ public final class SchermataIntermezzoGdx implements SchermataIntermezzo {
 		this.medio = medio;
 		this.testo = testo;
 		this.misureDelleImmagini = SchermataDiScambioArtefattiGdx.misure(immagini);
-		this.scena = new ScenaDellIntermezzo(width, height, this::misuraDi);
+		this.scena = new ScenaDellIntermezzo(width, height, DisposizioneDelloSchermo.dimensioniDellaScena(misureDelleImmagini, LivelloDiZoom.valore()),
+				this::misuraDi);
 	}
 
 	/** Mostra la pagina, facendo ripartire da zero il suo tempo. */

@@ -131,16 +131,17 @@ Le pagine vengono costruite **quando l'intermezzo scatta**, quindi possono dipen
 
 Una `PaginaIntermezzo` si disegna a strati, dal fondo verso l'alto. Tutti gli strati sono facoltativi:
 
-1. **Sfondo** (`conSfondo`): un'immagine scalata per coprire tutto lo schermo, mantenendo le proporzioni. Se manca c'è l'ombra del drago su fondo nero, come nei messaggi grandi.
+1. **Sfondo** (`conSfondo`): un'immagine a dimensione nativa e centrata sullo schermo, o stirata sugli assi chiesti (`TipoStiramento`). Se manca c'è l'ombra del drago su fondo nero, come nei messaggi grandi.
 2. **Elementi** (`conElemento`), nell'ordine in cui li aggiungi: ogni elemento aggiunto dopo sta sopra i precedenti. Metti prima le cose di sfondo, poi i personaggi.
 3. **Testo** in alto (`new PaginaIntermezzo("...")`), centrato e con a capo automatico.
 4. **Fumetti** delle battute (`conBattuta`), sempre sopra tutto.
 
 ### Coordinate
 
-- Le posizioni sono **frazioni dello schermo**: x da 0 (bordo sinistro) a 1 (bordo destro), y da 0 (bordo superiore) a 1 (bordo inferiore). Valgono a qualunque risoluzione.
+- Le posizioni sono **frazioni della scena**: x da 0 (bordo sinistro) a 1 (bordo destro), y da 0 (bordo superiore) a 1 (bordo inferiore).
+- La **scena** è un'area di misura fissa, l'area di contenuto del layout di oggi (1022×732 pixel: `DisposizioneDelloSchermo.dimensioniDellaScena`), centrata sullo schermo come lo sfondo. Sullo schermo per cui le pagine sono state composte coincide con l'area di contenuto; su uno schermo di un'altra forma (un telefono) si ritaglia ai bordi, o lascia del nero, insieme allo sfondo, e personaggi, fumetti e sfondo restano allineati fra loro. La calcola `ScenaDellIntermezzo`.
 - Il punto indicato è il **centro dell'immagine**.
-- Valori fuori da 0-1 mettono l'elemento fuori schermo. Si usano per le entrate e le uscite: per esempio si parte da x = 1.1 per entrare da destra.
+- Valori fuori da 0-1 mettono l'elemento fuori dalla scena (e di solito fuori schermo). Si usano per le entrate e le uscite: per esempio si parte da x = 1.1 per entrare da destra.
 
 Qualche misura per orientarsi, con la finestra normale in orizzontale (area di 1022×732 pixel):
 
@@ -231,13 +232,13 @@ ElementoIntermezzo.personaggio("goblin", TipoPersonaggio.GOBLIN, -0.1, 0.7)
 .conBattuta(BattutaIntermezzo.daPunto(0.95, 0.2, "Aiuto!"))         // da fuori scena
 ```
 
-- **Chi parla**: con `di(id, testo)` il fumetto punta alla bocca dell'elemento con quell'identificativo e lo segue se si muove o si gira. L'elemento deve essere **già stato aggiunto** alla pagina, altrimenti c'è un errore subito. Con `daPunto(x, y, testo)` la punta va a un punto fisso dello schermo.
+- **Chi parla**: con `di(id, testo)` il fumetto punta alla bocca dell'elemento con quell'identificativo e lo segue se si muove o si gira. L'elemento deve essere **già stato aggiunto** alla pagina, altrimenti c'è un errore subito. Con `daPunto(x, y, testo)` la punta va a un punto fisso della scena.
 - **La bocca**: per default è in alto al centro dell'immagine. Si sposta con `conBocca(x, y)` sull'elemento, in frazioni dell'immagine: (0, 0) è l'angolo in alto a sinistra. Per esempio `conBocca(0.4, 0.2)` per un personaggio con la testa spostata.
 - **Quando**: senza `daSecondo(s)`, una battuta parte alla fine della precedente più 0,3 secondi di pausa. La prima parte a 0.
 - **Quanto dura**: senza `perSecondi(s)`, la durata dipende dalla lunghezza: 1 secondo più 0,06 per carattere, minimo 2 secondi.
-- **Dove**: senza `nuvolaA(x, y)`, il fumetto va sopra chi parla, spostato verso il centro dello schermo, e resta sempre dentro lo schermo. Con `nuvolaA` indichi il centro del fumetto, in frazioni dello schermo.
+- **Dove**: senza `nuvolaA(x, y)`, il fumetto va sopra chi parla, spostato verso il centro dello schermo, e resta sempre dentro lo schermo. Con `nuvolaA` indichi il centro del fumetto, in frazioni della scena.
 - **Più fumetti insieme**: con `daSecondo` puoi sovrapporre battute nel tempo, per esempio due personaggi che parlano insieme.
-- **Larghezza**: un fumetto è largo al massimo un terzo dello schermo e va a capo da solo.
+- **Larghezza**: un fumetto è largo al massimo un terzo della scena e va a capo da solo.
 
 **Dialoghi dinamici**: siccome le pagine si costruiscono al momento, i testi possono venire da variabili, da condizioni o da una grammatica di `GrammarBean`, come fanno già le notizie delle locande:
 

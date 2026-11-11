@@ -6,6 +6,7 @@ import com.threeamigos.foresta.intermezzi.ImmagineIntermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.StatoElemento;
 import com.threeamigos.foresta.ui.Area;
+import com.threeamigos.foresta.ui.DisposizioneDelloSchermo;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.Misura;
 import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
@@ -58,7 +59,8 @@ public class DisplayableCanvasIntermezzo implements SchermataIntermezzo {
 		this.width = width;
 		this.height = height;
 		this.testo = testo;
-		this.scena = new ScenaDellIntermezzo(width, height, this::misuraDi);
+		this.scena = new ScenaDellIntermezzo(width, height, DisposizioneDelloSchermo.dimensioniDellaScena(new MisureDelleImmaginiAwt(), LivelloDiZoom.valore()),
+				this::misuraDi);
 	}
 
 	/**
