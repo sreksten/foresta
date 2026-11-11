@@ -32,9 +32,14 @@ Versioni: Gradle 8.13, AGP 8.13.0, `compileSdk` 36 (libGDX 1.14 usa AndroidX e `
 
 È la «F» del titolo (`LogoForesta.png`, pixel art 39×62, in `foresta-android/icone-android/` insieme allo script che la trasforma) su fondo pergamena (#DEBD94), come icona adattiva (`mipmap-anydpi-v26`: sfondo a tinta unita e primo piano trasparente). `icone-android/genera_icone.py` ingrandisce la bitmap **senza interpolare** con un fattore intero (×1 mdpi, ×2 xhdpi, ×3 xxhdpi, ×4 xxxhdpi), sempre dentro l'area di sicurezza di 66 su 108 punti, e scrive i PNG in `app/src/main/res`. Per cambiarla: si sostituisce la bitmap (o il colore nello script) e si rilancia `python3 icone-android/genera_icone.py` (serve Pillow). Niente SVG: la pixel art con retinatura non si vettorializza senza perdere l'aspetto.
 
-## Stato (2026-11-06)
+## Stato (2026-11-11)
 
-Provato su un **Realme Pad (RMP2103)**: un tablet da 10,4″, 2000×1200, Android 11, MediaTek G80 / Mali-G52, 3 GB di RAM. Il gioco parte, gira a circa 60 fotogrammi al secondo e mostra l'intro con la barra delle icone verticale. Il tocco non è stato provato sistematicamente.
+Provato su due dispositivi:
+
+- **Realme Pad (RMP2103)** (2026-11-06): un tablet da 10,4″, 2000×1200, Android 11, MediaTek G80 / Mali-G52, 3 GB di RAM. Il gioco parte, gira a circa 60 fotogrammi al secondo e mostra l'intro con la barra delle icone verticale.
+- **Motorola Moto G 2014 LTE (XT1072, «thea»)** (2026-11-11): un telefono da 5″, 1280×720, Snapdragon 400 / Adreno 305, 1 GB di RAM (870 MB disponibili al sistema), con **LineageOS 14.1, Android 7.1.2 (API 25)**: la prima prova sotto Android 8, cioè del `minSdk` 24. Il gioco parte e mostra l'intro con il testo che scorre e la barra delle icone verticale; nel log nessun errore di API mancanti (`NoSuchMethodError`, `NoClassDefFoundError`, `VerifyError`). In memoria occupa circa 67 MB (PSS; 24 MB di heap Java, 23 MB di grafica). Il testo si legge bene; a destra resta una fascia nera, perché il 16:9 del telefono non corrisponde al rapporto che il gioco si aspetta. Il Moto G esce di fabbrica con Android 6.0 (API 23): per arrivare alla 7.1 si è sbloccato il bootloader (codice dal portale Motorola), si è installato TWRP 3.7.0 (`fastboot flash recovery`) e da lì la nightly ufficiale `lineage-14.1-20180224-nightly-thea-signed.zip` (copia su archive.org, `adb sideload`).
+
+Su nessuno dei due si sono provati sistematicamente il tocco o una partita intera.
 
 ## Osservazioni
 

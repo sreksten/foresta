@@ -15,6 +15,7 @@ sa che esiste.
 | `interfacce/StrumentiDiSviluppo` | contratti | Quello che la finestra può fare alla partita: personaggi, partenza delle missioni, oggetti dei cofani |
 | `motore/StrumentiDiSviluppoMotore` | motore | L'implementazione sul gruppo e sul registro delle missioni |
 | `ui/sviluppo/FinestraDiProva` | swing | La finestra a tab (personaggi, gruppo, statistiche, missioni, dadi); la crea `Main` solo in modalità di prova |
+| `ui/sviluppo/FinestraDelleOpzioniDiAvvio` | swing | Prima del gioco, se fra gli argomenti c'è `MODALITA_DI_PROVA` (solo `Main`, dal desktop): schermo (profili di `SchermoDiProva` o a misura), orientamento, lingua, zoom, tutto schermo, logo, barra, joystick, cartella del log, altri argomenti, e la modalità di prova stessa, che si può spegnere; sotto, la riga di comando equivalente. Il modello è `ui/ScelteDiAvvio` (modulo comune) |
 
 La finestra vede solo i contratti (`VistaPartita` per leggere, `StrumentiDiSviluppo` e `TrucchiDiSviluppo` per cambiare), come ogni
 altra parte della UI. `AvvioDelMotore` installa sempre `PilotaggioDelTutorial` come truccatore di `Dado`; se la modalità di prova è accesa gli passa `TrucchiDiSviluppo`, che ha la precedenza (il tutorial decide solo dove i trucchi della finestra non decidono) e apre la

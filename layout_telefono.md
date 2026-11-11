@@ -36,15 +36,23 @@ Le misure dei dispositivi sono quelle note al 2026-11 e vanno ricontrollate sui 
 | Profilo (§3) | Pixel | Densità | dp | Layout | Scala | Area virtuale | Testo |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | `MINIMO` | 800×480 | 1 | 800×480 | telefono | 0,95 | 842×505 | 390 |
+| `GALAXY_S2` (Galaxy S II) | 800×480 | 1,5 | 533×320 | telefono | 0,63 | 842×505 | 390 |
 | `ECONOMICO` (HD+, tipo Galaxy A05) | 1600×720 | 2 | 800×360 | telefono | 0,71 | 1122×505 | 670 |
 | `GALAXY_S24` | 2340×1080 | 3 | 780×360 | telefono | 0,71 | 1094×505 | 642 |
+| `GALAXY_M31` | 2340×1080 | 2,625 | 891×411 | telefono | 0,81 | 1094×505 | 642 |
 | `PIXEL_8` | 2400×1080 | 2,625 | 914×411 | telefono | 0,81 | 1122×505 | 670 |
 | `PIXEL_8_PRO` | 2992×1344 | 3 | 997×448 | telefono | 0,89 | 1124×505 | 672 |
 | `IPHONE_SE` | 1334×750 | 2 | 667×375 | telefono | 0,74 | 898×505 | 446 |
 | `IPHONE_15` | 2556×1179 | 3 | 852×393 | telefono | 0,78 | 1095×505 | 643 |
 | `IPHONE_15_PRO_MAX` | 2796×1290 | 3 | 932×430 | telefono | 0,85 | 1095×505 | 643 |
 | `REALME_PAD` | 2000×1200 | 1,5 | 1333×800 | tablet | 1,09 | 1094×732 | 642 |
+| `TABLET_ECONOMICO` (8″, 1280×800) | 1280×800 | 1 | 1280×800 | tablet | 1,09 | 1094×732 | 642 |
+| `TABLET_FULL_HD` (10″ Android) | 1920×1200 | 1,5 | 1280×800 | tablet | 1,09 | 1094×732 | 642 |
+| `IPAD_MINI` (8,3″) | 2266×1488 | 2 | 1133×744 | tablet | 1,02 | 1094×732 | 642 |
 | `IPAD` (Air 10,9″) | 2360×1640 | 2 | 1180×820 | tablet | 1,08 | 1094×732 | 642 |
+| `IPAD_PRO_13` | 2752×2064 | 2 | 1376×1032 | tablet | 1,26 | 1094×732 | 642 |
+| `PORTATILE_HD` | 1366×768 | 1 | 1366×768 | tablet | 1,05 | 1094×732 | 642 |
+| `FULL_HD` (monitor) | 1920×1080 | 1 | 1920×1080 | tablet | 1,48 | 1094×732 | 642 |
 
 Due cose si leggono dalla tabella:
 

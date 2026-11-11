@@ -28,15 +28,23 @@ class SceltaDelLayoutTest {
     @ParameterizedTest
     @CsvSource({
             "MINIMO, TELEFONO, 0.95, 842, 505",
+            "GALAXY_S2, TELEFONO, 0.63, 842, 505",
             "ECONOMICO, TELEFONO, 0.71, 1122, 505",
             "GALAXY_S24, TELEFONO, 0.71, 1094, 505",
+            "GALAXY_M31, TELEFONO, 0.81, 1094, 505",
             "PIXEL_8, TELEFONO, 0.81, 1122, 505",
             "PIXEL_8_PRO, TELEFONO, 0.89, 1124, 505",
             "IPHONE_SE, TELEFONO, 0.74, 898, 505",
             "IPHONE_15, TELEFONO, 0.78, 1095, 505",
             "IPHONE_15_PRO_MAX, TELEFONO, 0.85, 1095, 505",
             "REALME_PAD, TABLET, 1.09, 1094, 732",
+            "TABLET_ECONOMICO, TABLET, 1.09, 1094, 732",
+            "TABLET_FULL_HD, TABLET, 1.09, 1094, 732",
+            "IPAD_MINI, TABLET, 1.02, 1094, 732",
             "IPAD, TABLET, 1.08, 1094, 732",
+            "IPAD_PRO_13, TABLET, 1.26, 1094, 732",
+            "PORTATILE_HD, TABLET, 1.05, 1094, 732",
+            "FULL_HD, TABLET, 1.48, 1094, 732",
     })
     void laTabellaDegliSchermiDiProva(SchermoDiProva profilo, TipoDiLayout tipo, double scala, int larghezza, int altezza) {
         SceltaDelLayout scelta = SceltaDelLayout.per(profilo.getMisura(), misure, ZOOM);
