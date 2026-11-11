@@ -330,6 +330,35 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 		}
 	}
 
+	private void portaDavantiSeImpilato(BersaglioDelSuggerimento bersaglio) {
+		TipoFinestra finestra = finestraDelBersaglio(bersaglio);
+		if (finestra == null || !isRiquadroImpilato(finestra)) {
+			return;
+		}
+		List<TipoFinestra> impilati = riquadriImpilati();
+		if (impilati.get(impilati.size() - 1) != finestra) {
+			primoPiano(finestra);
+		}
+	}
+
+	/**
+	 * Il riquadro a cui punta un suggerimento, o null se punta ad altro
+	 */
+	private static TipoFinestra finestraDelBersaglio(BersaglioDelSuggerimento bersaglio) {
+		switch (bersaglio) {
+			case RIQUADRO_DEL_GRUPPO:
+				return TipoFinestra.STATO;
+			case RIQUADRO_DELLE_MISSIONI:
+				return TipoFinestra.MISSIONI;
+			case RIQUADRO_DELLA_MAPPA:
+				return TipoFinestra.MAPPA;
+			case RIQUADRO_DEGLI_INCANTESIMI_E_DELLE_POZIONI:
+				return TipoFinestra.INCANTESIMI_E_POZIONI;
+			default:
+				return null;
+		}
+	}
+
 	private int quotaDellImpilato(TipoFinestra finestra) {
 		return disposizione.quotaNellaPila(riquadriImpilati().indexOf(finestra));
 	}
@@ -1230,8 +1259,10 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	public Area getAreaDelBersaglio(BersaglioDelSuggerimento bersaglio) {
 		switch (bersaglio) {
 			case RIQUADRI:
-				return DisposizioneDelFumetto.unione(DisposizioneDelFumetto.unione(getArea(riquadroGruppo()), getArea(riquadroIncantesimiEPozioni())),
+				Area impilati = DisposizioneDelFumetto.unione(DisposizioneDelFumetto.unione(getArea(riquadroGruppo()), getArea(riquadroIncantesimiEPozioni())),
 						getArea(riquadroMissioni()));
+				// Sul telefono anche la mappa è nella pila
+				return disposizione.isTelefono() ? DisposizioneDelFumetto.unione(impilati, getArea(riquadroMappa())) : impilati;
 			case RIQUADRO_DEL_COMBATTIMENTO:
 				return getArea(riquadroCombattimento());
 			case RIQUADRO_DEL_GRUPPO:
@@ -1332,6 +1363,8 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 		if (tutor.isAperto() && !isTutorialVisibile()) {
 			tutor.chiudi();
 		}
+		// Un suggerimento che indica un riquadro della pila lo porta davanti: il bordo non deve circondare un riquadro coperto dagli altri
+		tutor.getFumetto().filter(f -> isSchermataDelSuggerimento(f.getSuggerimento())).ifPresent(f -> portaDavantiSeImpilato(f.getBersaglio()));
 		// Finiti gli annunci che il suggerimento aspettava, o tutto quel che teneva occupata la UI: il suggerimento può aprirsi. Lo si controlla PRIMA di
 		// dire all'Automa che la UI è libera: se no l'Automa parte subito con l'intermezzo (l'eremita, a fine locazione), la schermata cambia e il suggerimento
 		// (per esempio «hai trovato un oggetto») si apre solo dopo

@@ -173,4 +173,30 @@ class DisplayableCanvasTutorialTest {
 			com.threeamigos.foresta.ui.barra.ComandiPossibili.reimposta();
 		}
 	}
+
+	@Test
+	void sulTelefonoIlSuggerimentoSullaMappaLaPortaDavantiEBordaIlSuoPostoNellaPila() {
+		// Given: il layout del telefono più stretto, con la mappa nella pila (dietro alle missioni)
+		canvas = new DisplayableCanvas(com.threeamigos.foresta.tipi.TipoDiLayout.TELEFONO, com.threeamigos.foresta.tipi.Orientamento.VERTICALE, 842, 505,
+				true, new GestorePunteggiInMemoria(), new VistaPartitaMotore());
+		canvas.setSize(842, 505);
+		canvas.getSchermo().iniziaGioco();
+		SchermoDelGioco<?, ?, ?, ?> schermo = canvas.getSchermo();
+		java.util.List<com.threeamigos.foresta.tipi.TipoFinestra> pila = schermo.riquadriImpilati();
+		assertNotEquals(com.threeamigos.foresta.tipi.TipoFinestra.MAPPA, pila.get(pila.size() - 1), "all'inizio la mappa sta dietro");
+		// When: si apre il suggerimento del movimento e si va alla pagina che indica la mappa
+		schermo.getTutor().aggiorna(EnumSet.of(Situazione.ICONE_DI_MOVIMENTO_PRESENTI), SI);
+		schermo.pollicePremuto();
+		assertEquals(com.threeamigos.foresta.tipi.BersaglioDelSuggerimento.RIQUADRO_DELLA_MAPPA, schermo.getTutor().getFumetto().get().getBersaglio());
+		BufferedImage immagine = new BufferedImage(842, 505, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = immagine.createGraphics();
+		canvas.paint(g);
+		g.dispose();
+		// Then: la mappa è davanti, e il bordo è attorno al suo posto nella pila, largo quanto la cornice grande
+		pila = schermo.riquadriImpilati();
+		assertEquals(com.threeamigos.foresta.tipi.TipoFinestra.MAPPA, pila.get(pila.size() - 1));
+		Area bersaglio = schermo.getAreaDelBersaglio(com.threeamigos.foresta.tipi.BersaglioDelSuggerimento.RIQUADRO_DELLA_MAPPA);
+		assertEquals(schermo.getDisposizione().getGruppo().getLarghezza(), bersaglio.getLarghezza());
+		assertEquals(schermo.getDisposizione().quotaNellaPila(pila.size() - 1), bersaglio.getY());
+	}
 }
