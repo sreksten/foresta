@@ -93,6 +93,8 @@ public final class SchermataMappaGdx implements SchermataMappa {
 			}
 			String risorsa = tessera.getTipo() == TipoLocazione.BOSCO ? NomiDelleImmagini.tesseraDelBosco(tessera.getVariante())
 					: NomiDelleImmagini.tessera(tessera.getTipo());
+			// Le tessere hanno parti trasparenti: sotto c'è il nero
+			immagini.riempi(batch, x, y, larghezzaIcona, altezzaIcona, Color.BLACK);
 			immagini.disegna(batch, risorsa, x, y, zoom);
 			if (tessera.isVisitata()) {
 				immagini.riempi(batch, x, y, larghezzaIcona, altezzaIcona, new Color(0f, 0f, 0f, OSCURAMENTO_DELLE_VISITATE));

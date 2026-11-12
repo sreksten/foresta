@@ -38,6 +38,19 @@ public final class ImmaginiAwt {
 	 * L'immagine rovesciata orizzontalmente, pixel per pixel. Non è ancora compatibile con lo schermo: lo diventa
 	 * quando la costruisce MappaPersonaggioImmagine (vedi BufferedImageBuilder.ingrandisci).
 	 */
+	/**
+	 * L'immagine su fondo nero, senza più trasparenze: le tessere della mappa hanno parti trasparenti, e la mappa le vuole sul nero
+	 */
+	public static BufferedImage suFondoNero(BufferedImage immagine) {
+		BufferedImage risultato = new BufferedImage(immagine.getWidth(), immagine.getHeight(), BufferedImage.TYPE_INT_RGB);
+		java.awt.Graphics2D g = risultato.createGraphics();
+		g.setColor(java.awt.Color.BLACK);
+		g.fillRect(0, 0, immagine.getWidth(), immagine.getHeight());
+		g.drawImage(immagine, 0, 0, null);
+		g.dispose();
+		return risultato;
+	}
+
 	public static BufferedImage specchia(BufferedImage immagine) {
 		BufferedImage specchiata = new BufferedImage(immagine.getWidth(), immagine.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		java.awt.Graphics2D g = specchiata.createGraphics();

@@ -58,6 +58,8 @@ public final class RiquadroMappaGdx extends RiquadroMappa {
 		for (Tessera tessera : veduta.getTessere()) {
 			String risorsa = tessera.getTipo() == TipoLocazione.BOSCO ? NomiDelleImmagini.tesseraDelBosco(tessera.getVariante())
 					: NomiDelleImmagini.tessera(tessera.getTipo());
+			// Le tessere hanno parti trasparenti: sotto c'è il nero
+			immagini.riempi(batch, tessera.getX(), tessera.getY(), larghezzaIcona, altezzaIcona, Color.BLACK);
 			immagini.disegna(batch, risorsa, tessera.getX(), tessera.getY(), zoom);
 			if (tessera.isVisitata()) {
 				immagini.riempi(batch, tessera.getX(), tessera.getY(), larghezzaIcona, altezzaIcona, new Color(0f, 0f, 0f, OSCURAMENTO_DELLE_VISITATE));

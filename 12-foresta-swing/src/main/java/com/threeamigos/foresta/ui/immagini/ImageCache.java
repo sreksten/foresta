@@ -186,7 +186,7 @@ public class ImageCache {
 		mappa = new EnumMap<>(TipoLocazione.class);
 		mappaVariantiBosco = new BufferedImage[RISORSE_VARIANTI_BOSCO.length];
 		for (int i = 0; i < RISORSE_VARIANTI_BOSCO.length; i++) {
-			mappaVariantiBosco[i] = BufferedImageBuilder.buildBufferedImage(RISORSE_VARIANTI_BOSCO[i], zoom);
+			mappaVariantiBosco[i] = ImmaginiAwt.suFondoNero(BufferedImageBuilder.buildBufferedImage(RISORSE_VARIANTI_BOSCO[i], zoom));
 		}
 		// I nomi delle tessere sono nel modulo comune; quelle con la stessa tessera (i castelli, le città) condividono l'immagine
 		Map<String, BufferedImage> tessere = new HashMap<>();
@@ -195,7 +195,8 @@ public class ImageCache {
 			if (tipoLocazione == TipoLocazione.BOSCO) {
 				mappa.put(tipoLocazione, mappaVariantiBosco[0]);
 			} else if (risorsa != null) {
-				mappa.put(tipoLocazione, tessere.computeIfAbsent(risorsa, r -> BufferedImageBuilder.buildBufferedImage(r, zoom)));
+				// Le tessere hanno parti trasparenti: sulla mappa stanno sul nero
+				mappa.put(tipoLocazione, tessere.computeIfAbsent(risorsa, r -> ImmaginiAwt.suFondoNero(BufferedImageBuilder.buildBufferedImage(r, zoom))));
 			}
 		}
 		segnalino = BufferedImageBuilder.buildBufferedImage("mappa/Segnalino.png", zoom);
