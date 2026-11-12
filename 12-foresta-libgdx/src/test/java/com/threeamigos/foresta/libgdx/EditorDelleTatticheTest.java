@@ -205,4 +205,38 @@ class EditorDelleTatticheTest {
 		assertNull(menu.sceltaAlla(0, 0));
 		assertDoesNotThrow(() -> menu.elenco(null).getMassimoScorrimento(menu.getAltezzaInterna()));
 	}
+
+	/** Il contenuto della prima riga dell'elenco: quella della voce 1, con il numero, il nome e le icone */
+	private ContenutoDiColonna primaRiga() {
+		editor.colonnaCentrale();
+		return (ContenutoDiColonna) editor.quadro().elenco.elementiVisibili(1000, 0).get(0).getImmagine();
+	}
+
+	private static Elemento icona(ContenutoDiColonna riga, String risorsa) {
+		return riga.getElementi().stream().filter(e -> risorsa.equals(e.getRisorsa())).findFirst().orElseThrow(AssertionError::new);
+	}
+
+	@Test
+	void sulTelefonoIlNumeroSuGiuEIlCestinoDiUnaVoceSonoEquidistanti() {
+		editor.setIconeDistanziate(true);
+		ContenutoDiColonna riga = primaRiga();
+		Elemento numero = riga.getElementi().stream().filter(e -> e.getTipo() == Elemento.Tipo.TESTO && "1.".equals(e.getRighe().get(0)))
+				.findFirst().orElseThrow(AssertionError::new);
+		int fineDelNumero = numero.getX() + com.threeamigos.foresta.ui.testo.FontTool.getWidth(numero.getFont(), "1.");
+		// Le icone non sotto il mouse sono un poco più piccole del loro posto (un pixel per lato): i posti cominciano un pixel prima e sono due più larghi
+		Elemento su = icona(riga, NomiDelleImmagini.ICONA_SU);
+		Elemento giu = icona(riga, NomiDelleImmagini.ICONA_GIU);
+		Elemento cestino = icona(riga, NomiDelleImmagini.ICONA_ELIMINA);
+		int posto = su.getLarghezza() + 2;
+		int dalNumero = (su.getX() - 1) - fineDelNumero;
+		int fraSuEGiu = (giu.getX() - 1) - (su.getX() - 1 + posto);
+		int fraGiuECestino = (cestino.getX() - 1) - (giu.getX() - 1 + posto);
+		assertEquals(dalNumero, fraSuEGiu);
+		assertEquals(fraSuEGiu, fraGiuECestino);
+		assertTrue(fraSuEGiu > 20, "distanziati per il dito: " + fraSuEGiu);
+		// Senza, le icone stanno strette a destra
+		editor.setIconeDistanziate(false);
+		ContenutoDiColonna stretta = primaRiga();
+		assertTrue(icona(stretta, NomiDelleImmagini.ICONA_GIU).getX() - icona(stretta, NomiDelleImmagini.ICONA_SU).getX() < giu.getX() - su.getX());
+	}
 }

@@ -138,6 +138,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		bestiario = new DisplayableCanvasBestiario(larghezzaContenuto, altezzaContenuto, vistaPartita);
 		grimorio = new DisplayableCanvasGrimorio(larghezzaContenuto, altezzaContenuto);
 		tattiche = new DisplayableCanvasTattiche(larghezzaContenuto, altezzaContenuto, vistaPartita);
+		// Sul telefono il numero e le icone di una voce stanno distanziati, per il dito
+		tattiche.getEditor().setIconeDistanziate(disposizione.isTelefono());
 		commerciante = new DisplayableCanvasCommerciante(larghezzaContenuto, altezzaContenuto, vistaPartita);
 		alchimista = new DisplayableCanvasScambiatoreConsumabili(larghezzaContenuto, altezzaContenuto, vistaPartita);
 		incantatore = new DisplayableCanvasIncantatore(larghezzaContenuto, altezzaContenuto, vistaPartita);

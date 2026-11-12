@@ -196,6 +196,7 @@ Sono disegnate per l'area di oggi (1022×732): sul telefono l'altezza è 505. Un
 - **I titoli** delle cornici che non ci stanno fra le decorazioni degli angoli prendono la forma corta (`titoloDellaCornice`, chiavi `…_BREVE` nei testi della UI): «Personaggio», «Gruppo», «Armaiolo», «Venditore», «Alchimista», «Banco».
 - **I separatori** più larghi dello spazio mostrano la loro parte centrale, dove sta il motivo: quelli della colonna centrale e della testata del gruppo (`ContenutoDiColonna.Elemento.immagineCentrata`, una striscia dell'immagine) e quelli degli elenchi degli oggetti (`ElencoScorrevole.creaSeparatore` li centra; chi disegna ritaglia l'elenco).
 - Vale per l'inventario, le botteghe, l'incantatore, l'alchimista e le tattiche. Test: `CorniciStretteTest`.
+- **Le tattiche**, sul telefono: nella riga di una voce il numero (che la attiva), su, giù e il cestino stanno a distanze uguali dal bordo sinistro al destro, perché col dito si prendano senza sbagliare; il nome della voce, se non ci sta fra il numero e su, va sulla riga sotto (`EditorDelleTattiche.setIconeDistanziate`, acceso da Swing e libGDX sul solo telefono; test in `EditorDelleTatticheTest`).
 
 ## 7. La barra delle icone
 

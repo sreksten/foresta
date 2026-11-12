@@ -159,6 +159,8 @@ public final class EditorDelleTattiche {
 	}
 
 	private final SchermataDiScambio schermata;
+	// Sul telefono, nella riga di una voce, il numero, su, giù e il cestino stanno a distanze uguali su tutta la larghezza: col dito si prendono meglio
+	private boolean iconeDistanziate;
 	private final VistaPartita vistaPartita;
 	private final MisureDelleImmagini misure;
 	private final DoomdarkFont fontRiga = DoomdarkFont.medio();
@@ -605,6 +607,14 @@ public final class EditorDelleTattiche {
 	}
 
 	/**
+	 * Sul telefono (le dita sono grosse e lo schermo piccolo): nella riga di una voce il numero, su, giù e il cestino stanno a distanze uguali, dal bordo
+	 * sinistro al destro; il nome, se non ci sta fra il numero e su, va sotto
+	 */
+	public void setIconeDistanziate(boolean iconeDistanziate) {
+		this.iconeDistanziate = iconeDistanziate;
+	}
+
+	/**
 	 * Il posto dei pezzi: le icone a destra sulla prima linea, gli altri di seguito da sinistra (dopo l'indentazione) e a capo, con un po' di
 	 * rientro, quando non stanno più nella linea
 	 */
@@ -619,6 +629,9 @@ public final class EditorDelleTattiche {
 				token.x = xDestra;
 				token.linea = 0;
 			}
+		}
+		if (iconeDistanziate && riga.profondita == 0) {
+			xDestra = distanzia(riga, larghezzaRiga - SPAZIO_FRA_PEZZI);
 		}
 		int xInizio = riga.profondita * PROFONDITA_INDENTAZIONE;
 		int xSinistra = xInizio;
@@ -637,6 +650,33 @@ public final class EditorDelleTattiche {
 			xSinistra += token.larghezza + SPAZIO_FRA_PEZZI;
 		}
 		riga.linee = linea + 1;
+	}
+
+	/**
+	 * Nella riga di una voce, il numero (il primo pezzo, a sinistra) e le icone a destra a distanze uguali fino al bordo destro: le icone sono nella riga
+	 * da destra a sinistra (togli, giù, su). Dice dove comincia la prima icona, il limite della prima linea per i pezzi di sinistra.
+	 */
+	private int distanzia(Riga riga, int bordoDestro) {
+		List<Token> icone = new ArrayList<>();
+		int larghezzaIcone = 0;
+		for (Token token : riga.pezzi) {
+			if (token.adDestra) {
+				icone.add(token);
+				larghezzaIcone += token.larghezza;
+			}
+		}
+		Token numero = riga.pezzi.get(0);
+		if (icone.isEmpty() || numero.adDestra) {
+			return bordoDestro;
+		}
+		int spazio = Math.max(SPAZIO_FRA_PEZZI, (bordoDestro - numero.larghezza - larghezzaIcone) / icone.size());
+		int x = numero.larghezza;
+		for (int i = icone.size() - 1; i >= 0; i--) {
+			x += spazio;
+			icone.get(i).x = x;
+			x += icone.get(i).larghezza;
+		}
+		return icone.get(icone.size() - 1).x;
 	}
 
 	/**

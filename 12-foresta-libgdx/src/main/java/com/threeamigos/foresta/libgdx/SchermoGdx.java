@@ -127,6 +127,8 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 		bestiario = new SchermataBestiarioGdx(larghezza, altezza, vistaPartita, immagini, piccolo, medio);
 		grimorio = new SchermataGrimorioGdx(larghezza, altezza, immagini, piccolo, medio);
 		tattiche = new SchermataTatticheGdx(larghezza, altezza, vistaPartita, immagini, piccolo, medio);
+		// Sul telefono il numero e le icone di una voce stanno distanziati, per il dito
+		tattiche.getEditor().setIconeDistanziate(disposizione.isTelefono());
 		Area barra = disposizione.getBarra();
 		barraIcone = new BarraIconeGdx(disposizione.getOrientamento(), barraDock, barra.getX(), barra.getY(), barra.getLarghezza(),
 				barra.getAltezza(), vistaPartita, immagini, piccolo, medio);
