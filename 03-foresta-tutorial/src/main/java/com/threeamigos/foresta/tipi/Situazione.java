@@ -74,5 +74,7 @@ public enum Situazione {
 	/** Cala la notte e ci si può accampare (l'icona dell'accampamento è nella barra). */
 	NOTTE,
 	/** Si gioca con il dito (tocco) invece che con il mouse. */
-	DITO_SULLO_SCHERMO
+	DITO_SULLO_SCHERMO,
+	/** Sul telefono, nella locazione ci sono abbastanza personaggi da stare stretti: la pila dei riquadri si può spostare per fare spazio. */
+	LOCAZIONE_AFFOLLATA
 }

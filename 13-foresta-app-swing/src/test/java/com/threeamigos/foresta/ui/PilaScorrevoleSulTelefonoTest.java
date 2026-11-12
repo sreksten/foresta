@@ -148,6 +148,15 @@ class PilaScorrevoleSulTelefonoTest {
 	}
 
 	@Test
+	void conLaLocazioneAffollataIlTutorialSpiegaLaPilaEPuntaATuttaLaPila() {
+		schermo.getTutor().aggiorna(EnumSet.of(Situazione.LOCAZIONE_AFFOLLATA), s -> true);
+		assertEquals(com.threeamigos.foresta.tipi.TipoSuggerimento.PILA_SCORREVOLE, schermo.getTutor().getFumetto().get().getSuggerimento());
+		assertEquals(BersaglioDelSuggerimento.RIQUADRI, schermo.getTutor().getFumetto().get().getBersaglio());
+		Area pila = schermo.getAreaDelBersaglio(BersaglioDelSuggerimento.RIQUADRI);
+		assertEquals(schermo.getDisposizione().getColonnaDestraX(), pila.getX(), "il bordo circonda la pila, al suo posto");
+	}
+
+	@Test
 	void sulTabletLaPilaNonScorre() {
 		DisplayableCanvas tablet = new DisplayableCanvas(Orientamento.ORIZZONTALE, 1024, 768, false, new GestorePunteggiInMemoria(),
 				new VistaPartitaMotore());

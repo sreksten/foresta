@@ -88,6 +88,9 @@ public enum TipoSuggerimento {
 	// La prima volta che in una locanda qualcuno chiede di unirsi al gruppo: il motore lo dice (NotificaMessaggioDelTutorial) prima di chiedere sì o no.
 	// La prima pagina dice che entra nel gruppo per sempre, la seconda che le locande costano di più ma conviene lo stesso
 	COMPAGNO_IN_LOCANDA(Situazione.COMPAGNO_IN_LOCANDA, BersaglioDelSuggerimento.ICONE_SI_NO),
+	// Solo sul telefono, la prima volta che nella locazione si sta stretti: la pila dei riquadri si sposta a destra e lascia spazio (vedi
+	// layout_telefono.md §4.6). Punta alla pila
+	PILA_SCORREVOLE(Situazione.LOCAZIONE_AFFOLLATA, BersaglioDelSuggerimento.RIQUADRI),
 	ACCAMPAMENTO(Situazione.NOTTE, BersaglioDelSuggerimento.ICONA_DELL_ACCAMPAMENTO),
 	GESTI_SUL_TOCCO(Situazione.DITO_SULLO_SCHERMO, BersaglioDelSuggerimento.BARRA_DELLE_ICONE);
 

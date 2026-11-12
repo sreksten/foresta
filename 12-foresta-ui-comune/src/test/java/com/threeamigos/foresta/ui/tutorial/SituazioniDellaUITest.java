@@ -226,6 +226,18 @@ class SituazioniDellaUITest {
 	}
 
 	@Test
+	void laLocazioneAffollataLaDiceChiContaIPersonaggiESoloInGioco() {
+		SituazioniDellaUI ui = new SituazioniDellaUI();
+		ui.segnaLocazioneAffollata(true);
+		assertFalse(ui.correnti(Collections.<Comando>emptyList(), false, false, false).contains(Situazione.LOCAZIONE_AFFOLLATA),
+				"fuori dalla schermata di gioco no");
+		ui.segnaSchermataDiGioco();
+		assertTrue(ui.correnti(Collections.<Comando>emptyList(), false, false, false).contains(Situazione.LOCAZIONE_AFFOLLATA));
+		ui.segnaLocazioneAffollata(false);
+		assertFalse(ui.correnti(Collections.<Comando>emptyList(), false, false, false).contains(Situazione.LOCAZIONE_AFFOLLATA));
+	}
+
+	@Test
 	void uscendoDalGiocoSiRicomincia() {
 		SituazioniDellaUI ui = new SituazioniDellaUI();
 		ui.segnaSchermataDiGioco();

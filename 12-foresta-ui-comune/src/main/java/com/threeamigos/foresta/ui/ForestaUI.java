@@ -5,6 +5,7 @@ import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.eventi.richieste.*;
 import com.threeamigos.foresta.interfacce.VistaPartita;
+import com.threeamigos.foresta.interfacce.VistaGruppo;
 import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
@@ -48,6 +49,8 @@ public abstract class ForestaUI implements Temporizzabile {
 	/** Quanto resta la prima schermata dell'intro (loghi o classifica) prima che l'intro vada avanti da sola */
 	private static final int PRIMA_SCHERMATA_DELL_INTRO_MS = 5_000;
 
+	// Da quanti personaggi nella locazione, sul telefono, si sta stretti e il tutorial spiega che la pila dei riquadri si sposta
+	static final int PERSONAGGI_DI_UNA_LOCAZIONE_AFFOLLATA = 4;
 	protected final VistaPartita vistaPartita;
 	protected final Temporizzatore temporizzatore;
 	// Arrivano quando il toolkit ha finito di costruirli (durante il logo iniziale)
@@ -352,6 +355,7 @@ public abstract class ForestaUI implements Temporizzabile {
 		situazioni.segnaQualcunoCaduto(isQualcunoCaduto());
 		situazioni.segnaMovimentoSpiegato(RegistroSuggerimenti.isVisto(TipoSuggerimento.MOVIMENTO_E_MAPPA));
 		situazioni.segnaOggettoSpiegato(RegistroSuggerimenti.isVisto(TipoSuggerimento.OGGETTO_TROVATO));
+		situazioni.segnaLocazioneAffollata(schermo.getPilaScorrevole() != null && personaggiInLocazione() >= PERSONAGGI_DI_UNA_LOCAZIONE_AFFOLLATA);
 		boolean laMappa = schermata == StatoDelloSchermo.MAPPA;
 		situazioni.segnaLaSchermata(schermata, laMappa && schermo.mappaConJoystick(), laMappa && schermo.mappaPiuGrandeDelloSchermo());
 		boolean aperto = schermo.getTutor().aggiorna(situazioni.correnti(ComandiPossibili.getComandi(), missioneAttiva, schermo.getTutor().isDito(),
@@ -407,6 +411,25 @@ public abstract class ForestaUI implements Temporizzabile {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Quanti personaggi si vedono nella locazione: il gruppo e i suoi ospiti vivi, e gli avversari vivi
+	 */
+	private int personaggiInLocazione() {
+		int quanti = 0;
+		VistaGruppoGiocatore gruppo = vistaPartita.getGruppoGiocatore();
+		if (gruppo != null) {
+			quanti += gruppo.getPersonaggiVivi().size();
+			for (VistaPersonaggio ospite : gruppo.getOspiti()) {
+				quanti += ospite.isVivo() ? 1 : 0;
+			}
+		}
+		VistaGruppo avversari = vistaPartita.getGruppoAvversario();
+		if (avversari != null) {
+			quanti += avversari.getPersonaggiVivi().size();
+		}
+		return quanti;
 	}
 
 	private boolean isQualcunoFeritoConUnaPozione() {

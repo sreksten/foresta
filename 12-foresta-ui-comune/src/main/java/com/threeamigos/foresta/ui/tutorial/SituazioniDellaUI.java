@@ -42,6 +42,7 @@ public final class SituazioniDellaUI {
 	private boolean reazioneScatenata;
 	private boolean joystickSullaMappa;
 	private boolean mappaPiuGrandeDelloSchermo;
+	private boolean locazioneAffollata;
 	// I fatti che solo il motore conosce (vedi NotificaMessaggioDelTutorial): restano finché il loro suggerimento non è stato visto
 	private final Set<Situazione> dalMotore = EnumSet.noneOf(Situazione.class);
 
@@ -142,6 +143,13 @@ public final class SituazioniDellaUI {
 	 */
 	public synchronized void segnaReazioneScatenata() {
 		reazioneScatenata = true;
+	}
+
+	/**
+	 * Sul telefono, se nella locazione ci sono abbastanza personaggi da stare stretti (lo conta chi conosce la partita: vedi ForestaUI)
+	 */
+	public synchronized void segnaLocazioneAffollata(boolean affollata) {
+		locazioneAffollata = affollata;
 	}
 
 	/**
@@ -283,6 +291,9 @@ public final class SituazioniDellaUI {
 		}
 		if (dito) {
 			situazioni.add(Situazione.DITO_SULLO_SCHERMO);
+		}
+		if (locazioneAffollata) {
+			situazioni.add(Situazione.LOCAZIONE_AFFOLLATA);
 		}
 		situazioni.addAll(dalMotore);
 		return situazioni;

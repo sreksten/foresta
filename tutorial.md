@@ -86,6 +86,7 @@ Il tutorial è **un elenco di suggerimenti**, e **la UI decide quando mostrarli*
 | 13 | Prima città o bottega | Cosa si può comprare, vendere, incantare |
 | 14 | Prima notte | L'accampamento, e perché serve qualcuno di guardia |
 | 15 | Prima volta sul tocco | Gesti: tocco, doppio tocco, pressione prolungata, trascinamento (può anche scattare in anticipo, appena c'è il dito) |
+| 16 | **Solo sul telefono**, la prima volta che nella locazione ci sono almeno quattro personaggi vivi fra gruppo, ospiti e avversari (`Situazione.LOCAZIONE_AFFOLLATA`, che conta `ForestaUI` con `PERSONAGGI_DI_UNA_LOCAZIONE_AFFOLLATA`; `PILA_SCORREVOLE`, punta a tutta la pila) | Due pagine: che trascinando un riquadro a destra, o con la freccia blu, la pila si sposta e la locazione si allarga; che trascinandola a sinistra, o con la freccia, si riapre (`layout_telefono.md` §4.6) |
 
 Fuori dal tutorial: trofei, bestiario, intermezzi, il lessico di incantesimi e canti. Sono scoperte, non prerequisiti.
 
