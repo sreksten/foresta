@@ -87,7 +87,7 @@ public class RegistroIntermezzi {
 		for (TipoIntermezzo tipoIntermezzo : TipoIntermezzo.values()) {
 			Intermezzo intermezzo = FabbricaIntermezzi.crea(tipoIntermezzo);
 			if (intermezzo.isDiRipiego() == diRipiego && !getIntermezziMD().isScattato(intermezzo.getId())
-					&& !ripetibiliDelMomento.contains(intermezzo.getId()) && intermezzo.deveScattare(momento)) {
+					&& !ripetibiliDelMomento.contains(intermezzo.getId()) && !isBloccato(tipoIntermezzo) && intermezzo.deveScattare(momento)) {
 				return intermezzo;
 			}
 		}

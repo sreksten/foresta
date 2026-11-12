@@ -109,6 +109,11 @@ public final class SceltaDegliIncarichi {
 		if (pronti.size() == 1) {
 			return pronti.get(0);
 		}
+		for (InSorteggio incarico : pronti) {
+			if (incarico.haLaPrecedenza()) {
+				return incarico;
+			}
+		}
 		Set<MissionePredefinita> affidate = classiAffidateNelGiro(giroCorrente());
 		List<InSorteggio> nuovi = new ArrayList<>();
 		List<InSorteggio> giaAffidati = new ArrayList<>();

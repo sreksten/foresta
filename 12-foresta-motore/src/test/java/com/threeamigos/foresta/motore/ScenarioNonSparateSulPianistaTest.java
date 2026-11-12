@@ -3,6 +3,7 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.intermezzi.Locande;
+import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 
@@ -181,7 +182,7 @@ class ScenarioNonSparateSulPianistaTest {
     }
 
     @Test
-    void laLocandaDelRaccontoEDallaTerzaLocandaConosciutaAllaSecondaVisita() {
+    void ilPianistaPartiAllaTerzaLocandaAncheNuovaEIlBenvenutoSlittaAllaVisitaDopo() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(154)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
             NonSparateSulPianista pianista = pianista();
@@ -189,25 +190,30 @@ class ScenarioNonSparateSulPianistaTest {
             CoordinateMD nuova = unAltraLocandaNelBosco(prima);
             CoordinateMD citta = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_FLEENA);
             Foresta.getLocazioneMD(prima).aggiungiProprieta(Locande.LOCANDA_VISITE, "1");
-            Foresta.getLocazioneMD(citta).aggiungiProprieta(Locande.LOCANDA_VISITE, "1");
+
+            // La seconda locanda: ancora niente
+            Foresta.setPosizioneDelGruppo(nuova);
+            pianista.controllaPreLocazione();
+            assertFalse(pianista.staPerAffidareIlBardo());
 
             // In città la missione non parte, per quante visite ci siano
+            Foresta.getLocazioneMD(citta).aggiungiProprieta(Locande.LOCANDA_VISITE, "1");
             Foresta.setPosizioneDelGruppo(citta);
             pianista.controllaPreLocazione();
             assertFalse(pianista.isAttiva());
             assertNull(pianista.getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE));
 
-            // La terza locanda, alla prima visita: c'è il benvenuto della locanda, non il bardo
+            // La terza locanda, anche se nuova: il locandiere chiede del bardo, e il benvenuto non c'è
             Foresta.setPosizioneDelGruppo(nuova);
             pianista.controllaPreLocazione();
-            assertFalse(pianista.staPerAffidareIlBardo());
-            assertTrue(new IntermezzoLocandaPrimaVisita().deveScattare(MomentoIntermezzo.INIZIO_LOCAZIONE));
-
-            // Alla seconda visita il locandiere chiede del bardo, al posto della recensione della locanda
-            Foresta.getLocazioneMD(nuova).aggiungiProprieta(Locande.LOCANDA_VISITATA, com.threeamigos.foresta.modellodati.LocazioneMD.AFFERMATIVO);
-            Foresta.getLocazioneMD(nuova).aggiungiProprieta(Locande.LOCANDA_VISITE, "1");
-            pianista.controllaPreLocazione();
             assertTrue(pianista.staPerAffidareIlBardo());
+            assertFalse(new IntermezzoLocandaPrimaVisita().deveScattare(MomentoIntermezzo.INIZIO_LOCAZIONE));
+            for (com.threeamigos.foresta.tipi.TipoIntermezzo tipo : com.threeamigos.foresta.tipi.TipoIntermezzo.values()) {
+                assertTrue(RegistroIntermezzi.isBloccato(tipo), "nessun'altra scena: " + tipo);
+            }
+            // Il benvenuto slitta alla visita dopo, dove aspetta come la recensione
+            assertNotNull(Foresta.getLocazioneMD(nuova).ottieniProprieta(Locande.LOCANDA_BENVENUTO_RIMANDATO));
+            assertTrue(new IntermezzoLocandaPrimaVisita().isDiRipiego());
         }
     }
 

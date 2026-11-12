@@ -480,8 +480,8 @@ final class PartitaDiTest implements AutoCloseable {
 	}
 
 	/**
-	 * Il gruppo è già entrato nelle locande di due città: la prossima locanda nel bosco, dalla seconda visita, è una locanda del racconto
-	 * (vedi LocandaDelRacconto), dove si offrono Non sparate sul pianista, la leggenda del locandiere e le missioni del sacerdote.
+	 * Il gruppo è già entrato nelle locande di due città: la prossima locanda nel bosco è la terza, dove parte Non sparate sul pianista (vedi
+	 * LocandaDelRacconto.isTerzaLocanda).
 	 */
 	PartitaDiTest conosceAltreDueLocande() {
 		for (TipoLocazione citta : new TipoLocazione[] {TipoLocazione.CITTA_NYENA, TipoLocazione.CITTA_MALGAARD}) {

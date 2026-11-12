@@ -127,14 +127,14 @@ class ScenariDiPassoTest {
     @Test
     void ilBardoGiaAffidatoBloccaLaScenaDiBenvenuto() {
         NonSparateSulPianista bardo = registra(new NonSparateSulPianista(), "BARDO");
-        Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locande.LOCANDA_VISITE, "9");
+        // Una locanda nel bosco nuova: il locandiere chiede del bardo alla terza locanda, cioè se il gruppo è già entrato due volte in una locanda
         Foresta.setPosizioneDelGruppo(locanda);
-        // Il locandiere chiede del bardo in una locanda del racconto: il gruppo deve conoscere almeno altre due locande
-        assertFalse(LocandaDelRacconto.isQui());
-        for (TipoLocazione citta : new TipoLocazione[] {TipoLocazione.CITTA_NYENA, TipoLocazione.CITTA_MALGAARD}) {
-            Foresta.getLocazioneMD(Foresta.getCoordinateLocazioneUnica(citta)).aggiungiProprieta(Locande.LOCANDA_VISITE, "1");
-        }
-        assertTrue(LocandaDelRacconto.isQui());
+        assertFalse(LocandaDelRacconto.isTerzaLocanda());
+        Foresta.getLocazioneMD(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA)).aggiungiProprieta(Locande.LOCANDA_VISITE, "1");
+        assertFalse(LocandaDelRacconto.isTerzaLocanda(), "una visita sola, finora");
+        Foresta.getLocazioneMD(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_MALGAARD)).aggiungiProprieta(Locande.LOCANDA_VISITE, "1");
+        assertTrue(LocandaDelRacconto.isTerzaLocanda());
+        assertFalse(LocandaDelRacconto.isQui(), "la leggenda e i recuperi aspettano la seconda visita a questa locanda");
         // Qui si provano i passi del bardo, non la scelta fra le missioni pronte nella locanda del racconto
         SceltaDegliIncarichi.setSorteggioAttivo(false);
         bardo.controllaPreLocazione();

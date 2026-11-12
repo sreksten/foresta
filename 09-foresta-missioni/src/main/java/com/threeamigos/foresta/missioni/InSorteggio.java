@@ -25,4 +25,11 @@ public interface InSorteggio extends Missione {
 	 * Il giro in cui la missione è stata affidata (vedi SceltaDegliIncarichi), o -1 se non si è ancora offerta.
 	 */
 	int getGiro();
+
+	/**
+	 * Se, quando è pronta, deve partire lei e non un'altra estratta a sorte: Non sparate sul pianista, alla terza locanda.
+	 */
+	default boolean haLaPrecedenza() {
+		return false;
+	}
 }

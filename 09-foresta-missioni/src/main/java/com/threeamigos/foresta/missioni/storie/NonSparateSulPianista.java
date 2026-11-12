@@ -2,6 +2,8 @@ package com.threeamigos.foresta.missioni.storie;
 
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.mappa.Foresta;
+import com.threeamigos.foresta.modellodati.LocazioneMD;
+import com.threeamigos.foresta.intermezzi.Locande;
 
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -29,9 +31,8 @@ import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
- * Non sparate sul pianista: in una locanda del racconto (vedi LocandaDelRacconto: dalla terza locanda conosciuta, alla seconda visita a
- * una locanda nel bosco o dopo), a una visita tranquilla e se il sorteggio delle missioni sceglie lei (SceltaDegliIncarichi: in locanda
- * concorre con la leggenda del locandiere e le missioni del sacerdote), il locandiere chiede
+ * Non sparate sul pianista: alla terza locanda (vedi LocandaDelRacconto.isTerzaLocanda: una locanda nel bosco, nuova o no, quando il gruppo è
+ * già entrato due volte in una locanda), a una visita tranquilla, il locandiere chiede
  * di riportare a casa un bardo che ha preso una sbronza solenne e non si regge in piedi, nella città più vicina. Il
  * bardo viaggia con il gruppo come ospite, ma **non vulnerabile**: è così ubriaco che i mostri non si curano di lui, quindi
  * non viene attaccato e non può morire. Arrivati, sua moglie paga e se lo porta in casa. Se la città viene distrutta, la
@@ -39,8 +40,9 @@ import com.threeamigos.foresta.testi.Testi;
  * RegistroPersonaggi). Si fa una volta sola: finita, bene o male, non ne lascia una nuova (poi il bardo chiede un altro favore,
  * vedi IlViaggioDellaMoglie).
  * <ol>
- * <li>INCARICO, a inizio locazione, in una locanda del racconto: l'intermezzo con il locandiere, al posto della recensione della
- * locanda (IntermezzoLocandaVisitaSuccessiva, che è di ripiego);</li>
+ * <li>INCARICO, a inizio locazione, alla terza locanda: l'intermezzo con il locandiere, e nessun'altra scena in quella visita (il
+ * benvenuto di una locanda nuova slitta alla visita dopo, la recensione è di ripiego). Nel sorteggio delle missioni (SceltaDegliIncarichi)
+ * ha la precedenza sulla leggenda del locandiere e sulle missioni del sacerdote;</li>
  * <li>ACCETTAZIONE, in locazione, nella stessa locanda: il bardo si unisce al gruppo e la missione si ricorda la
  * città più vicina;</li>
  * <li>VIAGGIO, a inizio locazione, fino alla città;</li>
@@ -135,6 +137,11 @@ public class NonSparateSulPianista extends MissioneAPassi implements InSorteggio
 							Foresta.setLocazioneConosciuta(Foresta.getCoordinateLocazioneUnica(cittaPiuVicina()));
 							CoordinateMD locanda = Foresta.getPosizioneDelGruppo();
 							aggiungiProprieta(LOCANDA, locanda.getX() + "," + locanda.getY());
+							// In una locanda nuova la scena del locandiere prende il posto del benvenuto, che scatterà alla visita dopo
+							LocazioneMD qui = Foresta.getLocazioneMD(locanda);
+							if (qui.ottieniProprieta(Locande.LOCANDA_VISITATA) == null) {
+								qui.aggiungiProprieta(Locande.LOCANDA_BENVENUTO_RIMANDATO, LocazioneMD.AFFERMATIVO);
+							}
 						})
 						.conIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, () -> scenaDelLocandiere().getPagine())
 						.poi(ACCETTAZIONE);
@@ -203,7 +210,15 @@ public class NonSparateSulPianista extends MissioneAPassi implements InSorteggio
 	 */
 	@Override
 	public boolean isProntoPerOffrirsi() {
-		return LocandaDelRacconto.isQui() && cittaPiuVicina() != null && isVisitaTranquilla();
+		return LocandaDelRacconto.isTerzaLocanda() && cittaPiuVicina() != null && isVisitaTranquilla();
+	}
+
+	/**
+	 * Alla terza locanda parte il pianista, anche se sono pronte la leggenda del locandiere o una missione del sacerdote.
+	 */
+	@Override
+	public boolean haLaPrecedenza() {
+		return true;
 	}
 
 	@Override
@@ -218,20 +233,19 @@ public class NonSparateSulPianista extends MissioneAPassi implements InSorteggio
 	}
 
 	/**
-	 * Se il locandiere sta per affidare il bardo al gruppo in questa locanda, o l'ha appena fatto con la sua scena e il bardo
-	 * non si è ancora unito al gruppo (succede in locazione, dopo gli intermezzi di inizio locazione): la scena del primo
-	 * ingresso gli cede il posto (vedi IntermezzoLocandaPrimaVisita), e non scatta nemmeno dopo la sua, con il bardo
-	 * seduto nell'angolo.
-	 */
-	/**
-	 * Nella locanda in cui il locandiere sta per chiedere di riportare a casa il bardo, la sua scena fa da benvenuto: il bardo non
-	 * può essere anche seduto nell'angolo a raccontare la fiaba (vedi IntermezzoLocandaPrimaVisita).
+	 * Nella locanda in cui il locandiere sta per affidare il bardo al gruppo, o l'ha appena fatto e il bardo non si è ancora unito al gruppo,
+	 * c'è solo la sua scena: nessun'altra (il benvenuto di una locanda nuova, con il bardo seduto nell'angolo a raccontare la fiaba, slitta
+	 * alla visita dopo; vedi IntermezzoLocandaPrimaVisita).
 	 */
 	@Override
 	public boolean bloccaIntermezzo(TipoIntermezzo tipo) {
-		return tipo == TipoIntermezzo.INTERMEZZO_LOCANDA_PRIMA_VISITA && staPerAffidareIlBardo();
+		return staPerAffidareIlBardo();
 	}
 
+	/**
+	 * Se il locandiere sta per affidare il bardo al gruppo in questa locanda, o l'ha appena fatto con la sua scena e il bardo non si è ancora
+	 * unito al gruppo (succede in locazione, dopo gli intermezzi di inizio locazione).
+	 */
 	public boolean staPerAffidareIlBardo() {
 		return INCARICO.equals(getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE))
 				|| (ACCETTAZIONE.equals(getPassoCorrente()) && nellaLocanda());

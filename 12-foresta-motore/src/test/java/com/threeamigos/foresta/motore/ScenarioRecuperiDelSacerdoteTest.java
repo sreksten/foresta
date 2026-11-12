@@ -187,7 +187,7 @@ class ScenarioRecuperiDelSacerdoteTest {
     }
 
     @Test
-    void inLocandaSiOffronoSoloDallaTerzaLocandaConosciutaEDallaSecondaVisita() {
+    void inLocandaSiOffronoDallaSecondaVisitaDopoIlBenvenuto() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(406)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, partita::rimandaLeMissioniCheSiOffrono);
             CoordinateMD locanda = null;
@@ -200,14 +200,13 @@ class ScenarioRecuperiDelSacerdoteTest {
             }
             assertNotNull(locanda, "una locanda nel bosco");
             Foresta.setPosizioneDelGruppo(locanda);
-            Foresta.getLocazioneMD(locanda).aggiungiProprieta(com.threeamigos.foresta.intermezzi.Locande.LOCANDA_VISITE, "1");
-            assertFalse(LocandaDelRacconto.isQui(), "è la prima locanda che il gruppo conosce");
-            for (TipoLocazione citta : new TipoLocazione[] {TipoLocazione.CITTA_MALGAARD, TipoLocazione.CITTA_RUUNA}) {
-                Foresta.getLocazioneMD(Foresta.getCoordinateLocazioneUnica(citta)).aggiungiProprieta(com.threeamigos.foresta.intermezzi.Locande.LOCANDA_VISITE, "1");
-            }
-            assertTrue(LocandaDelRacconto.isQui(), "la terza locanda, alla seconda visita");
             Foresta.getLocazioneMD(locanda).aggiungiProprieta(com.threeamigos.foresta.intermezzi.Locande.LOCANDA_VISITE, "0");
             assertFalse(LocandaDelRacconto.isQui(), "alla prima visita c'è il benvenuto della locanda");
+            Foresta.getLocazioneMD(locanda).aggiungiProprieta(com.threeamigos.foresta.intermezzi.Locande.LOCANDA_VISITE, "1");
+            assertTrue(LocandaDelRacconto.isQui(), "alla seconda visita");
+            // Se alla prima visita c'era il pianista, il benvenuto è rimandato: alla seconda c'è lui, e il racconto aspetta
+            Foresta.getLocazioneMD(locanda).aggiungiProprieta(com.threeamigos.foresta.intermezzi.Locande.LOCANDA_BENVENUTO_RIMANDATO, "S");
+            assertFalse(LocandaDelRacconto.isQui(), "prima il benvenuto rimandato");
         }
     }
 }

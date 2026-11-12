@@ -6,6 +6,7 @@ import com.threeamigos.foresta.intermezzi.Locande;
 import com.threeamigos.foresta.mappa.Foresta;
 
 import com.threeamigos.foresta.intermezzi.Intermezzo;
+import com.threeamigos.foresta.intermezzi.IntermezzoLocandaPrimaVisita;
 import com.threeamigos.foresta.intermezzi.IntermezzoLocandaVisitaSuccessiva;
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.RegistroIntermezzi;
@@ -191,12 +192,17 @@ class ScenarioIlViaggioDellaMoglieTest {
             assertNotNull(primo);
             assertFalse(primo instanceof IntermezzoLocandaVisitaSuccessiva, "la visita successiva dovrebbe aspettare: " + primo.getId());
 
-            // Mostrato quello del viaggio, nella visita seguente non c'è altro e la visita successiva si vede
+            // Mostrato quello del viaggio, nella visita seguente non c'è altro: si vede il benvenuto, rimandato perché alla prima visita c'era il
+            // pianista; e alla visita dopo ancora la recensione
             viaggio.segnaIntermezzoPassoMostrato("INCARICO");
             RegistroIntermezzi.nuovoMomento();
             Intermezzo dopo = RegistroIntermezzi.getProssimoIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE);
             assertNotNull(dopo);
-            assertInstanceOf(IntermezzoLocandaVisitaSuccessiva.class, dopo, String.valueOf(dopo.getId()));
+            assertInstanceOf(IntermezzoLocandaPrimaVisita.class, dopo, String.valueOf(dopo.getId()));
+            dopo.segnaScattato();
+            RegistroIntermezzi.nuovoMomento();
+            Intermezzo ancoraDopo = RegistroIntermezzi.getProssimoIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE);
+            assertInstanceOf(IntermezzoLocandaVisitaSuccessiva.class, ancoraDopo, String.valueOf(ancoraDopo == null ? null : ancoraDopo.getId()));
         }
     }
 }

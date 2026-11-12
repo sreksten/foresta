@@ -23,6 +23,11 @@ public final class Locande {
 	 */
 	public static final String LOCANDA_VISITE = "LOCANDA_VISITE";
 	/**
+	 * Segnata sulla casella di una locanda nuova quando, alla prima visita, la scena di una missione prende il posto del benvenuto (Non sparate
+	 * sul pianista, alla terza locanda): il benvenuto scatta alla visita dopo (vedi IntermezzoLocandaPrimaVisita).
+	 */
+	public static final String LOCANDA_BENVENUTO_RIMANDATO = "LOCANDA_BENVENUTO_RIMANDATO";
+	/**
 	 * Identificativo, recensione e dialogo della locanda, pescati quando la locanda viene costruita (vedi Locanda).
 	 */
 	public static final String LOCANDA_IDENTIFICATIVO = "LOCANDA_IDENTIFICATIVO";

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.intermezzi;
 
+import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.tipi.MomentoIntermezzo;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
@@ -18,7 +19,9 @@ import java.util.stream.Collectors;
 /**
  * Intermezzo per i checkpoint {@link MomentoIntermezzo#INIZIO_LOCAZIONE} (locanda nel
  * bosco) e {@link MomentoIntermezzo#INGRESSO_LOCANDA_IN_CITTA} (locanda in città): scatta
- * alla prima visita del gruppo a una locanda non ancora visitata. Il gruppo entra in scena
+ * alla prima visita del gruppo a una locanda non ancora visitata, o alla visita dopo se alla prima la scena di una missione ha preso il suo
+ * posto ({@link Locande#LOCANDA_BENVENUTO_RIMANDATO}: Non sparate sul pianista, alla terza locanda); rimandato, è di ripiego come la
+ * recensione, e se all'ingresso c'è la scena di una missione aspetta ancora. Il gruppo entra in scena
  * camminando verso il centro (capo in testa), un bardo saluta con "C'era una volta...",
  * il locandiere lo zittisce e pronuncia il dialogo di benvenuto specifico di quella
  * locanda.
@@ -67,14 +70,30 @@ public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 				+ (identificativo == null ? "" : "_" + identificativo);
 	}
 
+	/**
+	 * Il benvenuto rimandato aspetta come la recensione: scatta solo se in quell'ingresso non c'è la scena di una missione (una per visita).
+	 */
 	@Override
+	public boolean isDiRipiego() {
+		// Il registro lo chiede a ogni controllo, anche fuori dalle locande e prima che il gruppo sia sulla mappa
+		if (Foresta.getPosizioneDelGruppo() == null || Foresta.getLocazioneDelGruppo() == null) {
+			return false;
+		}
+		LocazioneMD locazioneMD = Locande.getLocazioneMDLocandaCorrente();
+		return locazioneMD != null && locazioneMD.ottieniProprieta(Locande.LOCANDA_BENVENUTO_RIMANDATO) != null;
+	}
+
+		@Override
 	public boolean deveScattare(MomentoIntermezzo momento) {
 		if (!Locande.momentoCoerenteConLocazioneCorrente(momento)) {
 			return false;
 		}
 		LocazioneMD locazioneMD = Locande.getLocazioneMDLocandaCorrente();
 		// Il momento è coerente con la locazione: una locanda o una città, che hanno sempre i loro dati
-		return locazioneMD.ottieniProprieta(Locande.LOCANDA_VISITATA) == null && !RegistroIntermezzi.isBloccato(TipoIntermezzo.INTERMEZZO_LOCANDA_PRIMA_VISITA);
+		// Che il benvenuto rimandato sia già scattato lo ricorda il registro, dal suo identificativo (getId)
+		boolean daFare = locazioneMD.ottieniProprieta(Locande.LOCANDA_VISITATA) == null
+				|| locazioneMD.ottieniProprieta(Locande.LOCANDA_BENVENUTO_RIMANDATO) != null;
+		return daFare && !RegistroIntermezzi.isBloccato(TipoIntermezzo.INTERMEZZO_LOCANDA_PRIMA_VISITA);
 	}
 
 	/**
