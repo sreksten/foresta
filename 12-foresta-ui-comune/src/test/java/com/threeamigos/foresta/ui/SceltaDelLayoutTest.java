@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.tipi.Orientamento;
+import com.threeamigos.foresta.tipi.PosizioneDellaBarra;
 import com.threeamigos.foresta.tipi.SchermoDiProva;
 import com.threeamigos.foresta.tipi.TipoDiLayout;
 import com.threeamigos.foresta.ui.immagini.MisureDaiFile;
@@ -25,33 +26,57 @@ class SceltaDelLayoutTest {
         assertEquals(505, minimo.altezza);
     }
 
+    /**
+     * Senza una scelta del giocatore: il tablet con la barra in basso se ci sta (1022x804), altrimenti a destra (1094x732); il telefono a destra
+     */
     @ParameterizedTest
     @CsvSource({
-            "MINIMO, TELEFONO, 0.95, 842, 505",
-            "GALAXY_S2, TELEFONO, 0.63, 842, 505",
-            "ECONOMICO, TELEFONO, 0.71, 1122, 505",
-            "GALAXY_S24, TELEFONO, 0.71, 1094, 505",
-            "GALAXY_M31, TELEFONO, 0.81, 1094, 505",
-            "PIXEL_8, TELEFONO, 0.81, 1122, 505",
-            "PIXEL_8_PRO, TELEFONO, 0.89, 1124, 505",
-            "IPHONE_SE, TELEFONO, 0.74, 898, 505",
-            "IPHONE_15, TELEFONO, 0.78, 1095, 505",
-            "IPHONE_15_PRO_MAX, TELEFONO, 0.85, 1095, 505",
-            "REALME_PAD, TABLET, 1.09, 1094, 732",
-            "TABLET_ECONOMICO, TABLET, 1.09, 1094, 732",
-            "TABLET_FULL_HD, TABLET, 1.09, 1094, 732",
-            "IPAD_MINI, TABLET, 1.02, 1094, 732",
-            "IPAD, TABLET, 1.08, 1094, 732",
-            "IPAD_PRO_13, TABLET, 1.26, 1094, 732",
-            "PORTATILE_HD, TABLET, 1.05, 1094, 732",
-            "FULL_HD, TABLET, 1.48, 1094, 732",
+            "MINIMO, TELEFONO, DESTRA, 0.95, 842, 505",
+            "GALAXY_S2, TELEFONO, DESTRA, 0.63, 842, 505",
+            "ECONOMICO, TELEFONO, DESTRA, 0.71, 1122, 505",
+            "GALAXY_S24, TELEFONO, DESTRA, 0.71, 1094, 505",
+            "GALAXY_M31, TELEFONO, DESTRA, 0.81, 1094, 505",
+            "PIXEL_8, TELEFONO, DESTRA, 0.81, 1122, 505",
+            "PIXEL_8_PRO, TELEFONO, DESTRA, 0.89, 1124, 505",
+            "IPHONE_SE, TELEFONO, DESTRA, 0.74, 898, 505",
+            "IPHONE_15, TELEFONO, DESTRA, 0.78, 1095, 505",
+            "IPHONE_15_PRO_MAX, TELEFONO, DESTRA, 0.85, 1095, 505",
+            "REALME_PAD, TABLET, DESTRA, 1.09, 1094, 732",
+            "TABLET_ECONOMICO, TABLET, DESTRA, 1.09, 1094, 732",
+            "TABLET_FULL_HD, TABLET, DESTRA, 1.09, 1094, 732",
+            "IPAD_MINI, TABLET, DESTRA, 1.02, 1094, 732",
+            "IPAD, TABLET, BASSO, 1.02, 1022, 804",
+            "IPAD_PRO_13, TABLET, BASSO, 1.28, 1022, 804",
+            "PORTATILE_HD, TABLET, DESTRA, 1.05, 1094, 732",
+            "FULL_HD, TABLET, BASSO, 1.34, 1022, 804",
     })
-    void laTabellaDegliSchermiDiProva(SchermoDiProva profilo, TipoDiLayout tipo, double scala, int larghezza, int altezza) {
+    void laTabellaDegliSchermiDiProva(SchermoDiProva profilo, TipoDiLayout tipo, PosizioneDellaBarra barra, double scala, int larghezza, int altezza) {
         SceltaDelLayout scelta = SceltaDelLayout.per(profilo.getMisura(), misure, ZOOM);
         assertEquals(tipo, scelta.getTipo());
+        assertEquals(barra == PosizioneDellaBarra.BASSO ? Orientamento.ORIZZONTALE : Orientamento.VERTICALE, scelta.getOrientamento());
+        assertFalse(scelta.isBarraASinistra());
         assertEquals(scala, scelta.getScala(), 0.005);
         assertEquals(larghezza, scelta.getAreaVirtuale().larghezza);
         assertEquals(altezza, scelta.getAreaVirtuale().altezza);
+    }
+
+    @Test
+    void laBarraVaDoveLaVuoleIlGiocatoreSeCiSta() {
+        // Sul tablet grande: a sinistra e a destra di lato, in basso in basso
+        SceltaDelLayout aSinistra = SceltaDelLayout.per(SchermoDiProva.IPAD.getMisura(), misure, ZOOM, PosizioneDellaBarra.SINISTRA);
+        assertEquals(Orientamento.VERTICALE, aSinistra.getOrientamento());
+        assertTrue(aSinistra.isBarraASinistra());
+        SceltaDelLayout aDestra = SceltaDelLayout.per(SchermoDiProva.IPAD.getMisura(), misure, ZOOM, PosizioneDellaBarra.DESTRA);
+        assertEquals(Orientamento.VERTICALE, aDestra.getOrientamento());
+        assertFalse(aDestra.isBarraASinistra());
+        assertTrue(SceltaDelLayout.barraInBassoPossibile(SchermoDiProva.IPAD.getMisura(), misure, ZOOM));
+        // Sul telefono e sul tablet basso la barra in basso non c'è: va a destra
+        SceltaDelLayout telefono = SceltaDelLayout.per(SchermoDiProva.GALAXY_S24.getMisura(), misure, ZOOM, PosizioneDellaBarra.BASSO);
+        assertEquals(Orientamento.VERTICALE, telefono.getOrientamento());
+        assertFalse(SceltaDelLayout.barraInBassoPossibile(SchermoDiProva.GALAXY_S24.getMisura(), misure, ZOOM));
+        assertFalse(SceltaDelLayout.barraInBassoPossibile(SchermoDiProva.REALME_PAD.getMisura(), misure, ZOOM));
+        // A sinistra anche sul telefono
+        assertTrue(SceltaDelLayout.per(SchermoDiProva.MINIMO.getMisura(), misure, ZOOM, PosizioneDellaBarra.SINISTRA).isBarraASinistra());
     }
 
     @Test

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.libgdx;
 
+import com.threeamigos.foresta.ui.barra.ComandiPossibili;
+import com.threeamigos.foresta.tipi.PosizioneDellaBarra;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
@@ -46,7 +48,12 @@ import com.threeamigos.foresta.ui.testo.DoomdarkFont;
  */
 public final class ForestaLibGDX extends ForestaUI implements ApplicationListener {
 
-	private final Orientamento orientamento;
+	// Dove sta la barra, e lo schermo per cui si sceglie il layout (quello simulato con SCHERMO= sul desktop, quello vero su Android e iOS; null sul
+	// desktop di sempre): cambiano se il giocatore sposta la barra dalle opzioni (vedi scegliLaDisposizione)
+	private PosizioneDellaBarra posizione;
+	private MisuraDelloSchermo misuraDelloSchermo;
+	private Orientamento orientamento;
+	private boolean barraASinistra;
 	private final EsecutoreGdx esecutore;
 	private final ControlloreDiGioco controlloreDiGioco;
 	private final GestorePunteggi gestorePunteggi;
@@ -54,10 +61,12 @@ public final class ForestaLibGDX extends ForestaUI implements ApplicationListene
 	private final boolean joystickVirtuale;
 	private final boolean saltaLogo;
 	private final boolean toccoRichiesto;
-	// La risoluzione virtuale e il layout: dalla scelta data, o sul telefono e sul tablet dalla misura vera dello schermo, in create()
+	// La risoluzione virtuale e il layout: dalla misura dello schermo (simulato, o vero sul telefono e sul tablet), in create()
 	private Misura dimensioni;
-	private TipoDiLayout tipoDiLayout;
-	private final boolean sceltaData;
+	private TipoDiLayout tipoDiLayout = TipoDiLayout.TABLET;
+	private boolean tocco;
+	// Come togliere le iscrizioni al bus che ha fatto lo schermo: servono quando lo si rifà, con la barra da un'altra parte
+	private java.util.List<Runnable> iscrizioniDelloSchermo = java.util.Collections.emptyList();
 
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
@@ -72,7 +81,10 @@ public final class ForestaLibGDX extends ForestaUI implements ApplicationListene
 	private LogoInizialeGdx logoIniziale;
 
 	/**
-	 * @param orientamento      dove sta la barra delle icone: in fondo (orizzontale) o sul lato destro (verticale, per i telefoni)
+	 * @param posizione         dove sta la barra (dagli argomenti o dalle opzioni), o null per lasciarlo decidere: in basso sul desktop e sul tablet se
+	 *                          ci sta, a destra sul telefono
+	 * @param schermoDiProva    lo schermo simulato con SCHERMO= sul desktop, o null: il layout si sceglie per lui (e su Android e iOS per lo schermo
+	 *                          vero, in create)
 	 * @param esecutore         il thread principale che il punto d'ingresso ha dato al motore (ThreadPrincipale): parte in create
 	 * @param controlloreDiGioco l'automa, da avvisare quando l'applicazione va in background e torna in primo piano
 	 * @param gestorePunteggi   la classifica da mostrare nell'intro (la stessa che riceve l'Automa)
@@ -83,25 +95,13 @@ public final class ForestaLibGDX extends ForestaUI implements ApplicationListene
 	 * @param saltaLogo         vero per non mostrare il logo iniziale (per esempio nelle partite di prova)
 	 * @param toccoRichiesto    vero per trattare anche il mouse come un dito (per provare i gesti sul desktop); sui telefoni il dito c'è comunque
 	 */
-	public ForestaLibGDX(Orientamento orientamento, EsecutoreGdx esecutore, ControlloreDiGioco controlloreDiGioco, GestorePunteggi gestorePunteggi, VistaPartita vistaPartita,
-						 Temporizzatore temporizzatore, boolean barraDock, boolean joystickVirtuale, boolean saltaLogo, boolean toccoRichiesto) {
-		this(orientamento, null, esecutore, controlloreDiGioco, gestorePunteggi, vistaPartita, temporizzatore, barraDock, joystickVirtuale, saltaLogo,
-				toccoRichiesto);
-	}
-
-	/**
-	 * @param scelta il layout per lo schermo vero o simulato (vedi SceltaDelLayout): la risoluzione virtuale è la sua area, e il FitViewport la fa
-	 *               entrare nella finestra; null per il layout di sempre sul desktop, e su Android e iOS per sceglierlo all'avvio dalla misura vera
-	 *               dello schermo (vedi {@link #sceltaDelloSchermoVero()})
-	 */
-	public ForestaLibGDX(Orientamento orientamento, SceltaDelLayout scelta, EsecutoreGdx esecutore, ControlloreDiGioco controlloreDiGioco,
+	public ForestaLibGDX(PosizioneDellaBarra posizione, MisuraDelloSchermo schermoDiProva, EsecutoreGdx esecutore, ControlloreDiGioco controlloreDiGioco,
 						 GestorePunteggi gestorePunteggi, VistaPartita vistaPartita, Temporizzatore temporizzatore, boolean barraDock,
 						 boolean joystickVirtuale, boolean saltaLogo, boolean toccoRichiesto) {
 		super(vistaPartita, temporizzatore);
-		this.orientamento = orientamento;
-		this.dimensioni = scelta != null ? scelta.getAreaVirtuale() : dimensioniDelloSchermo(orientamento);
-		this.tipoDiLayout = scelta != null ? scelta.getTipo() : TipoDiLayout.TABLET;
-		this.sceltaData = scelta != null;
+		this.posizione = posizione;
+		this.misuraDelloSchermo = schermoDiProva;
+		scegliLaDisposizione();
 		this.esecutore = esecutore;
 		this.controlloreDiGioco = controlloreDiGioco;
 		this.gestorePunteggi = gestorePunteggi;
@@ -120,43 +120,67 @@ public final class ForestaLibGDX extends ForestaUI implements ApplicationListene
 	}
 
 	/**
-	 * Sul telefono e sul tablet il layout si sceglie dallo schermo vero (layout_telefono.md §3.3): la superficie su cui libGDX disegna, che con il
-	 * modo immersivo è lo schermo senza le barre di sistema e senza il notch, e la densità del dispositivo. Null sul desktop, dove resta il layout di
-	 * sempre (o quello di SCHERMO=).
+	 * La finestra sul desktop per la barra in quella posizione (in basso, se null), senza uno schermo simulato
 	 */
-	private static SceltaDelLayout sceltaDelloSchermoVero() {
-		Application.ApplicationType tipo = Gdx.app.getType();
-		if (tipo != Application.ApplicationType.Android && tipo != Application.ApplicationType.iOS) {
-			return null;
+	public static Misura dimensioniPerIlDesktop(PosizioneDellaBarra posizione) {
+		return dimensioniDelloSchermo(posizione == null || posizione == PosizioneDellaBarra.BASSO ? Orientamento.ORIZZONTALE : Orientamento.VERTICALE);
+	}
+
+	/**
+	 * Il layout, l'orientamento della barra e la risoluzione virtuale: per lo schermo che si conosce (simulato o vero) li sceglie SceltaDelLayout, con
+	 * la barra dove la vuole il giocatore se ci sta; sul desktop di sempre la barra va dove dice la posizione (in basso, se non dice niente)
+	 */
+	private void scegliLaDisposizione() {
+		if (misuraDelloSchermo != null) {
+			SceltaDelLayout scelta = SceltaDelLayout.per(misuraDelloSchermo, new MisureDaiFile(), LivelloDiZoom.valore(), posizione);
+			Logger.log(() -> "Schermo " + misuraDelloSchermo + ": " + scelta);
+			dimensioni = scelta.getAreaVirtuale();
+			tipoDiLayout = scelta.getTipo();
+			orientamento = scelta.getOrientamento();
+			barraASinistra = scelta.isBarraASinistra();
+		} else {
+			dimensioni = dimensioniPerIlDesktop(posizione);
+			tipoDiLayout = TipoDiLayout.TABLET;
+			orientamento = posizione == null || posizione == PosizioneDellaBarra.BASSO ? Orientamento.ORIZZONTALE : Orientamento.VERTICALE;
+			barraASinistra = posizione == PosizioneDellaBarra.SINISTRA;
 		}
-		MisuraDelloSchermo schermo = new MisuraDelloSchermo(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Gdx.graphics.getDensity());
-		SceltaDelLayout scelta = SceltaDelLayout.per(schermo, new MisureDaiFile(), LivelloDiZoom.valore());
-		Logger.log(() -> "Schermo " + schermo + ": " + scelta);
-		return scelta;
 	}
 
 	@Override
 	public void create() {
 		esecutore.avviato();
-		SceltaDelLayout scelta = sceltaData ? null : sceltaDelloSchermoVero();
-		if (scelta != null) {
-			dimensioni = scelta.getAreaVirtuale();
-			tipoDiLayout = scelta.getTipo();
+		// Sul telefono e sul tablet il layout si sceglie dallo schermo vero (layout_telefono.md §3.3): la superficie su cui libGDX disegna, che con il
+		// modo immersivo è lo schermo senza le barre di sistema e senza il notch, e la densità del dispositivo
+		Application.ApplicationType tipo = Gdx.app.getType();
+		if (misuraDelloSchermo == null && (tipo == Application.ApplicationType.Android || tipo == Application.ApplicationType.iOS)) {
+			misuraDelloSchermo = new MisuraDelloSchermo(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Gdx.graphics.getDensity());
+			scegliLaDisposizione();
 		}
-		camera = new OrthographicCamera();
-		// L'asse y verso il basso, come Swing: le coordinate di riquadri e schermate si riusano tali e quali
-		camera.setToOrtho(true, dimensioni.larghezza, dimensioni.altezza);
-		viewport = new FitViewport(dimensioni.larghezza, dimensioni.altezza, camera);
 		batch = new SpriteBatchDiPrecisioneAltaGdx();
 		immagini = new ImmaginiGdx();
 		piccolo = new TestoGdx(DoomdarkFont.piccolo());
 		medio = new TestoGdx(DoomdarkFont.medio());
-		DisposizioneDelloSchermo disposizione = new DisposizioneDelloSchermo(tipoDiLayout, orientamento, dimensioni.larghezza, dimensioni.altezza,
-				new MisureDaiFile(), LivelloDiZoom.valore());
-		schermo = new SchermoGdx(disposizione, barraDock, gestorePunteggi, vistaPartita, immagini, piccolo, medio, camera, viewport);
+		pianificatore = new PianificatoreGdx();
 		// Col dito: gesti del dito (pressione prolungata, doppio tocco più lento), area sensibile della barra più larga e joystick a schermo, perché
 		// senza mouse non c'è altro modo di muoversi sulla mappa a tutto schermo
-		boolean tocco = toccoRichiesto || Gdx.app.getType() != Application.ApplicationType.Desktop;
+		tocco = toccoRichiesto || tipo != Application.ApplicationType.Desktop;
+		costruisciLoSchermo();
+		BusEventi.pubblica(new InternoInterfacciaUtentePronta());
+	}
+
+	/**
+	 * La camera, lo schermo del gioco, il campo di testo e l'input, per la risoluzione e la barra di adesso: si rifanno se il giocatore sposta la barra
+	 */
+	private void costruisciLoSchermo() {
+		camera = new OrthographicCamera();
+		// L'asse y verso il basso, come Swing: le coordinate di riquadri e schermate si riusano tali e quali
+		camera.setToOrtho(true, dimensioni.larghezza, dimensioni.altezza);
+		viewport = new FitViewport(dimensioni.larghezza, dimensioni.altezza, camera);
+		viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+		DisposizioneDelloSchermo disposizione = new DisposizioneDelloSchermo(tipoDiLayout, orientamento, barraASinistra, dimensioni.larghezza,
+				dimensioni.altezza, new MisureDaiFile(), LivelloDiZoom.valore());
+		iscrizioniDelloSchermo = BusEventi.iscrizioniDurante(() -> schermo = new SchermoGdx(disposizione, barraDock, gestorePunteggi, vistaPartita,
+				immagini, piccolo, medio, camera, viewport));
 		schermo.setJoystickVirtuale(joystickVirtuale || tocco);
 		schermo.setTocco(tocco);
 		// Il fumetto del tutorial lo sa disegnare e chiudere questo toolkit: da qui i suggerimenti si aprono, con i testi per il dito se serve
@@ -164,7 +188,6 @@ public final class ForestaLibGDX extends ForestaUI implements ApplicationListene
 		schermo.getTutor().setDito(tocco);
 		campoDiTesto = new CampoDiTestoGdx(immagini, medio, dimensioni.larghezza, dimensioni.altezza);
 		interfacciaCompleta(schermo, campoDiTesto.getCampo());
-		pianificatore = new PianificatoreGdx();
 		RouterDegliInput router = new RouterDegliInput(schermo.contestoDegliInput(), pianificatore,
 				tocco ? RouterDegliInput.INTERVALLO_DOPPIO_TOCCO : RouterDegliInput.INTERVALLO_DOPPIO_CLICK);
 		// Il campo di testo, quando si vede, prende i tasti e i tocchi prima dello schermo
@@ -173,7 +196,34 @@ public final class ForestaLibGDX extends ForestaUI implements ApplicationListene
 		Gdx.input.setCatchKey(Input.Keys.BACK, true);
 		Gdx.input.setInputProcessor(new InputMultiplexer(campoDiTesto, new AssorbiDuranteIlLogo(), new IndietroGdx(), new InputDelTutorialGdx(schermo.getTutorial(), viewport),
 				new InputGdx(router, pianificatore, viewport, tocco)));
-		BusEventi.pubblica(new InternoInterfacciaUtentePronta());
+	}
+
+	/**
+	 * Dalle opzioni (all'intro, senza una partita in corso): lo schermo si rifà con la barra dove l'ha voluta il giocatore (se ci sta: sul telefono la
+	 * barra in basso non c'è); sul desktop la finestra cambia misura se la barra passa dal basso a un lato o viceversa. Si resta nelle opzioni.
+	 */
+	@Override
+	protected void cambiaPosizioneDellaBarra(PosizioneDellaBarra nuova) {
+		Orientamento prima = orientamento;
+		boolean primaASinistra = barraASinistra;
+		posizione = nuova;
+		scegliLaDisposizione();
+		if (schermo == null || prima == orientamento && primaASinistra == barraASinistra) {
+			return;
+		}
+		iscrizioniDelloSchermo.forEach(Runnable::run);
+		if (Gdx.app.getType() == Application.ApplicationType.Desktop && misuraDelloSchermo == null) {
+			Gdx.graphics.setWindowedMode(dimensioni.larghezza, dimensioni.altezza);
+		}
+		costruisciLoSchermo();
+		// La schermata delle opzioni, con le scelte che il motore aveva messo nella barra
+		schermo.opzioni(ComandiPossibili.getComandi());
+		schermo.impostaAzioniIcone();
+	}
+
+	@Override
+	protected boolean barraInBassoPossibile() {
+		return misuraDelloSchermo == null || SceltaDelLayout.barraInBassoPossibile(misuraDelloSchermo, new MisureDaiFile(), LivelloDiZoom.valore());
 	}
 
 	/**

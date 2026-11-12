@@ -1,7 +1,10 @@
 package com.threeamigos.foresta.interfacce;
 
+import com.threeamigos.foresta.tipi.PosizioneDellaBarra;
+
 /**
- * Le opzioni del gioco che valgono da una partita all'altra e si cambiano dalla schermata delle opzioni (dall'intro): la lingua. Le crea chi avvia
+ * Le opzioni del gioco che valgono da una partita all'altra e si cambiano dalla schermata delle opzioni (dall'intro): la lingua e la posizione
+ * della barra dei comandi. Le crea chi avvia
  * il gioco (GestoreOpzioniSuFile) e le danno all'Automa, che le cambia, e all'interfaccia. Gli argomenti di avvio (per esempio {@code LINGUA=})
  * vincono su quel che c'è scritto qui.
  */
@@ -20,6 +23,13 @@ public interface GestoreOpzioni {
 	void setLingua(String codice);
 
 	/**
+	 * Dove sta la barra dei comandi, o null se non la si è mai scelta (la decide l'interfaccia)
+	 */
+	PosizioneDellaBarra getPosizioneDellaBarra();
+
+	void setPosizioneDellaBarra(PosizioneDellaBarra posizione);
+
+	/**
 	 * Le scrive dove stanno; dice se ci è riuscito
 	 */
 	boolean salva();
@@ -29,6 +39,7 @@ public interface GestoreOpzioni {
 	 */
 	final class InMemoria implements GestoreOpzioni {
 		private String lingua;
+		private PosizioneDellaBarra posizioneDellaBarra;
 
 		@Override
 		public boolean carica() {
@@ -43,6 +54,16 @@ public interface GestoreOpzioni {
 		@Override
 		public void setLingua(String codice) {
 			lingua = codice;
+		}
+
+		@Override
+		public PosizioneDellaBarra getPosizioneDellaBarra() {
+			return posizioneDellaBarra;
+		}
+
+		@Override
+		public void setPosizioneDellaBarra(PosizioneDellaBarra posizione) {
+			posizioneDellaBarra = posizione;
 		}
 
 		@Override

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta;
 
+import com.threeamigos.foresta.tipi.PosizioneDellaBarra;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
@@ -9,12 +10,9 @@ import com.threeamigos.foresta.libgdx.ForestaGdx;
 import com.threeamigos.foresta.libgdx.ForestaLibGDX;
 import com.threeamigos.foresta.motore.AvvioDelMotore;
 import com.threeamigos.foresta.strumenti.logger.Logger;
-import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.Misura;
 import com.threeamigos.foresta.ui.MisuraDelloSchermo;
 import com.threeamigos.foresta.ui.OpzioniDiAvvio;
-import com.threeamigos.foresta.ui.SceltaDelLayout;
-import com.threeamigos.foresta.ui.immagini.MisureDaiFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,14 +66,16 @@ public final class MainLibgdx {
 			// thread del motore sono demoni)
 			AvvioDelMotore motore = new AvvioDelMotore(esecutore, e -> Gdx.app.exit(), opzioni.isLinguaDecisa());
 			MisuraDelloSchermo schermo = opzioni.getSchermoDiProva();
-			SceltaDelLayout scelta = schermo == null ? null : SceltaDelLayout.per(schermo, new MisureDaiFile(), LivelloDiZoom.valore());
-			applicazione = new ForestaLibGDX(opzioni.getOrientamento(), scelta, esecutore, motore.getControlloreDiGioco(), motore.getGestorePunteggi(), motore.getVistaPartita(),
+			// La barra dove dicono gli argomenti, se lo dicono, altrimenti dove l'ha messa il giocatore nelle opzioni (o la decide il gioco)
+			PosizioneDellaBarra posizione = opzioni.getPosizioneDellaBarra() != null ? opzioni.getPosizioneDellaBarra()
+					: motore.getGestoreOpzioni().getPosizioneDellaBarra();
+			applicazione = new ForestaLibGDX(posizione, schermo, esecutore, motore.getControlloreDiGioco(), motore.getGestorePunteggi(), motore.getVistaPartita(),
 					AvvioDelMotore.nuovoTemporizzatore(), opzioni.isBarraDock(), opzioni.isJoystickVirtuale(), opzioni.isSaltaLogo(), opzioni.isTocco());
-			Misura dimensioni = ForestaLibGDX.dimensioniDelloSchermo(opzioni.getOrientamento());
+			Misura dimensioni = ForestaLibGDX.dimensioniPerIlDesktop(posizione);
 			larghezza = dimensioni.larghezza;
 			altezza = dimensioni.altezza;
-			if (scelta != null) {
-				Logger.log(() -> "Schermo di prova " + schermo + ": " + scelta);
+			if (schermo != null) {
+				// Lo schermo simulato: una finestra grande quanto i suoi dp, in cui il FitViewport fa entrare l'area virtuale
 				larghezza = (int) Math.round(schermo.getLarghezzaDp());
 				altezza = (int) Math.round(schermo.getAltezzaDp());
 			}

@@ -21,6 +21,9 @@ public enum TipoIcona {
 	RIPRISTINA_TUTORIAL(Comando.RIPRISTINA_TUTORIAL, "icone/RipristinaTutorial.png", SfondoIcona.VERDE),
 	CANCELLA_PUNTEGGI(Comando.CANCELLA_PUNTEGGI, "icone/Rimuovi.png", SfondoIcona.ROSSO),
 	CANCELLA_SALVATAGGI(Comando.CANCELLA_SALVATAGGI, "icone/Rimuovi.png", SfondoIcona.ROSSO),
+	BARRA_SINISTRA(Comando.BARRA_SINISTRA, "icone/BarraIconeSinistra.png", SfondoIcona.VERDE),
+	BARRA_BASSO(Comando.BARRA_BASSO, "icone/BarraIconeBasso.png", SfondoIcona.VERDE),
+	BARRA_DESTRA(Comando.BARRA_DESTRA, "icone/BarraIconeDestra.png", SfondoIcona.VERDE),
 
 	/* Scelta sesso del personaggio a inizio gioco */
 	MASCHIO(Comando.MASCHIO, "icone/Maschio.png", SfondoIcona.VERDE),

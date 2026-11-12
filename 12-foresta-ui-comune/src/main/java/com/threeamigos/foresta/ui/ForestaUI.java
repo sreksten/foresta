@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.ui;
 
+import java.util.List;
+import com.threeamigos.foresta.tipi.PosizioneDellaBarra;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
@@ -274,6 +276,8 @@ public abstract class ForestaUI implements Temporizzabile {
 			schermo.primoPiano(TipoFinestra.TESTO);
 		});
 		BusEventi.iscriviti(InternoFaseDiGioco.class, this::gestisciEventoFaseDiGioco);
+		// Scelta dalle opzioni: la barra si sposta subito
+		BusEventi.iscriviti(com.threeamigos.foresta.eventi.notifiche.NotificaPosizioneDellaBarra.class, e -> cambiaPosizioneDellaBarra(e.getPosizione()));
 		BusEventi.iscriviti(NotificaVariazioneEffettoDiStatoPersonaggio.class, this::gestisciEventoVariazioneEffettoDiStato);
 		BusEventi.iscriviti(NotificaVariazioneModificatorePersonaggio.class, this::gestisciEventoVariazioneModificatore);
 		BusEventi.iscriviti(NotificaVariazioneStatistichePersonaggio.class, this::gestisciEventoVariazioneStatistichePersonaggio);
@@ -289,6 +293,20 @@ public abstract class ForestaUI implements Temporizzabile {
 		this.campo = campo;
 		schermo.setRichiestaTesto(campo::mostra, campo::annulla);
 		schermo.setRicontrollaIlTutorial(this::aggiornaIlTutorial);
+	}
+
+	/**
+	 * Il giocatore ha scelto dove sta la barra dei comandi (dalla schermata delle opzioni, quindi senza una partita in corso): il toolkit rifà lo
+	 * schermo con la barra lì. Di base niente: lo fanno i toolkit che lo sanno fare.
+	 */
+	protected void cambiaPosizioneDellaBarra(PosizioneDellaBarra posizione) {
+	}
+
+	/**
+	 * Se su questo schermo la barra può stare in basso: non sul telefono, né su un tablet troppo basso. Di base sì.
+	 */
+	protected boolean barraInBassoPossibile() {
+		return true;
 	}
 
 	protected SchermoDelGioco<?, ?, ?, ?> getSchermo() {
@@ -489,10 +507,15 @@ public abstract class ForestaUI implements Temporizzabile {
 				break;
 
 			case OPZIONI:
-				// Dall'intro: l'intro si ferma (riparte quando si torna), e la schermata resta mentre nella barra cambiano le scelte
+				// Dall'intro: l'intro si ferma (riparte quando si torna), e la schermata resta mentre nella barra cambiano le scelte. La barra in basso
+				// non si offre dove non c'è posto (sul telefono, sui tablet più bassi)
 				temporizzatore.termina();
-				schermo.opzioni(evento.getComandiPossibili());
-				impostaAzioni(evento.getComandiPossibili());
+				List<Comando> comandi = new ArrayList<>(evento.getComandiPossibili());
+				if (!barraInBassoPossibile()) {
+					comandi.remove(Comando.BARRA_BASSO);
+				}
+				schermo.opzioni(comandi);
+				impostaAzioni(comandi);
 				break;
 
 			case NOME_PERSONAGGIO:

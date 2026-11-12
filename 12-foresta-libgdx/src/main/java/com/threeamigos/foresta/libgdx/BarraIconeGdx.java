@@ -134,7 +134,7 @@ public final class BarraIconeGdx {
 			return;
 		}
 		DisposizioneDelCartiglio d = cartiglio.disposizione(descrizione);
-		Punto posizione = BarraIcone.posizioneCartiglio(modello.getOrientamento(),
+		Punto posizione = BarraIcone.posizioneCartiglio(modello.getOrientamento(), modello.isASinistra(),
 				new Area(modello.getOffsetX() + r.getX(), modello.getOffsetY() + r.getY(), r.getLarghezza(), r.getAltezza()), d.getLarghezza(), d.getAltezza(),
 				larghezzaSchermo, altezzaSchermo);
 		cartiglio.disegna(batch, descrizione, posizione.x, posizione.y);

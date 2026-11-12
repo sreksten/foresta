@@ -14,6 +14,7 @@ public enum Stato {
 	// La schermata delle opzioni (dall'intro), e le scelte che vi si fanno nella barra: la lingua, la conferma delle cancellazioni
 	OPZIONI,
 	OPZIONI_LINGUA,
+	OPZIONI_BARRA,
 	OPZIONI_CANCELLA_PUNTEGGI,
 	OPZIONI_CANCELLA_SALVATAGGI,
 

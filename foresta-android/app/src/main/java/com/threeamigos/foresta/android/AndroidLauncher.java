@@ -8,12 +8,11 @@ import com.threeamigos.foresta.libgdx.EsecutoreGdx;
 import com.threeamigos.foresta.libgdx.ForestaGdx;
 import com.threeamigos.foresta.libgdx.ForestaLibGDX;
 import com.threeamigos.foresta.motore.AvvioDelMotore;
-import com.threeamigos.foresta.tipi.Orientamento;
 
 /**
- * Il punto d'ingresso Android, gemello di <code>MainLibgdx</code> per il desktop: collega il motore e l'interfaccia libGDX. Il telefono si usa in
- * orizzontale (l'attivita' e' forzata in orizzontale nel manifest) con la disposizione {@link Orientamento#VERTICALE}, cioe' la barra delle icone sul lato
- * destro.
+ * Il punto d'ingresso Android, gemello di <code>MainLibgdx</code> per il desktop: collega il motore e l'interfaccia libGDX. Il dispositivo si usa in
+ * orizzontale (l'attivita' e' forzata in orizzontale nel manifest); la barra delle icone sta dove l'ha messa il giocatore nelle opzioni, o, la prima
+ * volta, in basso sul tablet se ci sta e a destra sul telefono.
  */
 public class AndroidLauncher extends AndroidApplication {
 
@@ -49,8 +48,11 @@ public class AndroidLauncher extends AndroidApplication {
         EsecutoreGdx esecutore = new EsecutoreGdx();
         // Il motore chiede di uscire con NotificaUscitaDalGioco: si chiude l'applicazione
         AvvioDelMotore motore = new AvvioDelMotore(esecutore, e -> Gdx.app.exit(), LINGUA_DECISA);
-        ForestaLibGDX foresta = new ForestaLibGDX(Orientamento.VERTICALE, esecutore, motore.getControlloreDiGioco(), motore.getGestorePunteggi(),
-                motore.getVistaPartita(), AvvioDelMotore.nuovoTemporizzatore(), BARRA_DOCK, JOYSTICK_VIRTUALE, SALTA_LOGO, TOCCO_RICHIESTO);
+        // La barra dove l'ha messa il giocatore nelle opzioni; se non l'ha mai scelta la decide il gioco, dallo schermo: in basso sul tablet se ci sta,
+        // a destra sul telefono
+        ForestaLibGDX foresta = new ForestaLibGDX(motore.getGestoreOpzioni().getPosizioneDellaBarra(), null, esecutore, motore.getControlloreDiGioco(),
+                motore.getGestorePunteggi(), motore.getVistaPartita(), AvvioDelMotore.nuovoTemporizzatore(), BARRA_DOCK, JOYSTICK_VIRTUALE, SALTA_LOGO,
+                TOCCO_RICHIESTO);
 
         AndroidApplicationConfiguration configurazione = new AndroidApplicationConfiguration();
         configurazione.useImmersiveMode = true;

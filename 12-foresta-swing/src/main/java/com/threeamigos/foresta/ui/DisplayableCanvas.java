@@ -100,9 +100,17 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 */
 	public DisplayableCanvas(TipoDiLayout tipo, Orientamento orientamento, int larghezza, int altezza, boolean barraDock,
 							 GestorePunteggi gestorePunteggi, VistaPartita vistaPartita) {
+		this(tipo, orientamento, false, larghezza, altezza, barraDock, gestorePunteggi, vistaPartita);
+	}
+
+	/**
+	 * @param barraASinistra in verticale, la barra a sinistra invece che a destra (vedi DisposizioneDelloSchermo)
+	 */
+	public DisplayableCanvas(TipoDiLayout tipo, Orientamento orientamento, boolean barraASinistra, int larghezza, int altezza, boolean barraDock,
+							 GestorePunteggi gestorePunteggi, VistaPartita vistaPartita) {
 		super();
-		DisposizioneDelloSchermo disposizione = new DisposizioneDelloSchermo(tipo, orientamento, larghezza, altezza, new MisureDelleImmaginiAwt(),
-				LivelloDiZoom.valore());
+		DisposizioneDelloSchermo disposizione = new DisposizioneDelloSchermo(tipo, orientamento, barraASinistra, larghezza, altezza,
+				new MisureDelleImmaginiAwt(), LivelloDiZoom.valore());
 		int larghezzaContenuto = disposizione.getLarghezzaContenuto();
 		int altezzaContenuto = disposizione.getAltezzaContenuto();
 		setSize(larghezza, altezza);
@@ -578,7 +586,11 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		schermo.disegnaIlFumetto(fumetto -> fumetto.anima(graphics));
 	}
 
-	private void aggiornaSchermo(Graphics2D graphics) {
+	private void aggiornaSchermo(Graphics2D schermoIntero) {
+		// Il contenuto ha le sue coordinate: con la barra a sinistra si disegna spostato a destra del suo spessore. La barra, il tutorial e i cartigli
+		// della barra sono nelle coordinate dello schermo
+		Graphics2D graphics = (Graphics2D) schermoIntero.create();
+		graphics.translate(schermo.getXDelContenuto(), 0);
 		StatoDelloSchermo stato = schermo.getStato();
 		switch (stato) {
 			case INTRO:
@@ -657,10 +669,10 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 				break;
 		}
 		schermo.disegnaLAnnuncio(annuncio -> annuncio.anima(graphics));
-		barraIcone.disegna(graphics);
+		barraIcone.disegna(schermoIntero);
 		// Il suggerimento del tutorial sta sopra la barra delle icone, ma sotto le sfere e i cartigli dell'aiuto; si vede solo sulla sua schermata
 		if (schermo.isTutorialVisibile()) {
-			tutorial.disegna(graphics, getWidth(), getHeight());
+			tutorial.disegna(schermoIntero, getWidth(), getHeight());
 		}
 		// Decorazione nell'angolo in basso a sinistra della mappa a tutto schermo
 		if (schermo.isSferaMagicaVisibile()) {
@@ -673,13 +685,14 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			Graphics2D spostata = (Graphics2D) graphics.create();
 			try {
 				spostata.translate(scostamento, 0);
-				riquadroGruppo.disegnaAiuto(spostata, getWidth() - scostamento, getHeight());
-				riquadroMissioni.disegnaAiuto(spostata, getWidth() - scostamento, getHeight());
+				riquadroGruppo.disegnaAiuto(spostata, getWidth() - schermo.getXDelContenuto() - scostamento, getHeight());
+				riquadroMissioni.disegnaAiuto(spostata, getWidth() - schermo.getXDelContenuto() - scostamento, getHeight());
 			} finally {
 				spostata.dispose();
 			}
 		}
-		barraIcone.disegnaAiuto(graphics, getWidth(), getHeight());
+		graphics.dispose();
+		barraIcone.disegnaAiuto(schermoIntero, getWidth(), getHeight());
 		schermo.fineFotogramma();
 	}
 

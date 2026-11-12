@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.PosizioneDellaBarra;
+import com.threeamigos.foresta.eventi.notifiche.NotificaPosizioneDellaBarra;
 import com.threeamigos.foresta.bestiario.RegistroBestiario;
 import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.artefatti.Artefatto;
@@ -293,6 +295,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriComando.put(Stato.PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE, this::gestisciComandoInStatoPreGameSelezionaSalvataggioDaLeggere);
 		gestoriComando.put(Stato.OPZIONI, this::gestisciComandoInStatoOpzioni);
 		gestoriComando.put(Stato.OPZIONI_LINGUA, this::gestisciComandoInStatoOpzioniLingua);
+		gestoriComando.put(Stato.OPZIONI_BARRA, this::gestisciComandoInStatoOpzioniBarra);
 		gestoriComando.put(Stato.OPZIONI_CANCELLA_PUNTEGGI, this::gestisciComandoInStatoOpzioniCancellaPunteggi);
 		gestoriComando.put(Stato.OPZIONI_CANCELLA_SALVATAGGI, this::gestisciComandoInStatoOpzioniCancellaSalvataggi);
 		gestoriComando.put(Stato.PRE_GAME_ATTESA_SESSO_PERSONAGGIO, this::gestisciComandoInStatoPreGameAttesaSessoPersonaggio);
@@ -597,6 +600,12 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				RegistroSuggerimenti.ripristina();
 				annuncia("Automa.tutorialRipristinato");
 				return mostraLeOpzioni();
+			case POSIZIONE_BARRA:
+				// Le posizioni nella barra (sul telefono l'interfaccia non mostra quella in basso, che lì non c'è)
+				stato = Stato.OPZIONI_BARRA;
+				BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.OPZIONI, Comando.BARRA_SINISTRA, Comando.BARRA_BASSO, Comando.BARRA_DESTRA,
+						Comando.ANNULLA));
+				return Esito.FERMATI;
 			case CANCELLA_PUNTEGGI:
 				stato = Stato.OPZIONI_CANCELLA_PUNTEGGI;
 				BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.OPZIONI, Comando.SI, Comando.NO));
@@ -640,6 +649,31 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			// Nella lingua nuova: le partite salvate restano nella loro
 			annuncia("Automa.linguaCambiata");
 		}
+		return mostraLeOpzioni();
+	}
+
+	private Esito gestisciComandoInStatoOpzioniBarra(Comando comando) {
+		PosizioneDellaBarra posizione;
+		switch (comando) {
+			case BARRA_SINISTRA:
+				posizione = PosizioneDellaBarra.SINISTRA;
+				break;
+			case BARRA_BASSO:
+				posizione = PosizioneDellaBarra.BASSO;
+				break;
+			case BARRA_DESTRA:
+				posizione = PosizioneDellaBarra.DESTRA;
+				break;
+			case ANNULLA:
+				return mostraLeOpzioni();
+			default:
+				comandoNonValido(comando);
+				return Esito.FERMATI;
+		}
+		gestoreOpzioni.setPosizioneDellaBarra(posizione);
+		gestoreOpzioni.salva();
+		// L'interfaccia la sposta subito
+		BusEventi.pubblica(new NotificaPosizioneDellaBarra(posizione));
 		return mostraLeOpzioni();
 	}
 

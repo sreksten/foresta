@@ -130,4 +130,21 @@ class OpzioniTest {
 			assertFalse(partita.comandiDisponibili().contains(Comando.FLOPPY_CARICA));
 		}
 	}
+
+	@Test
+	void laPosizioneDellaBarraSiRicordaESiDiceAllInterfaccia() {
+		try (PartitaDiTest partita = PartitaDiTest.nuova(250)) {
+			partita.eventi().ascolta(com.threeamigos.foresta.eventi.notifiche.NotificaPosizioneDellaBarra.class);
+			partita.comando(Comando.OPZIONI);
+			partita.comando(Comando.POSIZIONE_BARRA);
+			partita.assertStato(Stato.OPZIONI_BARRA);
+			assertTrue(partita.comandiDisponibili().containsAll(Arrays.asList(Comando.BARRA_SINISTRA, Comando.BARRA_BASSO, Comando.BARRA_DESTRA,
+					Comando.ANNULLA)));
+			partita.comando(Comando.BARRA_SINISTRA);
+			assertEquals(com.threeamigos.foresta.tipi.PosizioneDellaBarra.SINISTRA, partita.opzioni().getPosizioneDellaBarra());
+			assertEquals(com.threeamigos.foresta.tipi.PosizioneDellaBarra.SINISTRA, partita.eventi()
+					.tutti(com.threeamigos.foresta.eventi.notifiche.NotificaPosizioneDellaBarra.class).get(0).getPosizione());
+			partita.assertStato(Stato.OPZIONI);
+		}
+	}
 }

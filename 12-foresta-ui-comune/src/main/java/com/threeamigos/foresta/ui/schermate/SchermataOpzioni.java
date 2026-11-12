@@ -4,6 +4,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoDiGioco;
 import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.PosizioneDellaBarra;
 import com.threeamigos.foresta.tipi.TipoIcona;
 import com.threeamigos.foresta.ui.Area;
 import com.threeamigos.foresta.ui.Finestra;
@@ -21,7 +22,7 @@ import java.util.List;
 /**
  * La schermata delle opzioni, che si apre dall'intro, senza disegno: il titolo e una riga per opzione, con a sinistra un pulsante (l'icona come nella
  * barra, che chi disegna compone) e accanto la scritta nel font grande dei titoli. Le righe: la lingua (la bandiera di quella in uso e il suo nome), il
- * tutorial da ripristinare, la classifica e i salvataggi da cancellare. Il pulsante manda il suo comando al motore, che mette le scelte nella barra (le
+ * tutorial da ripristinare, la barra dei comandi (l'icona della sua posizione), la classifica e i salvataggi da cancellare. Il pulsante manda il suo comando al motore, che mette le scelte nella barra (le
  * lingue, Sì e No): finché aspetta, il pulsante di quella riga è incorniciato.
  */
 public class SchermataOpzioni implements Finestra {
@@ -79,6 +80,12 @@ public class SchermataOpzioni implements Finestra {
 	private final Misura pulsante;
 	// La riga che ha mandato il suo comando e aspetta la scelta nella barra (la lingua, la conferma di una cancellazione), o null
 	private Comando inAttesa;
+	// Dove sta adesso la barra dei comandi: l'icona del suo pulsante
+	private PosizioneDellaBarra posizioneDellaBarra = PosizioneDellaBarra.BASSO;
+	// Il contenuto si rifà solo quando cambia quel che mostra: chi disegna tiene le immagini delle scritte per elemento, e un contenuto nuovo a ogni
+	// fotogramma le farebbe crescere senza fine
+	private ContenutoDiColonna contenutoPronto;
+	private String chiaveDelContenuto;
 
 	/**
 	 * @param pulsante quanto è grande un'icona della barra come la compone chi disegna
@@ -99,6 +106,13 @@ public class SchermataOpzioni implements Finestra {
 	}
 
 	/**
+	 * Dove sta adesso la barra: il pulsante della sua riga ne ha l'icona
+	 */
+	public void setPosizioneDellaBarra(PosizioneDellaBarra posizioneDellaBarra) {
+		this.posizioneDellaBarra = posizioneDellaBarra;
+	}
+
+	/**
 	 * Le righe di adesso, già disposte: centrate in larghezza, e in altezza nello spazio sotto il titolo
 	 */
 	public List<Riga> getRighe() {
@@ -106,6 +120,7 @@ public class SchermataOpzioni implements Finestra {
 		Comando lingua = linguaInUso();
 		righe.add(new Riga(Comando.OPZIONI_LINGUA, TipoIcona.ofComando(lingua), lingua.getDescrizione()));
 		righe.add(new Riga(Comando.RIPRISTINA_TUTORIAL, TipoIcona.RIPRISTINA_TUTORIAL, TestiDellaUI.get("OPZIONI_RIPRISTINA_TUTORIAL")));
+		righe.add(new Riga(Comando.POSIZIONE_BARRA, iconaDellaBarra(), TestiDellaUI.get("OPZIONI_BARRA")));
 		righe.add(new Riga(Comando.CANCELLA_PUNTEGGI, TipoIcona.CANCELLA_PUNTEGGI, TestiDellaUI.get("OPZIONI_CANCELLA_PUNTEGGI")));
 		righe.add(new Riga(Comando.CANCELLA_SALVATAGGI, TipoIcona.CANCELLA_SALVATAGGI, TestiDellaUI.get("OPZIONI_CANCELLA_SALVATAGGI")));
 		disponi(righe);
@@ -138,6 +153,15 @@ public class SchermataOpzioni implements Finestra {
 	 * Il titolo, le scritte delle righe nel font grande e la cornice del pulsante che aspetta: i pulsanti li disegna chi disegna, da {@link #getRighe()}
 	 */
 	public ContenutoDiColonna contenuto() {
+		String chiave = Testi.getLingua() + "|" + inAttesa + "|" + posizioneDellaBarra;
+		if (!chiave.equals(chiaveDelContenuto)) {
+			contenutoPronto = costruisciIlContenuto();
+			chiaveDelContenuto = chiave;
+		}
+		return contenutoPronto;
+	}
+
+	private ContenutoDiColonna costruisciIlContenuto() {
 		List<Elemento> elementi = new ArrayList<>();
 		String titolo = TestiDellaUI.get("OPZIONI_TITOLO");
 		ImmagineDiPixel pixelDelTitolo = LayoutDelTestoGrande.immagine(titolo, Math.max(1, width - 2 * MARGINE), true);
@@ -159,6 +183,17 @@ public class SchermataOpzioni implements Finestra {
 		return new ContenutoDiColonna(width, height, elementi);
 	}
 
+	private TipoIcona iconaDellaBarra() {
+		switch (posizioneDellaBarra) {
+			case SINISTRA:
+				return TipoIcona.BARRA_SINISTRA;
+			case DESTRA:
+				return TipoIcona.BARRA_DESTRA;
+			default:
+				return TipoIcona.BARRA_BASSO;
+		}
+	}
+
 	/**
 	 * Il comando della lingua in uso, quello della sua bandiera
 	 */
@@ -175,7 +210,8 @@ public class SchermataOpzioni implements Finestra {
 	 */
 	@Override
 	public void processaClick(int x, int y, Tasto tasto) {
-		if (tasto != Tasto.SINISTRO) {
+		// Mentre una riga aspetta la sua scelta nella barra il motore non accetta altri comandi
+		if (tasto != Tasto.SINISTRO || inAttesa != null) {
 			return;
 		}
 		for (Riga riga : getRighe()) {

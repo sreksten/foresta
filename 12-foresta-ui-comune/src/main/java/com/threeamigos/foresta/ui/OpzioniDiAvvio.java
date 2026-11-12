@@ -4,6 +4,7 @@ import com.threeamigos.foresta.strumenti.ModalitaDiProva;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.tipi.Orientamento;
+import com.threeamigos.foresta.tipi.PosizioneDellaBarra;
 import com.threeamigos.foresta.tipi.SchermoDiProva;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.Locale;
 
 /**
  * Le opzioni di avvio dalla riga di comando, uguali per Swing e libGDX (senza distinzione fra maiuscole e minuscole):
- * {@code ORIZZONTALE}, {@code VERTICALE}, {@code TUTTOSCHERMO}, {@code SALTALOGO}, {@code BARRACLASSICA}, {@code JOYSTICK_VIRTUALE}, {@code TOCCO}
+ * {@code ORIZZONTALE} (la barra in basso), {@code VERTICALE} (a destra), {@code SINISTRA} (a sinistra), {@code TUTTOSCHERMO}, {@code SALTALOGO}, {@code BARRACLASSICA}, {@code JOYSTICK_VIRTUALE}, {@code TOCCO}
  * (per provare con il mouse i gesti del dito; vale solo in libGDX, dove il dito c'è davvero sui telefoni),
  * {@code LINGUA=<codice>} ({@code it}, {@code en}, {@code en-GB}), {@code ZOOM=<numero>}, {@code MODALITA_DI_PROVA},
  * {@code SCHERMO=<profilo>} o {@code SCHERMO=<larghezza>x<altezza>[@<densità>]} (per provare dal desktop lo schermo di un telefono o di
@@ -25,8 +26,10 @@ import java.util.Locale;
 public final class OpzioniDiAvvio {
 
 	private Orientamento orientamento = Orientamento.ORIZZONTALE;
-	// Se l'orientamento è scritto negli argomenti: allora vince su quello che porta con sé SCHERMO=
+	// Se l'orientamento è scritto negli argomenti: allora vince su quello che porta con sé SCHERMO= e su quello delle opzioni
 	private boolean orientamentoScritto;
+	// Con SINISTRA, la barra verticale sta a sinistra
+	private boolean barraASinistra;
 	// Lo schermo da simulare sul desktop con SCHERMO=, o null
 	private MisuraDelloSchermo schermoDiProva;
 	private boolean tuttoSchermo;
@@ -69,6 +72,10 @@ public final class OpzioniDiAvvio {
 			orientamentoScritto = true;
 		} else if (maiuscolo.equals("VERTICALE")) {
 			orientamento = Orientamento.VERTICALE;
+			orientamentoScritto = true;
+		} else if (maiuscolo.equals("SINISTRA")) {
+			orientamento = Orientamento.VERTICALE;
+			barraASinistra = true;
 			orientamentoScritto = true;
 		} else if (maiuscolo.equals("TUTTOSCHERMO")) {
 			tuttoSchermo = true;
@@ -126,6 +133,18 @@ public final class OpzioniDiAvvio {
 
 	public Orientamento getOrientamento() {
 		return orientamento;
+	}
+
+	/**
+	 * Dove gli argomenti vogliono la barra (ORIZZONTALE, VERTICALE, SINISTRA), o null se non lo dicono: allora vale quella delle opzioni, o la decide il
+	 * gioco
+	 */
+	public PosizioneDellaBarra getPosizioneDellaBarra() {
+		if (!orientamentoScritto) {
+			return null;
+		}
+		return orientamento == Orientamento.ORIZZONTALE ? PosizioneDellaBarra.BASSO
+				: barraASinistra ? PosizioneDellaBarra.SINISTRA : PosizioneDellaBarra.DESTRA;
 	}
 
 	public boolean isTuttoSchermo() {

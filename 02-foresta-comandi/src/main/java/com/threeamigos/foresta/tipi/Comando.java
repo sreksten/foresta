@@ -31,6 +31,11 @@ public enum Comando {
 	OPZIONI_LINGUA,
 	CANCELLA_PUNTEGGI,
 	CANCELLA_SALVATAGGI,
+	// Nella schermata delle opzioni, il pulsante della barra dei comandi; poi, nella barra, dove metterla
+	POSIZIONE_BARRA,
+	BARRA_SINISTRA,
+	BARRA_BASSO,
+	BARRA_DESTRA,
 
 	// All'inizio del gioco, per scegliere il tipo del proprio personaggio.
 	// E si, classi e razze sono mischiate ma ce ne faremo una ragione.

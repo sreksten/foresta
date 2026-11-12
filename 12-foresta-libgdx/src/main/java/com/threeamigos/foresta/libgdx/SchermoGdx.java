@@ -170,6 +170,10 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 	 * acceso, i cartigli (quelli dei riquadri del gruppo e delle missioni nella schermata di gioco, poi quello della barra).
 	 */
 	public void disegna(Batch batch) {
+		// Il contenuto ha le sue coordinate: con la barra a sinistra si disegna spostato a destra del suo spessore. La barra, il tutorial e i cartigli
+		// della barra sono nelle coordinate dello schermo
+		Matrix4 schermoIntero = batch.getTransformMatrix().cpy();
+		batch.setTransformMatrix(schermoIntero.cpy().translate(getXDelContenuto(), 0, 0));
 		StatoDelloSchermo stato = getStato();
 		switch (stato) {
 			case INTRO:
@@ -248,6 +252,7 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 				break;
 		}
 		disegnaLAnnuncio(annuncio -> annuncio.anima(batch, camera, viewport));
+		batch.setTransformMatrix(schermoIntero);
 		barraIcone.disegna(batch, camera, viewport);
 		// Il suggerimento del tutorial sta sopra la barra delle icone, ma sotto i cartigli dell'aiuto
 		if (isTutorialVisibile()) {
@@ -255,7 +260,7 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 		}
 		if (stato == StatoDelloSchermo.IN_GIOCO) {
 			// I riquadri non sanno di quanto è scorsa la pila: i loro cartigli si spostano con lei
-			int scostamento = getScostamentoDellaPila();
+			int scostamento = getXDelContenuto() + getScostamentoDellaPila();
 			disegnaAiuto(batch, riquadroGruppo.righeDellAiuto(), scostamento + riquadroGruppo.getTopLeftX() + riquadroGruppo.getMouseX(),
 					riquadroGruppo.getTopLeftY() + riquadroGruppo.getMouseY());
 			disegnaAiuto(batch, riquadroMissioni.righeDellAiuto(), scostamento + riquadroMissioni.getTopLeftX() + riquadroMissioni.getMouseX(),

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.tipi.Orientamento;
+import com.threeamigos.foresta.tipi.PosizioneDellaBarra;
 import com.threeamigos.foresta.artefatti.VistaArtefatto;
 import com.threeamigos.foresta.artefatti.VistaBancoDiLavoro;
 import com.threeamigos.foresta.artefatti.VistaScambio;
@@ -150,6 +152,7 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	 */
 	protected final void prepara() {
 		posizionaRiquadriImpilati();
+		barraIcone().setASinistra(disposizione.isBarraASinistra());
 		if (pilaScorrevole != null) {
 			riquadroLocazione().setAllargamentoMassimo(pilaScorrevole.getScostamentoMassimo());
 		}
@@ -726,6 +729,8 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	 */
 	public void opzioni(Collection<Comando> comandiNellaBarra) {
 		schermataOpzioni().aggiorna(comandiNellaBarra);
+		schermataOpzioni().setPosizioneDellaBarra(disposizione.getOrientamento() == Orientamento.ORIZZONTALE ? PosizioneDellaBarra.BASSO
+				: disposizione.isBarraASinistra() ? PosizioneDellaBarra.SINISTRA : PosizioneDellaBarra.DESTRA);
 		cambiaStato(StatoDelloSchermo.OPZIONI);
 		ridisegna();
 	}
@@ -1440,9 +1445,32 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 
 	/**
 	 * Dove sta, in coordinate dello schermo, quello a cui punta un suggerimento: un riquadro (i tre impilati insieme, per i riquadri in generale), la
-	 * barra delle icone o le sole icone che si vedono fra quelle indicate (se nessuna si vede, la barra intera).
+	 * barra delle icone o le sole icone che si vedono fra quelle indicate (se nessuna si vede, la barra intera). Con la barra a sinistra, quel che sta
+	 * nel contenuto si sposta a destra del suo spessore.
 	 */
 	public Area getAreaDelBersaglio(BersaglioDelSuggerimento bersaglio) {
+		Area area = areaDelBersaglio(bersaglio);
+		boolean nellaBarra = bersaglio == BersaglioDelSuggerimento.BARRA_DELLE_ICONE || !bersaglio.getIcone().isEmpty();
+		return nellaBarra ? area : sulloSchermo(area);
+	}
+
+	/**
+	 * Un'area del contenuto nelle coordinate dello schermo: spostata a destra dello spessore della barra, se la barra sta a sinistra
+	 */
+	public Area sulloSchermo(Area nelContenuto) {
+		int x = disposizione.getXDelContenuto();
+		return x == 0 ? nelContenuto : new Area(nelContenuto.getX() + x, nelContenuto.getY(), nelContenuto.getLarghezza(), nelContenuto.getAltezza());
+	}
+
+	/**
+	 * Di quanto il contenuto sta a destra sullo schermo (lo spessore della barra, se sta a sinistra): chi disegna sposta di tanto tutto, tranne la barra
+	 * e quel che è già nelle coordinate dello schermo (il fumetto del tutorial, i cartigli della barra)
+	 */
+	public int getXDelContenuto() {
+		return disposizione.getXDelContenuto();
+	}
+
+	private Area areaDelBersaglio(BersaglioDelSuggerimento bersaglio) {
 		switch (bersaglio) {
 			case RIQUADRI:
 				Area impilati = DisposizioneDelFumetto.unione(DisposizioneDelFumetto.unione(getArea(riquadroGruppo()), getArea(riquadroIncantesimiEPozioni())),
@@ -1648,7 +1676,9 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 
 			@Override
 			public Area getArea(Finestra finestra) {
-				return SchermoDelGioco.this.getArea(finestra);
+				// Il router lavora sullo schermo: la barra è già lì, il resto si sposta se la barra sta a sinistra
+				Area area = SchermoDelGioco.this.getArea(finestra);
+				return finestra == barraIcone() ? area : sulloSchermo(area);
 			}
 
 			@Override
@@ -1688,8 +1718,8 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 			@Override
 			public boolean isSullaFrecciaDellaPila(int x, int y) {
 				Area freccia = getAreaDellaFrecciaDellaPila();
-				return freccia != null && new Area(freccia.getX(), freccia.getY(), freccia.getLarghezza(),
-						freccia.getAltezza() + TOCCO_SOTTO_LA_FRECCIA_DELLA_PILA).contiene(x, y);
+				return freccia != null && sulloSchermo(new Area(freccia.getX(), freccia.getY(), freccia.getLarghezza(),
+						freccia.getAltezza() + TOCCO_SOTTO_LA_FRECCIA_DELLA_PILA)).contiene(x, y);
 			}
 
 			@Override

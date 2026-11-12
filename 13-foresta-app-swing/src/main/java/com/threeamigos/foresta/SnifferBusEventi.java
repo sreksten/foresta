@@ -80,6 +80,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(InternoMostraSchermataGioco.class, this::onEventoMostraSchermataGioco);
         BusEventi.iscriviti(NotificaMostraStatisticheFineGioco.class, this::onEventoMostraStatistiche);
         BusEventi.iscriviti(NotificaGlobale.class, this::onEventoNotificaGlobale);
+        BusEventi.iscriviti(NotificaPosizioneDellaBarra.class, this::onEventoPosizioneDellaBarra);
         BusEventi.iscriviti(NotificaTestoParagrafo.class, this::onEventoParagrafo);
         // EventoPersonaggio è classe astratta
         BusEventi.iscriviti(InternoPreparazioneLocazione.class, this::onEventoPreparazioneLocazione);
@@ -445,6 +446,10 @@ public class SnifferBusEventi {
 
     private void onEventoNotificaGlobale(NotificaGlobale evento) {
         Logger.log(() -> String.format(Locale.ROOT, "%s - %s - %s - %s", new Date(), evento.getTipoEvento(), evento.getEtichetta(), evento.getMessaggio()));
+    }
+
+    private void onEventoPosizioneDellaBarra(NotificaPosizioneDellaBarra evento) {
+        Logger.log(() -> String.format(Locale.ROOT, "%s - %s - %s", new Date(), evento.getTipoEvento(), evento.getPosizione()));
     }
 
     private void onEventoParagrafo(NotificaTestoParagrafo evento) {

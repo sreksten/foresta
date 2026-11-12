@@ -14,7 +14,7 @@ import java.util.List;
  * vale per le icone della fascia di mezzo, ritagliate ai suoi bordi.
  * <p>
  * Funziona nei due orientamenti: l'ingrandimento si calcola lungo l'asse della barra e le icone crescono verso il contenuto, cioè verso l'alto nella barra
- * orizzontale (in fondo allo schermo) e verso sinistra in quella verticale (a destra). Le icone ingrandite escono quindi dalla barra: la loro geometria si
+ * orizzontale (in fondo allo schermo) e verso sinistra in quella verticale (a destra; verso destra se la barra sta a sinistra). Le icone ingrandite escono quindi dalla barra: la loro geometria si
  * ricalcola a ogni movimento del puntatore, e la barra reclama come suoi anche i punti fuori dal suo rettangolo che cadono su un'icona (vedi
  * {@link #contiene}), così si possono cliccare e il cursore che ci sale sopra non spegne l'effetto. Entrando e uscendo dalla barra l'effetto non scatta ma
  * cresce e si sgonfia in {@link #DURATA_TRANSIZIONE_NANOS}; dentro la barra le icone seguono subito il cursore. Col dito (vedi
@@ -181,9 +181,10 @@ public class BarraIconeDock extends BarraIcone {
 			int w = (int) Math.round(base.getLarghezza() * scale[i]);
 			int h = (int) Math.round(base.getAltezza() * scale[i]);
 			int p = (int) Math.round(posizione);
+			// In verticale le icone poggiano sul bordo dello schermo: quello destro, o il sinistro con la barra a sinistra
 			rettangoli.add(orizzontale
 					? new Area(p, base.getY() + base.getAltezza() - h, w, h)
-					: new Area(base.getX() + base.getLarghezza() - w, p, w, h));
+					: new Area(aSinistra ? base.getX() : base.getX() + base.getLarghezza() - w, p, w, h));
 			posizione += lunghezza(base) * scale[i];
 		}
 	}

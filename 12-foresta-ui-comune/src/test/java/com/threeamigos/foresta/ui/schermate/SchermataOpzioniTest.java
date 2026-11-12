@@ -8,6 +8,7 @@ import com.threeamigos.foresta.tipi.TipoIcona;
 import com.threeamigos.foresta.ui.Area;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.Misura;
+import com.threeamigos.foresta.ui.componenti.ContenutoDiColonna;
 import com.threeamigos.foresta.ui.componenti.ContenutoDiColonna.Elemento;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,10 +50,12 @@ class SchermataOpzioniTest {
 	}
 
 	@Test
-	void leRigheSonoLaLinguaIlTutorialEleDueCancellazioniUnaSottoLAltraDentroLoSchermo() {
+	void leRigheSonoLaLinguaIlTutorialLaBarraEleDueCancellazioniUnaSottoLAltraDentroLoSchermo() {
 		List<SchermataOpzioni.Riga> righe = schermata.getRighe();
-		assertEquals(Arrays.asList(Comando.OPZIONI_LINGUA, Comando.RIPRISTINA_TUTORIAL, Comando.CANCELLA_PUNTEGGI, Comando.CANCELLA_SALVATAGGI),
-				Arrays.asList(righe.get(0).getComando(), righe.get(1).getComando(), righe.get(2).getComando(), righe.get(3).getComando()));
+		List<Comando> comandi = new ArrayList<>();
+		righe.forEach(r -> comandi.add(r.getComando()));
+		assertEquals(Arrays.asList(Comando.OPZIONI_LINGUA, Comando.RIPRISTINA_TUTORIAL, Comando.POSIZIONE_BARRA, Comando.CANCELLA_PUNTEGGI,
+				Comando.CANCELLA_SALVATAGGI), comandi);
 		for (int i = 0; i < righe.size(); i++) {
 			Area area = righe.get(i).getArea();
 			assertTrue(area.getX() >= 0 && area.getX() + area.getLarghezza() <= 770, "dentro in larghezza");
@@ -74,7 +77,7 @@ class SchermataOpzioniTest {
 	@Test
 	void unClickSullaRigaMandaIlSuoComandoEIncorniciaIlPulsanteFinoAllaScelta() {
 		assertEquals(0, cornici(schermata));
-		Area punteggi = schermata.getRighe().get(2).getArea();
+		Area punteggi = schermata.getRighe().get(3).getArea();
 		// Anche sulla scritta, non solo sul pulsante
 		schermata.processaClick(punteggi.getX() + punteggi.getLarghezza() - 2, punteggi.getY() + 2, Finestra.Tasto.SINISTRO);
 		assertEquals(Collections.singletonList(Comando.CANCELLA_PUNTEGGI), mandati);
@@ -89,5 +92,31 @@ class SchermataOpzioniTest {
 	void unClickFuoriDalleRigheNonMandaNiente() {
 		schermata.processaClick(2, 2, Finestra.Tasto.SINISTRO);
 		assertTrue(mandati.isEmpty());
+	}
+
+	@Test
+	void laRigaDellaBarraHaLIconaDiDoveStaAdesso() {
+		schermata.setPosizioneDellaBarra(com.threeamigos.foresta.tipi.PosizioneDellaBarra.SINISTRA);
+		assertEquals(TipoIcona.BARRA_SINISTRA, schermata.getRighe().get(2).getIcona());
+		schermata.setPosizioneDellaBarra(com.threeamigos.foresta.tipi.PosizioneDellaBarra.DESTRA);
+		assertEquals(TipoIcona.BARRA_DESTRA, schermata.getRighe().get(2).getIcona());
+	}
+
+	@Test
+	void ilContenutoSiRifaSoloQuandoCambiaQuelCheMostra() {
+		// Chi disegna tiene le immagini delle scritte per elemento: un contenuto nuovo a ogni fotogramma riempiva la memoria
+		ContenutoDiColonna primo = schermata.contenuto();
+		assertSame(primo, schermata.contenuto());
+		schermata.setPosizioneDellaBarra(com.threeamigos.foresta.tipi.PosizioneDellaBarra.SINISTRA);
+		assertNotSame(primo, schermata.contenuto());
+	}
+
+	@Test
+	void mentreUnaRigaAspettaGliAltriClickNonMandanoNiente() {
+		Area punteggi = schermata.getRighe().get(3).getArea();
+		schermata.processaClick(punteggi.getX() + 2, punteggi.getY() + 2, Finestra.Tasto.SINISTRO);
+		schermata.aggiorna(Arrays.asList(Comando.SI, Comando.NO));
+		schermata.processaClick(punteggi.getX() + 2, punteggi.getY() + 2, Finestra.Tasto.SINISTRO);
+		assertEquals(Collections.singletonList(Comando.CANCELLA_PUNTEGGI), mandati);
 	}
 }

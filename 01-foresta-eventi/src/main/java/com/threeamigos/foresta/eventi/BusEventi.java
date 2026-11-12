@@ -30,6 +30,9 @@ public class BusEventi {
 
     private static volatile Consumer<Runnable> consegna = CONSEGNA_SU_THREAD_PRINCIPALE;
 
+    // Le iscrizioni fatte su questo thread mentre si costruisce qualcosa che poi si butterà via (vedi iscrizioniDurante)
+    private static final ThreadLocal<List<Runnable>> raccolta = new ThreadLocal<>();
+
     /**
      * Registra un gestore per gli eventi di quel tipo: ne bastano quelli della classe indicata, non le sue sottoclassi.
      *
@@ -41,7 +44,28 @@ public class BusEventi {
         sottoscrittori
                 .computeIfAbsent(eventType, k -> new CopyOnWriteArrayList<>())
                 .add((Consumer<Object>) listener);
-        return () -> cancellati(eventType, listener);
+        Runnable cancellazione = () -> cancellati(eventType, listener);
+        List<Runnable> inRaccolta = raccolta.get();
+        if (inRaccolta != null) {
+            inRaccolta.add(cancellazione);
+        }
+        return cancellazione;
+    }
+
+    /**
+     * Fa quell'azione e dice come togliere tutte le iscrizioni che ha fatto, su questo thread: per costruire qualcosa che si iscrive in tanti punti
+     * (lo schermo del gioco, con i suoi riquadri) e che più avanti si butta via per costruirne un altro.
+     */
+    public static List<Runnable> iscrizioniDurante(Runnable azione) {
+        List<Runnable> precedente = raccolta.get();
+        List<Runnable> iscrizioni = new java.util.ArrayList<>();
+        raccolta.set(iscrizioni);
+        try {
+            azione.run();
+        } finally {
+            raccolta.set(precedente);
+        }
+        return iscrizioni;
     }
 
     /**

@@ -7,6 +7,7 @@ import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.strumenti.temporizzatore.ThreadPrincipale;
 import com.threeamigos.foresta.ui.EsecutoreSwing;
 import com.threeamigos.foresta.ui.ForestaSwing;
+import com.threeamigos.foresta.tipi.PosizioneDellaBarra;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.MisuraDelloSchermo;
 import com.threeamigos.foresta.ui.OpzioniDiAvvio;
@@ -43,19 +44,21 @@ public class Main {
 		for (String sconosciuto : opzioni.getAltri()) {
 			Logger.log(() -> "Argomento sconosciuto ignorato: " + sconosciuto);
 		}
-		MisuraDelloSchermo schermo = opzioni.getSchermoDiProva();
-		SceltaDelLayout scelta = schermo == null ? null : SceltaDelLayout.per(schermo, new MisureDaiFile(), LivelloDiZoom.valore());
-		if (scelta != null) {
-			Logger.log(() -> "Schermo di prova " + schermo + ": " + scelta);
-		}
-
 		// Si registra per ascoltare qualsiasi evento venga generato
 		new SnifferBusEventi();
 		// Tutta la logica di gioco gira sull'Event Dispatch Thread di Swing; sul desktop si esce chiudendo il processo
 		AvvioDelMotore motore = new AvvioDelMotore(new EsecutoreSwing(), e -> System.exit(e.getCodice()), opzioni.isLinguaDecisa());
 
+		// La barra dove dicono gli argomenti, se lo dicono, altrimenti dove l'ha messa il giocatore nelle opzioni (o la decide il gioco)
+		PosizioneDellaBarra posizione = opzioni.getPosizioneDellaBarra() != null ? opzioni.getPosizioneDellaBarra()
+				: motore.getGestoreOpzioni().getPosizioneDellaBarra();
+		MisuraDelloSchermo schermo = opzioni.getSchermoDiProva();
+		if (schermo != null) {
+			Logger.log(() -> "Schermo di prova " + schermo + ": " + SceltaDelLayout.per(schermo, new MisureDaiFile(), LivelloDiZoom.valore(), posizione));
+		}
+
 		// La finestra, quando è pronta, avvisa l'automa che può cominciare
-		new ForestaSwing(opzioni.getOrientamento(), scelta, opzioni.isTuttoSchermo(), opzioni.isSaltaLogo(), opzioni.isBarraDock(),
+		new ForestaSwing(posizione, schermo, opzioni.isTuttoSchermo(), opzioni.isSaltaLogo(), opzioni.isBarraDock(),
 				opzioni.isJoystickVirtuale(), motore.getGestorePunteggi(), motore.getVistaPartita(), AvvioDelMotore.nuovoTemporizzatore());
 
 		if (ModalitaDiProva.isAttiva()) {

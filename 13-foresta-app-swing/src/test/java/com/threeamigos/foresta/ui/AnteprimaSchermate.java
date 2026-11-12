@@ -10,6 +10,7 @@ import com.threeamigos.foresta.motore.PartitaDiAnteprima;
 import com.threeamigos.foresta.motore.StatoDelMotore;
 import com.threeamigos.foresta.motore.VistaPartitaMotore;
 import com.threeamigos.foresta.tipi.Orientamento;
+import com.threeamigos.foresta.tipi.PosizioneDellaBarra;
 import com.threeamigos.foresta.tipi.TipoDiLayout;
 import com.threeamigos.foresta.tipi.TipoFinestra;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -30,7 +31,7 @@ import java.io.IOException;
  * <p>
  * Uso, dalla radice del progetto dopo {@code mvn test-compile}:
  * <pre>
- *     java -cp ... com.threeamigos.foresta.ui.AnteprimaSchermate CARTELLA [ORIZZONTALE|VERTICALE|SCHERMO=&lt;profilo o misura&gt;]
+ *     java -cp ... com.threeamigos.foresta.ui.AnteprimaSchermate CARTELLA [ORIZZONTALE|VERTICALE|SINISTRA|SCHERMO=&lt;profilo o misura&gt;]...
  * </pre>
  * Con {@code SCHERMO=} (come per {@code Main}: {@code SCHERMO=GALAXY_S24}, {@code SCHERMO=800x480}) le schermate hanno l'area virtuale e
  * il layout di quello schermo, senza scala, come la finestra di Swing.
@@ -44,10 +45,15 @@ public final class AnteprimaSchermate {
 
 	public static void main(String[] args) throws IOException {
 		File cartella = new File(args.length > 0 ? args[0] : ".");
-		OpzioniDiAvvio opzioni = OpzioniDiAvvio.leggi(args.length > 1 ? new String[]{args[1]} : new String[0]);
+		OpzioniDiAvvio opzioni = OpzioniDiAvvio.leggi(args.length > 1 ? java.util.Arrays.copyOfRange(args, 1, args.length) : new String[0]);
 		Orientamento orientamento = opzioni.getOrientamento();
 		SceltaDelLayout scelta = opzioni.getSchermoDiProva() == null ? null
-				: SceltaDelLayout.per(opzioni.getSchermoDiProva(), new MisureDaiFile(), LivelloDiZoom.valore());
+				: SceltaDelLayout.per(opzioni.getSchermoDiProva(), new MisureDaiFile(), LivelloDiZoom.valore(),
+				opzioni.getPosizioneDellaBarra());
+		if (scelta != null) {
+			orientamento = scelta.getOrientamento();
+		}
+		boolean barraASinistra = scelta != null ? scelta.isBarraASinistra() : opzioni.getPosizioneDellaBarra() == PosizioneDellaBarra.SINISTRA;
 		cartella.mkdirs();
 
 		BusEventi.iscriviti(InternoErrore.class, errore -> System.err.println("ERRORE: " + errore.getMessaggio()));
@@ -61,7 +67,7 @@ public final class AnteprimaSchermate {
 
 		Dimension finestra = scelta != null ? new Dimension(scelta.getAreaVirtuale().larghezza, scelta.getAreaVirtuale().altezza)
 				: ForestaSwing.calcolaDimensioniFinestra(orientamento, false);
-		DisplayableCanvas canvas = new DisplayableCanvas(scelta != null ? scelta.getTipo() : TipoDiLayout.TABLET, orientamento, finestra.width,
+		DisplayableCanvas canvas = new DisplayableCanvas(scelta != null ? scelta.getTipo() : TipoDiLayout.TABLET, orientamento, barraASinistra, finestra.width,
 				finestra.height, false, new GestorePunteggiInMemoria(), new VistaPartitaMotore());
 		canvas.setSize(finestra.width, finestra.height);
 

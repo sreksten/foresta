@@ -24,7 +24,8 @@ La misura che conta è quella fisica, cioè in **dp** (density-independent pixel
 
 ### 2.2 La regola
 
-- **Layout del tablet** se lo schermo in dp contiene quello di oggi a scala 1: con la barra delle icone a destra (`VERTICALE`) servono **1094×732 dp** (`DisposizioneDelloSchermo.dimensioniDelloSchermo`). Si disegna come oggi, con il `FitViewport` e le bande dove avanza.
+- **Layout del tablet** se lo schermo in dp contiene quello di oggi a scala 1. La barra delle icone va in basso se ci sta (`ORIZZONTALE`, **1022×804 dp**), altrimenti di lato (`VERTICALE`, **1094×732 dp**; le misure da `DisposizioneDelloSchermo.dimensioniDelloSchermo`). Si disegna come oggi, con il `FitViewport` e le bande dove avanza.
+- **La scelta del giocatore** (la riga «Barra comandi» delle opzioni, §7, o l'argomento `SINISTRA`) vince se lo schermo la permette: a sinistra o a destra si prova il tablet con la barra di lato e poi il telefono; in basso, se non ci sta, la barra va a destra. Sul telefono la barra in basso non c'è (`SceltaDelLayout.barraInBassoPossibile`) e le opzioni non la offrono. Il tutto è in `SceltaDelLayout.per(schermo, misure, zoom, preferita)`.
 - **Altrimenti, layout del telefono.** L'area virtuale è grande quanto lo schermo in dp, ma mai sotto il **minimo di 842×505** (§4.1). Se lo schermo in dp è più piccolo del minimo, si riduce tutto della stessa scala finché il minimo ci sta in altezza (e in larghezza), e la larghezza virtuale si allunga fino al rapporto dello schermo, quindi senza bande. La larghezza in più va al testo; l'altezza in più (che sui telefoni non c'è: sono tutti sotto i 505 dp) andrebbe al testo e alla pila.
 
 In formule, con lo schermo di `L`×`A` dp: `scala = min(1, A / 505, L / 842)`, area virtuale `L / scala` × `A / scala`.
@@ -49,10 +50,10 @@ Le misure dei dispositivi sono quelle note al 2026-11 e vanno ricontrollate sui 
 | `TABLET_ECONOMICO` (8″, 1280×800) | 1280×800 | 1 | 1280×800 | tablet | 1,09 | 1094×732 | 642 |
 | `TABLET_FULL_HD` (10″ Android) | 1920×1200 | 1,5 | 1280×800 | tablet | 1,09 | 1094×732 | 642 |
 | `IPAD_MINI` (8,3″) | 2266×1488 | 2 | 1133×744 | tablet | 1,02 | 1094×732 | 642 |
-| `IPAD` (Air 10,9″) | 2360×1640 | 2 | 1180×820 | tablet | 1,08 | 1094×732 | 642 |
-| `IPAD_PRO_13` | 2752×2064 | 2 | 1376×1032 | tablet | 1,26 | 1094×732 | 642 |
+| `IPAD` (Air 10,9″) | 2360×1640 | 2 | 1180×820 | tablet, barra in basso | 1,02 | 1022×804 | 642 |
+| `IPAD_PRO_13` | 2752×2064 | 2 | 1376×1032 | tablet, barra in basso | 1,28 | 1022×804 | 642 |
 | `PORTATILE_HD` | 1366×768 | 1 | 1366×768 | tablet | 1,05 | 1094×732 | 642 |
-| `FULL_HD` (monitor) | 1920×1080 | 1 | 1920×1080 | tablet | 1,48 | 1094×732 | 642 |
+| `FULL_HD` (monitor) | 1920×1080 | 1 | 1920×1080 | tablet, barra in basso | 1,34 | 1022×804 | 642 |
 
 Due cose si leggono dalla tabella:
 
@@ -201,6 +202,14 @@ Sono disegnate per l'area di oggi (1022×732): sul telefono l'altezza è 505. Un
 ## 7. La barra delle icone
 
 È già verticale e scorre (con freccine, trascinamento, inerzia ed elastico): su 505 di altezza ci stanno circa 7 icone da 64 alla volta. Il Dock si ingrandisce sotto il dito. Lungo la barra il bersaglio del tocco resta di 64 pixel virtuali: a scala 0,71 sono **45 dp**, al limite dei 48 consigliati da Android. Da provare con il dito su un telefono vero.
+
+### 7.1 Dove sta: in basso, a destra o a sinistra
+
+La posizione si sceglie dalla schermata delle opzioni (riga «Barra comandi», con l'icona della posizione di adesso; le scelte `BARRA_SINISTRA`, `BARRA_BASSO`, `BARRA_DESTRA` nella barra, la seconda solo dove ci sta) e si ricorda nel file delle opzioni (`GestoreOpzioni.getPosizioneDellaBarra`, riga `BARRA=`); l'argomento `SINISTRA` (o `ORIZZONTALE`/`VERTICALE`) vince sul file. Senza scelta: in basso su desktop e tablet, a destra sul telefono e sul tablet dove in basso non ci sta (§2.2).
+
+Il cambio vale subito: il motore pubblica `NotificaPosizioneDellaBarra` e l'interfaccia (`ForestaUI.cambiaPosizioneDellaBarra`) rifà lo schermo con la nuova disposizione; si può fare solo dall'intro, dove non c'è partita da ridisegnare. Le iscrizioni al bus del vecchio schermo si tolgono (`BusEventi.iscrizioniDurante` le raccoglie mentre lo schermo si costruisce); quelle fatte più tardi, pigramente, restano.
+
+**La barra a sinistra è uno spostamento, non un'altra disposizione**: tutto il contenuto ha le stesse coordinate della barra a destra, e si disegna spostato di `DisposizioneDelloSchermo.getXDelContenuto()` (lo spessore della barra, 72) con una traslazione (Swing `Graphics2D.translate`, libGDX la matrice del batch); la barra, il tutorial e i cartigli della barra si disegnano senza. Le aree restano in coordinate del contenuto (`SchermoDelGioco.getArea`); si portano sullo schermo (`sulloSchermo`) solo dove servono le coordinate vere: il contesto del router (`getArea` delle finestre che non sono la barra, `isSullaFrecciaDellaPila`) e i bersagli del tutorial che non sono la barra (`getAreaDelBersaglio`). La pila scorre sempre a destra; della barra cambiano solo il cartiglio (a destra dell'icona, `BarraIcone.posizioneCartiglio`) e l'ingrandimento del Dock (verso destra, `BarraIconeDock.ricalcola`).
 
 ## 8. Che cosa non cambia
 

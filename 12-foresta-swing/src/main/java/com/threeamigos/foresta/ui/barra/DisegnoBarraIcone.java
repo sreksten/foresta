@@ -124,7 +124,7 @@ final class DisegnoBarraIcone {
 		String descrizione = barra.descrizioneAiuto(barra.iconeVisibili.get(i).comando);
 		if (descrizione != null) {
 			Image testo = Cartiglio.testo(descrizione);
-			Punto posizione = BarraIcone.posizioneCartiglio(barra.getOrientamento(),
+			Punto posizione = BarraIcone.posizioneCartiglio(barra.getOrientamento(), barra.isASinistra(),
 					new Area(barra.getOffsetX() + r.getX(), barra.getOffsetY() + r.getY(), r.getLarghezza(), r.getAltezza()),
 					Cartiglio.larghezza(testo), Cartiglio.altezza(), larghezzaSchermo, altezzaSchermo);
 			Cartiglio.disegna(graphics, testo, posizione.x, posizione.y);

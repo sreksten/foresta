@@ -112,6 +112,8 @@ public class BarraIcone implements Finestra {
 
 	protected final Orientamento orientamento;
 	protected final boolean orizzontale;
+	// In verticale, se la barra sta a sinistra dello schermo invece che a destra: le icone del Dock crescono verso destra, il cartiglio sta a destra
+	protected boolean aSinistra;
 	protected final int offsetX;
 	protected final int offsetY;
 	protected final int larghezza;
@@ -576,11 +578,22 @@ public class BarraIcone implements Finestra {
 	 * allineato a un suo bordo.
 	 */
 	public static Punto posizioneCartiglio(Orientamento orientamento, Area icona, int larghezza, int altezza, int larghezzaSchermo, int altezzaSchermo) {
+		return posizioneCartiglio(orientamento, false, icona, larghezza, altezza, larghezzaSchermo, altezzaSchermo);
+	}
+
+	/**
+	 * Come {@link #posizioneCartiglio(Orientamento, Area, int, int, int, int)}; con la barra a sinistra il cartiglio sta alla destra dell'icona
+	 */
+	public static Punto posizioneCartiglio(Orientamento orientamento, boolean aSinistra, Area icona, int larghezza, int altezza, int larghezzaSchermo,
+			int altezzaSchermo) {
 		int x;
 		int y;
 		if (orientamento == Orientamento.ORIZZONTALE) {
 			x = icona.getX() + (icona.getLarghezza() - larghezza) / 2;
 			y = icona.getY() - altezza - DISTANZA_CARTIGLIO;
+		} else if (aSinistra) {
+			x = icona.getX() + icona.getLarghezza() + DISTANZA_CARTIGLIO;
+			y = icona.getY() + (icona.getAltezza() - altezza) / 2;
 		} else {
 			x = icona.getX() - larghezza - DISTANZA_CARTIGLIO;
 			y = icona.getY() + (icona.getAltezza() - altezza) / 2;
@@ -588,6 +601,18 @@ public class BarraIcone implements Finestra {
 		x = Math.max(0, Math.min(x, larghezzaSchermo - larghezza));
 		y = Math.max(0, Math.min(y, altezzaSchermo - altezza));
 		return new Punto(x, y);
+	}
+
+	/**
+	 * In verticale, la barra sta a sinistra dello schermo invece che a destra: le icone ingrandite del Dock crescono verso destra, verso il contenuto, e il
+	 * cartiglio dell'aiuto sta alla destra dell'icona
+	 */
+	public void setASinistra(boolean aSinistra) {
+		this.aSinistra = aSinistra && !orizzontale;
+	}
+
+	public boolean isASinistra() {
+		return aSinistra;
 	}
 
 	/**

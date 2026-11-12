@@ -196,6 +196,7 @@ public enum TipoEvento {
      * Mostra la finestra con i migliori 10 giocatori di tutti i tempi
      */
     NOTIFICA_MOSTRA_PUNTEGGI_MIGLIORI,
+    NOTIFICA_POSIZIONE_DELLA_BARRA,
     /**
      * Mostra la finestra con le statistiche sulla partita appena conclusa
      */

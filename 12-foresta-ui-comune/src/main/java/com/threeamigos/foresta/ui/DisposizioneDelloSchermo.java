@@ -34,6 +34,8 @@ public final class DisposizioneDelloSchermo {
 
 	private final TipoDiLayout tipo;
 	private final Orientamento orientamento;
+	// In verticale, la barra sta a sinistra invece che a destra: tutto il resto si disegna spostato a destra del suo spessore (getXDelContenuto)
+	private final boolean barraASinistra;
 	private final int larghezzaTotale;
 	private final int altezzaTotale;
 	private final int larghezzaContenuto;
@@ -70,6 +72,17 @@ public final class DisposizioneDelloSchermo {
 	 * @param zoom        lo zoom con cui si disegnano le immagini
 	 */
 	public DisposizioneDelloSchermo(TipoDiLayout tipo, Orientamento orientamento, int larghezza, int altezza, MisureDelleImmagini misure, double zoom) {
+		this(tipo, orientamento, false, larghezza, altezza, misure, zoom);
+	}
+
+	/**
+	 * @param barraASinistra in verticale, la barra a sinistra invece che a destra: le aree del contenuto restano le stesse, nelle coordinate del
+	 *                       contenuto (che comincia in x = 0), e chi disegna e chi riceve il mouse le sposta di {@link #getXDelContenuto()}; la barra
+	 *                       sta in x = 0
+	 */
+	public DisposizioneDelloSchermo(TipoDiLayout tipo, Orientamento orientamento, boolean barraASinistra, int larghezza, int altezza,
+			MisureDelleImmagini misure, double zoom) {
+		this.barraASinistra = barraASinistra && orientamento == Orientamento.VERTICALE;
 		if (tipo == TipoDiLayout.TELEFONO && orientamento != Orientamento.VERTICALE) {
 			throw new IllegalArgumentException("Il layout del telefono ha la barra delle icone a destra");
 		}
@@ -84,7 +97,7 @@ public final class DisposizioneDelloSchermo {
 		} else {
 			larghezzaContenuto = larghezza - SPESSORE_BARRA_ICONE;
 			altezzaContenuto = altezza;
-			barra = new Area(larghezza - SPESSORE_BARRA_ICONE, 0, SPESSORE_BARRA_ICONE, altezza);
+			barra = new Area(this.barraASinistra ? 0 : larghezza - SPESSORE_BARRA_ICONE, 0, SPESSORE_BARRA_ICONE, altezza);
 		}
 		Misura corniceGrande = conZoom(misure, RISORSA_CORNICE_GRANDE, zoom);
 		Misura corniceMappa = conZoom(misure, RISORSA_CORNICE_MAPPA, zoom);
@@ -195,6 +208,20 @@ public final class DisposizioneDelloSchermo {
 
 	public Orientamento getOrientamento() {
 		return orientamento;
+	}
+
+	/** Se la barra sta a sinistra (solo in verticale) */
+	public boolean isBarraASinistra() {
+		return barraASinistra;
+	}
+
+	/**
+	 * Di quanto il contenuto (riquadri e schermate a tutto schermo, che hanno le loro coordinate a partire da 0) sta a destra sullo schermo: lo spessore
+	 * della barra se sta a sinistra, altrimenti 0. Le aree di questa classe sono nelle coordinate del contenuto, tranne quella della barra, che è nelle
+	 * coordinate dello schermo
+	 */
+	public int getXDelContenuto() {
+		return barraASinistra ? SPESSORE_BARRA_ICONE : 0;
 	}
 
 	/** La larghezza di tutto lo schermo, barra compresa */

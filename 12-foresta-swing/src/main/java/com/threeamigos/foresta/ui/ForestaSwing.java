@@ -8,7 +8,9 @@ import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzatore;
 import com.threeamigos.foresta.tipi.Orientamento;
+import com.threeamigos.foresta.tipi.PosizioneDellaBarra;
 import com.threeamigos.foresta.tipi.TipoDiLayout;
+import com.threeamigos.foresta.ui.barra.ComandiPossibili;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
 import com.threeamigos.foresta.ui.schermate.DisegnoDiContenutoAwt;
 import com.threeamigos.foresta.ui.schermate.MisureDelleImmaginiAwt;
@@ -26,9 +28,12 @@ import java.awt.*;
  */
 public class ForestaSwing extends ForestaUI {
 
-	private final Orientamento orientamento;
-	// Lo schermo simulato con SCHERMO= (vedi SceltaDelLayout), o null per lo schermo di sempre
-	private final SceltaDelLayout scelta;
+	// Lo schermo simulato con SCHERMO=, o null per lo schermo di sempre
+	private final MisuraDelloSchermo schermoDiProva;
+	// Dove sta la barra e, per lo schermo simulato, il suo layout (vedi scegliLaDisposizione): cambiano se il giocatore sposta la barra dalle opzioni
+	private Orientamento orientamento;
+	private boolean barraASinistra;
+	private SceltaDelLayout scelta;
 	private final boolean tuttoSchermo;
 	private final boolean saltaLogoIniziale;
 	private final boolean barraDock;
@@ -38,6 +43,8 @@ public class ForestaSwing extends ForestaUI {
 	private JFrame jframe;
 	private Prompt prompt;
 	private DisplayableCanvas displayableCanvas;
+	// Come togliere le iscrizioni al bus che ha fatto il canvas: servono quando lo si rifà, con la barra da un'altra parte
+	private java.util.List<Runnable> iscrizioniDelCanvas = java.util.Collections.emptyList();
 	private int larghezza;
 	private int altezza;
 	// Solo durante lo stato LOGO_INIZIALE; poi il posto passa al displayableCanvas
@@ -54,27 +61,41 @@ public class ForestaSwing extends ForestaUI {
 	 * @param gestorePunteggi la classifica da mostrare nell'intro (la stessa che riceve l'Automa)
 	 * @param vistaPartita lo stato della partita da mostrare, in sola lettura
 	 */
-	public ForestaSwing(Orientamento orientamento, boolean tuttoSchermo, boolean saltaLogoIniziale, boolean barraDock,
-						boolean joystickVirtuale, GestorePunteggi gestorePunteggi, VistaPartita vistaPartita, Temporizzatore temporizzatore) {
-		this(orientamento, null, tuttoSchermo, saltaLogoIniziale, barraDock, joystickVirtuale, gestorePunteggi, vistaPartita, temporizzatore);
-	}
-
 	/**
-	 * @param scelta il layout per lo schermo simulato con SCHERMO=, o null per lo schermo di sempre: Swing non rimpicciolisce, e la finestra è
-	 *               grande quanto l'area virtuale (vedi layout_telefono.md §3.2)
+	 * @param posizione      dove sta la barra (dagli argomenti o dalle opzioni), o null per lasciarlo decidere: in basso sul desktop, e per lo
+	 *                       schermo simulato quel che sceglie SceltaDelLayout
+	 * @param schermoDiProva lo schermo simulato con SCHERMO=, o null per lo schermo di sempre: Swing non rimpicciolisce, e la finestra è grande quanto
+	 *                       l'area virtuale (vedi layout_telefono.md §3.2)
 	 */
-	public ForestaSwing(Orientamento orientamento, SceltaDelLayout scelta, boolean tuttoSchermo, boolean saltaLogoIniziale, boolean barraDock,
-						boolean joystickVirtuale, GestorePunteggi gestorePunteggi, VistaPartita vistaPartita, Temporizzatore temporizzatore) {
+	public ForestaSwing(PosizioneDellaBarra posizione, MisuraDelloSchermo schermoDiProva, boolean tuttoSchermo, boolean saltaLogoIniziale,
+						boolean barraDock, boolean joystickVirtuale, GestorePunteggi gestorePunteggi, VistaPartita vistaPartita,
+						Temporizzatore temporizzatore) {
 		super(vistaPartita, temporizzatore);
-		this.scelta = scelta;
+		this.schermoDiProva = schermoDiProva;
 		this.barraDock = barraDock;
 		this.joystickVirtuale = joystickVirtuale;
 		this.gestorePunteggi = gestorePunteggi;
-		this.orientamento = orientamento;
 		this.tuttoSchermo = tuttoSchermo;
+		scegliLaDisposizione(posizione);
 		this.saltaLogoIniziale = saltaLogoIniziale;
 		// Per ultimo: l'interfaccia, appena pronta, pubblica eventi a cui il motore risponde, e le iscrizioni devono esserci già tutte
 		SwingUtilities.invokeLater(this::creaEMostraInterfacciaUtente);
+	}
+
+	/**
+	 * Dove sta la barra: per lo schermo simulato lo sceglie SceltaDelLayout (in basso sul tablet se ci sta, a destra sul telefono, se il giocatore non
+	 * ha deciso altro); sul desktop in basso, a destra o a sinistra come dice la posizione (in basso, se non dice niente)
+	 */
+	private void scegliLaDisposizione(PosizioneDellaBarra posizione) {
+		if (schermoDiProva != null) {
+			scelta = SceltaDelLayout.per(schermoDiProva, new MisureDelleImmaginiAwt(), LivelloDiZoom.valore(), posizione);
+			orientamento = scelta.getOrientamento();
+			barraASinistra = scelta.isBarraASinistra();
+		} else {
+			scelta = null;
+			orientamento = posizione == null || posizione == PosizioneDellaBarra.BASSO ? Orientamento.ORIZZONTALE : Orientamento.VERTICALE;
+			barraASinistra = posizione == PosizioneDellaBarra.SINISTRA;
+		}
 	}
 
 	/**
@@ -99,9 +120,7 @@ public class ForestaSwing extends ForestaUI {
 		Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
 		jframe = new JFrame("La Foresta");
 		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Dimension dimensioniFinestra = scelta != null
-				? new Dimension(scelta.getAreaVirtuale().larghezza, scelta.getAreaVirtuale().altezza)
-				: calcolaDimensioniFinestra(orientamento, tuttoSchermo);
+		Dimension dimensioniFinestra = dimensioniFinestra();
 		larghezza = dimensioniFinestra.width;
 		altezza = dimensioniFinestra.height;
 
@@ -145,12 +164,65 @@ public class ForestaSwing extends ForestaUI {
 		prompt = new Prompt();
 		prompt.setLocation((larghezza - prompt.getSize().width) / 2, (altezza - prompt.getSize().height) / 2);
 
-		Logger.log(() -> "Orientamento: " + orientamento);
-		displayableCanvas = new DisplayableCanvas(scelta != null ? scelta.getTipo() : TipoDiLayout.TABLET, orientamento, larghezza, altezza, barraDock,
-				gestorePunteggi, vistaPartita);
+		creaIlCanvas();
+		interfacciaCompleta = true;
+	}
+
+	/**
+	 * La finestra: quella dello schermo simulato (la sua area virtuale), o quella che serve sul desktop per la barra dove sta
+	 */
+	private Dimension dimensioniFinestra() {
+		return scelta != null
+				? new Dimension(scelta.getAreaVirtuale().larghezza, scelta.getAreaVirtuale().altezza)
+				: calcolaDimensioniFinestra(orientamento, tuttoSchermo);
+	}
+
+	/**
+	 * Il canvas con la barra dove sta adesso, ricordando come togliere le iscrizioni al bus che fa: se la barra si sposta, il canvas si rifà
+	 */
+	private void creaIlCanvas() {
+		Logger.log(() -> "Orientamento: " + orientamento + (barraASinistra ? ", barra a sinistra" : ""));
+		iscrizioniDelCanvas = BusEventi.iscrizioniDurante(() -> displayableCanvas = new DisplayableCanvas(
+				scelta != null ? scelta.getTipo() : TipoDiLayout.TABLET, orientamento, barraASinistra, larghezza, altezza, barraDock,
+				gestorePunteggi, vistaPartita));
 		displayableCanvas.setJoystickVirtuale(joystickVirtuale);
 		interfacciaCompleta(displayableCanvas.getSchermo(), prompt.getCampo());
-		interfacciaCompleta = true;
+	}
+
+	/**
+	 * Dalle opzioni (all'intro, senza una partita in corso): il canvas si rifà con la barra dove l'ha voluta il giocatore, e la finestra cambia misura
+	 * se la barra passa dal basso a un lato o viceversa. Si resta nella schermata delle opzioni.
+	 */
+	@Override
+	protected void cambiaPosizioneDellaBarra(PosizioneDellaBarra posizione) {
+		Orientamento prima = orientamento;
+		boolean primaASinistra = barraASinistra;
+		scegliLaDisposizione(posizione);
+		if (displayableCanvas == null || prima == orientamento && primaASinistra == barraASinistra) {
+			return;
+		}
+		Dimension dimensioniFinestra = dimensioniFinestra();
+		larghezza = dimensioniFinestra.width;
+		altezza = dimensioniFinestra.height;
+		iscrizioniDelCanvas.forEach(Runnable::run);
+		// Tolto dalla finestra, il canvas ferma il suo thread dell'animazione
+		jframe.remove(displayableCanvas);
+		creaIlCanvas();
+		jframe.getContentPane().setPreferredSize(new Dimension(larghezza, altezza));
+		jframe.add(displayableCanvas);
+		displayableCanvas.setLocation(0, 0);
+		prompt.setLocation((larghezza - prompt.getSize().width) / 2, (altezza - prompt.getSize().height) / 2);
+		jframe.pack();
+		jframe.revalidate();
+		jframe.repaint();
+		// La schermata delle opzioni, con le scelte che il motore aveva messo nella barra
+		getSchermo().opzioni(ComandiPossibili.getComandi());
+		getSchermo().impostaAzioniIcone();
+	}
+
+	@Override
+	protected boolean barraInBassoPossibile() {
+		return schermoDiProva == null || SceltaDelLayout.barraInBassoPossibile(schermoDiProva, new MisureDelleImmaginiAwt(), LivelloDiZoom.valore());
 	}
 
 	/**
