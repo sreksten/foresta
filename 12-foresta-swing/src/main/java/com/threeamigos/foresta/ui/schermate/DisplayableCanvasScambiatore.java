@@ -35,15 +35,9 @@ import java.util.List;
 public abstract class DisplayableCanvasScambiatore extends SchermataDiScambio {
 
     /**
-     * Larghezza della cornice inventario
+     * Larghezza dell'immagine della cornice inventario: quella disegnata può essere minore (vedi getLarghezzaCornice)
      */
     protected static final int corniceInventarioWidth = ImageCache.corniceInventario.getWidth(null);
-
-    protected static final int ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO = ImageCache.corniceInventario.getHeight()
-            - 2 * (DIMENSIONE_BORDO_INTERNO + ImageCache.SPACING);
-
-    protected static final int LARGHEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO = ImageCache.corniceInventario.getWidth()
-            - 2 * (DIMENSIONE_BORDO_INTERNO + ImageCache.SPACING);
 
     /**
      * Usiamo l'immagine del Ladro come riferimento per disegnare il personaggio centrale della finestra di scambio
