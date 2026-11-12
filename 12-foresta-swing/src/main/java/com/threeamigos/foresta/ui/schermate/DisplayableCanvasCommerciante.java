@@ -79,7 +79,7 @@ public class DisplayableCanvasCommerciante extends DisplayableCanvasScambiatoreA
     @Override
     public void disegnaIntestazioniInventario(Graphics2D graphics) {
         TipoBottega bottega = TipoBottega.del(negozio);
-        disegnaIntestazioniInventarioImpl(graphics, bottega.getIntestazioneSinistra(), bottega.getIntestazioneDestra());
+        disegnaIntestazioniInventarioImpl(graphics, bottega.getChiaveIntestazioneSinistra(), bottega.getChiaveIntestazioneDestra());
     }
 
     private final DisegnoDiContenutoAwt disegno = new DisegnoDiContenutoAwt();

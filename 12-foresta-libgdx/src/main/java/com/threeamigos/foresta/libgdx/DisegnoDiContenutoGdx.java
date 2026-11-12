@@ -86,6 +86,10 @@ public final class DisegnoDiContenutoGdx {
 						// Con l'alone l'immagine è più grande di raggio pixel per lato: la si sposta, e il disegno resta al suo posto
 						TextureRegion conAlone = immagine(e);
 						batch.draw(conAlone, x - raggio, y - raggio);
+					} else if (e.isStriscia()) {
+						// Solo la striscia centrale di un'immagine più larga dello spazio (un separatore in una colonna stretta)
+						batch.draw(immagini.porzione(e.getRisorsa(), e.getXDellaStriscia(), 0, e.getLarghezza(), e.getAltezza()), x, y, e.getLarghezza(),
+								e.getAltezza());
 					} else {
 						batch.draw(immagine(e), x, y, e.getLarghezza(), e.getAltezza());
 					}

@@ -58,6 +58,9 @@ public final class ContenutoDiColonna {
 		private int argb;
 		private int raggioDellAlone;
 		private float opacita = 1f;
+		// Di un'immagine troppo larga si disegna solo una striscia: da dove comincia (nell'immagine) e quanto è larga l'immagine intera (0: tutta)
+		private int xDellaStriscia;
+		private int larghezzaIntera;
 
 		private Elemento(Tipo tipo, int x, int y) {
 			this.tipo = tipo;
@@ -123,12 +126,37 @@ public final class ContenutoDiColonna {
 			return e;
 		}
 
+		/**
+		 * Un'immagine centrata su xCentro, che non esce da larghezzaMassima: se è più larga se ne disegna solo la striscia centrale (i separatori, che hanno
+		 * il motivo nel mezzo, in una colonna più stretta di loro)
+		 */
+		public static Elemento immagineCentrata(String risorsa, int larghezza, int altezza, int larghezzaMassima, int xCentro, int y) {
+			if (larghezza <= larghezzaMassima) {
+				return immagine(risorsa, larghezza, altezza, false, null, xCentro - larghezza / 2, y);
+			}
+			int visibile = Math.max(1, larghezzaMassima);
+			Elemento e = immagine(risorsa, visibile, altezza, false, null, xCentro - visibile / 2, y);
+			e.larghezzaIntera = larghezza;
+			e.xDellaStriscia = (larghezza - visibile) / 2;
+			return e;
+		}
+
 		public static Elemento rettangolo(int larghezza, int altezza, int argb, int x, int y) {
 			Elemento e = new Elemento(Tipo.RETTANGOLO, x, y);
 			e.larghezza = larghezza;
 			e.altezza = altezza;
 			e.argb = argb;
 			return e;
+		}
+
+		/** Se dell'immagine si disegna solo una striscia (vedi {@link #immagineCentrata}): allora {@link #getLarghezza()} è quella della striscia */
+		public boolean isStriscia() {
+			return larghezzaIntera > 0;
+		}
+
+		/** Da dove comincia la striscia, nell'immagine intera */
+		public int getXDellaStriscia() {
+			return xDellaStriscia;
 		}
 
 		public Tipo getTipo() {

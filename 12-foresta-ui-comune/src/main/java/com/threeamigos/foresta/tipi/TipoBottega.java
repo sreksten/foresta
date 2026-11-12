@@ -54,6 +54,15 @@ public enum TipoBottega {
 		throw new IllegalArgumentException("Nessuna schermata del commerciante per " + negozio);
 	}
 
+	/** La chiave del titolo della colonna di sinistra (vedi SchermataDiScambio.titoloDellaCornice, che sceglie la forma corta se serve) */
+	public String getChiaveIntestazioneSinistra() {
+		return intestazioneSinistra;
+	}
+
+	public String getChiaveIntestazioneDestra() {
+		return intestazioneDestra;
+	}
+
 	public String getIntestazioneSinistra() {
 		return TestiDellaUI.get(intestazioneSinistra);
 	}

@@ -38,7 +38,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
 
     @Override
     public void disegnaIntestazioniInventario(Graphics2D graphics) {
-        disegnaIntestazioniInventarioImpl(graphics, TipoBottega.ALCHIMISTA.getIntestazioneSinistra(), TipoBottega.ALCHIMISTA.getIntestazioneDestra());
+        disegnaIntestazioniInventarioImpl(graphics, TipoBottega.ALCHIMISTA.getChiaveIntestazioneSinistra(), TipoBottega.ALCHIMISTA.getChiaveIntestazioneDestra());
     }
 
     @Override

@@ -47,7 +47,6 @@ public final class SchermataDiScambioArtefattiGdx extends SchermataDiScambio {
 	private final ElencoScorrevoleGdx elencoGdx;
 	private final ScambioDegliArtefatti scambioDegliArtefatti;
 	private final float zoom = (float) LivelloDiZoom.valore();
-	private final int larghezzaCornice;
 	// Intestazioni, negoziante e aiuto del doppio click; quella del commerciante cambia secondo il negozio (vedi impostaNegozio)
 	private TipoBottega bottega;
 	private final DisegnoDiContenutoGdx disegno;
@@ -67,7 +66,6 @@ public final class SchermataDiScambioArtefattiGdx extends SchermataDiScambio {
 				misure(immagini));
 		this.immagini = immagini;
 		this.medio = medio;
-		this.larghezzaCornice = immagini.larghezza(CORNICE, zoom);
 		this.bottega = bottega;
 		this.disegno = new DisegnoDiContenutoGdx(immagini, piccolo, medio);
 		this.cartiglio = new CartiglioGdx(immagini, medio);
@@ -191,9 +189,9 @@ public final class SchermataDiScambioArtefattiGdx extends SchermataDiScambio {
 	}
 
 	public void disegna(Batch batch, Camera camera, Viewport viewport) {
-		int xCorniceDestra = width - SPACING - larghezzaCornice;
-		immagini.disegnaAFasce(batch, CORNICE, SPACING, SPACING, zoom, getFasceDellaCornice());
-		immagini.disegnaAFasce(batch, CORNICE, xCorniceDestra, SPACING, zoom, getFasceDellaCornice());
+		int xCorniceDestra = width - SPACING - getLarghezzaCornice();
+		immagini.disegnaAPezzi(batch, CORNICE, SPACING, SPACING, zoom, getFasceDellaCornice(), getColonneDellaCornice());
+		immagini.disegnaAPezzi(batch, CORNICE, xCorniceDestra, SPACING, zoom, getFasceDellaCornice(), getColonneDellaCornice());
 		if (scambioDegliArtefatti.getScambio() == null) {
 			return;
 		}
@@ -203,8 +201,8 @@ public final class SchermataDiScambioArtefattiGdx extends SchermataDiScambio {
 		if (testata != null) {
 			disegno.disegna(batch, testata, 0, 0, 1f);
 		}
-		intestazione(batch, bottega.getIntestazioneSinistra(), SPACING + larghezzaCornice / 2);
-		intestazione(batch, bottega.getIntestazioneDestra(), width - SPACING - larghezzaCornice / 2);
+		intestazione(batch, titoloDellaCornice(bottega.getChiaveIntestazioneSinistra()), SPACING + getLarghezzaCornice() / 2);
+		intestazione(batch, titoloDellaCornice(bottega.getChiaveIntestazioneDestra()), width - SPACING - getLarghezzaCornice() / 2);
 		if (colonna.getPersonaggio() == null) {
 			disegno.disegna(batch, colonnaDelNegoziante(bottega.getMestiere(), banco == null ? Collections.emptyList() : RigheDellIncantatore.righe(banco)), 0, 0, 1f);
 		} else {

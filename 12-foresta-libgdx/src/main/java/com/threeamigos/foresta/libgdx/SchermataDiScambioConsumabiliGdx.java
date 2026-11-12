@@ -35,7 +35,6 @@ public final class SchermataDiScambioConsumabiliGdx extends SchermataDiScambio {
 	private final DisegnoDiContenutoGdx disegno;
 	private final CartiglioGdx cartiglio;
 	private final float zoom = (float) LivelloDiZoom.valore();
-	private final int larghezzaCornice;
 	// Gli sprite che restano confinati nella schermata (le monete spese, l'incantesimo comprato)
 	private final List<SpriteATempoGdx> spriteLocali = new ArrayList<>();
 
@@ -44,7 +43,6 @@ public final class SchermataDiScambioConsumabiliGdx extends SchermataDiScambio {
 				SchermataDiScambioArtefattiGdx.misure(immagini));
 		this.immagini = immagini;
 		this.medio = medio;
-		this.larghezzaCornice = immagini.larghezza(CORNICE, zoom);
 		this.disegno = new DisegnoDiContenutoGdx(immagini, piccolo, medio);
 		this.cartiglio = new CartiglioGdx(immagini, medio);
 		this.elencoGdx = new ElencoScorrevoleGdx(immagini, piccolo, medio);
@@ -85,13 +83,13 @@ public final class SchermataDiScambioConsumabiliGdx extends SchermataDiScambio {
 	}
 
 	public void disegna(Batch batch, Camera camera, Viewport viewport) {
-		int xCorniceDestra = width - SPACING - larghezzaCornice;
-		immagini.disegnaAFasce(batch, CORNICE, SPACING, SPACING, zoom, getFasceDellaCornice());
-		immagini.disegnaAFasce(batch, CORNICE, xCorniceDestra, SPACING, zoom, getFasceDellaCornice());
+		int xCorniceDestra = width - SPACING - getLarghezzaCornice();
+		immagini.disegnaAPezzi(batch, CORNICE, SPACING, SPACING, zoom, getFasceDellaCornice(), getColonneDellaCornice());
+		immagini.disegnaAPezzi(batch, CORNICE, xCorniceDestra, SPACING, zoom, getFasceDellaCornice(), getColonneDellaCornice());
 		disegnaElenco(batch, camera, viewport, logica.getElencoGruppo(), xMinimaZonaSinistra, scorrimentoSinistra, false);
 		disegnaElenco(batch, camera, viewport, logica.getElencoVenditore(), xMinimaZonaDestra, scorrimentoDestra, true);
-		intestazione(batch, TipoBottega.ALCHIMISTA.getIntestazioneSinistra(), SPACING + larghezzaCornice / 2);
-		intestazione(batch, TipoBottega.ALCHIMISTA.getIntestazioneDestra(), width - SPACING - larghezzaCornice / 2);
+		intestazione(batch, titoloDellaCornice(TipoBottega.ALCHIMISTA.getChiaveIntestazioneSinistra()), SPACING + getLarghezzaCornice() / 2);
+		intestazione(batch, titoloDellaCornice(TipoBottega.ALCHIMISTA.getChiaveIntestazioneDestra()), width - SPACING - getLarghezzaCornice() / 2);
 		disegno.disegna(batch, colonnaDelNegoziante(getMestiereAlCentro()), 0, 0, 1f);
 		for (SpriteATempoGdx sprite : new ArrayList<>(spriteLocali)) {
 			sprite.anima(batch, camera, viewport);

@@ -120,20 +120,26 @@ public abstract class DisplayableCanvasScambiatore extends SchermataDiScambio {
      */
     protected void disegnaInventario(Graphics2D graphics) {
         disegnaCornice(graphics, SPACING);
-        disegnaCornice(graphics, width - SPACING - corniceInventarioWidth);
+        disegnaCornice(graphics, width - SPACING - getLarghezzaCornice());
         disegnaIntestazioniInventario(graphics);
     }
 
     /**
-     * Una cornice dell'inventario: intera, o tagliata nel mezzo se lo schermo è più basso (la parte di sopra e quella di sotto, vedi CorniceTagliata)
+     * Una cornice dell'inventario: intera, o tagliata nel mezzo se lo schermo è più basso (la parte di sopra e quella di sotto) o se la colonna centrale
+     * ha bisogno di spazio (la parte di sinistra e quella di destra): fino a quattro pezzi, vedi CorniceTagliata
      */
     private void disegnaCornice(Graphics2D graphics, int x) {
         double zoom = LivelloDiZoom.valore();
-        for (CorniceTagliata.Fascia fascia : getFasceDellaCornice()) {
-            int ySorgente = (int) Math.round(fascia.getYSorgente() * zoom);
-            int y = SPACING + fascia.getYDestinazione();
-            graphics.drawImage(ImageCache.corniceInventario, x, y, x + corniceInventarioWidth, y + fascia.getAltezzaDestinazione(),
-                    0, ySorgente, corniceInventarioWidth, ySorgente + fascia.getAltezzaDestinazione(), null);
+        for (CorniceTagliata.Fascia colonna : getColonneDellaCornice()) {
+            int xSorgente = (int) Math.round(colonna.getYSorgente() * zoom);
+            int xDestinazione = x + colonna.getYDestinazione();
+            int larghezza = colonna.getAltezzaDestinazione();
+            for (CorniceTagliata.Fascia fascia : getFasceDellaCornice()) {
+                int ySorgente = (int) Math.round(fascia.getYSorgente() * zoom);
+                int y = SPACING + fascia.getYDestinazione();
+                graphics.drawImage(ImageCache.corniceInventario, xDestinazione, y, xDestinazione + larghezza, y + fascia.getAltezzaDestinazione(),
+                        xSorgente, ySorgente, xSorgente + larghezza, ySorgente + fascia.getAltezzaDestinazione(), null);
+            }
         }
     }
 
@@ -146,19 +152,21 @@ public abstract class DisplayableCanvasScambiatore extends SchermataDiScambio {
     /**
      * Disegna le intestazioni dell'inventario
      * @param graphics il graphics2D su cui disegnare
-     * @param intestazioneSinistra l'intestazione sinistra del riquadro oggetti presenti
-     * @param intestazioneDestra l'intestazione destra del riquadro oggetti presenti
+     * @param chiaveSinistra la chiave del titolo della cornice di sinistra (corto se quello lungo non ci sta: vedi titoloDellaCornice)
+     * @param chiaveDestra la chiave del titolo della cornice di destra
      */
-    protected void disegnaIntestazioniInventarioImpl(Graphics2D graphics, String intestazioneSinistra, String intestazioneDestra) {
+    protected void disegnaIntestazioniInventarioImpl(Graphics2D graphics, String chiaveSinistra, String chiaveDestra) {
+        String intestazioneSinistra = titoloDellaCornice(chiaveSinistra);
+        String intestazioneDestra = titoloDellaCornice(chiaveDestra);
         Image image = ImageCache.get(intestazioneSinistra, DoomdarkColorModel.Color.BLACK);
-        int x = SPACING + corniceInventarioWidth / 2 - image.getWidth(null) / 2;
+        int x = SPACING + getLarghezzaCornice() / 2 - image.getWidth(null) / 2;
         int y = SPACING;
         graphics.drawImage(image, x + 2, y + 2, null);
         image = ImageCache.get(intestazioneSinistra, DoomdarkColorModel.Color.LIGHT_GRAY);
         graphics.drawImage(image, x, y, null);
 
         image = ImageCache.get(intestazioneDestra, DoomdarkColorModel.Color.BLACK);
-        x = width - SPACING - corniceInventarioWidth / 2 - image.getWidth(null) / 2;
+        x = width - SPACING - getLarghezzaCornice() / 2 - image.getWidth(null) / 2;
         graphics.drawImage(image, x + 2, y + 2, null);
         image = ImageCache.get(intestazioneDestra, DoomdarkColorModel.Color.LIGHT_GRAY);
         graphics.drawImage(image, x, y, null);

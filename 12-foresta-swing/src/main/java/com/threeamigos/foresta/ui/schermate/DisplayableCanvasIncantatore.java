@@ -63,7 +63,7 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
 
     @Override
     public void disegnaIntestazioniInventario(Graphics2D graphics) {
-        disegnaIntestazioniInventarioImpl(graphics, TipoBottega.INCANTATORE.getIntestazioneSinistra(), TipoBottega.INCANTATORE.getIntestazioneDestra());
+        disegnaIntestazioniInventarioImpl(graphics, TipoBottega.INCANTATORE.getChiaveIntestazioneSinistra(), TipoBottega.INCANTATORE.getChiaveIntestazioneDestra());
     }
 
     @Override

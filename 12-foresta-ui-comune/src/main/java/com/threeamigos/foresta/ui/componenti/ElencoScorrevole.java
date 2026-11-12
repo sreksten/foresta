@@ -93,10 +93,11 @@ public class ElencoScorrevole<T> {
 	}
 
 	/**
-	 * Aggiunge un separatore orizzontale (un nodo che è solo un'immagine)
+	 * Aggiunge un separatore orizzontale (un nodo che è solo un'immagine), centrato: se è più largo dell'elenco se ne vede la parte centrale, dove sta il
+	 * suo motivo (chi disegna ritaglia l'elenco alla sua larghezza)
 	 */
 	public void creaSeparatore(ImmagineDelNodo separatore) {
-		creaNodo(null, null, null, null, separatore, null);
+		creaNodo(null, null, null, null, separatore, null).separatore = true;
 	}
 
 	private int calcolaAltezzaMassimaNodi() {
@@ -181,7 +182,7 @@ public class ElencoScorrevole<T> {
 			// occupano.
 			int altezzaNodo = nodo.getAltezzaSenzaFigli();
 			if (altezzaRaggiunta + altezzaNodo > offset && altezzaRaggiunta < offset + altezzaMassima) {
-				int x = nodo.getIndentazione();
+				int x = nodo.separatore ? (larghezza - nodo.icona.misura.larghezza) / 2 : nodo.getIndentazione();
 				if (nodo.icona != null) {
 					elementi.add(new ElementoDelElenco(ElementoDelElenco.Tipo.ICONA, nodo.icona.immagine, nodo.icona.misura.larghezza, null, null, null,
 							null, 0, 0, x, altezzaRaggiunta));
@@ -258,6 +259,8 @@ public class ElencoScorrevole<T> {
 		private final ImmagineDelNodo icona;
 		private final TestoDelNodo chiave;
 		private final TestoDelNodo valoreTesto;
+		// Un separatore: solo un'immagine, centrata nell'elenco
+		private boolean separatore;
 		private final ImmagineDelNodo valoreImmagine;
 		private final TestoDelNodo descrizione;
 		private final int larghezzaChiave;

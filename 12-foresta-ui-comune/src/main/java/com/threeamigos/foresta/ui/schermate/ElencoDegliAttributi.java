@@ -10,6 +10,8 @@ import com.threeamigos.foresta.ui.componenti.ElencoScorrevole;
 import com.threeamigos.foresta.ui.componenti.ElencoScorrevole.TestoDelNodo;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.DoomdarkFont;
+import com.threeamigos.foresta.ui.testo.FontTool;
+import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 
 import java.util.Collection;
@@ -30,6 +32,21 @@ public final class ElencoDegliAttributi {
 
 	private static final int INDENTAZIONE = 10;
 	private static final int INTERLINEA = 1;
+	// Il valore più largo che un attributo mostra, per la larghezza necessaria
+	private static final String VALORE_PIU_LARGO = "999";
+
+	/**
+	 * Quanto deve essere largo l'elenco perché ogni attributo stia su una riga con il suo valore: il nome più largo nella lingua in uso, lo spazio e il
+	 * valore più largo (le schermate di scambio stringono le cornici finché la colonna centrale non è larga così: vedi SchermataDiScambio)
+	 */
+	public static int larghezzaNecessaria() {
+		DoomdarkFont font = DoomdarkFont.medio();
+		int nome = 0;
+		for (TipoAttributo attributo : TipoAttributo.values()) {
+			nome = Math.max(nome, FontTool.getWidth(font, attributo.getNome()));
+		}
+		return nome + Finestra.SPACING + FontTool.getWidth(font, VALORE_PIU_LARGO);
+	}
 
 	private boolean modificatoriTemporaneiVisibili = true;
 	private final Map<TipoAttributo, Boolean> figliVisibili = new EnumMap<>(TipoAttributo.class);

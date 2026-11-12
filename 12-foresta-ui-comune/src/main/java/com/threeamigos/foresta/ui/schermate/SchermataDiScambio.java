@@ -84,7 +84,9 @@ public abstract class SchermataDiScambio implements Finestra {
 	 */
 	public final DoomdarkFont fontSmall = DoomdarkFont.piccolo();
 
+	// La larghezza della cornice come si disegna: quella dell'immagine, o meno se la colonna centrale non sarebbe larga abbastanza (tagliata nel mezzo)
 	final int larghezzaCornice;
+	private final List<CorniceTagliata.Fascia> colonneDellaCornice;
 	// L'altezza della cornice come si disegna: quella dell'immagine, o meno se lo schermo è più basso (tagliata nel mezzo, vedi CorniceTagliata)
 	private final int altezzaCornice;
 	private final List<CorniceTagliata.Fascia> fasceDellaCornice;
@@ -141,16 +143,21 @@ public abstract class SchermataDiScambio implements Finestra {
 	protected int mouseY = -1;
 
 	/**
-	 * @param larghezzaCornice la larghezza della cornice dell'inventario, già con lo zoom
+	 * @param larghezzaImmagineCornice la larghezza della cornice dell'inventario, già con lo zoom: se con lei la colonna centrale non è larga quanto un attributo
+	 *                         con il suo valore ({@link ElencoDegliAttributi#larghezzaNecessaria()}), la cornice si taglia nel mezzo
+	 *                         ({@link #getColonneDellaCornice()})
 	 * @param altezzaCornice   la sua altezza, con lo zoom: se lo schermo è più basso, la cornice si taglia nel mezzo ({@link #getFasceDellaCornice()})
 	 * @param misure           per le misure dei personaggi al centro
 	 */
-	protected SchermataDiScambio(int width, int height, VistaPartita vistaPartita, int larghezzaCornice, int altezzaCornice, MisureDelleImmagini misure) {
+	protected SchermataDiScambio(int width, int height, VistaPartita vistaPartita, int larghezzaImmagineCornice, int altezzaCornice, MisureDelleImmagini misure) {
 		this.vistaPartita = vistaPartita;
 		this.width = width;
 		this.height = height;
-		this.larghezzaCornice = larghezzaCornice;
 		double zoom = LivelloDiZoom.valore();
+		int larghezzaPerLeCornici = (width - 4 * SPACING - ElencoDegliAttributi.larghezzaNecessaria()) / 2;
+		this.colonneDellaCornice = CorniceTagliata.colonne((int) Math.round(larghezzaImmagineCornice / zoom), zoom,
+				Math.min(larghezzaImmagineCornice, larghezzaPerLeCornici));
+		this.larghezzaCornice = CorniceTagliata.larghezza(colonneDellaCornice);
 		this.fasceDellaCornice = CorniceTagliata.fasce((int) Math.round(altezzaCornice / zoom), zoom, height - SPACING);
 		this.altezzaCornice = CorniceTagliata.altezza(fasceDellaCornice);
 		this.misure = misure;
@@ -185,6 +192,29 @@ public abstract class SchermataDiScambio implements Finestra {
 	 */
 	public List<CorniceTagliata.Fascia> getFasceDellaCornice() {
 		return fasceDellaCornice;
+	}
+
+	/**
+	 * Come disegnare le due cornici in larghezza: l'immagine intera, o la sua parte di sinistra e quella di destra se la colonna centrale ha bisogno di
+	 * spazio (una {@link CorniceTagliata.Fascia} in larghezza: la y vale come x). Con le fasce in altezza, i pezzi sono fino a quattro.
+	 */
+	public List<CorniceTagliata.Fascia> getColonneDellaCornice() {
+		return colonneDellaCornice;
+	}
+
+	/**
+	 * Quanto è larga una cornice come si disegna (dalla x {@link #SPACING} la sinistra, fino a width - {@link #SPACING} la destra)
+	 */
+	public int getLarghezzaCornice() {
+		return larghezzaCornice;
+	}
+
+	/**
+	 * Il titolo di una cornice: il testo di quella chiave, o la sua forma corta (chiave_BREVE) se quello lungo non ci sta fra le decorazioni degli angoli
+	 */
+	public String titoloDellaCornice(String chiave) {
+		String titolo = TestiDellaUI.get(chiave);
+		return FontTool.getWidth(DoomdarkFont.medio(), titolo) <= larghezzaCornice - 2 * DIMENSIONE_BORDO_INTERNO ? titolo : TestiDellaUI.get(chiave + "_BREVE");
 	}
 
 	/**
@@ -259,8 +289,8 @@ public abstract class SchermataDiScambio implements Finestra {
 		}
 		y += SPACING;
 		Misura separatore = misure.immagine(NomiDelleImmagini.SEPARATORE);
-		elementi.add(Elemento.immagine(NomiDelleImmagini.SEPARATORE, separatore.larghezza, separatore.altezza, false, null,
-				xMinimaZonaDestra + (xMassimaZonaDestra - xMinimaZonaDestra - separatore.larghezza) / 2, y));
+		elementi.add(Elemento.immagineCentrata(NomiDelleImmagini.SEPARATORE, separatore.larghezza, separatore.altezza, xMassimaZonaDestra - xMinimaZonaDestra,
+				(xMinimaZonaDestra + xMassimaZonaDestra) / 2, y));
 		return new ContenutoDiColonna(width, y + separatore.altezza + SPACING, elementi);
 	}
 
@@ -370,7 +400,7 @@ public abstract class SchermataDiScambio implements Finestra {
 			y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 		}
 		Misura separatore = misure.immagine(NomiDelleImmagini.SEPARATORE);
-		elementi.add(Elemento.immagine(NomiDelleImmagini.SEPARATORE, separatore.larghezza, separatore.altezza, false, null, (width - separatore.larghezza) / 2, y));
+		elementi.add(separatoreCentrale(separatore, y));
 		return new ContenutoDiColonna(width, y + separatore.altezza, elementi);
 	}
 
@@ -415,7 +445,7 @@ public abstract class SchermataDiScambio implements Finestra {
 				puntiAbilita > 0 ? DoomdarkColorModel.Color.ORANGE : coloreTestata);
 		y += fontHeight;
 		Misura separatore = misure.immagine(NomiDelleImmagini.SEPARATORE);
-		elementi.add(Elemento.immagine(NomiDelleImmagini.SEPARATORE, separatore.larghezza, separatore.altezza, false, null, (width - separatore.larghezza) / 2, y));
+		elementi.add(separatoreCentrale(separatore, y));
 		return new ContenutoDiColonna(width, y + separatore.altezza, elementi);
 	}
 
@@ -449,6 +479,14 @@ public abstract class SchermataDiScambio implements Finestra {
 				width / 2 + misure.personaggio(TipoPersonaggio.ARMAIOLO).larghezza / 3,
 				yIntestazione + ladro.altezza / 3
 		);
+	}
+
+	/**
+	 * Il separatore della colonna centrale: al centro dello schermo, e se la colonna è più stretta di lui solo la sua parte centrale
+	 */
+	private Elemento separatoreCentrale(Misura separatore, int y) {
+		return Elemento.immagineCentrata(NomiDelleImmagini.SEPARATORE, separatore.larghezza, separatore.altezza, xMassimaZonaCentrale - xMinimaZonaCentrale,
+				width / 2, y);
 	}
 
 	/**

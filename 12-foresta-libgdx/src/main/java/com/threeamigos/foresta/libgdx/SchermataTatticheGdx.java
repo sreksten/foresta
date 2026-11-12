@@ -43,14 +43,12 @@ public final class SchermataTatticheGdx extends SchermataDiScambio implements Sc
 	private final CartiglioGdx cartiglio;
 	private final EditorDelleTattiche editor;
 	private final float zoom = (float) LivelloDiZoom.valore();
-	private final int larghezzaCornice;
 
 	public SchermataTatticheGdx(int width, int height, VistaPartita vistaPartita, ImmaginiGdx immagini, TestoGdx piccolo, TestoGdx medio) {
 		super(width, height, vistaPartita, immagini.larghezza(CORNICE, (float) LivelloDiZoom.valore()), immagini.altezza(CORNICE, (float) LivelloDiZoom.valore()),
 				SchermataDiScambioArtefattiGdx.misure(immagini));
 		this.immagini = immagini;
 		this.medio = medio;
-		this.larghezzaCornice = immagini.larghezza(CORNICE, zoom);
 		this.disegno = new DisegnoDiContenutoGdx(immagini, piccolo, medio);
 		this.cartiglio = new CartiglioGdx(immagini, medio);
 		this.elencoGdx = new ElencoScorrevoleGdx(immagini, piccolo, medio);
@@ -76,11 +74,11 @@ public final class SchermataTatticheGdx extends SchermataDiScambio implements Sc
 	}
 
 	public void disegna(Batch batch, Camera camera, Viewport viewport) {
-		int xCorniceDestra = width - SPACING - larghezzaCornice;
-		immagini.disegnaAFasce(batch, CORNICE, SPACING, SPACING, zoom, getFasceDellaCornice());
-		immagini.disegnaAFasce(batch, CORNICE, xCorniceDestra, SPACING, zoom, getFasceDellaCornice());
-		intestazione(batch, TestiDellaUI.get("TATTICHE_TATTICA"), SPACING + larghezzaCornice / 2);
-		intestazione(batch, TestiDellaUI.get("TATTICHE_SPIEGAZIONE"), width - SPACING - larghezzaCornice / 2);
+		int xCorniceDestra = width - SPACING - getLarghezzaCornice();
+		immagini.disegnaAPezzi(batch, CORNICE, SPACING, SPACING, zoom, getFasceDellaCornice(), getColonneDellaCornice());
+		immagini.disegnaAPezzi(batch, CORNICE, xCorniceDestra, SPACING, zoom, getFasceDellaCornice(), getColonneDellaCornice());
+		intestazione(batch, titoloDellaCornice("TATTICHE_TATTICA"), SPACING + getLarghezzaCornice() / 2);
+		intestazione(batch, titoloDellaCornice("TATTICHE_SPIEGAZIONE"), width - SPACING - getLarghezzaCornice() / 2);
 		if (editor.getPersonaggio() == null) {
 			return;
 		}

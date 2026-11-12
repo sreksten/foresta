@@ -105,6 +105,26 @@ public final class ImmaginiGdx implements Disposable {
 	}
 
 	/**
+	 * Disegna una cornice a pezzi (vedi CorniceTagliata): le fasce in altezza per le colonne in larghezza, con la cima a sinistra in (x, y). Senza tagli è
+	 * l'immagine intera; con i due tagli i pezzi sono quattro, attaccati
+	 */
+	public void disegnaAPezzi(Batch batch, String risorsa, float x, float y, float scala, List<CorniceTagliata.Fascia> fasce,
+			List<CorniceTagliata.Fascia> colonne) {
+		for (CorniceTagliata.Fascia colonna : colonne) {
+			if (colonna.getAltezzaSorgente() <= 0) {
+				continue;
+			}
+			for (CorniceTagliata.Fascia fascia : fasce) {
+				if (fascia.getAltezzaSorgente() <= 0) {
+					continue;
+				}
+				batch.draw(porzione(risorsa, colonna.getYSorgente(), fascia.getYSorgente(), colonna.getAltezzaSorgente(), fascia.getAltezzaSorgente()),
+						x + colonna.getYDestinazione(), y + fascia.getYDestinazione(), colonna.getAltezzaDestinazione(), fascia.getAltezzaDestinazione());
+			}
+		}
+	}
+
+	/**
 	 * Quanto è grande l'immagine con quella scala (2 per le immagini a metà risoluzione), arrotondata
 	 */
 	public int larghezza(String risorsa, float scala) {

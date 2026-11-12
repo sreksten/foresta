@@ -63,7 +63,7 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
 
     @Override
     public void disegnaIntestazioniInventario(Graphics2D graphics) {
-        disegnaIntestazioniInventarioImpl(graphics, TipoBottega.INVENTARIO.getIntestazioneSinistra(), TipoBottega.INVENTARIO.getIntestazioneDestra());
+        disegnaIntestazioniInventarioImpl(graphics, TipoBottega.INVENTARIO.getChiaveIntestazioneSinistra(), TipoBottega.INVENTARIO.getChiaveIntestazioneDestra());
     }
 
     private final DisegnoDiContenutoAwt disegno = new DisegnoDiContenutoAwt();

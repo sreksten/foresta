@@ -121,7 +121,7 @@ public class DisplayableCanvasTattiche extends DisplayableCanvasScambiatore impl
 
 	@Override
 	public void disegnaIntestazioniInventario(Graphics2D graphics) {
-		disegnaIntestazioniInventarioImpl(graphics, TestiDellaUI.get("TATTICHE_TATTICA"), TestiDellaUI.get("TATTICHE_SPIEGAZIONE"));
+		disegnaIntestazioniInventarioImpl(graphics, "TATTICHE_TATTICA", "TATTICHE_SPIEGAZIONE");
 	}
 
 	@Override

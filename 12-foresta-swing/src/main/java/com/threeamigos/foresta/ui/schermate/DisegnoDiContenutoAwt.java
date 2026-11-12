@@ -98,6 +98,10 @@ public final class DisegnoDiContenutoAwt {
 				if (raggio > 0) {
 					// Con l'alone l'immagine è più grande di raggio pixel per lato: la si sposta, e il disegno resta al suo posto
 					g.drawImage(immagine, x - raggio, y - raggio, null);
+				} else if (e.isStriscia()) {
+					// Solo la striscia centrale di un'immagine più larga dello spazio (un separatore in una colonna stretta)
+					int xs = e.getXDellaStriscia();
+					g.drawImage(immagine, x, y, x + e.getLarghezza(), y + e.getAltezza(), xs, 0, xs + e.getLarghezza(), e.getAltezza(), null);
 				} else {
 					g.drawImage(immagine, x, y, e.getLarghezza(), e.getAltezza(), null);
 				}

@@ -190,6 +190,13 @@ Sono disegnate per l'area di oggi (1022×732): sul telefono l'altezza è 505. Un
 - Le liste dentro la cornice (gli oggetti, le intestazioni dei negozianti) prendono l'altezza interna della cornice tagliata e scorrono come oggi: se ne vedono meno alla volta.
 - Lo stesso vale per le tattiche, che usano la stessa cornice.
 
+**La cornice si taglia anche in larghezza** (deciso il 2026-11-12). Con le cornici intere, nel minimo alla colonna centrale restavano circa 30 pixel: il personaggio sacrificato e gli attributi illeggibili. La colonna centrale deve essere larga almeno quanto un attributo con il suo valore sulla stessa riga: il nome di attributo più largo nella lingua in uso (in italiano «Rigenerazione salute», 264 pixel), lo spazio e «999» (`ElencoDegliAttributi.larghezzaNecessaria`). Se con le cornici intere non lo è, le due cornici si stringono dello stesso tanto, tagliate nel mezzo come per l'altezza: la parte sinistra dell'immagine e quella destra, attaccate (`CorniceTagliata.colonne`, `SchermataDiScambio.getColonneDellaCornice`; con i due tagli i pezzi sono quattro). Nel minimo le cornici passano da 360 a circa 220 pixel; anche sul tablet si stringono di poco (la colonna centrale era di 286 pixel).
+
+- Le zone, gli elenchi e la cornice destra seguono la larghezza vera (`getLarghezzaCornice`); gli elenchi più stretti vanno a capo come sempre.
+- **I titoli** delle cornici che non ci stanno fra le decorazioni degli angoli prendono la forma corta (`titoloDellaCornice`, chiavi `…_BREVE` nei testi della UI): «Personaggio», «Gruppo», «Armaiolo», «Venditore», «Alchimista», «Banco».
+- **I separatori** più larghi dello spazio mostrano la loro parte centrale, dove sta il motivo: quelli della colonna centrale e della testata del gruppo (`ContenutoDiColonna.Elemento.immagineCentrata`, una striscia dell'immagine) e quelli degli elenchi degli oggetti (`ElencoScorrevole.creaSeparatore` li centra; chi disegna ritaglia l'elenco).
+- Vale per l'inventario, le botteghe, l'incantatore, l'alchimista e le tattiche. Test: `CorniciStretteTest`.
+
 ## 7. La barra delle icone
 
 È già verticale e scorre (con freccine, trascinamento, inerzia ed elastico): su 505 di altezza ci stanno circa 7 icone da 64 alla volta. Il Dock si ingrandisce sotto il dito. Lungo la barra il bersaglio del tocco resta di 64 pixel virtuali: a scala 0,71 sono **45 dp**, al limite dei 48 consigliati da Android. Da provare con il dito su un telefono vero.
