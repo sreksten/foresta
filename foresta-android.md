@@ -32,14 +32,14 @@ Versioni: Gradle 8.13, AGP 8.13.0, `compileSdk` 36 (libGDX 1.14 usa AndroidX e `
 
 È la «F» del titolo (`LogoForesta.png`, pixel art 39×62, in `foresta-android/icone-android/` insieme allo script che la trasforma) su fondo pergamena (#DEBD94), come icona adattiva (`mipmap-anydpi-v26`: sfondo a tinta unita e primo piano trasparente). `icone-android/genera_icone.py` ingrandisce la bitmap **senza interpolare** con un fattore intero (×1 mdpi, ×2 xhdpi, ×3 xxhdpi, ×4 xxxhdpi), sempre dentro l'area di sicurezza di 66 su 108 punti, e scrive i PNG in `app/src/main/res`. Per cambiarla: si sostituisce la bitmap (o il colore nello script) e si rilancia `python3 icone-android/genera_icone.py` (serve Pillow). Niente SVG: la pixel art con retinatura non si vettorializza senza perdere l'aspetto. L'icona adattiva c'è solo da Android 8 (API 26): per le versioni prima (il `minSdk` è 24; il Moto G con Android 7.1 mostrava l'icona generica) lo script scrive anche le icone tradizionali, `ic_launcher.png` (la F su un quadrato pergamena con gli angoli arrotondati) e `ic_launcher_round.png` (su un cerchio), in xhdpi (96 pixel, F ×1), xxhdpi (144, ×2) e xxxhdpi (192, ×2); la mdpi la ricava il sistema dalla xhdpi, perché nemmeno la F ×1 ci sta in 48 pixel.
 
-## Stato (2026-11-11)
+## Stato (2026-11-12)
 
 Provato su due dispositivi:
 
 - **Realme Pad (RMP2103)** (2026-11-06): un tablet da 10,4″, 2000×1200, Android 11, MediaTek G80 / Mali-G52, 3 GB di RAM. Il gioco parte, gira a circa 60 fotogrammi al secondo e mostra l'intro con la barra delle icone verticale.
-- **Motorola Moto G 2014 LTE (XT1072, «thea»)** (2026-11-11): un telefono da 5″, 1280×720, Snapdragon 400 / Adreno 305, 1 GB di RAM (870 MB disponibili al sistema), con **LineageOS 14.1, Android 7.1.2 (API 25)**: la prima prova sotto Android 8, cioè del `minSdk` 24. Il gioco parte e mostra l'intro con il testo che scorre e la barra delle icone verticale; nel log nessun errore di API mancanti (`NoSuchMethodError`, `NoClassDefFoundError`, `VerifyError`). In memoria occupa circa 67 MB (PSS; 24 MB di heap Java, 23 MB di grafica). Il testo si legge bene; a destra resta una fascia nera, perché il 16:9 del telefono non corrisponde al rapporto che il gioco si aspetta. Il Moto G esce di fabbrica con Android 6.0 (API 23): per arrivare alla 7.1 si è sbloccato il bootloader (codice dal portale Motorola), si è installato TWRP 3.7.0 (`fastboot flash recovery`) e da lì la nightly ufficiale `lineage-14.1-20180224-nightly-thea-signed.zip` (copia su archive.org, `adb sideload`).
+- **Motorola Moto G 2014 LTE (XT1072, «thea»)** (2026-11-11): un telefono da 5″, 1280×720, Snapdragon 400 / Adreno 305, 1 GB di RAM (870 MB disponibili al sistema), con **LineageOS 14.1, Android 7.1.2 (API 25)**: la prima prova sotto Android 8, cioè del `minSdk` 24. Il gioco parte e mostra l'intro con il testo che scorre e la barra delle icone verticale; nel log nessun errore di API mancanti (`NoSuchMethodError`, `NoClassDefFoundError`, `VerifyError`). In memoria occupa circa 67 MB (PSS; 24 MB di heap Java, 23 MB di grafica). Il testo si legge bene. Dal 2026-11-12 usa il layout del telefono (`layout_telefono.md`): niente più fascia nera a destra, la pila dei riquadri che scorre di lato, le cornici dell'inventario strette; ci si è giocata una partita con il dito (locande, acquisti, inventario, combattimenti), e da lì sono venute le correzioni di quei giorni (il riquadro di testo meno sfumato, gli sprite sotto i riquadri che li coprono, il cartiglio che restava dopo un tocco, la regola del pianista). L'icona generica al posto della F, su Android 7.1, è corretta con le icone tradizionali (vedi sopra). Il Moto G esce di fabbrica con Android 6.0 (API 23): per arrivare alla 7.1 si è sbloccato il bootloader (codice dal portale Motorola), si è installato TWRP 3.7.0 (`fastboot flash recovery`) e da lì la nightly ufficiale `lineage-14.1-20180224-nightly-thea-signed.zip` (copia su archive.org, `adb sideload`).
 
-Su nessuno dei due si sono provati sistematicamente il tocco o una partita intera.
+Sul Realme Pad non si sono provati sistematicamente il tocco né una partita intera, e non si è ancora visto se resta sul layout del tablet.
 
 ## Osservazioni
 
@@ -50,6 +50,6 @@ Su nessuno dei due si sono provati sistematicamente il tocco o una partita inter
 
 ## Da fare / idee aperte
 
-- Provare il tocco e una partita intera (salvataggio, caricamento, inventario, mappa, combattimento, tastiera di sistema).
-- La firma dell'app e il pacchetto per lo store (Fase 7, punto 5), le icone, il nome e i margini di sicurezza (notch); lo schermo sempre acceso c'è già (`useWakelock` in `AndroidLauncher`).
-- Il layout per telefono (Fase 6): fatto, da provare sul Realme Pad (deve restare sul layout del tablet: lo dice la riga `Schermo …` del log, e dipende dalla densità che il tablet dichiara) e con `adb shell wm size` / `wm density` per fingere un telefono.
+- Sul Moto G: il salvataggio e il caricamento, la tastiera di sistema con il campo di testo aperto, le botteghe e le tattiche con le cornici strette. Sul Realme Pad il tocco e una partita intera.
+- La firma dell'app e il pacchetto per lo store (Fase 7, punto 5), il nome e i margini di sicurezza (notch); lo schermo sempre acceso c'è già (`useWakelock` in `AndroidLauncher`).
+- Il layout per telefono (Fase 6): fatto e provato sul Moto G; da provare sul Realme Pad (deve restare sul layout del tablet: lo dice la riga `Schermo …` del log, e dipende dalla densità che il tablet dichiara).
