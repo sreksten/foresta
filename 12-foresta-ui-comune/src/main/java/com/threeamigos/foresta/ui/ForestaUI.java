@@ -488,11 +488,10 @@ public abstract class ForestaUI implements Temporizzabile {
 				impostaAzioni(evento.getComandiPossibili());
 				break;
 
-			case LINGUA:
-				// Comincia una partita nuova: prima di tutto si sceglie la lingua (la scritta è nelle lingue offerte)
-				GestoreNuvole.azzera();
+			case OPZIONI:
+				// Dall'intro: l'intro si ferma (riparte quando si torna), e la schermata resta mentre nella barra cambiano le scelte
 				temporizzatore.termina();
-				schermo.scriviGrande(TestiDellaUI.get("SCEGLI_LINGUA"));
+				schermo.opzioni(evento.getComandiPossibili());
 				impostaAzioni(evento.getComandiPossibili());
 				break;
 

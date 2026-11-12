@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.testi.Testi;
+import com.threeamigos.foresta.salvataggi.GestoreOpzioniSuFile;
+import com.threeamigos.foresta.interfacce.GestoreOpzioni;
 import com.threeamigos.foresta.bestiario.RegistroBestiario;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoException;
@@ -29,12 +32,13 @@ import java.util.function.Consumer;
 /**
  * Il collegamento del motore, uguale per ogni piattaforma (il <code>Main</code> di Swing, quello di libGDX, poi Android e iOS): il
  * modello dati, il thread principale, chi chiude l'applicazione, i componenti del motore che ascoltano il bus, i gestori su file di
- * punteggi, trofei, bestiario e salvataggi, l'automa (che parte quando l'interfaccia pubblica {@code InternoInterfacciaUtentePronta})
+ * opzioni, punteggi, trofei, bestiario, tutorial e salvataggi, l'automa (che parte quando l'interfaccia pubblica {@code InternoInterfacciaUtentePronta})
  * e, in modalità di prova, i trucchi sui dadi. Le piattaforme ci aggiungono l'interfaccia.
  */
 public final class AvvioDelMotore {
 
 	private final GestorePunteggi gestorePunteggi;
+	private final GestoreOpzioni gestoreOpzioni;
 	private final Automa automa;
 	private final VistaPartitaMotore vistaPartita;
 
@@ -42,7 +46,7 @@ public final class AvvioDelMotore {
 	 * @param esecutore      il thread principale della piattaforma, su cui gira tutta la logica di gioco
 	 * @param uscita         che cosa fa la piattaforma quando il motore chiede di uscire (sul desktop chiude il processo): il motore
 	 *                       non lo fa da solo; il motivo di un'uscita per errore è già nel log
-	 * @param linguaDecisa   vero se la lingua è già decisa (dalla riga di comando): una partita nuova non la chiede
+	 * @param linguaDecisa   vero se la lingua è già decisa (dalla riga di comando): vince su quella scritta nelle opzioni
 	 */
 	public AvvioDelMotore(ThreadPrincipale.Esecutore esecutore, Consumer<NotificaUscitaDalGioco> uscita, boolean linguaDecisa) {
 		// Le parti del gioco ricevono i loro dati dal modello dati: prima di usarne una va detto loro dove sono
@@ -57,18 +61,21 @@ public final class AvvioDelMotore {
 		// Si registrano per ricordare gli ultimi messaggi e le ultime notizie e per tenere il conto di quanto succede in gioco
 		StatoDelMotore.registraComponenti();
 
+		// Le opzioni (la lingua) valgono da una partita all'altra; gli argomenti di avvio vincono su di loro
+		gestoreOpzioni = new GestoreOpzioniSuFile();
+		gestoreOpzioni.carica();
+		if (!linguaDecisa && gestoreOpzioni.getLingua() != null) {
+			Testi.impostaLingua(gestoreOpzioni.getLingua());
+		}
 		gestorePunteggi = new GestorePunteggiSuFile();
 		// Trofei e bestiario valgono da una partita all'altra: si rileggono una volta sola, all'avvio
 		RegistroTrofei.impostaGestoreTrofei(new GestoreTrofeiSuFile());
 		RegistroBestiario.impostaGestoreBestiario(new GestoreBestiarioSuFile());
-		// Il tutorial NON si salva su file finché lo si collauda (decisione dell'utente): si ricorda in memoria quel che si è visto durante la partita
-		// e a ogni avvio ricomincia da capo. Per farlo valere da una partita all'altra, come trofei e bestiario:
-		// RegistroSuggerimenti.impostaGestore(new GestoreSuggerimentiSuFile());
+		// Il tutorial vale da una partita all'altra, come trofei e bestiario: i suggerimenti si salvano man mano che si vedono (si ripristinano dalle opzioni)
+		RegistroSuggerimenti.impostaGestore(new GestoreSuggerimentiSuFile());
 
 		automa = new Automa(nuovoTemporizzatore(), new GestoreSalvataggiSuFile(), gestorePunteggi);
-		if (!linguaDecisa) {
-			automa.offriLaSceltaDellaLingua();
-		}
+		automa.impostaGestoreOpzioni(gestoreOpzioni);
 		ControlloreDiGioco controlloreDiGioco = automa;
 		// Ci si iscrive prima di creare l'interfaccia: un evento senza iscritti andrebbe perso lasciando il gioco sulla finestra nera
 		BusEventi.iscriviti(InternoInterfacciaUtentePronta.class, e -> controlloreDiGioco.inizia());
@@ -94,6 +101,11 @@ public final class AvvioDelMotore {
 	/** La classifica, la stessa che riceve l'automa: l'interfaccia la mostra nell'intro */
 	public GestorePunteggi getGestorePunteggi() {
 		return gestorePunteggi;
+	}
+
+	/** Le opzioni che valgono da una partita all'altra, le stesse che cambia l'automa */
+	public GestoreOpzioni getGestoreOpzioni() {
+		return gestoreOpzioni;
 	}
 
 	/** L'automa, che l'interfaccia avvisa quando l'applicazione va in background e torna in primo piano */

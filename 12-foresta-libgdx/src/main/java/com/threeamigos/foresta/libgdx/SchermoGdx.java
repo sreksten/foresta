@@ -73,6 +73,7 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 	private final SchermataTrofeiGdx trofei;
 	private final SchermataBestiarioGdx bestiario;
 	private final SchermataGrimorioGdx grimorio;
+	private final SchermataOpzioniGdx opzioni;
 	private final SchermataTatticheGdx tattiche;
 	private final BarraIconeGdx barraIcone;
 	private final TutorialGdx tutorial;
@@ -126,6 +127,7 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 		trofei = new SchermataTrofeiGdx(larghezza, altezza, vistaPartita, immagini, medio, testoGrande);
 		bestiario = new SchermataBestiarioGdx(larghezza, altezza, vistaPartita, immagini, piccolo, medio);
 		grimorio = new SchermataGrimorioGdx(larghezza, altezza, immagini, piccolo, medio);
+		opzioni = new SchermataOpzioniGdx(larghezza, altezza, immagini, piccolo, medio);
 		tattiche = new SchermataTatticheGdx(larghezza, altezza, vistaPartita, immagini, piccolo, medio);
 		// Sul telefono il numero e le icone di una voce stanno distanziati, per il dito
 		tattiche.getEditor().setIconeDistanziate(disposizione.isTelefono());
@@ -219,6 +221,9 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 				break;
 			case GRIMORIO:
 				grimorio.disegna(batch, camera, viewport, testoGrande);
+				break;
+			case OPZIONI:
+				opzioni.disegna(batch);
 				break;
 			case TATTICHE:
 				tattiche.disegna(batch, camera, viewport);
@@ -481,6 +486,11 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 	@Override
 	protected SchermataGrimorio schermataGrimorio() {
 		return grimorio;
+	}
+
+	@Override
+	protected SchermataOpzioni schermataOpzioni() {
+		return opzioni;
 	}
 
 	@Override

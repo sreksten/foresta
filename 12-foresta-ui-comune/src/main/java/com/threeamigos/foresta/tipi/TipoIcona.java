@@ -11,13 +11,16 @@ public enum TipoIcona {
 
 	/* Inizio gioco */
 	FLOPPY_CARICA(Comando.FLOPPY_CARICA, "icone/Floppy.png", SfondoIcona.VERDE),
+	OPZIONI(Comando.OPZIONI, "icone/Opzioni.png", SfondoIcona.VERDE),
 
-	/* Scelta della lingua, se la piattaforma la offre: le bandiere sono segnaposto da rifare */
+	/* La schermata delle opzioni: le lingue (le bandiere sono segnaposto da rifare), il tutorial da ripristinare, la classifica e i salvataggi da cancellare */
 	LINGUA_ITALIANO(Comando.LINGUA_ITALIANO, "icone/LinguaItaliano.png", SfondoIcona.VERDE),
 	LINGUA_INGLESE_USA(Comando.LINGUA_INGLESE_USA, "icone/LinguaIngleseUsa.png", SfondoIcona.VERDE),
 	LINGUA_INGLESE_GB(Comando.LINGUA_INGLESE_GB, "icone/LinguaIngleseGb.png", SfondoIcona.VERDE),
-	/* Nella stessa schermata, dopo le lingue: riaccende il tutorial. Il pollice con una freccia circolare è provvisorio, dal disegno di Si.png */
+	/* Il pollice con una freccia circolare è provvisorio, dal disegno di Si.png */
 	RIPRISTINA_TUTORIAL(Comando.RIPRISTINA_TUTORIAL, "icone/RipristinaTutorial.png", SfondoIcona.VERDE),
+	CANCELLA_PUNTEGGI(Comando.CANCELLA_PUNTEGGI, "icone/Rimuovi.png", SfondoIcona.ROSSO),
+	CANCELLA_SALVATAGGI(Comando.CANCELLA_SALVATAGGI, "icone/Rimuovi.png", SfondoIcona.ROSSO),
 
 	/* Scelta sesso del personaggio a inizio gioco */
 	MASCHIO(Comando.MASCHIO, "icone/Maschio.png", SfondoIcona.VERDE),

@@ -35,6 +35,12 @@ abstract class GestorePunteggiBase extends GestoreSuFile implements GestorePunte
 		}
 	}
 
+	@Override
+	public void ripristina() {
+		classifica.ripristinaLaPredefinita();
+		salva();
+	}
+
 	public int getConteggio() {
 		return classifica.getConteggio();
 	}

@@ -45,6 +45,11 @@ public interface GestorePunteggi {
 	void addPunteggio(String nome, int punteggio, String idPartita);
 
 	/**
+	 * Cancella i punteggi: la classifica torna quella predefinita, e si salva
+	 */
+	void ripristina();
+
+	/**
 	 * Salva i punteggi in qualche modo
 	 * @return true se la scrittura è andata a buon fine
 	 */

@@ -56,6 +56,8 @@ final class PartitaDiTest implements AutoCloseable {
 	private final Automa automa;
 	private final TemporizzatoreManuale temporizzatore = new TemporizzatoreManuale();
 	private final GestoreSalvataggiInMemoria salvataggi;
+	private final GestorePunteggiInMemoria punteggi = new GestorePunteggiInMemoria();
+	private final com.threeamigos.foresta.interfacce.GestoreOpzioni opzioni = new com.threeamigos.foresta.interfacce.GestoreOpzioni.InMemoria();
 	private final GestoreTrofeiInMemoria trofei = new GestoreTrofeiInMemoria();
 	private final GestoreBestiarioInMemoria bestiario = new GestoreBestiarioInMemoria();
 	private final RegistratoreEventi registratore = new RegistratoreEventi();
@@ -121,7 +123,8 @@ final class PartitaDiTest implements AutoCloseable {
 		BusEventi.iscriviti(NotificaTestoParagrafo.class, e -> ricordaTesto(e.getMessaggio()));
 
 		// Il precaricamento del motore sullo stesso thread, cosi' finisce prima che inizia() ritorni
-		automa = new Automa(temporizzatore, salvataggi, new GestorePunteggiInMemoria(), Runnable::run, this::leggiOrologio);
+		automa = new Automa(temporizzatore, salvataggi, punteggi, Runnable::run, this::leggiOrologio);
+		automa.impostaGestoreOpzioni(opzioni);
 		automa.inizia();
 		verificaNessunErrore();
 	}
@@ -238,12 +241,14 @@ final class PartitaDiTest implements AutoCloseable {
 		return this;
 	}
 
-	/**
-	 * La piattaforma offre la scelta della lingua all'inizio di una partita nuova (di base no: i test cominciano dal nome).
-	 */
-	PartitaDiTest conSceltaDellaLingua() {
-		automa.offriLaSceltaDellaLingua();
-		return this;
+	/** La classifica della partita, in memoria */
+	GestorePunteggiInMemoria punteggi() {
+		return punteggi;
+	}
+
+	/** Le opzioni della partita (la lingua), in memoria */
+	com.threeamigos.foresta.interfacce.GestoreOpzioni opzioni() {
+		return opzioni;
 	}
 
 	PartitaDiTest avanzaOrologio(double secondi) {

@@ -18,7 +18,7 @@ import com.threeamigos.foresta.tipi.Orientamento;
 public class AndroidLauncher extends AndroidApplication {
 
     // Le scelte di avvio che sul desktop vengono dagli argomenti (OpzioniDiAvvio): su Android non ci sono argomenti, e si decidono qui
-    /** La lingua non e' decisa in anticipo: una partita nuova la chiede */
+    /** La lingua non e' decisa in anticipo: vale quella scelta nelle opzioni (o l'italiano, la prima volta) */
     private static final boolean LINGUA_DECISA = false;
     /** La barra delle icone si ingrandisce sotto il dito, come il Dock (false: la barra classica fissa) */
     private static final boolean BARRA_DOCK = true;

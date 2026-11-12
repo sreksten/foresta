@@ -11,11 +11,15 @@ public enum Stato {
 
 	// Prima dell'inizio del gioco vero e proprio
 	INTRO,
+	// La schermata delle opzioni (dall'intro), e le scelte che vi si fanno nella barra: la lingua, la conferma delle cancellazioni
+	OPZIONI,
+	OPZIONI_LINGUA,
+	OPZIONI_CANCELLA_PUNTEGGI,
+	OPZIONI_CANCELLA_SALVATAGGI,
 
 	// Inizio gioco - selezione partita precedente o creazione nuovo personaggio
 	PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE,
 	FILE_DI_SALVATAGGIO_NON_VALIDO,
-	PRE_GAME_ATTESA_LINGUA,
 	PRE_GAME_ATTESA_NOME_PERSONAGGIO,
 	PRE_GAME_ATTESA_SESSO_PERSONAGGIO,
 	PRE_GAME_ATTESA_CLASSE_PERSONAGGIO,

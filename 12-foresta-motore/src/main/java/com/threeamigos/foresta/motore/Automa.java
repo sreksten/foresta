@@ -19,6 +19,7 @@ import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.interfacce.ControlloreDiGioco;
+import com.threeamigos.foresta.interfacce.GestoreOpzioni;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.interfacce.GestoreSalvataggi;
 import com.threeamigos.foresta.intermezzi.BattutaProgrammata;
@@ -131,8 +132,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private final Executor esecutorePrecaricamento;
 	// Il logo iniziale lascia il posto all'INTRO quando la UI e il motore hanno finito entrambi
-	// Se una partita nuova comincia chiedendo la lingua (vedi offriLaSceltaDellaLingua)
-	private boolean sceltaDellaLingua;
+	// Le opzioni che valgono da una partita all'altra (la lingua): si cambiano dalla schermata delle opzioni
+	private GestoreOpzioni gestoreOpzioni = new GestoreOpzioni.InMemoria();
 	private boolean logoInizialeMostrato;
 	private boolean motorePrecaricato;
 	private final GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
@@ -290,7 +291,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriComando.put(Stato.INTRO, this::gestisciComandoInStatoIntro);
 		gestoriComando.put(Stato.INTERMEZZO, this::gestisciComandoInStatoIntermezzo);
 		gestoriComando.put(Stato.PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE, this::gestisciComandoInStatoPreGameSelezionaSalvataggioDaLeggere);
-		gestoriComando.put(Stato.PRE_GAME_ATTESA_LINGUA, this::gestisciComandoInStatoPreGameAttesaLingua);
+		gestoriComando.put(Stato.OPZIONI, this::gestisciComandoInStatoOpzioni);
+		gestoriComando.put(Stato.OPZIONI_LINGUA, this::gestisciComandoInStatoOpzioniLingua);
+		gestoriComando.put(Stato.OPZIONI_CANCELLA_PUNTEGGI, this::gestisciComandoInStatoOpzioniCancellaPunteggi);
+		gestoriComando.put(Stato.OPZIONI_CANCELLA_SALVATAGGI, this::gestisciComandoInStatoOpzioniCancellaSalvataggi);
 		gestoriComando.put(Stato.PRE_GAME_ATTESA_SESSO_PERSONAGGIO, this::gestisciComandoInStatoPreGameAttesaSessoPersonaggio);
 		gestoriComando.put(Stato.PRE_GAME_ATTESA_CLASSE_PERSONAGGIO, this::gestisciComandoInStatoPreGameAttesaClassePersonaggio);
 		gestoriComando.put(Stato.IN_LOCAZIONE, this::gestisciComandoInStatoInLocazione);
@@ -442,6 +446,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		if (!getSalvataggiDaCaricare().isEmpty()) {
 			comandiPossibili.add(Comando.FLOPPY_CARICA);
 		}
+		comandiPossibili.add(Comando.OPZIONI);
 		return comandiPossibili;
 	}
 
@@ -558,11 +563,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	/**
-	 * Offre, all'inizio di una partita nuova, la scelta della lingua (italiano, inglese americano o britannico). Di base non c'è: la
-	 * partita si gioca nella lingua in uso, e chi avvia il gioco con una lingua precisa (l'argomento {@code LINGUA=} del desktop) non vuole la scelta.
+	 * Le opzioni che valgono da una partita all'altra, da cambiare dalla schermata delle opzioni (di base, in memoria)
 	 */
-	public void offriLaSceltaDellaLingua() {
-		sceltaDellaLingua = true;
+	public void impostaGestoreOpzioni(GestoreOpzioni gestoreOpzioni) {
+		this.gestoreOpzioni = gestoreOpzioni;
 	}
 
 	private Esito chiediIlNomeDelPersonaggio() {
@@ -572,47 +576,111 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	/**
-	 * La scelta della lingua, con in più, staccata, l'icona che ripristina il tutorial.
+	 * La schermata delle opzioni (dall'intro): i pulsanti delle sue righe mandano OPZIONI_LINGUA, RIPRISTINA_TUTORIAL, CANCELLA_PUNTEGGI,
+	 * CANCELLA_SALVATAGGI; nella barra c'è solo l'annulla, che torna all'intro.
 	 */
-	private Esito offriLaLingua() {
-		stato = Stato.PRE_GAME_ATTESA_LINGUA;
-		BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.LINGUA, Comando.LINGUA_ITALIANO, Comando.LINGUA_INGLESE_USA, Comando.LINGUA_INGLESE_GB,
-				Comando.RIPRISTINA_TUTORIAL));
+	private Esito mostraLeOpzioni() {
+		stato = Stato.OPZIONI;
+		BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.OPZIONI, Comando.ANNULLA));
 		return Esito.FERMATI;
 	}
 
-	private Esito gestisciComandoInStatoPreGameAttesaLingua(Comando comando) {
+	private Esito gestisciComandoInStatoOpzioni(Comando comando) {
 		switch (comando) {
+			case OPZIONI_LINGUA:
+				// Le lingue nella barra: la schermata resta
+				stato = Stato.OPZIONI_LINGUA;
+				BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.OPZIONI, Comando.LINGUA_ITALIANO, Comando.LINGUA_INGLESE_USA,
+						Comando.LINGUA_INGLESE_GB, Comando.ANNULLA));
+				return Esito.FERMATI;
 			case RIPRISTINA_TUTORIAL:
-				// Non è una lingua: il tutorial si riaccende e si resta a scegliere
 				RegistroSuggerimenti.ripristina();
-				BusEventi.pubblica(new NotificaGlobale(Testi.formatta("messaggi_motore", "Automa.tutorialRipristinato.titolo"),
-						Testi.formatta("messaggi_motore", "Automa.tutorialRipristinato")));
-				return offriLaLingua();
-			case LINGUA_ITALIANO:
-				Testi.impostaLingua("it");
-				break;
-			case LINGUA_INGLESE_USA:
-				Testi.impostaLingua("en");
-				break;
-			case LINGUA_INGLESE_GB:
-				Testi.impostaLingua("en-GB");
-				break;
+				annuncia("Automa.tutorialRipristinato");
+				return mostraLeOpzioni();
+			case CANCELLA_PUNTEGGI:
+				stato = Stato.OPZIONI_CANCELLA_PUNTEGGI;
+				BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.OPZIONI, Comando.SI, Comando.NO));
+				return Esito.FERMATI;
+			case CANCELLA_SALVATAGGI:
+				stato = Stato.OPZIONI_CANCELLA_SALVATAGGI;
+				BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.OPZIONI, Comando.SI, Comando.NO));
+				return Esito.FERMATI;
+			case ANNULLA:
+				mostraIntro();
+				return Esito.FERMATI;
 			default:
 				comandoNonValido(comando);
 				return Esito.FERMATI;
 		}
-		return chiediIlNomeDelPersonaggio();
+	}
+
+	private Esito gestisciComandoInStatoOpzioniLingua(Comando comando) {
+		String lingua;
+		switch (comando) {
+			case LINGUA_ITALIANO:
+				lingua = "it";
+				break;
+			case LINGUA_INGLESE_USA:
+				lingua = "en";
+				break;
+			case LINGUA_INGLESE_GB:
+				lingua = "en-GB";
+				break;
+			case ANNULLA:
+				return mostraLeOpzioni();
+			default:
+				comandoNonValido(comando);
+				return Esito.FERMATI;
+		}
+		boolean cambiata = !lingua.equals(Testi.getLingua());
+		Testi.impostaLingua(lingua);
+		gestoreOpzioni.setLingua(lingua);
+		gestoreOpzioni.salva();
+		if (cambiata) {
+			// Nella lingua nuova: le partite salvate restano nella loro
+			annuncia("Automa.linguaCambiata");
+		}
+		return mostraLeOpzioni();
+	}
+
+	private Esito gestisciComandoInStatoOpzioniCancellaPunteggi(Comando comando) {
+		if (comando == Comando.SI) {
+			gestorePunteggi.ripristina();
+			annuncia("Automa.punteggiCancellati");
+		} else if (comando != Comando.NO) {
+			comandoNonValido(comando);
+			return Esito.FERMATI;
+		}
+		return mostraLeOpzioni();
+	}
+
+	private Esito gestisciComandoInStatoOpzioniCancellaSalvataggi(Comando comando) {
+		if (comando == Comando.SI) {
+			for (TestataSalvataggio salvataggio : gestoreSalvataggi.getSalvataggiDisponibili()) {
+				gestoreSalvataggi.elimina(salvataggio.getId());
+			}
+			salvataggioInMemoria.elimina();
+			annuncia("Automa.salvataggiCancellati");
+		} else if (comando != Comando.NO) {
+			comandoNonValido(comando);
+			return Esito.FERMATI;
+		}
+		return mostraLeOpzioni();
+	}
+
+	/**
+	 * Un annuncio a tutto schermo con il titolo e il testo di quella chiave dei messaggi del motore (la chiave e chiave.titolo)
+	 */
+	private static void annuncia(String chiave) {
+		BusEventi.pubblica(new NotificaGlobale(Testi.formatta("messaggi_motore", chiave + ".titolo"), Testi.formatta("messaggi_motore", chiave)));
 	}
 
 	private Esito gestisciComandoInStatoIntro(Comando comando) {
 		switch (comando) {
 			case PERGAMENA:
-				if (sceltaDellaLingua) {
-					stato = Stato.PRE_GAME_ATTESA_LINGUA;
-					return offriLaLingua();
-				}
 				return chiediIlNomeDelPersonaggio();
+			case OPZIONI:
+				return mostraLeOpzioni();
 			case FLOPPY_CARICA:
 				stato = Stato.PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE;
 				BusEventi.pubblica(new RichiestaSelezioneSlotPerRilettura(getSalvataggiDaCaricare()));

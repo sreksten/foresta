@@ -19,12 +19,18 @@ public enum Comando {
 	MASCHIO,
 	FEMMINA,
 
-	// All'inizio di una partita nuova, per scegliere la lingua in cui si gioca (se la piattaforma lo offre)
+	// Nella schermata delle opzioni (dall'intro), per scegliere la lingua del gioco
 	LINGUA_ITALIANO,
 	LINGUA_INGLESE_USA,
 	LINGUA_INGLESE_GB,
-	// Nella stessa schermata, dopo le lingue e staccato da loro: riaccende il tutorial e fa rivedere i suggerimenti già visti
+	// Nella schermata delle opzioni: riaccende il tutorial e fa rivedere i suggerimenti già visti
 	RIPRISTINA_TUTORIAL,
+	// Dall'intro, apre la schermata delle opzioni
+	OPZIONI,
+	// Nella schermata delle opzioni, i pulsanti delle righe: la lingua (poi le lingue nella barra), la classifica e i salvataggi da cancellare (poi Sì e No)
+	OPZIONI_LINGUA,
+	CANCELLA_PUNTEGGI,
+	CANCELLA_SALVATAGGI,
 
 	// All'inizio del gioco, per scegliere il tipo del proprio personaggio.
 	// E si, classi e razze sono mischiate ma ce ne faremo una ragione.

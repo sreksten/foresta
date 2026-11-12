@@ -245,6 +245,8 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 
 	protected abstract SchermataGrimorio schermataGrimorio();
 
+	protected abstract SchermataOpzioni schermataOpzioni();
+
 	/** Imposta lo scambio e il personaggio che l'inventario mostra */
 	protected abstract void scambioDellInventario(VistaScambio scambio, VistaPersonaggio personaggio);
 
@@ -571,6 +573,8 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 				return schermataBestiario();
 			case GRIMORIO:
 				return schermataGrimorio();
+			case OPZIONI:
+				return schermataOpzioni();
 			case TATTICHE:
 				return schermataTattiche();
 			case COMMERCIANTE:
@@ -714,6 +718,15 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	public void sceltaDellaClasse(String titolo) {
 		schermataBestiario().apriPerLaSceltaDellaClasse(titolo);
 		cambiaStato(StatoDelloSchermo.SCELTA_DELLA_CLASSE);
+		ridisegna();
+	}
+
+	/**
+	 * Le opzioni, aperte dall'intro: nella barra ci sono le scelte che il motore offre adesso (l'annulla, le lingue, Sì e No).
+	 */
+	public void opzioni(Collection<Comando> comandiNellaBarra) {
+		schermataOpzioni().aggiorna(comandiNellaBarra);
+		cambiaStato(StatoDelloSchermo.OPZIONI);
 		ridisegna();
 	}
 

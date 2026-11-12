@@ -67,6 +67,11 @@ public final class GestorePunteggiInMemoria implements GestorePunteggi {
 	}
 
 	@Override
+	public void ripristina() {
+		punteggi.clear();
+	}
+
+	@Override
 	public boolean salva() {
 		return true;
 	}

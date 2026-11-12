@@ -17,9 +17,10 @@ public enum FaseDiGioco {
 	 */
 	INTRO,
 	/**
-	 * Si attende la lingua della partita (solo se la piattaforma offre la scelta): una partita nuova comincia da qui.
+	 * La schermata delle opzioni (dall'intro): la lingua, il tutorial, la classifica e i salvataggi da cancellare. I comandi possibili dicono che
+	 * cosa offre la barra (l'annulla, le lingue, Sì e No).
 	 */
-	LINGUA,
+	OPZIONI,
 	/**
 	 * Si attende il nome del personaggio (vuoto per uno casuale).
 	 */

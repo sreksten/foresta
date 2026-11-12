@@ -35,7 +35,7 @@ import java.io.IOException;
  * Con {@code SCHERMO=} (come per {@code Main}: {@code SCHERMO=GALAXY_S24}, {@code SCHERMO=800x480}) le schermate hanno l'area virtuale e
  * il layout di quello schermo, senza scala, come la finestra di Swing.
  * Scrive {@code gioco.png}, {@code gioco_mappa.png} (con la mappa davanti), sul telefono {@code gioco_pila_compattata.png} (con la pila scorsa a
- * destra), {@code inventario.png}, {@code mappa.png}, {@code trofei.png} e {@code bestiario.png}.
+ * destra), {@code inventario.png}, {@code mappa.png}, {@code trofei.png}, {@code bestiario.png} e {@code opzioni.png}.
  */
 public final class AnteprimaSchermate {
 
@@ -100,6 +100,8 @@ public final class AnteprimaSchermate {
 		canvas.getSchermo().inventario();
 		canvas.getSchermo().bestiario();
 		salva(canvas, new File(cartella, "bestiario.png"));
+		canvas.getSchermo().opzioni(java.util.Collections.singletonList(com.threeamigos.foresta.tipi.Comando.ANNULLA));
+		salva(canvas, new File(cartella, "opzioni.png"));
 		System.out.println("Salvate le schermate in " + cartella.getAbsolutePath());
 	}
 

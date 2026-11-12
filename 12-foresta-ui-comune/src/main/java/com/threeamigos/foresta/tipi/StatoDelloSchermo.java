@@ -37,6 +37,8 @@ public enum StatoDelloSchermo {
 	SCELTA_DELLA_CLASSE,
 	/** Il grimorio, aperto dall'inventario */
 	GRIMORIO,
+	/** Le opzioni (la lingua, il tutorial, la classifica e i salvataggi da cancellare), aperte dall'intro */
+	OPZIONI,
 	/** Le tattiche di un personaggio, aperte dall'inventario */
 	TATTICHE,
 	/** L'armaiolo o il venditore di pergamene */

@@ -246,6 +246,10 @@ public final class DatiDiProva {
 			}
 
 			@Override
+			public void ripristina() {
+			}
+
+			@Override
 			public boolean salva() {
 				return true;
 			}
