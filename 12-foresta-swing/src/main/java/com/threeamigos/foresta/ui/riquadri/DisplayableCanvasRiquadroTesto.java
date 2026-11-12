@@ -71,9 +71,11 @@ public class DisplayableCanvasRiquadroTesto extends RiquadroTesto {
 		Graphics2D g2d = copy.createGraphics();		
 		g2d.drawImage(image, 0, 0, null);
 		g2d.dispose();
-		int vertLimit = Math.min(imageHeight, 256);
+		// La sfumatura dall'alto: nera in cima, bianca piena alla sua fine (vedi RiquadroTesto.getAltezzaDellaSfumatura)
+		int vertLimit = Math.min(imageHeight, getAltezzaDellaSfumatura());
 		for (int y = 0; y < vertLimit; y++) {
-			int mask = (y << 16) + (y << 8) + y;
+			int livello = Math.round(luminositaAllaQuota(y) * 255);
+			int mask = (livello << 16) + (livello << 8) + livello;
 			for (int x = 0; x < imageWidth; x++) {
 				int argb = copy.getRGB(x, y);
 				int alfa = argb >>> 24;

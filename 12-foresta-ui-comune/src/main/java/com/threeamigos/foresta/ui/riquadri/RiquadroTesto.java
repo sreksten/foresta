@@ -11,6 +11,11 @@ import com.threeamigos.foresta.ui.testo.StoricoDelTesto;
  */
 public class RiquadroTesto implements Finestra {
 
+	/** La sfumatura in cima, al massimo: il testo più vecchio si spegne verso l'alto, dal nero al bianco pieno in 255 pixel */
+	public static final int SFUMATURA_MASSIMA = 255;
+	/** La sfumatura in cima non prende più di questa parte dell'altezza del riquadro: dove il riquadro è basso (il telefono) il testo resta leggibile */
+	public static final double PARTE_DELLA_SFUMATURA = 0.10;
+
 	// Pixel di scorrimento per ogni passo della rotella (uno scatto fa più passi: circa una riga)
 	private static final int PASSO_SCORRIMENTO = 3;
 
@@ -47,6 +52,21 @@ public class RiquadroTesto implements Finestra {
 
 	public int getHeight() {
 		return height;
+	}
+
+	/**
+	 * Quanti pixel, dalla cima del riquadro, il testo impiega a passare dal nero al bianco pieno: {@link #SFUMATURA_MASSIMA}, ma non più del
+	 * {@link #PARTE_DELLA_SFUMATURA} dell'altezza del riquadro
+	 */
+	public int getAltezzaDellaSfumatura() {
+		return Math.max(1, Math.min(SFUMATURA_MASSIMA, (int) Math.round(height * PARTE_DELLA_SFUMATURA)));
+	}
+
+	/**
+	 * La luminosità del testo a quella quota dalla cima del riquadro: 0 in cima, 1 dalla fine della sfumatura in giù
+	 */
+	public float luminositaAllaQuota(int quota) {
+		return Math.max(0f, Math.min(1f, quota / (float) getAltezzaDellaSfumatura()));
 	}
 
 	public StoricoDelTesto getStorico() {

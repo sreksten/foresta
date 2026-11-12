@@ -11,14 +11,12 @@ import com.threeamigos.foresta.ui.riquadri.RiquadroTesto;
 /**
  * Il riquadro di testo della schermata di gioco in libGDX: lo storico, lo scorrimento e i gesti sono quelli del modulo comune
  * ({@link RiquadroTesto}, gli stessi di Swing), qui c'è solo il disegno: sfondo nero con l'ombra del Drago al 30%, le righe di testo che si spengono
- * verso l'alto (per ogni riga una sfumatura di luminosità dalla sua cima al suo fondo, in base alla quota nel riquadro: nera in cima, bianca da 255
- * pixel in giù) e le frecce che dicono dove c'è altro testo.
+ * verso l'alto (per ogni riga una sfumatura di luminosità dalla sua cima al suo fondo, in base alla quota nel riquadro: nera in cima, bianca dalla
+ * fine della sfumatura in giù, vedi {@link RiquadroTesto#getAltezzaDellaSfumatura()}) e le frecce che dicono dove c'è altro testo.
  */
 public final class RiquadroTestoGdx extends RiquadroTesto {
 
 	private static final float ALFA_DELL_OMBRA = 0.3f;
-	// Sotto questa quota (in pixel dalla cima del riquadro) il testo si schiarisce fino al bianco
-	private static final int QUOTA_DEL_BIANCO = 255;
 
 	private final ImmaginiGdx immagini;
 	private final TestoGdx testo;
@@ -47,7 +45,7 @@ public final class RiquadroTestoGdx extends RiquadroTesto {
 		int altezzaDellaRiga = getStorico().getFont().getHeight();
 		int margine = getStorico().getFont().getPadding();
 		getStorico().perOgniRigaVisibile((riga, quota) -> testo.disegnaConSfumatura(batch, riga, x + margine, y + quota,
-				luminosita(quota), luminosita(quota + altezzaDellaRiga - 1)));
+				luminositaAllaQuota(quota), luminositaAllaQuota(quota + altezzaDellaRiga - 1)));
 		if (ritagliato) {
 			RitaglioGdx.esci(batch);
 		}
@@ -61,9 +59,5 @@ public final class RiquadroTestoGdx extends RiquadroTesto {
 			TextureRegion freccia = immagini.regione("icone/ComponenteScorrevole-FrecciaGiu.png");
 			batch.draw(freccia, x + getWidth() - freccia.getRegionWidth() - spazio, y + getHeight() - freccia.getRegionHeight() - spazio);
 		}
-	}
-
-	private static float luminosita(int quota) {
-		return Math.max(0f, Math.min(1f, quota / (float) QUOTA_DEL_BIANCO));
 	}
 }
