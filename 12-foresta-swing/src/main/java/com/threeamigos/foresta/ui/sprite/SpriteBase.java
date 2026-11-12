@@ -65,6 +65,14 @@ public abstract class SpriteBase implements SpriteInterface {
 		modello.setRitaglio(ritaglio == null ? null : new Area(ritaglio.x, ritaglio.y, ritaglio.width, ritaglio.height));
 	}
 
+	/**
+	 * Limita il disegno dello sprite a quest'area, in coordinate del canvas (null: nessun limite; vuota: non si vede)
+	 */
+	@Override
+	public final void setRitaglio(Area ritaglio) {
+		modello.setRitaglio(ritaglio);
+	}
+
 	@Override
 	public final void anima(Graphics2D g) {
 		if (!modello.prepara()) {

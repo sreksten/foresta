@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.sprite;
 
+import com.threeamigos.foresta.tipi.TipoFinestra;
 import com.threeamigos.foresta.ui.Area;
 import com.threeamigos.foresta.ui.Misura;
 import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
@@ -37,6 +38,8 @@ public final class DescrizioneSpriteATempo {
 	private float xIniziale;
 	private float yIniziale;
 	private Area ritaglio;
+	// Il riquadro della pila in cui lo sprite è nato, o null: si vede solo dove quel riquadro non è coperto
+	private TipoFinestra riquadro;
 	private float scalaDellIcona = 1f;
 
 	private DescrizioneSpriteATempo(String descrizione, Object icona, Misura misuraIcona, String testoVariazione, DoomdarkFont font,
@@ -200,6 +203,18 @@ public final class DescrizioneSpriteATempo {
 	public DescrizioneSpriteATempo conRitaglio(Area ritaglio) {
 		this.ritaglio = ritaglio;
 		return this;
+	}
+
+	/**
+	 * Lo sprite nasce in quel riquadro: se è della pila e un altro gli passa davanti, lo sprite resta sotto con lui
+	 */
+	public DescrizioneSpriteATempo delRiquadro(TipoFinestra riquadro) {
+		this.riquadro = riquadro;
+		return this;
+	}
+
+	public TipoFinestra getRiquadro() {
+		return riquadro;
 	}
 
 	/**

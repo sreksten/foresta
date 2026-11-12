@@ -39,6 +39,8 @@ import com.threeamigos.foresta.ui.testo.TestiDellaUI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.IdentityHashMap;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiConsumer;
@@ -85,6 +87,8 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	private final int altezzaDissolvenzaPila = DoomdarkFont.medio().getHeight();
 
 	private final List<S> sprite = new ArrayList<>();
+	// Gli sprite nati in un riquadro della pila, con il riquadro e il ritaglio con cui sono nati: si vedono solo dove il riquadro non è coperto
+	private final Map<S, SpriteDiUnRiquadro> spriteDeiRiquadri = new IdentityHashMap<>();
 	// Letta anche dal thread di animazione di Swing
 	private final List<A> codaAnnunci = new CopyOnWriteArrayList<>();
 	// Un annuncio richiesto mentre è ancora a schermo l'ultima pagina di un intermezzo (es. una missione attivata da un controllo
@@ -155,7 +159,14 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 			if (stato == StatoDelloSchermo.IN_GIOCO) {
 				// Gli sprite che arrivano così nascono nei riquadri della pila, che non sanno di quanto è scorsa
 				DescrizioneSpriteATempo descrizione = e.getDescrizione();
-				aggiungiSprite(sprite(descrizione == null ? null : descrizione.spostataInOrizzontale(getScostamentoDellaPila())));
+				if (descrizione == null) {
+					return;
+				}
+				S nuovo = sprite(descrizione.spostataInOrizzontale(getScostamentoDellaPila()));
+				if (nuovo != null && descrizione.getRiquadro() != null && isRiquadroImpilato(descrizione.getRiquadro())) {
+					spriteDeiRiquadri.put(nuovo, new SpriteDiUnRiquadro(descrizione.getRiquadro(), descrizione.getRitaglio()));
+				}
+				aggiungiSprite(nuovo);
 			}
 		});
 		// Il riquadro del gruppo
@@ -1157,11 +1168,55 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 	public void perOgniSprite(Consumer<S> anima) {
 		List<S> copia = new ArrayList<>(sprite);
 		for (S corrente : copia) {
+			SpriteDiUnRiquadro delRiquadro = spriteDeiRiquadri.get(corrente);
+			if (delRiquadro != null) {
+				corrente.setRitaglio(delRiquadro.ritaglioAdesso());
+			}
 			anima.accept(corrente);
 			if (!corrente.isAttivo()) {
 				sprite.remove(corrente);
+				spriteDeiRiquadri.remove(corrente);
 			}
 		}
+	}
+
+	/**
+	 * Dove si vede adesso un riquadro della pila: tutto se è davanti, altrimenti solo la striscia in cima che il successivo non copre
+	 */
+	Area parteScopertaDelRiquadro(TipoFinestra finestra) {
+		Area area = getArea(finestra(finestra));
+		int quotaSuccessivo = quotaDelSuccessivo(finestra);
+		if (quotaSuccessivo < 0) {
+			return area;
+		}
+		return new Area(area.getX(), area.getY(), area.getLarghezza(), Math.max(0, quotaSuccessivo - area.getY()));
+	}
+
+	/**
+	 * Uno sprite nato in un riquadro della pila: il riquadro, e il ritaglio con cui è nato (null: nessuno, solo il riquadro)
+	 */
+	private final class SpriteDiUnRiquadro {
+		private final TipoFinestra riquadro;
+		private final Area ritaglio;
+
+		SpriteDiUnRiquadro(TipoFinestra riquadro, Area ritaglio) {
+			this.riquadro = riquadro;
+			this.ritaglio = ritaglio;
+		}
+
+		/** Il ritaglio di nascita, ristretto alla parte del riquadro che adesso non è coperta (vuoto se è tutta coperta) */
+		Area ritaglioAdesso() {
+			Area scoperta = parteScopertaDelRiquadro(riquadro);
+			return ritaglio == null ? scoperta : intersezione(ritaglio, scoperta);
+		}
+	}
+
+	private static Area intersezione(Area a, Area b) {
+		int x = Math.max(a.getX(), b.getX());
+		int y = Math.max(a.getY(), b.getY());
+		int destra = Math.min(a.getX() + a.getLarghezza(), b.getX() + b.getLarghezza());
+		int fondo = Math.min(a.getY() + a.getAltezza(), b.getY() + b.getAltezza());
+		return new Area(x, y, Math.max(0, destra - x), Math.max(0, fondo - y));
 	}
 
 	/**

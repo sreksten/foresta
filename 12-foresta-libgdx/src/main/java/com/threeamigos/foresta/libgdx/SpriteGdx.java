@@ -36,6 +36,7 @@ public abstract class SpriteGdx implements SpriteDelloSchermo {
 	/**
 	 * Limita il disegno a quest'area, in coordinate dello schermo (null: nessun limite)
 	 */
+	@Override
 	public final void setRitaglio(Area ritaglio) {
 		modello.setRitaglio(ritaglio);
 	}
@@ -50,6 +51,11 @@ public abstract class SpriteGdx implements SpriteDelloSchermo {
 		Area ritaglio = modello.getRitaglio();
 		boolean ritagliato = ritaglio != null
 				&& RitaglioGdx.entra(batch, camera, viewport, ritaglio.getX(), ritaglio.getY(), ritaglio.getLarghezza(), ritaglio.getAltezza());
+		if (ritaglio != null && !ritagliato) {
+			// Il ritaglio non si vede (lo sprite di un riquadro coperto): niente da disegnare, ma il tempo passa
+			modello.aggiornaConOrologio(System.nanoTime());
+			return;
+		}
 		Color precedente = new Color(batch.getColor());
 		try {
 			disegna(batch, modello.getX(), modello.getY(), modello.getScala(), modello.getAlpha());

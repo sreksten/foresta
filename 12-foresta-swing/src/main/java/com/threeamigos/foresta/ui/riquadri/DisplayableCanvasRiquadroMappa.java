@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.riquadri;
 
+import com.threeamigos.foresta.tipi.TipoFinestra;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoCreazioneSpriteATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneConoscenzaMappa;
@@ -114,7 +115,8 @@ public class DisplayableCanvasRiquadroMappa extends DisegnatoreMappa implements 
 	}
 
 	private void gestisciEventoVariazioneMappa(NotificaVariazioneConoscenzaMappa evento) {
-		BusEventi.pubblica(new InternoCreazioneSpriteATempo(variaMappa()));
+		// Sul telefono la mappa è nella pila: lo sprite resta sotto i riquadri che le passano davanti
+		BusEventi.pubblica(new InternoCreazioneSpriteATempo(variaMappa().delRiquadro(TipoFinestra.MAPPA)));
 	}
 
 	private DescrizioneSpriteATempo variaMappa() {

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.riquadri;
 
+import com.threeamigos.foresta.tipi.TipoFinestra;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoCreazioneSpriteATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneDisponibilitaIncantesimi;
@@ -347,7 +348,7 @@ public abstract class RiquadroIncantesimiEPozioni implements Finestra {
 
 	private static void pubblica(DescrizioneSpriteATempo sprite) {
 		if (sprite != null) {
-			BusEventi.pubblica(new InternoCreazioneSpriteATempo(sprite));
+			BusEventi.pubblica(new InternoCreazioneSpriteATempo(sprite.delRiquadro(TipoFinestra.INCANTESIMI_E_POZIONI)));
 		}
 	}
 
