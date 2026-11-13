@@ -26,6 +26,8 @@ final class Elenchi {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < n; i++) {
 			if (i > 0) {
+				// Prima di ogni elemento tranne il primo: la virgola, e prima dell'ultimo la congiunzione (che in inglese cambia se
+				// gli elementi sono più di due)
 				sb.append(i < n - 1 ? separatore : n == 2 ? ultimoDiDue : ultimoDiPiu);
 			}
 			sb.append(elementi.get(i));

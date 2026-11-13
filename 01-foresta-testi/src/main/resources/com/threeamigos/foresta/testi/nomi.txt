@@ -5,7 +5,7 @@
 // Se due grammatiche avessero una produzione con lo stesso nome, la seconda porterebbe in coda il nome della grammatica di
 // origine (oggi solo DEGLI_LOCANDE: le sue note sono pensate per i locandieri).
 //
-// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
+// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GestoreGrammatiche).
 
 // ---------------------------------------------------------------------------------------------
 // Nomi di persona maschili, uno per riga, in ordine alfabetico: la somma dei nomi di locandieri, protagonisti

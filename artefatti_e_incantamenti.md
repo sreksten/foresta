@@ -515,7 +515,7 @@ Perché marcatori nel testo e non JSON, come in `artefatti.txt`: il JSON costrin
 
 ### Frequenze misurate
 
-Su 20.000 generazioni per radice (cambiano quando si aggiungono parole, per il boost dei pesi di `GrammarBean`, `GrammarBean.md` §5.2):
+Su 20.000 generazioni per radice (cambiano quando si aggiungono parole, per il boost dei pesi di `GestoreGrammatiche`, `GestoreGrammatiche.md` §5.2):
 
 | Radice | Elementali | Con soprannome | Modificatori positivi |
 | :--- | ---: | ---: | ---: |

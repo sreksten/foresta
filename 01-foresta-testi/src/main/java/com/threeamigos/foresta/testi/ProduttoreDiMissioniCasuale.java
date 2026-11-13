@@ -36,16 +36,16 @@ public final class ProduttoreDiMissioniCasuale {
 	/**
 	 * Una riga di missione a tappe (vedi tappe.txt e TappeRichieste): una farsa o una missione seria (una persona o un leggendario da
 	 * cercare, le tre chiavi, la scelta fra due piste). Quale chiedere lo decide chi chiama, perché la grammatica non può garantire
-	 * una proporzione (vedi GrammarBean.md, §5.2). Le righe sono tutte diverse: le produzioni a esaurimento si ripristinano a ogni
+	 * una proporzione (vedi GestoreGrammatiche.md, §5.2). Le righe sono tutte diverse: le produzioni a esaurimento si ripristinano a ogni
 	 * riga.
 	 */
 	public static String rigaDiTappe(boolean farsa) {
 		synchronized (SERRATURA_DELLE_TAPPE) {
-			GrammarBean grammatica = TAPPE.get();
+			GestoreGrammatiche grammatica = TAPPE.get();
 			try {
-				return String.join(" ", grammatica.produce(farsa ? "TAPPA_MISSIONE_FARSA" : "TAPPA_MISSIONE")).replace('\t', ' ').trim();
+				return String.join(" ", grammatica.produci(farsa ? "TAPPA_MISSIONE_FARSA" : "TAPPA_MISSIONE")).replace('\t', ' ').trim();
 			} finally {
-				grammatica.reset();
+				grammatica.ripristina();
 			}
 		}
 	}
@@ -63,7 +63,7 @@ public final class ProduttoreDiMissioniCasuale {
 	 * missione conserva nei suoi dati.
 	 */
 	public static String modelloDellaMissione(String produzione) {
-		return MISSIONI.get().produce(produzione).get(0).trim();
+		return MISSIONI.riga(produzione);
 	}
 
 	/**
@@ -139,10 +139,10 @@ public final class ProduttoreDiMissioniCasuale {
 	 * esauriti (e con loro le produzioni che li usano) si azzerano le sezioni statiche e si riparte.
 	 */
 	private static String produciDaMissioni(String produzione) {
-		if (!MISSIONI.get().canProduce(produzione)) {
-			GrammarBean.resetStaticProductions();
+		if (!MISSIONI.get().puoProdurre(produzione)) {
+			GestoreGrammatiche.ripristinaLeSezioniStatiche();
 		}
-		return MISSIONI.get().produce(produzione).get(0).trim();
+		return MISSIONI.riga(produzione);
 	}
 
 	/**
@@ -150,7 +150,7 @@ public final class ProduttoreDiMissioniCasuale {
 	 * otto campi separati da ";" (vedi MaterialeRichiesto).
 	 */
 	public static String materialeRichiesto(String produzione) {
-		return MISSIONI.get().produce(produzione).get(0).trim();
+		return MISSIONI.riga(produzione);
 	}
 
 	/**
@@ -158,7 +158,7 @@ public final class ProduttoreDiMissioniCasuale {
 	 * Spedizione).
 	 */
 	public static String spedizione() {
-		return MISSIONI.get().produce("TRASPORTO").get(0).trim();
+		return MISSIONI.riga("TRASPORTO");
 	}
 
 	/**
@@ -166,7 +166,7 @@ public final class ProduttoreDiMissioniCasuale {
 	 * OggettoSmarrito).
 	 */
 	public static String oggettoSmarrito() {
-		return MISSIONI.get().produce("OGGETTO_SMARRITO").get(0).trim();
+		return MISSIONI.riga("OGGETTO_SMARRITO");
 	}
 
 	/**
@@ -174,6 +174,6 @@ public final class ProduttoreDiMissioniCasuale {
 	 * missioni.txt).
 	 */
 	public static String nomeCapobanda() {
-		return MISSIONI.get().produce("NOME_CAPOBANDA").get(0).trim();
+		return MISSIONI.riga("NOME_CAPOBANDA");
 	}
 }

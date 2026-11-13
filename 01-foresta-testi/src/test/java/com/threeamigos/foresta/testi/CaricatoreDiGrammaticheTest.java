@@ -26,7 +26,7 @@ class CaricatoreDiGrammaticheTest {
 		assertEquals(CaricatoreDiGrammatiche.CARTELLA_TESTI + "non_esiste.txt", e.getRisorsa());
 		assertTrue(e.getMessage().contains("non_esiste.txt"), e.getMessage());
 		assertTrue(e.getMessage().contains("Grammar resource not found"), "dice anche perché: " + e.getMessage());
-		assertTrue(e.getCause() instanceof GrammarBean.InvalidGrammarException);
+		assertTrue(e.getCause() instanceof GestoreGrammatiche.GrammaticaMalformataException);
 	}
 
 	@Test
@@ -52,7 +52,7 @@ class CaricatoreDiGrammaticheTest {
 		});
 		assertEquals(0, caricamenti.get(), "non si carica finché non serve");
 
-		GrammarBean prima = pigra.get();
+		GestoreGrammatiche prima = pigra.get();
 
 		assertSame(prima, pigra.get());
 		assertSame(prima, pigra.carica(), "se è già caricata, la riusa");

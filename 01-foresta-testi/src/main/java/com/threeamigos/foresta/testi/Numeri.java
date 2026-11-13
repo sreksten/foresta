@@ -58,8 +58,9 @@ public final class Numeri {
 	/**
 	 * L'ordinale maschile in lettere ("primo", "undicesimo", "quarantunesimo"), con l'articolo davanti se richiesto.
 	 * Vale da 1 a 41: i numeri da contare nel gioco non vanno oltre (il tempo finisce al giorno 40, i gruppi sono di pochi
-	 * personaggi), quindi fuori da questo intervallo non c'è un ripiego: 0 dà "nullo" e da 42 in su lancia
-	 * {@code ArrayIndexOutOfBoundsException}. Se un giorno servono numeri più alti si allunga {@code ordinali}.
+	 * personaggi). Se un giorno servono numeri più alti si allunga {@code ordinali}.
+	 *
+	 * @throws IllegalArgumentException fuori da questo intervallo
 	 */
 	public static String getOrdinaleM(int numero, boolean articolo) {
 		return getOrdinaleImpl(numero, articolo, Articoli.IL, "o");
@@ -80,7 +81,12 @@ public final class Numeri {
 	}
 
 	// La radice dell'ordinale, l'eventuale "-esim" oltre il decimo e la lettera finale; l'articolo si elide davanti a "otta..." e "undic..."
+	// (8 e 11 sono i soli fra 1 e 41 che cominciano per vocale: "l'ottavo", "l'undicesima"). Per esempio 23 al femminile:
+	// "ventitre" + "esim" + "a" = "ventitreesima"
 	private static String getOrdinaleImpl(int numero, boolean aggiungiArticolo, String qualeArticolo, String letteraFinale) {
+		if (numero < 1 || numero >= ordinali.length) {
+			throw new IllegalArgumentException("Ordinale in lettere di " + numero + ": vale da 1 a " + (ordinali.length - 1));
+		}
 		StringBuilder sb = new StringBuilder(15);
 		if (aggiungiArticolo) {
 			if (numero == 8 || numero == 11)

@@ -14,7 +14,7 @@ Le dipendenze sono transitive: un modulo vede anche quello che vedono i moduli d
 
 - `02-foresta-attributi`: un artefatto porta modificatori di attributo (`ModificatoreAttributoMD`), e ne ha bisogno anche il listino.
 - `03-foresta-danni`: gli incantamenti sono danni elementali (`TipoDanno`) che si sommano al colpo dell'arma, e le armi hanno un tipo di danno.
-- `01-foresta-testi`: i nomi e le descrizioni dei tipi stanno in file per lingua, e i testi a caso degli oggetti vengono dalle grammatiche (`GrammarBean`).
+- `01-foresta-testi`: i nomi e le descrizioni dei tipi stanno in file per lingua, e i testi a caso degli oggetti vengono dalle grammatiche (`GestoreGrammatiche`).
 - `00-foresta-strumenti`: il caso (`Dado`) per generare gli artefatti.
 - `00-foresta-serializzazione`: gli artefatti si salvano con la partita.
 

@@ -240,7 +240,7 @@ ElementoIntermezzo.personaggio("goblin", TipoPersonaggio.GOBLIN, -0.1, 0.7)
 - **Più fumetti insieme**: con `daSecondo` puoi sovrapporre battute nel tempo, per esempio due personaggi che parlano insieme.
 - **Larghezza**: un fumetto è largo al massimo un terzo della scena e va a capo da solo.
 
-**Dialoghi dinamici**: siccome le pagine si costruiscono al momento, i testi possono venire da variabili, da condizioni o da una grammatica di `GrammarBean`, come fanno già le notizie delle locande:
+**Dialoghi dinamici**: siccome le pagine si costruiscono al momento, i testi possono venire da variabili, da condizioni o da una grammatica di `GestoreGrammatiche`, come fanno già le notizie delle locande:
 
 ```java
 String saluto = gruppo.getPersonaggiVivi().size() > 1 ? "Siete in tanti." : "Sei da solo?";

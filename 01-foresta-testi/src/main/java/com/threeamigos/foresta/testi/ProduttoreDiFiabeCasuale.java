@@ -25,15 +25,15 @@ public final class ProduttoreDiFiabeCasuale {
 	 * Una fiaba a caso, a paragrafi.
 	 */
 	public static List<String> fiaba() {
-		List<String> fiaba = FIABE.get().produce();
-		FIABE.get().reset();
+		List<String> fiaba = FIABE.get().produci();
+		FIABE.get().ripristina();
 		return fiaba;
 	}
 
 	/**
 	 * Azzera le liste esauribili della grammatica (vedi {@link ProduttoriDiTesti#resetProduzioni()}).
 	 */
-	static void reset() {
-		FIABE.get().reset();
+	static void ripristina() {
+		FIABE.get().ripristina();
 	}
 }

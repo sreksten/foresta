@@ -1,4 +1,4 @@
-// Nomi ed effetti degli artefatti generati a caso (vedi GrammaticaArtefatti e GrammarBean.md).
+// Nomi ed effetti degli artefatti generati a caso (vedi GrammaticaArtefatti e GestoreGrammatiche.md).
 //
 // FORMATO DEL RISULTATO
 //
@@ -42,7 +42,7 @@
 // parola che segue, così un prefisso può cominciare con qualunque lettera ("l'immane spada",
 // "lo smisurato elmo", "gli intrepidi schinieri").
 //
-// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean) e < > @ (marcatori).
+// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GestoreGrammatiche) e < > @ (marcatori).
 
 SPADA_0
     @la spada [COSMETICO_SPADA]

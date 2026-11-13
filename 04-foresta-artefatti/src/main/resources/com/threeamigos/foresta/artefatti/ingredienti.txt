@@ -1,5 +1,5 @@
 // Nomi ed effetti degli ingredienti magici, quelli che il venditore di pergamene vende e l'incantatore fonde
-// sugli artefatti (vedi GrammaticaArtefatti, GrammarBean.md e artefatti2.txt, che spiega i marcatori).
+// sugli artefatti (vedi GrammaticaArtefatti, GestoreGrammatiche.md e artefatti2.txt, che spiega i marcatori).
 //
 // Ogni ingrediente ha la sua specialità:
 //   pergamena   le caratteristiche primarie (Forza, Destrezza, … Fortuna)
@@ -15,9 +15,9 @@
 // PRODUZIONI RADICE
 //
 // <TIPO>_<n>, con n da 1 a 3 il numero di effetti. Gli effetti di un ingrediente sono tutti diversi:
-// EFFETTO_<TIPO>$ è one-shot (GrammarBean.md, §4.7), quindi un attributo o un danno esce una volta sola.
+// EFFETTO_<TIPO>$ è one-shot (GestoreGrammatiche.md, §4.7), quindi un attributo o un danno esce una volta sola.
 //
-// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean) e < > @ (marcatori).
+// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GestoreGrammatiche) e < > @ (marcatori).
 
 PERGAMENA_1
     @la pergamena [EFFETTO_PERGAMENA]

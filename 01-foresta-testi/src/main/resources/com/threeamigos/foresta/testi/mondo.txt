@@ -2,7 +2,7 @@
 // mondo_en.txt (stesse produzioni). Chi le usa: ProduttoreDiFrasiDelMondoCasuale e, con #include, le
 // grammatiche che hanno bisogno di una formula comune (per esempio quella con cui un locandiere dice il suo nome).
 //
-// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
+// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GestoreGrammatiche).
 
 // Il protagonista si presenta all'eremita (intermezzo introduttivo). NOME_EROE lo passa chi produce (addFixedProduction).
 PRESENTAZIONE_EROE

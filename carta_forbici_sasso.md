@@ -109,7 +109,7 @@ missione è una `ConLeggendario`); se il catalogo è finito, uno costruito al vo
 
 ## 4. I testi
 
-`testi/sfide.txt` (formato di `GrammarBean`) ha le produzioni `SFIDA`, `GIOCATORE_VINCE`, `GIOCATORE_PERDE`, `TORNEO` e
+`testi/sfide.txt` (formato di `GestoreGrammatiche`) ha le produzioni `SFIDA`, `GIOCATORE_VINCE`, `GIOCATORE_PERDE`, `TORNEO` e
 `NOME_LEGGENDARIO_DEI_CAMPIONI`; `ProduttoreDiSfideCasuale` ha un metodo per ognuna.
 
 ## 5. I test

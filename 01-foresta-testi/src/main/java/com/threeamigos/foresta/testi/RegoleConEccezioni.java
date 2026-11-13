@@ -29,7 +29,8 @@ final class RegoleConEccezioni implements RegoleDellaLingua {
 		if (!nome.getArticolo(true, plurale).isPresent()) {
 			return lingua.preposizioneArticolata(preposizione, nome, plurale);
 		}
-		// Il nome ha un suo articolo: la lingua fonde la preposizione con quello
+		// Il nome ha un suo articolo: la lingua fonde la preposizione con quello. Le regole sanno fondere la preposizione solo con
+		// un nome intero ("in" + "il x" dà "nel x"): si mette una "x" al posto del nome e la si toglie dal risultato
 		return lingua.conPreposizione(preposizione, articoloDeterminativo(nome, plurale) + "x").replaceAll("x$", "");
 	}
 

@@ -1,7 +1,7 @@
 // The names of the temples of the Forest (English version of templi.txt; same productions): a building, with its
 // article, and to whom or what it is dedicated. "the Sanctuary of the Moon", "the Hermitage of the Weekend".
 //
-// Characters not to use in the texts: [ ] { } | " (GrammarBean syntax).
+// Characters not to use in the texts: [ ] { } | " (GestoreGrammatiche syntax).
 
 NOME_TEMPIO
     [EDIFICIO] [DEDICA]

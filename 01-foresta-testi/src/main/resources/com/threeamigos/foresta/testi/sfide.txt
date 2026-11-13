@@ -3,7 +3,7 @@
 // terza sfida persa, lo manda al torneo. E i nomi dei leggendari costruiti al volo per la ricompensa della missione
 // La sfida dei campioni, quando il catalogo non ne ha più (vedi LaSfidaDeiCampioni).
 //
-// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
+// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GestoreGrammatiche).
 
 SFIDA
     Ti sfido a carta, forbici e sasso!

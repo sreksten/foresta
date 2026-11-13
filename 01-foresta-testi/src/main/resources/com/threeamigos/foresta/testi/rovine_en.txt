@@ -1,7 +1,7 @@
 // The names of the ruins of the Forest (English version of rovine.txt; same productions): what is left, with its
 // article, and whose or what it was. "the Remains of the Ancient Empire", "the Abandoned Mill of the Absent-Minded Surveyor".
 //
-// Characters not to use in the texts: [ ] { } | " (GrammarBean syntax).
+// Characters not to use in the texts: [ ] { } | " (GestoreGrammatiche syntax).
 
 NOME_ROVINE
     [RESTI] [ORIGINE]

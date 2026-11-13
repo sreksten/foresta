@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.testi;
 
+import com.threeamigos.foresta.strumenti.Maiuscole;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -88,7 +90,7 @@ public final class LinguaInglese implements RegoleDellaLingua {
 
 	@Override
 	public String inizialeMaiuscola(String testo) {
-		return testo.isEmpty() ? testo : Character.toUpperCase(testo.charAt(0)) + testo.substring(1);
+		return Maiuscole.inizialeMaiuscola(testo);
 	}
 
 	@Override
@@ -104,6 +106,8 @@ public final class LinguaInglese implements RegoleDellaLingua {
 		} else if (numero < ORDINALI.length) {
 			parola = ORDINALI[numero];
 		} else if (numero % 10 == 0) {
+			// Le decine tonde hanno un ordinale proprio ("twentieth"); le altre uniscono la decina e l'ordinale dell'unità
+			// ("twenty-first")
 			parola = DECINE_ORDINALI[numero / 10];
 		} else {
 			parola = DECINE[numero / 10] + "-" + ORDINALI[numero % 10];

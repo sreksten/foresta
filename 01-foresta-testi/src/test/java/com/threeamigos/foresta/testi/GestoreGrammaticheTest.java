@@ -13,62 +13,62 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class GrammarBeanTest {
+class GestoreGrammaticheTest {
 
     // ---- Constructors ----
 
     @Test
     void constructorWithNullGrammarIsNotAccepted() {
-        assertThrows(GrammarBean.InvalidGrammarException.class, () -> new GrammarBean(null));
+        assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class, () -> new GestoreGrammatiche(null));
     }
 
     @Test
     void constructorWithNullGrammarAndNullPostProductionIsNotAccepted() {
-        assertThrows(GrammarBean.InvalidGrammarException.class, () -> new GrammarBean((String)null, null));
+        assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class, () -> new GestoreGrammatiche((String)null, null));
     }
 
     @Test
     void constructorWithNullGrammarAndPostProductionIsNotAccepted() {
-        assertThrows(GrammarBean.InvalidGrammarException.class, () -> new GrammarBean(null, ""));
+        assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class, () -> new GestoreGrammatiche(null, ""));
     }
 
     @Test
     void constructorWithNullGrammarStreamAndNullPostProductionIsNotAccepted() {
-        assertThrows(GrammarBean.InvalidGrammarException.class, () -> new GrammarBean((InputStream)null, null));
+        assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class, () -> new GestoreGrammatiche((InputStream)null, null));
     }
 
 
     @Test
     void constructorWithGrammarOnlyHasNoPostProduction() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\tHello\n");
-        assertEquals("Hello", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\tHello\n");
+        assertEquals("Hello", bean.produci().get(0));
     }
 
     @Test
     void constructorWithNullPostProductionStringIsAccepted() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\tHello\n", null);
-        assertEquals("Hello", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\tHello\n", null);
+        assertEquals("Hello", bean.produci().get(0));
     }
 
     @Test
     void constructorWithPostProductionStringAppliesSubstitutions() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\ta il gatto\n", "a il:al");
-        assertEquals("al gatto", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\ta il gatto\n", "a il:al");
+        assertEquals("al gatto", bean.produci().get(0));
     }
 
     @Test
     void constructorWithInputStreamsWorks() throws Exception {
         ByteArrayInputStream grammar = new ByteArrayInputStream("ROOT\n\tHi\n".getBytes(StandardCharsets.UTF_8));
-        GrammarBean bean = new GrammarBean(grammar, null);
-        assertEquals("Hi", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche(grammar, null);
+        assertEquals("Hi", bean.produci().get(0));
     }
 
     // ---- Production headers / children parsing ----
 
     @Test
     void firstProductionBecomesRootNode() throws Exception {
-        GrammarBean bean = new GrammarBean("FIRST\n\tfirstText\nSECOND\n\tsecondText\n");
-        assertEquals("FIRST", bean.getRootNode());
+        GestoreGrammatiche bean = new GestoreGrammatiche("FIRST\n\tfirstText\nSECOND\n\tsecondText\n");
+        assertEquals("FIRST", bean.getRadice());
     }
 
     @Test
@@ -76,25 +76,25 @@ class GrammarBeanTest {
         // handleChildren calls child.trim() on each split alternative before storing it,
         // so stray leading/trailing spaces around "|"-separated alternatives must not leak
         // into the produced text.
-        GrammarBean bean = new GrammarBean("ROOT\n\t  a  |  b  \n");
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t  a  |  b  \n");
         Set<String> seen = new HashSet<>();
         for (int i = 0; i < 20; i++) {
-            seen.add(bean.produce().get(0));
+            seen.add(bean.produci().get(0));
         }
         assertEquals(new HashSet<>(java.util.Arrays.asList("a", "b")), seen);
     }
 
     @Test
     void duplicateProductionNameIsInvalid() {
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\tx\nROOT\n\ty\n"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\tx\nROOT\n\ty\n"));
         assertTrue(ex.getMessage().contains("is repeated"));
     }
 
     @Test
     void productionWithNoChildrenIsInvalid() {
-        assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("A\nB\nC\n\tx\n"));
+        assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("A\nB\nC\n\tx\n"));
     }
 
     @Test
@@ -114,8 +114,8 @@ class GrammarBeanTest {
                 "A\n",                                  // the only one
         };
         for (String grammar : grammars) {
-            GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                    () -> new GrammarBean(grammar), "Expected rejection for: " + grammar);
+            GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                    () -> new GestoreGrammatiche(grammar), "Expected rejection for: " + grammar);
             assertTrue(ex.getMessage().contains("has no children"), ex.getMessage());
         }
     }
@@ -124,84 +124,84 @@ class GrammarBeanTest {
     void penultimateProductionWithNoChildrenIsInvalid() {
         // The single position the old off-by-one missed, called out on its own so a future
         // regression names itself.
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("A\n\tx\nB\n\tx\nC\nD\n\tx\n"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("A\n\tx\nB\n\tx\nC\nD\n\tx\n"));
         assertTrue(ex.getMessage().contains("Production C has no children"), ex.getMessage());
     }
 
     @Test
     void grammarWithEveryProductionPopulatedIsStillAccepted() {
         // Guard against over-correcting D1 into rejecting valid grammars.
-        assertDoesNotThrow(() -> new GrammarBean("A\n\tx\nB\n\tx\nC\n\tx\n"));
+        assertDoesNotThrow(() -> new GestoreGrammatiche("A\n\tx\nB\n\tx\nC\n\tx\n"));
     }
 
     @Test
     void childLineWithoutPrecedingProductionIsInvalid() {
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("\tx\n"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("\tx\n"));
         assertTrue(ex.getMessage().contains("Missing parent production"));
         assertTrue(ex.getMessage().startsWith("Line 1"));
     }
 
     @Test
     void plainReferenceToAnOnlyAssignedKeyIsInvalidAtLoadTime() {
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\t[k=x][k]\n"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\t[k=x][k]\n"));
         assertTrue(ex.getMessage().contains("is not defined"));
     }
 
     @Test
     void hashReferenceToAnAssignedKeyIsValid() throws Exception {
-        assertEquals("x", new GrammarBean("ROOT\n\t[k=x][#k]\n").produce().get(0));
+        assertEquals("x", new GestoreGrammatiche("ROOT\n\t[k=x][#k]\n").produci().get(0));
     }
 
     @Test
     void commentAndEmptyLinesAreSkipped() throws Exception {
-        GrammarBean bean = new GrammarBean("// a comment\nROOT\n\n\tHello\n");
-        assertEquals("Hello", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("// a comment\nROOT\n\n\tHello\n");
+        assertEquals("Hello", bean.produci().get(0));
     }
 
     @Test
     void multipleAlternativesOnSameLineAreAllReachable() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\tA|B|C\n");
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\tA|B|C\n");
         Set<String> seen = new HashSet<>();
         for (int i = 0; i < 50; i++) {
-            seen.add(bean.produce().get(0));
+            seen.add(bean.produci().get(0));
         }
         assertEquals(new HashSet<>(java.util.Arrays.asList("A", "B", "C")), seen);
     }
 
     @Test
     void oneShotProductionMarkerIsRecognizedAndConsumed() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT$\n\tonly\n");
-        assertEquals("only", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT$\n\tonly\n");
+        assertEquals("only", bean.produci().get(0));
     }
 
     // ---- Line continuation (\) ----
 
     @Test
     void lineEndingWithBackslashIsJoinedWithNextLine() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\tHello \\\nworld\n");
-        assertEquals("Hello world", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\tHello \\\nworld\n");
+        assertEquals("Hello world", bean.produci().get(0));
     }
 
     @Test
     void multipleConsecutiveContinuationsAreAllJoined() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\tHello \\\ncruel \\\nworld\n");
-        assertEquals("Hello cruel world", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\tHello \\\ncruel \\\nworld\n");
+        assertEquals("Hello cruel world", bean.produci().get(0));
     }
 
     @Test
     void continuationAlsoWorksOnAProductionHeaderLine() throws Exception {
-        GrammarBean bean = new GrammarBean("RO\\\nOT\n\tx\n");
-        assertEquals("ROOT", bean.getRootNode());
-        assertEquals("x", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("RO\\\nOT\n\tx\n");
+        assertEquals("ROOT", bean.getRadice());
+        assertEquals("x", bean.produci().get(0));
     }
 
     @Test
     void danglingContinuationMarkerAtEndOfFileIsInvalid() {
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\tx \\\n"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\tx \\\n"));
         assertTrue(ex.getMessage().contains("continuation"));
     }
 
@@ -209,10 +209,10 @@ class GrammarBeanTest {
 
     @Test
     void inlineAlternationGroupExpandsToAllOptions() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\tIl {vecchio|giovane|misterioso} viandante\n");
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\tIl {vecchio|giovane|misterioso} viandante\n");
         Set<String> seen = new HashSet<>();
         for (int i = 0; i < 60; i++) {
-            seen.add(bean.produce().get(0));
+            seen.add(bean.produci().get(0));
         }
         assertEquals(3, seen.size());
         seen.forEach(s -> assertTrue(s.startsWith("Il ") && s.endsWith(" viandante")));
@@ -220,28 +220,28 @@ class GrammarBeanTest {
 
     @Test
     void multipleInlineAlternationGroupsOnSameChildBothExpand() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\t{a|b} and {c|d}\n");
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t{a|b} and {c|d}\n");
         Set<String> seen = new HashSet<>();
         for (int i = 0; i < 60; i++) {
-            seen.add(bean.produce().get(0));
+            seen.add(bean.produci().get(0));
         }
         assertEquals(4, seen.size());
     }
 
     @Test
     void topLevelPipeOutsideBraceIsStillASeparator() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\t{x|y} | B semplice\n");
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t{x|y} | B semplice\n");
         Set<String> seen = new HashSet<>();
         for (int i = 0; i < 60; i++) {
-            seen.add(bean.produce().get(0));
+            seen.add(bean.produci().get(0));
         }
         assertEquals(new HashSet<>(java.util.Arrays.asList("x", "y", "B semplice")), seen);
     }
 
     @Test
     void unclosedInlineAlternationBraceIsInvalid() {
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\tSomething {a|b senza chiusura\n"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\tSomething {a|b senza chiusura\n"));
         assertTrue(ex.getMessage().contains("Missing '}'"));
     }
 
@@ -251,18 +251,18 @@ class GrammarBeanTest {
         // longer invalid: it's kept as an empty-string leaf, aligning inline groups with how a
         // trailing "|" on a regular production's children line is already handled. The double
         // space this empty leaf would otherwise leave behind is collapsed by postProduce.
-        GrammarBean bean = new GrammarBean("ROOT\n\tSomething {   |  } vuoto\n");
-        assertEquals("Something vuoto", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\tSomething {   |  } vuoto\n");
+        assertEquals("Something vuoto", bean.produci().get(0));
     }
 
     @Test
     void inlineAlternationGroupWithEmptyLeafIsUsedAsOptionalElement() throws Exception {
         // A trailing "|" in the inline group represents "no adjective at all" — an optional
         // element commonly needed when generating natural-language text.
-        GrammarBean bean = new GrammarBean("ROOT\n\tUn {grande|feroce|}lupo\n");
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\tUn {grande|feroce|}lupo\n");
         Set<String> seen = new HashSet<>();
         for (int i = 0; i < 60; i++) {
-            seen.add(bean.produce().get(0));
+            seen.add(bean.produci().get(0));
         }
         assertEquals(new HashSet<>(java.util.Arrays.asList("Un grandelupo", "Un ferocelupo", "Un lupo")), seen);
     }
@@ -271,10 +271,10 @@ class GrammarBeanTest {
     void inlineProductionNameCollisionIsAvoided() throws Exception {
         // PROD_0 is declared by hand BEFORE the inline group is parsed, so the auto-naming
         // do-while loop must detect the collision and fall through to PROD_1.
-        GrammarBean bean = new GrammarBean("PROD_0\n\tfixed\nROOT\n\t[PROD_0] {x|y}\n");
+        GestoreGrammatiche bean = new GestoreGrammatiche("PROD_0\n\tfixed\nROOT\n\t[PROD_0] {x|y}\n");
         Set<String> seen = new HashSet<>();
         for (int i = 0; i < 40; i++) {
-            seen.add(bean.produce("ROOT").get(0));
+            seen.add(bean.produci("ROOT").get(0));
         }
         assertEquals(new HashSet<>(java.util.Arrays.asList("fixed x", "fixed y")), seen);
     }
@@ -284,10 +284,10 @@ class GrammarBeanTest {
         // One of the outer group's alternatives is "x {y|z}"; expanding it recursively turns the
         // nested group into its own on-the-fly production before the outer one is registered.
         // (The outer group needs a second option of its own: a single-option group is rejected.)
-        GrammarBean bean = new GrammarBean("ROOT\n\ta { x { y | z } | w } b\n");
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\ta { x { y | z } | w } b\n");
         Set<String> seen = new HashSet<>();
         for (int i = 0; i < 200; i++) {
-            seen.add(bean.produce().get(0));
+            seen.add(bean.produci().get(0));
         }
         assertEquals(new HashSet<>(java.util.Arrays.asList("a x y b", "a x z b", "a w b")), seen);
     }
@@ -296,10 +296,10 @@ class GrammarBeanTest {
     void nestedInlineAlternationGroupAtTopLevelExpandsRecursively() throws Exception {
         // The outer group has two top-level alternatives: "a" and the nested group "{b|c}";
         // splitTopLevelAlternatives must not be fooled by the nested group's own "|".
-        GrammarBean bean = new GrammarBean("ROOT\n\t{a|{b|c}}\n");
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t{a|{b|c}}\n");
         Set<String> seen = new HashSet<>();
         for (int i = 0; i < 60; i++) {
-            seen.add(bean.produce().get(0));
+            seen.add(bean.produci().get(0));
         }
         assertEquals(new HashSet<>(java.util.Arrays.asList("a", "b", "c")), seen);
     }
@@ -310,9 +310,9 @@ class GrammarBeanTest {
         // picks the second one, whose nested group ("{z|}") in turn picks its last (empty) leaf.
         // Every production produces a trimmed string, so the space left between "y" and the
         // nested group's now-empty expansion is stripped, yielding exactly "y", not "y ".
-        GrammarBean bean = new GrammarBean("ROOT\n\t{ x | y { z | } }\n");
-        bean.setProductionMode(TipoModalitaProduzioneTesti.ULTIMO);
-        assertEquals("y", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t{ x | y { z | } }\n");
+        bean.setModalita(TipoModalitaProduzioneTesti.ULTIMO);
+        assertEquals("y", bean.produci().get(0));
     }
 
     @Test
@@ -326,8 +326,8 @@ class GrammarBeanTest {
                 "ROOT\n\t{}\n",
                 "ROOT\n\ta { x { y | z } } b\n",   // the offending group is the outer one
         }) {
-            GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                    () -> new GrammarBean(grammar), "Expected rejection for: " + grammar);
+            GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                    () -> new GestoreGrammatiche(grammar), "Expected rejection for: " + grammar);
             assertTrue(ex.getMessage().contains("has no '|'"), ex.getMessage());
         }
     }
@@ -336,23 +336,23 @@ class GrammarBeanTest {
     void inlineAlternationGroupWithTwoOptionsIsStillValid() {
         // Guard against over-correcting: two options are enough, and one of them may be empty
         // (the optional-element idiom) or blank.
-        assertDoesNotThrow(() -> new GrammarBean("ROOT\n\t{a|b}\n"));
-        assertDoesNotThrow(() -> new GrammarBean("ROOT\n\tUn {grande|}lupo\n"));
-        assertDoesNotThrow(() -> new GrammarBean("ROOT\n\tSomething {   |  } vuoto\n"));
+        assertDoesNotThrow(() -> new GestoreGrammatiche("ROOT\n\t{a|b}\n"));
+        assertDoesNotThrow(() -> new GestoreGrammatiche("ROOT\n\tUn {grande|}lupo\n"));
+        assertDoesNotThrow(() -> new GestoreGrammatiche("ROOT\n\tSomething {   |  } vuoto\n"));
     }
 
     @Test
     void literalBracesAreEmittedByQuotingThemInsteadOfUsingASingleOptionGroup() throws Exception {
         // The replacement idiom for what a single-option group used to do silently, except that
         // now the braces actually reach the output.
-        GrammarBean bean = new GrammarBean("ROOT\n\tTAG \"{\" [X] \"}\"\nX\n\tvalore\n");
-        assertEquals("TAG { valore }", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\tTAG \"{\" [X] \"}\"\nX\n\tvalore\n");
+        assertEquals("TAG { valore }", bean.produci().get(0));
     }
 
     @Test
     void unclosedNestedInlineAlternationBraceIsInvalid() {
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\t{a|{b|c}\n"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\t{a|{b|c}\n"));
         assertTrue(ex.getMessage().contains("Missing '}'"));
     }
 
@@ -362,28 +362,28 @@ class GrammarBeanTest {
     void quotedBracesAreKeptAsLiteralTextInsteadOfBecomingAGroup() throws Exception {
         // Without the quotes "{a}" would be parsed as an inline alternation group with a
         // single option "a", collapsing to just "a"; the quotes must make the braces literal.
-        GrammarBean bean = new GrammarBean("ROOT\n\tvalue \"{a}\" here\n");
-        assertEquals("value {a} here", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\tvalue \"{a}\" here\n");
+        assertEquals("value {a} here", bean.produci().get(0));
     }
 
     @Test
     void quotedPipeIsKeptAsLiteralTextInsteadOfSplitting() throws Exception {
         // Without the quotes this line would be split into two alternatives ("x " and " y");
         // the quotes must keep the whole thing as a single leaf.
-        GrammarBean bean = new GrammarBean("ROOT\n\t\"x | y\"\n");
-        assertEquals("x | y", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t\"x | y\"\n");
+        assertEquals("x | y", bean.produci().get(0));
     }
 
     @Test
     void escapedQuoteInsideSpanProducesLiteralQuoteWithoutClosingIt() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\t\"say \\\"hi\\\" now\"\n");
-        assertEquals("say \"hi\" now", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t\"say \\\"hi\\\" now\"\n");
+        assertEquals("say \"hi\" now", bean.produci().get(0));
     }
 
     @Test
     void unclosedQuoteAtEndOfLineIsInvalid() {
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\t\"never closed\n"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\t\"never closed\n"));
         assertTrue(ex.getMessage().contains("Missing closing '\"'"));
     }
 
@@ -391,10 +391,10 @@ class GrammarBeanTest {
     void quotedPipeInsideInlineGroupOptionIsKeptAsLiteralText() throws Exception {
         // The group has two top-level options: the quoted "a|b" (a single literal option, its
         // "|" must not split it) and the plain "c".
-        GrammarBean bean = new GrammarBean("ROOT\n\t{ \"a|b\" | c }\n");
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t{ \"a|b\" | c }\n");
         Set<String> seen = new HashSet<>();
         for (int i = 0; i < 60; i++) {
-            seen.add(bean.produce().get(0));
+            seen.add(bean.produci().get(0));
         }
         assertEquals(new HashSet<>(java.util.Arrays.asList("a|b", "c")), seen);
     }
@@ -404,41 +404,41 @@ class GrammarBeanTest {
         // Regression: a quoted span protected '{', '}' and '|' but never '[' and ']', so a literal
         // bracket could not be emitted at all -- "[1, 2]" was parsed as a reference to a
         // production named "1, 2" and rejected at load time.
-        GrammarBean bean = new GrammarBean("ROOT\n\t\"\\[1, 2\\]\"\n");
-        assertEquals("[1, 2]", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t\"\\[1, 2\\]\"\n");
+        assertEquals("[1, 2]", bean.produci().get(0));
     }
 
     @Test
     void escapedBracketsCoexistWithRealReferencesInTheSameSpan() throws Exception {
         // The escape is per-bracket: an unescaped [X] in the same span must still expand, which is
         // what artefatti.txt relies on.
-        GrammarBean bean = new GrammarBean(
+        GestoreGrammatiche bean = new GestoreGrammatiche(
                 "ROOT\n\t\"{ \\\"tags\\\": \\[[X]\\] }\"\nX\n\t7\n");
-        assertEquals("{ \"tags\": [7] }", bean.produce().get(0));
+        assertEquals("{ \"tags\": [7] }", bean.produci().get(0));
     }
 
     @Test
     void unescapedBracketInsideQuotedSpanIsStillAReference() throws Exception {
         // Explicitly pinned: quoted spans still do NOT protect brackets by themselves. Changing
         // that would break artefatti.txt, whose JSON embeds [ATTRIBUTO_*] references inside spans.
-        GrammarBean bean = new GrammarBean("ROOT\n\t\"[X]\"\nX\n\tvalore\n");
-        assertEquals("valore", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t\"[X]\"\nX\n\tvalore\n");
+        assertEquals("valore", bean.produci().get(0));
     }
 
     @Test
     void escapedBracketOutsideAQuotedSpanIsNotAnEscape() {
         // The escape only exists inside a raw literal span, where '\\' is already the escape
         // character. Outside one, the backslash is not special and the bracket is still a token.
-        assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\t\\[X\\]\nX\n\tvalore\n"));
+        assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\t\\[X\\]\nX\n\tvalore\n"));
     }
 
     @Test
     void reservedPlaceholderCharacterInSourceIsRejected() {
         // The placeholders standing in for escaped brackets are control characters, but a source
         // file containing one would still corrupt the output silently, so it is refused.
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\ttesto \uE000 qui\n"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\ttesto \uE000 qui\n"));
         assertTrue(ex.getMessage().contains("Reserved placeholder"), ex.getMessage());
     }
 
@@ -447,8 +447,8 @@ class GrammarBeanTest {
         // The quote is never closed before end of line, so splitTopLevelAlternatives (run on the
         // whole raw line, before the group's braces are ever matched) reports the missing quote —
         // it never even gets to findMatchingClosingBrace/createInlineProduction.
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\t{ \"a | b }\n"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\t{ \"a | b }\n"));
         assertTrue(ex.getMessage().contains("Missing closing '\"'"));
     }
 
@@ -456,50 +456,50 @@ class GrammarBeanTest {
 
     @Test
     void referenceToUndefinedProductionIsInvalid() {
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\t[Missing]\n"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\t[Missing]\n"));
         assertTrue(ex.getMessage().contains("is not defined"));
     }
 
     @Test
     void referenceMissingClosingBracketIsInvalidAtLoadTime() {
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\t[Missing\n"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\t[Missing\n"));
         assertTrue(ex.getMessage().contains("Missing ']'"));
     }
 
     @Test
     void globalFixedMarkerAloneIsInvalid() {
-        assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\t[*]\n"));
+        assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\t[*]\n"));
     }
 
     @Test
     void localFixedMarkerAloneIsInvalid() {
-        assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\t[!]\n"));
+        assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\t[!]\n"));
     }
 
     @Test
     void assignmentMarkerWithoutKeyIsInvalid() {
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\t[=novalue]\n"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\t[=novalue]\n"));
         assertTrue(ex.getMessage().contains("must be preceded by a node name"));
     }
 
     @Test
     void referenceToDefinedProductionIsValid() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\t[OTHER]\nOTHER\n\ttext\n");
-        assertEquals("text", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[OTHER]\nOTHER\n\ttext\n");
+        assertEquals("text", bean.produci().get(0));
     }
 
     // ---- Fixed productions (* and !) ----
 
     @Test
     void globalFixedProductionIsCachedAcrossOccurrences() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\t[*NAME] [*NAME]\nNAME\n\ta|b|c\n");
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[*NAME] [*NAME]\nNAME\n\ta|b|c\n");
         for (int i = 0; i < 20; i++) {
-            String result = bean.produce().get(0);
+            String result = bean.produci().get(0);
             String[] parts = result.split(" ");
             assertEquals(parts[0], parts[1]);
         }
@@ -507,11 +507,11 @@ class GrammarBeanTest {
 
     @Test
     void localFixedProductionDoesNotLeakAcrossSiblingBranches() throws Exception {
-        GrammarBean bean = new GrammarBean(
+        GestoreGrammatiche bean = new GestoreGrammatiche(
                 "ROOT\n\t[BRANCH] [BRANCH]\nBRANCH\n\t[!NAME]-[!NAME]\nNAME\n\ta|b|c|d|e|f|g|h\n");
         boolean sawDifference = false;
         for (int i = 0; i < 60 && !sawDifference; i++) {
-            String result = bean.produce().get(0);
+            String result = bean.produci().get(0);
             String[] branches = result.split(" ");
             assertEquals(2, branches.length);
             // within a branch, the two locally-fixed halves must be equal
@@ -531,26 +531,26 @@ class GrammarBeanTest {
         // Regression: [!N] caches into the frame that resolved it, and a nested production's
         // own frame used to start from an empty local cache, so a [#N] one level down failed
         // with "Production #N not yet defined!" even though its caller had just fixed N.
-        GrammarBean bean = new GrammarBean("ROOT\n\t[!N] [SUB]\nSUB\n\tvisto:[#N]\nN\n\tvalore\n");
-        assertEquals("valore visto:valore", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[!N] [SUB]\nSUB\n\tvisto:[#N]\nN\n\tvalore\n");
+        assertEquals("valore visto:valore", bean.produci().get(0));
     }
 
     @Test
     void locallyFixedValueIsVisibleTwoLevelsDownTheSubtree() throws Exception {
         // Visibility must be transitive, not just one frame deep.
-        GrammarBean bean = new GrammarBean(
+        GestoreGrammatiche bean = new GestoreGrammatiche(
                 "ROOT\n\t[!N] [SUB]\nSUB\n\t[SUB2]\nSUB2\n\tvisto:[#N]\nN\n\tvalore\n");
-        assertEquals("valore visto:valore", bean.produce().get(0));
+        assertEquals("valore visto:valore", bean.produci().get(0));
     }
 
     @Test
     void locallyFixedValueIsReusedByANestedLocallyFixedReferenceToTheSameName() throws Exception {
         // "Locally fixed" means fixed for the subtree: a [!NAME] nested below another [!NAME]
         // must reuse the value rather than draw a fresh one.
-        GrammarBean bean = new GrammarBean(
+        GestoreGrammatiche bean = new GestoreGrammatiche(
                 "ROOT\n\t[!NAME] [SUB]\nSUB\n\t[!NAME]\nNAME\n\ta|b|c|d|e|f|g|h\n");
         for (int i = 0; i < 100; i++) {
-            String[] parts = bean.produce().get(0).split(" ");
+            String[] parts = bean.produci().get(0).split(" ");
             assertEquals(2, parts.length);
             assertEquals(parts[0], parts[1], "Nested [!NAME] should reuse the enclosing subtree's value");
         }
@@ -562,11 +562,11 @@ class GrammarBeanTest {
         // visible to a sibling branch produced afterwards, nor escape upwards. BRANCH fixes
         // NAME in its own frame; the two branches must therefore stay independent, while the
         // halves within each branch agree.
-        GrammarBean bean = new GrammarBean(
+        GestoreGrammatiche bean = new GestoreGrammatiche(
                 "ROOT\n\t[BRANCH] [BRANCH]\nBRANCH\n\t[!NAME]-[!NAME]\nNAME\n\ta|b|c|d|e|f|g|h\n");
         boolean sawDifference = false;
         for (int i = 0; i < 200; i++) {
-            String[] branches = bean.produce().get(0).split(" ");
+            String[] branches = bean.produci().get(0).split(" ");
             assertEquals(2, branches.length);
             for (String branch : branches) {
                 String[] halves = branch.split("-");
@@ -581,17 +581,17 @@ class GrammarBeanTest {
 
     @Test
     void addFixedProductionPreSeedsGlobalFixedValue() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\t[*NAME]\nNAME\n\treal\n");
-        bean.addFixedProduction("NAME", "overridden");
-        assertEquals("overridden", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[*NAME]\nNAME\n\treal\n");
+        bean.fissaProduzione("NAME", "overridden");
+        assertEquals("overridden", bean.produci().get(0));
     }
 
     @Test
     void globalFixedProductionIsClearedBetweenProduceCalls() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\t[*NAME]\nNAME\n\ta|b|c|d|e|f|g|h|i|j\n");
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[*NAME]\nNAME\n\ta|b|c|d|e|f|g|h|i|j\n");
         Set<String> seen = new HashSet<>();
         for (int i = 0; i < 60; i++) {
-            seen.add(bean.produce().get(0));
+            seen.add(bean.produci().get(0));
         }
         assertTrue(seen.size() > 1, "Global fixed cache should reset between produce() calls");
     }
@@ -602,14 +602,14 @@ class GrammarBeanTest {
     void assignmentAndReferenceRoundTrip() throws Exception {
         // ROOT's own alternative is "[k=hello] [#k]", which expands to " hello": every
         // production is expected to produce a trimmed string, so ROOT's leading space is stripped.
-        GrammarBean bean = new GrammarBean("ROOT\n\t[k=hello] [#k]\n");
-        assertEquals("hello", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[k=hello] [#k]\n");
+        assertEquals("hello", bean.produci().get(0));
     }
 
     @Test
     void referenceToUnassignedKeyIsInvalidAtRuntime() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\t[#neverset]\n");
-        assertThrows(IllegalArgumentException.class, bean::produce);
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[#neverset]\n");
+        assertThrows(IllegalArgumentException.class, bean::produci);
     }
 
     @Test
@@ -619,9 +619,9 @@ class GrammarBeanTest {
         // order, both the ROOT/A frames and the intermediate substitution A went through
         // (the first [X] resolved to "only" while the second was still untouched) before the
         // exception interrupted it.
-        GrammarBean bean = new GrammarBean("ROOT\n\t[A]\nA\n\t[X] [X]\nX$\n\tonly\n");
-        assertThrows(IllegalArgumentException.class, bean::produce);
-        String trace = bean.describeProductionTrace();
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[A]\nA\n\t[X] [X]\nX$\n\tonly\n");
+        assertThrows(IllegalArgumentException.class, bean::produci);
+        String trace = bean.descriviLaTraccia();
         assertTrue(trace.contains("A: [X] [X] -> only [X]"));
         int rootFrameIndex = trace.indexOf("[ROOT]:");
         int aFrameIndex = trace.indexOf("A: [X] [X] -> only [X]");
@@ -630,9 +630,9 @@ class GrammarBeanTest {
 
     @Test
     void productionTraceIsEmptyAfterSuccessfulProduction() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\thello\n");
-        bean.produce();
-        assertEquals("", bean.describeProductionTrace());
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\thello\n");
+        bean.produci();
+        assertEquals("", bean.descriviLaTraccia());
     }
 
     @Test
@@ -640,14 +640,14 @@ class GrammarBeanTest {
         // The assignment's value is itself a bracketed production reference: it must be fully
         // resolved before being cached under "k", so "[#k]" retrieves the resolved word, not
         // the raw "[OTHER]" text.
-        GrammarBean bean = new GrammarBean("ROOT\n\t[k=[OTHER]] [#k]\nOTHER\n\tresolved\n");
-        assertEquals("resolved", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[k=[OTHER]] [#k]\nOTHER\n\tresolved\n");
+        assertEquals("resolved", bean.produci().get(0));
     }
 
     @Test
     void assignmentValueReferencingUndefinedProductionIsInvalidAtLoadTime() {
-        assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\t[k=[NEVER_DEFINED]] [#k]\n"));
+        assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\t[k=[NEVER_DEFINED]] [#k]\n"));
     }
 
     @Test
@@ -655,10 +655,10 @@ class GrammarBeanTest {
         // "EQUIPAGGIAMENTO" is never declared as its own production, only ever assigned via
         // "=" elsewhere in the grammar; a later "[*EQUIPAGGIAMENTO]" must still be considered
         // valid at load time and resolve to the previously assigned value at runtime.
-        GrammarBean bean = new GrammarBean(
+        GestoreGrammatiche bean = new GestoreGrammatiche(
                 "ROOT\n\t[EQUIPAGGIAMENTO=[EQUIPAGGIAMENTO_POSSIBILE]] preso [*EQUIPAGGIAMENTO] di nuovo\n"
                         + "EQUIPAGGIAMENTO_POSSIBILE\n\tfucile\n");
-        assertEquals("preso fucile di nuovo", bean.produce().get(0));
+        assertEquals("preso fucile di nuovo", bean.produci().get(0));
     }
 
     @Test
@@ -666,31 +666,31 @@ class GrammarBeanTest {
         // [!NAME] caches its result into the current call frame's own local-fixed map under
         // key "NAME"; the following [#NAME] then finds it there directly, with no need to
         // fall back to the super map.
-        GrammarBean bean = new GrammarBean("ROOT\n\t[!NAME][#NAME]\nNAME\n\tvalue\n");
-        assertEquals("valuevalue", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[!NAME][#NAME]\nNAME\n\tvalue\n");
+        assertEquals("valuevalue", bean.produci().get(0));
     }
 
-    // ---- setRootNode / getRootNode ----
+    // ---- setRadice / getRadice ----
 
     @Test
     void setRootNodeChangesProductionStartPoint() throws Exception {
-        GrammarBean bean = new GrammarBean("FIRST\n\tfirstText\nSECOND\n\tsecondText\n");
-        bean.setRootNode("SECOND");
-        assertEquals("SECOND", bean.getRootNode());
-        assertEquals("secondText", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("FIRST\n\tfirstText\nSECOND\n\tsecondText\n");
+        bean.setRadice("SECOND");
+        assertEquals("SECOND", bean.getRadice());
+        assertEquals("secondText", bean.produci().get(0));
     }
 
     @Test
     void setRootNodeWithUndefinedProductionThrows() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\tx\n");
-        assertThrows(IllegalArgumentException.class, () -> bean.setRootNode("NOPE"));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\tx\n");
+        assertThrows(IllegalArgumentException.class, () -> bean.setRadice("NOPE"));
     }
 
     @Test
     void produceWithExplicitRootNodeDoesNotChangeDefaultRootNode() throws Exception {
-        GrammarBean bean = new GrammarBean("FIRST\n\tfirstText\nSECOND\n\tsecondText\n");
-        assertEquals("secondText", bean.produce("SECOND").get(0));
-        assertEquals("FIRST", bean.getRootNode());
+        GestoreGrammatiche bean = new GestoreGrammatiche("FIRST\n\tfirstText\nSECOND\n\tsecondText\n");
+        assertEquals("secondText", bean.produci("SECOND").get(0));
+        assertEquals("FIRST", bean.getRadice());
     }
 
     @Test
@@ -698,10 +698,10 @@ class GrammarBeanTest {
         // Regression: produce() cleared globalFixedProductions in a finally block but
         // produce(String) did not, so the very first value a [*Name] resolved to was frozen
         // for the whole lifetime of the bean, silently making every later call identical.
-        GrammarBean bean = new GrammarBean("ROOT\n\t[*NAME]\nNAME\n\ta|b|c|d|e|f|g|h\n");
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[*NAME]\nNAME\n\ta|b|c|d|e|f|g|h\n");
         Set<String> seen = new HashSet<>();
         for (int i = 0; i < 200; i++) {
-            seen.add(bean.produce("ROOT").get(0));
+            seen.add(bean.produci("ROOT").get(0));
         }
         assertTrue(seen.size() > 1, "Global fixed cache should reset between produce(String) calls, saw only " + seen);
     }
@@ -710,9 +710,9 @@ class GrammarBeanTest {
     void globalFixedProductionIsStillCachedWithinASingleProduceWithExplicitRootCall() throws Exception {
         // The clearing must happen after the text is produced, not before: within one call the
         // two occurrences must still agree.
-        GrammarBean bean = new GrammarBean("ROOT\n\t[*NAME] [*NAME]\nNAME\n\ta|b|c|d|e|f|g|h\n");
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[*NAME] [*NAME]\nNAME\n\ta|b|c|d|e|f|g|h\n");
         for (int i = 0; i < 50; i++) {
-            String[] parts = bean.produce("ROOT").get(0).split(" ");
+            String[] parts = bean.produci("ROOT").get(0).split(" ");
             assertEquals(2, parts.length);
             assertEquals(parts[0], parts[1]);
         }
@@ -721,36 +721,36 @@ class GrammarBeanTest {
     @Test
     void addFixedProductionStillAppliesToProduceWithExplicitRoot() throws Exception {
         // A pre-seeded value must survive until the text has been produced.
-        GrammarBean bean = new GrammarBean("ROOT\n\t[*NAME]\nNAME\n\treal\n");
-        bean.addFixedProduction("NAME", "overridden");
-        assertEquals("overridden", bean.produce("ROOT").get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[*NAME]\nNAME\n\treal\n");
+        bean.fissaProduzione("NAME", "overridden");
+        assertEquals("overridden", bean.produci("ROOT").get(0));
     }
 
     // ---- production mode ----
 
     @Test
     void productionModeDefaultsToRandom() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\tA|B|C\n");
-        assertEquals(TipoModalitaProduzioneTesti.CASUALE, bean.getProductionMode());
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\tA|B|C\n");
+        assertEquals(TipoModalitaProduzioneTesti.CASUALE, bean.getModalita());
     }
 
     @Test
     void firstProductionModeAlwaysPicksFirstOption() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\tA|B|C\n");
-        bean.setProductionMode(TipoModalitaProduzioneTesti.PRIMO);
-        assertEquals(TipoModalitaProduzioneTesti.PRIMO, bean.getProductionMode());
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\tA|B|C\n");
+        bean.setModalita(TipoModalitaProduzioneTesti.PRIMO);
+        assertEquals(TipoModalitaProduzioneTesti.PRIMO, bean.getModalita());
         for (int i = 0; i < 10; i++) {
-            assertEquals("A", bean.produce().get(0));
+            assertEquals("A", bean.produci().get(0));
         }
     }
 
     @Test
     void lastProductionModeAlwaysPicksLastOption() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\tA|B|C\n");
-        bean.setProductionMode(TipoModalitaProduzioneTesti.ULTIMO);
-        assertEquals(TipoModalitaProduzioneTesti.ULTIMO, bean.getProductionMode());
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\tA|B|C\n");
+        bean.setModalita(TipoModalitaProduzioneTesti.ULTIMO);
+        assertEquals(TipoModalitaProduzioneTesti.ULTIMO, bean.getModalita());
         for (int i = 0; i < 10; i++) {
-            assertEquals("C", bean.produce().get(0));
+            assertEquals("C", bean.produci().get(0));
         }
     }
 
@@ -758,12 +758,12 @@ class GrammarBeanTest {
 
     @Test
     void oneShotProductionIsRemovedAfterUse() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\t[X]\nX$\n\tonly\n");
-        assertEquals("only", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[X]\nX$\n\tonly\n");
+        assertEquals("only", bean.produci().get(0));
         // second call within the same cycle (no reset) must fail: X was fully consumed and removed,
         // and the cascade also stripped ROOT's only alternative referencing it, so ROOT itself
         // is removed too and the lookup finds no production at all for it.
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, bean::produce);
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, bean::produci);
         assertTrue(ex.getMessage().contains("ROOT"));
     }
 
@@ -771,10 +771,10 @@ class GrammarBeanTest {
     void oneShotProductionWithRemainingAlternativesIsNotRemoved() throws Exception {
         // X has 3 alternatives; consuming one must only strip that alternative, leaving the
         // production (and ROOT's reference to it) intact for the next call.
-        GrammarBean bean = new GrammarBean("ROOT\n\t[X]\nX$\n\ta|b|c\n");
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[X]\nX$\n\ta|b|c\n");
         Set<String> seen = new HashSet<>();
         for (int i = 0; i < 3; i++) {
-            seen.add(bean.produce().get(0));
+            seen.add(bean.produci().get(0));
         }
         assertEquals(new HashSet<>(java.util.Arrays.asList("a", "b", "c")), seen);
     }
@@ -784,76 +784,76 @@ class GrammarBeanTest {
         // ROOT has four alternatives: one references X plainly, one via [*X], one via [!X],
         // and one ("Z") doesn't reference X at all. Once X$ is exhausted, the cascade in
         // removeProduction must strip the first three but leave "Z" and ROOT itself standing.
-        GrammarBean bean = new GrammarBean("ROOT\n\t[X]|[*X]|[!X]|Z\nX$\n\tonly\n");
-        bean.setProductionMode(TipoModalitaProduzioneTesti.PRIMO);
-        assertEquals("only", bean.produce().get(0));
-        assertEquals("Z", bean.produce().get(0));
-        assertEquals("Z", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[X]|[*X]|[!X]|Z\nX$\n\tonly\n");
+        bean.setModalita(TipoModalitaProduzioneTesti.PRIMO);
+        assertEquals("only", bean.produci().get(0));
+        assertEquals("Z", bean.produci().get(0));
+        assertEquals("Z", bean.produci().get(0));
     }
 
     @Test
     void oneShotProductionIsAvailableAgainAfterReset() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\t[X] end\nX$\n\tonly\n");
-        assertEquals("only end", bean.produce().get(0));
-        bean.reset();
-        assertEquals("only end", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[X] end\nX$\n\tonly\n");
+        assertEquals("only end", bean.produci().get(0));
+        bean.ripristina();
+        assertEquals("only end", bean.produci().get(0));
     }
 
     @Test
     void canProduceTellsWhenAOneShotRunIsOver() throws Exception {
         // ROOT picks from two one-shot pools: after three productions both are exhausted, the
-        // cascade strips ROOT too, and canProduce says so before produce() would throw.
-        GrammarBean bean = new GrammarBean("ROOT\n\t[A]|[B]\nA$\n\ta1|a2\nB$\n\tb1\n");
+        // cascade strips ROOT too, and puoProdurre says so before produce() would throw.
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[A]|[B]\nA$\n\ta1|a2\nB$\n\tb1\n");
         Set<String> seen = new HashSet<>();
-        while (bean.canProduce("ROOT")) {
-            seen.add(bean.produce().get(0));
+        while (bean.puoProdurre("ROOT")) {
+            seen.add(bean.produci().get(0));
         }
         assertEquals(new HashSet<>(java.util.Arrays.asList("a1", "a2", "b1")), seen);
-        assertFalse(bean.canProduce("A"));
-        assertFalse(bean.canProduce("MAI_DEFINITA"));
-        bean.reset();
-        assertTrue(bean.canProduce("ROOT"));
+        assertFalse(bean.puoProdurre("A"));
+        assertFalse(bean.puoProdurre("MAI_DEFINITA"));
+        bean.ripristina();
+        assertTrue(bean.puoProdurre("ROOT"));
     }
 
     @Test
     void referencingExhaustedOneShotProductionAgainViaPlainReferenceThrows() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\t[X] [X]\nX$\n\tonly\n");
-        assertThrows(IllegalArgumentException.class, bean::produce);
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[X] [X]\nX$\n\tonly\n");
+        assertThrows(IllegalArgumentException.class, bean::produci);
     }
 
     @Test
     void referencingExhaustedOneShotProductionAgainViaFixedReferenceThrows() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\t[X] [*X]\nX$\n\tonly\n");
-        assertThrows(IllegalArgumentException.class, bean::produce);
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[X] [*X]\nX$\n\tonly\n");
+        assertThrows(IllegalArgumentException.class, bean::produci);
     }
 
     // ---- post-production substitutions ----
 
     @Test
     void nullPostProductionStreamMeansNoSubstitutions() throws Exception {
-        GrammarBean bean = new GrammarBean(
+        GestoreGrammatiche bean = new GestoreGrammatiche(
                 new ByteArrayInputStream("ROOT\n\tunchanged\n".getBytes(StandardCharsets.UTF_8)), null);
-        assertEquals("unchanged", bean.produce().get(0));
+        assertEquals("unchanged", bean.produci().get(0));
     }
 
     @Test
     void postProductionLineWithoutColonIsInvalid() {
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\tx\n", "justtext"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\tx\n", "justtext"));
         assertTrue(ex.getMessage().contains("No post production"));
     }
 
     @Test
     void postProductionLineWithEmptyPreIsInvalid() {
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\tx\n", ":post"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\tx\n", ":post"));
         assertTrue(ex.getMessage().contains("No pre production"));
     }
 
     @Test
     void postProductionLineWithEmptyPostIsInvalid() {
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\tx\n", "pre:"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\tx\n", "pre:"));
         assertTrue(ex.getMessage().contains("Empty post production"));
     }
 
@@ -863,8 +863,8 @@ class GrammarBeanTest {
         // rule that writes its own "pre" back into the text kept matching what it had just
         // written and looped forever, hanging the caller. Rejecting the rule at load time is
         // what keeps that repeated-application loop safe.
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\ta il gatto\n", "a il:a il grande"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\ta il gatto\n", "a il:a il grande"));
         assertTrue(ex.getMessage().contains("would never terminate"), ex.getMessage());
     }
 
@@ -872,8 +872,8 @@ class GrammarBeanTest {
     void postProductionRuleWhosePostEqualsPreIsInvalid() {
         // The degenerate no-op rule: also an endless loop, since the match is rewritten
         // identically and found again at the same position.
-        assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\tx\n", "x:x"));
+        assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\tx\n", "x:x"));
     }
 
     @Test
@@ -881,8 +881,8 @@ class GrammarBeanTest {
         // The containment can be at the start, in the middle or at the end of "post": all three
         // feed the rule back into itself.
         for (String rule : new String[]{"il:il bello", "il:bel il lo", "il:bello il"}) {
-            assertThrows(GrammarBean.InvalidGrammarException.class,
-                    () -> new GrammarBean("ROOT\n\til gatto\n", rule), "Expected rejection for: " + rule);
+            assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                    () -> new GestoreGrammatiche("ROOT\n\til gatto\n", rule), "Expected rejection for: " + rule);
         }
     }
 
@@ -891,8 +891,8 @@ class GrammarBeanTest {
         // Guard against over-correcting into a rejection of legitimate rules: " a il " and " al "
         // share most of their characters, but "post" does not contain "pre", so the rule
         // terminates and must be accepted.
-        assertDoesNotThrow(() -> new GrammarBean("ROOT\n\tvai a il castello\n", " a il : al "));
-        assertDoesNotThrow(() -> new GrammarBean("ROOT\n\ta , b\n", " ,:,"));
+        assertDoesNotThrow(() -> new GestoreGrammatiche("ROOT\n\tvai a il castello\n", " a il : al "));
+        assertDoesNotThrow(() -> new GestoreGrammatiche("ROOT\n\ta , b\n", " ,:,"));
     }
 
     @Test
@@ -900,53 +900,53 @@ class GrammarBeanTest {
         // The behaviour the load-time check exists to preserve: " a il " can overlap itself,
         // because it both starts and ends with a space, and the repeated-application loop
         // rewrites every occurrence. A single-pass replacement would leave the second one.
-        GrammarBean bean = new GrammarBean("ROOT\n\tvai a il a il castello\n", " a il : al ");
-        assertEquals("vai al al castello", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\tvai a il a il castello\n", " a il : al ");
+        assertEquals("vai al al castello", bean.produci().get(0));
     }
 
     @Test
     void postProductionCommentsAndBlankLinesAreSkipped() throws Exception {
         // A rule like "[,:[" is cryptic enough that it needs a comment beside it, so the
         // post-production file accepts them like the grammar file does.
-        GrammarBean bean = new GrammarBean("ROOT\n\ta il gatto\n",
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\ta il gatto\n",
                 "// questa riga spiega la regola\n\na il:al\n\n// e questa la chiude\n");
-        assertEquals("al gatto", bean.produce().get(0));
+        assertEquals("al gatto", bean.produci().get(0));
     }
 
     @Test
     void postProductionErrorStillReportsTheRealLineNumber() {
         // Comments and blank lines are skipped but still counted, so the line number in the
         // message points at the offending line of the file, not at the n-th rule.
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\tx\n", "// commento\n\na il:al\nsenzaduepunti\n"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\tx\n", "// commento\n\na il:al\nsenzaduepunti\n"));
         assertTrue(ex.getMessage().startsWith("Line 4:"), ex.getMessage());
     }
 
     @Test
     void postProductionFileMadeOnlyOfCommentsMeansNoSubstitutions() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\ta il gatto\n", "// nessuna regola qui\n\n");
-        assertEquals("a il gatto", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\ta il gatto\n", "// nessuna regola qui\n\n");
+        assertEquals("a il gatto", bean.produci().get(0));
     }
 
     @Test
     void postProductionRuleIsNotConfusedWithACommentWhenTheHashIsNotFirst() throws Exception {
         // Only a '//' at the very start of the line opens a comment: a '#' inside a rule is text.
-        GrammarBean bean = new GrammarBean("ROOT\n\tvedi nota\n", "vedi:cfr. #1");
-        assertEquals("cfr. #1 nota", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\tvedi nota\n", "vedi:cfr. #1");
+        assertEquals("cfr. #1 nota", bean.produci().get(0));
     }
 
     @Test
     void postProductionSubstitutesEveryOccurrence() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\ta il gatto e a il cane\n", "a il:al");
-        assertEquals("al gatto e al cane", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\ta il gatto e a il cane\n", "a il:al");
+        assertEquals("al gatto e al cane", bean.produci().get(0));
     }
 
     @Test
     void postProductionSubstitutionAtVeryEndOfTextIsHandled() throws Exception {
         // The matched "pre" text is the last thing in the produced string, so nothing
         // trails it after the substitution.
-        GrammarBean bean = new GrammarBean("ROOT\n\thello world\n", "world:earth");
-        assertEquals("hello earth", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\thello world\n", "world:earth");
+        assertEquals("hello earth", bean.produci().get(0));
     }
 
     @Test
@@ -954,8 +954,8 @@ class GrammarBeanTest {
         // EMPTY's only alternative is the empty string; the literal spaces the ROOT
         // template puts on either side of [EMPTY] must collapse into a single space
         // instead of surviving as a double space.
-        GrammarBean bean = new GrammarBean("ROOT\n\tleft [EMPTY] right\nEMPTY\n\t\n");
-        assertEquals("left right", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\tleft [EMPTY] right\nEMPTY\n\t\n");
+        assertEquals("left right", bean.produci().get(0));
     }
 
     @Test
@@ -963,30 +963,30 @@ class GrammarBeanTest {
         // Three consecutive empty references, each flanked by a literal space, leave behind
         // a run of four spaces; MULTIPLE_SPACES_REGEX ("[ \t]{2,}") must collapse any such
         // run, not just exactly two spaces, down to a single one.
-        GrammarBean bean = new GrammarBean("ROOT\n\ta [E1] [E2] [E3] b\nE1\n\t\nE2\n\t\nE3\n\t\n");
-        assertEquals("a b", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\ta [E1] [E2] [E3] b\nE1\n\t\nE2\n\t\nE3\n\t\n");
+        assertEquals("a b", bean.produci().get(0));
     }
 
     @Test
     void aRunOfTabsIsAlsoCollapsedToOneSpace() throws Exception {
         // The template embeds literal tabs (not just spaces) around [EMPTY]; a run of two
         // consecutive tabs left behind by the empty reference must collapse to one space too.
-        GrammarBean bean = new GrammarBean("ROOT\n\ta\t[EMPTY]\tb\nEMPTY\n\t\n");
-        assertEquals("a b", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\ta\t[EMPTY]\tb\nEMPTY\n\t\n");
+        assertEquals("a b", bean.produci().get(0));
     }
 
     @Test
     void aMixedRunOfSpacesAndTabsIsAlsoCollapsedToOneSpace() throws Exception {
         // One literal space and one literal tab, back to back, straddling the empty
         // reference: a "run of whitespace" is not just same-character repetition.
-        GrammarBean bean = new GrammarBean("ROOT\n\ta \t[EMPTY]\t b\nEMPTY\n\t\n");
-        assertEquals("a b", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\ta \t[EMPTY]\t b\nEMPTY\n\t\n");
+        assertEquals("a b", bean.produci().get(0));
     }
 
     @Test
     void aTabBeforePunctuationIsAlsoRemoved() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\tleft\t[EMPTY].\nEMPTY\n\t\n");
-        assertEquals("left.", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\tleft\t[EMPTY].\nEMPTY\n\t\n");
+        assertEquals("left.", bean.produci().get(0));
     }
 
     @Test
@@ -994,8 +994,8 @@ class GrammarBeanTest {
         // The substitution's own "post" text (" bar ") has a space on both sides, right
         // where the surrounding literal text already has one too; the resulting double
         // spaces must still be collapsed, not just ones present before substitutions run.
-        GrammarBean bean = new GrammarBean("ROOT\n\tx foo y\n", "foo: bar ");
-        assertEquals("x bar y", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\tx foo y\n", "foo: bar ");
+        assertEquals("x bar y", bean.produci().get(0));
     }
 
     @Test
@@ -1003,14 +1003,14 @@ class GrammarBeanTest {
         // EMPTY's only alternative is the empty string, sitting right before the final
         // period; the literal space the ROOT template puts before [EMPTY] must be removed
         // instead of surviving as a space immediately before the period.
-        GrammarBean bean = new GrammarBean("ROOT\n\tleft [EMPTY].\nEMPTY\n\t\n");
-        assertEquals("left.", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\tleft [EMPTY].\nEMPTY\n\t\n");
+        assertEquals("left.", bean.produci().get(0));
     }
 
     @Test
     void spaceBeforePunctuationIsRemovedForEveryCommonMark() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\ta [EMPTY], b [EMPTY]; c [EMPTY]: d [EMPTY]! e [EMPTY]?\nEMPTY\n\t\n");
-        assertEquals("a, b; c: d! e?", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\ta [EMPTY], b [EMPTY]; c [EMPTY]: d [EMPTY]! e [EMPTY]?\nEMPTY\n\t\n");
+        assertEquals("a, b; c: d! e?", bean.produci().get(0));
     }
 
     // ---- multi-line output ----
@@ -1019,10 +1019,10 @@ class GrammarBeanTest {
     void producedTextIsSplitIntoLines() throws Exception {
         // Neither the grammar file nor the post-production file can embed a literal newline
         // inside a single entry (both are parsed via BufferedReader.readLine()), so the only way
-        // to exercise the final line-splitting is to call the package-private produceImpl(String)
+        // to exercise the final line-splitting is to call the package-private produciDalNodo(String)
         // with a string that already contains one.
-        GrammarBean bean = new GrammarBean("ROOT\n\tirrelevant\n");
-        List<String> result = bean.produceImpl("line1\nline2");
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\tirrelevant\n");
+        List<String> result = bean.produciDalNodo("line1\nline2");
         assertEquals(java.util.Arrays.asList("line1", "line2"), result);
     }
 
@@ -1033,9 +1033,9 @@ class GrammarBeanTest {
         // Prerequisite for the default construct: splitTopLevelAlternatives used to track curly
         // braces and quotes but not square brackets, so a '|' inside [...] cut the token in half
         // and the load failed with "Missing ']'".
-        assertDoesNotThrow(() -> new GrammarBean("ROOT\n\t[K=a|b] [#K]\n"));
+        assertDoesNotThrow(() -> new GestoreGrammatiche("ROOT\n\t[K=a|b] [#K]\n"));
         assertEquals("a|b", assertDoesNotThrow(
-                () -> new GrammarBean("ROOT\n\t[K=a|b] [#K]\n").produce().get(0)));
+                () -> new GestoreGrammatiche("ROOT\n\t[K=a|b] [#K]\n").produci().get(0)));
     }
 
     @Test
@@ -1043,20 +1043,20 @@ class GrammarBeanTest {
         // The assignment sits AFTER the read in every one of these, so the fallback is what comes
         // out. Without the '?' each of them would throw halfway through the generation.
         String tail = " poi [K=[V]]\nV\n\tvalore\n";
-        assertEquals("ripiego poi", new GrammarBean("ROOT\n\t[*K? | ripiego]" + tail).produce().get(0));
-        assertEquals("ripiego poi", new GrammarBean("ROOT\n\t[#K? | ripiego]" + tail).produce().get(0));
-        assertEquals("ripiego poi", new GrammarBean("ROOT\n\t[!K? | ripiego]" + tail).produce().get(0));
-        assertEquals("ripiego poi", new GrammarBean("ROOT\n\t[K? | ripiego]" + tail).produce().get(0));
+        assertEquals("ripiego poi", new GestoreGrammatiche("ROOT\n\t[*K? | ripiego]" + tail).produci().get(0));
+        assertEquals("ripiego poi", new GestoreGrammatiche("ROOT\n\t[#K? | ripiego]" + tail).produci().get(0));
+        assertEquals("ripiego poi", new GestoreGrammatiche("ROOT\n\t[!K? | ripiego]" + tail).produci().get(0));
+        assertEquals("ripiego poi", new GestoreGrammatiche("ROOT\n\t[K? | ripiego]" + tail).produci().get(0));
     }
 
     @Test
     void defaultIsIgnoredWhenTheValueIsAvailable() throws Exception {
         // Guard against the fallback shadowing a perfectly good value: once assigned, the real
         // value wins, and a name that is a declared production is resolved normally.
-        GrammarBean assegnata = new GrammarBean("ROOT\n\t[K=[V]] [*K? | ripiego]\nV\n\tvalore\n");
-        assertEquals("valore", assegnata.produce().get(0));
-        GrammarBean dichiarata = new GrammarBean("ROOT\n\t[V? | ripiego]\nV\n\tvalore\n");
-        assertEquals("valore", dichiarata.produce().get(0));
+        GestoreGrammatiche assegnata = new GestoreGrammatiche("ROOT\n\t[K=[V]] [*K? | ripiego]\nV\n\tvalore\n");
+        assertEquals("valore", assegnata.produci().get(0));
+        GestoreGrammatiche dichiarata = new GestoreGrammatiche("ROOT\n\t[V? | ripiego]\nV\n\tvalore\n");
+        assertEquals("valore", dichiarata.produci().get(0));
     }
 
     @Test
@@ -1064,33 +1064,33 @@ class GrammarBeanTest {
         // An empty fallback is the way to say "if there is nothing, put nothing here"; the
         // surrounding spaces are collapsed by postProduce exactly as for any empty alternative.
         String grammatica = "ROOT\n\tprima %s dopo\nX\n\t[K=[V]]\nV\n\tvalore\n";
-        assertEquals("prima dopo", new GrammarBean(String.format(grammatica, "[K? | ]")).produce().get(0));
-        assertEquals("prima dopo", new GrammarBean(String.format(grammatica, "[K?]")).produce().get(0));
+        assertEquals("prima dopo", new GestoreGrammatiche(String.format(grammatica, "[K? | ]")).produci().get(0));
+        assertEquals("prima dopo", new GestoreGrammatiche(String.format(grammatica, "[K?]")).produci().get(0));
     }
 
     @Test
     void defaultMayBeALiteralAReferenceOrAnInlineGroup() throws Exception {
         String tail = " [K=[V]]\nALTRA\n\taltra\nV\n\tvalore\n";
-        assertEquals("letterale", new GrammarBean("ROOT\n\t[K? | letterale]" + tail).produce().get(0));
-        assertEquals("altra", new GrammarBean("ROOT\n\t[K? | [ALTRA]]" + tail).produce().get(0));
+        assertEquals("letterale", new GestoreGrammatiche("ROOT\n\t[K? | letterale]" + tail).produci().get(0));
+        assertEquals("altra", new GestoreGrammatiche("ROOT\n\t[K? | [ALTRA]]" + tail).produci().get(0));
         Set<String> visti = new HashSet<>();
-        GrammarBean gruppo = new GrammarBean("ROOT\n\t[K? | {a|b}]" + tail);
+        GestoreGrammatiche gruppo = new GestoreGrammatiche("ROOT\n\t[K? | {a|b}]" + tail);
         for (int i = 0; i < 200; i++) {
-            visti.add(gruppo.produce().get(0));
+            visti.add(gruppo.produci().get(0));
         }
         assertEquals(new HashSet<>(java.util.Arrays.asList("a", "b")), visti);
     }
 
     @Test
     void literalPipeInsideADefaultIsProtectedByAQuotedSpan() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\t[K? | \"a|b\"] [K=[V]]\nV\n\tvalore\n");
-        assertEquals("a|b", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[K? | \"a|b\"] [K=[V]]\nV\n\tvalore\n");
+        assertEquals("a|b", bean.produci().get(0));
     }
 
     @Test
     void capitalizeMarkerAppliesToTheDefaultToo() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\t^[K? | \u00e0bc] [K=[V]]\nV\n\tvalore\n");
-        assertEquals("\u00c0bc", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t^[K? | \u00e0bc] [K=[V]]\nV\n\tvalore\n");
+        assertEquals("\u00c0bc", bean.produci().get(0));
     }
 
     @Test
@@ -1098,14 +1098,14 @@ class GrammarBeanTest {
         // The lookup runs against the pruned currentProductionsMap, so an exhausted one-shot
         // production simply reads as "no value available" and the fallback takes over, instead of
         // the cascade killing the whole generation.
-        GrammarBean con = new GrammarBean("ROOT\n\t[X? | esaurito]\nX$\n\tsolo\n");
-        assertEquals("solo", con.produce().get(0));
-        assertEquals("esaurito", con.produce().get(0));
-        assertEquals("esaurito", con.produce().get(0));
+        GestoreGrammatiche con = new GestoreGrammatiche("ROOT\n\t[X? | esaurito]\nX$\n\tsolo\n");
+        assertEquals("solo", con.produci().get(0));
+        assertEquals("esaurito", con.produci().get(0));
+        assertEquals("esaurito", con.produci().get(0));
 
-        GrammarBean senza = new GrammarBean("ROOT\n\t[X]\nX$\n\tsolo\n");
-        assertEquals("solo", senza.produce().get(0));
-        assertThrows(IllegalArgumentException.class, senza::produce);
+        GestoreGrammatiche senza = new GestoreGrammatiche("ROOT\n\t[X]\nX$\n\tsolo\n");
+        assertEquals("solo", senza.produci().get(0));
+        assertThrows(IllegalArgumentException.class, senza::produci);
     }
 
     @Test
@@ -1113,55 +1113,55 @@ class GrammarBeanTest {
         // The '?' buys tolerance about WHEN a value appears, not about whether the name means
         // anything: a typo must still be caught at load time rather than silently defaulting for
         // ever. A name is "known" if it is a declared production or a key assigned somewhere.
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\t[MAI_VISTA? | ripiego]\n"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\t[MAI_VISTA? | ripiego]\n"));
         assertTrue(ex.getMessage().contains("MAI_VISTA"), ex.getMessage());
-        assertDoesNotThrow(() -> new GrammarBean("ROOT\n\t[K? | ripiego] [K=[V]]\nV\n\tvalore\n"));
-        assertDoesNotThrow(() -> new GrammarBean("ROOT\n\t[V? | ripiego]\nV\n\tvalore\n"));
+        assertDoesNotThrow(() -> new GestoreGrammatiche("ROOT\n\t[K? | ripiego] [K=[V]]\nV\n\tvalore\n"));
+        assertDoesNotThrow(() -> new GestoreGrammatiche("ROOT\n\t[V? | ripiego]\nV\n\tvalore\n"));
     }
 
     @Test
     void defaultMarkerWithoutANameIsInvalid() {
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\t[? | ripiego]\n"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\t[? | ripiego]\n"));
         assertTrue(ex.getMessage().contains("must be preceded by a node name"), ex.getMessage());
     }
 
     @Test
     void aBrokenReferenceInsideADefaultIsStillRejected() {
         // The fallback is grammar too: it gets validated like any other text.
-        assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\t[K? | [MAI_VISTA]] [K=[V]]\nV\n\tvalore\n"));
+        assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\t[K? | [MAI_VISTA]] [K=[V]]\nV\n\tvalore\n"));
     }
 
     @Test
     void anAssignmentInsideADefaultIsCollectedAsAnAssignedKey() throws Exception {
         // collectAssignedKeys has to descend into the fallback, otherwise "[B=...]" written there
         // would go unnoticed and the later "[#B]" would be rejected as undefined.
-        GrammarBean bean = new GrammarBean(
+        GestoreGrammatiche bean = new GestoreGrammatiche(
                 "ROOT\n\t[K? | [B=[V]]ripiego] [#B]\nX\n\t[K=[V]]\nV\n\tvalore\n");
-        assertEquals("ripiego valore", bean.produce().get(0));
+        assertEquals("ripiego valore", bean.produci().get(0));
     }
 
     @Test
     void productionNameMayNotEndWithTheDefaultMarker() {
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT?\n\tx\n"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT?\n\tx\n"));
         assertTrue(ex.getMessage().contains("may not end with"), ex.getMessage());
     }
 
     @Test
     void questionMarkAndPipeInsideAnAssignmentStayPlainText() throws Exception {
         // An assignment's value is free text, so "?|" in there is not a default separator.
-        GrammarBean bean = new GrammarBean("ROOT\n\t[K=a? | b] [#K]\n");
-        assertEquals("a? | b", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[K=a? | b] [#K]\n");
+        assertEquals("a? | b", bean.produci().get(0));
     }
 
     @Test
     void whitespaceAroundTheDefaultMarkerAndPipeIsIgnored() throws Exception {
         String tail = " [K=[V]]\nV\n\tvalore\n";
         for (String token : new String[]{"[K?|ripiego]", "[K? |ripiego]", "[K ? | ripiego]", "[K   ?   |   ripiego]"}) {
-            assertEquals("ripiego", new GrammarBean("ROOT\n\t" + token + tail).produce().get(0),
+            assertEquals("ripiego", new GestoreGrammatiche("ROOT\n\t" + token + tail).produci().get(0),
                     "Unexpected result for " + token);
         }
     }
@@ -1173,20 +1173,20 @@ class GrammarBeanTest {
         // productionsMap is insertion-ordered, so validation walks the productions in the order
         // the file declares them and the first broken reference reported is the first one written.
         // Under a plain HashMap this was decided by hash order instead.
-        GrammarBean.InvalidGrammarException prima = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\t[MANCA_UNO]\nSECONDA\n\t[MANCA_DUE]\n"));
+        GestoreGrammatiche.GrammaticaMalformataException prima = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\t[MANCA_UNO]\nSECONDA\n\t[MANCA_DUE]\n"));
         assertTrue(prima.getMessage().contains("MANCA_UNO"), prima.getMessage());
 
-        GrammarBean.InvalidGrammarException dopo = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("SECONDA\n\t[MANCA_DUE]\nROOT\n\t[MANCA_UNO]\n"));
+        GestoreGrammatiche.GrammaticaMalformataException dopo = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("SECONDA\n\t[MANCA_DUE]\nROOT\n\t[MANCA_UNO]\n"));
         assertTrue(dopo.getMessage().contains("MANCA_DUE"), dopo.getMessage());
     }
 
     @Test
     void postProductionRulesAreAppliedInFileOrder() throws Exception {
         // "abc" and "ab" both match the produced text: the rule listed first consumes it.
-        GrammarBean bean = new GrammarBean("ROOT\n\tabc\n", "abc:Y\nab:X");
-        assertEquals("Y", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\tabc\n", "abc:Y\nab:X");
+        assertEquals("Y", bean.produci().get(0));
     }
 
     @Test
@@ -1194,8 +1194,8 @@ class GrammarBeanTest {
         // Same two rules, opposite order: now the shorter "ab" gets there first and leaves the "c"
         // behind. This is the whole point of honouring file order -- the file can express its own
         // precedence, which under hash order it could not.
-        GrammarBean bean = new GrammarBean("ROOT\n\tabc\n", "ab:X\nabc:Y");
-        assertEquals("Xc", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\tabc\n", "ab:X\nabc:Y");
+        assertEquals("Xc", bean.produci().get(0));
     }
 
     @Test
@@ -1216,11 +1216,11 @@ class GrammarBeanTest {
 
     private static double percentualeDiUscitaImmediata(String grammatica, String radice, String uscita)
             throws Exception {
-        GrammarBean bean = new GrammarBean(grammatica);
+        GestoreGrammatiche bean = new GestoreGrammatiche(grammatica);
         int conteggio = 0;
         int prove = 40000;
         for (int i = 0; i < prove; i++) {
-            if (uscita.equals(bean.produce(radice).get(0))) {
+            if (uscita.equals(bean.produci(radice).get(0))) {
                 conteggio++;
             }
         }
@@ -1236,34 +1236,34 @@ class GrammarBeanTest {
         // default is already UTF-8 this passes either way; it fails where the default differs.
         byte[] grammatica = "ROOT\n\tperch\u00e9 la citt\u00e0 pu\u00f2 gi\u00e0 finire cos\u00ec\n"
                 .getBytes(StandardCharsets.UTF_8);
-        GrammarBean bean = new GrammarBean(new ByteArrayInputStream(grammatica), null);
-        assertEquals("perch\u00e9 la citt\u00e0 pu\u00f2 gi\u00e0 finire cos\u00ec", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche(new ByteArrayInputStream(grammatica), null);
+        assertEquals("perch\u00e9 la citt\u00e0 pu\u00f2 gi\u00e0 finire cos\u00ec", bean.produci().get(0));
     }
 
     @Test
     void accentedTextInPostProductionStreamIsDecodedAsUtf8() throws Exception {
         byte[] grammatica = "ROOT\n\ta il perche\n".getBytes(StandardCharsets.UTF_8);
         byte[] post = "a il perche:al perch\u00e9".getBytes(StandardCharsets.UTF_8);
-        GrammarBean bean = new GrammarBean(new ByteArrayInputStream(grammatica), new ByteArrayInputStream(post));
-        assertEquals("al perch\u00e9", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche(new ByteArrayInputStream(grammatica), new ByteArrayInputStream(post));
+        assertEquals("al perch\u00e9", bean.produci().get(0));
     }
 
     @Test
     void accentedTextFromTheStringConstructorRoundTrips() throws Exception {
         // The String constructor encodes to bytes and immediately re-reads them: the encode and
         // the decode must agree, which they only do if both name UTF-8 explicitly.
-        GrammarBean bean = new GrammarBean("ROOT\n\tl'et\u00e0 dell'or\u00f2 \u00e8 gi\u00e0 finita\n",
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\tl'et\u00e0 dell'or\u00f2 \u00e8 gi\u00e0 finita\n",
                 "or\u00f2:oro");
-        assertEquals("l'et\u00e0 dell'oro \u00e8 gi\u00e0 finita", bean.produce().get(0));
+        assertEquals("l'et\u00e0 dell'oro \u00e8 gi\u00e0 finita", bean.produci().get(0));
     }
 
     @Test
     void accentedLetterIsCapitalizedCorrectlyThroughTheWholePipeline() throws Exception {
         // Ties the encoding to the capitalize marker: a multi-byte first letter must survive
         // decoding and still be upper-cased.
-        GrammarBean bean = new GrammarBean(
+        GestoreGrammatiche bean = new GestoreGrammatiche(
                 new ByteArrayInputStream("ROOT\n\t^[X]\nX\n\t\u00e8 vero\n".getBytes(StandardCharsets.UTF_8)), null);
-        assertEquals("\u00c8 vero", bean.produce().get(0));
+        assertEquals("\u00c8 vero", bean.produci().get(0));
     }
 
     // ---- random seeding ----
@@ -1274,13 +1274,13 @@ class GrammarBeanTest {
         // a millisecond, so two beans built one after another (exactly what
         // the game's text producers do when they load their grammars) drew the identical sequence.
         // Now every bean draws from Dado's single source, so interleaved draws differ anyway.
-        GrammarBean first = new GrammarBean("ROOT\n\ta|b|c|d|e|f|g|h\n");
-        GrammarBean second = new GrammarBean("ROOT\n\ta|b|c|d|e|f|g|h\n");
+        GestoreGrammatiche first = new GestoreGrammatiche("ROOT\n\ta|b|c|d|e|f|g|h\n");
+        GestoreGrammatiche second = new GestoreGrammatiche("ROOT\n\ta|b|c|d|e|f|g|h\n");
         StringBuilder fromFirst = new StringBuilder();
         StringBuilder fromSecond = new StringBuilder();
         for (int i = 0; i < 40; i++) {
-            fromFirst.append(first.produce().get(0));
-            fromSecond.append(second.produce().get(0));
+            fromFirst.append(first.produci().get(0));
+            fromSecond.append(second.produci().get(0));
         }
         assertNotEquals(fromFirst.toString(), fromSecond.toString(),
                 "Two beans built back to back must not draw the same sequence");
@@ -1288,17 +1288,17 @@ class GrammarBeanTest {
 
     @Test
     void theSameDadoSeedGivesTheSameProductions() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\ta|b|c|d|e|f|g|h\n");
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\ta|b|c|d|e|f|g|h\n");
         try {
             Dado.impostaSeme(2024);
             StringBuilder first = new StringBuilder();
             for (int i = 0; i < 40; i++) {
-                first.append(bean.produce().get(0));
+                first.append(bean.produci().get(0));
             }
             Dado.impostaSeme(2024);
             StringBuilder second = new StringBuilder();
             for (int i = 0; i < 40; i++) {
-                second.append(bean.produce().get(0));
+                second.append(bean.produci().get(0));
             }
             assertEquals(first.toString(), second.toString());
         } finally {
@@ -1309,10 +1309,10 @@ class GrammarBeanTest {
     @Test
     void aSingleBeanStillVariesAcrossCalls() throws Exception {
         // Sanity guard for the seeding change: the generator must still be random.
-        GrammarBean bean = new GrammarBean("ROOT\n\ta|b|c|d|e|f|g|h\n");
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\ta|b|c|d|e|f|g|h\n");
         Set<String> seen = new HashSet<>();
         for (int i = 0; i < 200; i++) {
-            seen.add(bean.produce().get(0));
+            seen.add(bean.produci().get(0));
         }
         assertEquals(8, seen.size(), "Expected every alternative to be reachable, saw " + seen);
     }
@@ -1324,23 +1324,23 @@ class GrammarBeanTest {
         // "[k=X[Y]" has three '[' but only two ']': bracket matching is nesting-aware, so this
         // is caught as malformed as soon as the grammar is loaded, instead of silently producing
         // a broken token that only blows up later when the story is generated.
-        assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\t[k=X[Y] [#k]\n"));
+        assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\t[k=X[Y] [#k]\n"));
     }
 
     // ---- self-referencing (recursive) productions ----
 
     @Test
     void productionCanReferenceItselfRecursively() throws Exception {
-        // LISTA's own children reference "[LISTA]" again: produceImpl's token-resolution
-        // loop has no cycle/depth guard, so this recurses through resolveToken/produceImpl
+        // LISTA's own children reference "[LISTA]" again: produciDalNodo's token-resolution
+        // loop has no cycle/depth guard, so this recurses through resolveToken/produciDalNodo
         // however many times the random alternative "elemento [LISTA]" is picked, until the
         // terminating alternative "fine" is eventually chosen. Across enough trials this must
         // (a) never fail/overflow and (b) actually reach more than one level of recursion.
-        GrammarBean bean = new GrammarBean("LISTA\n\telemento [LISTA]|fine\n");
+        GestoreGrammatiche bean = new GestoreGrammatiche("LISTA\n\telemento [LISTA]|fine\n");
         int maxDepthSeen = 0;
         for (int i = 0; i < 300; i++) {
-            String result = bean.produce().get(0);
+            String result = bean.produci().get(0);
             assertTrue(result.matches("(elemento )*fine"), "Unexpected produced text: " + result);
             int depth = result.split(" ").length - 1;
             maxDepthSeen = Math.max(maxDepthSeen, depth);
@@ -1351,12 +1351,12 @@ class GrammarBeanTest {
     @Test
     void mutuallyRecursiveProductionsResolveEachOther() throws Exception {
         // A references B and B references A right back; nothing in checkProductionsValidity
-        // rejects this cycle at load time, and produceImpl happily bounces between the two
+        // rejects this cycle at load time, and produciDalNodo happily bounces between the two
         // until a non-referencing alternative ("stop") is picked.
-        GrammarBean bean = new GrammarBean("A\n\tx[B]|stop\nB\n\ty[A]|stop\n");
+        GestoreGrammatiche bean = new GestoreGrammatiche("A\n\tx[B]|stop\nB\n\ty[A]|stop\n");
         boolean sawBounce = false;
         for (int i = 0; i < 300; i++) {
-            String result = bean.produce().get(0);
+            String result = bean.produci().get(0);
             assertTrue(result.matches("([xy])*stop"), "Unexpected produced text: " + result);
             if (result.length() > "stop".length()) {
                 sawBounce = true;
@@ -1369,76 +1369,76 @@ class GrammarBeanTest {
 
     @Test
     void weightTokenIsStrippedFromAlternativeText() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\t[^5] A|B\n");
-        bean.setProductionMode(TipoModalitaProduzioneTesti.PRIMO);
-        assertEquals("A", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[^5] A|B\n");
+        bean.setModalita(TipoModalitaProduzioneTesti.PRIMO);
+        assertEquals("A", bean.produci().get(0));
     }
 
     @Test
     void weightTokenOnLastAlternativeIsAlsoStripped() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\tA|[^3] B\n");
-        bean.setProductionMode(TipoModalitaProduzioneTesti.ULTIMO);
-        assertEquals("B", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\tA|[^3] B\n");
+        bean.setModalita(TipoModalitaProduzioneTesti.ULTIMO);
+        assertEquals("B", bean.produci().get(0));
     }
 
     @Test
     void unmarkedAlternativesStillBehaveAsBeforeWhenMixedWithWeights() throws Exception {
         // The unweighted alternatives ("B", "C") must remain reachable exactly as before,
         // regardless of the presence of a weighted sibling ("A").
-        GrammarBean bean = new GrammarBean("ROOT\n\t[^5] A|B|C\n");
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[^5] A|B|C\n");
         Set<String> seen = new HashSet<>();
         for (int i = 0; i < 200; i++) {
-            seen.add(bean.produce().get(0));
+            seen.add(bean.produci().get(0));
         }
         assertEquals(new HashSet<>(java.util.Arrays.asList("A", "B", "C")), seen);
     }
 
     @Test
     void zeroWeightIsInvalid() {
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\t[^0] A\n"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\t[^0] A\n"));
         assertTrue(ex.getMessage().contains("positive number"));
     }
 
     @Test
     void negativeWeightIsInvalid() {
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\t[^-1] A\n"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\t[^-1] A\n"));
         assertTrue(ex.getMessage().contains("positive number"));
     }
 
     @Test
     void nonNumericWeightIsInvalid() {
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\t[^abc] A\n"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\t[^abc] A\n"));
         assertTrue(ex.getMessage().contains("positive number"));
     }
 
     @Test
     void unclosedWeightTokenIsInvalid() {
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\t[^5 A\n"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\t[^5 A\n"));
         assertTrue(ex.getMessage().contains("Missing ']'"));
     }
 
     @Test
     void fractionalWeightTokenIsStrippedAndHonored() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\t[^2.5] A|B\n");
-        bean.setProductionMode(TipoModalitaProduzioneTesti.PRIMO);
-        assertEquals("A", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[^2.5] A|B\n");
+        bean.setModalita(TipoModalitaProduzioneTesti.PRIMO);
+        assertEquals("A", bean.produci().get(0));
     }
 
     @Test
     void infiniteWeightIsInvalid() {
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\t[^Infinity] A\n"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\t[^Infinity] A\n"));
         assertTrue(ex.getMessage().contains("positive number"));
     }
 
     @Test
     void nanWeightIsInvalid() {
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\t[^NaN] A\n"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT\n\t[^NaN] A\n"));
         assertTrue(ex.getMessage().contains("positive number"));
     }
 
@@ -1447,11 +1447,11 @@ class GrammarBeanTest {
         // "A" is 20x as likely as "B" under RANDOM mode; over enough trials the observed
         // frequency ordering must reflect that, without asserting an exact ratio (to avoid
         // flakiness).
-        GrammarBean bean = new GrammarBean("ROOT\n\t[^20] A|B\n");
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[^20] A|B\n");
         int countA = 0;
         int countB = 0;
         for (int i = 0; i < 2000; i++) {
-            if ("A".equals(bean.produce().get(0))) {
+            if ("A".equals(bean.produci().get(0))) {
                 countA++;
             } else {
                 countB++;
@@ -1463,11 +1463,11 @@ class GrammarBeanTest {
     @Test
     void fractionalWeightSkewsRandomSelectionProportionally() throws Exception {
         // "A" (weight 0.5) is a fifth as likely as "B" (weight 2.5) under RANDOM mode.
-        GrammarBean bean = new GrammarBean("ROOT\n\t[^0.5] A|[^2.5] B\n");
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[^0.5] A|[^2.5] B\n");
         int countA = 0;
         int countB = 0;
         for (int i = 0; i < 2000; i++) {
-            if ("A".equals(bean.produce().get(0))) {
+            if ("A".equals(bean.produci().get(0))) {
                 countA++;
             } else {
                 countB++;
@@ -1480,21 +1480,21 @@ class GrammarBeanTest {
     void weightedAlternativeInsideOneShotProductionIsRemovedAfterUse() throws Exception {
         // X has two weighted alternatives; consuming one via FIRST mode must remove exactly
         // that one (by reference, not by content), leaving the other one reachable afterward.
-        GrammarBean bean = new GrammarBean("ROOT\n\t[X]\nX$\n\t[^5] a|[^3] b\n");
-        bean.setProductionMode(TipoModalitaProduzioneTesti.PRIMO);
-        assertEquals("a", bean.produce().get(0));
-        assertEquals("b", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[X]\nX$\n\t[^5] a|[^3] b\n");
+        bean.setModalita(TipoModalitaProduzioneTesti.PRIMO);
+        assertEquals("a", bean.produci().get(0));
+        assertEquals("b", bean.produci().get(0));
     }
 
     @Test
     void weightedOptionInsideInlineGroupIsHonored() throws Exception {
         // The inline group becomes an on-the-fly production; its "x" option is heavily
         // weighted relative to "y", and this must be honored without any special handling.
-        GrammarBean bean = new GrammarBean("ROOT\n\t{[^20] x|y}\n");
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t{[^20] x|y}\n");
         int countX = 0;
         int countY = 0;
         for (int i = 0; i < 2000; i++) {
-            if ("x".equals(bean.produce().get(0))) {
+            if ("x".equals(bean.produci().get(0))) {
                 countX++;
             } else {
                 countY++;
@@ -1510,11 +1510,11 @@ class GrammarBeanTest {
         // RICH has ten leaf alternatives (aggregate weight 10), POOR has one (aggregate
         // weight 1); ROOT's two alternatives start out with the same base weight, but the
         // one referencing RICH must end up boosted well above the one referencing POOR.
-        GrammarBean bean = new GrammarBean("ROOT\n\t[RICH]|[POOR]\nRICH\n\ta|b|c|d|e|f|g|h|i|j\nPOOR\n\tz\n");
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[RICH]|[POOR]\nRICH\n\ta|b|c|d|e|f|g|h|i|j\nPOOR\n\tz\n");
         int richCount = 0;
         int poorCount = 0;
         for (int i = 0; i < 3000; i++) {
-            if ("z".equals(bean.produce().get(0))) {
+            if ("z".equals(bean.produci().get(0))) {
                 poorCount++;
             } else {
                 richCount++;
@@ -1527,11 +1527,11 @@ class GrammarBeanTest {
     void grammarWithNoCrossReferencesIsUnaffectedByDescendantAdjustment() throws Exception {
         // No alternative references another production, so findReferencedProductions
         // returns nothing for every one of them: weights must stay exactly as declared.
-        GrammarBean bean = new GrammarBean("ROOT\n\t[^5] A|B|C\n");
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[^5] A|B|C\n");
         int countA = 0;
         int countOther = 0;
         for (int i = 0; i < 2000; i++) {
-            if ("A".equals(bean.produce().get(0))) {
+            if ("A".equals(bean.produci().get(0))) {
                 countA++;
             } else {
                 countOther++;
@@ -1547,20 +1547,20 @@ class GrammarBeanTest {
         // "[k=X]" assigns a literal value and "[#k]" retrieves it; neither references a
         // production, so they must not contribute to any descendant-weight boost, and
         // must not be mistaken for an undefined-production reference either.
-        assertDoesNotThrow(() -> new GrammarBean("ROOT\n\t[k=X] [#k]\n"));
+        assertDoesNotThrow(() -> new GestoreGrammatiche("ROOT\n\t[k=X] [#k]\n"));
     }
 
     @Test
     void fixedReferencesContributeToDescendantBoostLikePlainReferences() throws Exception {
         // [*RICH] and [!RICH] must count RICH's aggregate weight toward the boost exactly
         // like a plain [RICH] reference would.
-        GrammarBean beanGlobal = new GrammarBean("ROOT\n\t[*RICH]|[POOR]\nRICH\n\ta|b|c|d|e|f|g|h|i|j\nPOOR\n\tz\n");
-        GrammarBean beanLocal = new GrammarBean("ROOT\n\t[!RICH]|[POOR]\nRICH\n\ta|b|c|d|e|f|g|h|i|j\nPOOR\n\tz\n");
-        for (GrammarBean bean : java.util.Arrays.asList(beanGlobal, beanLocal)) {
+        GestoreGrammatiche beanGlobal = new GestoreGrammatiche("ROOT\n\t[*RICH]|[POOR]\nRICH\n\ta|b|c|d|e|f|g|h|i|j\nPOOR\n\tz\n");
+        GestoreGrammatiche beanLocal = new GestoreGrammatiche("ROOT\n\t[!RICH]|[POOR]\nRICH\n\ta|b|c|d|e|f|g|h|i|j\nPOOR\n\tz\n");
+        for (GestoreGrammatiche bean : java.util.Arrays.asList(beanGlobal, beanLocal)) {
             int richCount = 0;
             int poorCount = 0;
             for (int i = 0; i < 3000; i++) {
-                if ("z".equals(bean.produce().get(0))) {
+                if ("z".equals(bean.produci().get(0))) {
                     poorCount++;
                 } else {
                     richCount++;
@@ -1573,124 +1573,124 @@ class GrammarBeanTest {
     @Test
     void selfRecursiveProductionAdjustmentDoesNotHang() {
         assertTimeoutPreemptively(java.time.Duration.ofSeconds(2), () ->
-                new GrammarBean("LISTA\n\telemento [LISTA]|fine\n"));
+                new GestoreGrammatiche("LISTA\n\telemento [LISTA]|fine\n"));
     }
 
     @Test
     void mutuallyRecursiveProductionsAdjustmentDoesNotHang() {
         assertTimeoutPreemptively(java.time.Duration.ofSeconds(2), () ->
-                new GrammarBean("A\n\tx[B]|stop\nB\n\ty[A]|stop\n"));
+                new GestoreGrammatiche("A\n\tx[B]|stop\nB\n\ty[A]|stop\n"));
     }
 
     @Test
     void threeWayCyclicProductionsAdjustmentDoesNotHang() {
         assertTimeoutPreemptively(java.time.Duration.ofSeconds(2), () ->
-                new GrammarBean("A\n\t[B]|stopA\nB\n\t[C]|stopB\nC\n\t[A]|stopC\n"));
+                new GestoreGrammatiche("A\n\t[B]|stopA\nB\n\t[C]|stopB\nC\n\t[A]|stopC\n"));
     }
 
     // ---- Capitalize marker ----
 
     @Test
     void capitalizeMarkerCapitalizesPlainProductionResult() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\t^[X]\nX\n\thello\n");
-        assertEquals("Hello", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t^[X]\nX\n\thello\n");
+        assertEquals("Hello", bean.produci().get(0));
     }
 
     @Test
     void referenceWithoutMarkerIsUnaffected() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\t[X]\nX\n\thello\n");
-        assertEquals("hello", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[X]\nX\n\thello\n");
+        assertEquals("hello", bean.produci().get(0));
     }
 
     @Test
     void caretNotImmediatelyFollowedByBracketIsLiteralText() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\tpower^2 [X]\nX\n\thello\n");
-        assertEquals("power^2 hello", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\tpower^2 [X]\nX\n\thello\n");
+        assertEquals("power^2 hello", bean.produci().get(0));
     }
 
     @Test
     void capitalizeMarkerWorksOnGloballyFixedProduction() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\t^[*NAME]\nNAME\n\treal\n");
-        assertEquals("Real", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t^[*NAME]\nNAME\n\treal\n");
+        assertEquals("Real", bean.produci().get(0));
     }
 
     @Test
     void capitalizeMarkerWorksOnLocallyFixedProduction() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\t^[!NAME]\nNAME\n\treal\n");
-        assertEquals("Real", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t^[!NAME]\nNAME\n\treal\n");
+        assertEquals("Real", bean.produci().get(0));
     }
 
     @Test
     void capitalizeMarkerWorksOnStoredValueReference() throws Exception {
         // [!NAME] caches "value" under key "NAME"; [#NAME] retrieves it, and the leading
         // ^ capitalizes that retrieved copy without affecting the first, uncapitalized one.
-        GrammarBean bean = new GrammarBean("ROOT\n\t[!NAME]^[#NAME]\nNAME\n\tvalue\n");
-        assertEquals("valueValue", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t[!NAME]^[#NAME]\nNAME\n\tvalue\n");
+        assertEquals("valueValue", bean.produci().get(0));
     }
 
     @Test
     void capitalizeMarkerOnEmptyResolutionIsNoOp() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\ta^[X]b\nX\n\thello|\n");
-        bean.setProductionMode(TipoModalitaProduzioneTesti.ULTIMO);
-        assertEquals("ab", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\ta^[X]b\nX\n\thello|\n");
+        bean.setModalita(TipoModalitaProduzioneTesti.ULTIMO);
+        assertEquals("ab", bean.produci().get(0));
     }
 
     @Test
     void capitalizeMarkerHandlesAccentedFirstLetter() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\t^[X]\nX\n\tàlbero\n");
-        assertEquals("Àlbero", bean.produce().get(0));
+        GestoreGrammatiche bean = new GestoreGrammatiche("ROOT\n\t^[X]\nX\n\tàlbero\n");
+        assertEquals("Àlbero", bean.produci().get(0));
     }
 
     // Derived productions
 
     @Test
     void correctDerivedProduction() throws Exception {
-        GrammarBean grammarBean = new GrammarBean("ROOT=PROD1 PROD2\nPROD1\n\talbero\nPROD2\n\ttavolo");
-        List<GrammarBean.WeightedAlternative> productions = grammarBean.getProductions("ROOT");
-        assertTrue(productions.stream().anyMatch(p -> p.getText().equals("tavolo")));
-        assertTrue(productions.stream().anyMatch(p -> p.getText().equals("albero")));
+        GestoreGrammatiche grammarBean = new GestoreGrammatiche("ROOT=PROD1 PROD2\nPROD1\n\talbero\nPROD2\n\ttavolo");
+        List<GestoreGrammatiche.AlternativaPesata> productions = grammarBean.getAlternative("ROOT");
+        assertTrue(productions.stream().anyMatch(p -> p.getTesto().equals("tavolo")));
+        assertTrue(productions.stream().anyMatch(p -> p.getTesto().equals("albero")));
     }
 
     @Test
     void correctDerivedProductionWithNoProducers() throws Exception {
-        GrammarBean grammarBean = new GrammarBean("ROOT=\n\talbero\n\ttavolo");
-        List<GrammarBean.WeightedAlternative> productions = grammarBean.getProductions("ROOT");
-        assertTrue(productions.stream().anyMatch(p -> p.getText().equals("albero")));
-        assertTrue(productions.stream().anyMatch(p -> p.getText().equals("tavolo")));
+        GestoreGrammatiche grammarBean = new GestoreGrammatiche("ROOT=\n\talbero\n\ttavolo");
+        List<GestoreGrammatiche.AlternativaPesata> productions = grammarBean.getAlternative("ROOT");
+        assertTrue(productions.stream().anyMatch(p -> p.getTesto().equals("albero")));
+        assertTrue(productions.stream().anyMatch(p -> p.getTesto().equals("tavolo")));
     }
 
     @Test
     void undeclaredProduction() throws Exception {
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT=PROD1"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT=PROD1"));
         assertTrue(ex.getMessage().contains("undeclared production: PROD1"));
     }
 
     @Test
     void selfDerivedProduction() throws Exception {
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT=ROOT"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT=ROOT"));
         assertTrue(ex.getMessage().contains("derives from itself"));
     }
 
     @Test
     void repeatedProduction() throws Exception {
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT=PROD1\tPROD1"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT=PROD1\tPROD1"));
         assertTrue(ex.getMessage().contains("PROD1 is repeated more than once"));
     }
 
     @Test
     void mutuallyDerivedProduction1() throws Exception {
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT=PROD1\nPROD1=ROOT"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT=PROD1\nPROD1=ROOT"));
         assertTrue(ex.getMessage().contains("are mutually derived"));
     }
 
     @Test
     void mutuallyDerivedProduction2() throws Exception {
-        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT=PROD1\nPROD1=PROD2\nPROD2=ROOT"));
+        GestoreGrammatiche.GrammaticaMalformataException ex = assertThrows(GestoreGrammatiche.GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("ROOT=PROD1\nPROD1=PROD2\nPROD2=ROOT"));
         assertTrue(ex.getMessage().contains("are mutually derived"));
     }
 }

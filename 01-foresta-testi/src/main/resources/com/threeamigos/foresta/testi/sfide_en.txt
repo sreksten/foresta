@@ -1,6 +1,6 @@
 // The lines of the rock, paper, scissors challenge (English version of sfide.txt; same productions).
 //
-// Characters not to use in the texts: [ ] { } | " (GrammarBean syntax).
+// Characters not to use in the texts: [ ] { } | " (GestoreGrammatiche syntax).
 
 SFIDA
     I challenge you to rock, paper, scissors!

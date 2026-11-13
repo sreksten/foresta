@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
- * Le regole di postproduzione che il gioco pubblica (in questo modulo) devono continuare a essere accettate da {@link GrammarBean}.
+ * Le regole di postproduzione che il gioco pubblica (in questo modulo) devono continuare a essere accettate da {@link GestoreGrammatiche}.
  */
 class GrammatichePubblicateTest {
 
@@ -22,8 +22,8 @@ class GrammatichePubblicateTest {
              InputStream postProduction = GrammatichePubblicateTest.class.getResourceAsStream(
                      "/com/threeamigos/foresta/testi/preposizioni_articolate_pp.txt")) {
             assertNotNull(postProduction, "preposizioni_articolate_pp.txt not found on the test classpath");
-            GrammarBean bean = new GrammarBean(grammar, postProduction);
-            assertEquals("vai al castello", bean.produce().get(0));
+            GestoreGrammatiche bean = new GestoreGrammatiche(grammar, postProduction);
+            assertEquals("vai al castello", bean.produci().get(0));
         }
     }
 }

@@ -38,6 +38,10 @@ Un testo che costa costruirlo si passa come fornitore, `Logger.log(() -> "Colpo 
 - **`TemporizzatoreJ2SE`**: l'implementazione sull'esecutore pianificato del JDK. Gli impulsi falliti si segnalano a chi li ha chiesti.
 - **`ThreadPrincipale`**: il thread su cui gira **tutta la logica di gioco**. Il motore e il bus eventi non conoscono il toolkit grafico: chiedono qui di eseguire un'operazione sul thread principale (`esegui` subito se si è già lì, `accoda` dopo), e chi assembla il gioco installa l'`Esecutore` del proprio toolkit (con Swing è `ui/EsecutoreSwing`, installato da `Main`). Finché non se ne installa uno le operazioni girano subito sul thread chiamante: è così nei test.
 
+### La maiuscola iniziale: `Maiuscole`
+
+`Maiuscole.inizialeMaiuscola` mette in maiuscolo il primo carattere di un testo e lascia il resto com'è (null e il testo vuoto restano come sono). Sta qui perché la usano moduli che non si vedono fra loro: i testi (`Articoli`, `LinguaInglese`, `GestoreGrammatiche`), gli eventi (`NotificaDiTesto`), le missioni (`IncaricoInCitta`) e l'interfaccia (`RivelazioneDellArtefatto`).
+
 ### La modalità di prova: `ModalitaDiProva` e `TrucchiDiSviluppo`
 
 `ModalitaDiProva` è un semplice interruttore, acceso dall'argomento di avvio `MODALITA_DI_PROVA` (lo legge `OpzioniDiAvvio`, in `12-foresta-ui-comune`). Con la modalità accesa il gioco regala monete, pergamene e pozioni a volontà, svela la mappa e mette in campo artefatti potenti; senza, la partita parte come per un giocatore vero.

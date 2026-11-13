@@ -4,7 +4,7 @@
 //   trinket the offensive secondaries      seal  the defensive secondaries
 // Roots: <TYPE>_<n>, n from 1 to 3 effects, all different (EFFETTO_<TYPE>$ is one-shot).
 //
-// Characters not to use in the texts: [ ] { } | " (GrammarBean syntax) and < > @ (markers).
+// Characters not to use in the texts: [ ] { } | " (GestoreGrammatiche syntax) and < > @ (markers).
 
 PERGAMENA_1
     the scroll [EFFETTO_PERGAMENA]

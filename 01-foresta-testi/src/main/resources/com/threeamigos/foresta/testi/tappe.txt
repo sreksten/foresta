@@ -3,8 +3,8 @@
 //
 // Due radici: TAPPA_MISSIONE dà una missione seria (persona, oggetto leggendario, chiavi, due piste) e
 // TAPPA_MISSIONE_FARSA una farsa. Quale chiedere lo decide il gioco (circa una su tre è una farsa: vedi
-// CostantiMissioni), perché i pesi [^N] di GrammarBean non sono proporzionali: ogni ramo riceve un aumento in
-// base alla ricchezza dei sottoalberi (GrammarBean.md §5.2), e così le proporzioni fra le ricette serie sono solo
+// CostantiMissioni), perché i pesi [^N] di GestoreGrammatiche non sono proporzionali: ogni ramo riceve un aumento in
+// base alla ricchezza dei sottoalberi (GestoreGrammatiche.md §5.2), e così le proporzioni fra le ricette serie sono solo
 // indicative. Le produzioni a esaurimento (NOME_CHIAVE$, CUSTODE_DATI$) si ripristinano dopo ogni riga.
 //
 // Ogni produzione TAPPA_MISSIONE dà una riga di campi CHIAVE=valore separati da ";", come missioni.txt.

@@ -3,7 +3,7 @@
 // Distratto". Le rovine che nascono in partita, da un castello sconfitto o da una città distrutta, non pescano da qui:
 // prendono il nome da quello che c'era prima ("le Rovine del Maniero del Malefizio", vedi Foresta.distruggiLocazioneUnica).
 //
-// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
+// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GestoreGrammatiche).
 
 NOME_ROVINE
     [RESTI] [ORIGINE]

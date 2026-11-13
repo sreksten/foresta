@@ -3,7 +3,7 @@ package com.threeamigos.foresta.artefatti;
 import com.threeamigos.foresta.testi.CaricatoreDiGrammatiche;
 import com.threeamigos.foresta.testi.GrammaticaNonValidaException;
 import com.threeamigos.foresta.testi.GrammaticaPigra;
-import com.threeamigos.foresta.testi.GrammarBean;
+import com.threeamigos.foresta.testi.GestoreGrammatiche;
 import com.threeamigos.foresta.tipi.TipoModalitaProduzioneTesti;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import com.threeamigos.foresta.testi.Preposizione;
 /**
  * I testi a caso degli artefatti: le righe di {@code leggendari.txt} (gli oggetti leggendari, i loro set e i libri tecnici, che
  * {@code OggettoLeggendario}, {@code SetLeggendario} e {@code LibroTecnico} leggono riga per riga), le battute che li
- * raccontano e i nomi degli oggetti che fanno salire di livello un artefatto ({@code artefatti2.txt}). Vedi GrammarBean.md e
+ * raccontano e i nomi degli oggetti che fanno salire di livello un artefatto ({@code artefatti2.txt}). Vedi GestoreGrammatiche.md e
  * artefatti_e_incantamenti.md.
  */
 public final class ProduttoreDiArtefattiCasuale {
@@ -48,7 +48,7 @@ public final class ProduttoreDiArtefattiCasuale {
 	 * artefatti2.txt e TipoArtefatto.AGGIORNAMENTO).
 	 */
 	public static String nomeAggiornamento() {
-		return AGGIORNAMENTI.get().produce("NOME_AGGIORNAMENTO").get(0).trim();
+		return AGGIORNAMENTI.get().produci("NOME_AGGIORNAMENTO").get(0).trim();
 	}
 
 	/**
@@ -57,9 +57,9 @@ public final class ProduttoreDiArtefattiCasuale {
 	 * nella partita, che lo sa dalle sue missioni (la grammatica non si salva con la partita).
 	 */
 	public static synchronized Optional<String> oggettoLeggendario(Predicate<String> giaPescato) {
-		LEGGENDARI.get().reset();
-		while (LEGGENDARI.get().canProduce(OGGETTO_LEGGENDARIO)) {
-			String riga = String.join(" ", LEGGENDARI.get().produce(OGGETTO_LEGGENDARIO)).trim();
+		LEGGENDARI.get().ripristina();
+		while (LEGGENDARI.get().puoProdurre(OGGETTO_LEGGENDARIO)) {
+			String riga = String.join(" ", LEGGENDARI.get().produci(OGGETTO_LEGGENDARIO)).trim();
 			if (!giaPescato.test(riga)) {
 				return Optional.of(riga);
 			}
@@ -73,9 +73,9 @@ public final class ProduttoreDiArtefattiCasuale {
 	 * @param nomeBreve il nome breve dell'oggetto, con l'articolo: "lo Scudo Fiscale"
 	 */
 	public static synchronized String introduzioneDellaLeggenda(String nomeBreve) {
-		LEGGENDARI.get().addFixedProduction("DELL_OGGETTO", Lingue.corrente().conPreposizione(Preposizione.DI, nomeBreve));
-		LEGGENDARI.get().addFixedProduction("L_OGGETTO", nomeBreve);
-		return LEGGENDARI.get().produce("INTRODUZIONE_LEGGENDA").get(0).trim();
+		LEGGENDARI.get().fissaProduzione("DELL_OGGETTO", Lingue.corrente().conPreposizione(Preposizione.DI, nomeBreve));
+		LEGGENDARI.get().fissaProduzione("L_OGGETTO", nomeBreve);
+		return LEGGENDARI.get().produci("INTRODUZIONE_LEGGENDA").get(0).trim();
 	}
 
 	/**
@@ -112,8 +112,8 @@ public final class ProduttoreDiArtefattiCasuale {
 	 * @param titolo il titolo fra virgolette e la descrizione: "The C Programming Language", di B. Kernighan e D. Ritchie
 	 */
 	public static synchronized String letturaDelLibroTecnico(String titolo) {
-		LEGGENDARI.get().addFixedProduction("TITOLO", titolo);
-		return LEGGENDARI.get().produce("LETTURA_LIBRO_TECNICO").get(0).trim();
+		LEGGENDARI.get().fissaProduzione("TITOLO", titolo);
+		return LEGGENDARI.get().produci("LETTURA_LIBRO_TECNICO").get(0).trim();
 	}
 
 	/**
@@ -123,14 +123,14 @@ public final class ProduttoreDiArtefattiCasuale {
 	 * @param chiaveLibro la chiave del libro (vedi LibroTecnico.getChiave)
 	 */
 	public static synchronized String conclusioneSulLibroTecnico(String chiaveLibro) {
-		return LEGGENDARI.get().produce("CONCLUSIONE_" + chiaveLibro).get(0).trim();
+		return LEGGENDARI.get().produci("CONCLUSIONE_" + chiaveLibro).get(0).trim();
 	}
 
 	/**
 	 * Quel che dice l'incantatore quando una riprogrammazione va male (vedi ERRORE_RIPROGRAMMAZIONE in LEGGENDARI.txt).
 	 */
 	public static synchronized String erroreDiRiprogrammazione() {
-		return LEGGENDARI.get().produce("ERRORE_RIPROGRAMMAZIONE").get(0).trim();
+		return LEGGENDARI.get().produci("ERRORE_RIPROGRAMMAZIONE").get(0).trim();
 	}
 
 	/**
@@ -141,17 +141,17 @@ public final class ProduttoreDiArtefattiCasuale {
 	 */
 	private static synchronized List<String> tutteLeRigheLeggendarie(String produzione) {
 		List<String> righe = new ArrayList<>();
-		GrammarBean grammatica = LEGGENDARI.get();
-		TipoModalitaProduzioneTesti modalita = grammatica.getProductionMode();
-		grammatica.setProductionMode(TipoModalitaProduzioneTesti.PRIMO);
+		GestoreGrammatiche grammatica = LEGGENDARI.get();
+		TipoModalitaProduzioneTesti modalita = grammatica.getModalita();
+		grammatica.setModalita(TipoModalitaProduzioneTesti.PRIMO);
 		try {
-			grammatica.reset();
-			while (grammatica.canProduce(produzione)) {
-				righe.add(String.join(" ", grammatica.produce(produzione)).trim());
+			grammatica.ripristina();
+			while (grammatica.puoProdurre(produzione)) {
+				righe.add(String.join(" ", grammatica.produci(produzione)).trim());
 			}
 		} finally {
-			grammatica.setProductionMode(modalita);
-			grammatica.reset();
+			grammatica.setModalita(modalita);
+			grammatica.ripristina();
 		}
 		return righe;
 	}

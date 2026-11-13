@@ -41,10 +41,24 @@ public final class Testi {
 
 	private static final List<Runnable> ASCOLTATORI = new java.util.concurrent.CopyOnWriteArrayList<>();
 
-	// La lingua scelta dalla piattaforma, come "en-GB"; volatile perché si legge da più thread
-	private static volatile String lingua = LINGUA_PREDEFINITA;
-	// I suffissi dei file da cercare, dal più specifico al più generico ("en_GB", "en", "it"); si ricalcola con la lingua
-	private static volatile String[] catena = {LINGUA_PREDEFINITA};
+	/**
+	 * La lingua scelta e i file da cercare per lei, sempre cambiati insieme: chi legge da un altro thread non vede mai la
+	 * lingua nuova con i file di quella vecchia.
+	 */
+	private static final class LinguaScelta {
+		// Come "en-GB"
+		final String codice;
+		// I suffissi dei file da cercare, dal più specifico al più generico ("en_GB", "en", "it")
+		final String[] catena;
+
+		LinguaScelta(String codice, String[] catena) {
+			this.codice = codice;
+			this.catena = catena;
+		}
+	}
+
+	// volatile perché si legge da più thread; si sostituisce intera, mai un pezzo alla volta
+	private static volatile LinguaScelta scelta = new LinguaScelta(LINGUA_PREDEFINITA, new String[] {LINGUA_PREDEFINITA});
 
 	// Per nome del file e lingua; una lingua senza file vale un elenco vuoto
 	private static final ConcurrentMap<String, Properties> CACHE = new ConcurrentHashMap<>();
@@ -58,9 +72,9 @@ public final class Testi {
 	 * vale lo stesso); con null o vuoto torna l'italiano.
 	 */
 	public static void impostaLingua(String codice) {
-		String precedente = lingua;
-		impostaLinguaImpl(codice);
-		if (!lingua.equals(precedente)) {
+		String precedente = scelta.codice;
+		scelta = linguaDa(codice);
+		if (!scelta.codice.equals(precedente)) {
 			for (Runnable ascoltatore : ASCOLTATORI) {
 				ascoltatore.run();
 			}
@@ -81,7 +95,7 @@ public final class Testi {
 	 */
 	public static List<String> suffissiDellaLingua() {
 		List<String> suffissi = new ArrayList<>();
-		for (String suffisso : catena) {
+		for (String suffisso : scelta.catena) {
 			if (!LINGUA_PREDEFINITA.equals(suffisso)) {
 				suffissi.add(suffisso);
 			}
@@ -89,16 +103,16 @@ public final class Testi {
 		return suffissi;
 	}
 
-	private static void impostaLinguaImpl(String codice) {
+	// Da "en-GB" (o "en_gb") ricava la lingua da mostrare ("en-GB") e la catena dei file da cercare (en_GB, en, it)
+	private static LinguaScelta linguaDa(String codice) {
 		String pulito = codice == null ? "" : codice.trim().replace('_', '-');
 		if (pulito.isEmpty()) {
-			lingua = LINGUA_PREDEFINITA;
-			catena = new String[] {LINGUA_PREDEFINITA};
-			return;
+			return new LinguaScelta(LINGUA_PREDEFINITA, new String[] {LINGUA_PREDEFINITA});
 		}
 		String[] parti = pulito.split("-", 2);
 		String soloLingua = parti[0].toLowerCase(Locale.ROOT);
 		List<String> suffissi = new ArrayList<>();
+		String lingua;
 		if (parti.length > 1 && !parti[1].isEmpty()) {
 			String regione = parti[1].toUpperCase(Locale.ROOT);
 			suffissi.add(soloLingua + "_" + regione);
@@ -110,14 +124,14 @@ public final class Testi {
 		if (!LINGUA_PREDEFINITA.equals(soloLingua)) {
 			suffissi.add(LINGUA_PREDEFINITA);
 		}
-		catena = suffissi.toArray(new String[0]);
+		return new LinguaScelta(lingua, suffissi.toArray(new String[0]));
 	}
 
 	/**
 	 * Il codice della lingua in uso ("it" finché la piattaforma non ne sceglie un'altra), con la regione se c'è ("en-GB").
 	 */
 	public static String getLingua() {
-		return lingua;
+		return scelta.codice;
 	}
 
 	/**
@@ -125,7 +139,7 @@ public final class Testi {
 	 * in italiano.
 	 */
 	public static Optional<String> get(String file, String chiave) {
-		for (String suffisso : catena) {
+		for (String suffisso : scelta.catena) {
 			String testo = carica(file, suffisso).getProperty(chiave);
 			if (testo != null) {
 				return Optional.of(testo);
@@ -178,7 +192,7 @@ public final class Testi {
 		Class<?> classe = costante.getDeclaringClass();
 		ConcurrentMap<String, Properties> perLingua = CACHE_DELLE_ENUM.computeIfAbsent(classe, k -> new ConcurrentHashMap<>());
 		String chiave = costante.name() + '.' + voce;
-		for (String suffisso : catena) {
+		for (String suffisso : scelta.catena) {
 			String testo = proprietaDellEnum(perLingua, classe, suffisso).getProperty(chiave);
 			if (testo != null) {
 				return Optional.of(testo);

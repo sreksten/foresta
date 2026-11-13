@@ -25,7 +25,7 @@ public final class ProduttoreDiLuoghiCasuale {
 	 * Un nome a caso per un tempio, con l'articolo: "il Santuario della Luna" (vedi templi.txt e Tempio.getNome).
 	 */
 	public static String nomeTempio() {
-		return TEMPLI.get().produce("NOME_TEMPIO").get(0).trim();
+		return TEMPLI.riga("NOME_TEMPIO");
 	}
 
 	/**
@@ -33,6 +33,6 @@ public final class ProduttoreDiLuoghiCasuale {
 	 * Rovine.getNome).
 	 */
 	public static String nomeRovine() {
-		return ROVINE.get().produce("NOME_ROVINE").get(0).trim();
+		return ROVINE.riga("NOME_ROVINE");
 	}
 }

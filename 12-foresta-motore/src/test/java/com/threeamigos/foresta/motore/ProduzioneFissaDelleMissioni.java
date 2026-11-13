@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.testi.GrammarBean;
+import com.threeamigos.foresta.testi.GestoreGrammatiche;
 import com.threeamigos.foresta.testi.GrammaticaPigra;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.TipoModalitaProduzioneTesti;
@@ -9,12 +9,12 @@ import java.lang.reflect.Field;
 
 /**
  * Per i test che dipendono dalle estrazioni della grammatica delle missioni: finché è aperta, la grammatica sceglie sempre la prima
- * alternativa invece di estrarre a caso (vedi {@link GrammarBean#setProductionMode}); alla chiusura torna com'era. Il gioco non lo sa:
+ * alternativa invece di estrarre a caso (vedi {@link GestoreGrammatiche#setModalita}); alla chiusura torna com'era. Il gioco non lo sa:
  * la grammatica la raggiunge il test, per riflessione.
  */
 final class ProduzioneFissaDelleMissioni implements AutoCloseable {
 
-    private final GrammarBean grammatica;
+    private final GestoreGrammatiche grammatica;
     private final TipoModalitaProduzioneTesti modalitaPrecedente;
 
     private ProduzioneFissaDelleMissioni(TipoModalitaProduzioneTesti modalita) {
@@ -25,8 +25,8 @@ final class ProduzioneFissaDelleMissioni implements AutoCloseable {
         } catch (ReflectiveOperationException e) {
             throw new AssertionError(e);
         }
-        modalitaPrecedente = grammatica.getProductionMode();
-        grammatica.setProductionMode(modalita);
+        modalitaPrecedente = grammatica.getModalita();
+        grammatica.setModalita(modalita);
     }
 
     /** La prima alternativa di ogni produzione, finché non si chiude. */
@@ -41,6 +41,6 @@ final class ProduzioneFissaDelleMissioni implements AutoCloseable {
 
     @Override
     public void close() {
-        grammatica.setProductionMode(modalitaPrecedente);
+        grammatica.setModalita(modalitaPrecedente);
     }
 }

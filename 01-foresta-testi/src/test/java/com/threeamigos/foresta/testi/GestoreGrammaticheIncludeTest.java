@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.testi;
 
-import com.threeamigos.foresta.testi.GrammarBean.InvalidGrammarException;
+import com.threeamigos.foresta.testi.GestoreGrammatiche.GrammaticaMalformataException;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -14,9 +14,9 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * La direttiva {@code #include <file>} di GrammarBean (vedi GrammarBean.md, §4.11).
+ * La direttiva {@code #include <file>} di GestoreGrammatiche (vedi GestoreGrammatiche.md, §4.11).
  */
-class GrammarBeanIncludeTest {
+class GestoreGrammaticheIncludeTest {
 
     private static InputStream flusso(String testo) {
         return new ByteArrayInputStream(testo.getBytes(StandardCharsets.UTF_8));
@@ -25,15 +25,15 @@ class GrammarBeanIncludeTest {
     /**
      * Una grammatica principale e i file che può includere, tutti in memoria; ricorda quali file sono stati chiesti.
      */
-    private static GrammarBean grammatica(String principale, Map<String, String> file, List<String> richiesti) throws Exception {
-        return new GrammarBean(flusso(principale), null, percorso -> {
+    private static GestoreGrammatiche grammatica(String principale, Map<String, String> file, List<String> richiesti) throws Exception {
+        return new GestoreGrammatiche(flusso(principale), null, percorso -> {
             richiesti.add(percorso);
             String testo = file.get(percorso);
             return testo == null ? null : flusso(testo);
         });
     }
 
-    private static GrammarBean grammatica(String principale, Map<String, String> file) throws Exception {
+    private static GestoreGrammatiche grammatica(String principale, Map<String, String> file) throws Exception {
         return grammatica(principale, file, new ArrayList<>());
     }
 
@@ -46,31 +46,31 @@ class GrammarBeanIncludeTest {
     }
 
     private static String errore(String principale, Map<String, String> file) {
-        InvalidGrammarException e = assertThrows(InvalidGrammarException.class, () -> grammatica(principale, file));
+        GrammaticaMalformataException e = assertThrows(GrammaticaMalformataException.class, () -> grammatica(principale, file));
         return e.getMessage();
     }
 
     @Test
     void includeUnFileNellaStessaCartella() throws Exception {
-        GrammarBean bean = grammatica("RADICE\n    ciao [NOME]\n\n#include <nomi.txt>\n", file("nomi.txt", "NOME\n    Aldo\n"));
-        assertEquals("ciao Aldo", bean.produce("RADICE").get(0));
+        GestoreGrammatiche bean = grammatica("RADICE\n    ciao [NOME]\n\n#include <nomi.txt>\n", file("nomi.txt", "NOME\n    Aldo\n"));
+        assertEquals("ciao Aldo", bean.produci("RADICE").get(0));
     }
 
     @Test
     void laRadiceDiDefaultELaPrimaProduzioneDopoLEspansione() throws Exception {
         // Con l'include in cima, la prima produzione è quella del file incluso: lo dice il manuale
-        GrammarBean bean = grammatica("#include <nomi.txt>\nRADICE\n    ciao [NOME]\n", file("nomi.txt", "NOME\n    Aldo\n"));
-        assertEquals("NOME", bean.getRootNode());
-        bean.setRootNode("RADICE");
-        assertEquals("ciao Aldo", bean.produce().get(0));
+        GestoreGrammatiche bean = grammatica("#include <nomi.txt>\nRADICE\n    ciao [NOME]\n", file("nomi.txt", "NOME\n    Aldo\n"));
+        assertEquals("NOME", bean.getRadice());
+        bean.setRadice("RADICE");
+        assertEquals("ciao Aldo", bean.produci().get(0));
     }
 
     @Test
     void ilNomeEARelativoAllaCartellaDiChiInclude() throws Exception {
         List<String> richiesti = new ArrayList<>();
-        GrammarBean bean = grammatica("RADICE\n    [NOME] [COGNOME]\n\n#include <nomi/nomi.txt>\n",
+        GestoreGrammatiche bean = grammatica("RADICE\n    [NOME] [COGNOME]\n\n#include <nomi/nomi.txt>\n",
                 file("nomi/nomi.txt", "NOME\n    Aldo\n\n#include <cognomi.txt>\n", "nomi/cognomi.txt", "COGNOME\n    Rossi\n"), richiesti);
-        assertEquals("Aldo Rossi", bean.produce("RADICE").get(0));
+        assertEquals("Aldo Rossi", bean.produci("RADICE").get(0));
         assertEquals(java.util.Arrays.asList("nomi/nomi.txt", "nomi/cognomi.txt"), richiesti);
     }
 
@@ -78,17 +78,17 @@ class GrammarBeanIncludeTest {
     void unFileSiIncludeUnaVoltaSola() throws Exception {
         List<String> richiesti = new ArrayList<>();
         // Incluso due volte dalla principale e una da un altro incluso: niente produzioni ripetute
-        GrammarBean bean = grammatica("RADICE\n    [NOME] [COGNOME]\n#include <nomi.txt>\n#include <nomi.txt>\n#include <altro.txt>\n",
+        GestoreGrammatiche bean = grammatica("RADICE\n    [NOME] [COGNOME]\n#include <nomi.txt>\n#include <nomi.txt>\n#include <altro.txt>\n",
                 file("nomi.txt", "NOME\n    Aldo\n", "altro.txt", "COGNOME\n    Rossi\n#include <nomi.txt>\n"), richiesti);
-        assertEquals("Aldo Rossi", bean.produce("RADICE").get(0));
+        assertEquals("Aldo Rossi", bean.produci("RADICE").get(0));
         assertEquals(java.util.Arrays.asList("nomi.txt", "altro.txt"), richiesti);
     }
 
     @Test
     void dueFileCheSiIncludonoVicendevolmenteNonGirano() throws Exception {
-        GrammarBean bean = grammatica("RADICE\n    [A] [B]\n#include <a.txt>\n",
+        GestoreGrammatiche bean = grammatica("RADICE\n    [A] [B]\n#include <a.txt>\n",
                 file("a.txt", "A\n    uno\n#include <b.txt>\n", "b.txt", "B\n    due\n#include <a.txt>\n"));
-        assertEquals("uno due", bean.produce("RADICE").get(0));
+        assertEquals("uno due", bean.produci("RADICE").get(0));
     }
 
     @Test
@@ -116,9 +116,9 @@ class GrammarBeanIncludeTest {
 
     @Test
     void senzaUnResolverLInclusioneNonSiPuoRisolvere() throws Exception {
-        InvalidGrammarException e = assertThrows(InvalidGrammarException.class,
-                () -> new GrammarBean("RADICE\n    ciao\n#include <nomi.txt>\n"));
-        assertTrue(e.getMessage().contains("IncludeResolver"), e.getMessage());
+        GrammaticaMalformataException e = assertThrows(GrammaticaMalformataException.class,
+                () -> new GestoreGrammatiche("RADICE\n    ciao\n#include <nomi.txt>\n"));
+        assertTrue(e.getMessage().contains("RisolutoreDelleInclusioni"), e.getMessage());
     }
 
     @Test
@@ -141,8 +141,8 @@ class GrammarBeanIncludeTest {
     @Test
     void unaRigaDiContinuazioneNonEMaiUnaDirettiva() throws Exception {
         List<String> richiesti = new ArrayList<>();
-        GrammarBean bean = grammatica("RADICE\n    uno \\\n#include <nomi.txt>\n", file("nomi.txt", "NOME\n    Aldo\n"), richiesti);
-        assertEquals("uno #include <nomi.txt>", bean.produce("RADICE").get(0));
+        GestoreGrammatiche bean = grammatica("RADICE\n    uno \\\n#include <nomi.txt>\n", file("nomi.txt", "NOME\n    Aldo\n"), richiesti);
+        assertEquals("uno #include <nomi.txt>", bean.produci("RADICE").get(0));
         assertTrue(richiesti.isEmpty());
     }
 
@@ -154,8 +154,8 @@ class GrammarBeanIncludeTest {
 
     @Test
     void UnCommentoConLeBarreNonEUnaDirettiva() throws Exception {
-        GrammarBean bean = grammatica("// #include <non-un-file>\n//  commento\nRADICE\n    ciao\n", file());
-        assertEquals("ciao", bean.produce("RADICE").get(0));
+        GestoreGrammatiche bean = grammatica("// #include <non-un-file>\n//  commento\nRADICE\n    ciao\n", file());
+        assertEquals("ciao", bean.produci("RADICE").get(0));
     }
 
     @Test
@@ -176,29 +176,29 @@ class GrammarBeanIncludeTest {
 
     @Test
     void daRisorsaLeggeIFileDellaStessaCartellaEDelleSottocartelle() throws Exception {
-        GrammarBean bean = GrammarBean.fromResource(GrammarBeanIncludeTest.class,
+        GestoreGrammatiche bean = GestoreGrammatiche.daRisorsa(GestoreGrammaticheIncludeTest.class,
                 "/com/threeamigos/foresta/testi/include_prova/principale.txt", null);
-        assertEquals("Aldo Rossi", bean.produce("RADICE").get(0));
+        assertEquals("Aldo Rossi", bean.produci("RADICE").get(0));
     }
 
     @Test
     void daRisorsaDiceSeLaRisorsaManca() {
-        InvalidGrammarException e = assertThrows(InvalidGrammarException.class, () -> GrammarBean.fromResource(
-                GrammarBeanIncludeTest.class, "/com/threeamigos/foresta/testi/include_prova/non_esiste.txt", null));
+        GrammaticaMalformataException e = assertThrows(GrammaticaMalformataException.class, () -> GestoreGrammatiche.daRisorsa(
+                GestoreGrammaticheIncludeTest.class, "/com/threeamigos/foresta/testi/include_prova/non_esiste.txt", null));
         assertTrue(e.getMessage().contains("not found"), e.getMessage());
     }
 
     @Test
     void ilFileDiPostProduzioneNonSiToccaEFunzionaConGliInclude() throws Exception {
-        GrammarBean bean = new GrammarBean(flusso("RADICE\n    vado a il [NOME]\n#include <nomi.txt>\n"), flusso(" a il : al \n"),
+        GestoreGrammatiche bean = new GestoreGrammatiche(flusso("RADICE\n    vado a il [NOME]\n#include <nomi.txt>\n"), flusso(" a il : al \n"),
                 percorso -> flusso("NOME\n    forno\n"));
-        assertEquals("vado al forno", bean.produce("RADICE").get(0).trim());
+        assertEquals("vado al forno", bean.produci("RADICE").get(0).trim());
     }
 
-    private static java.util.Set<String> prodotti(GrammarBean bean, String produzione) {
+    private static java.util.Set<String> prodotti(GestoreGrammatiche bean, String produzione) {
         java.util.Set<String> prodotti = new java.util.TreeSet<>();
         for (int i = 0; i < 300; i++) {
-            prodotti.add(bean.produce(produzione).get(0));
+            prodotti.add(bean.produci(produzione).get(0));
         }
         return prodotti;
     }
@@ -206,21 +206,21 @@ class GrammarBeanIncludeTest {
     @Test
     void sipuoUsarePiuDiUnaDirettivaNelloStessoFile() throws Exception {
         List<String> richiesti = new ArrayList<>();
-        GrammarBean bean = grammatica("RADICE\n    [NOME] [COGNOME] [CITTA]\n#include <nomi.txt>\n#include <cognomi.txt>\n#include <sub/citta.txt>\n",
+        GestoreGrammatiche bean = grammatica("RADICE\n    [NOME] [COGNOME] [CITTA]\n#include <nomi.txt>\n#include <cognomi.txt>\n#include <sub/citta.txt>\n",
                 file("nomi.txt", "NOME\n    Aldo\n", "cognomi.txt", "COGNOME\n    Rossi\n", "sub/citta.txt", "CITTA\n    Roma\n"), richiesti);
-        assertEquals("Aldo Rossi Roma", bean.produce("RADICE").get(0));
+        assertEquals("Aldo Rossi Roma", bean.produci("RADICE").get(0));
         assertEquals(java.util.Arrays.asList("nomi.txt", "cognomi.txt", "sub/citta.txt"), richiesti);
     }
 
     @Test
     void unIncludeSenzaIntestazioneAggiungeAlternativeALaProduzioneCheLoPrecede() throws Exception {
-        GrammarBean bean = grammatica("RADICE\n    uno\n#include <altre.txt>\n", file("altre.txt", "    due\n    tre\n"));
+        GestoreGrammatiche bean = grammatica("RADICE\n    uno\n#include <altre.txt>\n", file("altre.txt", "    due\n    tre\n"));
         assertEquals(new java.util.TreeSet<>(java.util.Arrays.asList("uno", "due", "tre")), prodotti(bean, "RADICE"));
     }
 
     @Test
     void unIncludeNelMezzoDiUnaProduzioneLaSpezza_LeRigheDopoAppartengonoAllUltimaProduzioneDelFileIncluso() throws Exception {
-        GrammarBean bean = grammatica("RADICE\n    uno\n#include <altro.txt>\n    due\n", file("altro.txt", "ALTRA\n    alfa\n"));
+        GestoreGrammatiche bean = grammatica("RADICE\n    uno\n#include <altro.txt>\n    due\n", file("altro.txt", "ALTRA\n    alfa\n"));
         assertEquals(java.util.Collections.singleton("uno"), prodotti(bean, "RADICE"));
         assertEquals(new java.util.TreeSet<>(java.util.Arrays.asList("alfa", "due")), prodotti(bean, "ALTRA"));
     }
@@ -228,44 +228,44 @@ class GrammarBeanIncludeTest {
     @Test
     void unIncludeIndentatoNonEUnaDirettiva() throws Exception {
         List<String> richiesti = new ArrayList<>();
-        GrammarBean bean = grammatica("RADICE\n    #include <altro.txt>\n", file("altro.txt", "ALTRA\n    alfa\n"), richiesti);
-        assertEquals("#include <altro.txt>", bean.produce("RADICE").get(0));
+        GestoreGrammatiche bean = grammatica("RADICE\n    #include <altro.txt>\n", file("altro.txt", "ALTRA\n    alfa\n"), richiesti);
+        assertEquals("#include <altro.txt>", bean.produci("RADICE").get(0));
         assertTrue(richiesti.isEmpty());
     }
 
     @Test
     void dueGrammaticheCheIncludonoLoStessoFileHannoProduzioniIndipendenti() throws Exception {
         Map<String, String> comune = file("nomi.txt", "NOME$\n    Aldo\n    Bruno\n");
-        GrammarBean a = grammatica("A\n    [NOME]\n#include <nomi.txt>\n", comune);
-        GrammarBean b = grammatica("B\n    [NOME]\n#include <nomi.txt>\n", comune);
+        GestoreGrammatiche a = grammatica("A\n    [NOME]\n#include <nomi.txt>\n", comune);
+        GestoreGrammatiche b = grammatica("B\n    [NOME]\n#include <nomi.txt>\n", comune);
 
         // Una produzione one-shot si consuma in A...
         java.util.Set<String> usciti = new java.util.TreeSet<>();
-        usciti.add(a.produce("NOME").get(0));
-        usciti.add(a.produce("NOME").get(0));
+        usciti.add(a.produci("NOME").get(0));
+        usciti.add(a.produci("NOME").get(0));
         assertEquals(new java.util.TreeSet<>(java.util.Arrays.asList("Aldo", "Bruno")), usciti);
-        assertFalse(a.canProduce("NOME"), "in A i nomi sono finiti");
+        assertFalse(a.puoProdurre("NOME"), "in A i nomi sono finiti");
         // ...ma in B è intatta: gli stessi due nomi, per intero
-        assertTrue(b.canProduce("NOME"));
+        assertTrue(b.puoProdurre("NOME"));
         java.util.Set<String> inB = new java.util.TreeSet<>();
-        inB.add(b.produce("NOME").get(0));
-        inB.add(b.produce("NOME").get(0));
+        inB.add(b.produci("NOME").get(0));
+        inB.add(b.produci("NOME").get(0));
         assertEquals(usciti, inB);
-        assertFalse(b.canProduce("NOME"));
+        assertFalse(b.puoProdurre("NOME"));
 
         // Il reset di una non tocca l'altra
-        a.reset();
-        assertTrue(a.canProduce("NOME"));
-        assertFalse(b.canProduce("NOME"));
+        a.ripristina();
+        assertTrue(a.puoProdurre("NOME"));
+        assertFalse(b.puoProdurre("NOME"));
     }
 
     @Test
     void leProduzioniFissateNonPassanoDaUnaGrammaticaAllAltra() throws Exception {
         Map<String, String> comune = file("nomi.txt", "NOME\n    Aldo\n    Bruno\n");
-        GrammarBean a = grammatica("A\n    [*NOME] e [*NOME]\n#include <nomi.txt>\n", comune);
-        GrammarBean b = grammatica("B\n    [*NOME] e [*NOME]\n#include <nomi.txt>\n", comune);
-        a.addFixedProduction("NOME", "Zeno");
-        assertEquals("Zeno e Zeno", a.produce("A").get(0));
+        GestoreGrammatiche a = grammatica("A\n    [*NOME] e [*NOME]\n#include <nomi.txt>\n", comune);
+        GestoreGrammatiche b = grammatica("B\n    [*NOME] e [*NOME]\n#include <nomi.txt>\n", comune);
+        a.fissaProduzione("NOME", "Zeno");
+        assertEquals("Zeno e Zeno", a.produci("A").get(0));
         java.util.Set<String> inB = prodotti(b, "B");
         assertFalse(inB.stream().anyMatch(t -> t.contains("Zeno")), inB.toString());
         assertTrue(inB.contains("Aldo e Aldo") && inB.contains("Bruno e Bruno"), inB.toString());

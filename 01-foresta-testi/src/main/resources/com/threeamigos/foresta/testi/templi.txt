@@ -2,7 +2,7 @@
 // suo articolo, e a chi o a che cosa è dedicato. "il Santuario della Luna", "l'Eremo del Fine Settimana".
 // Il nome si dà al tempio la prima volta che serve e si salva con la casella.
 //
-// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
+// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GestoreGrammatiche).
 
 NOME_TEMPIO
     [EDIFICIO] [DEDICA]

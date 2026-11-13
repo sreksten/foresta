@@ -4,7 +4,7 @@ package com.threeamigos.foresta.testi;
  * Il ciclo di vita dei produttori di testi a caso di questo modulo: li carica insieme e li azzera quando comincia una partita
  * nuova. I produttori sono {@link ProduttoreDiFiabeCasuale}, {@link ProduttoreDiFrasiDelMondoCasuale}, {@link ProduttoreDiLocandeCasuale}, {@link ProduttoreDiLuoghiCasuale},
  * {@link ProduttoreDiMissioniCasuale}, {@link ProduttoreDiOroscopiCasuale} e {@link ProduttoreDiSfideCasuale}; ciascuno legge le sue
- * grammatiche una volta sola, la prima volta che si usa. Vedi GrammarBean.md e nomi.md.
+ * grammatiche una volta sola, la prima volta che si usa. Vedi GestoreGrammatiche.md e nomi.md.
  */
 public final class ProduttoriDiTesti {
 
@@ -27,12 +27,14 @@ public final class ProduttoriDiTesti {
 	}
 
 	/**
-	 * Azzera le liste esauribili delle grammatiche (i nomi già estratti), così si può ripartire per una partita nuova.
+	 * Azzera le liste esauribili delle grammatiche (i nomi già estratti), così si può ripartire per una partita nuova. Si
+	 * azzerano solo le grammatiche che hanno produzioni monouso ({@code NOME$}): le altre non si consumano. Chi aggiunge
+	 * una produzione monouso a un'altra grammatica deve aggiungerla qui.
 	 */
 	public static void resetProduzioni() {
-		ProduttoreDiFiabeCasuale.reset();
-		ProduttoreDiOroscopiCasuale.reset();
-		ProduttoreDiLocandeCasuale.reset();
-		GrammarBean.resetStaticProductions();
+		ProduttoreDiFiabeCasuale.ripristina();
+		ProduttoreDiOroscopiCasuale.ripristina();
+		ProduttoreDiLocandeCasuale.ripristina();
+		GestoreGrammatiche.ripristinaLeSezioniStatiche();
 	}
 }

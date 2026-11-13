@@ -9,7 +9,7 @@
 
     <artifactId>01-foresta-testi</artifactId>
     <name>01-foresta-testi</name>
-    <description>I testi: il caricatore per lingua (Testi), gli articoli e i numeri in lettere, e il produttore di testi da una grammatica (GrammarBean)</description>
+    <description>I testi: il caricatore per lingua (Testi), gli articoli e i numeri in lettere, e il produttore di testi da una grammatica (GestoreGrammatiche)</description>
 
     <dependencies>
         <dependency>

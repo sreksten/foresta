@@ -12,7 +12,7 @@ Documenti di dettaglio su singoli sottosistemi:
 | Economia (entrate, uscite, prezzi per livello) | [`economia.md`](economia.md) |
 | Interazioni fra effetti di stato e tipi di danno | [`interazioni_effetti_di_stato.md`](interazioni_effetti_di_stato.md) |
 | Scrivere, animare e provare un intermezzo | [`intermezzi.md`](intermezzi.md) |
-| Generazione procedurale di testo | `GrammarBean.md` |
+| Generazione procedurale di testo | `GestoreGrammatiche.md` |
 
 ## 1. Mappa dei pacchetti e dei moduli
 
@@ -27,7 +27,7 @@ Un pacchetto può stare in più moduli (`tipi`, `modellodati`, `eventi` e `event
 | `strumenti` | `00-foresta-strumenti` (e `01-foresta-punteggi`, `11-foresta-motore-api`) | `Dado`, il `Logger`, il temporizzatore e `ThreadPrincipale`, `TrucchiDiSviluppo`, `ModalitaDiProva`; `Punteggio`; `TestataSalvataggio` |
 | `serializzazione` | `00-foresta-serializzazione` | `Serializzabile`, `LettoreCampi`, `MappaProprieta` |
 | `eventi` | `01-foresta-eventi` (la base) e ogni modulo | il bus (`BusEventi`) e `TipoEvento`; ogni evento sta nel modulo della parte di cui parla, nelle quattro famiglie `comandigiocatore`, `notifiche`, `richieste`, `interni` |
-| `testi` | `01-foresta-testi` | `Testi`, `GrammarBean` e i produttori di testi (`ProduttoreDi…Casuale`) con le grammatiche |
+| `testi` | `01-foresta-testi` | `Testi`, `GestoreGrammatiche` e i produttori di testi (`ProduttoreDi…Casuale`) con le grammatiche |
 | `attributi`, `modificatori` | `02-foresta-attributi` | le formule degli attributi secondari e i modificatori |
 | `effettidistato`, `danni` | `02-foresta-effettidistato`, `03-foresta-danni` | gli effetti di stato e i tipi di danno con le loro interazioni (i tipi stanno in `tipi`) |
 | `mappa`, `notizie` | `02-foresta-mappa`, `02-foresta-notizie` | `Foresta` (la griglia e il gruppo che vi si sposta), `Notizie` |
@@ -309,7 +309,7 @@ Nello stato `INTERMEZZO` l'automa pubblica `NotificaPaginaIntermezzo`, e la UI m
 
 ## 11. Generazione procedurale di testo
 
-`GrammarBean` è un motore di grammatiche generative (alternative pesate, riferimenti annidati, variabili, produzioni fissate e one-shot) con il suo manuale in `GrammarBean.md`. I produttori di testi, uno per argomento, caricano a runtime **nove grammatiche** (`CaricatoreDiGrammatiche`), tutte con lo stesso file di post-produzione `preposizioni_articolate_pp.txt` (per le preposizioni articolate) tranne l'ultima: `fiabe.txt`, `oroscopo.txt`, `locande.txt`, `templi.txt`, `rovine.txt`, `artefatti2.txt` (solo la produzione `NOME_AGGIORNAMENTO`, senza post-produzione: i nomi degli oggetti che fanno salire di livello un artefatto), `missioni.txt` e `leggendari.txt`. Sono: `ProduttoreDiFiabeCasuale` (`fiabe.txt`), `ProduttoreDiOroscopiCasuale` (`oroscopo.txt`), `ProduttoreDiLocandeCasuale` (`locande.txt`), `ProduttoreDiLuoghiCasuale` (`templi.txt`, `rovine.txt`), `ProduttoreDiMissioniCasuale` (`missioni.txt`: ostaggi, pellegrini, richieste di materiali, cose da consegnare, oggetti smarriti, nomi di persona), `ProduttoreDiArtefattiCasuale` (`leggendari.txt` e `artefatti2.txt`) e `ProduttoreDiSfideCasuale` (`sfide.txt`, senza post-produzione). `ProduttoriDiTesti` li precarica durante il logo e ne azzera le produzioni one-shot a ogni nuova partita (`resetProduzioni`). Gli artefatti hanno una grammatica a parte (`GrammaticaArtefatti`, §9).
+`GestoreGrammatiche` è un motore di grammatiche generative (alternative pesate, riferimenti annidati, variabili, produzioni fissate e one-shot) con il suo manuale in `GestoreGrammatiche.md`. I produttori di testi, uno per argomento, caricano a runtime **nove grammatiche** (`CaricatoreDiGrammatiche`), tutte con lo stesso file di post-produzione `preposizioni_articolate_pp.txt` (per le preposizioni articolate) tranne l'ultima: `fiabe.txt`, `oroscopo.txt`, `locande.txt`, `templi.txt`, `rovine.txt`, `artefatti2.txt` (solo la produzione `NOME_AGGIORNAMENTO`, senza post-produzione: i nomi degli oggetti che fanno salire di livello un artefatto), `missioni.txt` e `leggendari.txt`. Sono: `ProduttoreDiFiabeCasuale` (`fiabe.txt`), `ProduttoreDiOroscopiCasuale` (`oroscopo.txt`), `ProduttoreDiLocandeCasuale` (`locande.txt`), `ProduttoreDiLuoghiCasuale` (`templi.txt`, `rovine.txt`), `ProduttoreDiMissioniCasuale` (`missioni.txt`: ostaggi, pellegrini, richieste di materiali, cose da consegnare, oggetti smarriti, nomi di persona), `ProduttoreDiArtefattiCasuale` (`leggendari.txt` e `artefatti2.txt`) e `ProduttoreDiSfideCasuale` (`sfide.txt`, senza post-produzione). `ProduttoriDiTesti` li precarica durante il logo e ne azzera le produzioni one-shot a ogni nuova partita (`resetProduzioni`). Gli artefatti hanno una grammatica a parte (`GrammaticaArtefatti`, §9).
 
 ### Notizie delle locande
 
@@ -342,4 +342,4 @@ Punti di attenzione verificati sul codice, utili per l'assessment e un eventuale
 - **Dimensione della mappa variabile.** `DIMENSIONE_X`/`DIMENSIONE_Y` (in `CostruttoreDellaForesta`, passate a `Foresta.azzera`) oggi valgono 20 e si stanno tarando con le prove.
 - **Elenchi di cose da fare.** I `TODO`/`FIXME` generali che stavano in testa ad `Automa` sono ora in [`todo.md`](todo.md); quelli legati a un punto preciso del codice restano lì, e `todo.md` spiega come ritrovarli.
 - **Combattimento da bilanciare.** Resta aperto un `FIXME` sul fatto che personaggi di livello 5 pesantemente armati non scalfiscano boss come la Strega o il Lich; il piano di bilanciamento è in [`artefatti_e_incantamenti.md`](artefatti_e_incantamenti.md) ed [`economia.md`](economia.md).
-- **Punto di forza: `GrammarBean.md`.** È già un manuale e un assessment con difetti verificati sperimentalmente, ed è un buon modello per gli altri documenti.
+- **Punto di forza: `GestoreGrammatiche.md`.** È già un manuale e un assessment con difetti verificati sperimentalmente, ed è un buon modello per gli altri documenti.

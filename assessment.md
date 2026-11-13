@@ -78,7 +78,7 @@ Le classi più grandi (escluse le tabelle dei font bitmap `DoomdarkFont*`):
 | Classe | Modulo | Righe | Allora |
 | :--- | :--- | ---: | ---: |
 | `motore/Automa` | motore | 2615 | 2415 |
-| `testi/GrammarBean` | testi | 2563 | 2563 |
+| `testi/GestoreGrammatiche` | testi | 2563 | 2563 |
 | `locazioni/LocazioneBase` | motore | 2273 | 2188 |
 | `tipi/CostantiPersonaggi` | personaggi | 1577 | 1559 |
 | `ui/SchermoDelGioco` | ui-comune | 1434 | era in `DisplayableCanvas` (1781) |
@@ -126,8 +126,8 @@ Dal basso in alto, con il livello che porta il nome del modulo. Le dipendenze so
 ### Problemi, in ordine di priorità
 
 1. **Documentazione che invecchia.** Vedi il §6: la divisione in moduli, il tutorial e libGDX non sono arrivati nei documenti trasversali, e `CLAUDE.md` ha percorsi che non esistono più. Chi segue un documento per trovare dove sta una cosa finisce spesso nel modulo sbagliato.
-2. **Classi grandi.** `Automa` (2615 righe), `LocazioneBase` (2273) e `GrammarBean` (2563) sono le tre che superano le 2000, e `Automa` e `LocazioneBase` sono cresciute dall'ultima volta. **Giudizio:** i tagli naturali sono gli stessi di allora: altri sotto-automi in `Automa` (creazione del gruppo, combattimento, fine partita) e il combattimento a round fuori da `LocazioneBase`. Come ha mostrato `PersonaggioBase` (dimezzato), con i moduli il taglio è più facile.
-3. **Stato statico.** Lo stato della partita vive in registri e singleton (4 classi con `getIstanza()` e una ventina con un metodo statico `azzera`/`reimposta`/`reset`: `GruppoGiocatore`, `RegistroMissioni`, `Cassa`, `Foresta`…). **Giudizio:** accettabile per un gioco single-player, a patto di non aggiungere registri statici.
+2. **Classi grandi.** `Automa` (2615 righe), `LocazioneBase` (2273) e `GestoreGrammatiche` (2563) sono le tre che superano le 2000, e `Automa` e `LocazioneBase` sono cresciute dall'ultima volta. **Giudizio:** i tagli naturali sono gli stessi di allora: altri sotto-automi in `Automa` (creazione del gruppo, combattimento, fine partita) e il combattimento a round fuori da `LocazioneBase`. Come ha mostrato `PersonaggioBase` (dimezzato), con i moduli il taglio è più facile.
+3. **Stato statico.** Lo stato della partita vive in registri e singleton (4 classi con `getIstanza()` e una ventina con un metodo statico `azzera`/`reimposta`/`ripristina`: `GruppoGiocatore`, `RegistroMissioni`, `Cassa`, `Foresta`…). **Giudizio:** accettabile per un gioco single-player, a patto di non aggiungere registri statici.
 4. **Residui della divisione.**
    - `10-foresta-modellodati` contiene solo `ModelloDati`.
    - `11-foresta-motore-api` dichiara `01-foresta-punteggi` e `10-foresta-modellodati` ma non ne usa le classi (lo dice `dependency:analyze`): servono solo a farle arrivare in transitiva a `motore` e `ui-comune`. Con le dipendenze "in vista" dovrebbero dichiararle loro.
@@ -181,7 +181,7 @@ Sono tutti di gravità bassa. I percorsi sono relativi a `…/` del modulo indic
 ### 6.1 Come è stato fatto
 
 - **Controlli meccanici, fatti da me su tutto il progetto:** i moduli e le loro dipendenze nei `pom.xml` contro la sezione «Dipendenze» di ogni documento di modulo e contro la tabella di `CLAUDE.md`; i nomi di classi, metodi, costanti e file citati fra apici nei `.md`, cercati nei sorgenti e nelle risorse; i percorsi di `CLAUDE.md`, `foresta.md` e `didattico.md`; i conteggi (test, moduli, righe, costanti delle enum più citate).
-- **Lettura dei documenti, fatta da quattro agenti in parallelo** (uno per gruppo di documenti, in sola lettura), ognuno con il compito di confrontare le parti che descrivono lo stato attuale con il codice. Ho ricontrollato a mano circa venti dei loro rilievi (i più gravi e un campione dei numeri) e si sono confermati (in un conteggio il mio differiva di un'unità, e ho usato il mio); il resto lo riporto sulla base delle loro righe, che citano file e riga. Di sei documenti la lettura è stata parziale: `GrammarBean.md`, `artefatti_e_incantamenti.md`, `testi_delle_missioni.md`, `personaggi_giocabili.md`, `tattiche_di_combattimento_automatiche.md` e `assessment_portabilita.md` (di quest'ultimo la parte sulla UI e sull'architettura).
+- **Lettura dei documenti, fatta da quattro agenti in parallelo** (uno per gruppo di documenti, in sola lettura), ognuno con il compito di confrontare le parti che descrivono lo stato attuale con il codice. Ho ricontrollato a mano circa venti dei loro rilievi (i più gravi e un campione dei numeri) e si sono confermati (in un conteggio il mio differiva di un'unità, e ho usato il mio); il resto lo riporto sulla base delle loro righe, che citano file e riga. Di sei documenti la lettura è stata parziale: `GestoreGrammatiche.md`, `artefatti_e_incantamenti.md`, `testi_delle_missioni.md`, `personaggi_giocabili.md`, `tattiche_di_combattimento_automatiche.md` e `assessment_portabilita.md` (di quest'ultimo la parte sulla UI e sull'architettura).
 - **Fuori dal controllo:** `tipiDanno.md` e `tipiPersonaggio.md` (appunti generici sul genere fantasy, non descrivono il codice) e `revisione_documentazione.md` (diario).
 
 ### 6.2 Cosa è allineato
@@ -196,7 +196,7 @@ Sono tutti di gravità bassa. I percorsi sono relativi a `…/` del modulo indic
 Questo è l'elenco dei rilievi della valutazione. **Il 2026-11-09, subito dopo, sono stati corretti** (verificando ogni nome e numero nel codice, non sulla fiducia degli agenti: dove un rilievo era sbagliato, per esempio «`impostaAzioni` non esiste più», non l'ho applicato):
 - `CLAUDE.md`, `didattico.md` e `foresta.md` (la struttura, i diagrammi, le tabelle dei moduli con le dipendenze uguali ai `pom.xml`, i percorsi, le ricette, i numeri), e le righe delle dipendenze dei documenti di modulo;
 - i documenti trasversali: `motore_di_gioco.md` (mappa dei pacchetti e dei moduli, separazione dalla UI, stati, Foresta, compagni, effetti di stato, incantesimi), `motore_grafico.md`, `12-foresta-swing.md`, `12-foresta-ui-comune.md`, `12-foresta-libgdx.md`, `porting_libGDX.md`, `tutorial.md`, `tutorial_tattiche.md`, `03-foresta-tutorial.md`, `tattiche_internals.md` e `tattiche_di_combattimento_automatiche.md` (dove stanno i dati e la logica);
-- i rilievi di dominio: `01-foresta-eventi.md` (134 costanti), `GrammarBean.md`, `artefatti_e_incantamenti.md` §7, `intermezzi.md`, `gestione_missioni.md`, `passi_missioni.md`, `09-foresta-missioni.md`, `05-foresta-personaggi.md`, `04-foresta-artefatti.md`, `08-foresta-tattiche.md`, `06-foresta-bestiario.md` e `bestiario.md`, `06-foresta-combattimento.md`, `03-foresta-danni.md`, `debolezze_e_resistenze.md`, `nomi.md`, `07-foresta-intermezzi.md`, `strumenti_di_prova.md`, `personaggi_giocabili.md`, `foresta-android.md`, `todo.md`, `missione_a_tappe.md`, `12-foresta-motore.md`, `10-foresta-modellodati.md`, `11-foresta-motore-api.md`, `02-foresta-notizie.md`, `00-foresta-strumenti.md` e `13-foresta-app-swing.md`;
+- i rilievi di dominio: `01-foresta-eventi.md` (134 costanti), `GestoreGrammatiche.md`, `artefatti_e_incantamenti.md` §7, `intermezzi.md`, `gestione_missioni.md`, `passi_missioni.md`, `09-foresta-missioni.md`, `05-foresta-personaggi.md`, `04-foresta-artefatti.md`, `08-foresta-tattiche.md`, `06-foresta-bestiario.md` e `bestiario.md`, `06-foresta-combattimento.md`, `03-foresta-danni.md`, `debolezze_e_resistenze.md`, `nomi.md`, `07-foresta-intermezzi.md`, `strumenti_di_prova.md`, `personaggi_giocabili.md`, `foresta-android.md`, `todo.md`, `missione_a_tappe.md`, `12-foresta-motore.md`, `10-foresta-modellodati.md`, `11-foresta-motore-api.md`, `02-foresta-notizie.md`, `00-foresta-strumenti.md` e `13-foresta-app-swing.md`;
 - `assessment_portabilita.md`: ha solo un blocco di aggiornamento in testa (non è riscritto).
 
 Il testo dettagliato dei rilievi (documento per documento, con i nomi e i numeri sbagliati) è nella storia di git, nella versione di questo file del 2026-11-09; qui resta solo quel che è ancora aperto (§6.4). Un'osservazione vale ancora: i **diari nei documenti** (le sezioni «fatto (data)» di `artefatti_e_incantamenti.md`, `interazioni_effetti_di_stato.md`, `modificatori_temporanei.md`, `testi_delle_missioni.md`, `gestione_missioni.md` e `tutorial.md`) citano nomi che non esistono più, ed è per loro che così tanti nomi non si trovavano nel codice.
@@ -206,7 +206,7 @@ Il testo dettagliato dei rilievi (documento per documento, con i nomi e i numeri
 - **`assessment_portabilita.md`**: le sezioni da «La UI Swing» in poi hanno ancora i numeri e le decisioni «da prendere» di prima del porting (c'è solo il blocco di aggiornamento in testa); andrebbe riscritto come analisi dello stato, o ridotto.
 - **`tattiche_internals.md` e `tattiche_di_combattimento_automatiche.md`**: le tabelle e le sezioni sulle azioni (§3.1, §5, §7.2, §11.9) non nominano molte azioni di `TipoAzione` (Martello sacro, Attacco alle spalle, le abilità di Chierico e Druido, le sei globali) e i criteri di scelta dell'incantesimo sono cinque, non quattro (`PIU_ECONOMICO_CHE_BASTA`).
 - **`testi_delle_missioni.md`**: i passi §6 descrivono ancora i `.properties` come esistenti; è il materiale storico del porting.
-- **Omissioni minori**: `01-foresta-testi.md` (`Elenchi`, `Preposizione`, `RegoleConEccezioni`, `Testi.serie`), `02-foresta-attributi.md` (`potenzialeDiCarico`, `CRITICO_MASSIMO`), `bestiario.md` (`RegistroBestiario.sbloccaInSilenzio`), `intermezzi.md` (alcuni metodi del riferimento rapido, l'opzione `--compagni` dell'anteprima), `07-foresta-intermezzi.md` (`GruppoInScena`), `carta_forbici_sasso.md` (i file delle immagini sono nell'atlante `fondi`), `nomi.md` (due conteggi di nomi sono di uno o due fuori), `GrammarBean.md` (l'esempio d'uso con `fiabe.txt` e `oroscopo.txt`, «~1300 righe»), `artefatti_e_incantamenti.md` (l'intestazione datata 2026-09-25), `modificatori_temporanei.md` §7 (`descrizioneBreve` non c'è: il testo lo dà `TestoDeiModificatori`).
+- **Omissioni minori**: `01-foresta-testi.md` (`Elenchi`, `Preposizione`, `RegoleConEccezioni`, `Testi.serie`), `02-foresta-attributi.md` (`potenzialeDiCarico`, `CRITICO_MASSIMO`), `bestiario.md` (`RegistroBestiario.sbloccaInSilenzio`), `intermezzi.md` (alcuni metodi del riferimento rapido, l'opzione `--compagni` dell'anteprima), `07-foresta-intermezzi.md` (`GruppoInScena`), `carta_forbici_sasso.md` (i file delle immagini sono nell'atlante `fondi`), `nomi.md` (due conteggi di nomi sono di uno o due fuori), `GestoreGrammatiche.md` (l'esempio d'uso con `fiabe.txt` e `oroscopo.txt`, «~1300 righe»), `artefatti_e_incantamenti.md` (l'intestazione datata 2026-09-25), `modificatori_temporanei.md` §7 (`descrizioneBreve` non c'è: il testo lo dà `TestoDeiModificatori`).
 - **I diari**: le sezioni «fatto (data)» di `artefatti_e_incantamenti.md`, `interazioni_effetti_di_stato.md`, `modificatori_temporanei.md`, `testi_delle_missioni.md`, `gestione_missioni.md` e `tutorial.md` non sono state tolte (vedi sopra).
 
 ## 7. Portabilità (riassunto)
@@ -252,7 +252,7 @@ Appunti del 2026-11-09, ricavati dalla documentazione e dal codice, **non da par
 ### 10.1 Cosa ha in più (da proteggere)
 
 - **Il sistema di tattiche.** Regole programmabili per ogni personaggio e per ogni mostro: 7 rose di bersagli, 18 filtri, 12 ordinamenti, 7 condizioni, 40 azioni (`08-foresta-tattiche`), con la spiegazione di ogni decisione. È più ricco di quanto si trovi di solito nei giochi indie.
-- **Il testo generato da grammatiche** (`GrammarBean`, `01-foresta-testi`): fiabe, oroscopi, notizie satiriche sulle malefatte del gruppo, nomi, testi delle missioni, in tre lingue.
+- **Il testo generato da grammatiche** (`GestoreGrammatiche`, `01-foresta-testi`): fiabe, oroscopi, notizie satiriche sulle malefatte del gruppo, nomi, testi delle missioni, in tre lingue.
 - **Danni e stati che si combinano:** 18 tipi di danno, 21 effetti di stato, 34 reazioni, debolezze e resistenze per classe.
 - **Una pressione di tempo vera:** il calendario del Drago (20, 25, 30 e 35 giorni, perdita oltre il 40).
 - **Un tutorial che pilota la partita** (`PilotaggioDelTutorial`): i dadi dei primi turni sono truccati perché si incontri un mostro alla volta.
@@ -357,7 +357,7 @@ In ordine di livello. Le righe sono quelle di `wc -l` su `src/main/java` al 2026
 | Passo | Modulo | Che cosa entra | Righe | Stato |
 | ---: | :--- | :--- | ---: | :--- |
 | 1 | `00-foresta-serializzazione`, `00-foresta-strumenti`, `01-foresta-eventi`, `01-foresta-punteggi` | tutto | 2.700 | fatto il 2026-11-13, proposte applicate |
-| 2 | `01-foresta-testi` | tutto (`GrammarBean` da solo fa 2.563 righe) | 4.600 | da fare |
+| 2 | `01-foresta-testi` | tutto (`GestoreGrammatiche`, già `GrammarBean`, da solo fa 2.600 righe) | 4.600 | fatto il 2026-11-13, proposte applicate |
 | 3 | `02-foresta-attributi`, `02-foresta-comandi`, `02-foresta-effettidistato`, `02-foresta-mappa` | tutto | 3.600 | da fare |
 | 4 | `02-foresta-notizie`, `03-foresta-danni`, `03-foresta-tutorial` | tutto | 1.550 | da fare |
 | 5 | `04-foresta-artefatti` | tutto | 5.250 | da fare |
@@ -456,11 +456,92 @@ Da migliorare, in ordine di importanza:
 3. Il difetto D1.1 (un booleano rovinato letto in silenzio come falso) è l'unica crepa nella regola, altrimenti rispettata, che un salvataggio rovinato si dichiara.
 4. `TipoEvento` oggi serve solo al registro (570 righe che ripetono i nomi delle classi); l'utente lo tiene come dizionario degli eventi (§11.5, X1).
 
+#### Passo 2: `01-foresta-testi` (2026-11-13)
+
+**Esito (2026-11-13):** l'utente ha approvato tutto, e ha chiesto anche di rinominare la classe. Applicate:
+- **la rinomina (R2.1).** `GrammarBean` è diventata `GestoreGrammatiche`, con tutti i nomi in italiano: metodi, campi, classi interne, costanti e variabili, compresi quelli che usano gli altri moduli. Per esempio `produce` diventa `produci`, `reset` diventa `ripristina`, `canProduce` diventa `puoProdurre`, `setRootNode` diventa `setRadice`, `addFixedProduction` diventa `fissaProduzione`, `fromResource` diventa `daRisorsa`; `InvalidGrammarException` diventa `GrammaticaMalformataException`, `IncludeResolver` diventa `RisolutoreDelleInclusioni`. Sono stati rinominati anche i test (`GestoreGrammatiche*Test`), il manuale (`GestoreGrammatiche.md`) e i rimandi in tutti i documenti, tranne il diario `revisione_documentazione.md`. **I messaggi d'errore restano in inglese, per decisione dell'utente**: li legge chi modifica le grammatiche, che può non sapere l'italiano. La decisione è scritta in `GestoreGrammatiche.md` §9 e nel Javadoc della classe;
+- **D2.1:** una graffa di chiusura senza apertura è un errore di caricamento. Due casi limite in `GestoreGrammaticheCasiLimiteTest`, che si aspettavano il vecchio comportamento, sono stati adattati;
+- **D2.2 e D2.3:** le produzioni derivate si risolvono in ordine di dipendenza (`risolviDerivate`), e solo un ciclo vero è un errore. Sono state corrette, non tolte, e il manuale ora le descrive (§4.13);
+- **D2.4:** in `Testi`, la lingua e la sua catena di file stanno in un solo oggetto immutabile;
+- **D2.5:** un ordinale fuori da 1–41 è un'`IllegalArgumentException` che lo dice;
+- **D2.6:** tolte le frasi di storia dai Javadoc;
+- **F2.1:** la classe interna `Scansione` sostituisce cinque scanner (`unescapeQuotes`, che trasforma il testo, resta a parte ma segue la stessa regola degli escape);
+- **F2.2**, **F2.3**, **F2.4** (`GrammaticaPigra.riga`, 20 chiamate) e **X2** (`strumenti.Maiuscole`, al posto di sei copie).
+
+Ci sono tre test nuovi: la graffa isolata, le derivate a catena nei due ordini, il ciclo. Sono verdi tutti i test del progetto: 3.762, di cui 37 saltati.
+
+Letti per intero i 26 file (4.600 righe, di cui 2.563 di `GestoreGrammatiche`), con le grammatiche dove serviva per decidere se un caso è raggiungibile. I tre difetti di `GestoreGrammatiche` qui sotto li ho confermati con piccole grammatiche lanciate con `jshell` sulle classi compilate. Test del modulo verdi dopo i commenti (341).
+
+**`NullPointerException` possibili**
+
+- *Certi:* nessuno.
+- *Plausibili:* nessuno.
+- *Controllati e scartati:*
+  - `GestoreGrammatiche.produzioneStatica` con una produzione che non è statica (`staticSectionOf` darebbe null): la si chiama solo dopo `isStaticName`.
+  - `GestoreGrammatiche.produci()` senza radice: la radice è la prima produzione del file, impostata al caricamento.
+  - `CaricatoreDiGrammatiche.perLaLingua` con una risorsa senza punto (darebbe un errore di indice, non una `NullPointerException`): tutti passano un `.txt`.
+  - `GrammaticaNonValidaException` con la causa null: tutti la costruiscono in un `catch`.
+  - `Lingue.per(null)`: `Testi.getLingua()` non è mai null.
+  - Le grammatiche che `ProduttoriDiTesti.resetProduzioni` non azzera (mondo, sfide, templi, rovine, missioni): non hanno produzioni monouso, quindi non si consumano (ho contato le `NOME$` in tutti i file e in tutte le lingue).
+
+**Altri difetti (non `NullPointerException`)**
+
+- **D2.1 (confermato)** In `GestoreGrammatiche.splitTopLevelAlternatives`, una graffa `}` isolata fuori dalle virgolette porta il contatore sotto zero, e da lì in poi i `|` non dividono più. La riga `A } | B` diventa una sola alternativa, `A } | B`, senza errore. Gli altri cinque scanner della classe invece si fermano a zero (`Math.max(0, …)`). Proposta: una graffa di chiusura senza apertura è un errore di caricamento (`GrammaticaMalformataException`), come quella di apertura senza chiusura.
+- **D2.2 (confermato)** Con le produzioni derivate a catena (`A = B`, poi `B = C`), `A` resta senza alternative: il caricamento non se ne accorge (`validatePreviousProduction` salta le derivate) e la produzione fallisce dopo, con un errore di indice.
+- **D2.3 (confermato)** Nell'ordine inverso (`C`, `B = C`, `A = B`) il caricamento rifiuta la grammatica dicendo che A e B «are mutually derived», e non è vero: è una catena, non un ciclo. **Nessuna grammatica del gioco usa le produzioni derivate**: le usano solo i test di `GestoreGrammaticheTest`. Le strade sono due: correggerle (risolvere le derivazioni in ordine di dipendenza e rifiutare solo i cicli veri), oppure toglierle dalla sintassi. Togliere è una cancellazione: decide l'utente.
+- **D2.4** `Testi.impostaLingua` scrive `lingua` e `catena` in due momenti diversi: un thread che legge proprio in mezzo vede la lingua nuova con la catena dei file vecchia. Oggi la lingua cambia dalla schermata delle opzioni, sul thread principale, quindi non succede. Se si vuole chiuderlo, basta tenere le due cose in un solo oggetto immutabile.
+- **D2.5** `Numeri.getOrdinaleM(0)` dà «nullo» e `getOrdinaleF(0)` «nulla»: viene da `append(null)` sulla radice che manca, ed è documentato. Da 42 in su c'è un errore di indice senza spiegazione. Proposta: un'`IllegalArgumentException` che dica l'intervallo valido (da 1 a 41).
+- **D2.6** Alcuni Javadoc di `GestoreGrammatiche` raccontano la storia del codice («prima che questa funzione esistesse», «una volta era un Random privato», «una semplice HashMap lasciava…»). La convenzione del progetto è che i documenti descrivono il presente: andrebbero tolte quelle frasi, senza toccare il resto.
+
+**Parti in comune**
+
+- **F2.1** In `GestoreGrammatiche` sei scanner scorrono il testo carattere per carattere tenendo il conto di virgolette, escape, graffe e quadre: `splitTopLevelAlternatives`, `findNextUnquotedOpeningBrace`, `unescapeQuotes`, `findMatchingClosingBrace`, `findDefaultSeparator` e `hasTopLevelAssignment`. Ognuno lo rifà a modo suo, con piccole differenze: alcuni riconoscono solo l'escape delle virgolette, altri qualunque escape; alcuni si fermano a zero e altri no, ed è da qui che nasce D2.1. Una piccola classe interna che fa la scansione e dice a ogni carattere «sono fra virgolette, a questa profondità» toglierebbe un centinaio di righe e le differenze. Il rischio è medio, perché è il cuore del parser, ma i 341 test del modulo lo coprono bene. Conviene farla dopo D2.1.
+- **F2.2** `produci()` e `produci(String)` hanno lo stesso corpo: il primo può essere `return produci(rootNode);`.
+- **F2.3** `Nome.di(Enum)` e `Nome.di(String, Enum)` ripetono la stessa costruzione di dieci righe, cambiando solo dove si cerca una voce. Possono chiamare un metodo privato che riceve «come si legge una voce» (una `Function<String, Optional<String>>`). Resta diverso solo il ripiego del singolare.
+- **F2.4** I sette produttori ripetono una ventina di volte `GRAMMATICA.get().produci("PRODUZIONE").get(0).trim()`. Un metodo `GrammaticaPigra.riga(String produzione)` li renderebbe di una riga ciascuno, più facili da leggere.
+- **F2.5** La maiuscola iniziale è scritta tre volte in questo modulo (`Articoli.inizialeMaiuscola`, `LinguaInglese.inizialeMaiuscola`, `GestoreGrammatiche.capitalizeFirstLetter`) e altre tre fuori: §11.5, X2.
+- *Non vale la pena:* il ciclo che salta i caratteri non lettera all'inizio di `suonoIniziale`, uguale in italiano e in inglese. Sono cinque righe, e il resto dei due metodi è diverso.
+
+**Pezzi che andrebbero riscritti**
+
+- **R2.1** `GestoreGrammatiche` ha tutti i nomi in inglese: campi, metodi, classi interne e messaggi d'errore (`"Production X is empty!"`). I commenti invece sono in italiano, come il resto del progetto. Per un neofita la classe è doppiamente difficile: la sintassi delle grammatiche e due lingue mescolate. Tradurre i nomi privati è meccanico. I nomi pubblici (`produci`, `ripristina`, `setRadice`, `puoProdurre`, `fissaProduzione`) li usano anche gli altri moduli, quindi andrebbero cambiati con loro. I messaggi d'errore li controllano decine di test (`contains("is not defined")`…). È un lavoro grande: decide l'utente se e quando farlo.
+- **R2.2** Il Javadoc di `GestoreGrammatiche` è accurato ma prolisso: quello della classe è lungo duecento righe, e molti metodi ripetono le stesse spiegazioni. Ho aggiunto in testa una mappa per orientarsi (le due fasi, caricamento e produzione, con i metodi principali e un esempio). Si potrebbe portare la guida della sintassi in `GestoreGrammatiche.md`, che esiste già, e lasciare nel codice solo il riassunto. Anche questo è da decidere.
+- *Idea, non urgente:* le sezioni statiche (`#include_static`, circa 250 righe con il loro lucchetto) potrebbero diventare una classe a parte, e `GestoreGrammatiche` scenderebbe sotto le 2.300 righe.
+
+**Commenti aggiunti**
+
+- `GestoreGrammatiche`: come orientarsi nella classe, con un esempio; il «righello» della scelta pesata; il richiamo alle altre copie della maiuscola.
+- `GrammaticaPigra`: perché la mappa è concorrente.
+- `RegoleConEccezioni`: il trucco della «x» al posto del nome.
+- `Numeri`: perché l'articolo si elide solo per 8 e 11, con un esempio.
+- `Nome`: l'indice degli articoli.
+- `Elenchi`: il ternario annidato.
+- `LinguaInglese`: gli ordinali composti.
+- `ProduttoriDiTesti`: quali grammatiche si azzerano, e che cosa fare se se ne aggiunge una con produzioni monouso.
+- `Testi`: che cosa fa `impostaLinguaImpl`.
+- `Articoli`: 33 Javadoc avevano perso il punto prima di «Vale».
+
+**Giudizio**
+
+È un modulo in due metà diverse.
+
+**Le classi della lingua** (`Testi`, `Lingue`, `RegoleDellaLingua` con `LinguaItaliana`, `LinguaInglese` e `RegoleConEccezioni`, `Nome`, `Articoli`, `Numeri`) sono il miglior esempio didattico del progetto. Hanno un'interfaccia piccola, una classe per lingua, le eccezioni dei nomi messe davanti alla regola con un decoratore (`RegoleConEccezioni`) e i testi nei file `.properties` con il ripiego sull'italiano. Un neofita le legge senza aiuto.
+
+**`GestoreGrammatiche`** è un piccolo linguaggio di programmazione, potente e molto provato (341 test nel modulo, quasi tutti suoi). Però è la classe più difficile del progetto:
+- è lunga, ha due lingue mescolate (R2.1) e un Javadoc che spiega tutto ma annega il lettore (R2.2);
+- contiene sei scanner simili che non si comportano allo stesso modo (F2.1), e da lì è nato D2.1;
+- le produzioni derivate (D2.2, D2.3) sono una funzione rotta, ma che nessuna grammatica usa.
+
+I sette produttori di testi sono semplici ma ripetitivi (F2.4).
+
+In ordine di valore per il lettore: F2.4, F2.2 e F2.3 (piccoli e sicuri), poi D2.1 e la decisione su D2.2/D2.3, poi F2.1. R2.1 è il cambiamento più utile per un neofita, ma anche il più costoso.
+
 ### 11.5 Proposte che toccano più moduli
 
 Le fattorizzazioni che spostano codice fra moduli si raccolgono qui, con i passi che le hanno trovate, e si decidono a parte.
 
-- **X1 `TipoEvento` (passo 1) — decisa: resta.** Per l'utente è il dizionario centralizzato di tutti i tipi di evento del gioco, e potrà servire ancora; il suo Javadoc ora lo dice. L'enum ha 134 costanti, una per classe di evento, e ogni evento la passa al costruttore di `EventoBase`. Il bus però smista per classe, e il tipo lo legge solo `SnifferBusEventi` (`13-foresta-app-swing`) per scriverlo nel registro, dove basterebbe `evento.getClass().getSimpleName()`. Toglierlo vorrebbe dire eliminare un'enum di 570 righe e un argomento dai costruttori di circa 134 classi, in quasi tutti i moduli. In cambio, aggiungere un evento costerebbe un passo in meno (oggi va aggiunta anche la costante). Si perderebbero i commenti di una riga di ogni costante, che però ripetono il Javadoc delle classi, e il raggruppamento per famiglia, che dicono già i sottopacchetti `comandigiocatore`, `notifiche`, `richieste` e `interni`. **È una cancellazione: decide l'utente.**
+- **X1 `TipoEvento` (passo 1) — decisa: resta.** Per l'utente è il dizionario centralizzato di tutti i tipi di evento del gioco, e potrà servire ancora; il suo Javadoc ora lo dice. L'enum ha 134 costanti, una per classe di evento, e ogni evento la passa al costruttore di `EventoBase`. Il bus però smista per classe, e il tipo lo legge solo `SnifferBusEventi` (`13-foresta-app-swing`) per scriverlo nel registro, dove basterebbe `evento.getClass().getSimpleName()`. Toglierlo vorrebbe dire eliminare un'enum di 570 righe e un argomento dai costruttori di circa 134 classi, in quasi tutti i moduli. In cambio, aggiungere un evento costerebbe un passo in meno (oggi va aggiunta anche la costante). Si perderebbero i commenti di una riga di ogni costante, che però ripetono il Javadoc delle classi, e il raggruppamento per famiglia, che dicono già i sottopacchetti `comandigiocatore`, `notifiche`, `richieste` e `interni`.
+- **X2 La maiuscola iniziale (passo 2) — fatta:** ora c'è `strumenti.Maiuscole.inizialeMaiuscola`. «Il primo carattere in maiuscolo, il resto com'è» è scritto sei volte: `Articoli.inizialeMaiuscola`, `LinguaInglese.inizialeMaiuscola` e `GestoreGrammatiche.capitalizeFirstLetter` (`01-foresta-testi`), `NotificaDiTesto.conInizialeMaiuscola` (`01-foresta-eventi`), `IncaricoInCitta` (`09-foresta-missioni`) e `RivelazioneDellArtefatto` (`12-foresta-ui-comune`). `01-foresta-eventi` non vede `01-foresta-testi`, perché sono allo stesso livello: l'unico posto che vedono tutti è `00-foresta-strumenti`, per esempio una classe `strumenti.Maiuscole` con un metodo statico. Le varianti hanno differenze minime (alcune lasciano com'è un testo che comincia già in maiuscolo, altre accettano null) che si possono unire senza cambiare il comportamento. È una fattorizzazione piccola ma tocca quattro moduli.
 
 ## Osservazioni
 

@@ -8,7 +8,7 @@ tengono in un registro, che si salva con la partita.
 
 Risorsa `01-foresta-testi/src/main/resources/com/threeamigos/foresta/testi/nomi.txt`. `locande.txt` e `missioni.txt` la includono con
 `#include_static` (una sezione condivisa: un nome uscito in una grammatica non esce più in nessun'altra), `fiabe.txt` con
-`#include` normale (le fiabe si azzerano a ogni racconto: hanno una copia tutta loro). Vedi [`GrammarBean.md`](GrammarBean.md)
+`#include` normale (le fiabe si azzerano a ogni racconto: hanno una copia tutta loro). Vedi [`GestoreGrammatiche.md`](GestoreGrammatiche.md)
 §4.7 (one-shot), §4.11 e §4.12.
 
 | Lista | Voci | Note |
@@ -30,9 +30,9 @@ goblin, soprannomi e titoli delle fiabe). Le produzioni che **combinano** le lis
 testi le chiamano per nome: `NOME_CASUALE` e `ATTRIBUTO` (locande), `NOME_PROTAGONISTA`, `COGNOME_PROTAGONISTA` e
 `NOME_PRINCIPESSA` (fiabe), `NOME_OSTAGGIO`, `NOME_PELLEGRINO`, `NOME_MAGO`, `NOME_CAMPIONE`, `NOME_BRIGANTE`… (missioni).
 
-`GrammarBean.resetStaticProductions()` azzera **tutte** le sezioni statiche insieme, e con esse le one-shot locali delle
+`GestoreGrammatiche.ripristinaLeSezioniStatiche()` azzera **tutte** le sezioni statiche insieme, e con esse le one-shot locali delle
 grammatiche che le includono (le locande). Non c'è ricarica automatica: un pool esaurito pota a cascata le alternative che lo
-usano, e `produce()` finisce per lanciare `IllegalArgumentException`.
+usano, e `produci()` finisce per lanciare `IllegalArgumentException`.
 
 ## 2. Chi ha un nome
 
@@ -66,7 +66,7 @@ si ripete.
 
 Durante la partita ostaggi, pellegrini e maghi delle missioni pescano dallo stesso `NOME_MASCHILE`. Quando finisce,
 `ProduttoreDiMissioniCasuale.produciDaMissioni` (usata da `nomeOstaggio`, `nomePellegrino`, `nomeDiPersonaggioNoto` e
-`rigaDiMissioni`) vede che `canProduce` è falso, azzera le sezioni statiche e riparte. Dopo un reset un ostaggio può avere il
+`rigaDiMissioni`) vede che `puoProdurre` è falso, azzera le sezioni statiche e riparte. Dopo un reset un ostaggio può avere il
 nome di un residente: è accettato.
 
 ## 4. Il registro dei residenti

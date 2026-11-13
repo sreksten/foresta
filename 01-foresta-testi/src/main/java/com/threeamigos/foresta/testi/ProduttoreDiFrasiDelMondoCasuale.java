@@ -27,36 +27,36 @@ public final class ProduttoreDiFrasiDelMondoCasuale {
 	 * @param nome il nome con cui si presenta l'eroe
 	 */
 	public static String presentazioneDelProtagonista(String nome) {
-		MONDO.get().addFixedProduction("NOME_EROE", nome);
-		return MONDO.get().produce("PRESENTAZIONE_EROE").get(0).trim();
+		MONDO.get().fissaProduzione("NOME_EROE", nome);
+		return MONDO.riga("PRESENTAZIONE_EROE");
 	}
 
 	/**
 	 * Il saluto dell'armaiolo quando il gruppo entra nella sua bottega (vedi mondo.txt).
 	 */
 	public static String salutoDellArmaiolo() {
-		return MONDO.get().produce("SALUTO_ARMAIOLO").get(0).trim();
+		return MONDO.riga("SALUTO_ARMAIOLO");
 	}
 
 	/**
 	 * Il saluto dell'alchimista quando il gruppo entra nella sua bottega (vedi mondo.txt).
 	 */
 	public static String salutoDellAlchimista() {
-		return MONDO.get().produce("SALUTO_ALCHIMISTA").get(0).trim();
+		return MONDO.riga("SALUTO_ALCHIMISTA");
 	}
 
 	/**
 	 * Il saluto dell'incantatore quando il gruppo entra nel suo laboratorio (vedi mondo.txt).
 	 */
 	public static String salutoDellIncantatore() {
-		return MONDO.get().produce("SALUTO_INCANTATORE").get(0).trim();
+		return MONDO.riga("SALUTO_INCANTATORE");
 	}
 
 	/**
 	 * Il saluto del venditore di pergamene quando il gruppo entra nel suo negozio (vedi mondo.txt).
 	 */
 	public static String salutoDelVenditoreDiPergamene() {
-		return MONDO.get().produce("SALUTO_VENDITORE").get(0).trim();
+		return MONDO.riga("SALUTO_VENDITORE");
 	}
 
 	/**
@@ -65,14 +65,14 @@ public final class ProduttoreDiFrasiDelMondoCasuale {
 	 * @param negozianti il plurale del mestiere, in minuscolo ("armaioli")
 	 */
 	public static String domandaAlNegozianteSempreAperto(String negozianti) {
-		MONDO.get().addFixedProduction("NEGOZIANTI", negozianti);
-		return MONDO.get().produce("NON_CHIUDETE_MAI_DOMANDA").get(0).trim();
+		MONDO.get().fissaProduzione("NEGOZIANTI", negozianti);
+		return MONDO.riga("NON_CHIUDETE_MAI_DOMANDA");
 	}
 
 	/**
 	 * La risposta del negoziante a chi gli chiede perché non chiude mai (vedi mondo.txt).
 	 */
 	public static String rispostaDelNegozianteSempreAperto() {
-		return MONDO.get().produce("NON_CHIUDETE_MAI_RISPOSTA").get(0).trim();
+		return MONDO.riga("NON_CHIUDETE_MAI_RISPOSTA");
 	}
 }

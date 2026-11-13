@@ -3,7 +3,7 @@
 // Qui stanno le liste (NOME_MASCHILE e COGNOME sono le liste comuni di nomi maschili e cognomi); le produzioni che le combinano
 // (NOME_CASUALE, NOME_CAMPIONE...) restano nelle grammatiche.
 //
-// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
+// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GestoreGrammatiche).
 
 NOME_MASCHILE$
     Alaric | Aldric | Alphonse | Ambrose | Anselm | Archibald | Armand | Arnold | Aubrey | Aurelian

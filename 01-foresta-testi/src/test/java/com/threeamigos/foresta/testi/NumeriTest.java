@@ -49,7 +49,7 @@ class NumeriTest {
 
     @Test
     void fuoriDaLimitiDegliOrdinaliNonCeUnRipiego() {
-        assertEquals("nullo", Numeri.getOrdinaleM(0));
-        assertThrows(ArrayIndexOutOfBoundsException.class, () -> Numeri.getOrdinaleM(42));
+        assertThrows(IllegalArgumentException.class, () -> Numeri.getOrdinaleM(0));
+        assertThrows(IllegalArgumentException.class, () -> Numeri.getOrdinaleF(42));
     }
 }

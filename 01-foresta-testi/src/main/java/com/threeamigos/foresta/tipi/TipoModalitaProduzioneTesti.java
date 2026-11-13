@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.tipi;
 
-import com.threeamigos.foresta.testi.GrammarBean;
+import com.threeamigos.foresta.testi.GestoreGrammatiche;
 
 /**
- * Come {@link GrammarBean} sceglie un'alternativa fra i figli di una produzione.
+ * Come {@link GestoreGrammatiche} sceglie un'alternativa fra i figli di una produzione.
  *
  * @author Stefano Reksten
  */

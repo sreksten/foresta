@@ -6,7 +6,7 @@
 // che l'armaiolo forgia e i viandanti che si incontrano nel bosco.
 // I nomi sono tutti maschili, perché i testi delle missioni parlano di "suo marito" e "sua moglie".
 //
-// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
+// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GestoreGrammatiche).
 
 // ---------------------------------------------------------------------------------------------
 // Ostaggi (vedi IlRapimento) e pellegrini (vedi IlPellegrino): un nome maschile (il bardo ha quello del registro dei personaggi)
@@ -655,7 +655,7 @@ INCARICO_DI_COMBATTIMENTO
 
 // I titoli nobiliari buffi che Sua Maestà concede (vedi le righe di TITOLO_NOBILIARE qui sopra) e i nemici da
 // sconfiggere per averli, pescati a caso. Le alternative pesano poco perché le righe che le usano non escano più
-// spesso delle altre (vedi GrammarBean, il peso delle alternative che contengono riferimenti).
+// spesso delle altre (vedi GestoreGrammatiche, il peso delle alternative che contengono riferimenti).
 
 TITOLO_DELLA_PALUDE
     [^0.1] Baronetto della Palude Puzzolente

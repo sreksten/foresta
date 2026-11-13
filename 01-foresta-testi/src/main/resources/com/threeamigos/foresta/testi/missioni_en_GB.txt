@@ -1,7 +1,7 @@
 // Versione inglese di missioni.txt: stesse produzioni e stessi campi (il formato è descritto in missioni.txt). Il genere (F/M) dei
 // materiali non conta in inglese ma si tiene uguale all'italiano, perché il codice lo vuole.
 //
-// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
+// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GestoreGrammatiche).
 
 NOME_OSTAGGIO
     [NOME_MASCHILE]
@@ -526,7 +526,7 @@ INCARICO_DI_COMBATTIMENTO
 
 // I titoli nobiliari buffi che Sua Maestà concede (vedi le righe di TITOLO_NOBILIARE qui sopra) e i nemici da
 // sconfiggere per averli, pescati a caso. Le alternative pesano poco perché le righe che le usano non escano più
-// spesso delle altre (vedi GrammarBean, il peso delle alternative che contengono riferimenti).
+// spesso delle altre (vedi GestoreGrammatiche, il peso delle alternative che contengono riferimenti).
 
 // Tutti i titoli cominciano per consonante: davanti compare "a" (mai "an")
 TITOLO_DELLA_PALUDE

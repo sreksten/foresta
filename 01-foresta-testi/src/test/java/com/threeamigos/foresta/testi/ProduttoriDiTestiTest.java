@@ -171,7 +171,7 @@ class ProduttoriDiTestiTest {
 		});
 
 		ProduttoreDiOroscopiCasuale.DialogoSullOroscopo dialogo = ProduttoreDiOroscopiCasuale.dialogoSullOroscopo(
-				new GrammarBean("DIALOGO_SULL_OROSCOPO\n    Giornata fortunata\n" + DOMANDE));
+				new GestoreGrammatiche("DIALOGO_SULL_OROSCOPO\n    Giornata fortunata\n" + DOMANDE));
 
 		assertEquals("Giornata fortunata", dialogo.getOroscopo());
 		assertNull(dialogo.getTema());
@@ -184,7 +184,7 @@ class ProduttoriDiTestiTest {
 	@Test
 	void unTemaSenzaFormaFaUnaDomandaGenerica() throws Exception {
 		ProduttoreDiOroscopiCasuale.DialogoSullOroscopo dialogo = ProduttoreDiOroscopiCasuale.dialogoSullOroscopo(
-				new GrammarBean("DIALOGO_SULL_OROSCOPO\n    Stelle propizie/niente\n" + DOMANDE));
+				new GestoreGrammatiche("DIALOGO_SULL_OROSCOPO\n    Stelle propizie/niente\n" + DOMANDE));
 
 		assertEquals("Stelle propizie", dialogo.getOroscopo());
 		assertNull(dialogo.getTema());
@@ -194,7 +194,7 @@ class ProduttoriDiTestiTest {
 	@Test
 	void unTemaConLaFormaFaUnaDomandaSuQuelTema() throws Exception {
 		ProduttoreDiOroscopiCasuale.DialogoSullOroscopo dialogo = ProduttoreDiOroscopiCasuale.dialogoSullOroscopo(
-				new GrammarBean("DIALOGO_SULL_OROSCOPO\n    Il sole sorge/COSA:il Sole\n" + DOMANDE));
+				new GestoreGrammatiche("DIALOGO_SULL_OROSCOPO\n    Il sole sorge/COSA:il Sole\n" + DOMANDE));
 
 		assertEquals("Il sole sorge", dialogo.getOroscopo());
 		assertEquals("il Sole", dialogo.getTema());
@@ -205,7 +205,7 @@ class ProduttoriDiTestiTest {
 	// ------------------------------------------------------------------------------------------ locande malformate
 
 	private static List<ProduttoreDiLocandeCasuale.DatiLocanda> daRiga(String riga) throws Exception {
-		return ProduttoreDiLocandeCasuale.getDatiLocanda(1, new GrammarBean("LOCANDA\n    " + riga + "\n"));
+		return ProduttoreDiLocandeCasuale.getDatiLocanda(1, new GestoreGrammatiche("LOCANDA\n    " + riga + "\n"));
 	}
 
 	@Test
@@ -231,8 +231,8 @@ class ProduttoriDiTestiTest {
 
 	@Test
 	void unaGrammaticaDiLocandeCheProduceUnaRigaSolaPerVolta() throws Exception {
-		GrammarBean piuRighe = new GrammarBean("LOCANDA\n    [#RIGHE]\n");
-		piuRighe.addFixedProduction("RIGHE", "il Boccale/BOCCALE/Oste/RECENSIONE=x/DIALOGO=y\nil Calice/CALICE/Oste/RECENSIONE=x/DIALOGO=y");
+		GestoreGrammatiche piuRighe = new GestoreGrammatiche("LOCANDA\n    [#RIGHE]\n");
+		piuRighe.fissaProduzione("RIGHE", "il Boccale/BOCCALE/Oste/RECENSIONE=x/DIALOGO=y\nil Calice/CALICE/Oste/RECENSIONE=x/DIALOGO=y");
 
 		IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
 				() -> ProduttoreDiLocandeCasuale.getDatiLocanda(1, piuRighe));

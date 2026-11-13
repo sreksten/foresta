@@ -1,8 +1,8 @@
 /**
  * La generazione dei testi a caso del gioco.
  * <p>
- * {@link com.threeamigos.foresta.testi.GrammarBean} (modulo 01-foresta-testi) legge una grammatica da un file di testo e produce testi
- * espandendo a caso le sue produzioni (alternative, riferimenti, valori fissati, pesi, sostituzioni finali: vedi GrammarBean.md).
+ * {@link com.threeamigos.foresta.testi.GestoreGrammatiche} (modulo 01-foresta-testi) legge una grammatica da un file di testo e produce testi
+ * espandendo a caso le sue produzioni (alternative, riferimenti, valori fissati, pesi, sostituzioni finali: vedi GestoreGrammatiche.md).
  * I produttori dei testi (fiabe, oroscopi, luoghi, sfide, missioni, locande) stanno in 01-foresta-testi con le loro grammatiche e non
  * conoscono il bus: una grammatica che manca solleva una {@link com.threeamigos.foresta.testi.GrammaticaNonValidaException}. Qui nel motore
  * restano quello che dipende dal gioco: {@link com.threeamigos.foresta.artefatti.ProduttoreDiArtefattiCasuale} (leggendari, libri tecnici,

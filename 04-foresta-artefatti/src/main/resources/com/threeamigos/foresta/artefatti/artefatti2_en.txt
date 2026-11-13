@@ -10,7 +10,7 @@
 // (blades), _METALLO (metal), _STOFFA (cloth) and _PROTEZIONE (defensive pieces) apply only to some types of item.
 // Same content as the Italian version, minus the genders: a word appears once, always with the same effect.
 //
-// Characters not to use in the texts: [ ] { } | " (GrammarBean syntax) and < > @ (markers).
+// Characters not to use in the texts: [ ] { } | " (GestoreGrammatiche syntax) and < > @ (markers).
 
 SPADA_0
     the sword [COSMETICO_SPADA]

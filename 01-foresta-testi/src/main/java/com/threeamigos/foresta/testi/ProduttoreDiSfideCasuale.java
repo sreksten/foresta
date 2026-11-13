@@ -23,28 +23,28 @@ public final class ProduttoreDiSfideCasuale {
 	 * La frase con cui chi ha stretto amicizia sfida il capo del gruppo a carta, forbici e sasso (vedi sfide.txt).
 	 */
 	public static String fraseDiSfida() {
-		return SFIDE.get().produce("SFIDA").get(0).trim();
+		return SFIDE.riga("SFIDA");
 	}
 
 	/**
 	 * Quello che dice l'avversario quando il giocatore vince la sfida (vedi sfide.txt).
 	 */
 	public static String fraseSeIlGiocatoreVince() {
-		return SFIDE.get().produce("GIOCATORE_VINCE").get(0).trim();
+		return SFIDE.riga("GIOCATORE_VINCE");
 	}
 
 	/**
 	 * Quello che dice l'avversario quando il giocatore perde la sfida (vedi sfide.txt).
 	 */
 	public static String fraseSeIlGiocatorePerde() {
-		return SFIDE.get().produce("GIOCATORE_PERDE").get(0).trim();
+		return SFIDE.riga("GIOCATORE_PERDE");
 	}
 
 	/**
 	 * Quello che dice l'avversario alla terza sfida vinta dal gruppo, per mandarlo al torneo (vedi sfide.txt).
 	 */
 	public static String fraseDelTorneo() {
-		return SFIDE.get().produce("TORNEO").get(0).trim();
+		return SFIDE.riga("TORNEO");
 	}
 
 	/**
@@ -52,6 +52,6 @@ public final class ProduttoreDiSfideCasuale {
 	 * sfide.txt).
 	 */
 	public static String nomeLeggendarioDeiCampioni() {
-		return SFIDE.get().produce("NOME_LEGGENDARIO_DEI_CAMPIONI").get(0).trim();
+		return SFIDE.riga("NOME_LEGGENDARIO_DEI_CAMPIONI");
 	}
 }

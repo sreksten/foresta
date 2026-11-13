@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.eventi.notifiche;
 
+import com.threeamigos.foresta.strumenti.Maiuscole;
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.tipi.TipoEvento;
 
@@ -18,18 +19,9 @@ public abstract class NotificaDiTesto extends EventoBase {
      */
     protected NotificaDiTesto(TipoEvento tipoEvento, String messaggio) {
         super(tipoEvento);
-        this.messaggio = conInizialeMaiuscola(messaggio);
+        this.messaggio = Maiuscole.inizialeMaiuscola(messaggio);
     }
 
-    /**
-     * Il messaggio con il primo carattere maiuscolo (null e il testo vuoto restano come sono).
-     */
-    static String conInizialeMaiuscola(String messaggio) {
-        if (messaggio == null || messaggio.isEmpty() || Character.isUpperCase(messaggio.charAt(0))) {
-            return messaggio;
-        }
-        return Character.toUpperCase(messaggio.charAt(0)) + messaggio.substring(1);
-    }
 
     /**
      * Il messaggio da mostrare al giocatore.

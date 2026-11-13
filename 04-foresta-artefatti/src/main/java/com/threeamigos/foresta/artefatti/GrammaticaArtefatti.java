@@ -4,8 +4,8 @@ import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.strumenti.logger.Logger;
-import com.threeamigos.foresta.testi.GrammarBean;
-import com.threeamigos.foresta.testi.GrammarBean.InvalidGrammarException;
+import com.threeamigos.foresta.testi.GestoreGrammatiche;
+import com.threeamigos.foresta.testi.GestoreGrammatiche.GrammaticaMalformataException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,7 +21,7 @@ import com.threeamigos.foresta.testi.CaricatoreDiGrammatiche;
  * tolgono dal testo e diventano un {@link Risultato}, che dice che cosa ha l'artefatto ma non quanto,
  * perché i valori dipendono dal livello e li decide il generatore.
  * <p>
- * GrammarBean non è thread-safe, quindi {@link #genera} è sincronizzato.
+ * GestoreGrammatiche non è thread-safe, quindi {@link #genera} è sincronizzato.
  */
 final class GrammaticaArtefatti {
 
@@ -37,7 +37,7 @@ final class GrammaticaArtefatti {
 	private static final Pattern MARCATORE = Pattern.compile("<([a-z]+):([^<>]*)>");
 	private static final Pattern MODIFICATORE = Pattern.compile("([A-Z_]+)([+-]\\d+)");
 
-	private final GrammarBean grammatica;
+	private final GestoreGrammatiche grammatica;
 	/**
 	 * Per ogni tipo presente nella grammatica il numero minimo e massimo di effetti, cioè la radice {@code <TIPO>_<n>} più
 	 * piccola e più grande (le radici vanno dalla prima all'ultima senza buchi)
@@ -45,7 +45,7 @@ final class GrammaticaArtefatti {
 	private final Map<TipoArtefatto, Integer> effettiMinimi = new EnumMap<>(TipoArtefatto.class);
 	private final Map<TipoArtefatto, Integer> effettiMassimi = new EnumMap<>(TipoArtefatto.class);
 
-	GrammaticaArtefatti(GrammarBean grammatica) {
+	GrammaticaArtefatti(GestoreGrammatiche grammatica) {
 		this.grammatica = grammatica;
 		for (TipoArtefatto tipo : TipoArtefatto.values()) {
 			for (int effetti = 0; effetti <= EFFETTI_CERCATI; effetti++) {
@@ -75,8 +75,8 @@ final class GrammaticaArtefatti {
 	static GrammaticaArtefatti caricaOppureNull(String file) {
 		try (InputStream grammatica = GrammaticaArtefatti.class.getResourceAsStream(CaricatoreDiGrammatiche.perLaLingua(GrammaticaArtefatti.class, file));
 			 InputStream postProduzione = GrammaticaArtefatti.class.getResourceAsStream(CaricatoreDiGrammatiche.perLaLingua(GrammaticaArtefatti.class, POST_PRODUZIONE))) {
-			return new GrammaticaArtefatti(new GrammarBean(grammatica, postProduzione));
-		} catch (InvalidGrammarException | IOException | RuntimeException e) {
+			return new GrammaticaArtefatti(new GestoreGrammatiche(grammatica, postProduzione));
+		} catch (GrammaticaMalformataException | IOException | RuntimeException e) {
 			Logger.log(e);
 			return null;
 		}
@@ -84,7 +84,7 @@ final class GrammaticaArtefatti {
 
 	private boolean esisteRadice(TipoArtefatto tipo, int effetti) {
 		try {
-			grammatica.setRootNode(radice(tipo, effetti));
+			grammatica.setRadice(radice(tipo, effetti));
 			return true;
 		} catch (IllegalArgumentException e) {
 			return false;
@@ -108,8 +108,8 @@ final class GrammaticaArtefatti {
 		if (massimo == null) {
 			throw new IllegalArgumentException("La grammatica degli artefatti non genera il tipo " + tipo);
 		}
-		String riga = String.join(" ", grammatica.produce(radice(tipo, Math.max(effettiMinimi.get(tipo), Math.min(massimo, effetti)))));
-		grammatica.reset();
+		String riga = String.join(" ", grammatica.produci(radice(tipo, Math.max(effettiMinimi.get(tipo), Math.min(massimo, effetti)))));
+		grammatica.ripristina();
 		return interpreta(riga);
 	}
 

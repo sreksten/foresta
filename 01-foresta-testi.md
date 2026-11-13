@@ -1,6 +1,6 @@
 # 01-foresta-testi
 
-Tutti i testi del gioco che **non stanno nel codice**: i file di testi per lingua (i nomi e le descrizioni delle enum, le note, i comandi), le regole dell'italiano per comporre frasi (articoli, preposizioni articolate, numeri in lettere), il motore di grammatiche `GrammarBean` che produce testi a caso e i produttori che lo usano per fiabe, oroscopi, luoghi, sfide, missioni e locande.
+Tutti i testi del gioco che **non stanno nel codice**: i file di testi per lingua (i nomi e le descrizioni delle enum, le note, i comandi), le regole dell'italiano per comporre frasi (articoli, preposizioni articolate, numeri in lettere), il motore di grammatiche `GestoreGrammatiche` che produce testi a caso e i produttori che lo usano per fiabe, oroscopi, luoghi, sfide, missioni e locande.
 
 Sta in basso perché ogni modulo che ha un'enum con nomi da mostrare o una frase da comporre ha bisogno di queste funzioni, e perché è qui che si decide **come il gioco potrà essere tradotto**: un testo che sta in un file `_<lingua>.properties` si traduce copiando il file, non toccando il codice.
 
@@ -12,7 +12,7 @@ Sta in basso perché ogni modulo che ha un'enum con nomi da mostrare o una frase
 
 Le dipendenze sono transitive: un modulo vede anche quello che vedono i moduli da cui dipende, quindi il compilatore garantisce la separazione fra i moduli che non si raggiungono.
 
-Dipende da `00-foresta-strumenti` per il caso (`GrammarBean` sceglie le alternative con `Dado`, e quindi segue il seme e i trucchi) e per il log. Non conosce il dominio: i produttori generano testo, non sanno chi lo mostrerà.
+Dipende da `00-foresta-strumenti` per il caso (`GestoreGrammatiche` sceglie le alternative con `Dado`, e quindi segue il seme e i trucchi) e per il log. Non conosce il dominio: i produttori generano testo, non sanno chi lo mostrerà.
 
 ## Funzionamento
 
@@ -35,9 +35,9 @@ La lingua è l'italiano (`LINGUA_PREDEFINITA`) finché la piattaforma non scegli
 - `Articoli` ha gli articoli determinativi e indeterminativi (`il `, `lo `, `la `, `l'`, `i `, `gli `, `le `, `un `, `uno `…) già con lo spazio o l'apostrofo finale, le preposizioni articolate, e due funzioni: fondere una preposizione con l'articolo di un nome e mettere la maiuscola iniziale. Sono testi italiani: la localizzazione completa verrà dopo.
 - `Numeri` scrive in lettere i cardinali e gli ordinali (maschile e femminile: `getOrdinaleM/F`, validi per il giorno del calendario).
 
-### `GrammarBean`: testi a caso da una grammatica
+### `GestoreGrammatiche`: testi a caso da una grammatica
 
-Legge un file di grammatica e lo usa per **produrre** testo casuale espandendo ricorsivamente i riferimenti. È la parte più grossa del modulo; il manuale completo è in [`GrammarBean.md`](GrammarBean.md). In breve, il formato:
+Legge un file di grammatica e lo usa per **produrre** testo casuale espandendo ricorsivamente i riferimenti. È la parte più grossa del modulo; il manuale completo è in [`GestoreGrammatiche.md`](GestoreGrammatiche.md). In breve, il formato:
 
 - una riga alla colonna 0 dichiara una **produzione**; le righe rientrate sono le sue **alternative**, anche più d'una per riga separate da `|`;
 - `[Nome]` richiama un'altra produzione; `{a|b|c}` è un gruppo di alternative in linea;
@@ -47,7 +47,7 @@ Legge un file di grammatica e lo usa per **produrre** testo casuale espandendo r
 
 `TipoModalitaProduzioneTesti` dice come scegliere fra le alternative (`PRIMO`, `ULTIMO` per i test, `CASUALE`). Il caso viene da `Dado`, quindi con un seme fisso una partita produce sempre gli stessi testi.
 
-`CaricatoreDiGrammatiche` carica un file `.txt` (dalla cartella `testi` o da una risorsa indicata da chi ha grammatiche sue, come gli artefatti) e traduce gli errori in `GrammaticaNonValidaException`; `GrammaticaPigra` carica la grammatica solo al primo uso, così un errore è un'eccezione normale e non un guasto di inizializzazione di classe.
+`CaricatoreDiGrammatiche` carica un file `.txt` (dalla cartella `testi` o da una risorsa indicata da chi ha grammatiche sue, come gli artefatti) e traduce gli errori in `GrammaticaNonValidaException`; `GrammaticaPigra` carica la grammatica solo al primo uso, così un errore è un'eccezione normale e non un guasto di inizializzazione di classe; `riga(produzione)` dà la prima riga prodotta, senza spazi ai bordi, che è quel che chiedono quasi tutti i produttori.
 
 ### I produttori
 
@@ -69,5 +69,5 @@ Ogni produttore legge le sue grammatiche e offre testi pronti:
 
 - Ogni grammatica ha la sua versione inglese accanto (`nome_en.txt`, o `nome_en_GB.txt` per le sole differenze britanniche): `CaricatoreDiGrammatiche.perLaLingua` cerca il file più specifico e, se manca, torna a quello italiano. `ConfrontoGrammaticheTest` confronta ogni coppia (stesse produzioni, almeno quasi altrettante alternative per produzione, con una tolleranza del 3%): una traduzione «ridotta» fa fallire la suite. Averne di più non è un difetto. Le grafie britanniche (`toward`→`towards`, `armor`→`armour`, `traveler`→`traveller`…) stanno in `nome_en_GB.txt`, un file completo che c'è solo dove cambia qualcosa; `VariantiBritannicheDelleGrammaticheTest` controlla che abbia le stesse produzioni e alternative della versione americana e nessuna grafia americana comune. Nei `.properties` basta l'override per chiave in `_en_GB`.
 - `Articoli` e i file `.txt` sono ancora scritti in italiano: portare il gioco in un'altra lingua vuol dire anche ripensare queste regole (vedi `assessment_portabilita.md`).
-- `GrammarBean` è una classe molto grande (più di 2500 righe) e dalla sintassi ricca: ogni nuova funzione della grammatica va documentata nel manuale `GrammarBean.md`.
+- `GestoreGrammatiche` è una classe molto grande (più di 2500 righe) e dalla sintassi ricca: ogni nuova funzione della grammatica va documentata nel manuale `GestoreGrammatiche.md`.
 - I produttori tengono stato statico (cosa è già stato estratto): `resetProduzioni()` va chiamato a ogni partita nuova.

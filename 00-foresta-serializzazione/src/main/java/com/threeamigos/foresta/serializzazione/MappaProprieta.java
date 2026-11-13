@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
  * "chiave{@value #SEPARATORE}valore".
  * <p>
  * Il separatore non è ':' perché quel carattere può comparire legittimamente nei valori
- * (ad esempio nella prosa generata da {@code GrammarBean}); '§' è stato scelto perché non
+ * (ad esempio nella prosa generata da {@code GestoreGrammatiche}); '§' è stato scelto perché non
  * ricorre né nelle chiavi convenzionali del progetto né nei testi generati.
  *
  * @author Stefano Reksten

@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.testi;
 
-import com.threeamigos.foresta.testi.GrammarBean.InvalidGrammarException;
+import com.threeamigos.foresta.testi.GestoreGrammatiche.GrammaticaMalformataException;
 
 import java.io.IOException;
 
@@ -29,10 +29,10 @@ public final class CaricatoreDiGrammatiche {
 	 * @param postProduzione la risorsa con le sostituzioni finali, o null
 	 * @throws GrammaticaNonValidaException se una risorsa manca o la grammatica non è valida
 	 */
-	public static GrammarBean carica(Class<?> ancora, String risorsa, String postProduzione) {
+	public static GestoreGrammatiche carica(Class<?> ancora, String risorsa, String postProduzione) {
 		try {
-			return GrammarBean.fromResource(ancora, perLaLingua(ancora, risorsa), postProduzione == null ? null : perLaLingua(ancora, postProduzione));
-		} catch (InvalidGrammarException | IOException e) {
+			return GestoreGrammatiche.daRisorsa(ancora, perLaLingua(ancora, risorsa), postProduzione == null ? null : perLaLingua(ancora, postProduzione));
+		} catch (GrammaticaMalformataException | IOException e) {
 			throw new GrammaticaNonValidaException(risorsa, e);
 		}
 	}
@@ -60,7 +60,7 @@ public final class CaricatoreDiGrammatiche {
 	 * @param conPreposizioniArticolate se le preposizioni articolate del testo prodotto vanno sistemate
 	 * @throws GrammaticaNonValidaException se manca o non è valida
 	 */
-	public static GrammarBean caricaDeiTesti(String nomeFile, boolean conPreposizioniArticolate) {
+	public static GestoreGrammatiche caricaDeiTesti(String nomeFile, boolean conPreposizioniArticolate) {
 		return carica(CaricatoreDiGrammatiche.class, CARTELLA_TESTI + nomeFile,
 				conPreposizioniArticolate ? PREPOSIZIONI_ARTICOLATE : null);
 	}

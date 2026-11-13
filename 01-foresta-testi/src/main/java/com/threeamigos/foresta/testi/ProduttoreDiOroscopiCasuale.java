@@ -32,9 +32,9 @@ public final class ProduttoreDiOroscopiCasuale {
 	}
 
 	// Il dialogo da una grammatica data: serve a provare gli oroscopi malformati, che la grammatica del gioco non ha
-	static DialogoSullOroscopo dialogoSullOroscopo(GrammarBean oroscopi) {
+	static DialogoSullOroscopo dialogoSullOroscopo(GestoreGrammatiche oroscopi) {
 		try {
-			String prodotto = String.join(" ", oroscopi.produce("DIALOGO_SULL_OROSCOPO"));
+			String prodotto = String.join(" ", oroscopi.produci("DIALOGO_SULL_OROSCOPO"));
 			int separatore = prodotto.lastIndexOf('/');
 			// Un oroscopo senza tema ("testo/FORMA:nome") non rompe il dialogo: il capo fa la domanda generica
 			String oroscopo = (separatore < 0 ? prodotto : prodotto.substring(0, separatore)).trim();
@@ -52,15 +52,15 @@ public final class ProduttoreDiOroscopiCasuale {
 			return new DialogoSullOroscopo(oroscopo, nome, produciSulTema(oroscopi, "DOMANDA_" + forma, nome),
 					produciSulTema(oroscopi, "RISPOSTA_SULL_OROSCOPO", nome));
 		} finally {
-			oroscopi.reset();
+			oroscopi.ripristina();
 		}
 	}
 
-	private static String produciSulTema(GrammarBean oroscopi, String produzione, String tema) {
+	private static String produciSulTema(GestoreGrammatiche oroscopi, String produzione, String tema) {
 		if (tema != null) {
-			oroscopi.addFixedProduction("TEMA", tema);
+			oroscopi.fissaProduzione("TEMA", tema);
 		}
-		return String.join(" ", oroscopi.produce(produzione)).trim();
+		return String.join(" ", oroscopi.produci(produzione)).trim();
 	}
 
 	/**
@@ -112,7 +112,7 @@ public final class ProduttoreDiOroscopiCasuale {
 	/**
 	 * Azzera le liste esauribili della grammatica (vedi {@link ProduttoriDiTesti#resetProduzioni()}).
 	 */
-	static void reset() {
-		OROSCOPI.get().reset();
+	static void ripristina() {
+		OROSCOPI.get().ripristina();
 	}
 }

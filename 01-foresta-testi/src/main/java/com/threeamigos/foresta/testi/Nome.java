@@ -2,6 +2,7 @@ package com.threeamigos.foresta.testi;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * Un nome comune con quel che serve per articolarlo e declinarlo: singolare, plurale, genere, suono iniziale e pronome con
@@ -66,14 +67,7 @@ public final class Nome {
 	 */
 	public static Nome di(Enum<?> costante) {
 		String singolare = Testi.testo(costante, "NOME_SINGOLARE").orElseGet(() -> Testi.testoOCostante(costante, "NOME"));
-		return new Nome(singolare,
-				Testi.testo(costante, "NOME_PLURALE").orElse(singolare),
-				Genere.dallaSigla(Testi.testo(costante, "GENERE").orElse(null)),
-				Suono.dalNome(Testi.testo(costante, "SUONO").orElse(null)),
-				Testi.testo(costante, "PRONOME").orElse(null),
-				Testi.testo(costante, "AGENTE_DETERMINATO").map(v -> v.trim().equalsIgnoreCase("true")).orElse(false),
-				new String[] {Testi.testo(costante, "ADS").orElse(null), Testi.testo(costante, "ADP").orElse(null),
-						Testi.testo(costante, "AIS").orElse(null), Testi.testo(costante, "AIP").orElse(null)});
+		return dalleVoci(singolare, voce -> Testi.testo(costante, voce));
 	}
 
 	/**
@@ -83,14 +77,20 @@ public final class Nome {
 	public static Nome di(String file, Enum<?> costante) {
 		String prefisso = costante.name() + ".";
 		String singolare = Testi.get(file, prefisso + "NOME_SINGOLARE").orElse(costante.name());
+		return dalleVoci(singolare, voce -> Testi.get(file, prefisso + voce));
+	}
+
+	// Il nome con il singolare già trovato e le altre voci lette con la funzione data (che dice dove stanno: i file
+	// dell'enum o un file a parte); una voce che manca vale il suo ripiego
+	private static Nome dalleVoci(String singolare, Function<String, Optional<String>> voce) {
 		return new Nome(singolare,
-				Testi.get(file, prefisso + "NOME_PLURALE").orElse(singolare),
-				Genere.dallaSigla(Testi.get(file, prefisso + "GENERE").orElse(null)),
-				Suono.dalNome(Testi.get(file, prefisso + "SUONO").orElse(null)),
-				Testi.get(file, prefisso + "PRONOME").orElse(null),
-				Testi.get(file, prefisso + "AGENTE_DETERMINATO").map(v -> v.trim().equalsIgnoreCase("true")).orElse(false),
-				new String[] {Testi.get(file, prefisso + "ADS").orElse(null), Testi.get(file, prefisso + "ADP").orElse(null),
-						Testi.get(file, prefisso + "AIS").orElse(null), Testi.get(file, prefisso + "AIP").orElse(null)});
+				voce.apply("NOME_PLURALE").orElse(singolare),
+				Genere.dallaSigla(voce.apply("GENERE").orElse(null)),
+				Suono.dalNome(voce.apply("SUONO").orElse(null)),
+				voce.apply("PRONOME").orElse(null),
+				voce.apply("AGENTE_DETERMINATO").map(v -> v.trim().equalsIgnoreCase("true")).orElse(false),
+				new String[] {voce.apply("ADS").orElse(null), voce.apply("ADP").orElse(null),
+						voce.apply("AIS").orElse(null), voce.apply("AIP").orElse(null)});
 	}
 
 	public String getSingolare() {
@@ -128,6 +128,7 @@ public final class Nome {
 	 * {@code AIS}, {@code AIP}), col suo separatore finale.
 	 */
 	public Optional<String> getArticolo(boolean determinativo, boolean plurale) {
+		// Gli articoli stanno nell'ordine ADS, ADP, AIS, AIP: i determinativi da 0, gli indeterminativi da 2, il plurale uno dopo
 		return Optional.ofNullable(articoli[(determinativo ? 0 : 2) + (plurale ? 1 : 0)]);
 	}
 

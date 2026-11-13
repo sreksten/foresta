@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui.sprite;
 
+import com.threeamigos.foresta.strumenti.Maiuscole;
 import com.threeamigos.foresta.artefatti.VistaArtefatto;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
@@ -538,12 +539,12 @@ public final class RivelazioneDellArtefatto {
 		Optional<String> nomeProprio = artefatto.getNomeProprio();
 		if (nomeProprio.isPresent()) {
 			aggiungi(righe, nomeProprio.get(), DoomdarkColorModel.Color.YELLOW, font, larghezzaMassima);
-			aggiungi(righe, maiuscola(artefatto.getNome()), DoomdarkColorModel.Color.WHITE, font, larghezzaMassima);
+			aggiungi(righe, Maiuscole.inizialeMaiuscola(artefatto.getNome()), DoomdarkColorModel.Color.WHITE, font, larghezzaMassima);
 		} else {
-			aggiungi(righe, maiuscola(artefatto.getNome()), DoomdarkColorModel.Color.YELLOW, font, larghezzaMassima);
+			aggiungi(righe, Maiuscole.inizialeMaiuscola(artefatto.getNome()), DoomdarkColorModel.Color.YELLOW, font, larghezzaMassima);
 		}
 		if (artefatto.getDescrizione() != null) {
-			aggiungi(righe, maiuscola(artefatto.getDescrizione()), DoomdarkColorModel.Color.LIGHT_GRAY, font, larghezzaMassima);
+			aggiungi(righe, Maiuscole.inizialeMaiuscola(artefatto.getDescrizione()), DoomdarkColorModel.Color.LIGHT_GRAY, font, larghezzaMassima);
 		}
 		StringBuilder dati = new StringBuilder(TestiDellaUI.get("LIVELLO_ARTEFATTO", artefatto.getLivello()));
 		if (artefatto.getRarita() != TipoRaritaArtefatto.COMUNE) {
@@ -590,7 +591,7 @@ public final class RivelazioneDellArtefatto {
 	}
 
 	private static String incantamento(IncantamentoMD incantamento) {
-		StringBuilder sb = new StringBuilder(maiuscola(incantamento.getNomeIncantamento()));
+		StringBuilder sb = new StringBuilder(Maiuscole.inizialeMaiuscola(incantamento.getNomeIncantamento()));
 		List<String> parti = new ArrayList<>();
 		if (incantamento.getDannoBonusFisso() != 0) {
 			parti.add(String.format(Locale.ROOT, "%+d", incantamento.getDannoBonusFisso()));
@@ -602,10 +603,6 @@ public final class RivelazioneDellArtefatto {
 			sb.append(' ').append(Lingue.corrente().elenco(parti));
 		}
 		return sb.toString();
-	}
-
-	private static String maiuscola(String testo) {
-		return testo.isEmpty() ? testo : Character.toUpperCase(testo.charAt(0)) + testo.substring(1);
 	}
 
 	private static float uscitaMorbida(float u) {

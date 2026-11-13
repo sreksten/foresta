@@ -25,7 +25,7 @@
 //   PLURALE=SI     facoltativo, solo se il nome è plurale ("gli Scarponi Chiodati"): da questo dipende il verbo di chi ne parla;
 //   SET=           facoltativo, la chiave del set di cui l'oggetto è un pezzo (vedi SET_LEGGENDARIO in fondo).
 //
-// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean), § (salvataggi) e ";" (separa i campi).
+// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GestoreGrammatiche), § (salvataggi) e ";" (separa i campi).
 
 OGGETTO_LEGGENDARIO
     [SPADA_LEGGENDARIA]

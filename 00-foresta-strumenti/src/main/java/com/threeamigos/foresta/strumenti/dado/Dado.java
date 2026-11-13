@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
  * I lanci importanti hanno anche un contesto ({@link ContestoLancio}): in modalità di prova un
  * {@link TruccatoreDiDadi} può decidere il risultato di un contesto, finché non si spegne il trucco. La coda dei test
  * ha la precedenza.
- * Il generatore di artefatti e le grammatiche (GrammarBean) usano direttamente {@link #sorgente()}: seguono il seme
+ * Il generatore di artefatti e le grammatiche (GestoreGrammatiche) usano direttamente {@link #sorgente()}: seguono il seme
  * ma non consumano i lanci truccati, che restano per le decisioni.
  *
  * @author Stefano Reksten

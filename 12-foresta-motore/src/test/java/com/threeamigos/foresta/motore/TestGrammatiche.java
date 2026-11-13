@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.testi.GrammarBean;
+import com.threeamigos.foresta.testi.GestoreGrammatiche;
 
 /**
  *
@@ -10,18 +10,18 @@ abstract class TestGrammatiche {
 
     private static final int MAX_LINE_LENGTH = 120;
 
-    protected static void printProductionsNoNewline(GrammarBean gBean) {
+    protected static void printProductionsNoNewline(GestoreGrammatiche gBean) {
         for (int i = 0; i < 10; i++) {
-            for (String s : gBean.produce()) {
+            for (String s : gBean.produci()) {
                 for (String line : s.replace("\\n", "\n").split("\n", -1)) {
                     System.out.println(line);
                 }
             }
         }
     }
-    protected static void printProductions(GrammarBean gBean) {
+    protected static void printProductions(GestoreGrammatiche gBean) {
         for (int i = 0; i < 5; i++) {
-            for (String s : gBean.produce()) {
+            for (String s : gBean.produci()) {
                 for (String line : s.replace("\\n", "\n").split("\n", -1)) {
                     printWrapped(line);
                 }
@@ -30,9 +30,9 @@ abstract class TestGrammatiche {
         }
     }
 
-    protected static void printProductions(GrammarBean gBean, String rootProduction) {
+    protected static void printProductions(GestoreGrammatiche gBean, String rootProduction) {
         for (int i = 0; i < 5; i++) {
-            for (String s : gBean.produce(rootProduction)) {
+            for (String s : gBean.produci(rootProduction)) {
                 for (String line : s.replace("\\n", "\n").split("\n", -1)) {
                     printWrapped(line);
                 }

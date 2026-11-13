@@ -9,14 +9,15 @@ import java.util.function.Supplier;
  */
 public final class GrammaticaPigra {
 
-	private final Supplier<GrammarBean> caricamento;
-	// Una per lingua: se la lingua cambia se ne carica un'altra, e al ritorno si ritrova la prima
-	private final java.util.concurrent.ConcurrentMap<String, GrammarBean> perLingua = new java.util.concurrent.ConcurrentHashMap<>();
+	private final Supplier<GestoreGrammatiche> caricamento;
+	// Una per lingua: se la lingua cambia se ne carica un'altra, e al ritorno si ritrova la prima. È una mappa "concurrent"
+	// perché get() la legge senza lucchetto, mentre carica() la scrive con il lucchetto
+	private final java.util.concurrent.ConcurrentMap<String, GestoreGrammatiche> perLingua = new java.util.concurrent.ConcurrentHashMap<>();
 
 	/**
 	 * @param caricamento come si carica la grammatica; può sollevare una {@link GrammaticaNonValidaException}
 	 */
-	public GrammaticaPigra(Supplier<GrammarBean> caricamento) {
+	public GrammaticaPigra(Supplier<GestoreGrammatiche> caricamento) {
 		this.caricamento = caricamento;
 	}
 
@@ -32,15 +33,23 @@ public final class GrammaticaPigra {
 	 *
 	 * @throws GrammaticaNonValidaException se non si può caricare
 	 */
-	public GrammarBean get() {
-		GrammarBean corrente = perLingua.get(Testi.getLingua());
+	public GestoreGrammatiche get() {
+		GestoreGrammatiche corrente = perLingua.get(Testi.getLingua());
 		return corrente != null ? corrente : carica();
 	}
 
+	/**
+	 * La prima riga di testo prodotta da quella produzione, senza spazi ai bordi: è quel che chiede quasi sempre chi usa
+	 * una grammatica per un nome o una frase.
+	 */
+	public String riga(String produzione) {
+		return get().produci(produzione).get(0).trim();
+	}
+
 	// Se due thread arrivano insieme, il secondo trova già la grammatica del primo
-	synchronized GrammarBean carica() {
+	synchronized GestoreGrammatiche carica() {
 		String lingua = Testi.getLingua();
-		GrammarBean grammatica = perLingua.get(lingua);
+		GestoreGrammatiche grammatica = perLingua.get(lingua);
 		if (grammatica == null) {
 			grammatica = caricamento.get();
 			perLingua.put(lingua, grammatica);

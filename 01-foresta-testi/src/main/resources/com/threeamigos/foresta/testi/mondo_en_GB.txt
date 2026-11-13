@@ -2,7 +2,7 @@
 // mondo.txt, the Italian base. Used by ProduttoreDiFrasiDelMondoCasuale and, with #include, by the grammars that need a shared
 // formula (for example the one an innkeeper uses to say his name).
 //
-// Characters not to use in the texts: [ ] { } | " (GrammarBean syntax).
+// Characters not to use in the texts: [ ] { } | " (GestoreGrammatiche syntax).
 
 // The hero introduces himself to the hermit (introductory intermezzo). NOME_EROE is passed by whoever produces (addFixedProduction).
 PRESENTAZIONE_EROE

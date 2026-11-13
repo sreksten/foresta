@@ -2,7 +2,7 @@
 // il tipo di danno dell'INCANTAMENTO); si traducono NOME, BREVE, DESCRIZIONE, il nome dell'incantamento e le LEGGENDA. Il formato dei
 // campi è descritto in leggendari.txt.
 //
-// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean), § (salvataggi) e ";" (separa i campi).
+// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GestoreGrammatiche), § (salvataggi) e ";" (separa i campi).
 
 OGGETTO_LEGGENDARIO
     [SPADA_LEGGENDARIA]

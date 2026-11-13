@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.incarichi;
 
+import com.threeamigos.foresta.strumenti.Maiuscole;
 import com.threeamigos.foresta.missioni.InSorteggio;
 import com.threeamigos.foresta.statistiche.Statistiche;
 import com.threeamigos.foresta.mappa.Foresta;
@@ -297,7 +298,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi implements InSorteg
 			return "";
 		}
 		String nome = citta.name().substring(PREFISSO_CITTA.length()).toLowerCase(Locale.ROOT);
-		return Character.toUpperCase(nome.charAt(0)) + nome.substring(1);
+		return Maiuscole.inizialeMaiuscola(nome);
 	}
 
 	@Override

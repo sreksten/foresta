@@ -29,7 +29,7 @@ public final class ProduttoreDiLocandeCasuale {
 	 */
 	public static String reazioneLocandiere() {
 		// Niente reset: REAZIONE_LOCANDIERE non usa produzioni monouso, non si esaurisce
-		return LOCANDE.get().produce("REAZIONE_LOCANDIERE").get(0);
+		return LOCANDE.get().produci("REAZIONE_LOCANDIERE").get(0);
 	}
 
 	/**
@@ -39,7 +39,7 @@ public final class ProduttoreDiLocandeCasuale {
 	 * @param identificativoLocanda l'identificativo della locanda: si pesca da {@code NOTIZIE_<identificativo>}
 	 */
 	public static String notiziaGrezza(String identificativoLocanda) {
-		return LOCANDE.get().produce("NOTIZIE_" + identificativoLocanda).get(0);
+		return LOCANDE.get().produci("NOTIZIE_" + identificativoLocanda).get(0);
 	}
 
 	/**
@@ -57,12 +57,12 @@ public final class ProduttoreDiLocandeCasuale {
 	}
 
 	// I dati da una grammatica data: serve a provare le righe malformate, che la grammatica del gioco non ha
-	static List<DatiLocanda> getDatiLocanda(int quantita, GrammarBean locande) {
+	static List<DatiLocanda> getDatiLocanda(int quantita, GestoreGrammatiche locande) {
 		List<DatiLocanda> datiLocanda = new ArrayList<>();
 		for (int i = 0; i < quantita; i++) {
-			List<String> produzioni = locande.produce();
+			List<String> produzioni = locande.produci();
 			if (produzioni.size() > 1) {
-				throw new IllegalArgumentException("La grammatica produce più di una riga di produzione per " + locande.getRootNode());
+				throw new IllegalArgumentException("La grammatica produce più di una riga di produzione per " + locande.getRadice());
 			}
 			// Con -1 i campi finali vuoti restano (una locanda senza dialogo o senza recensione)
 			String[] token = produzioni.get(0).split("/", -1);
@@ -95,8 +95,8 @@ public final class ProduttoreDiLocandeCasuale {
 	/**
 	 * Azzera le liste esauribili della grammatica (vedi {@link ProduttoriDiTesti#resetProduzioni()}).
 	 */
-	static void reset() {
-		LOCANDE.get().reset();
+	static void ripristina() {
+		LOCANDE.get().ripristina();
 	}
 
 	/**

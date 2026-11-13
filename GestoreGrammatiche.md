@@ -1,6 +1,6 @@
-# GrammarBean — Manuale d'uso
+# GestoreGrammatiche — Manuale d'uso
 
-`GrammarBean` legge un file di grammatica testuale e lo usa per **generare testo casuale**
+`GestoreGrammatiche` legge un file di grammatica testuale e lo usa per **generare testo casuale**
 espandendo ricorsivamente dei riferimenti fra produzioni. È il motore dietro `fiabe.txt`,
 `oroscopo.txt`, `artefatti2.txt` e le altre grammatiche del gioco.
 
@@ -38,7 +38,7 @@ sperimentalmente sulla versione corrente.
 Una grammatica è un insieme di **produzioni**. Ogni produzione ha un nome e una lista di
 **alternative** (i "figli"). Generare testo significa:
 
-1. partire dalla produzione radice (`rootNode`);
+1. partire dalla produzione radice (`radice`);
 2. scegliere una delle sue alternative (casualmente, con pesi — §5);
 3. sostituire ogni riferimento `[Nome]` trovato nel testo scelto con una alternativa di
    `Nome`, scelta e a sua volta espansa allo stesso modo;
@@ -64,28 +64,28 @@ che la referenziava. Questo serve a rendere usabili le alternative volutamente v
 
 ```java
 // Da stringa, senza post-produzione
-new GrammarBean(String grammatica)
+new GestoreGrammatiche(String grammatica)
 
 // Da stringa, con post-produzione (può essere null)
-new GrammarBean(String grammatica, String postProduzione)
+new GestoreGrammatiche(String grammatica, String postProduzione)
 
 // Da stream (l'uso tipico nel progetto); postProduction può essere null
-new GrammarBean(InputStream grammatica, InputStream postProduzione)
+new GestoreGrammatiche(InputStream grammatica, InputStream postProduzione)
 
 // Da stream, con una grammatica che include altri file con #include (§4.11)
-new GrammarBean(InputStream grammatica, InputStream postProduzione, GrammarBean.IncludeResolver risolutore)
+new GestoreGrammatiche(InputStream grammatica, InputStream postProduzione, GestoreGrammatiche.IncludeResolver risolutore)
 
 // Da risorsa del classpath, con gli #include risolti nella cartella della risorsa (§4.11)
-GrammarBean.fromResource(Class<?> ancora, String risorsaGrammatica, String risorsaPostProduzione)
+GestoreGrammatiche.fromResource(Class<?> ancora, String risorsaGrammatica, String risorsaPostProduzione)
 ```
 
-`IncludeResolver` è l'interfaccia con un metodo, `InputStream open(String percorso)`, che apre il testo di un
-file incluso (o restituisce `null` se non esiste), e un metodo facoltativo, `String identity(String percorso)`, che dà un
-nome unico al file (serve per `#include_static`, §4.12; di default è `null`: il risolutore non le supporta). `fromResource` ne costruisce uno che legge dal classpath, nella
+`RisolutoreDelleInclusioni` è l'interfaccia con un metodo, `InputStream apri(String percorso)`, che apre il testo di un
+file incluso (o restituisce `null` se non esiste), e un metodo facoltativo, `String identita(String percorso)`, che dà un
+nome unico al file (serve per `#include_static`, §4.12; di default è `null`: il risolutore non le supporta). `daRisorsa` ne costruisce uno che legge dal classpath, nella
 cartella della risorsa: per i file del progetto è il modo normale di caricare una grammatica che usa `#include`.
 I costruttori senza risolutore accettano solo grammatiche senza `#include`.
 
-Tutti dichiarano `throws InvalidGrammarException, IOException`. **Tutta la validazione e
+Tutti dichiarano `throws GrammaticaMalformataException, IOException`. **Tutta la validazione e
 tutto il calcolo dei pesi avvengono nel costruttore**: se la grammatica è accettata, i pesi
 sono già fissati e non cambiano più per tutta la vita dell'oggetto.
 
@@ -93,7 +93,7 @@ Uso tipico nel progetto — è così che `CaricatoreDiGrammatiche` carica `fiabe
 `oroscopo.txt`, le due grammatiche usate dal gioco:
 
 ```java
-GrammarBean bean = new GrammarBean(
+GestoreGrammatiche bean = new GestoreGrammatiche(
         MiaClasse.class.getResourceAsStream("/com/threeamigos/foresta/motore/artefatti.txt"),
         MiaClasse.class.getResourceAsStream("/com/threeamigos/foresta/testi/preposizioni_articolate_pp.txt"));
 ```
@@ -102,33 +102,33 @@ GrammarBean bean = new GrammarBean(
 
 | Metodo | Descrizione |
 | :--- | :--- |
-| `List<String> produce()` | Genera partendo da `rootNode`. Al termine **svuota** la cache delle produzioni fissate globali. |
-| `List<String> produce(String rootNode)` | Genera partendo dalla produzione indicata, senza cambiare `rootNode`. Come `produce()`, svuota la cache globale al termine. |
-| `void reset()` | Ripristina le produzioni one-shot consumate e svuota la cache globale. Segna il confine fra una serie di generazioni e la successiva: **quando** chiamarlo è una scelta, vedi §4.7. |
-| `boolean canProduce(String)` | Se la produzione può ancora produrre in questo ciclo: esiste e ha alternative. Diventa falso quando una produzione one-shot si esaurisce, e con lei quelle che la usavano soltanto (la cascata, §4.7), fino al prossimo `reset()`. Serve a sapere che una serie senza ripetizioni è finita prima che `produce()` lanci l'eccezione. |
-| `void setRootNode(String)` | Cambia la radice. Lancia `IllegalArgumentException` se il nome non è una produzione definita. |
-| `String getRootNode()` | La radice corrente. Di default è **la prima produzione dichiarata nel file**. |
-| `void setProductionMode(TipoModalitaProduzioneTesti)` | `CASUALE` (default), `PRIMO`, `ULTIMO`. |
-| `TipoModalitaProduzioneTesti getProductionMode()` | Il modo corrente. |
-| `static void resetStaticProductions()` | Restituisce tutte le sezioni statiche (§4.12): ciò che è stato consumato torna disponibile, e ogni grammatica che ne include una ricostruisce le proprie produzioni al prossimo uso. Da chiamare a inizio partita. |
-| `void addFixedProduction(String nome, String valore)` | Pre-imposta il valore che un riferimento `[*nome]` restituirà, prima di chiamare `produce()`. |
+| `List<String> produci()` | Genera partendo da `radice`. Al termine **svuota** la cache delle produzioni fissate globali. |
+| `List<String> produci(String radice)` | Genera partendo dalla produzione indicata, senza cambiare `radice`. Come `produci()`, svuota la cache globale al termine. |
+| `void ripristina()` | Ripristina le produzioni one-shot consumate e svuota la cache globale. Segna il confine fra una serie di generazioni e la successiva: **quando** chiamarlo è una scelta, vedi §4.7. |
+| `boolean puoProdurre(String)` | Se la produzione può ancora produrre in questo ciclo: esiste e ha alternative. Diventa falso quando una produzione one-shot si esaurisce, e con lei quelle che la usavano soltanto (la cascata, §4.7), fino al prossimo `ripristina()`. Serve a sapere che una serie senza ripetizioni è finita prima che `produci()` lanci l'eccezione. |
+| `void setRadice(String)` | Cambia la radice. Lancia `IllegalArgumentException` se il nome non è una produzione definita. |
+| `String getRadice()` | La radice corrente. Di default è **la prima produzione dichiarata nel file**. |
+| `void setModalita(TipoModalitaProduzioneTesti)` | `CASUALE` (default), `PRIMO`, `ULTIMO`. |
+| `TipoModalitaProduzioneTesti getModalita()` | Il modo corrente. |
+| `static void ripristinaLeSezioniStatiche()` | Restituisce tutte le sezioni statiche (§4.12): ciò che è stato consumato torna disponibile, e ogni grammatica che ne include una ricostruisce le proprie produzioni al prossimo uso. Da chiamare a inizio partita. |
+| `void fissaProduzione(String nome, String valore)` | Pre-imposta il valore che un riferimento `[*nome]` restituirà, prima di chiamare `produci()`. |
 
-`produceImpl(String)` è package-private: espone l'espansione di un token già racchiuso in
+`produciDalNodo(String)` è package-private: espone l'espansione di un token già racchiuso in
 parentesi e l'ordine interno delle fasi, quindi non fa parte della superficie pubblica.
 
 ### Un'istanza per thread
 
-`GrammarBean` **non è thread-safe** e va confinato in un solo thread. Il punto che inganna è
-che `produce()` sembra una lettura e non lo è: consuma le alternative one-shot, riempie e poi
+`GestoreGrammatiche` **non è thread-safe** e va confinato in un solo thread. Il punto che inganna è
+che `produci()` sembra una lettura e non lo è: consuma le alternative one-shot, riempie e poi
 svuota la cache delle produzioni fissate globali, e pesca da un `Random` condiviso. Due thread
 sulla stessa istanza possono perdere i valori fissati l'uno dell'altro, consumare due volte la
 stessa alternativa one-shot, o lasciare la mappa delle produzioni potata a metà. Anche
-`reset()`, `addFixedProduction`, `setRootNode` e `setProductionMode` scrivono lo stesso stato.
+`ripristina()`, `fissaProduzione`, `setRadice` e `setModalita` scrivono lo stesso stato.
 
 Ciò che invece **è** condivisibile è il sorgente: tutto quello che viene analizzato al
 caricamento — le produzioni, i pesi già calcolati, le regole di post-produzione — non viene
 più riscritto dopo il costruttore. Quindi per generare testo da più thread si dà a ciascuno il
-**proprio** `GrammarBean` costruito dallo stesso file, invece di sincronizzare l'accesso a
+**proprio** `GestoreGrammatiche` costruito dallo stesso file, invece di sincronizzare l'accesso a
 un'istanza sola.
 
 
@@ -176,7 +176,7 @@ Un commento è una riga che inizia a colonna 0 con `//`, come in C e in Java: tu
 che inizia con `//` è invece un'alternativa con quel testo, e un `//` a metà riga è testo: non esistono commenti a fine
 riga. Righe vuote e commenti contano comunque nella numerazione dei messaggi d'errore.
 
-Una riga che inizia con `#` e non è una direttiva (`#include`, `#include_static`) è un errore (`Unknown directive`):
+Una riga che inizia con `#` e non è una direttiva (`#include`, `#include_static`) è un errore (`Unknown direttiva`):
 il `#` non è più un commento.
 
 ### Codifica dei caratteri
@@ -185,7 +185,7 @@ I file di grammatica e di post-produzione vanno scritti in **UTF-8**: è la codi
 le risorse del progetto, ed è quella che il `pom.xml` dichiara per la build
 (`project.build.sourceEncoding`).
 
-`GrammarBean` li decodifica indicando **UTF-8 esplicitamente**, non affidandosi al charset di
+`GestoreGrammatiche` li decodifica indicando **UTF-8 esplicitamente**, non affidandosi al charset di
 default della JVM, quindi le lettere accentate di una grammatica sopravvivono su qualunque
 piattaforma e con qualunque versione di Java. Lo stesso vale per una `String` passata ai
 costruttori testuali: viene codificata in UTF-8 prima di essere riletta.
@@ -218,7 +218,7 @@ costruttori testuali: viene codificata in UTF-8 prima di essere riletta.
 
 > **Nota sulla colonna "Risolto".** È la distinzione più importante da tenere a mente.
 > Tutto ciò che è risolto *al caricamento* è già stato trasformato e non esiste più quando
-> si genera; tutto ciò che è risolto *alla generazione* viene rivalutato ad ogni `produce()`.
+> si genera; tutto ciò che è risolto *alla generazione* viene rivalutato ad ogni `produci()`.
 > Vedi §7.
 
 ### 4.1 Riferimenti fra produzioni
@@ -238,7 +238,7 @@ estrazioni distinte.
 
 Servono quando lo stesso valore deve ricomparire identico più volte.
 
-- `[*Nome]` — **fissata globalmente**: la prima espansione dentro una chiamata a `produce()`
+- `[*Nome]` — **fissata globalmente**: la prima espansione dentro una chiamata a `produci()`
   viene messa in cache e riusata da *ogni* altra occorrenza, in qualunque punto del testo.
 - `[!Nome]` — **fissata localmente**: idem, ma la cache vale solo dentro lo stesso
   sottoalbero di produzione, quindi rami fratelli generati indipendentemente ottengono
@@ -308,6 +308,10 @@ autogenerate ricorsivamente.
 >
 > `{a|}` va bene: sono due opzioni, di cui una vuota (§4.5). `{}` no: è una sola opzione
 > vuota.
+
+> ⚠️ **Una graffa di chiusura senza apertura è un errore di caricamento.** `A } | B` è rifiutata
+> (il messaggio dice `'}' without a matching '{'`): per scrivere una graffa come testo la si mette
+> fra virgolette, `A "}" | B`.
 
 ### 4.5 Alternative vuote (elementi opzionali)
 
@@ -383,21 +387,21 @@ La cascata può quindi svuotare porzioni ampie della grammatica, e il sintomo fi
 `IllegalArgumentException: Production X is empty!` a una chiamata successiva — dove `X` può
 stare diversi livelli sopra il serbatoio che si è davvero prosciugato.
 
-#### Quando chiamare `reset()`, e quando non chiamarlo
+#### Quando chiamare `ripristina()`, e quando non chiamarlo
 
-Le produzioni one-shot rendono **stateful** una sequenza di `produce()`, e chi chiama decide
-con `reset()` dove finisce una sequenza e dove comincia la prossima. Non esiste una politica
+Le produzioni one-shot rendono **stateful** una sequenza di `produci()`, e chi chiama decide
+con `ripristina()` dove finisce una sequenza e dove comincia la prossima. Non esiste una politica
 giusta in assoluto, perché i due scopi possibili sono opposti:
 
-| Scopo | `reset()` | Perché |
+| Scopo | `ripristina()` | Perché |
 | :--- | :--- | :--- |
-| **Risultati indipendenti** — una fiaba per ogni richiesta (`ProduttoreDiFiabeCasuale.fiaba()`) | dopo **ogni** `produce()` | Ogni risultato deve pescare dall'insieme completo. Senza reset i serbatoi si svuotano di chiamata in chiamata: i risultati impoveriscono e alla fine la generazione fallisce. |
+| **Risultati indipendenti** — una fiaba per ogni richiesta (`ProduttoreDiFiabeCasuale.fiaba()`) | dopo **ogni** `produci()` | Ogni risultato deve pescare dall'insieme completo. Senza reset i serbatoi si svuotano di chiamata in chiamata: i risultati impoveriscono e alla fine la generazione fallisce. |
 | **Una serie deliberatamente senza ripetizioni** — cinque personaggi tutti diversi | **solo all'inizio** della serie | È esattamente ciò a cui serve il `$`. Resettare fra un elemento e l'altro lo annullerebbe, e i personaggi potrebbero ripetersi. |
 
 Nel secondo caso la **lunghezza della serie è limitata dal serbatoio one-shot più piccolo** che
 attraversa: superarla non dà un risultato scadente, dà l'eccezione di cui sopra. Se serve una
 serie più lunga, il serbatoio va allargato. Per sapere prima che la serie è finita c'è
-`canProduce(nome)`: diventa falso quando la produzione, o tutto ciò che usava, si è esaurito.
+`puoProdurre(nome)`: diventa falso quando la produzione, o tutto ciò che usava, si è esaurito.
 
 ```java
 bean.reset();
@@ -525,7 +529,7 @@ anche in file diversi, è `Production X is repeated`, e i riferimenti `[Nome]` s
   cartella, non in quella della grammatica principale.
 - Separatore sempre `/`. Non sono ammessi percorsi assoluti, `.`, `..` o segmenti vuoti: non si esce dalla cartella
   della grammatica principale, e per questo non occorre fidarsi del contenuto delle direttive.
-- Con `fromResource` la cartella è quella della risorsa principale (`/com/.../motore/`). Con un `IncludeResolver` proprio
+- Con `daRisorsa` la cartella è quella della risorsa principale (`/com/.../motore/`). Con un `RisolutoreDelleInclusioni` proprio
   il percorso che il risolutore riceve è già completo, relativo alla cartella della principale (per esempio
   `cognomi/comuni.txt`). Una grammatica con `#include` costruita senza risolutore è un errore al caricamento.
 
@@ -537,25 +541,25 @@ anche in file diversi, è `Production X is repeated`, e i riferimenti `[Nome]` s
   un errore (`Too many nested #include`).
 - **La radice di default** è la prima produzione del testo *già espanso*: se `#include` sta in cima al file, la prima
   produzione è quella del file incluso. Per tenere la radice nella grammatica principale si mette l'`#include` dopo la
-  radice (come nell'esempio) o si chiama `setRootNode`.
+  radice (come nell'esempio) o si chiama `setRadice`.
 - **Le continuazioni di riga** (`\`, §4.9) non attraversano i file: una riga con `\` finale non può essere l'ultima
   di un file incluso, e una riga che ne continua un'altra non è mai una direttiva (resta testo, e non viene aperto
   nessun file).
-- **Ogni `GrammarBean` è indipendente**, anche se due includono lo **stesso identico file**: ciascuna ne ha la propria
+- **Ogni `GestoreGrammatiche` è indipendente**, anche se due includono lo **stesso identico file**: ciascuna ne ha la propria
   copia, caricata e analizzata per conto suo (non c'è stato statico nella classe). Quindi le produzioni one-shot
-  (`NOME$`, §4.7) si consumano per grammatica e si azzerano con il `reset()` di *quella* grammatica; le produzioni
-  fissate (`[*Nome]`, `addFixedProduction`) e le variabili (`[chiave=valore]`) non passano da una all'altra. L'unica cosa
+  (`NOME$`, §4.7) si consumano per grammatica e si azzerano con il `ripristina()` di *quella* grammatica; le produzioni
+  fissate (`[*Nome]`, `fissaProduzione`) e le variabili (`[chiave=valore]`) non passano da una all'altra. L'unica cosa
   condivisa è la sorgente del caso, `Dado.sorgente()` (§2): un nome pescato in una grammatica sposta la sequenza
   casuale anche per le altre, ma non le toglie nulla.
   **Conseguenza:** un nome già uscito in `locande.txt` non è escluso in `fiabe.txt` o `missioni.txt`, anche se tutte e
   tre includono la stessa lista one-shot con `#include`. Per condividere il consumo *fra* grammatiche si include il file
   come sezione statica con `#include_static` (§4.12).
 - Un `#` seguito da altro (`# include` con lo spazio, `#includes`) non è una direttiva: è un errore
-  (`Unknown directive`). `#include` attaccato è una direttiva, e se è scritta male (senza `<...>`, con le
+  (`Unknown direttiva`). `#include` attaccato è una direttiva, e se è scritta male (senza `<...>`, con le
   virgolette, con il nome vuoto) è un errore.
 - Il file di post-produzione (§6) non ha `#include`.
 - Gli errori di caricamento indicano **file e riga di provenienza**: `Line 120 (nomi.txt:12): …`; per le righe della
-  grammatica principale `(source:4)`. Senza `#include` i messaggi restano `Line N`.
+  grammatica principale `(sorgenteDerivata:4)`. Senza `#include` i messaggi restano `Line N`.
 
 ### 4.12 Sezioni statiche: `#include_static <file>`
 
@@ -574,13 +578,13 @@ RADICE
 **Cosa può includere e chi lo usa**
 
 - Il nome del file segue le regole di §4.11 (relativo alla cartella, sottocartelle, niente `..`). Serve un risolutore che
-  identifichi i file: `fromResource` lo fa (l'identità è l'URL della risorsa, quindi due grammatiche della stessa
-  cartella condividono la stessa sezione); con un `IncludeResolver` proprio bisogna implementare `identity`,
+  identifichi i file: `daRisorsa` lo fa (l'identità è l'URL della risorsa, quindi due grammatiche della stessa
+  cartella condividono la stessa sezione); con un `RisolutoreDelleInclusioni` proprio bisogna implementare `identita`,
   altrimenti è un errore.
 - Il file statico è **autonomo**: è analizzato da solo, quindi non può citare produzioni della grammatica che lo
   include. Non può contenere `#include_static`, ma può avere `#include` normali, relativi alla sua cartella. Le sue
   produzioni si citano in ogni forma (`[Nome]`, `[*Nome]`, `[!Nome]`, `[Nome? | ripiego]`) e si possono usare come
-  radice (`produce("NOME")`, `setRootNode`).
+  radice (`produci("NOME")`, `setRadice`).
 - Un nome non può essere definito sia nella grammatica sia in una sezione che include, né da due sezioni incluse dalla
   stessa grammatica: è un errore al caricamento.
 
@@ -590,20 +594,20 @@ RADICE
   valore uscito attraverso una non esce più da nessun'altra.
 - Quando si **esaurisce**, la produzione sparisce, con le produzioni della sezione che dipendevano da lei e, in **ogni**
   grammatica che includa la sezione, con le alternative che la citano (la stessa potatura a cascata di una one-shot
-  normale, §4.7). Le altre grammatiche lo scoprono al primo uso dopo: `canProduce` e `produce` ne tengono conto.
+  normale, §4.7). Le altre grammatiche lo scoprono al primo uso dopo: `puoProdurre` e `produci` ne tengono conto.
 - **Non c'è ricarica automatica**: una produzione esaurita resta esaurita. Se servono più valori, il file deve
-  contenerne abbastanza; se una radice si svuota, `produce()` lancia `IllegalArgumentException`
+  contenerne abbastanza; se una radice si svuota, `produci()` lancia `IllegalArgumentException`
   (`Production X is empty!`), come per una one-shot locale.
 - Le produzioni che non sono one-shot sono condivise ma non si consumano.
-- Le produzioni fissate (`[*Nome]`, `addFixedProduction`) e le variabili restano **di ogni grammatica**: non passano
+- Le produzioni fissate (`[*Nome]`, `fissaProduzione`) e le variabili restano **di ogni grammatica**: non passano
   dall'una all'altra.
 
 **Ripristino**
 
-- `GrammarBean.resetStaticProductions()` (statico) restituisce tutte le sezioni statiche. Ogni grammatica che ne include
+- `GestoreGrammatiche.ripristinaLeSezioniStatiche()` (statico) restituisce tutte le sezioni statiche. Ogni grammatica che ne include
   una, al prossimo uso, ricostruisce anche le proprie produzioni (comprese le sue one-shot locali), così non resta
   potato nulla di ciò che è tornato disponibile. Va chiamato a inizio partita.
-- Il `reset()` di una singola grammatica **non** tocca le sezioni statiche: ripristina solo la parte sua, e pota di nuovo
+- Il `ripristina()` di una singola grammatica **non** tocca le sezioni statiche: ripristina solo la parte sua, e pota di nuovo
   ciò che nelle sezioni è ancora esaurito.
 
 **Pesi e thread**
@@ -611,11 +615,30 @@ RADICE
 - I pesi di una sezione sono quelli calcolati quando il file è stato analizzato. Per il boost dei discendenti (§5), le
   alternative della grammatica che citano una produzione della sezione contano il suo peso complessivo.
 - Un solo blocco protegge tutte le sezioni statiche: grammatiche diverse, in thread diversi, possono pescare dallo stesso
-  pool senza che un valore esca due volte. Una singola `GrammarBean` si usa comunque da un thread solo (§2).
+  pool senza che un valore esca due volte. Una singola `GestoreGrammatiche` si usa comunque da un thread solo (§2).
 - Le sezioni statiche sono stato globale del programma. Nei test che dipendono da cosa è già uscito, si chiama
-  `resetStaticProductions()` all'inizio (e alla fine).
+  `ripristinaLeSezioniStatiche()` all'inizio (e alla fine).
 - Gli errori dentro il file statico dicono dove è la direttiva e quale sezione: `Line 3 (source:3): In the static section
   nomi.txt: …`.
+
+### 4.13 Produzioni derivate: `NOME = ALTRA ALTRA2`
+
+Un'intestazione con `=` dichiara una produzione che, oltre alle alternative scritte sotto di lei (se ne ha), prende
+tutte quelle delle produzioni nominate dopo l'uguale:
+
+```
+ARMA = SPADA ASCIA
+	un bastone
+SPADA
+	una spada corta | una spada lunga
+ASCIA
+	un'ascia
+```
+
+`[ARMA]` sceglie fra il bastone, le due spade e l'ascia. Le derivazioni possono fare catena (`A = B`, `B = C`): `A`
+riceve anche le alternative di `C`, in qualunque ordine siano scritte le intestazioni. Sono errori di caricamento una
+produzione che deriva da sé (`A = A`), una sorgente ripetuta (`A = B B`), una sorgente che non esiste e un ciclo
+(`A = B`, `B = A`, che il messaggio descrive come `A -> B -> A`). Oggi nessuna grammatica del gioco usa le derivate.
 
 ## 5. Il sistema dei pesi
 
@@ -664,7 +687,7 @@ peso_effettivo(alternativa) = peso_dichiarato + 0.33 × Σ peso_aggregato(produz
 peso_aggregato(produzione) = Σ peso_effettivo(sue alternative)
 ```
 
-dove `0.33` è la costante `SCALE_FACTOR`. Il calcolo è ricorsivo dal basso: quando si
+dove `0.33` è la costante `FATTORE_DI_SCALA`. Il calcolo è ricorsivo dal basso: quando si
 somma il peso aggregato di una produzione referenziata, quella produzione ha già ricevuto
 il proprio boost.
 
@@ -682,7 +705,7 @@ Dettagli:
 - `[chiave=valore]` e `[#chiave]` **non** contribuiscono (non referenziano produzioni), ma
   il *valore* di un'assegnazione sì: `[k=[ALTRA]]` conta `ALTRA`.
 - Il boost è **permanente**: calcolato nel costruttore, congelato per tutta la vita
-  dell'oggetto. `reset()` non lo ricalcola.
+  dell'oggetto. `ripristina()` non lo ricalcola.
 
 #### Esempio: ricchezza
 
@@ -758,7 +781,7 @@ alternative il livello 1 è scivolato dal 12,7% al 6,0% senza che nessuno toccas
 
 ### 5.4 Come calibrare i pesi
 
-Poiché `peso_effettivo = peso_dichiarato + boost`, e il boost è fisso e calcolabile, si
+Poiché `peso_effettivo = peso_dichiarato + aumento`, e il boost è fisso e calcolabile, si
 ricava il peso da dichiarare:
 
 ```
@@ -771,7 +794,7 @@ peso_dichiarato_i = peso_effettivo_desiderato_i − boost_i
 2. Scegli le proporzioni desiderate e scalale in modo che **ogni** `peso_effettivo_i` sia
    `> boost_i` (altrimenti servirebbe un peso dichiarato ≤ 0, che è rifiutato).
 3. Sottrai.
-4. **Verifica misurando**: un ciclo di ~100.000 `produce()` con conteggio delle frequenze.
+4. **Verifica misurando**: un ciclo di ~100.000 `produci()` con conteggio delle frequenze.
    Il passo 4 non è opzionale — a mano è facile sbagliare un aggregato.
 
 Applicato ad `artefatti.txt` per ottenere 60 / 25 / 10 / 5 — i pesi si mettono sulle opzioni
@@ -837,7 +860,7 @@ aggregato 15:
 | `[^60]` | 30,3% |
 | `[^1000]` | 25,2% |
 
-La probabilità di continuare tende a `SCALE_FACTOR / (1 + SCALE_FACTOR)` = **24,8%**, e sotto
+La probabilità di continuare tende a `FATTORE_DI_SCALA / (1 + FATTORE_DI_SCALA)` = **24,8%**, e sotto
 quella soglia non scende per nessun peso. Per limitare davvero la lunghezza di una lista serve
 strutturarla senza ricorsione (alternative esplicite per 0, 1, 2 elementi).
 
@@ -845,8 +868,8 @@ strutturarla senza ricorsione (alternative esplicite per 0, 1, 2 elementi).
 
 ## 6. Il file di post-produzione
 
-File opzionale, una regola per riga, formato `pre:post`. Ogni occorrenza di `pre` nel testo
-finale è sostituita con `post`. Serve a rammendare l'italiano prodotto per concatenazione
+File opzionale, una regola per riga, formato `prima:dopo`. Ogni occorrenza di `prima` nel testo
+finale è sostituita con `dopo`. Serve a rammendare l'italiano prodotto per concatenazione
 meccanica.
 
 `preposizioni_articolate_pp.txt`:
@@ -864,29 +887,29 @@ Note pratiche:
   grammatica — una regola come `[,:[` ha bisogno di una spiegazione accanto molto più di una
   riga di grammatica. Commenti e righe vuote **contano** comunque nella numerazione riportata
   dai messaggi d'errore, che punta quindi alla riga vera del file. Solo un `//` a inizio riga
-  apre un commento: uno dentro una regola è testo. Di conseguenza un `pre` che inizia con `//`
+  apre un commento: uno dentro una regola è testo. Di conseguenza un `prima` che inizia con `//`
   non è esprimibile, come nel file di grammatica.
 - Una riga di soli spazi è considerata vuota. Qui è diverso dal file di grammatica, dove una
-  riga indentata e vuota è un'alternativa vuota significativa: in una regola `pre:post` non
+  riga indentata e vuota è un'alternativa vuota significativa: in una regola `prima:dopo` non
   potrebbe esprimere nulla.
-- Lo split è sul **primo** `:`, quindi `post` può contenere `:`.
+- Lo split è sul **primo** `:`, quindi `dopo` può contenere `:`.
 - Gli **spazi sono significativi** e sono lo strumento con cui si delimitano le parole:
-  `pre = " a il "` con spazi ai lati evita di colpire "…ta il…".
-- `pre` e `post` non possono essere vuoti o solo spazi (errore al caricamento).
+  `prima = " a il "` con spazi ai lati evita di colpire "…ta il…".
+- `prima` e `dopo` non possono essere vuoti o solo spazi (errore al caricamento).
 - Una riga senza `:` è un errore.
-- `post` **non può contenere `pre`** alla lettera: è un errore al caricamento
-  (`Post production '…' contains its own pre production '…'`). Es. `a il:a il grande` è
-  rifiutato. Il motivo è che ogni regola viene riapplicata finché il suo `pre` compare
-  ancora, riscandendo il testo dall'inizio: una regola che riscrive il proprio `pre` non
+- `dopo` **non può contenere `prima`** alla lettera: è un errore al caricamento
+  (`Post produzione '…' contains its proprie prima produzione '…'`). Es. `a il:a il grande` è
+  rifiutato. Il motivo è che ogni regola viene riapplicata finché il suo `prima` compare
+  ancora, riscandendo il testo dall'inizio: una regola che riscrive il proprio `prima` non
   terminerebbe mai.
 - Ogni regola è applicata **ripetutamente**, quindi anche le occorrenze che si
-  **sovrappongono** vengono tutte riscritte. Con `pre = " a il "` (spazio iniziale e finale,
+  **sovrappongono** vengono tutte riscritte. Con `prima = " a il "` (spazio iniziale e finale,
   quindi sovrapponibile con sé stesso), `vai a il a il castello` diventa
   `vai al al castello`.
 - Le regole sono applicate **nell'ordine in cui compaiono nel file**. Conta quando due regole
   possono agganciare lo stesso tratto di testo: la prima elencata lo consuma. Con
   `abc:Y` prima di `ab:X`, il testo `abc` diventa `Y`; con l'ordine opposto diventa `Xc`. Un
-  `pre` più lungo va quindi elencato prima di un `pre` che ne è un prefisso.
+  `prima` più lungo va quindi elencato prima di un `prima` che ne è un prefisso.
 
 **Dopo** tutte le sostituzioni, sempre e comunque:
 
@@ -909,15 +932,15 @@ spiega la maggior parte dei comportamenti sorprendenti.
 | 1 | Lettura riga per riga | Continuazioni `\` unite, commenti e righe vuote scartati |
 | 2 | Header e figli | Produzioni registrate, `$` staccato, prima produzione = radice |
 | 3 | Split su `\|` | Consapevole di `{...}`, `[...]` e `"..."` |
-| 4 | `parseWeight` | `[^N]` staccato e convertito in numero, rimosso dal testo |
-| 5 | `expandInlineAlternations` | `{...}` → produzioni `PROD_n`, virgolette rimosse |
-| 6 | `collectAssignedKeys` | Raccolta di tutte le chiavi `[chiave=…]` |
-| 7 | `checkProductionsValidity` | Ogni riferimento deve puntare a una produzione o a una chiave assegnata |
-| 8 | `adjustWeightsForDescendants` | **Boost dei pesi, congelato per sempre** |
-| 9 | Post-produzione | Regole `pre:post` caricate |
-| 10 | `reset()` | Copia di lavoro delle produzioni |
+| 4 | `leggiPeso` | `[^N]` staccato e convertito in numero, rimosso dal testo |
+| 5 | `espandiAlternativeInLinea` | `{...}` → produzioni `PROD_n`, virgolette rimosse |
+| 6 | `raccogliChiaviAssegnate` | Raccolta di tutte le chiavi `[chiave=…]` |
+| 7 | `controllaLeProduzioni` | Ogni riferimento deve puntare a una produzione o a una chiave assegnata |
+| 8 | `aumentaIPesiPerIDiscendenti` | **Boost dei pesi, congelato per sempre** |
+| 9 | Post-produzione | Regole `prima:dopo` caricate |
+| 10 | `ripristina()` | Copia di lavoro delle produzioni |
 
-### Ad ogni `produce()`
+### Ad ogni `produci()`
 
 | # | Fase | Effetto |
 | :-- | :--- | :--- |
@@ -927,7 +950,7 @@ spiega la maggior parte dei comportamenti sorprendenti.
 | 4 | Cache fissate | `[*…]` globale, `[!…]` per sottoalbero |
 | 5 | `^` | Capitalizzazione del valore risolto |
 | 6 | Trim | Ogni produzione restituisce testo trimmato |
-| 7 | `postProduce` | Sostituzioni + collasso spazi + spazi prima di punteggiatura |
+| 7 | `postProduci` | Sostituzioni + collasso spazi + spazi prima di punteggiatura |
 | 8 | Split righe | `List<String>` |
 
 Corollari utili:
@@ -935,7 +958,7 @@ Corollari utili:
 - Un `[^N]` scritto male non arriva mai a runtime: fallisce al caricamento.
 - Un `[#chiave]` usato prima dell'assegnazione **non** è intercettabile al caricamento.
 - Non serve ottimizzare i pesi "a runtime": sono già calcolati.
-- Cambiare `productionMode` non ricalcola nulla, ma disattiva l'uso dei pesi.
+- Cambiare `modalita` non ricalcola nulla, ma disattiva l'uso dei pesi.
 
 ---
 
@@ -1004,7 +1027,7 @@ for (int i = 0; i < 3; i++) {                   // al massimo 3: tante quante le
 }
 ```
 
-Nessun `reset()` **dentro** il ciclo: è quello che garantisce i tre personaggi distinti (§4.7).
+Nessun `ripristina()` **dentro** il ciclo: è quello che garantisce i tre personaggi distinti (§4.7).
 
 ### Accumulare più valori in una lista
 
@@ -1051,7 +1074,7 @@ RACCONTO_P_5
 ```
 
 `RACCONTO_P_2` assegna, `RACCONTO_P_5` legge. Il `?` rende la seconda lettura indipendente
-dall'ordine: funziona anche invocando `produce("RACCONTO_P_5")` da sola, o riordinando le
+dall'ordine: funziona anche invocando `produci("RACCONTO_P_5")` da sola, o riordinando le
 produzioni. **Non serve** dichiarare una produzione-segnaposto `EQUIPAGGIAMENTO` per far
 passare la validazione: basta che il nome sia assegnato da qualche parte (§4.10).
 
@@ -1085,40 +1108,45 @@ for (int i = 0; i < 100_000; i++) {
 
 ## 9. Errori e diagnostica
 
-### `InvalidGrammarException` (caricamento)
+**I messaggi d'errore sono in inglese, per scelta** (decisione del 2026-11-13). Il codice di `GestoreGrammatiche` è in
+italiano come il resto del progetto, ma i messaggi li legge soprattutto chi scrive o modifica una grammatica, e chi
+vuole cambiare le grammatiche della Foresta (anche per un'altra lingua) non è detto che sappia l'italiano: un messaggio
+in inglese lo capisce chiunque. Chi aggiunge un controllo scrive il messaggio in inglese, come gli altri.
+
+### `GrammaticaMalformataException` (caricamento)
 
 | Messaggio | Causa |
 | :--- | :--- |
 | `Production X is repeated.` | Nome di produzione duplicato |
-| `Missing parent production.` | Riga indentata senza header che la precede |
+| `Missing parent produzione.` | Riga indentata senza header che la precede |
 | `Malformed #include, expected #include <file>` | Direttiva senza `<...>`, con le virgolette o col nome vuoto (§4.11) |
-| `Invalid file name in #include: 'x' (…)` | Nome assoluto, con `..`, `.`, `\` o segmenti vuoti (§4.11) |
+| `Invalid file nome in #include: 'x' (…)` | Nome assoluto, con `..`, `.`, `\` o segmenti vuoti (§4.11) |
 | `Included file not found: x` | Il risolutore non trova il file (§4.11); il messaggio dice dove è la direttiva (`nomi.txt:3`) |
-| `#include cannot be resolved: the grammar was built without an IncludeResolver` | Grammatica con `#include` costruita senza risolutore (§4.11) |
+| `#include cannot be risolto: the grammatica was built without an RisolutoreDelleInclusioni` | Grammatica con `#include` costruita senza risolutore (§4.11) |
 | `Too many nested #include (more than 10)` | Include troppo annidati (§4.11) |
-| `Grammar resource not found: x` | `fromResource` non trova la risorsa della grammatica |
-| `Unknown directive: comments start with //, …` | Una riga che inizia con `#` e non è una direttiva (§3) |
-| `#include_static cannot be used inside a static section` | Una sezione statica include un'altra sezione statica (§4.12) |
-| `#include_static needs a resolver that identifies its files` | Il risolutore non dà un'`identity` ai file (§4.12) |
+| `Grammar resource not found: x` | `daRisorsa` non trova la risorsa della grammatica |
+| `Unknown direttiva: comments inizio with //, …` | Una riga che inizia con `#` e non è una direttiva (§3) |
+| `#include_static cannot be used inside a static sezione` | Una sezione statica include un'altra sezione statica (§4.12) |
+| `#include_static needs a risolutoreDellaSezione that identifies its files` | Il risolutore non dà un'`identita` ai file (§4.12) |
 | `Production X is defined by two static sections (…)` | Due sezioni incluse dalla stessa grammatica definiscono lo stesso nome (§4.12) |
-| `Production X is repeated: it is also defined by the static section …` | La grammatica definisce un nome già definito da una sua sezione statica (§4.12) |
-| `In the static section f: …` | Un errore dentro il file statico; il messaggio dice anche dove è la direttiva |
-| `Line continuation marker '\' at end of file` | `\` finale sull'ultima riga |
+| `Production X is repeated: it is also defined by the static sezione …` | La grammatica definisce un nome già definito da una sua sezione statica (§4.12) |
+| `In the static sezione f: …` | Un errore dentro il file statico; il messaggio dice anche dove è la direttiva |
+| `Line continuation marker '\' at fine of file` | `\` finale sull'ultima riga |
 | `Missing '}' for inline alternation …` | Graffa non chiusa |
 | `Missing closing '"'` | Span letterale non chiuso |
 | `Inline alternation group '{…}' has no '\|'` | Gruppo inline con una sola opzione (§4.4) |
 | `Reserved placeholder character found` | Il sorgente contiene un carattere `U+E000`/`U+E001`, riservato all'escape `\[`/`\]` |
-| `Missing ']' for weight token` | `[^5 A` |
-| `Invalid weight 'x': must be a positive number` | `[^0]`, `[^-1]`, `[^abc]`, `[^NaN]`, `[^Infinity]` |
+| `Missing ']' for peso token` | `[^5 A` |
+| `Invalid peso 'x': must be a positive number` | `[^0]`, `[^-1]`, `[^abc]`, `[^NaN]`, `[^Infinity]` |
 | `Missing ']' element after token …` | Parentesi quadre sbilanciate |
 | `Production X is not defined` | Riferimento a produzione inesistente — **anche `Production ^9 is not defined` per un `[^9]` non a inizio alternativa** |
 | `Production X is not defined: a '?' default covers the order…` | `[X? \| …]` su un nome che non è né produzione né chiave assegnata (§4.10) |
-| `? marker must be preceded by a node name` | `[? \| …]` |
-| `Production name X? may not end with '?'` | Header di produzione che termina con `?` (§4.10) |
-| `Empty fixed production present` | `[*]` o `[!]` da soli |
-| `= symbol must be preceded by a node name` | `[=valore]` |
-| `No pre production` / `No post production` / `Empty post production` | Riga malformata nel file di post-produzione (i commenti e le righe vuote sono ignorati, §6) |
-| `Post production 'X' contains its own pre production 'Y': the substitution would never terminate` | Regola di post-produzione autoalimentante |
+| `? marker must be preceded by a node nome` | `[? \| …]` |
+| `Production nome X? may not fine with '?'` | Header di produzione che termina con `?` (§4.10) |
+| `Empty fixed produzione present` | `[*]` o `[!]` da soli |
+| `= symbol must be preceded by a node nome` | `[=valore]` |
+| `No prima produzione` / `No dopo produzione` / `Empty dopo produzione` | Riga malformata nel file di post-produzione (i commenti e le righe vuote sono ignorati, §6) |
+| `Post produzione 'X' contains its proprie prima produzione 'Y': the substitution would never terminate` | Regola di post-produzione autoalimentante |
 
 ### `IllegalArgumentException` (runtime)
 
@@ -1126,12 +1154,12 @@ for (int i = 0; i < 100_000; i++) {
 | :--- | :--- |
 | `Production X is empty!` | Produzione rimossa dalla cascata one-shot, o riferimento a chiave mai assegnata |
 | `Production #k not yet defined!` | `[#k]` letto prima che l'assegnazione o il `[!k]` corrispondente sia stato eseguito, oppure fuori dal sottoalbero che l'ha fissato |
-| `X: not a valid production` | `setRootNode` con un nome inesistente |
+| `X: not a valid produzione` | `setRadice` con un nome inesistente |
 | `Missing ']' element after token …` | Parentesi sbilanciate emerse a runtime |
 
 ### Traccia di produzione
 
-Quando `produce()`/`produce(String)` sollevano una `RuntimeException`, prima di rilanciarla
+Quando `produci()`/`produci(String)` sollevano una `RuntimeException`, prima di rilanciarla
 viene loggato (via `Logger.log`) il percorso di espansione seguito fino a quel punto: una riga
 per ogni produzione ancora "aperta" nello stack di chiamate al momento dell'errore (dalla più
 esterna alla più interna), ciascuna con la sequenza dei testi intermedi che ha attraversato,
@@ -1188,7 +1216,7 @@ il codice precedente, dove falliscono: verificano la correzione, non la descrivo
 **D5 — Nessun limite di profondità di ricorsione.**
 
 ```java
-new GrammarBean("ROOT\n\tx [ROOT]\n").produce();   // StackOverflowError
+new GestoreGrammatiche("ROOT\n\tx [ROOT]\n").produce();   // StackOverflowError
 ```
 
 Aggravante: il boost dei discendenti (§5.2) **aumenta** la probabilità di scegliere il ramo
@@ -1198,13 +1226,13 @@ oltre una soglia, forza la scelta fra le alternative non ricorsive.
 
 ### Limiti di progetto
 
-**Q3 — Il boost dei discendenti non è disattivabile.** `SCALE_FACTOR` è una costante
+**Q3 — Il boost dei discendenti non è disattivabile.** `FATTORE_DI_SCALA` è una costante
 privata. Non c'è modo di dire "questa produzione la peso io a mano". Il risultato è che
-ogni distribuzione va misurata invece che letta (§5.3). Utile sarebbe un `SCALE_FACTOR`
+ogni distribuzione va misurata invece che letta (§5.3). Utile sarebbe un `FATTORE_DI_SCALA`
 configurabile e/o un marcatore per-produzione che disattivi il boost.
 
-**Q5 — Un'assegnazione è sempre globale.** `assignFixedProduction` scrive nel campo
-`globalFixedProductions` ignorando il parametro `superFixedProductions` che riceve. Il
+**Q5 — Un'assegnazione è sempre globale.** `assegnaProduzioneFissata` scrive nel campo
+`fissateGlobali` ignorando il parametro `fissateEreditate` che riceve. Il
 javadoc lo documenta, ma il parametro non usato è un indizio di intento incompiuto.
 
 ### Priorità suggerite
@@ -1223,12 +1251,12 @@ javadoc lo documenta, ma il parametro non usato è un indizio di intento incompi
 **Struttura**
 
 - [ ] Il file è salvato in **UTF-8** (§3).
-- [ ] La prima produzione del file è la radice desiderata (o si chiama `setRootNode`).
+- [ ] La prima produzione del file è la radice desiderata (o si chiama `setRadice`).
 - [ ] Ogni produzione ha almeno un'alternativa (verificato al caricamento in ogni posizione).
 - [ ] Nessun nome di produzione duplicato.
 - [ ] Nessuna riga indentata prima del primo header.
-- [ ] Se si usa `#include_static <file>` (§4.12): il file è autonomo, `resetStaticProductions()` è chiamato a inizio partita, ce ne sono abbastanza di ogni produzione one-shot (non c'è ricarica) e nessun nome è definito sia nella grammatica sia nella sezione.
-- [ ] Se si usa `#include <file>` (§4.11): la grammatica è caricata con `fromResource` (o con un risolutore), l'`#include` sta dopo la radice desiderata, e i nomi delle produzioni dei file inclusi non ripetono quelli degli altri.
+- [ ] Se si usa `#include_static <file>` (§4.12): il file è autonomo, `ripristinaLeSezioniStatiche()` è chiamato a inizio partita, ce ne sono abbastanza di ogni produzione one-shot (non c'è ricarica) e nessun nome è definito sia nella grammatica sia nella sezione.
+- [ ] Se si usa `#include <file>` (§4.11): la grammatica è caricata con `daRisorsa` (o con un risolutore), l'`#include` sta dopo la radice desiderata, e i nomi delle produzioni dei file inclusi non ripetono quelli degli altri.
 
 **Sintassi**
 
@@ -1247,7 +1275,7 @@ javadoc lo documenta, ma il parametro non usato è un indizio di intento incompi
       `[NOME? | …]` (§4.10) — non una produzione-segnaposto.
 - [ ] Ogni produzione ricorsiva ha almeno un'alternativa di uscita (D5).
 - [ ] Per ogni produzione one-shot è chiaro quale dei due scopi serve — risultati
-      indipendenti o serie senza ripetizioni — e `reset()` è chiamato di conseguenza (§4.7).
+      indipendenti o serie senza ripetizioni — e `ripristina()` è chiamato di conseguenza (§4.7).
 - [ ] I pool one-shot sono abbastanza capienti per la lunghezza massima che la grammatica può
       chiedere: una produzione ricorsiva che pesca da un serbatoio one-shot lo esaurisce, e la
       cascata di rimozione (§4.7) fa poi fallire la generazione a metà.
@@ -1260,11 +1288,11 @@ javadoc lo documenta, ma il parametro non usato è un indizio di intento incompi
 
 **Post-produzione**
 
-- [ ] Nessuna regola in cui `post` contiene `pre` (rifiutata al caricamento).
+- [ ] Nessuna regola in cui `dopo` contiene `prima` (rifiutata al caricamento).
 - [ ] Gli spazi delimitatori sono presenti dove servono (`" a il "`, non `"a il"`).
 - [ ] Fra regole che possono agganciare lo stesso testo, la più specifica è elencata prima (§6).
 
 **Uso dell'API**
 
-- [ ] `reset()` è chiamato dove segna il confine giusto fra le serie di generazioni (§4.7).
+- [ ] `ripristina()` è chiamato dove segna il confine giusto fra le serie di generazioni (§4.7).
 - [ ] Un'istanza per thread (§2).
