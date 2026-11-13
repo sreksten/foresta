@@ -14,7 +14,7 @@ import com.threeamigos.foresta.testi.Testi;
  * Il costo di acquisto e di lancio lo dà questa enum (i valori sono in {@link CostantiIncantesimi}); le istanze di incantesimo le dà incantesimi.FabbricaIncantesimi.
  * <p>
  * I testi di ogni costante (NOME, NOME_SINGOLARE, NOME_PLURALE, EFFETTO) non stanno qui ma nel file
- * {@code classe_incantesimo_<lingua>.properties}, alla voce {@code COSTANTE.VOCE}, in modo che il gioco si possa
+ * {@code tipo_incantesimo_<lingua>.properties}, alla voce {@code COSTANTE.VOCE}, in modo che il gioco si possa
  * tradurre (vedi {@link Testi}).
  *
  * @author Stefano Reksten
@@ -69,28 +69,29 @@ public enum TipoIncantesimo {
 	}
 
 	/**
-	 * Il tipo di questo incantesimo: BENEFICO, MALEFICO
+	 * La categoria di questo incantesimo: BENEFICO o MALEFICO
 	 */
 	public CategoriaIncantesimo getCategoriaIncantesimo() {
 		return categoriaIncantesimo;
 	}
 
 	/**
-	 * La portata di questo incantesimo; GLOBALE, GRUPPO, SINGOLO_SOLO_VIVI, SINGOLO_QUALSIASI
+	 * La portata di questo incantesimo: GLOBALE, GRUPPO, MULTIPLO, SINGOLO_SOLO_VIVI o SINGOLO_QUALSIASI
 	 */
 	public PortataIncantesimo getPortata() {
 		return portata;
 	}
 
 	/**
-	 * Il tipo di danno causato da questo incantesimo: sottoclassi di FISICO, MAGICO, ELEMENTALE
+	 * Il tipo di danno causato da questo incantesimo (la sua CategoriaDanno dice se è fisico, magico o elementale); null per
+	 * gli incantesimi BENEFICI (Resurrezione, Grido di battaglia), che non fanno danno
 	 */
 	public TipoDanno getTipoDanno() {
 		return tipoDanno;
 	}
 
 	/**
-	 * Il nome breve di un incantesimo, senza "incantesimo di" (es. Aria, Alba Sacra)
+	 * Il nome breve di un incantesimo, senza "incantesimo di" (es. Aria, Grido di battaglia)
 	 */
 	public String getNome() {
 		return Testi.testoOCostante(this, "NOME");

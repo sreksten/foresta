@@ -65,13 +65,13 @@ I mostri attaccano con `ArmaNaturale` (artigli, morsi, soffi… al posto dell'ar
 
 ### Le costanti
 
-`CostantiPersonaggi` (più di 1500 righe) contiene i valori di partenza di ogni classe, i moltiplicatori e il bilanciamento del combattimento (fuga, mietitura, danno ad area, cambi d'arma, dimensione dei gruppi…); `CostantiIncantesimi` quelli degli incantesimi.
+`CostantiPersonaggi` (circa 1300 righe) contiene i valori di partenza di ogni classe (salute e magia di base, quanti se ne incontrano, l'esperienza che danno, l'intelligenza massima che regola l'astuzia delle tattiche), i moltiplicatori e il bilanciamento del combattimento (fuga, mietitura, danno ad area, cambi d'arma, dimensione dei gruppi…); `CostantiIncantesimi` quelli degli incantesimi.
 
 ### I dati e i contratti
 
 - **Dati**: `PersonaggioMD` (identificativo, classe, nome, vivo/morto, livello, esperienza, punti abilità, causa del trapasso, motivo nel gruppo, valori minimi, massimi e attuali degli attributi, modificatori, stati alterati, le ricariche delle abilità innate e dei canti, per nome, artefatti), `GruppoMD` (scorte e personaggi) e `GruppoGiocatoreMD`.
 - **Viste per la UI**: `VistaPersonaggio`, `VistaGruppo`, `VistaGruppoGiocatore`.
-- **Eventi**: le notifiche sul personaggio e sul gruppo (livello, ferite, reazione di classe a un danno, approvazione o rifiuto degli spostamenti di artefatti, variazione delle scorte di pozioni e incantesimi) e gli interni che portano il dominio (creazione di un personaggio, un avversario sconfitto, un personaggio entrato nel gruppo, punti esperienza assegnati, caratteristica osservata, scheletro risvegliato, sfida vinta…).
+- **Eventi**: le notifiche sul personaggio e sul gruppo (livello, ferite, reazione di classe a un danno, approvazione o rifiuto degli spostamenti di artefatti, con la base comune `EsitoSpostamentoArtefatto`, variazione delle scorte di pozioni e incantesimi, con la base comune `NotificaVariazioneDisponibilita`) e gli interni che portano il dominio (creazione di un personaggio, un avversario sconfitto, un personaggio entrato nel gruppo, punti esperienza assegnati, caratteristica osservata, scheletro risvegliato, sfida vinta…).
 
 ## Osservazioni
 

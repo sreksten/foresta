@@ -9,7 +9,8 @@ import com.threeamigos.foresta.artefatti.ScambiatoreArtefatti;
 
 /**
  * Il giocatore chiede di poter spostare un Artefatto dall'inventario generale a un Personaggio.
- * L'esito viene deciso dal peso dell'Artefatto.
+ * L'esito lo decide GruppoGiocatore con le regole dell'equipaggiamento (RegoleEquipaggiamento: carico, posto libero, livello,
+ * classe, forza...), e lo annuncia con {@link #approvazione()} o {@link #rifiuto(String)}.
  *
  * @author Stefano Reksten
  */

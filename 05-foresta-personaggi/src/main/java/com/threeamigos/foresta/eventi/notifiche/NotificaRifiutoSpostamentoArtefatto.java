@@ -1,53 +1,22 @@
 package com.threeamigos.foresta.eventi.notifiche;
 
-import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.tipi.TipoEvento;
 import com.threeamigos.foresta.artefatti.VistaScambio;
 
 /**
- * Classe base per i rifiuti delle richieste di spostamento di un artefatto.
- * (Personaggio &lt;-&gt; GruppoGiocatore, GruppoGiocatore &lt;-&gt; commerciante)
+ * Classe base per i rifiuti delle richieste di spostamento di un artefatto
+ * (Personaggio &lt;-&gt; GruppoGiocatore, GruppoGiocatore &lt;-&gt; commerciante). I dati stanno in {@link EsitoSpostamentoArtefatto}.
  *
  * @author Stefano Reksten
  */
-public abstract class NotificaRifiutoSpostamentoArtefatto<T> extends EventoBase {
-
-    private final VistaScambio scambio;
-    private final T oggettoSpostato;
-    private final String uuidRichiesta;
+public abstract class NotificaRifiutoSpostamentoArtefatto<T> extends EsitoSpostamentoArtefatto<T> {
 
     /**
      * @param scambio lo scambio aperto da cui veniva la richiesta, o null
      * @param oggettoSpostato l'oggetto di cui si chiedeva lo spostamento
-     * @param uuidRichiesta l'identificativo della richiesta che si rifiuta
+     * @param uuidRichiesta l'identificativo della richiesta a cui si risponde
      */
     public NotificaRifiutoSpostamentoArtefatto(TipoEvento tipoEvento, VistaScambio scambio, T oggettoSpostato, String uuidRichiesta) {
-        super(tipoEvento);
-        this.scambio = scambio;
-        this.oggettoSpostato = oggettoSpostato;
-        this.uuidRichiesta = uuidRichiesta;
+        super(tipoEvento, scambio, oggettoSpostato, uuidRichiesta);
     }
-
-    /**
-     * @return lo scambio aperto da cui veniva la richiesta, o null: le schermate rispondono solo alle notifiche del
-     * proprio (la richiesta stessa è interna al motore)
-     */
-    public VistaScambio getScambio() {
-        return scambio;
-    }
-
-    /**
-     * @return l'oggetto di cui si chiedeva lo spostamento
-     */
-    public T getOggettoSpostato() {
-        return oggettoSpostato;
-    }
-
-    /**
-     * @return l'identificativo della richiesta che si rifiuta
-     */
-    public String getUuidRichiesta() {
-        return uuidRichiesta;
-    }
-
 }

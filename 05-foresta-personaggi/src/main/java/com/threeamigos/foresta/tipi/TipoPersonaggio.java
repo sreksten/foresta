@@ -77,6 +77,10 @@ public enum TipoPersonaggio {
 	// Solo per le missioni di scorta: non si incontra e non si recluta
 	VIANDANTE(CategoriaPersonaggio.UMANOIDE);
 
+	// I campi e i blocchi static qui sotto si inizializzano nell'ordine in cui sono scritti, una volta sola, dopo che tutte le
+	// costanti dell'enum sono state create: per questo i blocchi possono riempire le mappe delle costanti (vedi i campi
+	// dannoSubito, immuneAIncantesimi e immuneAEffetti più sotto).
+
 	// Il ruolo di chi lo condivide con un'altra classe (quella al maschile). Se non c'è, si assume il proprio ruolo
 	private static final Map<TipoPersonaggio, TipoPersonaggio> RUOLI = new EnumMap<>(TipoPersonaggio.class);
 
@@ -86,7 +90,8 @@ public enum TipoPersonaggio {
 	static {
 		AVVERSARI.addAll(EnumSet.of(GUERRIERO, GUERRIERA, LADRO, MAGO, MAGA, ELFO, ELFA));
 	}
-	// I mostri di ogni giorno: tutti gli avversari tranne i boss e i due maghi oscuri
+	// I mostri di ogni giorno: i mostri del primo blocco dell'enum tranne i boss (Drago, Idra, Lich, Minotauro gigante, Strega) e i due
+	// maghi oscuri (Necromante, Ombra nera)
 	private static final Set<TipoPersonaggio> MOSTRI_COMUNI = EnumSet.range(ARPIA, VIVERNA);
 	static {
 		MOSTRI_COMUNI.removeAll(EnumSet.of(DRAGO, IDRA, LICH, MINOTAURO_GIGANTE, NECROMANTE, OMBRA_NERA, STREGA));
@@ -106,7 +111,7 @@ public enum TipoPersonaggio {
 			fantasma.moltiplicaIlDannoSubito(TipoDanno.CONTUNDENTE, 0.5d);
 			fantasma.moltiplicaIlDannoSubito(TipoDanno.PERFORANTE, 0.5d);
 			fantasma.moltiplicaIlDannoSubito(TipoDanno.TAGLIENTE, 0.5d);
-			// Non si possono immobilizzare, e aria e terra li attraversano anche sotto forma di incantesimo
+			// Non si possono far cadere a terra (ATTERRATO), e aria e terra li attraversano anche sotto forma di incantesimo
 			fantasma.immuneAIncantesimi.addAll(EnumSet.of(TipoIncantesimo.ARIA, TipoIncantesimo.TERRA));
 			fantasma.immuneAEffetti.add(TipoEffettoDiStato.ATTERRATO);
 		}
@@ -131,8 +136,9 @@ public enum TipoPersonaggio {
 		CHIMERA_DRAGO.immuneAEffetti.add(TipoEffettoDiStato.BRUCIATO);
 		CHIMERA.moltiplicaIlDannoSubito(TipoDanno.FUOCO, 0.5d);
 		CHIMERA.moltiplicaIlDannoSubito(TipoDanno.VELENO, 0.5d);
-		// La viverna è velenosa
+		// La viverna è velenosa, e come ogni draconico il fuoco non la ferisce
 		VIVERNA.moltiplicaIlDannoSubito(TipoDanno.VELENO, 0.0d);
+		VIVERNA.moltiplicaIlDannoSubito(TipoDanno.FUOCO, 0.0d);
 		VIVERNA.immuneAIncantesimi.add(TipoIncantesimo.FUOCO);
 		// L'idra: palude e veleno; il fuoco e l'acido impediscono alle teste di ricrescere
 		IDRA.moltiplicaIlDannoSubito(TipoDanno.TERRA, 0.0d);
@@ -146,6 +152,7 @@ public enum TipoPersonaggio {
 		// Il troll si rigenera, ma non dal fuoco e dall'acido
 		TROLL.moltiplicaIlDannoSubito(TipoDanno.FUOCO, 1.5d);
 		TROLL.moltiplicaIlDannoSubito(TipoDanno.ACIDO, 1.5d);
+		TROLL.moltiplicaIlDannoSubito(TipoDanno.TERRA, 0.0d);
 		TROLL.immuneAIncantesimi.add(TipoIncantesimo.TERRA);
 		// Il gargoyle è di pietra: subisce solo il danno fisico, e la pietra si spacca a martellate
 		for (TipoDanno tipoDanno : TipoDanno.values()) {
@@ -156,7 +163,7 @@ public enum TipoPersonaggio {
 		GARGOYLE.moltiplicaIlDannoSubito(TipoDanno.CONTUNDENTE, 1.5d);
 		GARGOYLE.moltiplicaIlDannoSubito(TipoDanno.PERFORANTE, 0.75d);
 		GARGOYLE.moltiplicaIlDannoSubito(TipoDanno.TAGLIENTE, 0.75d);
-		// Nessun incantesimo lo tocca (e nessun danno che non sia fisico, elementale o magico, di un incantesimo o di un'abilità: li
+		// Nessun incantesimo lo tocca (e nessun danno che non sia fisico, nemmeno quello elementale o magico di un'abilità: lo
 		// azzera il ciclo qui sopra); la pietra non sanguina, non si infetta, non si avvelena e non si immobilizza
 		GARGOYLE.immuneATuttiGliIncantesimi = true;
 		GARGOYLE.immuneAEffetti.addAll(EnumSet.of(TipoEffettoDiStato.SANGUINAMENTO, TipoEffettoDiStato.INFETTATO,
@@ -164,14 +171,18 @@ public enum TipoPersonaggio {
 		// Il necromante vive di energia necrotica e ne è temprato, ma è vivo: la luce sacra lo ferisce più del normale
 		NECROMANTE.moltiplicaIlDannoSubito(TipoDanno.NECROTICO, 0.5d);
 		NECROMANTE.moltiplicaIlDannoSubito(TipoDanno.SACRO, 1.25d);
-		// La strega: al rogo, e le maledizioni sono il suo mestiere
+		// La strega: acqua, aria e terra non la toccano, ma al rogo il fuoco la brucia più di tutti; le maledizioni sono il suo mestiere
 		STREGA.moltiplicaIlDannoSubito(TipoDanno.FUOCO, 1.5d);
 		STREGA.moltiplicaIlDannoSubito(TipoDanno.MALEDIZIONE, 0.5d);
-		STREGA.immuneAIncantesimi.addAll(EnumSet.of(TipoIncantesimo.ACQUA, TipoIncantesimo.ARIA, TipoIncantesimo.FUOCO, TipoIncantesimo.TERRA));
+		STREGA.moltiplicaIlDannoSubito(TipoDanno.ACQUA, 0.0d);
+		STREGA.moltiplicaIlDannoSubito(TipoDanno.ARIA, 0.0d);
+		STREGA.moltiplicaIlDannoSubito(TipoDanno.TERRA, 0.0d);
+		STREGA.immuneAIncantesimi.addAll(EnumSet.of(TipoIncantesimo.ACQUA, TipoIncantesimo.ARIA, TipoIncantesimo.TERRA));
 		// Il folletto teme il ferro: lame e punte lo feriscono di più
 		FOLLETTO.moltiplicaIlDannoSubito(TipoDanno.TAGLIENTE, 1.25d);
 		FOLLETTO.moltiplicaIlDannoSubito(TipoDanno.PERFORANTE, 1.25d);
 		// L'arpia vive nell'aria
+		ARPIA.moltiplicaIlDannoSubito(TipoDanno.ARIA, 0.0d);
 		ARPIA.immuneAIncantesimi.add(TipoIncantesimo.ARIA);
 
 		// Il chierico serve il sacro e ne è protetto: il necrotico e le maledizioni lo feriscono meno
@@ -208,7 +219,9 @@ public enum TipoPersonaggio {
 	private final Map<TipoDanno, Double> dannoSubito = new EnumMap<>(TipoDanno.class);
 
 	// Gli incantesimi e gli effetti di stato a cui la classe è immune in più di quanto dicono le sue categorie (CategoriaPersonaggio); come
-	// per i danni, li riempie solo il blocco static. Il gargoyle è immune a tutti gli incantesimi.
+	// per i danni, li riempie solo il blocco static. Il gargoyle è immune a tutti gli incantesimi. Regola: chi è immune a un incantesimo è
+	// immune anche al suo tipo di danno, da qualunque parte venga (lo controlla CaratteristicheDiClasseTest); fa eccezione Morte, che
+	// uccide e non fa danno.
 	private final Set<TipoIncantesimo> immuneAIncantesimi = EnumSet.noneOf(TipoIncantesimo.class);
 	private boolean immuneATuttiGliIncantesimi;
 	private final Set<TipoEffettoDiStato> immuneAEffetti = EnumSet.noneOf(TipoEffettoDiStato.class);
@@ -328,7 +341,7 @@ public enum TipoPersonaggio {
 	}
 
 	/**
-	 * Se è un mostro comune, cioè non un boss né uno dei maghi oscuri (Necromante, Ombra Nera): la sua salute cresce con il livello più di
+	 * Se è un mostro comune, cioè non un boss (Drago, Idra, Lich, Minotauro gigante, Strega) né uno dei maghi oscuri (Necromante, Ombra Nera): la sua salute cresce con il livello più di
 	 * quella dei giocanti (vedi CostantiPersonaggi.MOSTRI_COMUNI_CRESCITA_SALUTE_PER_LIVELLO)
 	 */
 	public boolean isMostroComune() {

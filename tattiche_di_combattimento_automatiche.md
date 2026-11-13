@@ -163,8 +163,8 @@ condizioni dentro la lista fanno già variare il comportamento, e i boss hanno l
 diversa (`TatticheDeiPersonaggi.imposta`), per esempio in una missione un goblin più furbo degli altri con una tattica tutta sua; la tattica dell'istanza si salva con la partita (§1, §11.12).
 
 **L'astuzia e le soglie.** Le soglie dei quattro livelli sono: 1 = da 0 a 11, 2 = da 12 a 19, 3 = da 20 a 30, 4 = da 31 (`SOGLIA_ASTUTO`, `SOGLIA_ESPERTO` e `SOGLIA_STRATEGA` in `TatticheBase`). Il **Folletto** (massimo 8)
-sta fra il Goblin e l'Hobgoblin e l'**Ombra Nera** (31) nel quarto livello. Il massimo sta in `*_MAX_INTELLIGENZA` di `CostantiPersonaggi`, che serve anche a calcolare l'INTELLIGENZA vera: cambiarlo
-cambia anche i lanciatori di incantesimi.
+sta fra il Goblin e l'Hobgoblin e l'**Ombra Nera** (31) nel quarto livello. Il massimo sta in `*_MAX_INTELLIGENZA` di `CostantiPersonaggi` (`Personaggio.getMaxIntelligenza`), che serve solo a questo: l'INTELLIGENZA vera
+la distribuisce `LanciatoreDeiDadi`, con un budget suo.
 
 L'**astuzia** (`Astuzia.di`) parte dal **massimo di classe** ed è ridotta da una **rampa sul livello** (quello del personaggio, che nei mostri è del mondo):
 `astuzia = massimo × min(1, ASTUZIA_PARTENZA + ASTUZIA_PER_LIVELLO × (livello − 1))`, con `CostantiTattiche.ASTUZIA_PARTENZA` = 0,4 e `ASTUZIA_PER_LIVELLO` = 0,075: il 40% del massimo al livello 1, pieno al livello 9. Un'Ombra Nera

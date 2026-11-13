@@ -25,7 +25,7 @@ public enum PortataIncantesimo {
 	 */
 	MULTIPLO,
 	/**
-	 * Sul un singolo personaggio ma del nostro gruppo inclusi quelli morti (per abilitare Resurrezione).
+	 * Su un solo personaggio del nostro gruppo, anche se è morto: è la portata della Resurrezione.
 	 */
 	SINGOLO_QUALSIASI,
 	/**

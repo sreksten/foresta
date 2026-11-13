@@ -31,9 +31,9 @@ public class TestGenerazionePersonaggi {
         final String CSV_FILE = "PERSONAGGI_VALORI_MEDI.csv";
 
         try (FileWriter writer = new FileWriter(CSV_FILE)) {
-            writer.append("TIPO,FORZA,FORZA_MEDIA,DESTREZZA,DESTREZZA_MEDIA,COSTITUZIONE,COSTITUZIONE_MEDIA,");
-            writer.append("INTELLIGENZA,INTELLIGENZA_MEDIA,SAGGEZZA,SAGGEZZA_MEDIA,CARISMA,CARISMA_MEDIA,");
-            writer.append("FORTUNA,FORTUNA_MEDIA,CRITICO_MEDIA,CARICO_MASSIMO_MEDIA,PRECISIONE_MEDIA,");
+            writer.append("TIPO,FORZA_MEDIA,DESTREZZA_MEDIA,COSTITUZIONE_MEDIA,");
+            writer.append("INTELLIGENZA_MASSIMA,INTELLIGENZA_MEDIA,SAGGEZZA_MEDIA,CARISMA_MEDIA,");
+            writer.append("FORTUNA_MEDIA,CRITICO_MEDIA,CARICO_MASSIMO_MEDIA,PRECISIONE_MEDIA,");
             writer.append("VELOCITA_MEDIA,FURTIVITA_MEDIA,PARATA_MEDIA,RESISTENZA_MAGICA_MEDIA,");
             writer.append("PERCEZIONE_MEDIA,SOGGEZIONE_MEDIA,FURIA_MEDIA,CORAGGIO_MEDIA,VALORE_MEDIA,CONTRATTAZIONE_MEDIA\n");
 
@@ -95,19 +95,13 @@ public class TestGenerazionePersonaggi {
                 double mediaContrattazione = sommaContrattazione / (double) NUMERO_ISTANZE;
 
                 writer.append(classe.toString()).append(",");
-                writer.append(String.valueOf(pbPerMax.getMaxStatistica(TipoAttributo.FORZA))).append(",");
                 writer.append(String.format("%.2f", mediaForza)).append(",");
-                writer.append(String.valueOf(pbPerMax.getMaxStatistica(TipoAttributo.DESTREZZA))).append(",");
                 writer.append(String.format("%.2f", mediaDestrezza)).append(",");
-                writer.append(String.valueOf(pbPerMax.getMaxStatistica(TipoAttributo.COSTITUZIONE))).append(",");
                 writer.append(String.format("%.2f", mediaCostituzione)).append(",");
-                writer.append(String.valueOf(pbPerMax.getMaxStatistica(TipoAttributo.INTELLIGENZA))).append(",");
+                writer.append(String.valueOf(pbPerMax.getMaxIntelligenza())).append(",");
                 writer.append(String.format("%.2f", mediaIntelligenza)).append(",");
-                writer.append(String.valueOf(pbPerMax.getMaxStatistica(TipoAttributo.SAGGEZZA))).append(",");
                 writer.append(String.format("%.2f", mediaSaggezza)).append(",");
-                writer.append(String.valueOf(pbPerMax.getMaxStatistica(TipoAttributo.CARISMA))).append(",");
                 writer.append(String.format("%.2f", mediaCarisma)).append(",");
-                writer.append(String.valueOf(pbPerMax.getMaxStatistica(TipoAttributo.FORTUNA))).append(",");
                 writer.append(String.format("%.2f", mediaFortuna)).append(",");
                 writer.append(String.format("%.2f", mediaCritico)).append(",");
                 writer.append(String.format("%.2f", mediaCarico)).append(",");

@@ -2,7 +2,6 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 
-import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
@@ -145,24 +144,7 @@ public abstract class PersonaggioNonCombattente extends PersonaggioBase implemen
 	}
 
 	@Override
-	public double getMaxStatistica(TipoAttributo tipoAttributo) {
-		switch (tipoAttributo) {
-			case FORZA:
-				return CostantiPersonaggi.NON_COMBATTENTE_MAX_FORZA;
-			case DESTREZZA:
-				return CostantiPersonaggi.NON_COMBATTENTE_MAX_DESTREZZA;
-			case COSTITUZIONE:
-				return CostantiPersonaggi.NON_COMBATTENTE_MAX_COSTITUZIONE;
-			case INTELLIGENZA:
-				return CostantiPersonaggi.NON_COMBATTENTE_MAX_INTELLIGENZA;
-			case SAGGEZZA:
-				return CostantiPersonaggi.NON_COMBATTENTE_MAX_SAGGEZZA;
-			case CARISMA:
-				return CostantiPersonaggi.NON_COMBATTENTE_MAX_CARISMA;
-			case FORTUNA:
-				return CostantiPersonaggi.NON_COMBATTENTE_MAX_FORTUNA;
-			default:
-				throw new IllegalArgumentException(tipoAttributo + " non è un tipo primario");
-		}
+	public double getMaxIntelligenza() {
+		return CostantiPersonaggi.NON_COMBATTENTE_MAX_INTELLIGENZA;
 	}
 }

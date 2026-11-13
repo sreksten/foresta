@@ -2,7 +2,6 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 
-import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
@@ -153,25 +152,8 @@ public class Guerriero extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public double getMaxStatistica(TipoAttributo tipoAttributo) {
-		switch (tipoAttributo) {
-			case FORZA:
-				return CostantiPersonaggi.GUERRIERO_MAX_FORZA;
-			case DESTREZZA:
-				return CostantiPersonaggi.GUERRIERO_MAX_DESTREZZA;
-			case COSTITUZIONE:
-				return CostantiPersonaggi.GUERRIERO_MAX_COSTITUZIONE;
-			case INTELLIGENZA:
-				return CostantiPersonaggi.GUERRIERO_MAX_INTELLIGENZA;
-			case SAGGEZZA:
-				return CostantiPersonaggi.GUERRIERO_MAX_SAGGEZZA;
-			case CARISMA:
-				return CostantiPersonaggi.GUERRIERO_MAX_CARISMA;
-			case FORTUNA:
-				return CostantiPersonaggi.GUERRIERO_MAX_FORTUNA;
-			default:
-				throw new IllegalArgumentException(tipoAttributo + " non è un tipo primario");
-		}
+	public double getMaxIntelligenza() {
+		return CostantiPersonaggi.GUERRIERO_MAX_INTELLIGENZA;
 	}
 
 	@Override

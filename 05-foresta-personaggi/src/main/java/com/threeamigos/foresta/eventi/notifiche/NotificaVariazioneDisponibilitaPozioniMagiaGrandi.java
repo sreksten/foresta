@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.eventi.notifiche;
 
-import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.tipi.TipoEvento;
 
 /**
@@ -8,23 +7,9 @@ import com.threeamigos.foresta.tipi.TipoEvento;
  *
  * @author Stefano Reksten
  */
-public class NotificaVariazioneDisponibilitaPozioniMagiaGrandi extends EventoBase {
-
-    private final int valorePrecedente;
-    private final int nuovoValore;
+public class NotificaVariazioneDisponibilitaPozioniMagiaGrandi extends NotificaVariazioneDisponibilita {
 
     public NotificaVariazioneDisponibilitaPozioniMagiaGrandi(int valorePrecedente, int nuovoValore) {
-        super(TipoEvento.NOTIFICA_VARIAZIONE_DISPONIBILITA_POZIONI_MAGIA_GRANDI);
-        this.valorePrecedente = valorePrecedente;
-        this.nuovoValore = nuovoValore;
+        super(TipoEvento.NOTIFICA_VARIAZIONE_DISPONIBILITA_POZIONI_MAGIA_GRANDI, valorePrecedente, nuovoValore);
     }
-
-    public int getValorePrecedente() {
-        return valorePrecedente;
-    }
-
-    public int getNuovoValore() {
-        return nuovoValore;
-    }
-
 }

@@ -53,6 +53,9 @@ public interface VistaPersonaggio {
 	 */
 	Optional<String> getNomeProprio();
 
+	/**
+	 * Il nome della classe al singolare, senza articolo ("goblin", "maga"), anche per chi ha un nome proprio
+	 */
 	String getNomeSingolare();
 
 	boolean isPNG();
@@ -77,7 +80,7 @@ public interface VistaPersonaggio {
 	int getLivello();
 
 	/**
-	 * L'ordinale del personaggio all'interno del gruppo, per distinguere i mostri dello stesso tipo
+	 * L'ordinale del personaggio all'interno del gruppo, per distinguere i mostri dello stesso tipo ("il secondo scheletro")
 	 */
 	int getOrdinale();
 
@@ -96,6 +99,9 @@ public interface VistaPersonaggio {
 	 */
 	boolean isAlLivelloMassimo();
 
+	/**
+	 * I punti esperienza che il personaggio dà a chi lo sconfigge (un valore della sua classe)
+	 */
 	int getPuntiEsperienza();
 
 	int getPuntiAbilitaDisponibili();
@@ -104,14 +110,19 @@ public interface VistaPersonaggio {
 
 	int getSaluteMassima();
 
+	/**
+	 * La salute che il personaggio recupera a fine locazione (vedi CostantiPersonaggi.RIGENERAZIONE_SALUTE_QUOTA_SALUTE_MASSIMA)
+	 */
 	int getRigenerazioneSalute();
 
 	int getMagia();
 
 	int getMagiaMassima();
 
+	/**
+	 * La magia che il personaggio recupera a fine locazione (vedi CostantiPersonaggi.RIGENERAZIONE_MAGIA_QUOTA_MAGIA_MASSIMA)
+	 */
 	int getRigenerazioneMagia();
-
 
 	int getCaricoMassimo();
 
@@ -122,27 +133,14 @@ public interface VistaPersonaggio {
 	 */
 	int get(TipoAttributo tipoAttributo);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	/**
+	 * Il potere magico in percentuale: 100 è normale, e moltiplica i danni dei suoi incantesimi (120 fa il 20% in più)
+	 */
 	double getPotereMagico();
 
+	/**
+	 * Quanti bersagli colpisce al massimo con un incantesimo a più bersagli (MULTIPLO): almeno uno
+	 */
 	int getBersagli();
 
 	/**

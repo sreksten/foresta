@@ -2,6 +2,8 @@ package com.threeamigos.foresta.interfacce;
 
 /**
  * Un oggetto di cui si possono scrivere i nomi con l'articolo giusto (il, un, alcuni...), per costruire le frasi dei testi.
+ * Ogni articolo porta con sé quel che lo separa dal nome ("il ", "l'"), quindi si scrive attaccato: {@code getADS() + nome}.
+ * Le sigle: A articolo, I indeterminativo o D determinativo, S singolare o P plurale.
  *
  * @author Stefano Reksten
  */

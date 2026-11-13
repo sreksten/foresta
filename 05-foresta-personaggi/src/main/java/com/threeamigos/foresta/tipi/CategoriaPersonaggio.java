@@ -7,9 +7,10 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * La categoria di creatura di un Personaggio, per scegliere chi colpire o a chi rivolgere un'azione "per categoria" (un
- * non morto, un volante...) durante l'esecuzione di una Tattica. Un {@link TipoPersonaggio} ne ha una o più:
- * per esempio, lo Spirito è sia NON_MORTO, sia VOLANTE.
+ * La categoria di creatura di un Personaggio (un non morto, un volante...). Serve a due cose: alle tattiche, per scegliere
+ * chi colpire o a chi rivolgere un'azione "per categoria", e al combattimento, perché una categoria porta con sé debolezze,
+ * resistenze e immunità comuni a tutte le sue classi (i non morti temono il sacro). Un {@link TipoPersonaggio} ne ha una
+ * o più: per esempio, lo Spirito è sia NON_MORTO, sia VOLANTE.
  * <p>
  * I testi di ogni costante (NOME) non stanno qui ma nel file {@code categoria_personaggio_<lingua>.properties}, alla voce
  * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link Testi}).
@@ -52,7 +53,9 @@ public enum CategoriaPersonaggio {
 	COSTRUTTO;
 
 	// Le debolezze e le resistenze comuni a una categoria (quelle di una sola classe stanno in TipoPersonaggio).
-	// Vedi anche debolezze_e_resistenze.md
+	// Vedi anche debolezze_e_resistenze.md.
+	// Un blocco static di un'enum gira una volta sola, quando si usa l'enum la prima volta, dopo che tutte le costanti
+	// sono state create: per questo può riempire le mappe delle costanti, che il costruttore ha lasciato vuote.
 	static {
 		// I non morti: la luce sacra li brucia, il veleno non li tocca (non hanno un corpo che vive) e
 		// l'energia necrotica li rafforza più che ferirli

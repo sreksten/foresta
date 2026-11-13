@@ -2,7 +2,6 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.gruppi.DatiDiProva;
 
-import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,9 +13,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * all'inizio hanno le stesse caratteristiche di prima (vedi personaggi_giocabili.md).
  */
 class ViandanteENonCombattentiASeTest {
-
-	private static final TipoAttributo[] PRIMARI = {TipoAttributo.FORZA, TipoAttributo.DESTREZZA, TipoAttributo.COSTITUZIONE,
-			TipoAttributo.INTELLIGENZA, TipoAttributo.SAGGEZZA, TipoAttributo.CARISMA, TipoAttributo.FORTUNA};
 
 	@BeforeEach
 	void preparaModelloDati() {
@@ -42,9 +38,7 @@ class ViandanteENonCombattentiASeTest {
 	void ilViandanteHaLeCaratteristicheDelBardoDiPrima() {
 		Bardo bardo = new Bardo("Orfeo", 4);
 		Viandante viandante = new Viandante("Anselmo", 4);
-		for (TipoAttributo attributo : PRIMARI) {
-			assertEquals(bardo.getMaxStatistica(attributo), viandante.getMaxStatistica(attributo), attributo.name());
-		}
+		assertEquals(bardo.getMaxIntelligenza(), viandante.getMaxIntelligenza());
 		assertEquals(bardo.getSaluteBase(), viandante.getSaluteBase());
 		assertEquals(bardo.getMagiaBase(), viandante.getMagiaBase());
 		assertEquals(bardo.getLivellamentoMagia(), viandante.getLivellamentoMagia());
@@ -62,9 +56,7 @@ class ViandanteENonCombattentiASeTest {
 	void iNonCombattentiHannoLeStatisticheDelBardoPerZeroVirgolaOttantacinque() {
 		Bardo bardo = new Bardo("Orfeo", 4);
 		Locandiere locandiere = new Locandiere("Gigio", 4);
-		for (TipoAttributo attributo : PRIMARI) {
-			assertEquals(bardo.getMaxStatistica(attributo) * 0.85, locandiere.getMaxStatistica(attributo), 1e-9, attributo.name());
-		}
+		assertEquals(bardo.getMaxIntelligenza() * 0.85, locandiere.getMaxIntelligenza(), 1e-9);
 		assertEquals(90, locandiere.getSaluteBase());
 		assertEquals(30, locandiere.getMagiaBase());
 		assertEquals(14, locandiere.getLivellamentoMagia());

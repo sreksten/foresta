@@ -31,14 +31,14 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	private final List<ArtefattoMD> artefatti = new ArrayList<>();
 	// Chi viaggia con il gruppo senza farne parte (vedi GruppoGiocatore.aggiungiOspite)
 	private final List<PersonaggioMD> ospiti = new ArrayList<>();
-	// Gli ospiti che gli avversari possono attaccare, per uuid
-	private final Set<String> ospitiVulnerabili = new HashSet<>();
+	// Gli ospiti che gli avversari possono attaccare, per uuid; in ordine alfabetico, così il salvataggio li scrive sempre nello stesso ordine
+	private final Set<String> ospitiVulnerabili = new TreeSet<>();
 	// Le sfide a carta, forbici e sasso vinte in tutta la partita (vedi carta_forbici_sasso.md)
 	private int sfideVinte;
 	// Vale per tutta la partita e si salva con il gruppo. Diventa vero quando un sacerdote o una sacerdotessa entra nel gruppo
 	// accettando l'offerta di una missione (La Benedizione, Il Giro delle Sette Chiese): da allora nessuna missione lo ripropone,
 	// così se ne ottiene al più uno. Un rifiuto, o un gruppo già al completo, non lo alzano: l'altra missione può ancora offrirlo.
-	// Chi lo legge e lo scrive: OffertaDelSacerdote. Si azzera con una partita nuova (reimposta).
+	// Chi lo legge e lo scrive: OffertaDelSacerdote (in 09-foresta-missioni, attraverso GruppoGiocatore). Si azzera con una partita nuova (reimposta).
 	private boolean sacerdoteAccolto;
 
 	/**
@@ -113,12 +113,11 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		artefatti.remove(artefatto);
 	}
 
-	////////////////////////////////
-
 	/**
 	 * Azzera il gruppo per una partita nuova: oltre a quanto azzera {@link GruppoMD#reimposta()}, reimposta
-	 * artefatti, ospiti e ospiti vulnerabili, e il conto delle sfide vinte.
+	 * artefatti, ospiti e ospiti vulnerabili, il conto delle sfide vinte e il sacerdote accolto.
 	 */
+	@Override
 	public void reimposta() {
 		super.reimposta();
 		artefatti.clear();

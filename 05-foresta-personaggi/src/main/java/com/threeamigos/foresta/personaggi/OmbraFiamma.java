@@ -153,25 +153,8 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public double getMaxStatistica(TipoAttributo tipoAttributo) {
-		switch (tipoAttributo) {
-			case FORZA:
-				return CostantiPersonaggi.OMBRAFIAMMA_MAX_FORZA;
-			case DESTREZZA:
-				return CostantiPersonaggi.OMBRAFIAMMA_MAX_DESTREZZA;
-			case COSTITUZIONE:
-				return CostantiPersonaggi.OMBRAFIAMMA_MAX_COSTITUZIONE;
-			case INTELLIGENZA:
-				return CostantiPersonaggi.OMBRAFIAMMA_MAX_INTELLIGENZA;
-			case SAGGEZZA:
-				return CostantiPersonaggi.OMBRAFIAMMA_MAX_SAGGEZZA;
-			case CARISMA:
-				return CostantiPersonaggi.OMBRAFIAMMA_MAX_CARISMA;
-			case FORTUNA:
-				return CostantiPersonaggi.OMBRAFIAMMA_MAX_FORTUNA;
-			default:
-				throw new IllegalArgumentException(tipoAttributo + " non è un tipo primario");
-		}
+	public double getMaxIntelligenza() {
+		return CostantiPersonaggi.OMBRAFIAMMA_MAX_INTELLIGENZA;
 	}
 
 	@Override

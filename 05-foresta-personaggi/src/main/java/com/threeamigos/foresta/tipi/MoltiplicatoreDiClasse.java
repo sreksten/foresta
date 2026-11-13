@@ -58,9 +58,10 @@ public final class MoltiplicatoreDiClasse {
 	}
 
 	/**
-	 * Se la classe sta sopra la media (più di 1), sotto (meno di 1) o nella media
+	 * Se la classe sta sopra la media (più di 1), sotto (meno di 1) o nella media: 1, -1 o 0, come un Comparator
 	 */
 	public int getSegno() {
+		// Si confronta in centesimi e arrotondato, così un 0,999999 nato da un calcolo vale 1 come il testo che lo mostra ("1")
 		return Double.compare(Math.round(moltiplicatore * 100.0d), 100L);
 	}
 

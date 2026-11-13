@@ -86,6 +86,7 @@ final class SaluteEMorte {
 		md().set(TipoAttributo.SALUTE, salute);
 		md().set(TipoAttributo.STANCHEZZA, 9);
 		md().setVivo(true);
+		md().setCausaTrapasso(null);
 		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(p, TipoAttributo.SALUTE, salutePrecedente, salute));
 		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(p, TipoAttributo.STANCHEZZA, stanchezzaPrecedente, 9));
 		BusEventi.pubblica(new NotificaVariazioneStatoVitalePersonaggio(p, true));

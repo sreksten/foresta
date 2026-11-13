@@ -2,7 +2,6 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 
-import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
@@ -134,25 +133,8 @@ public class Strega extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public double getMaxStatistica(TipoAttributo tipoAttributo) {
-		switch (tipoAttributo) {
-			case FORZA:
-				return CostantiPersonaggi.STREGA_MAX_FORZA;
-			case DESTREZZA:
-				return CostantiPersonaggi.STREGA_MAX_DESTREZZA;
-			case COSTITUZIONE:
-				return CostantiPersonaggi.STREGA_MAX_COSTITUZIONE;
-			case INTELLIGENZA:
-				return CostantiPersonaggi.STREGA_MAX_INTELLIGENZA;
-			case SAGGEZZA:
-				return CostantiPersonaggi.STREGA_MAX_SAGGEZZA;
-			case CARISMA:
-				return CostantiPersonaggi.STREGA_MAX_CARISMA;
-			case FORTUNA:
-				return CostantiPersonaggi.STREGA_MAX_FORTUNA;
-			default:
-				throw new IllegalArgumentException(tipoAttributo + " non è un tipo primario");
-		}
+	public double getMaxIntelligenza() {
+		return CostantiPersonaggi.STREGA_MAX_INTELLIGENZA;
 	}
 
 	@Override

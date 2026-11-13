@@ -109,10 +109,10 @@ class PredicatiTest {
 
     @Test
     void l_AstuziaEILMassimoDiClassePerLaRampaSulLivello() {
-        double massimo = guerriero.getMaxStatistica(com.threeamigos.foresta.tipi.TipoAttributo.INTELLIGENZA);
+        double massimo = guerriero.getMaxIntelligenza();
         assertEquals(massimo * CostantiTattiche.ASTUZIA_PARTENZA, Astuzia.di(guerriero), 1e-9, "al livello 1 il 40%");
         Personaggio stregaAlta = FabbricaPersonaggi.crea(TipoPersonaggio.STREGA, 9);
-        assertEquals(stregaAlta.getMaxStatistica(com.threeamigos.foresta.tipi.TipoAttributo.INTELLIGENZA), Astuzia.di(stregaAlta), 1e-9, "al livello 9 il pieno");
+        assertEquals(stregaAlta.getMaxIntelligenza(), Astuzia.di(stregaAlta), 1e-9, "al livello 9 il pieno");
         Personaggio stregaBassa = FabbricaPersonaggi.crea(TipoPersonaggio.STREGA, 1);
         ContestoTattico dellaStrega = new ContestoTattico(stregaBassa, false, Collections.singletonList(stregaBassa), Collections.singletonList(guerriero), Collections.emptyList());
         // La Strega ha 65 di massimo: 26 al livello 1, quindi è della terza fascia (20-30) e non della quarta

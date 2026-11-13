@@ -2,7 +2,6 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 
-import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
@@ -133,24 +132,7 @@ public class OmbraNera extends NonMortoVolante {
 	}
 
 	@Override
-	public double getMaxStatistica(TipoAttributo tipoAttributo) {
-		switch (tipoAttributo) {
-			case FORZA:
-				return CostantiPersonaggi.OMBRANERA_MAX_FORZA;
-			case DESTREZZA:
-				return CostantiPersonaggi.OMBRANERA_MAX_DESTREZZA;
-			case COSTITUZIONE:
-				return CostantiPersonaggi.OMBRANERA_MAX_COSTITUZIONE;
-			case INTELLIGENZA:
-				return CostantiPersonaggi.OMBRANERA_MAX_INTELLIGENZA;
-			case SAGGEZZA:
-				return CostantiPersonaggi.OMBRANERA_MAX_SAGGEZZA;
-			case CARISMA:
-				return CostantiPersonaggi.OMBRANERA_MAX_CARISMA;
-			case FORTUNA:
-				return CostantiPersonaggi.OMBRANERA_MAX_FORTUNA;
-			default:
-				throw new IllegalArgumentException(tipoAttributo + " non è un tipo primario");
-		}
+	public double getMaxIntelligenza() {
+		return CostantiPersonaggi.OMBRANERA_MAX_INTELLIGENZA;
 	}
 }

@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.tattiche.valutazione;
 
-import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.CostantiTattiche;
 
@@ -18,7 +17,7 @@ public final class Astuzia {
 	 * L'astuzia del personaggio: la sua intelligenza massima moltiplicata per una rampa che parte da un valore iniziale e cresce con il livello, fino a un tetto.
 	 */
 	public static double di(Personaggio personaggio) {
-		double massimo = personaggio.getMaxStatistica(TipoAttributo.INTELLIGENZA);
+		double massimo = personaggio.getMaxIntelligenza();
 		double rampa = Math.min(1.0d, CostantiTattiche.ASTUZIA_PARTENZA + CostantiTattiche.ASTUZIA_PER_LIVELLO * (personaggio.getLivello() - 1));
 		return massimo * rampa;
 	}

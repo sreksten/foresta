@@ -26,16 +26,15 @@ import static com.threeamigos.foresta.serializzazione.Serializzabile.*;
  * soltanto alcune scorciatoie di scrittura, {@code setForza}, {@code setSalute}..., perché le classi dei personaggi le
  * chiamano nel costruttore per darsi i valori di partenza, e lì si leggono meglio di un {@code set(TipoAttributo.FORZA, ...)}.
  * <p>
- * Le regole del gioco (come cambiano gli attributi, come si combatte) stanno nel motore; qui ci sono solo i dati.
+ * Le regole del gioco (come cambiano gli attributi, come si combatte) stanno in personaggi.PersonaggioBase e nei moduli
+ * sopra (combattimento, poteri, motore); qui ci sono solo i dati.
  *
  * @author Stefano Reksten
  */
 public class PersonaggioMD implements Serializzabile {
 
 	/**
-	 * Costante che indica che un dato attributo non ha limite.
-	 * Per il tempo, indica che il personaggio è entrato definitivamente nel gruppo
-	 * di un giocatore.
+	 * Il valore massimo che vuol dire "nessun limite" (vedi PersonaggioBase.limitaEntroMassimi).
 	 */
 	public static final int SENZA_LIMITE = -1;
 
@@ -53,7 +52,6 @@ public class PersonaggioMD implements Serializzabile {
 	 */
 	private String nome;
 
-	// Impostati da PersonaggioBase uguali per tutti i personaggi
 	/**
 	 * Se il personaggio è vivo
 	 */
@@ -71,7 +69,7 @@ public class PersonaggioMD implements Serializzabile {
 	 */
 	private int puntiAbilitaDisponibili;
 	/**
-	 * La causa della morte del personaggio
+	 * La causa della morte del personaggio, già in parole per i testi; null se è vivo
 	 */
 	private String causaTrapasso;
 	/**
@@ -103,7 +101,8 @@ public class PersonaggioMD implements Serializzabile {
 	 */
 	private final Map<TipoAttributo, Double> valoriAttributi = new EnumMap<>(TipoAttributo.class);
 	/**
-	 * Modificatori permanenti agli attributi dei personaggi
+	 * I modificatori agli attributi che il personaggio ha su di sé, permanenti e a tempo (quelli degli artefatti stanno negli
+	 * artefatti)
 	 */
 	private final List<ModificatoreAttributoMD> modificatori = new ArrayList<>();
 	/**
@@ -422,6 +421,7 @@ public class PersonaggioMD implements Serializzabile {
 	 * l'inventario li mostra.
 	 */
 	public void ripristinaArtefatti(List<ArtefattoMD> prima) {
+		// Prima si copia, poi si svuota: così funziona anche se "prima" fosse una vista di questa stessa lista
 		List<ArtefattoMD> copia = new ArrayList<>(prima);
 		artefatti.clear();
 		artefatti.addAll(copia);

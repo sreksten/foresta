@@ -6,9 +6,8 @@ import com.threeamigos.foresta.artefatti.VistaScambio;
 
 /**
  * Il GruppoGiocatore rifiuta lo spostamento di un Artefatto da un Personaggio verso l'inventario generale.
- * Il discriminante è il peso dell'oggetto.
  * <p>
- * (NOTA: in questo momento l'inventario generale non ha limite di peso, quindi questo evento non viene sollevato).
+ * Oggi nessuno la pubblica: l'inventario generale non ha limite di peso, quindi lo stoccaggio si approva sempre.
  *
  * @author Stefano Reksten
  */

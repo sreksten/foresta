@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.eventi.notifiche;
 
-import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.tipi.TipoEvento;
 
 /**
@@ -8,23 +7,9 @@ import com.threeamigos.foresta.tipi.TipoEvento;
  *
  * @author Stefano Reksten
  */
-public class NotificaVariazioneDisponibilitaPozioniSalute extends EventoBase {
-
-    private final int valorePrecedente;
-    private final int nuovoValore;
+public class NotificaVariazioneDisponibilitaPozioniSalute extends NotificaVariazioneDisponibilita {
 
     public NotificaVariazioneDisponibilitaPozioniSalute(int valorePrecedente, int nuovoValore) {
-        super(TipoEvento.NOTIFICA_VARIAZIONE_DISPONIBILITA_POZIONI_SALUTE);
-        this.valorePrecedente = valorePrecedente;
-        this.nuovoValore = nuovoValore;
+        super(TipoEvento.NOTIFICA_VARIAZIONE_DISPONIBILITA_POZIONI_SALUTE, valorePrecedente, nuovoValore);
     }
-
-    public int getValorePrecedente() {
-        return valorePrecedente;
-    }
-
-    public int getNuovoValore() {
-        return nuovoValore;
-    }
-
 }

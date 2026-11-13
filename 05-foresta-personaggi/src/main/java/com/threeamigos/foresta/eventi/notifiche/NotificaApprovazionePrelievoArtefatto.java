@@ -5,7 +5,7 @@ import com.threeamigos.foresta.tipi.TipoEvento;
 import com.threeamigos.foresta.artefatti.VistaScambio;
 
 /**
- * Il GruppoGiocatore (che controlla il peso dell'Artefatto e la disponibilità di carico di un Personaggio)
+ * Il GruppoGiocatore (che controlla con RegoleEquipaggiamento se il Personaggio può prendere l'Artefatto)
  * approva lo spostamento di un Artefatto dall'inventario generale verso un Personaggio.
  * L'Artefatto passa nell'inventario del Personaggio.
  *

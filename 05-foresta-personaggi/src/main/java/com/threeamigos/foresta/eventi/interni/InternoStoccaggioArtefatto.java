@@ -8,9 +8,8 @@ import com.threeamigos.foresta.artefatti.ScambiatoreArtefatti;
 
 /**
  * Il giocatore chiede di poter spostare un Artefatto da un Personaggio verso l'inventario del gruppo.
- * L'esito viene deciso dal peso dell'Artefatto.
  * <p>
- * (NOTA: in questo momento l'inventario generale non ha limite di peso, quindi viene approvato automaticamente).
+ * L'inventario generale non ha limite di peso, quindi GruppoGiocatore approva sempre ({@link #approvazione()}).
  *
  * @author Stefano Reksten
  */

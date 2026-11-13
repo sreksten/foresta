@@ -35,9 +35,10 @@ public final class CostantiIncantesimi {
      */
     public static final int COSTO_LANCIO_SENZA_DANNI = 5;
 
-    /**
-     * Incantesimi
-     */
+    // Gli incantesimi, uno per uno. Il costo di lancio di chi fa danno si calcola dai suoi danni con costoPerBersaglio, anche se i
+    // danni sono scritti una riga più sotto: Java lo permette perché il nome porta davanti la classe (CostantiIncantesimi.), e il valore è
+    // giusto perché i danni sono costanti scritte con un numero, che il compilatore mette al loro posto (se un giorno i danni diventassero
+    // un calcolo, andrebbero spostati sopra il costo, altrimenti lì varrebbero ancora 0).
     public static final int INCANTESIMO_ACQUA_COSTO_ACQUISTO = 5;
 
     public static final int INCANTESIMO_ACQUA_COSTO_LANCIO = costoPerBersaglio(CostantiIncantesimi.INCANTESIMO_ACQUA_DANNI);

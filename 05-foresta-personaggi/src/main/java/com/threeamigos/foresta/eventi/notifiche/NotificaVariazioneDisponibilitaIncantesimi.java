@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.eventi.notifiche;
 
-import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.tipi.TipoEvento;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
@@ -9,29 +8,19 @@ import com.threeamigos.foresta.tipi.TipoIncantesimo;
  *
  * @author Stefano Reksten
  */
-public class NotificaVariazioneDisponibilitaIncantesimi extends EventoBase {
+public class NotificaVariazioneDisponibilitaIncantesimi extends NotificaVariazioneDisponibilita {
 
-    private final int valorePrecedente;
-    private final int nuovoValore;
     private final TipoIncantesimo tipoIncantesimo;
 
     public NotificaVariazioneDisponibilitaIncantesimi(TipoIncantesimo tipoIncantesimo, int valorePrecedente, int nuovoValore) {
-        super(TipoEvento.NOTIFICA_VARIAZIONE_DISPONIBILITA_INCANTESIMI);
+        super(TipoEvento.NOTIFICA_VARIAZIONE_DISPONIBILITA_INCANTESIMI, valorePrecedente, nuovoValore);
         this.tipoIncantesimo = tipoIncantesimo;
-        this.valorePrecedente = valorePrecedente;
-        this.nuovoValore = nuovoValore;
     }
 
-    public int getValorePrecedente() {
-        return valorePrecedente;
-    }
-
-    public int getNuovoValore() {
-        return nuovoValore;
-    }
-
+    /**
+     * L'incantesimo di cui è cambiato il numero di pergamene
+     */
     public TipoIncantesimo getClasseIncantesimo() {
         return tipoIncantesimo;
     }
-
 }

@@ -616,6 +616,10 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 
 	double getMoltiplicatoreRecuperoFisico();
 
-	double getMaxStatistica(TipoAttributo tipoAttributo);
+	/**
+	 * L'intelligenza massima della classe (CostantiPersonaggi.<classe>_MAX_INTELLIGENZA): non quella vera del personaggio, che
+	 * distribuisce LanciatoreDeiDadi, ma il riferimento della classe per l'astuzia delle sue tattiche (Astuzia).
+	 */
+	double getMaxIntelligenza();
 
 }

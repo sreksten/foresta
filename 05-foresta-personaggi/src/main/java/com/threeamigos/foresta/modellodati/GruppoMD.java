@@ -22,7 +22,7 @@ import static com.threeamigos.foresta.serializzazione.Serializzabile.stampaRiga;
 public class GruppoMD implements Serializzabile {
 
 	private final List<PersonaggioMD> personaggiMD = new ArrayList<>();
-	// Le scorte del gruppo: le pergamene degli incantesimi e le pozioni
+	// Le scorte del gruppo: le pergamene degli incantesimi (quante per ogni incantesimo; chi manca ne ha zero) e le pozioni
 	protected final Map<TipoIncantesimo, Integer> incantesimi = new EnumMap<>(TipoIncantesimo.class);
 	protected int pozioniSalute;
 	protected int pozioniSaluteGrande;
@@ -30,7 +30,8 @@ public class GruppoMD implements Serializzabile {
 	protected int pozioniMagiaGrande;
 	protected int pozioniPanacea;
 	protected int pozioniAumentoLivello;
-	// La posizione del capo fra i personaggi: il capo è il primo che è entrato nel gruppo, e non cambia se lo si sposta
+	// La posizione del capo fra i personaggi: il capo è il primo che è entrato nel gruppo, e resta lui anche se lo si sposta
+	// (allora chi lo sposta, GruppoGiocatore, aggiorna qui la sua nuova posizione)
 	protected int indiceCapo;
 
 	/**

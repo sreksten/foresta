@@ -191,7 +191,7 @@ Grammatiche inglesi (passo 10, 2026-11-01), da rileggere per tono e giochi di pa
 
 ### Costanti di bilanciamento come dati
 
-Le costanti di bilanciamento (soprattutto quelle di `CostantiPersonaggi`) sono molte, in gran parte tabelle per classe (`GOBLIN_MAX_FORZA`, `GOBLIN_MOLTIPLICATORE_CRITICO`...). Metterle in una risorsa (properties o JSON) permetterebbe di bilanciare senza ricompilare. C'è un motivo in più: i `static final` primitivi vengono copiati nelle classi che li usano, quindi una compilazione incrementale parziale può tenere valori vecchi. È il lavoro più grande dell'elenco e ha senso solo se serve davvero il bilanciamento senza ricompilare.
+Le costanti di bilanciamento (soprattutto quelle di `CostantiPersonaggi`) sono molte, in gran parte tabelle per classe (`GOBLIN_SALUTE_BASE`, `GOBLIN_MOLTIPLICATORE_CRITICO`...). Metterle in una risorsa (properties o JSON) permetterebbe di bilanciare senza ricompilare. C'è un motivo in più: i `static final` primitivi vengono copiati nelle classi che li usano, quindi una compilazione incrementale parziale può tenere valori vecchi. È il lavoro più grande dell'elenco e ha senso solo se serve davvero il bilanciamento senza ricompilare.
 
 ### Ciclo di vita dell'app
 

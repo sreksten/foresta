@@ -2,7 +2,6 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 
-import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
@@ -144,24 +143,7 @@ public class Druida extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public double getMaxStatistica(TipoAttributo tipoAttributo) {
-		switch (tipoAttributo) {
-			case FORZA:
-				return CostantiPersonaggi.DRUIDA_MAX_FORZA;
-			case DESTREZZA:
-				return CostantiPersonaggi.DRUIDA_MAX_DESTREZZA;
-			case COSTITUZIONE:
-				return CostantiPersonaggi.DRUIDA_MAX_COSTITUZIONE;
-			case INTELLIGENZA:
-				return CostantiPersonaggi.DRUIDA_MAX_INTELLIGENZA;
-			case SAGGEZZA:
-				return CostantiPersonaggi.DRUIDA_MAX_SAGGEZZA;
-			case CARISMA:
-				return CostantiPersonaggi.DRUIDA_MAX_CARISMA;
-			case FORTUNA:
-				return CostantiPersonaggi.DRUIDA_MAX_FORTUNA;
-			default:
-				throw new IllegalArgumentException(tipoAttributo + " non è un tipo primario");
-		}
+	public double getMaxIntelligenza() {
+		return CostantiPersonaggi.DRUIDA_MAX_INTELLIGENZA;
 	}
 }

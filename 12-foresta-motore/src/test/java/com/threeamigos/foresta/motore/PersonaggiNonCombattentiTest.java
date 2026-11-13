@@ -2,7 +2,6 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.tipi.TipoAbilita;
 import com.threeamigos.foresta.abilita.AbilitaInnate;
-import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.missioni.storie.LaSfidaDeiCampioni;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
@@ -27,8 +26,6 @@ class PersonaggiNonCombattentiTest {
             TipoPersonaggio.LOCANDIERE, TipoPersonaggio.ARMAIOLO, TipoPersonaggio.ALCHIMISTA,
             TipoPersonaggio.VENDITORE_DI_PERGAMENE, TipoPersonaggio.INCANTATORE, TipoPersonaggio.MOGLIE_DEL_BARDO);
 
-    private static final TipoAttributo[] PRIMARI = {TipoAttributo.FORZA, TipoAttributo.DESTREZZA, TipoAttributo.COSTITUZIONE,
-            TipoAttributo.INTELLIGENZA, TipoAttributo.SAGGEZZA, TipoAttributo.CARISMA, TipoAttributo.FORTUNA};
 
     @BeforeEach
     void preparaModello() {
@@ -55,12 +52,10 @@ class PersonaggiNonCombattentiTest {
         Personaggio bardo = FabbricaPersonaggi.modello(TipoPersonaggio.BARDO);
         for (TipoPersonaggio tipo : NON_COMBATTENTI) {
             Personaggio personaggio = FabbricaPersonaggi.modello(tipo);
-            for (TipoAttributo attributo : PRIMARI) {
-                double massimo = personaggio.getMaxStatistica(attributo);
-                double massimoDelBardo = bardo.getMaxStatistica(attributo);
-                assertTrue(massimo < massimoDelBardo, tipo + " " + attributo + ": " + massimo + " non è sotto " + massimoDelBardo);
-                assertTrue(massimo > massimoDelBardo * 0.7, tipo + " " + attributo + ": troppo più debole del bardo");
-            }
+            double massimo = personaggio.getMaxIntelligenza();
+            double massimoDelBardo = bardo.getMaxIntelligenza();
+            assertTrue(massimo < massimoDelBardo, tipo + ": " + massimo + " non è sotto " + massimoDelBardo);
+            assertTrue(massimo > massimoDelBardo * 0.7, tipo + ": troppo più debole del bardo");
             assertTrue(personaggio.getSaluteBase() < bardo.getSaluteBase());
             assertTrue(personaggio.getSaluteBase() > bardo.getSaluteBase() * 0.7);
         }

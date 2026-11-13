@@ -4,7 +4,8 @@ import com.threeamigos.foresta.tipi.TipoEvento;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 
 /**
- * Classe base astratta per notificare eventi che accadono ad un Personaggio.
+ * Classe base astratta per notificare eventi che accadono a un Personaggio. Porta il personaggio come VistaPersonaggio, in
+ * sola lettura, perché queste notifiche le legge la UI.
  *
  * @author Stefano Reksten
  */

@@ -62,14 +62,14 @@ Le altre categorie (umanoide, bestia, draconico, gigantesco, ibrido) non hanno r
 | **Drago** | gelo ×1,5 | | fuoco | il fuoco è casa sua; il freddo ferisce i draghi di fuoco |
 | **Chimera Drago** | gelo ×1,5 | veleno ×0,5 | fuoco | idem; ha anche la testa velenosa |
 | **Chimera** | | fuoco ×0,5, veleno ×0,5 | | respira fuoco e veleno (è nel suo repertorio) |
-| **Viverna** | | | veleno | è velenosa (è nel suo repertorio) |
+| **Viverna** | | | veleno, fuoco | è velenosa (è nel suo repertorio); come i draghi, il fuoco non la ferisce |
 | **Idra** | fuoco ×1,5, acido ×1,5 | | terra, acqua, aria, veleno | creatura delle paludi e velenosa; il fuoco e l'acido impediscono alle teste di ricrescere |
-| **Troll** | fuoco ×1,5, acido ×1,5 | | | si rigenera, ma non dal fuoco e dall'acido |
+| **Troll** | fuoco ×1,5, acido ×1,5 | | terra | si rigenera, ma non dal fuoco e dall'acido; la terra non lo scalfisce |
 | **Gargoyle** | contundente ×1,5 | perforante ×0,75, tagliente ×0,75 | tutto ciò che non è fisico (e veleno e psichico, dal costrutto) | è di pietra: subisce solo i colpi fisici, e la pietra si spacca a martellate |
 | **Necromante** | sacro ×1,25 | necrotico ×0,5 | | vive di energia necrotica, ma è vivo: la luce sacra lo ferisce di più |
-| **Strega** | fuoco ×1,5 | maledizione ×0,5 | | "al rogo"; le maledizioni sono il suo mestiere |
+| **Strega** | fuoco ×1,5 | maledizione ×0,5 | acqua, aria, terra | "al rogo"; gli altri elementi non la toccano; le maledizioni sono il suo mestiere |
 | **Folletto** | tagliente ×1,25, perforante ×1,25 | | | teme il ferro (le fate e i folletti soffrono il "ferro freddo") |
-| **Arpia** | | | aria (agli incantesimi) | vive nell'aria |
+| **Arpia** | | | aria | vive nell'aria |
 | **Chierico, Chierica** | | necrotico ×0,75, maledizione ×0,75 | | serve il sacro e ne è protetto |
 | **Druido, Druida** | fuoco ×1,25, tagliente ×1,1 | acqua ×0,75, terra ×0,75, veleno ×0,75 | | vive di terra, acqua e veleni, ma soffre il fuoco e le lame |
 

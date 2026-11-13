@@ -64,6 +64,7 @@ class CaratteristicheDiClasseTest {
 		assertTrue(TipoPersonaggio.TROLL.isImmuneAIncantesimo(TipoIncantesimo.TERRA));
 		assertTrue(TipoPersonaggio.ARPIA.isImmuneAIncantesimo(TipoIncantesimo.ARIA));
 		assertTrue(TipoPersonaggio.VIVERNA.isImmuneAIncantesimo(TipoIncantesimo.FUOCO));
+		assertFalse(TipoPersonaggio.STREGA.isImmuneAIncantesimo(TipoIncantesimo.FUOCO), "al rogo: il fuoco la brucia");
 		for (TipoPersonaggio fantasma : new TipoPersonaggio[]{TipoPersonaggio.FANTASMA, TipoPersonaggio.OMBRA_NERA, TipoPersonaggio.SPETTRO, TipoPersonaggio.SPIRITO}) {
 			assertTrue(fantasma.isImmuneAIncantesimo(TipoIncantesimo.ARIA), fantasma.name());
 			assertTrue(fantasma.isImmuneAIncantesimo(TipoIncantesimo.TERRA), fantasma.name());
@@ -179,5 +180,21 @@ class CaratteristicheDiClasseTest {
 			assertTrue(voce.getDescrizione().length() > 40, voce.name());
 		}
 		assertEquals(TipoPersonaggio.MAGO.getDescrizione(), TipoPersonaggio.MAGA.getDescrizione());
+	}
+
+	@Test
+	void chiEImmuneAUnIncantesimoEImmuneAncheAlSuoDanno() {
+		for (TipoPersonaggio classe : TipoPersonaggio.values()) {
+			for (TipoIncantesimo incantesimo : TipoIncantesimo.values()) {
+				// Morte uccide e non fa danno; i benefici non hanno un tipo di danno
+				if (incantesimo == TipoIncantesimo.MORTE || incantesimo.getTipoDanno() == null) {
+					continue;
+				}
+				if (classe.isImmuneAIncantesimo(incantesimo)) {
+					assertEquals(0.0d, classe.getMoltiplicatoreDannoSubito(incantesimo.getTipoDanno()),
+							classe + " è immune a " + incantesimo + " ma non al danno " + incantesimo.getTipoDanno());
+				}
+			}
+		}
 	}
 }

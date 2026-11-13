@@ -2,7 +2,6 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 
-import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
@@ -143,24 +142,7 @@ public class Necromante extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public double getMaxStatistica(TipoAttributo tipoAttributo) {
-		switch (tipoAttributo) {
-			case FORZA:
-				return CostantiPersonaggi.NECROMANTE_MAX_FORZA;
-			case DESTREZZA:
-				return CostantiPersonaggi.NECROMANTE_MAX_DESTREZZA;
-			case COSTITUZIONE:
-				return CostantiPersonaggi.NECROMANTE_MAX_COSTITUZIONE;
-			case INTELLIGENZA:
-				return CostantiPersonaggi.NECROMANTE_MAX_INTELLIGENZA;
-			case SAGGEZZA:
-				return CostantiPersonaggi.NECROMANTE_MAX_SAGGEZZA;
-			case CARISMA:
-				return CostantiPersonaggi.NECROMANTE_MAX_CARISMA;
-			case FORTUNA:
-				return CostantiPersonaggi.NECROMANTE_MAX_FORTUNA;
-			default:
-				throw new IllegalArgumentException(tipoAttributo + " non è un tipo primario");
-		}
+	public double getMaxIntelligenza() {
+		return CostantiPersonaggi.NECROMANTE_MAX_INTELLIGENZA;
 	}
 }

@@ -5,7 +5,8 @@ import com.threeamigos.foresta.tipi.TipoEvento;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 /**
- * Evento interno del motore che traccia la creazione di un Personaggio
+ * È stato creato un Personaggio: lo pubblica PersonaggioBase alla fine del costruttore. Oggi lo ascolta solo il registro
+ * degli eventi di prova (SnifferBusEventi)
  *
  * @author Stefano Reksten
  */
