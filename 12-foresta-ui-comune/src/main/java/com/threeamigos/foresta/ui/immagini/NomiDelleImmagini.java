@@ -212,14 +212,6 @@ public final class NomiDelleImmagini {
 	public static final String INDICATORE = "mappa/Indicatore.png";
 
 	/**
-	 * Se la risorsa è la tessera di una casella della mappa (un terreno, un luogo, una bottega), e non un segno che le si disegna sopra (il segnalino,
-	 * l'indicatore): le tessere hanno parti trasparenti, e chi le disegna ci mette sotto il nero
-	 */
-	public static boolean isTesseraDellaMappa(String risorsa) {
-		return risorsa != null && risorsa.startsWith("mappa/") && !risorsa.equals(SEGNALINO) && !risorsa.equals(INDICATORE);
-	}
-
-	/**
 	 * La tessera di una locazione sulla mappa (per il bosco, la prima variante: vedi {@link #tesseraDelBosco}), o null se quel tipo non ne ha una
 	 */
 	public static String tessera(TipoLocazione tipo) {

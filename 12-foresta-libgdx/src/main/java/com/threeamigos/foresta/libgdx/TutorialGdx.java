@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.libgdx;
 
-import com.threeamigos.foresta.ui.immagini.NomiDelleImmagini;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.threeamigos.foresta.tipi.TipoIcona;
@@ -80,10 +79,6 @@ final class TutorialGdx {
 				punta.x, punta.y, 1f);
 		batch.setColor(Color.WHITE);
 		for (int i = 0; i < risorseDelleIcone.size(); i++) {
-			// La tessera di un luogo ha parti trasparenti: come sulla mappa, sta sul nero
-			if (NomiDelleImmagini.isTesseraDellaMappa(risorseDelleIcone.get(i))) {
-				immagini.riempi(batch, posizione.x + intestazione.getXDellIcona(i), posizione.y + intestazione.getYDellIcona(i), larghezze[i], altezze[i], Color.BLACK);
-			}
 			immagini.disegna(batch, risorseDelleIcone.get(i), posizione.x + intestazione.getXDellIcona(i), posizione.y + intestazione.getYDellIcona(i), zoom);
 		}
 		if (titolo.isPresent()) {

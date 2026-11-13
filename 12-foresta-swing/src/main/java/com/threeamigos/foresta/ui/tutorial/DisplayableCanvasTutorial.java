@@ -1,7 +1,5 @@
 package com.threeamigos.foresta.ui.tutorial;
 
-import com.threeamigos.foresta.ui.immagini.NomiDelleImmagini;
-import com.threeamigos.foresta.ui.immagini.ImmaginiAwt;
 import com.threeamigos.foresta.tipi.TipoIcona;
 import com.threeamigos.foresta.ui.Area;
 import com.threeamigos.foresta.ui.Punto;
@@ -103,9 +101,7 @@ public class DisplayableCanvasTutorial {
 		DoomdarkFont font = DoomdarkFont.medio();
 		List<BufferedImage> icone = new ArrayList<>();
 		for (String risorsa : risorseDelleIcone) {
-			BufferedImage icona = BufferedImageBuilder.buildBufferedImage(risorsa, LivelloDiZoom.valore());
-			// La tessera di un luogo ha parti trasparenti: come sulla mappa, sta sul nero
-			icone.add(NomiDelleImmagini.isTesseraDellaMappa(risorsa) ? ImmaginiAwt.suFondoNero(icona) : icona);
+			icone.add(BufferedImageBuilder.buildBufferedImage(risorsa, LivelloDiZoom.valore()));
 		}
 		int[] larghezze = new int[icone.size()];
 		int[] altezze = new int[icone.size()];
