@@ -20,7 +20,7 @@ class NomiGrammaticaliDeiPersonaggiTest {
 	}
 
 	private static Personaggio modello(TipoPersonaggio tipo) {
-		return FabbricaPersonaggi.modello(tipo);
+		return FabbricaPersonaggi.crea(tipo, 1);
 	}
 
 	@Test

@@ -8,7 +8,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
  * sacra e la luce divina innate (sono del Sacerdote): sa scacciare i non morti (vedi {@code ScacciareINonMorti}) e imporre
  * le mani ({@code ImposizioneDelleMani}). Il femminile è la {@link Chierica}.
  */
-public class Chierico extends PersonaggioBase implements Personaggio {
+public class Chierico extends PersonaggioBase {
 
 	public Chierico(int livello) {
 		super(TipoPersonaggio.CHIERICO, livello);

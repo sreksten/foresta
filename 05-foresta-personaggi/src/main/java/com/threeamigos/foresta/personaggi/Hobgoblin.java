@@ -8,7 +8,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
  * L'hobgoblin: creatura umanoide e corrompibile, ma non amichevole. Con la corruzione offre un aiuto a pagamento, incantesimi
  * o la mappa della Foresta.
  */
-public class Hobgoblin extends PersonaggioBase implements Personaggio {
+public class Hobgoblin extends PersonaggioBase {
 
 	public Hobgoblin(int livello) {
 		super(TipoPersonaggio.HOBGOBLIN, livello);

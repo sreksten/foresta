@@ -15,7 +15,6 @@ import com.threeamigos.foresta.modificatori.ModificatoreAttivo;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Nome;
-import com.threeamigos.foresta.testi.Preposizione;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.*;
@@ -257,11 +256,13 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	/**
-	 * Le immunità agli effetti di stato che non sono della classe ma di questo personaggio: di norma nessuna. Il Guerriero, per esempio, non si
-	 * confonde e non si spaventa finché è in berserk. Non entrano nel bestiario, che descrive le classi.
+	 * Le immunità agli effetti di stato che non sono della classe ma di questo personaggio, in questo momento: chi ha il berserk (vedi
+	 * Berserk) non si confonde e non si spaventa finché ci è dentro. Una classe può aggiungerne di sue. Non entrano nel bestiario, che
+	 * descrive le classi.
 	 */
 	protected boolean isImmuneAEffettoPerIstanza(TipoEffettoDiStato effettoStato) {
-		return false;
+		return Berserk.haIlBerserk(getClasse()) && hasEffettoDiStato(TipoEffettoDiStato.BERSERK)
+				&& (effettoStato == TipoEffettoDiStato.CONFUSO || effettoStato == TipoEffettoDiStato.SPAVENTATO);
 	}
 	
 	/**
@@ -487,60 +488,59 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	// CLASSE
-	// Il nome della classe con quel che serve per articolarlo, nella lingua in uso: viene dai file dei testi della classe
-	// (NOME_SINGOLARE, NOME_PLURALE, GENERE, PRONOME...) e le regole sono della lingua (vedi RegoleDellaLingua)
-	private Nome nomeGrammaticale() {
-		return Nome.di(getClasse());
+	// Il nome della classe con quel che serve per articolarlo: vedi NomeDellaClasse
+	private NomeDellaClasse nomeDellaClasse() {
+		return NomeDellaClasse.di(getClasse());
 	}
 
 	@Override
 	public String getNomeSingolare() {
-		return nomeGrammaticale().getSingolare();
+		return nomeDellaClasse().getNomeSingolare();
 	}
 
 	@Override
 	public String getNomePlurale() {
-		return nomeGrammaticale().getPlurale();
+		return nomeDellaClasse().getNomePlurale();
 	}
 
 	@Override
 	public String getADS() {
-		return Lingue.corrente().articoloDeterminativo(nomeGrammaticale(), false);
+		return nomeDellaClasse().getADS();
 	}
 
 	@Override
 	public String getADP() {
-		return Lingue.corrente().articoloDeterminativo(nomeGrammaticale(), true);
+		return nomeDellaClasse().getADP();
 	}
 
 	@Override
 	public String getAIS() {
-		return Lingue.corrente().articoloIndeterminativo(nomeGrammaticale(), false);
+		return nomeDellaClasse().getAIS();
 	}
 
 	@Override
 	public String getAIP() {
-		return Lingue.corrente().articoloIndeterminativo(nomeGrammaticale(), true);
+		return nomeDellaClasse().getAIP();
 	}
 
 	@Override
 	public String getDeS() {
-		return Lingue.corrente().preposizioneArticolata(Preposizione.DI, nomeGrammaticale(), false);
+		return nomeDellaClasse().getDeS();
 	}
 
 	@Override
 	public String getDeP() {
-		return Lingue.corrente().preposizioneArticolata(Preposizione.DI, nomeGrammaticale(), true);
+		return nomeDellaClasse().getDeP();
 	}
 
 	@Override
 	public String getDa() {
-		return Lingue.corrente().daAgente(nomeGrammaticale());
+		return nomeDellaClasse().getDa();
 	}
 
 	@Override
 	public String getPronome() {
-		return nomeGrammaticale().getPronome().orElse("");
+		return nomeDellaClasse().getPronome();
 	}
 
 	@Override
@@ -1000,7 +1000,7 @@ public abstract class PersonaggioBase implements Personaggio {
 				return rigenerazioneMagiaSenzaModificatori();
 			case CARICO_MASSIMO:
 				// Quello salvato ha già i modificatori: applicandoli di nuovo la variazione dei temporanei verrebbe contata due volte
-				return potenzialeDiCarico(md, this);
+				return potenzialeDiCarico(md, valori());
 			default:
 				return md.getOptional(tipoAttributo).orElse(0.0d);
 		}
@@ -1013,17 +1013,17 @@ public abstract class PersonaggioBase implements Personaggio {
 	 * parata, resistenza magica, percezione, soggezione, furia, coraggio, valore, contrattazione, numero bersagli
 	 */
 	protected void ricalcolaAttributiSecondari() {
-		AttributiSecondari.ricalcola(md, this, this);
+		AttributiSecondari.ricalcola(md, valori(), this);
 	}
 
 	/**
 	 * Ricalcola gli attributi secondari (carico massimo, critico, precisione, velocità, furtività, parata,
 	 * resistenza magica, percezione, soggezione, furia, coraggio, valore, contrattazione, numero bersagli)
-	 * direttamente su {@code md}, usando i moltiplicatori di classe di {@code moltiplicatori}. Non pubblica eventi: da usare
+	 * direttamente su {@code md}, con i moltiplicatori della sua classe (CostantiPersonaggi.valoriDi). Non pubblica eventi: da usare
 	 * in fase di caricamento, quando non esiste ancora un Personaggio vivo a cui riferirli.
 	 */
-	public static void ricalcolaAttributiSecondari(PersonaggioMD md, Personaggio moltiplicatori) {
-		AttributiSecondari.ricalcola(md, moltiplicatori, null);
+	public static void ricalcolaAttributiSecondari(PersonaggioMD md) {
+		AttributiSecondari.ricalcola(md, CostantiPersonaggi.valoriDi(md.getClasse()), null);
 	}
 
 	// I valori della classe, dalla sua riga della tabella (CostantiPersonaggi.valoriDi): uguali per tutti i personaggi della classe

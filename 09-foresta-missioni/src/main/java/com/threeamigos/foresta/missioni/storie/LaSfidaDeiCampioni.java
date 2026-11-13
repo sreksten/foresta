@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.storie;
 
+import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 import com.threeamigos.foresta.missioni.PartitaCartaForbiciSasso;
 
 import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
@@ -14,7 +15,6 @@ import com.threeamigos.foresta.missioni.leggende.PescaLeggendaria;
 import com.threeamigos.foresta.missioni.richieste.CombattimentoRichiesto;
 import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.statistiche.Statistiche;
-import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.strumenti.dado.Dado;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
@@ -189,7 +189,7 @@ public class LaSfidaDeiCampioni extends MissioneAPassi implements ConLeggendario
 		for (int i = 0; i < CAMPIONI; i++) {
 			TipoPersonaggio classe = classi.get(Dado.tiraAncheAUnaFaccia(classi.size()) - 1);
 			TipoLocazione luogo = luoghi.remove(Dado.tiraAncheAUnaFaccia(luoghi.size()) - 1);
-			boolean donna = FabbricaPersonaggi.modello(classe).getSesso() == Personaggio.Sesso.FEMMINA;
+			boolean donna = CostantiPersonaggi.valoriDi(classe).isFemmina();
 			String nome = ProduttoreDiMissioniCasuale.rigaDiMissioni(donna ? "NOME_CAMPIONESSA" : "NOME_CAMPIONE");
 			RegistroPersonaggi.registraCampione(nome, classe);
 			campioni.add(IlCampione.di(classe, nome, luogo));
@@ -204,7 +204,7 @@ public class LaSfidaDeiCampioni extends MissioneAPassi implements ConLeggendario
 	public static List<TipoPersonaggio> classiAmichevoli() {
 		List<TipoPersonaggio> classi = new ArrayList<>();
 		for (TipoPersonaggio classe : TipoPersonaggio.values()) {
-			if (FabbricaPersonaggi.modello(classe).isAmichevole() && PartitaCartaForbiciSasso.puoGiocare(classe)) {
+			if (CostantiPersonaggi.valoriDi(classe).isAmichevole() && PartitaCartaForbiciSasso.puoGiocare(classe)) {
 				classi.add(classe);
 			}
 		}

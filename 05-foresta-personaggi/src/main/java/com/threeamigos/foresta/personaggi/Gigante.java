@@ -8,7 +8,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
  * Il gigante: creatura umanoide e gigantesca, corrompibile e amichevole. Con l'amicizia offre aiuto, incantesimi,
  * informazioni, mappe e un pasto.
  */
-public class Gigante extends PersonaggioBase implements Personaggio {
+public class Gigante extends PersonaggioBase {
 
 	public Gigante(int livello) {
 		super(TipoPersonaggio.GIGANTE, livello);

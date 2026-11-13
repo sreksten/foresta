@@ -3,8 +3,6 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.missioni.leggende.LaLeggendaDelNegoziante;
 import com.threeamigos.foresta.strumenti.ModalitaDiProva;
 import com.threeamigos.foresta.tutorial.RegistroSuggerimenti;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.mappa.Foresta;
 
@@ -85,11 +83,6 @@ final class PartitaDiTest implements AutoCloseable {
 		BusEventi.azzera();
 		BusEventi.impostaConsegna(Runnable::run);
 		Dado.ripristina();
-		// I modelli delle classi (FabbricaPersonaggi.modello) si creano una volta sola e creandoli si tira il dado: se nascessero dentro la partita,
-		// dopo il seme, la partita andrebbe diversamente a seconda che un test girato prima li abbia già creati o no. Si creano qui, prima del seme
-		for (TipoPersonaggio classe : TipoPersonaggio.values()) {
-			FabbricaPersonaggi.modello(classe);
-		}
 		Dado.impostaSeme(seme);
 		ModelloDati.installa();
 		StatoDelMotore.azzera();

@@ -138,7 +138,7 @@ class RegistroBestiarioTest {
         assertTrue(annunciate.isEmpty(), "nessun annuncio: la schermata e' ancora vuota");
         assertTrue(gestore.contieneRiga("GUERRIERO|true|"), "ma si salva");
         // Quando poi entra nel gruppo la voce c'e' gia': nemmeno allora c'e' niente da annunciare
-        BusEventi.pubblica(new InternoPersonaggioEntratoNelGruppo(FabbricaPersonaggi.modello(TipoPersonaggio.GUERRIERA)));
+        BusEventi.pubblica(new InternoPersonaggioEntratoNelGruppo(FabbricaPersonaggi.crea(TipoPersonaggio.GUERRIERA, 1)));
         assertTrue(annunciate.isEmpty());
         // Una classe senza voce nel bestiario (un non combattente) non fa niente
         assertFalse(TipoPersonaggio.MOGLIE_DEL_BARDO.hasVoceNelBestiario());
@@ -151,7 +151,7 @@ class RegistroBestiarioTest {
     void chiEntraNelGruppoHaGiaLaSuaVoceENonSiAnnuncia() {
         assertTrue(RegistroBestiario.isSbloccata(TipoPersonaggio.MAGO), "i personaggi giocabili sono noti da sempre");
 
-        BusEventi.pubblica(new InternoPersonaggioEntratoNelGruppo(FabbricaPersonaggi.modello(TipoPersonaggio.MAGA)));
+        BusEventi.pubblica(new InternoPersonaggioEntratoNelGruppo(FabbricaPersonaggi.crea(TipoPersonaggio.MAGA, 1)));
 
         assertTrue(RegistroBestiario.isSbloccata(TipoPersonaggio.MAGO), "Mago e Maga sono la stessa voce");
         assertTrue(annunciate.isEmpty(), "non c'è niente di nuovo da annunciare");

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.leggende;
 
+import com.threeamigos.foresta.personaggi.NomeDellaClasse;
 import com.threeamigos.foresta.missioni.incarichi.SceltaDegliIncarichi;
 import com.threeamigos.foresta.missioni.InSorteggio;
 import com.threeamigos.foresta.mappa.Foresta;
@@ -18,8 +19,6 @@ import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mondo.RegistroArtefatti;
 import com.threeamigos.foresta.statistiche.Statistiche;
-import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
-import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -178,7 +177,7 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 	 * I guardiani per i testi, con l'articolo: "le Viverne".
 	 */
 	private String getNomeDeiGuardiani() {
-		Personaggio modello = FabbricaPersonaggi.modello(getGuardiani().getClasse());
+		NomeDellaClasse modello = NomeDellaClasse.di(getGuardiani().getClasse());
 		return modello.getADP() + modello.getNomePlurale();
 	}
 

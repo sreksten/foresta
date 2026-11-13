@@ -6,7 +6,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 /**
  * La chierica: il Chierico al femminile, con lo stesso ruolo e le stesse capacità (vedi {@link Chierico}).
  */
-public class Chierica extends PersonaggioBase implements Personaggio {
+public class Chierica extends PersonaggioBase {
 
 	public Chierica(int livello) {
 		super(TipoPersonaggio.CHIERICA, livello);

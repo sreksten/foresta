@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.missioni.richieste;
 
-import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
-import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.personaggi.NomeDellaClasse;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.testi.Lingue;
 import com.threeamigos.foresta.testi.Genere;
@@ -43,7 +42,7 @@ public final class InfestazioneRichiesta {
 	 * Chi infesta il posto, per i testi: "una Chimera-drago", "quattro Scheletri".
 	 */
 	public String getDescrizione() {
-		Personaggio modello = FabbricaPersonaggi.modello(nemico);
+		NomeDellaClasse modello = NomeDellaClasse.di(nemico);
 		if (numero == 1) {
 			return modello.getAIS() + modello.getNomeSingolare();
 		}

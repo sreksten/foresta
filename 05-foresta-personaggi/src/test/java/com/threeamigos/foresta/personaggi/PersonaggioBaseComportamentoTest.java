@@ -165,7 +165,7 @@ class PersonaggioBaseComportamentoTest {
         p.setModelloDati(altro);
         assertSame(altro, p.getModelloDati());
         // Il ricalcolo statico non pubblica niente: serve al caricamento
-        PersonaggioBase.ricalcolaAttributiSecondari(altro, p);
+        PersonaggioBase.ricalcolaAttributiSecondari(altro);
         assertEquals(TipoPersonaggio.GUERRIERO, p.getClasse());
     }
 

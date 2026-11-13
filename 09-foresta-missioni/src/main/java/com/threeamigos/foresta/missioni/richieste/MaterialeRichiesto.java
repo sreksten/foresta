@@ -1,9 +1,8 @@
 package com.threeamigos.foresta.missioni.richieste;
 
+import com.threeamigos.foresta.personaggi.NomeDellaClasse;
 import com.threeamigos.foresta.missioni.OggettiDaRaccogliere;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
-import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
-import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
@@ -235,7 +234,7 @@ public final class MaterialeRichiesto {
 		List<String> parti = new ArrayList<>();
 		if (isTrofeo()) {
 			for (TipoPersonaggio nemico : nemici) {
-				Personaggio modello = FabbricaPersonaggi.modello(nemico);
+				NomeDellaClasse modello = NomeDellaClasse.di(nemico);
 				parti.add(modello.getADP() + modello.getNomePlurale());
 			}
 			return ProduttoreDiMissioniCasuale.testoDellaMissione("MATERIALE_RICHIESTO_SI_PRENDONO" + suffisso, "PARAM_ELENCO", elenco(parti));

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.incarichi;
 
+import com.threeamigos.foresta.personaggi.NomeDellaClasse;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
@@ -11,8 +12,6 @@ import com.threeamigos.foresta.missioni.TestiDeiLuoghi;
 import com.threeamigos.foresta.missioni.richieste.ColpoRichiesto;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
-import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
-import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.testi.Lingue;
@@ -83,7 +82,7 @@ public class IlColpo extends IncaricoInCitta {
 	 */
 	private String getNomeDelleGuardie() {
 		ColpoRichiesto colpo = getColpo();
-		Personaggio modello = FabbricaPersonaggi.modello(colpo.getGuardia());
+		NomeDellaClasse modello = NomeDellaClasse.di(colpo.getGuardia());
 		if (colpo.getNumero() == 1) {
 			String guardia = modello.getADS() + modello.getNomeSingolare();
 			return colpo.isConCapo() ? getCapo() + ", " + guardia : guardia;

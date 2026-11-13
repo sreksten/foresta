@@ -6,10 +6,10 @@ import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
- * L'ombrafiamma: un personaggio segreto, immortale, che parte con salute e magia piene. Ha un carisma che fa riuscire sempre
- * l'amicizia (una faccia in più del dado dell'amicizia), e non partecipa alle sfide a carta, forbici e sasso.
+ * L'ombrafiamma: un personaggio segreto, immortale, che parte con salute e magia piene. Ha un carisma che fa riuscire quasi sempre
+ * l'amicizia (fallisce solo con il 12 del dado: vedi get), e non partecipa alle sfide a carta, forbici e sasso.
  */
-public class OmbraFiamma extends PersonaggioBase implements Personaggio {
+public class OmbraFiamma extends PersonaggioBase {
 
 	public OmbraFiamma(int livello) {
 		super(TipoPersonaggio.OMBRAFIAMMA, livello);

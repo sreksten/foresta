@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * La chimera: bestia ibrida. Nel suo repertorio ci sono il Fuoco e il Veleno.
  */
-public class Chimera extends PersonaggioBase implements Personaggio {
+public class Chimera extends PersonaggioBase {
 
 	public Chimera(int livello) {
 		super(TipoPersonaggio.CHIMERA, livello);

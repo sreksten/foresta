@@ -8,7 +8,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
  * Il titano: creatura umanoide e gigantesca, corrompibile e amichevole. Con l'amicizia offre aiuto, incantesimi, informazioni,
  * mappe e un pasto; con la corruzione può fare qualsiasi offerta.
  */
-public class Titano extends PersonaggioBase implements Personaggio {
+public class Titano extends PersonaggioBase {
 
 	public Titano(int livello) {
 		super(TipoPersonaggio.TITANO, livello);
@@ -28,14 +28,7 @@ public class Titano extends PersonaggioBase implements Personaggio {
 
 	@Override
 	public TipoOfferta[] getOfferteCorruzione() {
-		return new TipoOfferta[] {
-				TipoOfferta.AIUTO_GRATUITO,
-				TipoOfferta.AIUTO_MERCENARIO,
-				TipoOfferta.INCANTESIMI,
-				TipoOfferta.INFORMAZIONI,
-				TipoOfferta.MAPPA_FORESTA,
-				TipoOfferta.MAPPA_ZONA,
-				TipoOfferta.PASTO
-		};
+		// Tutte le offerte
+		return TipoOfferta.values();
 	}
 }

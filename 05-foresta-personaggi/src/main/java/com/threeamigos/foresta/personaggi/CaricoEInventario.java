@@ -9,6 +9,7 @@ import com.threeamigos.foresta.eventi.interni.InternoSpadaNascostaImpugnata;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneStatistichePersonaggio;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
+import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoSlotArtefatto;
 
@@ -56,11 +57,11 @@ final class CaricoEInventario {
 	}
 
 	boolean puoPrendere(double quantita) {
-		return quantita <= AttributiSecondari.calcolaCaricoMassimo(md(), p) - getCarico();
+		return quantita <= AttributiSecondari.calcolaCaricoMassimo(md(), CostantiPersonaggi.valoriDi(md().getClasse())) - getCarico();
 	}
 
 	int getCaricoMassimo() {
-		return (int) AttributiSecondari.calcolaCaricoMassimo(md(), p);
+		return (int) AttributiSecondari.calcolaCaricoMassimo(md(), CostantiPersonaggi.valoriDi(md().getClasse()));
 	}
 
 	List<Artefatto> getInventario() {

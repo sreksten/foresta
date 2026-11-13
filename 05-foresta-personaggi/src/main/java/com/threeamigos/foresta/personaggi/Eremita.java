@@ -8,7 +8,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
  * L'eremita: umanoide, corrompibile e amichevole. Con l'amicizia offre aiuto, incantesimi, informazioni, mappe e un pasto;
  * con la corruzione, soltanto informazioni.
  */
-public class Eremita extends PersonaggioBase implements Personaggio {
+public class Eremita extends PersonaggioBase {
 
 	public Eremita(int livello) {
 		super(TipoPersonaggio.EREMITA, livello);
@@ -31,4 +31,5 @@ public class Eremita extends PersonaggioBase implements Personaggio {
 		return new TipoOfferta[] {
 				TipoOfferta.INFORMAZIONI,
 		};
-	}}
+	}
+}

@@ -6,9 +6,9 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 /**
  * Il druido giocante, al maschile: l'incantatore della natura, che usa bastone e lancia ma niente armatura né scudo.
  * Ha innate le radici (Terra), lo sciame (Veleno), la pelle di corteccia e la rigenerazione (vedi il pacchetto
- * {@code incantesimi}). Il femminile è la {@link Druida}, che ha lo stesso ruolo.
+ * {@code abilita}). Il femminile è la {@link Druida}, che ha lo stesso ruolo.
  */
-public class Druido extends PersonaggioBase implements Personaggio {
+public class Druido extends PersonaggioBase {
 
 	public Druido(int livello) {
 		super(TipoPersonaggio.DRUIDO, livello);

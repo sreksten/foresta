@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.incarichi;
 
+import com.threeamigos.foresta.personaggi.NomeDellaClasse;
 import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.leggendari.OggettoLeggendario;
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -18,8 +19,6 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.statistiche.Statistiche;
-import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
-import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.testi.RegoleDellaLingua;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
@@ -132,7 +131,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 	 * Uno sfidante per i testi: "un Guerriero".
 	 */
 	private static String unSfidante(TipoPersonaggio classe) {
-		Personaggio modello = FabbricaPersonaggi.modello(classe);
+		NomeDellaClasse modello = NomeDellaClasse.di(classe);
 		return modello.getAIS() + modello.getNomeSingolare();
 	}
 
@@ -140,7 +139,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 	 * Il campione per i testi: "Bradamante la Fulva, la Guerriera".
 	 */
 	private String ilCampione() {
-		Personaggio modello = FabbricaPersonaggi.modello(getTorneo().getCampione());
+		NomeDellaClasse modello = NomeDellaClasse.di(getTorneo().getCampione());
 		return getCampione() + ", " + modello.getADS() + modello.getNomeSingolare();
 	}
 

@@ -49,9 +49,9 @@ class PersonaggiNonCombattentiTest {
 
     @Test
     void sonoUnPocoPiuDeboliDelBardo() {
-        Personaggio bardo = FabbricaPersonaggi.modello(TipoPersonaggio.BARDO);
+        Personaggio bardo = FabbricaPersonaggi.crea(TipoPersonaggio.BARDO, 1);
         for (TipoPersonaggio tipo : NON_COMBATTENTI) {
-            Personaggio personaggio = FabbricaPersonaggi.modello(tipo);
+            Personaggio personaggio = FabbricaPersonaggi.crea(tipo, 1);
             double massimo = personaggio.getMaxIntelligenza();
             double massimoDelBardo = bardo.getMaxIntelligenza();
             assertTrue(massimo < massimoDelBardo, tipo + ": " + massimo + " non è sotto " + massimoDelBardo);
@@ -66,7 +66,7 @@ class PersonaggiNonCombattentiTest {
         for (TipoPersonaggio tipo : NON_COMBATTENTI) {
             assertFalse(AbilitaInnate.conosciutaDa(tipo, TipoAbilita.DARDO_ARCANO));
             assertFalse(AbilitaInnate.conosciutaDa(tipo, TipoAbilita.ALBA_SACRA));
-            Personaggio modello = FabbricaPersonaggi.modello(tipo);
+            Personaggio modello = FabbricaPersonaggi.crea(tipo, 1);
             assertFalse(modello.isAmichevole(), tipo + " non è un avversario con cui fare amicizia");
             assertFalse(LaSfidaDeiCampioni.classiAmichevoli().contains(tipo), tipo + " non è un campione");
         }

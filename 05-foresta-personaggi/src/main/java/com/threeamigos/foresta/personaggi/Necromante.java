@@ -8,7 +8,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
  * non si corrompe e non diventa amico. Combatte con l'energia necrotica (la dissipazione dell'anima, vedi ArmaNaturale) e conosce le magie dei maghi
  * nemici; subisce meno danno necrotico e più danno sacro (vedi TipoPersonaggio).
  */
-public class Necromante extends PersonaggioBase implements Personaggio {
+public class Necromante extends PersonaggioBase {
 
 	public Necromante(int livello) {
 		super(TipoPersonaggio.NECROMANTE, livello);

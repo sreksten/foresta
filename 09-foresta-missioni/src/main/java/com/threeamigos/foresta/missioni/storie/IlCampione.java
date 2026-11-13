@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.missioni.storie;
 
 
+import com.threeamigos.foresta.personaggi.NomeDellaClasse;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.missioni.*;
@@ -9,8 +10,6 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.mondo.RegistroPersonaggi;
-import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
-import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -74,7 +73,7 @@ public class IlCampione extends MissioneAPassi {
 	 * Il campione per i testi: "Bradamante la Fulva, una Guerriera".
 	 */
 	public String ilCampione() {
-		Personaggio modello = FabbricaPersonaggi.modello(getClasseDelCampione());
+		NomeDellaClasse modello = NomeDellaClasse.di(getClasseDelCampione());
 		return getCampione() + ", " + modello.getAIS() + modello.getNomeSingolare();
 	}
 

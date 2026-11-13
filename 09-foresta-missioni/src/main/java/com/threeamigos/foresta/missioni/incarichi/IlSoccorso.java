@@ -1,11 +1,10 @@
 package com.threeamigos.foresta.missioni.incarichi;
 
+import com.threeamigos.foresta.personaggi.NomeDellaClasse;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 import com.threeamigos.foresta.missioni.IncontroDiMissione;
 import com.threeamigos.foresta.missioni.TestiDeiLuoghi;
 import com.threeamigos.foresta.missioni.richieste.SoccorsoRichiesto;
-import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
-import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -75,7 +74,7 @@ public class IlSoccorso extends LaLiberazione {
 	 */
 	private String getNomeDeiNemici() {
 		SoccorsoRichiesto soccorso = getSoccorso();
-		Personaggio modello = FabbricaPersonaggi.modello(soccorso.getNemico());
+		NomeDellaClasse modello = NomeDellaClasse.di(soccorso.getNemico());
 		if (soccorso.getNumero() == 1) {
 			String nemico = modello.getADS() + modello.getNomeSingolare();
 			return soccorso.isConCapo() ? getCapo() + ", " + nemico : nemico;

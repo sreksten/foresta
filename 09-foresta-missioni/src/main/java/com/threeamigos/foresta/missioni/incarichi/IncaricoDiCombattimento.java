@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni.incarichi;
 
+import com.threeamigos.foresta.personaggi.NomeDellaClasse;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
@@ -9,8 +10,6 @@ import com.threeamigos.foresta.missioni.richieste.CombattimentoRichiesto;
 import com.threeamigos.foresta.missioni.richieste.OndateDellaRiga;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.mappa.Foresta;
-import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
-import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.testi.RegoleDellaLingua;
 import com.threeamigos.foresta.testi.ProduttoreDiMissioniCasuale;
 import com.threeamigos.foresta.tipi.MissionePredefinita;
@@ -110,7 +109,7 @@ public class IncaricoDiCombattimento extends IncaricoInCitta {
 	 */
 	private String getNomeDeiNemici() {
 		CombattimentoRichiesto incarico = getIncarico();
-		Personaggio modello = FabbricaPersonaggi.modello(incarico.getNemico());
+		NomeDellaClasse modello = NomeDellaClasse.di(incarico.getNemico());
 		if (getNumero() == 1) {
 			String nemico = modello.getADS() + modello.getNomeSingolare();
 			return incarico.isConCapo() ? getCapo() + ", " + nemico : nemico;

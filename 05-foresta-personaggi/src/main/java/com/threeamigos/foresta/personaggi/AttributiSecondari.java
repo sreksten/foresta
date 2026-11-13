@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.tipi.ValoriDiClasse;
+
 import com.threeamigos.foresta.artefatti.leggendari.RegoleSetLeggendari;
 import com.threeamigos.foresta.attributi.CalcolatoreAttributiSecondari;
 import com.threeamigos.foresta.eventi.BusEventi;
@@ -24,10 +26,10 @@ import java.util.OptionalDouble;
  * soggezione, furia, coraggio, valore, contrattazione, numero di bersagli) e il valore di ogni attributo con i suoi modificatori. Le formule
  * stanno in {@link CalcolatoreAttributiSecondari}; qui si leggono i primari dal {@link PersonaggioMD}, si sceglie il moltiplicatore della
  * classe e si scrive il risultato, pubblicando le variazioni se c'è un personaggio a cui riferirle. Funzioni statiche, perché servono
- * anche alla rilettura di una partita: lì i dati sono un {@link PersonaggioMD} appena letto, i moltiplicatori vengono da un personaggio
- * modello della stessa classe e non c'è nessuno a cui riferire le variazioni (vedi PersonaggioBase.ricalcolaAttributiSecondari).
+ * anche alla rilettura di una partita: lì i dati sono un {@link PersonaggioMD} appena letto e non c'è nessuno a cui riferire le variazioni (vedi
+ * PersonaggioBase.ricalcolaAttributiSecondari).
  * <p>
- * Nei metodi, {@code moltiplicatori} è il personaggio da cui si leggono i moltiplicatori della classe e {@code sorgenteEvento} quello
+ * Nei metodi, {@code moltiplicatori} sono i valori della classe (CostantiPersonaggi.valoriDi) e {@code sorgenteEvento} il personaggio
  * nominato nelle notifiche (null per non pubblicarne).
  */
 final class AttributiSecondari {
@@ -39,7 +41,7 @@ final class AttributiSecondari {
 	 * Ricalcola e scrive nel modello dati tutti gli attributi secondari. Pubblica una NotificaVariazioneStatistichePersonaggio per ogni
 	 * valore cambiato, ma solo se c'è {@code sorgenteEvento} e il valore c'era già (la prima volta non è una variazione).
 	 */
-	static void ricalcola(PersonaggioMD md, Personaggio moltiplicatori, Personaggio sorgenteEvento) {
+	static void ricalcola(PersonaggioMD md, ValoriDiClasse moltiplicatori, Personaggio sorgenteEvento) {
 		// Il carico massimo è un massimo, non un valore: si legge e si scrive con getMassimo/setMassimo
 		Optional<Double> valorePrecedente = md.getMassimo(TipoAttributo.CARICO_MASSIMO);
 		double valoreAttuale = calcolaCaricoMassimo(md, moltiplicatori);
@@ -74,60 +76,60 @@ final class AttributiSecondari {
 	 * Il critico (0-100): dai primari DESTREZZA e FORTUNA, con i loro modificatori, e dal moltiplicatore della classe. La formula, con i
 	 * rendimenti decrescenti, sta in {@link CalcolatoreAttributiSecondari#critico}; i modificatori del CRITICO stesso li applica chi lo legge.
 	 */
-	static int calcolaCritico(PersonaggioMD md, Personaggio moltiplicatori) {
+	static int calcolaCritico(PersonaggioMD md, ValoriDiClasse moltiplicatori) {
 		return CalcolatoreAttributiSecondari.critico(valoreDi(md, TipoAttributo.DESTREZZA), valoreDi(md, TipoAttributo.FORTUNA), moltiplicatori.getMoltiplicatoreCritico());
 	}
 
-	static int calcolaPrecisione(PersonaggioMD md, Personaggio moltiplicatori) {
+	static int calcolaPrecisione(PersonaggioMD md, ValoriDiClasse moltiplicatori) {
 		return CalcolatoreAttributiSecondari.precisione(valoreDi(md, TipoAttributo.DESTREZZA), valoreDi(md, TipoAttributo.INTELLIGENZA), moltiplicatori.getMoltiplicatorePrecisione());
 	}
 
-	static int calcolaVelocita(PersonaggioMD md, Personaggio moltiplicatori) {
+	static int calcolaVelocita(PersonaggioMD md, ValoriDiClasse moltiplicatori) {
 		return CalcolatoreAttributiSecondari.velocita(valoreDi(md, TipoAttributo.DESTREZZA), valoreDi(md, TipoAttributo.FORTUNA), moltiplicatori.getMoltiplicatoreVelocita());
 	}
 
-	static int calcolaFurtivita(PersonaggioMD md, Personaggio moltiplicatori) {
+	static int calcolaFurtivita(PersonaggioMD md, ValoriDiClasse moltiplicatori) {
 		return CalcolatoreAttributiSecondari.furtivita(valoreDi(md, TipoAttributo.DESTREZZA), valoreDi(md, TipoAttributo.FORTUNA), moltiplicatori.getMoltiplicatoreFurtivita());
 	}
 
-	static int calcolaParata(PersonaggioMD md, Personaggio moltiplicatori) {
+	static int calcolaParata(PersonaggioMD md, ValoriDiClasse moltiplicatori) {
 		return CalcolatoreAttributiSecondari.parata(valoreDi(md, TipoAttributo.FORZA), valoreDi(md, TipoAttributo.DESTREZZA), moltiplicatori.getMoltiplicatoreParata());
 	}
 
-	static int calcolaResistenzaMagica(PersonaggioMD md, Personaggio moltiplicatori) {
+	static int calcolaResistenzaMagica(PersonaggioMD md, ValoriDiClasse moltiplicatori) {
 		return CalcolatoreAttributiSecondari.resistenzaMagica(valoreDi(md, TipoAttributo.SAGGEZZA), valoreDi(md, TipoAttributo.INTELLIGENZA), moltiplicatori.getMoltiplicatoreResistenzaMagica());
 	}
 
-	static int calcolaPercezione(PersonaggioMD md, Personaggio moltiplicatori) {
+	static int calcolaPercezione(PersonaggioMD md, ValoriDiClasse moltiplicatori) {
 		return CalcolatoreAttributiSecondari.percezione(valoreDi(md, TipoAttributo.SAGGEZZA), valoreDi(md, TipoAttributo.DESTREZZA), moltiplicatori.getMoltiplicatorePercezione());
 	}
 
-	static int calcolaSoggezione(PersonaggioMD md, Personaggio moltiplicatori) {
+	static int calcolaSoggezione(PersonaggioMD md, ValoriDiClasse moltiplicatori) {
 		return CalcolatoreAttributiSecondari.soggezione(valoreDi(md, TipoAttributo.CARISMA), valoreDi(md, TipoAttributo.FORZA), moltiplicatori.getMoltiplicatoreSoggezione());
 	}
 
-	static int calcolaFuria(PersonaggioMD md, Personaggio moltiplicatori) {
+	static int calcolaFuria(PersonaggioMD md, ValoriDiClasse moltiplicatori) {
 		return CalcolatoreAttributiSecondari.furia(valoreDi(md, TipoAttributo.FORZA), valoreDi(md, TipoAttributo.FORTUNA), moltiplicatori.getMoltiplicatoreFuria());
 	}
 
-	static int calcolaCoraggio(PersonaggioMD md, Personaggio moltiplicatori) {
+	static int calcolaCoraggio(PersonaggioMD md, ValoriDiClasse moltiplicatori) {
 		return CalcolatoreAttributiSecondari.coraggio(valoreDi(md, TipoAttributo.CARISMA), valoreDi(md, TipoAttributo.COSTITUZIONE), moltiplicatori.getMoltiplicatoreCoraggio());
 	}
 
-	static int calcolaContrattazione(PersonaggioMD md, Personaggio moltiplicatori) {
+	static int calcolaContrattazione(PersonaggioMD md, ValoriDiClasse moltiplicatori) {
 		return CalcolatoreAttributiSecondari.contrattazione(valoreDi(md, TipoAttributo.CARISMA), valoreDi(md, TipoAttributo.FORTUNA), moltiplicatori.getMoltiplicatoreContrattazione());
 	}
 
-	static int calcolaValore(PersonaggioMD md, Personaggio moltiplicatori) {
+	static int calcolaValore(PersonaggioMD md, ValoriDiClasse moltiplicatori) {
 		return CalcolatoreAttributiSecondari.valore(valoreDi(md, TipoAttributo.SAGGEZZA), valoreDi(md, TipoAttributo.COSTITUZIONE), moltiplicatori.getMoltiplicatoreValore());
 	}
 
 	/**
 	 * Quanti bersagli il personaggio minaccia insieme. I due primari da cui dipende cambiano con la classe (vedi i rami dello switch).
 	 */
-	static int calcolaNumeroBersagli(PersonaggioMD md, Personaggio moltiplicatori) {
+	static int calcolaNumeroBersagli(PersonaggioMD md, ValoriDiClasse moltiplicatori) {
 		// Recuperiamo la classe per capire qual è la forza trainante del personaggio
-		TipoPersonaggio classe = moltiplicatori.getClasse();
+		TipoPersonaggio classe = md.getClasse();
 
 		int statPrincipale;
 		int statSecondaria;
@@ -198,14 +200,14 @@ final class AttributiSecondari {
 	 * Il carico massimo: il potenziale che viene da FORZA, COSTITUZIONE e moltiplicatore della classe (vedi {@link #potenzialeDiCarico}),
 	 * cambiato dai modificatori di CARICO_MASSIMO (quelli degli artefatti e quelli a tempo).
 	 */
-	static double calcolaCaricoMassimo(PersonaggioMD md, Personaggio moltiplicatori) {
+	static double calcolaCaricoMassimo(PersonaggioMD md, ValoriDiClasse moltiplicatori) {
 		return getQuantitaModificata(md, potenzialeDiCarico(md, moltiplicatori), TipoAttributo.CARICO_MASSIMO);
 	}
 
 	/**
 	 * Il carico massimo prima dei modificatori di CARICO_MASSIMO.
 	 */
-	static double potenzialeDiCarico(PersonaggioMD md, Personaggio moltiplicatori) {
+	static double potenzialeDiCarico(PersonaggioMD md, ValoriDiClasse moltiplicatori) {
 		return CalcolatoreAttributiSecondari.potenzialeDiCarico(valoreDi(md, TipoAttributo.FORZA), valoreDi(md, TipoAttributo.COSTITUZIONE), moltiplicatori.getMoltiplicatoreCarico());
 	}
 

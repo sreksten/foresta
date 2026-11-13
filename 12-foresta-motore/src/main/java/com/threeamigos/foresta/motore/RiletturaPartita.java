@@ -7,7 +7,6 @@ import com.threeamigos.foresta.oggetti.RaccoltaBottino;
 import com.threeamigos.foresta.missioni.RegistroMissioni;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
-import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.PersonaggioBase;
 import com.threeamigos.foresta.testi.Testi;
 
@@ -29,7 +28,7 @@ public final class RiletturaPartita {
 		// La partita torna nella lingua in cui è nata: prima di tutto, perché ciò che si ricostruisce da qui in poi si racconta in quella
 		Testi.impostaLingua(ModelloDati.getIstanza().getLingua());
 		for (PersonaggioMD personaggioMD : ModelloDati.getIstanza().getGruppoGiocatoreMD().getPersonaggiMD()) {
-			PersonaggioBase.ricalcolaAttributiSecondari(personaggioMD, FabbricaPersonaggi.modello(personaggioMD.getClasse()));
+			PersonaggioBase.ricalcolaAttributiSecondari(personaggioMD);
 		}
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		gruppo.setModelloDati(ModelloDati.getIstanza().getGruppoGiocatoreMD());

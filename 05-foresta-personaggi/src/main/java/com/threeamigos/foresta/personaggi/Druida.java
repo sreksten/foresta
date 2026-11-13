@@ -6,7 +6,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 /**
  * La druida: il Druido al femminile, con lo stesso ruolo e le stesse capacità (vedi {@link Druido}).
  */
-public class Druida extends PersonaggioBase implements Personaggio {
+public class Druida extends PersonaggioBase {
 
 	public Druida(int livello) {
 		super(TipoPersonaggio.DRUIDA, livello);

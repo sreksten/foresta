@@ -4,9 +4,9 @@ package com.threeamigos.foresta.personaggi;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
- * Il troll: creatura umanoide e gigantesca, corrompibile ma non amichevole. È immune agli incantesimi di Terra.
+ * Il troll: creatura umanoide e gigantesca, corrompibile ma non amichevole. La terra non lo scalfisce, incantesimi compresi (vedi TipoPersonaggio).
  */
-public class Troll extends PersonaggioBase implements Personaggio {
+public class Troll extends PersonaggioBase {
 
 	public Troll(int livello) {
 		super(TipoPersonaggio.TROLL, livello);

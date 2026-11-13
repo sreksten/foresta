@@ -86,8 +86,8 @@ La scheda di una voce aperta, dall'alto:
    Divina del Sacerdote, il dardo arcano di Mago ed Elfo), lette dal codice di chi le definisce;
 4. **forze e debolezze**: le caratteristiche scoperte (le debolezze in rosso, resistenze e immunità in verde) e quante ne restano da scoprire, senza dire di che
    tipo (o "Niente di particolare" per chi non ne ha);
-5. il **carattere**: i moltiplicatori della classe (carico massimo, critico, precisione... danni magici e fisici, rigenerazioni; `MoltiplicatoriDiClasse`, letti dal
-   personaggio modello) con la **nota** che spiega perché ha quel valore (`note_personaggi_it.properties`, `NoteDeiPersonaggi`): verde sopra la media e rosso sotto
+5. il **carattere**: i moltiplicatori della classe (carico massimo, critico, precisione... danni magici e fisici, rigenerazioni; `MoltiplicatoriDiClasse`, letti dalla
+   tabella delle classi, `CostantiPersonaggi.valoriDi`) con la **nota** che spiega perché ha quel valore (`note_personaggi_it.properties`, `NoteDeiPersonaggi`): verde sopra la media e rosso sotto
    (per la stanchezza, dove un valore alto è un difetto, al contrario). Un moltiplicatore **a zero** non si mostra (l'Arpia non sa contrattare). Se la forma
    maschile e quella femminile hanno **valori o note diversi** si mostrano tutti e due ("Maga x0,75 · Mago x0,8"); se sono uguali, una volta.
 

@@ -11,7 +11,7 @@ import java.util.Set;
  * La chimera drago: bestia ibrida e draconica. Nel suo repertorio ci sono il Fuoco e il Veleno, ed è immune al Fuoco e
  * allo stato bruciato.
  */
-public class ChimeraDrago extends PersonaggioBase implements Personaggio {
+public class ChimeraDrago extends PersonaggioBase {
 
 	public ChimeraDrago(int livello) {
 		super(TipoPersonaggio.CHIMERA_DRAGO, livello);

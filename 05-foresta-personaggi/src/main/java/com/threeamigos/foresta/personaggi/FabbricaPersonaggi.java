@@ -9,13 +9,12 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * Costruisce i personaggi di ogni TipoPersonaggio, e dà quel che dipende solo dalla classe: i nomi, i moltiplicatori
- * (attraverso un personaggio modello) e quanti se ne incontrano al massimo in una locazione.
+ * Costruisce i personaggi di ogni TipoPersonaggio. Quel che dipende solo dalla classe non chiede un personaggio: i nomi stanno in
+ * NomeDellaClasse, i valori (moltiplicatori, quanti se ne incontrano...) nella tabella CostantiPersonaggi.valoriDi.
  */
 public final class FabbricaPersonaggi {
 
 	private static final Map<TipoPersonaggio, Function<Integer, Personaggio>> COSTRUTTORI = new EnumMap<>(TipoPersonaggio.class);
-	private static final Map<TipoPersonaggio, Personaggio> MODELLI = new EnumMap<>(TipoPersonaggio.class);
 
 	static {
 		COSTRUTTORI.put(TipoPersonaggio.ARPIA, Arpia::new);
@@ -86,28 +85,17 @@ public final class FabbricaPersonaggi {
 	}
 
 	/**
-	 * Personaggio "modello" della classe, creato al primo uso e riutilizzato, da usare unicamente per leggere ciò
-	 * che dipende solo dalla classe: i moltiplicatori (getMoltiplicatoreX()) e i nomi. Non va mai collegato a un
-	 * PersonaggioMD reale né usato per altro: serve a evitare di dover istanziare un Personaggio ad-hoc ogni volta che
-	 * serve solo conoscere questi dati (es. ricalcolo massivo degli attributi secondari in fase di caricamento, o le
-	 * statistiche ridisegnate a ogni frame).
-	 */
-	public static Personaggio modello(TipoPersonaggio tipo) {
-		return MODELLI.computeIfAbsent(tipo, t -> crea(t, 1));
-	}
-
-	/**
 	 * Il nome al singolare della classe, per esempio "Goblin".
 	 */
 	public static String nomeSingolare(TipoPersonaggio tipo) {
-		return modello(tipo).getNomeSingolare();
+		return NomeDellaClasse.di(tipo).getNomeSingolare();
 	}
 
 	/**
 	 * Il nome al plurale della classe, per esempio "Idre".
 	 */
 	public static String nomePlurale(TipoPersonaggio tipo) {
-		return modello(tipo).getNomePlurale();
+		return NomeDellaClasse.di(tipo).getNomePlurale();
 	}
 
 	/**

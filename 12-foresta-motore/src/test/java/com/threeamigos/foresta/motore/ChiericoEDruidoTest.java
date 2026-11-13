@@ -105,22 +105,22 @@ class ChiericoEDruidoTest {
         assertTrue(TipoPersonaggio.CHIERICO.stessoRuoloDi(TipoPersonaggio.CHIERICA));
         assertTrue(TipoPersonaggio.DRUIDO.stessoRuoloDi(TipoPersonaggio.DRUIDA));
         assertFalse(TipoPersonaggio.CHIERICO.stessoRuoloDi(TipoPersonaggio.DRUIDO));
-        Personaggio chierico = FabbricaPersonaggi.modello(TipoPersonaggio.CHIERICO);
-        Personaggio chierica = FabbricaPersonaggi.modello(TipoPersonaggio.CHIERICA);
+        Personaggio chierico = FabbricaPersonaggi.crea(TipoPersonaggio.CHIERICO, 1);
+        Personaggio chierica = FabbricaPersonaggi.crea(TipoPersonaggio.CHIERICA, 1);
         assertEquals(chierico.getMoltiplicatoreParata(), chierica.getMoltiplicatoreParata());
         assertEquals(chierico.getMoltiplicatoreDanniFisici(), chierica.getMoltiplicatoreDanniFisici());
         assertEquals(chierico.getSaluteBase(), chierica.getSaluteBase());
-        Personaggio druido = FabbricaPersonaggi.modello(TipoPersonaggio.DRUIDO);
-        Personaggio druida = FabbricaPersonaggi.modello(TipoPersonaggio.DRUIDA);
+        Personaggio druido = FabbricaPersonaggi.crea(TipoPersonaggio.DRUIDO, 1);
+        Personaggio druida = FabbricaPersonaggi.crea(TipoPersonaggio.DRUIDA, 1);
         assertEquals(druido.getMoltiplicatoreDanniMagici(), druida.getMoltiplicatoreDanniMagici());
         assertEquals(druido.getMoltiplicatorePercezione(), druida.getMoltiplicatorePercezione());
     }
 
     @Test
     void ilChiericoStaFraIlSacerdoteEIlGuerriero() {
-        Personaggio chierico = FabbricaPersonaggi.modello(TipoPersonaggio.CHIERICO);
-        Personaggio sacerdote = FabbricaPersonaggi.modello(TipoPersonaggio.SACERDOTE);
-        Personaggio guerriero = FabbricaPersonaggi.modello(TipoPersonaggio.GUERRIERO);
+        Personaggio chierico = FabbricaPersonaggi.crea(TipoPersonaggio.CHIERICO, 1);
+        Personaggio sacerdote = FabbricaPersonaggi.crea(TipoPersonaggio.SACERDOTE, 1);
+        Personaggio guerriero = FabbricaPersonaggi.crea(TipoPersonaggio.GUERRIERO, 1);
         assertTrue(chierico.getMoltiplicatoreParata() > sacerdote.getMoltiplicatoreParata());
         assertTrue(chierico.getMoltiplicatoreParata() < guerriero.getMoltiplicatoreParata());
         assertTrue(chierico.getMoltiplicatoreDanniFisici() > sacerdote.getMoltiplicatoreDanniFisici());

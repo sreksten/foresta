@@ -11,7 +11,7 @@ import java.util.Set;
  * vale per tutti i non morti, sono immuni agli incantesimi di Aria e di Terra e allo stato atterrato. Le classi concrete
  * aggiungono solo i loro valori.
  */
-public abstract class NonMortoVolante extends PersonaggioBase implements Personaggio {
+public abstract class NonMortoVolante extends PersonaggioBase {
 
 	NonMortoVolante(TipoPersonaggio classe, int livello) {
 		super(classe, livello);

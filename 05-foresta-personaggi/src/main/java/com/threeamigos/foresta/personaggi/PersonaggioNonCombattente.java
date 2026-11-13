@@ -13,7 +13,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
  * <p>
  * Il sesso lo dice la tabella delle classi (la moglie del bardo e la donna sono femmine).
  */
-public abstract class PersonaggioNonCombattente extends PersonaggioBase implements Personaggio {
+public abstract class PersonaggioNonCombattente extends PersonaggioBase {
 
 	protected PersonaggioNonCombattente(String nome, TipoPersonaggio classe, int livello) {
 		super(nome, classe, livello);

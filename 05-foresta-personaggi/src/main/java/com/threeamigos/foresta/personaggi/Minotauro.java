@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.personaggi;
 
-
 import com.threeamigos.foresta.tipi.TipoOfferta;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
@@ -8,9 +7,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
  * Il minotauro: creatura umanoide e ibrida, corrompibile ma non amichevole. Con la corruzione offre un aiuto a pagamento o la
  * mappa della Foresta. Per la sua versione gigante vedi {@link MinotauroGigante}.
  */
-public class Minotauro extends PersonaggioBase implements Personaggio {
-
-	public TipoPersonaggio getClasse() { return TipoPersonaggio.MINOTAURO; }
+public class Minotauro extends PersonaggioBase {
 
 	public Minotauro(int livello) {
 		super(TipoPersonaggio.MINOTAURO, livello);

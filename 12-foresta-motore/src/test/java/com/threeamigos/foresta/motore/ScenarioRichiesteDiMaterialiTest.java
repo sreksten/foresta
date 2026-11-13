@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.personaggi.NomeDellaClasse;
 import com.threeamigos.foresta.economia.Cassa;
 import com.threeamigos.foresta.mondo.RegistroPersonaggi;
 import com.threeamigos.foresta.gruppi.GruppoAvversario;
@@ -45,7 +46,7 @@ class ScenarioRichiesteDiMaterialiTest {
                 assertTrue(materiale.getPrezzo() > 0);
                 assertFalse(materiale.getBattutaDelCapo().isEmpty());
                 assertFalse(materiale.getRispostaDelMandante().isEmpty());
-                materiale.getNemici().forEach(nemico -> FabbricaPersonaggi.modello(nemico));
+                materiale.getNemici().forEach(nemico -> assertFalse(NomeDellaClasse.di(nemico).getNomePlurale().isEmpty()));
                 plurali.add(materiale.getPlurale());
             }
             assertTrue(plurali.size() >= 5, mandante + ": " + plurali);
