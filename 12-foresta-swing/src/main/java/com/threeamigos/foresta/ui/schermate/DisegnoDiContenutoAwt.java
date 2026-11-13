@@ -58,13 +58,14 @@ public final class DisegnoDiContenutoAwt {
 	}
 
 	/**
-	 * Il contenuto intero in un'immagine, per farla scorrere (vedi ScorrimentoVerticale)
+	 * Il contenuto intero in un'immagine, per farla scorrere (vedi ScorrimentoVerticale). Le immagini dei suoi elementi non si tengono: servono una volta
+	 * sola, e tenute crescerebbero a ogni contenuto nuovo (l'intro ne fa uno a ogni giro)
 	 */
 	BufferedImage comeImmagine(ContenutoDiColonna contenuto) {
 		BufferedImage immagine = new BufferedImage(contenuto.getLarghezza(), contenuto.getAltezza(), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = immagine.createGraphics();
 		try {
-			disegna(g, contenuto, 0, 0);
+			new DisegnoDiContenutoAwt().disegna(g, contenuto, 0, 0);
 		} finally {
 			g.dispose();
 		}

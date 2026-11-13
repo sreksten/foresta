@@ -9,6 +9,7 @@ import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 import com.threeamigos.foresta.testi.Genere;
 import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.Misura;
@@ -114,7 +115,9 @@ public final class SchermateSenzaPartita {
 		}
 	}
 
-	private DisposizioneDiSchermata ricordata(String chiave, java.util.function.Supplier<DisposizioneDiSchermata> costruttore) {
+	private DisposizioneDiSchermata ricordata(String chiaveSenzaLingua, java.util.function.Supplier<DisposizioneDiSchermata> costruttore) {
+		// Le scritte cambiano con la lingua, che si può cambiare dalle opzioni: una schermata fatta in un'altra lingua non vale
+		String chiave = Testi.getLingua() + "|" + chiaveSenzaLingua;
 		DisposizioneDiSchermata fatta = fatte.get(chiave);
 		if (fatta == null) {
 			if (fatte.size() > 40) {
@@ -249,6 +252,9 @@ public final class SchermateSenzaPartita {
 	}
 
 	private void aggiungiGliSlot(List<Elemento> elementi, Collection<TestataSalvataggio> salvataggi) {
+		// Prima i personaggi di tutti gli slot, poi tutte le scritte: su uno schermo basso gli slot si avvicinano, e i personaggi di uno slot non devono
+		// coprire la scritta di quello sopra
+		List<Elemento> scritte = new ArrayList<>();
 		for (TestataSalvataggio testata : salvataggi) {
 			try {
 				int id = numeroDaComando(testata.getId());
@@ -256,11 +262,12 @@ public final class SchermateSenzaPartita {
 				aggiungiIPersonaggi(elementi, id, testata.getGruppoGiocatore().getPersonaggi(), y);
 				ImmagineDiPixel descrizione = LayoutDelTestoGrande.conAlone(LayoutDelTestoGrande.immagine(
 						id + " - " + testata.getDescrizione().toLowerCase(Locale.ROOT), width - 2 * RAGGIO_ALONE, true), RAGGIO_ALONE);
-				elementi.add(Elemento.testoGrande(descrizione, 0, y - RAGGIO_ALONE));
+				scritte.add(Elemento.testoGrande(descrizione, 0, y - RAGGIO_ALONE));
 			} catch (Exception e) {
 				BusEventi.pubblica(new InternoException("Durante lettura intestazione del file di salvataggio " + testata.getId(), e));
 			}
 		}
+		elementi.addAll(scritte);
 	}
 
 	private void aggiungiIPersonaggi(List<Elemento> elementi, int id, Collection<? extends VistaPersonaggio> personaggi, int coordinataY) {

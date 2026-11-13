@@ -197,6 +197,7 @@ public enum TipoEvento {
      */
     NOTIFICA_MOSTRA_PUNTEGGI_MIGLIORI,
     NOTIFICA_POSIZIONE_DELLA_BARRA,
+    NOTIFICA_STILE_DELLA_BARRA,
     /**
      * Mostra la finestra con le statistiche sulla partita appena conclusa
      */

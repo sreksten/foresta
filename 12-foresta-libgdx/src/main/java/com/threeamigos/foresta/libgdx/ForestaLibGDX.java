@@ -2,6 +2,7 @@ package com.threeamigos.foresta.libgdx;
 
 import com.threeamigos.foresta.ui.barra.ComandiPossibili;
 import com.threeamigos.foresta.tipi.PosizioneDellaBarra;
+import com.threeamigos.foresta.tipi.StileDellaBarra;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
@@ -57,7 +58,7 @@ public final class ForestaLibGDX extends ForestaUI implements ApplicationListene
 	private final EsecutoreGdx esecutore;
 	private final ControlloreDiGioco controlloreDiGioco;
 	private final GestorePunteggi gestorePunteggi;
-	private final boolean barraDock;
+	private boolean barraDock;
 	private final boolean joystickVirtuale;
 	private final boolean saltaLogo;
 	private final boolean toccoRichiesto;
@@ -211,10 +212,29 @@ public final class ForestaLibGDX extends ForestaUI implements ApplicationListene
 		if (schermo == null || prima == orientamento && primaASinistra == barraASinistra) {
 			return;
 		}
-		iscrizioniDelloSchermo.forEach(Runnable::run);
 		if (Gdx.app.getType() == Application.ApplicationType.Desktop && misuraDelloSchermo == null) {
 			Gdx.graphics.setWindowedMode(dimensioni.larghezza, dimensioni.altezza);
 		}
+		rifaiLoSchermo();
+	}
+
+	/**
+	 * Dalle opzioni (all'intro, senza una partita in corso): lo schermo si rifà con la barra normale o con il Dock. Si resta nelle opzioni.
+	 */
+	@Override
+	protected void cambiaStileDellaBarra(StileDellaBarra stile) {
+		boolean dock = stile != StileDellaBarra.NORMALE;
+		if (schermo == null || dock == barraDock) {
+			barraDock = dock;
+			return;
+		}
+		barraDock = dock;
+		rifaiLoSchermo();
+	}
+
+	// Butta lo schermo, con le sue iscrizioni al bus, e lo rifà com'è adesso; si torna alle opzioni
+	private void rifaiLoSchermo() {
+		iscrizioniDelloSchermo.forEach(Runnable::run);
 		costruisciLoSchermo();
 		// La schermata delle opzioni, con le scelte che il motore aveva messo nella barra
 		schermo.opzioni(ComandiPossibili.getComandi());

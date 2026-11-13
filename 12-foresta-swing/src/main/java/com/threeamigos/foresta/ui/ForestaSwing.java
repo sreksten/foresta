@@ -9,6 +9,7 @@ import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.strumenti.temporizzatore.Temporizzatore;
 import com.threeamigos.foresta.tipi.Orientamento;
 import com.threeamigos.foresta.tipi.PosizioneDellaBarra;
+import com.threeamigos.foresta.tipi.StileDellaBarra;
 import com.threeamigos.foresta.tipi.TipoDiLayout;
 import com.threeamigos.foresta.ui.barra.ComandiPossibili;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
@@ -36,7 +37,7 @@ public class ForestaSwing extends ForestaUI {
 	private SceltaDelLayout scelta;
 	private final boolean tuttoSchermo;
 	private final boolean saltaLogoIniziale;
-	private final boolean barraDock;
+	private boolean barraDock;
 	private final boolean joystickVirtuale;
 	private final GestorePunteggi gestorePunteggi;
 
@@ -201,6 +202,28 @@ public class ForestaSwing extends ForestaUI {
 		if (displayableCanvas == null || prima == orientamento && primaASinistra == barraASinistra) {
 			return;
 		}
+		rifaiIlCanvas();
+	}
+
+	/**
+	 * Dalle opzioni (all'intro, senza una partita in corso): il canvas si rifà con la barra normale o con il Dock. Si resta nella schermata delle opzioni.
+	 */
+	@Override
+	protected void cambiaStileDellaBarra(StileDellaBarra stile) {
+		boolean dock = stile != StileDellaBarra.NORMALE;
+		if (displayableCanvas == null || dock == barraDock) {
+			barraDock = dock;
+			return;
+		}
+		barraDock = dock;
+		rifaiIlCanvas();
+	}
+
+	/**
+	 * Butta il canvas, con le sue iscrizioni al bus, e ne fa uno nuovo con la disposizione e la barra di adesso; la finestra prende la sua misura. Si
+	 * torna alla schermata delle opzioni, con le scelte che il motore aveva messo nella barra.
+	 */
+	private void rifaiIlCanvas() {
 		Dimension dimensioniFinestra = dimensioniFinestra();
 		larghezza = dimensioniFinestra.width;
 		altezza = dimensioniFinestra.height;

@@ -8,6 +8,7 @@ import com.threeamigos.foresta.libgdx.EsecutoreGdx;
 import com.threeamigos.foresta.libgdx.ForestaGdx;
 import com.threeamigos.foresta.libgdx.ForestaLibGDX;
 import com.threeamigos.foresta.motore.AvvioDelMotore;
+import com.threeamigos.foresta.tipi.StileDellaBarra;
 
 /**
  * Il punto d'ingresso Android, gemello di <code>MainLibgdx</code> per il desktop: collega il motore e l'interfaccia libGDX. Il dispositivo si usa in
@@ -19,8 +20,6 @@ public class AndroidLauncher extends AndroidApplication {
     // Le scelte di avvio che sul desktop vengono dagli argomenti (OpzioniDiAvvio): su Android non ci sono argomenti, e si decidono qui
     /** La lingua non e' decisa in anticipo: vale quella scelta nelle opzioni (o l'italiano, la prima volta) */
     private static final boolean LINGUA_DECISA = false;
-    /** La barra delle icone si ingrandisce sotto il dito, come il Dock (false: la barra classica fissa) */
-    private static final boolean BARRA_DOCK = true;
     /** Il joystick a schermo sulla mappa non si chiede: col dito lo accende comunque ForestaLibGDX */
     private static final boolean JOYSTICK_VIRTUALE = false;
     /** Il logo iniziale si mostra */
@@ -49,9 +48,10 @@ public class AndroidLauncher extends AndroidApplication {
         // Il motore chiede di uscire con NotificaUscitaDalGioco: si chiude l'applicazione
         AvvioDelMotore motore = new AvvioDelMotore(esecutore, e -> Gdx.app.exit(), LINGUA_DECISA);
         // La barra dove l'ha messa il giocatore nelle opzioni; se non l'ha mai scelta la decide il gioco, dallo schermo: in basso sul tablet se ci sta,
-        // a destra sul telefono
+        // a destra sul telefono. Ed è il Dock, se il giocatore non ha scelto la barra normale
         ForestaLibGDX foresta = new ForestaLibGDX(motore.getGestoreOpzioni().getPosizioneDellaBarra(), null, esecutore, motore.getControlloreDiGioco(),
-                motore.getGestorePunteggi(), motore.getVistaPartita(), AvvioDelMotore.nuovoTemporizzatore(), BARRA_DOCK, JOYSTICK_VIRTUALE, SALTA_LOGO,
+                motore.getGestorePunteggi(), motore.getVistaPartita(), AvvioDelMotore.nuovoTemporizzatore(),
+                motore.getGestoreOpzioni().getStileDellaBarra() != StileDellaBarra.NORMALE, JOYSTICK_VIRTUALE, SALTA_LOGO,
                 TOCCO_RICHIESTO);
 
         AndroidApplicationConfiguration configurazione = new AndroidApplicationConfiguration();

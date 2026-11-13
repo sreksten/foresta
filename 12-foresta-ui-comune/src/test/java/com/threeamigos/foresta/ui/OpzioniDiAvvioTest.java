@@ -59,4 +59,13 @@ class OpzioniDiAvvioTest {
         assertFalse(sbagliato.isTocco());
         assertTrue(sbagliato.getAltri().isEmpty(), "è ignorato, non passato a chi avvia");
     }
+
+    @Test
+    void laBarraClassicaDegliArgomentiVinceSulloStileDelleOpzioni() {
+        OpzioniDiAvvio senza = OpzioniDiAvvio.leggi(new String[0]);
+        assertTrue(senza.isBarraDock(null), "mai scelto: il Dock");
+        assertTrue(senza.isBarraDock(com.threeamigos.foresta.tipi.StileDellaBarra.DOCK));
+        assertFalse(senza.isBarraDock(com.threeamigos.foresta.tipi.StileDellaBarra.NORMALE));
+        assertFalse(OpzioniDiAvvio.leggi(new String[]{"BARRACLASSICA"}).isBarraDock(com.threeamigos.foresta.tipi.StileDellaBarra.DOCK));
+    }
 }

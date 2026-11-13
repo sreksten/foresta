@@ -5,6 +5,7 @@ import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.tipi.Orientamento;
 import com.threeamigos.foresta.tipi.PosizioneDellaBarra;
+import com.threeamigos.foresta.tipi.StileDellaBarra;
 import com.threeamigos.foresta.tipi.SchermoDiProva;
 
 import java.util.ArrayList;
@@ -161,6 +162,14 @@ public final class OpzioniDiAvvio {
 
 	public boolean isBarraDock() {
 		return barraDock;
+	}
+
+	/**
+	 * Se la barra è il Dock: no se gli argomenti dicono {@code BARRACLASSICA}, altrimenti come l'ha scelta il giocatore nelle opzioni (se non l'ha mai
+	 * scelta, null: il Dock)
+	 */
+	public boolean isBarraDock(StileDellaBarra dalleOpzioni) {
+		return barraDock && dalleOpzioni != StileDellaBarra.NORMALE;
 	}
 
 	public boolean isJoystickVirtuale() {

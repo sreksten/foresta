@@ -2,6 +2,7 @@ package com.threeamigos.foresta.ui;
 
 import java.util.List;
 import com.threeamigos.foresta.tipi.PosizioneDellaBarra;
+import com.threeamigos.foresta.tipi.StileDellaBarra;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
@@ -278,6 +279,7 @@ public abstract class ForestaUI implements Temporizzabile {
 		BusEventi.iscriviti(InternoFaseDiGioco.class, this::gestisciEventoFaseDiGioco);
 		// Scelta dalle opzioni: la barra si sposta subito
 		BusEventi.iscriviti(com.threeamigos.foresta.eventi.notifiche.NotificaPosizioneDellaBarra.class, e -> cambiaPosizioneDellaBarra(e.getPosizione()));
+		BusEventi.iscriviti(com.threeamigos.foresta.eventi.notifiche.NotificaStileDellaBarra.class, e -> cambiaStileDellaBarra(e.getStile()));
 		BusEventi.iscriviti(NotificaVariazioneEffettoDiStatoPersonaggio.class, this::gestisciEventoVariazioneEffettoDiStato);
 		BusEventi.iscriviti(NotificaVariazioneModificatorePersonaggio.class, this::gestisciEventoVariazioneModificatore);
 		BusEventi.iscriviti(NotificaVariazioneStatistichePersonaggio.class, this::gestisciEventoVariazioneStatistichePersonaggio);
@@ -300,6 +302,13 @@ public abstract class ForestaUI implements Temporizzabile {
 	 * schermo con la barra lì. Di base niente: lo fanno i toolkit che lo sanno fare.
 	 */
 	protected void cambiaPosizioneDellaBarra(PosizioneDellaBarra posizione) {
+	}
+
+	/**
+	 * Il giocatore ha scelto com'è la barra dei comandi, normale o Dock (dalla schermata delle opzioni): il toolkit rifà lo schermo con quella barra. Di
+	 * base niente: lo fanno i toolkit che lo sanno fare.
+	 */
+	protected void cambiaStileDellaBarra(StileDellaBarra stile) {
 	}
 
 	/**

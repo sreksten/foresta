@@ -24,6 +24,8 @@ public enum TipoIcona {
 	BARRA_SINISTRA(Comando.BARRA_SINISTRA, "icone/BarraIconeSinistra.png", SfondoIcona.VERDE),
 	BARRA_BASSO(Comando.BARRA_BASSO, "icone/BarraIconeBasso.png", SfondoIcona.VERDE),
 	BARRA_DESTRA(Comando.BARRA_DESTRA, "icone/BarraIconeDestra.png", SfondoIcona.VERDE),
+	BARRA_NORMALE(Comando.BARRA_NORMALE, "icone/BarraIconeStandard.png", SfondoIcona.VERDE),
+	BARRA_DOCK(Comando.BARRA_DOCK, "icone/BarraIconeDock.png", SfondoIcona.VERDE),
 
 	/* Scelta sesso del personaggio a inizio gioco */
 	MASCHIO(Comando.MASCHIO, "icone/Maschio.png", SfondoIcona.VERDE),

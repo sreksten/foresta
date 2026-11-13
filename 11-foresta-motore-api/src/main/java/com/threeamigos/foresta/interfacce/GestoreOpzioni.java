@@ -1,10 +1,11 @@
 package com.threeamigos.foresta.interfacce;
 
 import com.threeamigos.foresta.tipi.PosizioneDellaBarra;
+import com.threeamigos.foresta.tipi.StileDellaBarra;
 
 /**
- * Le opzioni del gioco che valgono da una partita all'altra e si cambiano dalla schermata delle opzioni (dall'intro): la lingua e la posizione
- * della barra dei comandi. Le crea chi avvia
+ * Le opzioni del gioco che valgono da una partita all'altra e si cambiano dalla schermata delle opzioni (dall'intro): la lingua, la posizione
+ * e lo stile della barra dei comandi. Le crea chi avvia
  * il gioco (GestoreOpzioniSuFile) e le danno all'Automa, che le cambia, e all'interfaccia. Gli argomenti di avvio (per esempio {@code LINGUA=})
  * vincono su quel che c'è scritto qui.
  */
@@ -30,6 +31,13 @@ public interface GestoreOpzioni {
 	void setPosizioneDellaBarra(PosizioneDellaBarra posizione);
 
 	/**
+	 * Com'è la barra dei comandi, o null se non lo si è mai scelto (di solito il Dock)
+	 */
+	StileDellaBarra getStileDellaBarra();
+
+	void setStileDellaBarra(StileDellaBarra stile);
+
+	/**
 	 * Le scrive dove stanno; dice se ci è riuscito
 	 */
 	boolean salva();
@@ -40,6 +48,7 @@ public interface GestoreOpzioni {
 	final class InMemoria implements GestoreOpzioni {
 		private String lingua;
 		private PosizioneDellaBarra posizioneDellaBarra;
+		private StileDellaBarra stileDellaBarra;
 
 		@Override
 		public boolean carica() {
@@ -64,6 +73,16 @@ public interface GestoreOpzioni {
 		@Override
 		public void setPosizioneDellaBarra(PosizioneDellaBarra posizione) {
 			posizioneDellaBarra = posizione;
+		}
+
+		@Override
+		public StileDellaBarra getStileDellaBarra() {
+			return stileDellaBarra;
+		}
+
+		@Override
+		public void setStileDellaBarra(StileDellaBarra stile) {
+			stileDellaBarra = stile;
 		}
 
 		@Override

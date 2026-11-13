@@ -78,12 +78,19 @@ class OpzioniTest {
 	}
 
 	@Test
-	void ripristinareIlTutorialLoRiaccendeESiRestaNelleOpzioni() {
+	void ripristinareIlTutorialLoRiaccendeSoloConIlSiESiRestaNelleOpzioni() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(221)) {
 			RegistroSuggerimenti.setAttivo(false);
 			RegistroSuggerimenti.visto(TipoSuggerimento.COMBATTIMENTO);
 			partita.comando(Comando.OPZIONI);
 			partita.comando(Comando.RIPRISTINA_TUTORIAL);
+			partita.assertStato(Stato.OPZIONI_RIPRISTINA_TUTORIAL);
+			assertEquals(Arrays.asList(Comando.SI, Comando.NO), partita.comandiDisponibili());
+			partita.comando(Comando.NO);
+			assertTrue(RegistroSuggerimenti.isVisto(TipoSuggerimento.COMBATTIMENTO), "con il no resta com'era");
+			partita.assertStato(Stato.OPZIONI);
+			partita.comando(Comando.RIPRISTINA_TUTORIAL);
+			partita.comando(Comando.SI);
 			assertTrue(RegistroSuggerimenti.isAttivo());
 			assertFalse(RegistroSuggerimenti.isVisto(TipoSuggerimento.COMBATTIMENTO));
 			partita.assertStato(Stato.OPZIONI);
@@ -144,6 +151,22 @@ class OpzioniTest {
 			assertEquals(com.threeamigos.foresta.tipi.PosizioneDellaBarra.SINISTRA, partita.opzioni().getPosizioneDellaBarra());
 			assertEquals(com.threeamigos.foresta.tipi.PosizioneDellaBarra.SINISTRA, partita.eventi()
 					.tutti(com.threeamigos.foresta.eventi.notifiche.NotificaPosizioneDellaBarra.class).get(0).getPosizione());
+			partita.assertStato(Stato.OPZIONI);
+		}
+	}
+
+	@Test
+	void loStileDellaBarraSiRicordaESiDiceAllInterfaccia() {
+		try (PartitaDiTest partita = PartitaDiTest.nuova(251)) {
+			partita.eventi().ascolta(com.threeamigos.foresta.eventi.notifiche.NotificaStileDellaBarra.class);
+			partita.comando(Comando.OPZIONI);
+			partita.comando(Comando.STILE_BARRA);
+			partita.assertStato(Stato.OPZIONI_STILE_BARRA);
+			assertEquals(Arrays.asList(Comando.BARRA_NORMALE, Comando.BARRA_DOCK, Comando.ANNULLA), partita.comandiDisponibili());
+			partita.comando(Comando.BARRA_NORMALE);
+			assertEquals(com.threeamigos.foresta.tipi.StileDellaBarra.NORMALE, partita.opzioni().getStileDellaBarra());
+			assertEquals(com.threeamigos.foresta.tipi.StileDellaBarra.NORMALE, partita.eventi()
+					.tutti(com.threeamigos.foresta.eventi.notifiche.NotificaStileDellaBarra.class).get(0).getStile());
 			partita.assertStato(Stato.OPZIONI);
 		}
 	}

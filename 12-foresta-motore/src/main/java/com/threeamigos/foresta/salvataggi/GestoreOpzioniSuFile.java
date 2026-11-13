@@ -4,6 +4,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoException;
 import com.threeamigos.foresta.interfacce.GestoreOpzioni;
 import com.threeamigos.foresta.tipi.PosizioneDellaBarra;
+import com.threeamigos.foresta.tipi.StileDellaBarra;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,17 +14,19 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * Le opzioni del gioco nel file {@code opzioni} della cartella {@code .foresta}: una per riga, {@code NOME=valore} ({@code LINGUA=en-GB},
- * {@code BARRA=SINISTRA}). Un file che non c'è vuol dire
+ * {@code BARRA=SINISTRA}, {@code STILE=DOCK}). Un file che non c'è vuol dire
  * le opzioni predefinite; una riga che non si conosce si ignora.
  */
 public final class GestoreOpzioniSuFile extends GestoreSuFile implements GestoreOpzioni {
 
 	private static final String LINGUA = "LINGUA";
 	private static final String BARRA = "BARRA";
+	private static final String STILE = "STILE";
 
 	private String nomeFile;
 	private String lingua;
 	private PosizioneDellaBarra posizioneDellaBarra;
+	private StileDellaBarra stileDellaBarra;
 
 	/**
 	 * Scrive nella cartella {@code .foresta} della cartella dell'utente.
@@ -65,6 +68,8 @@ public final class GestoreOpzioniSuFile extends GestoreSuFile implements Gestore
 					lingua = valore.isEmpty() ? null : valore;
 				} else if (BARRA.equals(nome)) {
 					posizioneDellaBarra = posizione(valore);
+				} else if (STILE.equals(nome)) {
+					stileDellaBarra = stile(valore);
 				}
 			}
 		} catch (Exception e) {
@@ -94,6 +99,25 @@ public final class GestoreOpzioniSuFile extends GestoreSuFile implements Gestore
 		return null;
 	}
 
+	private static StileDellaBarra stile(String valore) {
+		for (StileDellaBarra stile : StileDellaBarra.values()) {
+			if (stile.name().equals(valore)) {
+				return stile;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public StileDellaBarra getStileDellaBarra() {
+		return stileDellaBarra;
+	}
+
+	@Override
+	public void setStileDellaBarra(StileDellaBarra stile) {
+		stileDellaBarra = stile;
+	}
+
 	@Override
 	public PosizioneDellaBarra getPosizioneDellaBarra() {
 		return posizioneDellaBarra;
@@ -113,6 +137,9 @@ public final class GestoreOpzioniSuFile extends GestoreSuFile implements Gestore
 				}
 				if (posizioneDellaBarra != null) {
 					writer.println(BARRA + "=" + posizioneDellaBarra.name());
+				}
+				if (stileDellaBarra != null) {
+					writer.println(STILE + "=" + stileDellaBarra.name());
 				}
 			});
 		} catch (Exception e) {

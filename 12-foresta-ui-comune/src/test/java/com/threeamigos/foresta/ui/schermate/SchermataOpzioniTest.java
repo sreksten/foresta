@@ -50,11 +50,11 @@ class SchermataOpzioniTest {
 	}
 
 	@Test
-	void leRigheSonoLaLinguaIlTutorialLaBarraEleDueCancellazioniUnaSottoLAltraDentroLoSchermo() {
+	void leRigheSonoLaLinguaIlTutorialPosizioneEStileDellaBarraEleDueCancellazioniUnaSottoLAltraDentroLoSchermo() {
 		List<SchermataOpzioni.Riga> righe = schermata.getRighe();
 		List<Comando> comandi = new ArrayList<>();
 		righe.forEach(r -> comandi.add(r.getComando()));
-		assertEquals(Arrays.asList(Comando.OPZIONI_LINGUA, Comando.RIPRISTINA_TUTORIAL, Comando.POSIZIONE_BARRA, Comando.CANCELLA_PUNTEGGI,
+		assertEquals(Arrays.asList(Comando.OPZIONI_LINGUA, Comando.RIPRISTINA_TUTORIAL, Comando.POSIZIONE_BARRA, Comando.STILE_BARRA, Comando.CANCELLA_PUNTEGGI,
 				Comando.CANCELLA_SALVATAGGI), comandi);
 		for (int i = 0; i < righe.size(); i++) {
 			Area area = righe.get(i).getArea();
@@ -77,7 +77,7 @@ class SchermataOpzioniTest {
 	@Test
 	void unClickSullaRigaMandaIlSuoComandoEIncorniciaIlPulsanteFinoAllaScelta() {
 		assertEquals(0, cornici(schermata));
-		Area punteggi = schermata.getRighe().get(3).getArea();
+		Area punteggi = schermata.getRighe().get(4).getArea();
 		// Anche sulla scritta, non solo sul pulsante
 		schermata.processaClick(punteggi.getX() + punteggi.getLarghezza() - 2, punteggi.getY() + 2, Finestra.Tasto.SINISTRO);
 		assertEquals(Collections.singletonList(Comando.CANCELLA_PUNTEGGI), mandati);
@@ -113,10 +113,27 @@ class SchermataOpzioniTest {
 
 	@Test
 	void mentreUnaRigaAspettaGliAltriClickNonMandanoNiente() {
-		Area punteggi = schermata.getRighe().get(3).getArea();
+		Area punteggi = schermata.getRighe().get(4).getArea();
 		schermata.processaClick(punteggi.getX() + 2, punteggi.getY() + 2, Finestra.Tasto.SINISTRO);
 		schermata.aggiorna(Arrays.asList(Comando.SI, Comando.NO));
 		schermata.processaClick(punteggi.getX() + 2, punteggi.getY() + 2, Finestra.Tasto.SINISTRO);
 		assertEquals(Collections.singletonList(Comando.CANCELLA_PUNTEGGI), mandati);
+	}
+
+	@Test
+	void ogniRigaHaIlSuoSottotitoloInBiancoSottoLaScritta() {
+		for (SchermataOpzioni.Riga riga : schermata.getRighe()) {
+			assertFalse(riga.getRigheDelSottotitolo().isEmpty(), riga.getComando().name());
+			assertFalse(riga.getSottotitolo().startsWith("OPZIONI_"), "il testo c'è: " + riga.getSottotitolo());
+		}
+		long sottotitoli = schermata.contenuto().getElementi().stream().filter(e -> e.getTipo() == Elemento.Tipo.TESTO).count();
+		assertEquals(schermata.getRighe().size(), sottotitoli);
+	}
+
+	@Test
+	void laRigaDelloStileHaLIconaDellaBarraDiAdesso() {
+		assertEquals(TipoIcona.BARRA_DOCK, schermata.getRighe().get(3).getIcona());
+		schermata.setStileDellaBarra(com.threeamigos.foresta.tipi.StileDellaBarra.NORMALE);
+		assertEquals(TipoIcona.BARRA_NORMALE, schermata.getRighe().get(3).getIcona());
 	}
 }

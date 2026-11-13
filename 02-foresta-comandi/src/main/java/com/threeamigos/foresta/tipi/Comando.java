@@ -36,6 +36,10 @@ public enum Comando {
 	BARRA_SINISTRA,
 	BARRA_BASSO,
 	BARRA_DESTRA,
+	// Nella schermata delle opzioni, il pulsante dello stile della barra dei comandi; poi, nella barra, quale
+	STILE_BARRA,
+	BARRA_NORMALE,
+	BARRA_DOCK,
 
 	// All'inizio del gioco, per scegliere il tipo del proprio personaggio.
 	// E si, classi e razze sono mischiate ma ce ne faremo una ragione.

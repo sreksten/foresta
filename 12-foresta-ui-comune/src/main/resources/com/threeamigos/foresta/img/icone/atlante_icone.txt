@@ -22,7 +22,9 @@ AlbaSacra LuceDivina ImposizioneDelleMani MartelloSacro PelleDiCorteccia Radici 
 # Direzioni, frecce e azioni di gioco
 Nord Est Sud Ovest Su Giu Sinistra Destra ComponenteScorrevole-FrecciaSu@16x16 ComponenteScorrevole-FrecciaGiu@16x16 ComponenteScorrevole-FrecciaSinistra@16x16 ComponenteScorrevole-FrecciaDestra@16x16 Combattimento Fuga PassaInosservato Accampamento EsciDaCitta Singolo SingoloAttacco Carta Forbice Sasso
 # Scelte e conferme
-Si No Annulla Aggiungi Rimuovi Aiuto 1 2 3 4 5 Maschio Femmina LinguaItaliano LinguaIngleseGb LinguaIngleseUsa RipristinaTutorial Opzioni BarraIconeSinistra BarraIconeBasso BarraIconeDestra
+Si No Annulla Aggiungi Rimuovi Aiuto 1 2 3 4 5 Maschio Femmina
+# Opzioni
+Opzioni LinguaItaliano LinguaIngleseGb LinguaIngleseUsa RipristinaTutorial BarraIconeSinistra BarraIconeBasso BarraIconeDestra BarraIconeStandard BarraIconeDock
 # Negozi, luoghi e schermate di contorno (a destra due icone scherzose)
 NegozioAlchimista NegozioArmaiolo NegozioIncantatore NegozioVenditoreDiPergamene Locanda Fusione Mappa Inventario Gruppo Trofei Bestiario TatticheAttacco Floppy Grimorio - - - - - - Ruttolomeo Storpsgorblin
 # Consumabili, valori e missioni (a destra gli sfondi delle icone)

@@ -70,7 +70,7 @@ public final class MainLibgdx {
 			PosizioneDellaBarra posizione = opzioni.getPosizioneDellaBarra() != null ? opzioni.getPosizioneDellaBarra()
 					: motore.getGestoreOpzioni().getPosizioneDellaBarra();
 			applicazione = new ForestaLibGDX(posizione, schermo, esecutore, motore.getControlloreDiGioco(), motore.getGestorePunteggi(), motore.getVistaPartita(),
-					AvvioDelMotore.nuovoTemporizzatore(), opzioni.isBarraDock(), opzioni.isJoystickVirtuale(), opzioni.isSaltaLogo(), opzioni.isTocco());
+					AvvioDelMotore.nuovoTemporizzatore(), opzioni.isBarraDock(motore.getGestoreOpzioni().getStileDellaBarra()), opzioni.isJoystickVirtuale(), opzioni.isSaltaLogo(), opzioni.isTocco());
 			Misura dimensioni = ForestaLibGDX.dimensioniPerIlDesktop(posizione);
 			larghezza = dimensioni.larghezza;
 			altezza = dimensioni.altezza;

@@ -1,7 +1,5 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.tipi.PosizioneDellaBarra;
-import com.threeamigos.foresta.eventi.notifiche.NotificaPosizioneDellaBarra;
 import com.threeamigos.foresta.bestiario.RegistroBestiario;
 import com.threeamigos.foresta.abilita.AbilitaInnate;
 import com.threeamigos.foresta.artefatti.Artefatto;
@@ -296,6 +294,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriComando.put(Stato.OPZIONI, this::gestisciComandoInStatoOpzioni);
 		gestoriComando.put(Stato.OPZIONI_LINGUA, this::gestisciComandoInStatoOpzioniLingua);
 		gestoriComando.put(Stato.OPZIONI_BARRA, this::gestisciComandoInStatoOpzioniBarra);
+		gestoriComando.put(Stato.OPZIONI_STILE_BARRA, this::gestisciComandoInStatoOpzioniStileBarra);
+		gestoriComando.put(Stato.OPZIONI_RIPRISTINA_TUTORIAL, this::gestisciComandoInStatoOpzioniRipristinaTutorial);
 		gestoriComando.put(Stato.OPZIONI_CANCELLA_PUNTEGGI, this::gestisciComandoInStatoOpzioniCancellaPunteggi);
 		gestoriComando.put(Stato.OPZIONI_CANCELLA_SALVATAGGI, this::gestisciComandoInStatoOpzioniCancellaSalvataggi);
 		gestoriComando.put(Stato.PRE_GAME_ATTESA_SESSO_PERSONAGGIO, this::gestisciComandoInStatoPreGameAttesaSessoPersonaggio);
@@ -597,14 +597,18 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 						Comando.LINGUA_INGLESE_GB, Comando.ANNULLA));
 				return Esito.FERMATI;
 			case RIPRISTINA_TUTORIAL:
-				RegistroSuggerimenti.ripristina();
-				annuncia("Automa.tutorialRipristinato");
-				return mostraLeOpzioni();
+				stato = Stato.OPZIONI_RIPRISTINA_TUTORIAL;
+				BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.OPZIONI, Comando.SI, Comando.NO));
+				return Esito.FERMATI;
 			case POSIZIONE_BARRA:
 				// Le posizioni nella barra (sul telefono l'interfaccia non mostra quella in basso, che lì non c'è)
 				stato = Stato.OPZIONI_BARRA;
 				BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.OPZIONI, Comando.BARRA_SINISTRA, Comando.BARRA_BASSO, Comando.BARRA_DESTRA,
 						Comando.ANNULLA));
+				return Esito.FERMATI;
+			case STILE_BARRA:
+				stato = Stato.OPZIONI_STILE_BARRA;
+				BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.OPZIONI, Comando.BARRA_NORMALE, Comando.BARRA_DOCK, Comando.ANNULLA));
 				return Esito.FERMATI;
 			case CANCELLA_PUNTEGGI:
 				stato = Stato.OPZIONI_CANCELLA_PUNTEGGI;
@@ -641,14 +645,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				comandoNonValido(comando);
 				return Esito.FERMATI;
 		}
-		boolean cambiata = !lingua.equals(Testi.getLingua());
+		// Che le partite salvate restino nella loro lingua lo dice la schermata delle opzioni, sotto la riga della lingua
 		Testi.impostaLingua(lingua);
 		gestoreOpzioni.setLingua(lingua);
 		gestoreOpzioni.salva();
-		if (cambiata) {
-			// Nella lingua nuova: le partite salvate restano nella loro
-			annuncia("Automa.linguaCambiata");
-		}
 		return mostraLeOpzioni();
 	}
 
@@ -674,6 +674,39 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoreOpzioni.salva();
 		// L'interfaccia la sposta subito
 		BusEventi.pubblica(new NotificaPosizioneDellaBarra(posizione));
+		return mostraLeOpzioni();
+	}
+
+	private Esito gestisciComandoInStatoOpzioniStileBarra(Comando comando) {
+		StileDellaBarra stile;
+		switch (comando) {
+			case BARRA_NORMALE:
+				stile = StileDellaBarra.NORMALE;
+				break;
+			case BARRA_DOCK:
+				stile = StileDellaBarra.DOCK;
+				break;
+			case ANNULLA:
+				return mostraLeOpzioni();
+			default:
+				comandoNonValido(comando);
+				return Esito.FERMATI;
+		}
+		gestoreOpzioni.setStileDellaBarra(stile);
+		gestoreOpzioni.salva();
+		// L'interfaccia la cambia subito
+		BusEventi.pubblica(new NotificaStileDellaBarra(stile));
+		return mostraLeOpzioni();
+	}
+
+	private Esito gestisciComandoInStatoOpzioniRipristinaTutorial(Comando comando) {
+		if (comando == Comando.SI) {
+			RegistroSuggerimenti.ripristina();
+			annuncia("Automa.tutorialRipristinato");
+		} else if (comando != Comando.NO) {
+			comandoNonValido(comando);
+			return Esito.FERMATI;
+		}
 		return mostraLeOpzioni();
 	}
 

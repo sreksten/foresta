@@ -58,7 +58,8 @@ public class Main {
 		}
 
 		// La finestra, quando è pronta, avvisa l'automa che può cominciare
-		new ForestaSwing(posizione, schermo, opzioni.isTuttoSchermo(), opzioni.isSaltaLogo(), opzioni.isBarraDock(),
+		new ForestaSwing(posizione, schermo, opzioni.isTuttoSchermo(), opzioni.isSaltaLogo(),
+				opzioni.isBarraDock(motore.getGestoreOpzioni().getStileDellaBarra()),
 				opzioni.isJoystickVirtuale(), motore.getGestorePunteggi(), motore.getVistaPartita(), AvvioDelMotore.nuovoTemporizzatore());
 
 		if (ModalitaDiProva.isAttiva()) {

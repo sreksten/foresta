@@ -2,6 +2,7 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.tipi.Orientamento;
 import com.threeamigos.foresta.tipi.PosizioneDellaBarra;
+import com.threeamigos.foresta.tipi.StileDellaBarra;
 import com.threeamigos.foresta.artefatti.VistaArtefatto;
 import com.threeamigos.foresta.artefatti.VistaBancoDiLavoro;
 import com.threeamigos.foresta.artefatti.VistaScambio;
@@ -31,6 +32,7 @@ import com.threeamigos.foresta.tipi.TipoFinestra;
 import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.tipi.TipoNegozio;
 import com.threeamigos.foresta.ui.barra.BarraIcone;
+import com.threeamigos.foresta.ui.barra.BarraIconeDock;
 import com.threeamigos.foresta.ui.riquadri.*;
 import com.threeamigos.foresta.ui.schermate.*;
 import com.threeamigos.foresta.ui.sprite.*;
@@ -731,6 +733,7 @@ public abstract class SchermoDelGioco<S extends SpriteDelloSchermo, A extends An
 		schermataOpzioni().aggiorna(comandiNellaBarra);
 		schermataOpzioni().setPosizioneDellaBarra(disposizione.getOrientamento() == Orientamento.ORIZZONTALE ? PosizioneDellaBarra.BASSO
 				: disposizione.isBarraASinistra() ? PosizioneDellaBarra.SINISTRA : PosizioneDellaBarra.DESTRA);
+		schermataOpzioni().setStileDellaBarra(barraIcone() instanceof BarraIconeDock ? StileDellaBarra.DOCK : StileDellaBarra.NORMALE);
 		cambiaStato(StatoDelloSchermo.OPZIONI);
 		ridisegna();
 	}

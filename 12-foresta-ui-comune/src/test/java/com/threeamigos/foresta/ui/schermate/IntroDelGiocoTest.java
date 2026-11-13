@@ -2,6 +2,7 @@ package com.threeamigos.foresta.ui.schermate;
 
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.interfacce.VistaPartita;
+import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.ui.Misura;
 import com.threeamigos.foresta.ui.componenti.ContenutoDiColonna;
@@ -298,5 +299,23 @@ class IntroDelGiocoTest {
 		int altezza = 600 - SchermateSenzaPartita.QUOTA_CLASSIFICA - IntroDelGioco.FASCIA;
 		assertTrue(IntroDelGioco.classificaFerma(altezza, 600));
 		assertFalse(IntroDelGioco.classificaFerma(altezza + 1, 600));
+	}
+
+	@Test
+	void laStoriaSiRifaSeLaLinguaCambiaDalleOpzioni() {
+		try {
+			intro.resettaSequenza();
+			ContenutoDiColonna italiana = intro.avanza().getContenuto();
+			intro.resettaSequenza();
+			assertSame(italiana, intro.avanza().getContenuto(), "nella stessa lingua la storia si fa una volta sola");
+			Testi.impostaLingua("en");
+			intro.resettaSequenza();
+			ContenutoDiColonna inglese = intro.avanza().getContenuto();
+			assertNotSame(italiana, inglese);
+			assertNotEquals(italiana.getElementi().get(0).getChiave(), inglese.getElementi().get(0).getChiave(),
+					"la chiave dell'immagine dice la lingua: libGDX tiene le immagini per chiave");
+		} finally {
+			Testi.impostaLingua(null);
+		}
 	}
 }

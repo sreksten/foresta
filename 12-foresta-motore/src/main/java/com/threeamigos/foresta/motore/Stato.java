@@ -11,10 +11,12 @@ public enum Stato {
 
 	// Prima dell'inizio del gioco vero e proprio
 	INTRO,
-	// La schermata delle opzioni (dall'intro), e le scelte che vi si fanno nella barra: la lingua, la conferma delle cancellazioni
+	// La schermata delle opzioni (dall'intro), e le scelte che vi si fanno nella barra: la lingua, la conferma del ripristino del tutorial e delle cancellazioni
 	OPZIONI,
 	OPZIONI_LINGUA,
 	OPZIONI_BARRA,
+	OPZIONI_STILE_BARRA,
+	OPZIONI_RIPRISTINA_TUTORIAL,
 	OPZIONI_CANCELLA_PUNTEGGI,
 	OPZIONI_CANCELLA_SALVATAGGI,
 

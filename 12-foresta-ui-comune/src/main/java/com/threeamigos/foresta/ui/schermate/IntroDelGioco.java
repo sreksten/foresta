@@ -3,6 +3,7 @@ package com.threeamigos.foresta.ui.schermate;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.strumenti.Punteggio;
+import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.ui.Area;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.Misura;
@@ -146,6 +147,8 @@ public final class IntroDelGioco {
 	private ColonnaScorrevole colonna;
 	private ContenutoDiColonna contenuto;
 	private ContenutoDiColonna contenutoDellaStoria;
+	// La lingua in cui è scritta la storia pronta: se il giocatore la cambia dalle opzioni, la storia si rifà
+	private String linguaDellaStoria;
 	// Il tempo della fase: dall'ultimo fotogramma, da quando il logo della Foresta si è fermato (e compare il 3AM), da quando si sta fermi
 	private long ultimoFotogramma;
 	private double secondiLoghi = -1;
@@ -228,15 +231,17 @@ public final class IntroDelGioco {
 
 	/**
 	 * Tutta la storia in un contenuto, come un unico testo che va a capo dove serve (i paragrafi di VistaPartita.getStoria, che erano le pagine dell'intro di
-	 * una volta), con un alone nero attorno alle lettere. Non cambia mai: si fa una volta sola.
+	 * una volta), con un alone nero attorno alle lettere. Si fa una volta sola per lingua.
 	 */
 	private ContenutoDiColonna contenutoDellaStoria() {
-		if (contenutoDellaStoria == null) {
+		String lingua = Testi.getLingua();
+		if (contenutoDellaStoria == null || !lingua.equals(linguaDellaStoria)) {
+			linguaDellaStoria = lingua;
 			int raggio = SchermateSenzaPartita.RAGGIO_ALONE;
 			ImmagineDiPixel storia = LayoutDelTestoGrande.conAlone(
 					LayoutDelTestoGrande.immagine(String.join(" ", vistaPartita.getStoria()), width - 2 * raggio, true, INTERLINEA_STORIA), raggio);
 			contenutoDellaStoria = new ContenutoDiColonna(width, storia.getAltezza(),
-					Collections.singletonList(Elemento.testoGrande(storia, "storia|" + width + "|" + vistaPartita.getStoria().size(), 0, 0)));
+					Collections.singletonList(Elemento.testoGrande(storia, "storia|" + lingua + "|" + width + "|" + vistaPartita.getStoria().size(), 0, 0)));
 		}
 		return contenutoDellaStoria;
 	}
