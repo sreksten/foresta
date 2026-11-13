@@ -1,6 +1,6 @@
 # 13-foresta-app-libgdx
 
-L'**applicazione desktop** (Windows, Linux, macOS) con l'interfaccia libGDX: il punto d'ingresso (`MainLibgdx`) che collega il motore, come `Main` per Swing, e apre la finestra con il backend LWJGL3. Android e iOS hanno il loro punto d'ingresso, fuori da Maven (vedi [`porting_libGDX.md`](porting_libGDX.md)).
+L'**applicazione desktop** (Windows, Linux, macOS) con l'interfaccia libGDX: il punto d'ingresso (`MainLibgdx`) che collega il motore, come `Main` per Swing, e apre la finestra con il backend LWJGL3. Android e iOS hanno il loro punto d'ingresso, fuori da Maven (vedi [`porting_libGDX.md`](porting_libGDX.md)); l'APK di Android lo costruisce [`13-foresta-app-android`](13-foresta-app-android.md) con il profilo `android`.
 
 ## Dipendenze
 

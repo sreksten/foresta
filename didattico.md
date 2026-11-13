@@ -128,9 +128,9 @@ Chi sta più in basso non conosce chi sta più in alto: quando una parte ha biso
 | 10 | modellodati, trofei | [`10-foresta-modellodati.md`](10-foresta-modellodati.md), [`10-foresta-trofei.md`](10-foresta-trofei.md) |
 | 11 | motore-api | [`11-foresta-motore-api.md`](11-foresta-motore-api.md) |
 | 12 | motore, ui-comune, swing, libgdx | [`12-foresta-motore.md`](12-foresta-motore.md), [`12-foresta-ui-comune.md`](12-foresta-ui-comune.md), [`12-foresta-swing.md`](12-foresta-swing.md), [`12-foresta-libgdx.md`](12-foresta-libgdx.md) |
-| 13 | app-swing, app-libgdx | [`13-foresta-app-swing.md`](13-foresta-app-swing.md), [`13-foresta-app-libgdx.md`](13-foresta-app-libgdx.md) |
+| 13 | app-android, app-swing, app-libgdx | [`13-foresta-app-android.md`](13-foresta-app-android.md), [`13-foresta-app-swing.md`](13-foresta-app-swing.md), [`13-foresta-app-libgdx.md`](13-foresta-app-libgdx.md) |
 
-Il motore e la UI dipendono entrambi da `11-foresta-motore-api` e mai l'uno dall'altro: è lì che stanno le «lingue comuni» (eventi e viste). Solo le applicazioni (`13-foresta-app-swing`, `13-foresta-app-libgdx`) li mettono insieme; su Android lo fa `AndroidLauncher`, in `foresta-android/`, fuori da Maven. Un test (`DipendenzeDalToolkitGraficoTest`) controlla che nessuno fuori da `12-foresta-swing` usi `java.awt`, Swing, `javax.imageio` o `javax.sound`, e che nessuno fuori dai due moduli libGDX usi `com.badlogic`.
+Il motore e la UI dipendono entrambi da `11-foresta-motore-api` e mai l'uno dall'altro: è lì che stanno le «lingue comuni» (eventi e viste). Solo le applicazioni (`13-foresta-app-swing`, `13-foresta-app-libgdx`) li mettono insieme; su Android lo fa `AndroidLauncher`, in `foresta-android/`, un progetto Gradle che Maven lancia con il profilo `android` (`13-foresta-app-android`). Un test (`DipendenzeDalToolkitGraficoTest`) controlla che nessuno fuori da `12-foresta-swing` usi `java.awt`, Swing, `javax.imageio` o `javax.sound`, e che nessuno fuori dai due moduli libGDX usi `com.badlogic`.
 
 ## 3. Il bus eventi: come le parti si parlano
 

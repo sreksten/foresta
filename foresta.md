@@ -4,7 +4,7 @@ Panoramica del progetto: cos'è il gioco, come è fatto, dove trovare il resto d
 
 ## Cos'è
 
-**La Foresta** è un **gioco di ruolo single-player in italiano** per desktop e Android, scritto in Java: il motore non usa nessuna libreria grafica, e l'interfaccia esiste in due versioni sopra lo stesso motore, Swing/Java2D per il desktop e libGDX per desktop e Android. Si distribuisce come JAR eseguibile (`foresta-0.0.1-SNAPSHOT-jar-with-dependencies.jar`, classe main `com.threeamigos.foresta.Main` per Swing; `MainLibgdx` per la versione libGDX; per Android c'è il lanciatore `AndroidLauncher`, in `foresta-android/`, fuori da Maven). È un progetto personale dell'autore ("La Foresta by Gundam of 3AM" nel `pom.xml`; il `README.md` dice *"My favourite game! (Italian language only)"*).
+**La Foresta** è un **gioco di ruolo single-player in italiano** per desktop e Android, scritto in Java: il motore non usa nessuna libreria grafica, e l'interfaccia esiste in due versioni sopra lo stesso motore, Swing/Java2D per il desktop e libGDX per desktop e Android. Si distribuisce come JAR eseguibile (`foresta-0.0.1-SNAPSHOT-jar-with-dependencies.jar`, classe main `com.threeamigos.foresta.Main` per Swing; `MainLibgdx` per la versione libGDX; per Android c'è il lanciatore `AndroidLauncher`, in `foresta-android/`, e `mvn package -Pandroid` scrive anche l'APK di debug `foresta-android-0.0.1-SNAPSHOT.apk`). È un progetto personale dell'autore ("La Foresta by Gundam of 3AM" nel `pom.xml`; il `README.md` dice *"My favourite game! (Italian language only)"*).
 
 L'estetica richiama i fantasy a schermate fisse degli anni '80: un font bitmap fatto in casa (`DoomdarkFont`, omaggio a *Doomdark's Revenge* e *Lords of Midnight*), sprite, cornici pixel-perfect. Un gruppo di avventurieri esplora una foresta a caselle, entra nelle locazioni, combatte, raccoglie artefatti e incantesimi e affronta la missione principale, **sconfiggere il Drago**, prima che il tempo finisca. Il Drago ha quattro alleati nei loro castelli (Idra, Lich, Minotauro Gigante, Strega), e intorno alla storia principale ruotano molte missioni secondarie.
 
@@ -91,6 +91,7 @@ Il progetto è un insieme di moduli Maven (pom padre nella radice); ogni modulo 
 | 12 | [`12-foresta-ui-comune`](12-foresta-ui-comune.md) | le immagini del gioco (PNG, in atlanti) e la logica d'interfaccia che non disegna, uguale per ogni toolkit: lo schermo di gioco (`SchermoDelGioco`, `ForestaUI`), il router degli input, i modelli della barra icone (anche il Dock), dei riquadri e delle schermate, il tutorial; niente `java.awt`, Swing né libGDX | motore-api, tattiche, tutorial |
 | 12 | [`12-foresta-swing`](12-foresta-swing.md) | `ui`: il disegno con Java2D (`ForestaSwing`, `DisplayableCanvas`, i riquadri e le schermate disegnati) e gli eventi con sprite | ui-comune |
 | 12 | [`12-foresta-libgdx`](12-foresta-libgdx.md) | l'interfaccia in libGDX (Android, famiglia Apple, desktop): stessa partita di Swing con un altro toolkit | ui-comune |
+| 13 | [`13-foresta-app-android`](13-foresta-app-android.md) | l'APK di debug: copia i jar del gioco e lancia il progetto Gradle `foresta-android/`; solo con il profilo `android` | motore, libgdx |
 | 13 | [`13-foresta-app-libgdx`](13-foresta-app-libgdx.md) | `MainLibgdx`, l'applicazione desktop con libGDX | motore, libgdx |
 | 13 | [`13-foresta-app-swing`](13-foresta-app-swing.md) | `Main`, `SnifferBusEventi` e i test che usano motore e UI insieme | motore, swing |
 
@@ -111,7 +112,7 @@ Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbrevia
 ## Stack e build
 
 - **Java 8** (`maven.compiler.source/target = 1.8`), build **Maven**, sorgenti in UTF-8.
-- **Swing/AWT/Java2D** per la grafica del desktop, senza librerie esterne, e **libGDX** (1.14.2) per la versione libGDX e per Android; il motore e i moduli sotto la UI non usano nessuna libreria grafica. Android si costruisce con Gradle (`foresta-android/`), fuori da Maven.
+- **Swing/AWT/Java2D** per la grafica del desktop, senza librerie esterne, e **libGDX** (1.14.2) per la versione libGDX e per Android; il motore e i moduli sotto la UI non usano nessuna libreria grafica. Android si costruisce con Gradle (`foresta-android/`), che Maven lancia con il profilo `android` (`13-foresta-app-android`).
 - **JUnit 5** per i test e **JaCoCo** per la copertura. `mvn test` esegue la suite: al 2026-11-10 sono 3655 test, tutti verdi (37 saltati), distribuiti sui moduli. I test di scenario guidano partite intere senza UI (`PartitaDiTest`).
 - I salvataggi usano un formato testo proprietario a campi separati da `|` (`Serializzabile`), senza versione: la compatibilità con i salvataggi vecchi non è un obiettivo.
 - Al 2026-11-09: 1059 file e circa 133.000 righe di codice (il motore ne ha 10.500, `12-foresta-ui-comune` 24.500, Swing 9.400, libGDX 6.600), più 596 file e circa 89.500 righe di test.
@@ -148,7 +149,7 @@ Ogni modulo ha le sue cartelle `src/main/java/com/threeamigos/foresta` (abbrevia
 | [`assessment_portabilita.md`](assessment_portabilita.md) | Cosa manca per portare il gioco su Android e iOS: testi, costanti, ciclo di vita dell'app, uscite dal processo |
 | [`porting_libGDX.md`](porting_libGDX.md) | Il piano del porting su libGDX e su Android: le fasi, le decisioni e lo stato |
 | [`layout_telefono.md`](layout_telefono.md) | Il piano del layout per telefono (Fase 6 del porting): come si sceglie il layout, la schermata di gioco, intro e trofei, le misure di prova dal desktop |
-| [`foresta-android.md`](foresta-android.md) | Il lanciatore Android (Gradle, fuori da Maven): come si costruisce e si prova, e cosa resta |
+| [`foresta-android.md`](foresta-android.md) | Il lanciatore Android (Gradle, lanciato da Maven con il profilo `android`): come si costruisce e si prova, e cosa resta |
 | [`todo.md`](todo.md) | Cose da fare generali e bug noti |
 | [`revisione_documentazione.md`](revisione_documentazione.md) | Piano e avanzamento della revisione della documentazione |
 | `tipiDanno.md`, `tipiPersonaggio.md` | Appunti generici sul genere fantasy (tipi di danno, ruoli dei personaggi), non descrivono il codice |

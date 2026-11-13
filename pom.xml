@@ -63,6 +63,17 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <!-- mvn package -Pandroid: anche l'APK di debug (foresta-android-<versione>.apk nella radice); servono l'SDK Android
+             (ANDROID_HOME) e un JDK dal 17 al 21 per Gradle (-Dandroid.java.home se Maven gira con un altro); vedi 13-foresta-app-android.md -->
+        <profile>
+            <id>android</id>
+            <modules>
+                <module>13-foresta-app-android</module>
+            </modules>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>

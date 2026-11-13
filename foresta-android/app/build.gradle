@@ -4,7 +4,6 @@ plugins {
 
 // La stessa versione di libGDX del pom padre (libgdx.version)
 def gdxVersion = '1.14.2'
-def foresta = '0.0.1-SNAPSHOT'
 
 android {
     namespace 'com.threeamigos.foresta.android'
@@ -47,10 +46,15 @@ configurations {
     natives
 }
 
+// I jar del gioco (motore, interfaccia libGDX e tutte le parti sotto) li copia Maven: `mvn package -Pandroid` dalla radice
+// (modulo 13-foresta-app-android), che passa la cartella con -Pforesta.libs; da solo Gradle li cerca dove li lascia Maven
+def cartellaDeiJar = rootProject.file(findProperty('foresta.libs') ?: "${rootDir}/../13-foresta-app-android/target/libs")
+if (!cartellaDeiJar.isDirectory()) {
+    throw new GradleException("Mancano i jar del gioco in ${cartellaDeiJar}: prima `mvn package -Pandroid` dalla radice (vedi foresta-android.md)")
+}
+
 dependencies {
-    // Il motore e l'interfaccia libGDX: le altre parti (tutto il resto del gioco) arrivano come dipendenze transitive dai loro pom
-    implementation "com.threeamigos:12-foresta-motore:${foresta}"
-    implementation "com.threeamigos:12-foresta-libgdx:${foresta}"
+    implementation fileTree(dir: cartellaDeiJar, include: '*.jar')
 
     implementation "com.badlogicgames.gdx:gdx-backend-android:${gdxVersion}"
     natives "com.badlogicgames.gdx:gdx-platform:${gdxVersion}:natives-armeabi-v7a"

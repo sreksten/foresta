@@ -1,0 +1,128 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.threeamigos</groupId>
+        <artifactId>foresta</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>13-foresta-app-android</artifactId>
+    <name>13-foresta-app-android</name>
+    <description>L'APK di debug per Android: copia i jar del gioco e lancia il progetto Gradle foresta-android (solo con il profilo android)</description>
+    <packaging>pom</packaging>
+
+    <properties>
+        <!-- Il progetto Gradle con AndroidLauncher, il manifest e le icone -->
+        <android.progetto>${maven.multiModuleProjectDirectory}/foresta-android</android.progetto>
+        <!-- Dove si copiano i jar del gioco, che Gradle legge con la proprietà foresta.libs -->
+        <android.libs>${project.build.directory}/libs</android.libs>
+        <!-- Il JDK con cui gira Gradle: l'Android Gradle Plugin vuole dal 17 al 21; senza -Dandroid.java.home quello di Maven -->
+        <android.java.home>${java.home}</android.java.home>
+        <android.gradlew>${android.progetto}/gradlew</android.gradlew>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.threeamigos</groupId>
+            <artifactId>12-foresta-motore</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.threeamigos</groupId>
+            <artifactId>12-foresta-libgdx</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- 1. I jar del gioco appena compilati (non quelli di ~/.m2); libGDX no: Gradle lo prende con gdx-backend-android, e due copie di gdx farebbero classi doppie -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.6.1</version>
+                <executions>
+                    <execution>
+                        <id>jar-del-gioco</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${android.libs}</outputDirectory>
+                            <includeScope>runtime</includeScope>
+                            <excludeGroupIds>com.badlogicgames.gdx</excludeGroupIds>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- 2. Gradle costruisce l'APK di debug con quei jar -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <id>apk-di-debug</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>${android.gradlew}</executable>
+                            <workingDirectory>${android.progetto}</workingDirectory>
+                            <arguments>
+                                <argument>assembleDebug</argument>
+                                <argument>-Pforesta.libs=${android.libs}</argument>
+                                <argument>--no-daemon</argument>
+                            </arguments>
+                            <environmentVariables>
+                                <JAVA_HOME>${android.java.home}</JAVA_HOME>
+                            </environmentVariables>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- 3. L'APK nella radice, accanto ai jar -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>apk-nella-radice</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <copy file="${android.progetto}/app/build/outputs/apk/debug/app-debug.apk"
+                                      tofile="${maven.multiModuleProjectDirectory}/foresta-android-${project.version}.apk"
+                                      overwrite="true"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!-- Su Windows il wrapper di Gradle è gradlew.bat -->
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <properties>
+                <android.gradlew>${android.progetto}/gradlew.bat</android.gradlew>
+            </properties>
+        </profile>
+    </profiles>
+
+</project>

@@ -1,6 +1,6 @@
 # foresta-android
 
-Il prototipo Android della Foresta (Fase 7 di `porting_libGDX.md`): un progetto Gradle **fuori da Maven**, quindi senza numero di livello, che mette insieme il motore e l'interfaccia libGDX in un'applicazione Android.
+Il prototipo Android della Foresta (Fase 7 di `porting_libGDX.md`): un progetto Gradle, quindi senza numero di livello, che mette insieme il motore e l'interfaccia libGDX in un'applicazione Android. Non è un modulo Maven, ma Maven lo lancia: `mvn package -Pandroid` dalla radice scrive anche l'APK di debug (modulo [`13-foresta-app-android`](13-foresta-app-android.md)).
 
 ## Cosa fa e perché
 
@@ -8,7 +8,7 @@ Il prototipo Android della Foresta (Fase 7 di `porting_libGDX.md`): un progetto 
 
 ## Dipendenze
 
-Non sono moduli Maven: i moduli del gioco (`12-foresta-motore`, `12-foresta-libgdx`, e da loro tutto il resto) si prendono dal repository Maven locale (`~/.m2`, gruppo `com.threeamigos`), e libGDX (`gdx-backend-android` con le librerie native per le quattro architetture) da Maven Central. Quindi **prima di compilare** si installano i moduli: `mvn install -DskipTests -pl 12-foresta-motore,12-foresta-libgdx -am` dalla radice. `mavenLocal()` è limitato al gruppo `com.threeamigos`: il repository locale ha i pom di libGDX (per il desktop) ma non i jar delle librerie native Android, e Gradle si fermerebbe lì.
+I jar del gioco (`12-foresta-motore`, `12-foresta-libgdx` e tutto quello che sta sotto, 30 in tutto) li copia Maven in `13-foresta-app-android/target/libs` e Gradle li prende da lì (`fileTree`, cartella data con `-Pforesta.libs`; senza, quella di prima): non passano più da `~/.m2`, quindi Gradle usa quelli appena compilati e non serve `mvn install`. libGDX (`gdx-backend-android` con le librerie native per le quattro architetture) viene da Maven Central; Maven non lo copia, perché due copie di `gdx` darebbero classi doppie.
 
 ## Pagine di prova su Android
 
@@ -16,12 +16,12 @@ Per vedere un pezzo dell'interfaccia senza il motore (e fare screenshot con `adb
 
 ## Come si compila e si prova
 
-Servono un JDK 17 (l'Android Gradle Plugin non vuole il 22), l'SDK Android (piattaforma 36, build-tools) e `adb`; come si sono installati e come si tolgono sta in `risorse_e_documenti_vari/android_disinstalla.sh`.
+Servono un JDK dal 17 al 21 (l'Android Gradle Plugin non vuole il 22), l'SDK Android (piattaforma 36, build-tools) e `adb`; come si sono installati e come si tolgono sta in `risorse_e_documenti_vari/android_disinstalla.sh`.
 
 ```
-export JAVA_HOME=<JDK 17> ANDROID_HOME=/opt/homebrew/share/android-commandlinetools
-cd foresta-android && ./gradlew assembleDebug
-adb install -r app/build/outputs/apk/debug/app-debug.apk
+export ANDROID_HOME=/opt/homebrew/share/android-commandlinetools
+mvn package -Pandroid -DskipTests -Dandroid.java.home=<JDK 17>     # dalla radice: jar e foresta-android-0.0.1-SNAPSHOT.apk
+adb install -r foresta-android-0.0.1-SNAPSHOT.apk
 adb shell monkey -p com.threeamigos.foresta -c android.intent.category.LAUNCHER 1
 adb logcat --pid=$(adb shell pidof com.threeamigos.foresta)
 ```
