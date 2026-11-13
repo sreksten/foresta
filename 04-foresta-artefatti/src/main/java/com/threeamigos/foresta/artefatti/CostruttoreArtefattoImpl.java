@@ -55,8 +55,8 @@ public class CostruttoreArtefattoImpl implements
     }
 
     @Override
-    public CostruttoreArtefatto.StepCostoAcquisto setDanniBase(int livello) {
-        artefattoMD.setDanni(livello);
+    public CostruttoreArtefatto.StepCostoAcquisto setDanniBase(int danni) {
+        artefattoMD.setDanni(danni);
         return this;
     }
 

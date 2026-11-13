@@ -35,7 +35,7 @@ class GrammaticheDegliArtefattiInIngleseTest {
 
 	@Test
 	void ogniArtefattoHaTantiEffettiQuantiNeChiede() {
-		GrammaticaArtefatti grammatica = GrammaticaArtefatti.caricaOppureNull();
+		GrammaticaArtefatti grammatica = GrammaticaArtefatti.artefatti();
 		assertNotNull(grammatica, "artefatti2_en.txt non si carica");
 		for (TipoArtefatto tipo : TIPI) {
 			assertTrue(grammatica.supporta(tipo), tipo.toString());
@@ -54,7 +54,7 @@ class GrammaticheDegliArtefattiInIngleseTest {
 
 	@Test
 	void ogniIngredienteHaTantiEffettiQuantiNeChiede() {
-		GrammaticaArtefatti grammatica = GrammaticaArtefatti.caricaIngredientiOppureNull();
+		GrammaticaArtefatti grammatica = GrammaticaArtefatti.ingredienti();
 		assertNotNull(grammatica, "ingredienti_en.txt non si carica");
 		for (TipoArtefatto tipo : INGREDIENTI) {
 			assertTrue(grammatica.supporta(tipo), tipo.toString());

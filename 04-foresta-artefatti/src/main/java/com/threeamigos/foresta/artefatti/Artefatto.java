@@ -53,6 +53,8 @@ public class Artefatto implements OggettoConCosto, OggettoConPeso, VistaArtefatt
 	 * equipaggiarlo): le viste degli artefatti sono artefatti. I comandi della UI non portano viste ma uuid, e il
 	 * motore ritrova l'artefatto da sé.
 	 */
+	// Un cast: funziona perché tutte le VistaArtefatto che la UI riceve dal motore sono in realtà degli Artefatto. Una
+	// vista di un'altra classe darebbe ClassCastException
 	public static Artefatto da(VistaArtefatto vista) {
 		return (Artefatto) vista;
 	}

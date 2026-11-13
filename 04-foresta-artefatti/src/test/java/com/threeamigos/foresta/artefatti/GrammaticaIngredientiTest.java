@@ -28,7 +28,7 @@ class GrammaticaIngredientiTest {
 
     @BeforeAll
     static void carica() {
-        grammatica = GrammaticaArtefatti.caricaIngredientiOppureNull();
+        grammatica = GrammaticaArtefatti.ingredienti();
         assertNotNull(grammatica, "ingredienti.txt non si carica");
     }
 

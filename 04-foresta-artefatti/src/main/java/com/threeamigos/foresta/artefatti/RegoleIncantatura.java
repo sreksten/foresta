@@ -360,6 +360,9 @@ public final class RegoleIncantatura {
 			}
 			return riprogrammazione;
 		}
+		// L'idea: si mettono in fila tutti gli effetti, quelli che l'artefatto ha già e quelli che gli ingredienti portano, dal
+		// più prezioso al meno prezioso. I primi "posti" restano o entrano; gli altri restano fuori, e se erano già
+		// sull'artefatto escono (scalzati da uno più prezioso)
 		List<Artefatto> ingredienti = ingredienti(banco);
 		int livello = artefatto.getLivello() + aggiornamenti(banco);
 		List<Effetto> candidati = new ArrayList<>();
@@ -379,6 +382,8 @@ public final class RegoleIncantatura {
 		Piano piano = new Piano();
 		for (int i = 0; i < ordinati.size(); i++) {
 			Effetto effetto = ordinati.get(i);
+			// I primi "presenti" candidati sono gli effetti che l'artefatto ha già (sono stati aggiunti per primi). Effetto non
+			// ridefinisce equals, quindi indexOf lo cerca per identità: trova proprio quell'oggetto
 			boolean presente = candidati.indexOf(effetto) < presenti;
 			if (i < posti) {
 				if (!presente) {

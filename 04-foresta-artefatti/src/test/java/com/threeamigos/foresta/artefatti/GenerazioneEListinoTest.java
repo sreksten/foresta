@@ -41,8 +41,8 @@ class GenerazioneEListinoTest {
 
     @Test
     void conLeGrammaticheSiGeneraOgniTipo() {
-        GrammaticaArtefatti artefatti = GrammaticaArtefatti.caricaOppureNull();
-        GrammaticaArtefatti ingredienti = GrammaticaArtefatti.caricaIngredientiOppureNull();
+        GrammaticaArtefatti artefatti = GrammaticaArtefatti.artefatti();
+        GrammaticaArtefatti ingredienti = GrammaticaArtefatti.ingredienti();
         assertNotNull(artefatti);
         assertNotNull(ingredienti);
         for (int seme = 0; seme < 40; seme++) {
@@ -52,7 +52,7 @@ class GenerazioneEListinoTest {
 
     @Test
     void senzaLaGrammaticaDegliIngredientiSiUsanoLeTabelle() {
-        GrammaticaArtefatti artefatti = GrammaticaArtefatti.caricaOppureNull();
+        GrammaticaArtefatti artefatti = GrammaticaArtefatti.artefatti();
         GeneratoreArtefattiTabelle generatore = new GeneratoreArtefattiTabelle(new Random(3), artefatti, null);
         for (int livello = 1; livello <= 12; livello++) {
             assertTrue(generatore.generaIngrediente(livello).getTipo().isIngrediente());
@@ -62,7 +62,7 @@ class GenerazioneEListinoTest {
     @Test
     void conUnaGrammaticaCheNonConosceIlTipoSiUsanoLeTabelle() {
         // La grammatica degli artefatti non conosce gli ingredienti
-        GrammaticaArtefatti artefatti = GrammaticaArtefatti.caricaOppureNull();
+        GrammaticaArtefatti artefatti = GrammaticaArtefatti.artefatti();
         GeneratoreArtefattiTabelle generatore = new GeneratoreArtefattiTabelle(new Random(3), null, artefatti);
         assertTrue(generatore.generaArtefatto(TipoArtefatto.GEMMA, 5).getTipo().isIngrediente());
     }

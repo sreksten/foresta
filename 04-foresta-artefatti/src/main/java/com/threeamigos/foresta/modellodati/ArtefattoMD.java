@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.modellodati;
 
+import com.threeamigos.foresta.strumenti.Maiuscole;
 import com.threeamigos.foresta.tipi.*;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoDanno;
@@ -53,7 +54,7 @@ public class ArtefattoMD implements Serializzabile {
 			if (sb.length() > 0) {
 				sb.append(' ');
 			}
-			sb.append(parola.substring(0, 1).toUpperCase(Locale.ROOT)).append(parola.substring(1));
+			sb.append(Maiuscole.inizialeMaiuscola(parola));
 		}
 		return sb.toString();
 	}

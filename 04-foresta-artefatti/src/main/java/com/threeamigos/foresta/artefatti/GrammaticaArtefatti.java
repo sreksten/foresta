@@ -3,12 +3,10 @@ package com.threeamigos.foresta.artefatti;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.strumenti.logger.Logger;
 import com.threeamigos.foresta.testi.GestoreGrammatiche;
-import com.threeamigos.foresta.testi.GestoreGrammatiche.GrammaticaMalformataException;
+import com.threeamigos.foresta.testi.GrammaticaNonValidaException;
+import com.threeamigos.foresta.testi.GrammaticaPigra;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,31 +55,63 @@ final class GrammaticaArtefatti {
 		}
 	}
 
+	// Le due grammatiche, caricate una volta per lingua al primo uso. Come ogni grammatica del gioco, se una manca o è
+	// sbagliata il caricamento solleva GrammaticaNonValidaException, e il gioco non parte (vedi PrecaricatoreDeiTesti)
+	private static final GrammaticaPigra ARTEFATTI = new GrammaticaPigra(() -> CaricatoreDiGrammatiche.carica(
+			GrammaticaArtefatti.class, GRAMMATICA, POST_PRODUZIONE));
+	private static final GrammaticaPigra INGREDIENTI = new GrammaticaPigra(() -> CaricatoreDiGrammatiche.carica(
+			GrammaticaArtefatti.class, GRAMMATICA_INGREDIENTI, POST_PRODUZIONE));
+
 	/**
-	 * La grammatica degli artefatti del gioco, o null se non si carica: in quel caso il generatore resta alle sue
-	 * tabelle.
+	 * La grammatica degli artefatti del gioco (artefatti2.txt), nella lingua in uso.
+	 *
+	 * @throws GrammaticaNonValidaException se manca o non è valida
 	 */
-	static GrammaticaArtefatti caricaOppureNull() {
-		return caricaOppureNull(GRAMMATICA);
+	static GrammaticaArtefatti artefatti() {
+		return new GrammaticaArtefatti(ARTEFATTI.get());
 	}
 
 	/**
-	 * La grammatica degli ingredienti magici (pergamene, gemme…), o null se non si carica.
+	 * La grammatica degli ingredienti magici (pergamene, gemme…: ingredienti.txt), nella lingua in uso.
+	 *
+	 * @throws GrammaticaNonValidaException se manca o non è valida
 	 */
-	static GrammaticaArtefatti caricaIngredientiOppureNull() {
-		return caricaOppureNull(GRAMMATICA_INGREDIENTI);
+	static GrammaticaArtefatti ingredienti() {
+		return new GrammaticaArtefatti(INGREDIENTI.get());
 	}
 
-	static GrammaticaArtefatti caricaOppureNull(String file) {
-		try (InputStream grammatica = GrammaticaArtefatti.class.getResourceAsStream(CaricatoreDiGrammatiche.perLaLingua(GrammaticaArtefatti.class, file));
-			 InputStream postProduzione = GrammaticaArtefatti.class.getResourceAsStream(CaricatoreDiGrammatiche.perLaLingua(GrammaticaArtefatti.class, POST_PRODUZIONE))) {
-			return new GrammaticaArtefatti(new GestoreGrammatiche(grammatica, postProduzione));
-		} catch (GrammaticaMalformataException | IOException | RuntimeException e) {
-			Logger.log(e);
-			return null;
+	/**
+	 * Una grammatica degli artefatti da una risorsa qualunque, con la post-produzione del gioco: per i test.
+	 *
+	 * @throws GrammaticaNonValidaException se manca o non è valida
+	 */
+	static GrammaticaArtefatti carica(String risorsa) {
+		return new GrammaticaArtefatti(CaricatoreDiGrammatiche.carica(GrammaticaArtefatti.class, risorsa, POST_PRODUZIONE));
+	}
+
+	/**
+	 * Carica subito le due grammatiche, invece di aspettare il primo uso (vedi {@code PrecaricatoreDeiTesti}).
+	 *
+	 * @throws GrammaticaNonValidaException se una manca o non è valida
+	 */
+	static void precarica() {
+		ARTEFATTI.get();
+		INGREDIENTI.get();
+	}
+
+	/**
+	 * Il nome di un oggetto che fa salire di livello un artefatto (produzione NOME_AGGIORNAMENTO di artefatti2.txt). Lo
+	 * produce la stessa grammatica che genera gli artefatti, così artefatti2.txt si carica una volta sola.
+	 */
+	static String nomeAggiornamento() {
+		GestoreGrammatiche grammatica = ARTEFATTI.get();
+		synchronized (grammatica) {
+			return grammatica.produci("NOME_AGGIORNAMENTO").get(0).trim();
 		}
 	}
 
+	// Se la grammatica ha la produzione TIPO_N (per esempio SPADA_2): setRadice lancia un'eccezione se non c'è, e qui la si
+	// usa come domanda
 	private boolean esisteRadice(TipoArtefatto tipo, int effetti) {
 		try {
 			grammatica.setRadice(radice(tipo, effetti));
@@ -103,7 +133,14 @@ final class GrammaticaArtefatti {
 	 * Un artefatto con quel numero di effetti: se la grammatica non ne prevede tanti, o così pochi, il massimo o il
 	 * minimo che ha.
 	 */
-	synchronized Risultato genera(TipoArtefatto tipo, int effetti) {
+	Risultato genera(TipoArtefatto tipo, int effetti) {
+		// La grammatica è condivisa (una per lingua) e non si può usare da due thread insieme: il lucchetto è la grammatica stessa
+		synchronized (grammatica) {
+			return generaDallaGrammatica(tipo, effetti);
+		}
+	}
+
+	private Risultato generaDallaGrammatica(TipoArtefatto tipo, int effetti) {
 		Integer massimo = effettiMassimi.get(tipo);
 		if (massimo == null) {
 			throw new IllegalArgumentException("La grammatica degli artefatti non genera il tipo " + tipo);

@@ -360,7 +360,7 @@ In ordine di livello. Le righe sono quelle di `wc -l` su `src/main/java` al 2026
 | 2 | `01-foresta-testi` | tutto (`GestoreGrammatiche`, già `GrammarBean`, da solo fa 2.600 righe) | 4.600 | fatto il 2026-11-13, proposte applicate |
 | 3 | `02-foresta-attributi`, `02-foresta-comandi`, `02-foresta-effettidistato`, `02-foresta-mappa` | tutto | 3.600 | fatto il 2026-11-13, proposte applicate (D3.2 al passo 9) |
 | 4 | `02-foresta-notizie`, `03-foresta-danni`, `03-foresta-tutorial` | tutto | 1.550 | fatto il 2026-11-13, proposte applicate |
-| 5 | `04-foresta-artefatti` | tutto | 5.250 | da fare |
+| 5 | `04-foresta-artefatti` | tutto | 5.250 | fatto il 2026-11-13, proposte applicate |
 | 6 | `05-foresta-personaggi` | `tipi` (con `CostantiPersonaggi`), `modellodati`, `interfacce`, `eventi` | 5.700 | da fare |
 | 7 | `05-foresta-personaggi` | `personaggi`: i meccanismi (`PersonaggioBase`, `Personaggio`, `SaluteEMorte`, `EffettiDiStato`, `ModificatoriTemporanei`, `AttributiSecondari`, `CaricoEInventario`, `GestoreProgressione`, `Progressione`, `RegoleEquipaggiamento`, `CalcolatoreRiposo`, `RisultatoRiposo`, `FabbricaPersonaggi`, `EquipaggiamentoIniziale`, `LanciatoreDeiDadi`, `MoltiplicatoriDiClasse`, `NomeEDescrizione`, `ArmaNaturale`, `PersonaggioNonCombattente`) e `gruppi` | 5.500 | da fare |
 | 8 | `05-foresta-personaggi` | `personaggi`: le classi dei personaggi e dei mostri (tutti gli altri file, da `Alchimista` a `Viverna`): **qui le parti in comune sono il tema principale** (sono una sessantina di classi corte e simili: se non basta una sessione, A–L e M–Z) | 7.550 | da fare |
@@ -660,6 +660,77 @@ Tre moduli piccoli e puliti, i migliori incontrati finora insieme a quelli del p
 
 I difetti sono tutti di documentazione: Javadoc rimasti indietro rispetto al codice (D4.1, D4.2, D4.3). È lo stesso fenomeno dei documenti `.md` del §6, in piccolo, e ogni passo ne trova qualcuno. Conferma che un commento che descrive il «quando» o il «chi» invecchia più in fretta di uno che descrive il «che cosa».
 
+#### Passo 5: `04-foresta-artefatti` (2026-11-13)
+
+Letti per intero i 44 file (5.250 righe), con i chiamanti dove serviva (`CommercioDelGruppo` e `GestoreBotteghe` per la fusione, le risorse delle grammatiche per le traduzioni, `ConvenzioniDiLocalizzazioneTest`). Test del modulo verdi dopo i commenti.
+
+**Esito (2026-11-13):** l'utente ha approvato tutto. Applicato:
+- **D5.1:** i testi dell'ingrediente del Core Dump stanno in `generatore_artefatti_<lingua>.properties` (voci `CORE_DUMP.NOME` e `CORE_DUMP.DESCRIZIONE`), e il nome del tipo viene da `nomi_artefatti`: in inglese è «the Core Dump Gem, that holds…».
+- **D5.2, decisione dell'utente:** *una qualsiasi grammatica rotta deve impedire al gioco di partire*. `GrammaticaArtefatti` non ha più `caricaOppureNull`. Carica le sue due grammatiche con `CaricatoreDiGrammatiche` (`GrammaticaPigra`, una volta per lingua), e un errore è una `GrammaticaNonValidaException`, che `PrecaricatoreDeiTesti` trasforma in uscita dal gioco. Il test che si aspettava null per una grammatica inesistente ora si aspetta l'errore. `artefatti2.txt` si carica una volta sola, perché i nomi degli aggiornamenti li dà `GrammaticaArtefatti.nomeAggiornamento`. **Test nuovo, `TutteLeGrammaticheTest`** (`12-foresta-motore`): carica tutte le grammatiche del gioco (testi, artefatti, ingredienti, leggendari) e i cataloghi che se ne leggono, in italiano, inglese e inglese britannico. `mvn package` esegue i test, quindi con una grammatica rotta il jar non si costruisce.
+- **D5.3 e F5.1:** la classe `RigaDiCampi` legge le righe di oggetti, set e libri tecnici, e ogni errore dice la riga. I messaggi sono `new IllegalArgumentException(…)`, perché `ConvenzioniDiLocalizzazioneTest` riconosce così i messaggi per chi sviluppa.
+- **D5.4, D5.5, F5.2, F5.3:** in `CostantiArtefatti` ci sono `ARTEFATTO_COSTO_BASE`, `ARTEFATTO_COSTO_PER_LIVELLO`, `ARTEFATTO_PERCENTUALE_PER_LIVELLO` e `ARMA_SCARTO_DANNI`.
+
+Sono verdi tutti i test del progetto: 3.767, di cui 37 saltati.
+
+**`NullPointerException` possibili**
+
+- *Certi:* nessuno.
+- *Plausibili:* nessuno.
+- *Controllati e scartati:*
+  - `ArtefattoMD.addModificatore(modificatore)` legge `tipo.getCategoria()`, ma tutti quelli che creano un artefatto danno prima il tipo: i generatori, `IngredienteDelCoreDump` e il costruttore a passi, che non permette altro.
+  - `ArtefattoMD.salva` con un nome null, che si scriverebbe come "null": tutti danno un nome, e il costruttore a passi lo impone.
+  - `GeneratoreArtefattiTabelle.peso(tipo)` restituisce un `Double` che diventa `double` e darebbe una `NullPointerException` per un tipo senza peso. Oggi tutti i 24 tipi hanno il loro peso (li ho confrontati), ma un tipo nuovo senza peso romperebbe la generazione: è fragile.
+  - Il nome proprio che `RegoleIncantatura.fondi` cancella quando il giocatore non ne dà uno: è voluto, perché `GestoreBotteghe` propone quello che c'è e il giocatore lo può svuotare.
+
+**Altri difetti**
+
+- **D5.1 (confermato)** `IngredienteDelCoreDump` scrive i suoi testi in italiano direttamente nel codice: i nomi (`"la Pergamena"`, `"il Monile"`…), `" del Core Dump"` e `"che conserva "`. In nessun file di testi ce n'è una traduzione, quindi in inglese l'ingrediente si chiama «la Gemma del Core Dump», «che conserva Fire Major». È l'unico testo per il giocatore scritto nel codice trovato finora. Proposta:
+  - il nome del tipo con `Nome.di("nomi_artefatti", tipo)` e il suo articolo, come fa già `GeneratoreArtefattiTabelle.nomeComune`;
+  - due voci, `CORE_DUMP.NOME` e `CORE_DUMP.DESCRIZIONE`, in `generatore_artefatti_<lingua>.properties`.
+
+  *Correzione:* avevo scritto che `ConvenzioniDiLocalizzazioneTest` controlla solo i `.properties`. Non è così: `leStringheItalianeNelCodiceNonAumentano` conta le stringhe italiane nel codice, modulo per modulo, e fallisce se il numero supera quello registrato in `localizzazione_baseline.properties`. Queste frasi gli sfuggivano perché sono pezzi corti (`"la Gemma"`, `" del Core Dump"`), che il riconoscitore non prende per frasi.
+- **D5.2 (decisa, vedi l'esito)** Due politiche diverse per una grammatica rotta. `GrammaticaArtefatti.caricaOppureNull` scrive l'errore nel registro e il gioco continua con le tabelle, cioè con nomi più poveri, senza che il giocatore lo sappia. Le grammatiche dei testi invece fermano il gioco con `GrammaticaNonValidaException`. Inoltre `artefatti2.txt` si carica due volte: una in `GrammaticaArtefatti` e una in `ProduttoreDiArtefattiCasuale.AGGIORNAMENTI`. Decide l'utente se una grammatica degli artefatti rotta debba fermare il gioco come le altre.
+- **D5.3** Una riga sbagliata in `leggendari.txt` dà un messaggio che non dice quale riga è. In `OggettoLeggendario` e `LibroTecnico` «Manca il campo X» non ha la riga, e neanche gli errori di `TipoArtefatto.valueOf`, `Integer.parseInt` e `Double.parseDouble`. `SetLeggendario` invece la mette. Si risolve con F5.1.
+- **D5.4** In `CostruttoreArtefatto.StepDanniBase.setDanniBase(int livello)` (e nell'implementazione) il parametro si chiama `livello` ma sono i danni: un nome che inganna. Da rinominare in `danni`.
+- **D5.5** `GeneratoreArtefattiTabelle` usa numeri senza nome per il bilanciamento: il costo di partenza `5 + 5 * livello`, il `5.0 * livello` per cento di parata, resistenza magica e potere magico (in tre punti), lo scarto `nextInt(3) - 1`. Eppure accanto c'è `CostantiArtefatti`, che esiste proprio per questi valori. La regola del progetto (niente valori magici) li vuole lì, con un nome.
+
+**Parti in comune**
+
+- **F5.1** `OggettoLeggendario`, `LibroTecnico` e `SetLeggendario` leggono ognuno a modo suo le stesse righe `CHIAVE=valore;CHIAVE=valore`: dividono sul `;`, controllano l'`=`, rifiutano i campi sconosciuti e quelli ripetuti, hanno ciascuno il proprio `obbligatorio`. Una piccola classe `RigaDiCampi` nel pacchetto `leggendari` farebbe tutto questo una volta, con i metodi `obbligatorio(chiave)`, `facoltativo(chiave)` e `ripetuti(chiave)`, e con messaggi che dicono sempre la riga (D5.3). Si risparmiano circa 60 righe.
+- **F5.2** `ProduttoreDiArtefattiCasuale` ripete cinque volte `.get().produci(X).get(0).trim()`: è `GrammaticaPigra.riga(X)`, nato al passo 2.
+- **F5.3** `LibroTecnico.getTitoloDaLeggere` mette la maiuscola a mano. `ArtefattoMD.normalizzaNomeProprio` la mette a ogni parola, e può usare `Maiuscole.inizialeMaiuscola` su ciascuna.
+- *Non vale la pena:* `GrammaticaArtefatti.esisteRadice` usa un'eccezione come domanda. Funziona, è commentato, e si chiama solo al caricamento.
+
+**Pezzi che andrebbero riscritti:** nessuno. `RegoleIncantatura.piano` è il pezzo più difficile del modulo, ma è corto: ora ha un commento che spiega l'idea.
+
+**Commenti aggiunti**
+
+- `CostruttoreArtefatto`: come funziona il costruttore a passi.
+- `Artefatto.da`: il cast.
+- `RegoleIncantatura.piano`: la fila degli effetti per prezzo, e l'`indexOf` per identità.
+- `GeneratoreArtefattiTabelle`: lo scarto dei danni, l'uno su tre degli incantamenti, l'indice unico degli ingredienti.
+- `GrammaticaArtefatti`: l'eccezione usata come domanda.
+- `GradoIncantamento`: l'ordine delle costanti conta.
+- `TipoRaritaArtefatto`: la formula degli effetti massimi, con esempi.
+- `OggettoLeggendario`: il ramo dell'arma nel costruttore.
+- `IncantamentoMD`: i commenti dei campi erano scomposti, su righe a sé.
+
+**Giudizio**
+
+Un modulo ben progettato, il più ricco visto finora:
+- gli artefatti non sanno che esiste un mondo, perché ricevono il livello come parametro;
+- le regole della fusione sono funzioni pure, che il motore e la UI interrogano senza cambiare niente (il `Piano`);
+- il costruttore a passi rende impossibile un artefatto senza nome;
+- i leggendari e i set sono dati, controllati per intero al caricamento, con messaggi chiari (set con meno di due pezzi, pezzi che non si possono indossare insieme).
+
+Per un neofita le parti dure sono `RegoleIncantatura.piano`, il costruttore a passi e le tabelle del generatore: ora sono commentate.
+
+Difetti:
+- **D5.1 è un difetto vero per chi gioca in inglese**: testi italiani scritti nel codice.
+- D5.5 è la regola dei valori magici non rispettata proprio accanto alla classe delle costanti.
+- Tre parser della stessa sintassi (F5.1).
+- Come altrove, lo stato statico (i cataloghi, `SpadaNormalmenteNascosta.fonteDelLivello`) è comodo ma va azzerato a mano nei test, e il rientro mescola tab e spazi.
+
 ### 11.5 Proposte che toccano più moduli
 
 Le fattorizzazioni che spostano codice fra moduli si raccolgono qui, con i passi che le hanno trovate, e si decidono a parte.
@@ -685,4 +756,5 @@ Le fattorizzazioni che spostano codice fra moduli si raccolgono qui, con i passi
 - Un test sui documenti, come quelli che già controllano le convenzioni del codice: la sezione «Dipendenze» di ogni documento di modulo contro i `pom.xml` (righe «Dichiarate nel pom», «Solo per i test», «Lo dichiarano») e l'esistenza delle classi e dei file citati fra apici (con un elenco di eccezioni per i segnaposto e per i documenti diario). Avrebbe preso quasi tutto il §6.3.
 - Mettere nel progetto la misura della copertura con tutti i test, per esempio come profilo Maven o come piccolo strumento in `risorse_e_documenti_vari/`.
 - Una nuova lettura integrale dei sorgenti, modulo per modulo: è il §11.
+- Rendere più sensibile il riconoscitore di `ConvenzioniDiLocalizzazioneTest.leStringheItalianeNelCodiceNonAumentano`: dal passo 5 (D5.1) sappiamo che gli sfuggono i pezzi corti di frase (`"la Gemma"`, `" del Core Dump"`), che si concatenano per fare un testo per il giocatore.
 - Un test che produca tutte le alternative delle grammatiche e le disegni con i font, per prendere le produzioni malformate e i caratteri che il font non ha; con lo stesso passo, decidere quali produzioni sono davvero morte (§5.1, B35e).

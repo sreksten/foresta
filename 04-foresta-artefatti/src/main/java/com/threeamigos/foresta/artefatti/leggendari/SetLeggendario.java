@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.artefatti.leggendari;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Un set di oggetti leggendari, letto da una riga di SET_LEGGENDARIO in leggendari.txt: la chiave a cui rimandano i
@@ -18,8 +18,8 @@ import java.util.Objects;
  */
 public final class SetLeggendario {
 
-	private static final String SEPARATORE = ";";
-	private static final String UGUALE = "=";
+	// I campi della riga di un set (vedi RigaDiCampi), tutti al massimo una volta
+	private static final List<String> CAMPI = Arrays.asList("CHIAVE", "NOME", "MOLTIPLICATORE", "PEZZI");
 	/**
 	 * Un set ha almeno due pezzi, e non si completa con meno di due
 	 */
@@ -32,44 +32,18 @@ public final class SetLeggendario {
 	private final Integer pezziRichiesti;
 
 	private SetLeggendario(String riga) {
-		Objects.requireNonNull(riga);
-		Map<String, String> campi = new HashMap<>();
-		for (String campo : riga.split(SEPARATORE)) {
-			if (campo.trim().isEmpty()) {
-				continue;
-			}
-			int uguale = campo.indexOf(UGUALE);
-			if (uguale < 0) {
-				throw new IllegalArgumentException("Un campo è CHIAVE=valore: " + campo + " in " + riga);
-			}
-			String chiaveCampo = campo.substring(0, uguale).trim();
-			if (!"CHIAVE".equals(chiaveCampo) && !"NOME".equals(chiaveCampo) && !"MOLTIPLICATORE".equals(chiaveCampo)
-					&& !"PEZZI".equals(chiaveCampo)) {
-				throw new IllegalArgumentException("Campo sconosciuto: " + chiaveCampo + " in " + riga);
-			}
-			if (campi.put(chiaveCampo, campo.substring(uguale + 1).trim()) != null) {
-				throw new IllegalArgumentException("Campo ripetuto: " + chiaveCampo + " in " + riga);
-			}
-		}
-		chiave = obbligatorio(campi, "CHIAVE", riga);
-		nome = obbligatorio(campi, "NOME", riga);
-		moltiplicatore = Double.parseDouble(obbligatorio(campi, "MOLTIPLICATORE", riga));
+		RigaDiCampi campi = new RigaDiCampi(riga, CAMPI, Collections.emptyList());
+		chiave = campi.obbligatorio("CHIAVE");
+		nome = campi.obbligatorio("NOME");
+		moltiplicatore = campi.decimale("MOLTIPLICATORE", campi.obbligatorio("MOLTIPLICATORE"));
 		if (moltiplicatore <= 1.0d) {
-			throw new IllegalArgumentException("Il moltiplicatore di un set è più di 1: " + riga);
+			throw new IllegalArgumentException(campi.conLaRiga("Il moltiplicatore di un set è più di 1"));
 		}
-		String pezzi = campi.get("PEZZI");
-		pezziRichiesti = pezzi == null ? null : Integer.valueOf(pezzi);
+		String pezzi = campi.facoltativo("PEZZI");
+		pezziRichiesti = pezzi == null ? null : campi.intero("PEZZI", pezzi);
 		if (pezziRichiesti != null && pezziRichiesti < PEZZI_MINIMI) {
-			throw new IllegalArgumentException("Un set si completa con almeno " + PEZZI_MINIMI + " pezzi: " + riga);
+			throw new IllegalArgumentException(campi.conLaRiga("Un set si completa con almeno " + PEZZI_MINIMI + " pezzi"));
 		}
-	}
-
-	private static String obbligatorio(Map<String, String> campi, String chiave, String riga) {
-		String valore = campi.get(chiave);
-		if (valore == null || valore.isEmpty()) {
-			throw new IllegalArgumentException("Manca il campo " + chiave + " in " + riga);
-		}
-		return valore;
 	}
 
 	/**

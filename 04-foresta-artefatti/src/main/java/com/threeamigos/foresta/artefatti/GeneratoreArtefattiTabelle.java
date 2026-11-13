@@ -38,8 +38,8 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 
 	static synchronized GeneratoreArtefatti istanza() {
 		if (istanzaDelGioco == null) {
-			istanzaDelGioco = new GeneratoreArtefattiTabelle(Dado.sorgente(), GrammaticaArtefatti.caricaOppureNull(),
-					GrammaticaArtefatti.caricaIngredientiOppureNull());
+			istanzaDelGioco = new GeneratoreArtefattiTabelle(Dado.sorgente(), GrammaticaArtefatti.artefatti(),
+					GrammaticaArtefatti.ingredienti());
 		}
 		return istanzaDelGioco;
 	}
@@ -204,7 +204,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 		md.setNome(nomeConComplemento(tipo));
 		md.setLivello(livelloEffettivo);
 		md.setPeso(PESI.get(tipo));
-		md.setCostoAcquisto(5 + 5 * livelloEffettivo);
+		md.setCostoAcquisto(CostantiArtefatti.ARTEFATTO_COSTO_BASE + CostantiArtefatti.ARTEFATTO_COSTO_PER_LIVELLO * livelloEffettivo);
 		if (grammatica != null && grammatica.supporta(tipo) && random.nextDouble() < CostantiArtefatti.ARTEFATTO_PROBABILITA_DA_GRAMMATICA) {
 			return generaDaGrammatica(md, livelloEffettivo);
 		}
@@ -227,7 +227,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 				break;
 			case POTENZIAMENTO_POTERE_MAGICO:
 				md.setDescrizione(testo("DESCRIZIONE.MAGIA"));
-				md.addModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.VARIAZIONE_PERCENTUALE, 5.0 * livelloEffettivo, "");
+				md.addModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.VARIAZIONE_PERCENTUALE, CostantiArtefatti.ARTEFATTO_PERCENTUALE_PER_LIVELLO * livelloEffettivo, "");
 				break;
 			default:
 				TipoAttributo accessorio = ACCESSORI[random.nextInt(ACCESSORI.length)];
@@ -321,7 +321,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 	private void completaProtezione(ArtefattoMD md, int livello) {
 		md.setDescrizione(testo(md.getTipo().getCardinalita() == TipoCardinalitaArtefatto.PAIO ? "DESCRIZIONE.PROTEZIONE_PAIO" : "DESCRIZIONE.PROTEZIONE"));
 		md.addModificatore(md.getTipo() == TipoArtefatto.VESTE ? TipoAttributo.RESISTENZA_MAGICA : TipoAttributo.PARATA,
-				TipoModificatore.VARIAZIONE_PERCENTUALE, 5.0 * livello, "");
+				TipoModificatore.VARIAZIONE_PERCENTUALE, CostantiArtefatti.ARTEFATTO_PERCENTUALE_PER_LIVELLO * livello, "");
 	}
 
 	/**
@@ -329,7 +329,10 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 	 * il bastone magico la metà ma aumenta la magia.
 	 */
 	private void completaArma(ArtefattoMD md, int livello) {
-		int danni = GeneratoreArtefatti.danniMediArma(livello) + random.nextInt(3) - 1;
+		// Uno scarto a caso fra -ARMA_SCARTO_DANNI e +ARMA_SCARTO_DANNI dai danni medi: con scarto 1, nextInt(3) dà 0, 1 o 2,
+		// e meno 1 fa -1, 0 o +1
+		int scarto = CostantiArtefatti.ARMA_SCARTO_DANNI;
+		int danni = GeneratoreArtefatti.danniMediArma(livello) + random.nextInt(2 * scarto + 1) - scarto;
 		if (md.getTipo() == TipoArtefatto.SPADONE) {
 			danni = (int) Math.round(danni * CostantiArtefatti.ARTEFATTO_MOLTIPLICATORE_DUE_MANI);
 			md.setCostoAcquisto((int) Math.round(md.getCostoAcquisto() * CostantiArtefatti.ARTEFATTO_MOLTIPLICATORE_DUE_MANI));
@@ -337,7 +340,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 		if (md.getTipo() == TipoArtefatto.BASTONE_MAGICO) {
 			danni = danni / 2;
 			md.setDescrizione(testo("DESCRIZIONE.MAGIA"));
-			md.addModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.VARIAZIONE_PERCENTUALE, 5.0 * livello, "");
+			md.addModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.VARIAZIONE_PERCENTUALE, CostantiArtefatti.ARTEFATTO_PERCENTUALE_PER_LIVELLO * livello, "");
 		} else {
 			md.setDescrizione(testo("DESCRIZIONE.COMBATTIMENTO"));
 		}
@@ -370,7 +373,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 		int livelloEffettivo = Math.max(1, livello);
 		ArtefattoMD md = new ArtefattoMD();
 		md.setTipo(TipoArtefatto.AGGIORNAMENTO);
-		md.setNome(ProduttoreDiArtefattiCasuale.nomeAggiornamento());
+		md.setNome(GrammaticaArtefatti.nomeAggiornamento());
 		md.setDescrizione(testo("DESCRIZIONE.AGGIORNAMENTO"));
 		md.setLivello(livelloEffettivo);
 		md.setPeso(PESI.get(TipoArtefatto.AGGIORNAMENTO));
@@ -417,6 +420,8 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 			Collections.shuffle(attributi, random);
 			Collections.shuffle(danni, random);
 			for (int i = 0; i < numeroEffetti; i++) {
+				// Un ingrediente ha o solo danni (gemma, monile) o solo attributi (pergamena, gingillo, sigillo), e al massimo
+				// INGREDIENTE_EFFETTI_MASSIMI effetti: per questo basta un indice solo per le due liste
 				if (i < danni.size()) {
 					md.addIncantamento(generaIncantamento(grado, danni.get(i)));
 				} else {
@@ -456,6 +461,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 	private IncantamentoMD generaIncantamento(GradoIncantamento grado, TipoDanno tipoDanno) {
 		int bonusFisso = grado.getBonusFisso();
 		double coefficiente = grado.getCoefficiente();
+		// Una volta su tre solo il danno fisso, una su tre solo la parte che cresce con l'intelligenza, una su tre tutti e due
 		switch (random.nextInt(3)) {
 			case 0:
 				coefficiente = 0;

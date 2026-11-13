@@ -11,6 +11,10 @@ import com.threeamigos.foresta.tipi.TipoModificatore;
  * Il costruttore a passi di un artefatto (step builder): il compilatore impone l'ordine in cui si danno i dati. Si parte da
  * {@link #istanza()} e si danno nell'ordine il tipo, il nome, la descrizione, il livello, i danni base (solo per le armi), il costo
  * di acquisto e il peso; poi si aggiungono a piacere modificatori e incantamenti e si chiude con {@code costruisci()}.
+ * <p>
+ * Come funziona: ogni interfaccia {@code StepX} ha solo i metodi permessi a quel punto, e ognuno restituisce l'interfaccia del
+ * passo dopo. Così {@code CostruttoreArtefatto.istanza().setNome(...)} non compila (manca il tipo), e un artefatto non può
+ * nascere senza nome. Una sola classe, {@link CostruttoreArtefattoImpl}, le implementa tutte.
  *
  * @author Stefano Reksten
  */
@@ -66,7 +70,7 @@ public interface CostruttoreArtefatto {
         /**
          * I danni base (solo per le armi).
          */
-        StepCostoAcquisto setDanniBase(int livello);
+        StepCostoAcquisto setDanniBase(int danni);
 
         /**
          * Il prezzo d'acquisto.

@@ -1,5 +1,9 @@
 package com.threeamigos.foresta.artefatti;
 
+import com.threeamigos.foresta.strumenti.Maiuscole;
+import com.threeamigos.foresta.testi.Lingue;
+import com.threeamigos.foresta.testi.Nome;
+import com.threeamigos.foresta.testi.Testi;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
@@ -14,7 +18,9 @@ public final class IngredienteDelCoreDump {
 
 	private static final TipoArtefatto[] TIPI = {TipoArtefatto.PERGAMENA, TipoArtefatto.GEMMA, TipoArtefatto.MONILE,
 			TipoArtefatto.GINGILLO, TipoArtefatto.SIGILLO};
-	private static final String[] NOMI = {"la Pergamena", "la Gemma", "il Monile", "il Gingillo", "il Sigillo"};
+	// I nomi dei tipi stanno in nomi_artefatti_<lingua>.properties, le frasi in generatore_artefatti_<lingua>.properties
+	private static final String FILE_DEI_NOMI = "nomi_artefatti";
+	private static final String FILE_DEI_TESTI = "generatore_artefatti";
 
 	private IngredienteDelCoreDump() {
 	}
@@ -26,8 +32,11 @@ public final class IngredienteDelCoreDump {
 		int scelto = Dado.tiraAncheAUnaFaccia(TIPI.length) - 1;
 		ArtefattoMD md = new ArtefattoMD();
 		md.setTipo(TIPI[scelto]);
-		md.setNome(NOMI[scelto] + " del Core Dump");
-		md.setDescrizione("che conserva " + incantamento.getNomeIncantamento());
+		// "la Gemma del Core Dump", "the Core Dump Gem": l'articolo e il tipo con la maiuscola, messi dove li vuole la lingua
+		Nome nome = Nome.di(FILE_DEI_NOMI, TIPI[scelto]);
+		md.setNome(Testi.formatta(FILE_DEI_TESTI, "CORE_DUMP.NOME", Lingue.corrente().articoloDeterminativo(nome, false),
+				Maiuscole.inizialeMaiuscola(nome.getSingolare())));
+		md.setDescrizione(Testi.formatta(FILE_DEI_TESTI, "CORE_DUMP.DESCRIZIONE", incantamento.getNomeIncantamento()));
 		md.setLivello(Math.max(1, livello));
 		md.setPeso(GeneratoreArtefattiTabelle.peso(TIPI[scelto]));
 		md.addIncantamento(incantamento);

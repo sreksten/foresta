@@ -33,7 +33,7 @@ class GrammaticaArtefattiTest {
 
     @BeforeAll
     static void carica() {
-        grammatica = GrammaticaArtefatti.caricaOppureNull();
+        grammatica = GrammaticaArtefatti.artefatti();
         assertNotNull(grammatica, "artefatti2.txt non si carica");
     }
 

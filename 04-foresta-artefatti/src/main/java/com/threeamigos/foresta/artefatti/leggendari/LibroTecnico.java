@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.artefatti.leggendari;
 
+import com.threeamigos.foresta.strumenti.Maiuscole;
 import com.threeamigos.foresta.artefatti.*;
 import com.threeamigos.foresta.modellodati.*;
 import com.threeamigos.foresta.tipi.AspettoArtefatto;
@@ -21,8 +22,9 @@ import java.util.*;
  */
 public final class LibroTecnico {
 
-	private static final String SEPARATORE = ";";
-	private static final String UGUALE = "=";
+	// I campi della riga di un libro tecnico (vedi RigaDiCampi): quelli che compaiono una volta e quelli che si ripetono
+	private static final List<String> CAMPI_SINGOLI = Arrays.asList("CHIAVE", "NOME", "DESCRIZIONE", "TIPO", "DANNI_MAGICI");
+	private static final List<String> CAMPI_RIPETUTI = Collections.singletonList("BATTUTA");
 	private static final int MOLTIPLICATORE = 2;
 	private static final TipoArtefatto TIPO_DI_DEFAULT = TipoArtefatto.LIBRO_MAGICO;
 
@@ -41,65 +43,29 @@ public final class LibroTecnico {
 	private final int moltiplicatoreDanniMagici;
 
 	private LibroTecnico(String riga) {
-		Map<String, String> campi = new HashMap<>();
-		List<String> battuteLette = new ArrayList<>();
-		for (String campo : riga.split(SEPARATORE)) {
-			if (campo.trim().isEmpty()) {
-				continue;
-			}
-			int uguale = campo.indexOf(UGUALE);
-			if (uguale < 0) {
-				throw new IllegalArgumentException("Un campo è CHIAVE=valore: " + campo + " in " + riga);
-			}
-			String chiaveCampo = campo.substring(0, uguale).trim();
-			String valore = campo.substring(uguale + 1).trim();
-			switch (chiaveCampo) {
-				case "BATTUTA":
-					battuteLette.add(valore);
-					break;
-				case "CHIAVE":
-				case "NOME":
-				case "DESCRIZIONE":
-				case "TIPO":
-				case "DANNI_MAGICI":
-					if (campi.put(chiaveCampo, valore) != null) {
-						throw new IllegalArgumentException("Campo ripetuto: " + chiaveCampo + " in " + riga);
-					}
-					break;
-				default:
-					throw new IllegalArgumentException("Campo sconosciuto: " + chiaveCampo + " in " + riga);
-			}
-		}
-		chiave = obbligatorio(campi, "CHIAVE");
-		nome = obbligatorio(campi, "NOME");
-		descrizione = obbligatorio(campi, "DESCRIZIONE");
-		tipo = campi.containsKey("TIPO") ? TipoArtefatto.valueOf(campi.get("TIPO")) : TIPO_DI_DEFAULT;
+		RigaDiCampi campi = new RigaDiCampi(riga, CAMPI_SINGOLI, CAMPI_RIPETUTI);
+		chiave = campi.obbligatorio("CHIAVE");
+		nome = campi.obbligatorio("NOME");
+		descrizione = campi.obbligatorio("DESCRIZIONE");
+		tipo = campi.ha("TIPO") ? campi.enumerato(TipoArtefatto.class, "TIPO", campi.facoltativo("TIPO")) : TIPO_DI_DEFAULT;
 		if (tipo != TipoArtefatto.LIBRO_MAGICO && !tipo.isRiprogrammazione()) {
-			throw new IllegalArgumentException("Un libro tecnico è un libro magico o una riprogrammazione: " + riga);
+			throw new IllegalArgumentException(campi.conLaRiga("Un libro tecnico è un libro magico o una riprogrammazione"));
 		}
-		moltiplicatoreDanniMagici = campi.containsKey("DANNI_MAGICI") ? Integer.parseInt(campi.get("DANNI_MAGICI")) : 1;
+		moltiplicatoreDanniMagici = campi.ha("DANNI_MAGICI") ? campi.intero("DANNI_MAGICI", campi.facoltativo("DANNI_MAGICI")) : 1;
 		if (moltiplicatoreDanniMagici < 1) {
-			throw new IllegalArgumentException("DANNI_MAGICI è almeno 1: " + riga);
+			throw new IllegalArgumentException(campi.conLaRiga("DANNI_MAGICI è almeno 1"));
 		}
-		if (battuteLette.isEmpty()) {
-			throw new IllegalArgumentException("Un libro tecnico ha almeno una BATTUTA: " + riga);
+		battute = campi.ripetuti("BATTUTA");
+		if (battute.isEmpty()) {
+			throw new IllegalArgumentException(campi.conLaRiga("Un libro tecnico ha almeno una BATTUTA"));
 		}
-		battute = Collections.unmodifiableList(battuteLette);
-	}
-
-	private static String obbligatorio(Map<String, String> campi, String chiave) {
-		String valore = campi.get(chiave);
-		if (valore == null || valore.isEmpty()) {
-			throw new IllegalArgumentException("Manca il campo " + chiave);
-		}
-		return valore;
 	}
 
 	/**
 	 * Il libro tecnico di una riga di leggendari.txt.
 	 */
 	static LibroTecnico da(String riga) {
-		return new LibroTecnico(Objects.requireNonNull(riga));
+		return new LibroTecnico(riga);
 	}
 
 	/**
@@ -199,7 +165,7 @@ public final class LibroTecnico {
 	 * V”, che spiega tutto, tranne come si esce dall'editor".
 	 */
 	public String getTitoloDaLeggere() {
-		return '“' + nome.substring(0, 1).toUpperCase(Locale.ROOT) + nome.substring(1) + "”, " + descrizione;
+		return '“' + Maiuscole.inizialeMaiuscola(nome) + "”, " + descrizione;
 	}
 
 	/**

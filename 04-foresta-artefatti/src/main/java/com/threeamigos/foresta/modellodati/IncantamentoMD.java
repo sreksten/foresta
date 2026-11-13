@@ -20,15 +20,12 @@ import static com.threeamigos.foresta.serializzazione.Serializzabile.composto;
 public class IncantamentoMD {
 
     private final String nomeIncantamento;
+    // Il tipo di danno che aggiunge, per esempio FUOCO (anche un danno magico: il nome è rimasto da quando erano solo elementali)
     private final TipoDanno tipoDannoElementale;
-
- // es. FUOCO
+    // I danni in più a ogni colpo, per esempio 4
     private final int dannoBonusFisso;
-
-           // es. 4 danni bonus
+    // Quanto cresce con l'intelligenza di chi colpisce, per esempio 0.2
     private final double coefficienteScala;
-
-       // es. 0.2 (scala su Intelligenza)
 
     /**
      * @param nomeIncantamento il nome dell'incantamento; il carattere "|" si toglie e un nome vuoto diventa {@link ArtefattoMD#NESSUN_NOME}

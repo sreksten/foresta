@@ -23,8 +23,10 @@ import java.util.*;
  */
 public final class OggettoLeggendario {
 
-	private static final String SEPARATORE = ";";
-	private static final String UGUALE = "=";
+	// I campi della riga di leggendari.txt (vedi RigaDiCampi): quelli che compaiono una volta e quelli che si ripetono
+	private static final List<String> CAMPI_SINGOLI = Arrays.asList("CHIAVE", "TIPO", "NOME", "BREVE", "DESCRIZIONE", "LIVELLO",
+			"DANNI", "COSTO", "PESO", "SET", "PLURALE");
+	private static final List<String> CAMPI_RIPETUTI = Arrays.asList("MOD", "INCANTAMENTO", "LEGGENDA");
 	private static final int LEGGENDE_MINIME = 2;
 
 	private final String riga;
@@ -44,75 +46,35 @@ public final class OggettoLeggendario {
 	private final String set;
 
 	private OggettoLeggendario(String riga) {
-		this.riga = Objects.requireNonNull(riga);
-		Map<String, String> campi = new HashMap<>();
-		Map<String, List<String>> ripetuti = new HashMap<>();
-		for (String campo : riga.split(SEPARATORE)) {
-			if (campo.trim().isEmpty()) {
-				continue;
-			}
-			int uguale = campo.indexOf(UGUALE);
-			if (uguale < 0) {
-				throw new IllegalArgumentException("Un campo è CHIAVE=valore: " + campo + " in " + riga);
-			}
-			String chiave = campo.substring(0, uguale).trim();
-			String valore = campo.substring(uguale + 1).trim();
-			switch (chiave) {
-				case "MOD":
-				case "INCANTAMENTO":
-				case "LEGGENDA":
-					ripetuti.computeIfAbsent(chiave, k -> new ArrayList<>()).add(valore);
-					break;
-				case "CHIAVE":
-				case "TIPO":
-				case "NOME":
-				case "BREVE":
-				case "DESCRIZIONE":
-				case "LIVELLO":
-				case "DANNI":
-				case "COSTO":
-				case "PESO":
-				case "SET":
-				case "PLURALE":
-					if (campi.put(chiave, valore) != null) {
-						throw new IllegalArgumentException("Campo ripetuto: " + chiave + " in " + riga);
-					}
-					break;
-				default:
-					throw new IllegalArgumentException("Campo sconosciuto: " + chiave + " in " + riga);
-			}
-		}
-		chiave = obbligatorio(campi, "CHIAVE");
-		tipo = TipoArtefatto.valueOf(obbligatorio(campi, "TIPO"));
-		nome = obbligatorio(campi, "NOME");
-		nomeBreve = obbligatorio(campi, "BREVE");
-		descrizione = obbligatorio(campi, "DESCRIZIONE");
-		livello = Integer.parseInt(obbligatorio(campi, "LIVELLO"));
-		costo = Integer.parseInt(obbligatorio(campi, "COSTO"));
-		peso = Double.parseDouble(obbligatorio(campi, "PESO"));
+		RigaDiCampi campi = new RigaDiCampi(riga, CAMPI_SINGOLI, CAMPI_RIPETUTI);
+		this.riga = riga;
+		chiave = campi.obbligatorio("CHIAVE");
+		tipo = campi.enumerato(TipoArtefatto.class, "TIPO", campi.obbligatorio("TIPO"));
+		nome = campi.obbligatorio("NOME");
+		nomeBreve = campi.obbligatorio("BREVE");
+		descrizione = campi.obbligatorio("DESCRIZIONE");
+		livello = campi.intero("LIVELLO", campi.obbligatorio("LIVELLO"));
+		costo = campi.intero("COSTO", campi.obbligatorio("COSTO"));
+		peso = campi.decimale("PESO", campi.obbligatorio("PESO"));
 		boolean arma = tipo.getCategoria() == CategoriaArtefatto.ARMA;
-		if (arma != campi.containsKey("DANNI")) {
-			throw new IllegalArgumentException("I danni ci sono per le armi, e solo per loro: " + riga);
+		if (arma != campi.ha("DANNI")) {
+			throw new IllegalArgumentException(campi.conLaRiga("I danni ci sono per le armi, e solo per loro"));
 		}
-		danni = arma ? Integer.parseInt(campi.get("DANNI")) : null;
-		modificatori = Collections.unmodifiableList(ripetuti.getOrDefault("MOD", Collections.emptyList()));
-		incantamenti = Collections.unmodifiableList(ripetuti.getOrDefault("INCANTAMENTO", Collections.emptyList()));
-		leggenda = Collections.unmodifiableList(ripetuti.getOrDefault("LEGGENDA", Collections.emptyList()));
+		danni = arma ? campi.intero("DANNI", campi.facoltativo("DANNI")) : null;
+		modificatori = campi.ripetuti("MOD");
+		incantamenti = campi.ripetuti("INCANTAMENTO");
+		leggenda = campi.ripetuti("LEGGENDA");
 		if (leggenda.size() < LEGGENDE_MINIME) {
-			throw new IllegalArgumentException("La leggenda ha almeno " + LEGGENDE_MINIME + " battute: " + riga);
+			throw new IllegalArgumentException(campi.conLaRiga("La leggenda ha almeno " + LEGGENDE_MINIME + " battute"));
 		}
-		set = campi.get("SET");
-		plurale = campi.containsKey("PLURALE");
-		// Si costruisce una volta qui, così un modificatore o un incantamento sbagliato si scoprono subito
-		costruisci(livello);
-	}
-
-	private static String obbligatorio(Map<String, String> campi, String chiave) {
-		String valore = campi.get(chiave);
-		if (valore == null || valore.isEmpty()) {
-			throw new IllegalArgumentException("Manca il campo " + chiave);
+		set = campi.facoltativo("SET");
+		plurale = campi.ha("PLURALE");
+		// Si costruisce una volta qui, così un modificatore o un incantamento sbagliato si scoprono subito (con la riga)
+		try {
+			costruisci(livello);
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException(campi.conLaRiga(e.getMessage()), e);
 		}
-		return valore;
 	}
 
 	/**
@@ -220,6 +182,7 @@ public final class OggettoLeggendario {
 				.setNome(nome)
 				.setDescrizione(descrizione)
 				.setLivello(livelloAllaNascita(livelloDiRiferimento));
+		// Un'arma passa dai danni base, il resto va diretto al costo (il costruttore a passi lo permette solo così)
 		CostruttoreArtefatto.StepModificatore costruttore = (danni != null ? passo.setDanniBase(danni).setCostoAcquisto(costo)
 				: passo.setCostoAcquisto(costo)).setPeso(peso);
 		for (String modificatore : modificatori) {

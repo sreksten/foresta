@@ -49,6 +49,8 @@ public enum TipoRaritaArtefatto {
 	/**
 	 * Numero massimo di effetti per un artefatto incantabile di questo livello.
 	 */
+	// Il livello più lo scarto della rarità, ma mai sotto 0 né sopra il tetto: un comune di livello 2 ha 1 effetto, un
+	// leggendario di livello 2 ne ha 3, e dal livello 4 in su un comune ne ha 3 (il suo tetto)
 	public int getEffettiMassimi(int livello) {
 		return Math.max(0, Math.min(tettoEffetti, livello + scartoSulLivello));
 	}

@@ -80,6 +80,7 @@ public enum GradoIncantamento {
 	/**
 	 * Posizione del grado (1, 2, 3), usata per i modificatori fissi di attributo, che sono piccoli.
 	 */
+	// 1, 2 o 3: dipende dall'ordine delle costanti (MINORE, MEDIO, MAGGIORE), che quindi non si cambia
 	public int getGradino() {
 		return ordinal() + 1;
 	}

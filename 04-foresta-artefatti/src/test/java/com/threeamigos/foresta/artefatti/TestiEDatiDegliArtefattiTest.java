@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.artefatti;
 
+import com.threeamigos.foresta.testi.GrammaticaNonValidaException;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.artefatti.leggendari.LibroTecnico;
@@ -57,8 +58,9 @@ class TestiEDatiDegliArtefattiTest {
     }
 
     @Test
-    void unaGrammaticaCheNonSiCaricaDaNull() {
-        assertNull(GrammaticaArtefatti.caricaOppureNull("/non/esiste.txt"));
+    void unaGrammaticaCheNonSiCaricaFermaIlGioco() {
+        // Come ogni grammatica del gioco: una che manca o è sbagliata è un errore, non un null in silenzio
+        assertThrows(GrammaticaNonValidaException.class, () -> GrammaticaArtefatti.carica("/non/esiste.txt"));
     }
 
     @Test

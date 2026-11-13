@@ -23,8 +23,6 @@ public final class ProduttoreDiArtefattiCasuale {
 
 	private static final GrammaticaPigra LEGGENDARI = new GrammaticaPigra(() -> CaricatoreDiGrammatiche.carica(
 			ProduttoreDiArtefattiCasuale.class, "/com/threeamigos/foresta/artefatti/leggendari.txt", null));
-	private static final GrammaticaPigra AGGIORNAMENTI = new GrammaticaPigra(() -> CaricatoreDiGrammatiche.carica(
-			ProduttoreDiArtefattiCasuale.class, "/com/threeamigos/foresta/artefatti/artefatti2.txt", null));
 	private static final String OGGETTO_LEGGENDARIO = "OGGETTO_LEGGENDARIO";
 	private static final String SET_LEGGENDARIO = "SET_LEGGENDARIO";
 	private static final String LIBRO_TECNICO = "LIBRO_TECNICO";
@@ -40,7 +38,7 @@ public final class ProduttoreDiArtefattiCasuale {
 	 */
 	public static void precarica() {
 		LEGGENDARI.get();
-		AGGIORNAMENTI.get();
+		GrammaticaArtefatti.precarica();
 	}
 
 	/**
@@ -48,7 +46,7 @@ public final class ProduttoreDiArtefattiCasuale {
 	 * artefatti2.txt e TipoArtefatto.AGGIORNAMENTO).
 	 */
 	public static String nomeAggiornamento() {
-		return AGGIORNAMENTI.get().produci("NOME_AGGIORNAMENTO").get(0).trim();
+		return GrammaticaArtefatti.nomeAggiornamento();
 	}
 
 	/**
@@ -75,7 +73,7 @@ public final class ProduttoreDiArtefattiCasuale {
 	public static synchronized String introduzioneDellaLeggenda(String nomeBreve) {
 		LEGGENDARI.get().fissaProduzione("DELL_OGGETTO", Lingue.corrente().conPreposizione(Preposizione.DI, nomeBreve));
 		LEGGENDARI.get().fissaProduzione("L_OGGETTO", nomeBreve);
-		return LEGGENDARI.get().produci("INTRODUZIONE_LEGGENDA").get(0).trim();
+		return LEGGENDARI.riga("INTRODUZIONE_LEGGENDA");
 	}
 
 	/**
@@ -113,7 +111,7 @@ public final class ProduttoreDiArtefattiCasuale {
 	 */
 	public static synchronized String letturaDelLibroTecnico(String titolo) {
 		LEGGENDARI.get().fissaProduzione("TITOLO", titolo);
-		return LEGGENDARI.get().produci("LETTURA_LIBRO_TECNICO").get(0).trim();
+		return LEGGENDARI.riga("LETTURA_LIBRO_TECNICO");
 	}
 
 	/**
@@ -123,14 +121,14 @@ public final class ProduttoreDiArtefattiCasuale {
 	 * @param chiaveLibro la chiave del libro (vedi LibroTecnico.getChiave)
 	 */
 	public static synchronized String conclusioneSulLibroTecnico(String chiaveLibro) {
-		return LEGGENDARI.get().produci("CONCLUSIONE_" + chiaveLibro).get(0).trim();
+		return LEGGENDARI.riga("CONCLUSIONE_" + chiaveLibro);
 	}
 
 	/**
 	 * Quel che dice l'incantatore quando una riprogrammazione va male (vedi ERRORE_RIPROGRAMMAZIONE in LEGGENDARI.txt).
 	 */
 	public static synchronized String erroreDiRiprogrammazione() {
-		return LEGGENDARI.get().produci("ERRORE_RIPROGRAMMAZIONE").get(0).trim();
+		return LEGGENDARI.riga("ERRORE_RIPROGRAMMAZIONE");
 	}
 
 	/**

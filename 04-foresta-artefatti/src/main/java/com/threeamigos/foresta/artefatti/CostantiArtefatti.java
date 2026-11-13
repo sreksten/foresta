@@ -24,6 +24,28 @@ public final class CostantiArtefatti {
     // ---- Come nasce un artefatto (vedi GeneratoreArtefattiTabelle)
 
     /**
+     * Il costo di un artefatto appena generato, prima degli incantamenti: questo, più {@link #ARTEFATTO_COSTO_PER_LIVELLO} per
+     * ogni livello.
+     */
+    public static final int ARTEFATTO_COSTO_BASE = 5;
+
+    /**
+     * Quanto aumenta il costo di un artefatto appena generato a ogni livello (vedi {@link #ARTEFATTO_COSTO_BASE}).
+     */
+    public static final int ARTEFATTO_COSTO_PER_LIVELLO = 5;
+
+    /**
+     * La percentuale che un artefatto appena generato dà per ogni suo livello: di parata (o di resistenza magica per una
+     * veste) a una protezione, di potere magico a un bastone o a un libro.
+     */
+    public static final double ARTEFATTO_PERCENTUALE_PER_LIVELLO = 5.0;
+
+    /**
+     * Di quanto i danni di un'arma appena generata possono scostarsi dalla media, in più o in meno.
+     */
+    public static final int ARMA_SCARTO_DANNI = 1;
+
+    /**
      * Probabilità che un artefatto generato abbia un nome proprio.
      */
     public static final double ARTEFATTO_PROBABILITA_NOME_PROPRIO = 0.05;
