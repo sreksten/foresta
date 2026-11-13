@@ -323,65 +323,71 @@ Si procede **un passo alla volta**, dal basso verso l'alto (§11.3): un passo è
 
 **Cosa si fa subito e cosa si propone.** In ogni passo:
 - **i commenti si aggiungono subito** (non cambiano il comportamento);
-- **le correzioni dei possibili `NullPointerException` e le fattorizzazioni si propongono**, con file e riga, e si applicano solo dopo l'ok dell'utente (regole di `CLAUDE.md`: niente iniziative sul disegno, prima di cambiare la forma del codice si chiede). Le correzioni piccole e locali (un controllo, un valore di ritorno) si possono applicare nello stesso passo, dopo l'ok; le fattorizzazioni fra moduli diversi vanno nel §11.5 e si fanno a parte;
+- **le correzioni e le fattorizzazioni si propongono** all'utente, con file e riga, e si applicano solo dopo il suo ok (regole di `CLAUDE.md`: niente iniziative sul disegno, prima di cambiare la forma del codice o di cancellare si chiede);
 - **il commit si fa solo su richiesta**, dopo la revisione dell'utente.
 
-Alla fine di ogni passo si aggiornano la riga della tabella del §11.3 (stato, data) e il §11.4 (che cosa si è trovato).
+**Che cosa resta scritto qui.** Il rapporto completo di un passo (i casi controllati, le proposte una per una) va all'utente, nella conversazione. In questo documento restano solo:
+- il **giudizio** su ogni parte (§11.4);
+- le **migliorie ancora aperte**, cioè quelle non applicate (§11.4);
+- le **decisioni** dell'utente da non riproporre (§11.5);
+- le **verifiche rimandate** a un passo successivo, scritte nella riga di quel passo (§11.3).
+
+Quel che è stato sistemato non si scrive: lo racconta il commit «Revisione del codice, passo N».
 
 ### 11.2 Il prompt di un passo
 
 Da incollare in una sessione nuova di Claude Code, mettendo al posto di `<PASSO>` il numero del passo della tabella del §11.3:
 
-> Esegui il passo `<PASSO>` della revisione del codice descritta in `assessment.md` §11. Leggi prima §11.1 e §11.3 (che cosa entra nel passo) e §11.4 e §11.5 (che cosa hanno trovato i passi prima: non ripeterlo, e usa le parti comuni già proposte). Lavora tu, leggendo i file per intero; al massimo un agente di aiuto se il passo è grande, mai più di due.
+> Esegui il passo `<PASSO>` della revisione del codice descritta in `assessment.md` §11. Leggi prima §11.1, la riga del passo nel §11.3 (che cosa entra e le verifiche rimandate a questo passo), il §11.4 (le migliorie aperte e i giudizi dei passi prima: non ripeterli) e il §11.5 (le decisioni da non riproporre). Lavora tu, leggendo i file per intero; al massimo un agente di aiuto se il passo è grande, mai più di due.
 >
 > Per **ogni file** del passo:
 >
-> 1. **`NullPointerException` possibili.** Per ogni riferimento che si usa (chiamata di metodo, accesso a un campo, `unboxing` di un `Integer`/`Boolean`, `switch` su un'enum, `for` su una collezione) chiediti se può valere `null`, e **non fermarti al file**: risali a chi lo produce (chi chiama il metodo, chi assegna il campo, cosa restituisce il metodo chiamato). Casi tipici in questo progetto: `Map.get` su una chiave che può mancare; metodi che restituiscono `null` per dire «non c'è» (`trova…`, `cerca…`, `get…OrNull`); campi dei `…MD` dopo la rilettura di un salvataggio (un campo che il file non aveva); singleton e registri usati prima di `azzera`/`installa`/`setFornitoreDiDati`; parametri che arrivano dagli eventi del bus; `Testi.get` con una chiave che manca nei `.properties`; personaggi morti o rimossi dal gruppo nel mezzo di un combattimento; liste vuote dove si prende il primo elemento. Segnala **solo i casi che puoi raggiungere davvero** (scrivi il percorso: chi chiama, con quali dati), separando i certi dai plausibili; un caso che hai controllato e scartato scrivilo in una riga, così il passo dopo non lo ricontrolla. Non proporre controlli `if (x != null)` che nascondono un errore: se `null` vuol dire che qualcosa è andato storto prima, la correzione è lì.
-> 2. **Parti in comune.** Cerca il codice ripetuto: metodi quasi uguali in classi sorelle (per esempio le classi dei personaggi e dei mostri, le missioni, le schermate Swing e libGDX), blocchi copiati con piccole differenze, costanti ripetute, cicli che fanno la stessa ricerca. Per ognuno: dove sta (file e righe), che cosa avrebbe di comune, **dove andrebbe** (in quale classe e in quale modulo, rispettando i livelli: un modulo vede solo quelli sotto), quante righe si risparmiano e che cosa si rischia. Non vale la pena di fattorizzare due righe uguali, né di unire cose che si somigliano oggi ma hanno ragioni diverse per cambiare. Le proposte che toccano più moduli vanno nel §11.5.
+> 1. **`NullPointerException` possibili.** Per ogni riferimento che si usa (chiamata di metodo, accesso a un campo, `unboxing` di un `Integer`/`Boolean`, `switch` su un'enum, `for` su una collezione) chiediti se può valere `null`, e **non fermarti al file**: risali a chi lo produce (chi chiama il metodo, chi assegna il campo, cosa restituisce il metodo chiamato). Casi tipici in questo progetto: `Map.get` su una chiave che può mancare; metodi che restituiscono `null` per dire «non c'è» (`trova…`, `cerca…`, `get…OrNull`); campi dei `…MD` dopo la rilettura di un salvataggio (un campo che il file non aveva); singleton e registri usati prima di `azzera`/`installa`/`setFornitoreDiDati`; parametri che arrivano dagli eventi del bus; `Testi.get` con una chiave che manca nei `.properties`; personaggi morti o rimossi dal gruppo nel mezzo di un combattimento; liste vuote dove si prende il primo elemento. Segnala **solo i casi che puoi raggiungere davvero** (scrivi il percorso: chi chiama, con quali dati), separando i certi dai plausibili. Non proporre controlli `if (x != null)` che nascondono un errore: se `null` vuol dire che qualcosa è andato storto prima, la correzione è lì. Un sospetto si verifica (con il codice dei chiamanti, o con una prova in `jshell` sulle classi compilate) prima di chiamarlo difetto.
+> 2. **Parti in comune.** Cerca il codice ripetuto: metodi quasi uguali in classi sorelle (per esempio le classi dei personaggi e dei mostri, le missioni, le schermate Swing e libGDX), blocchi copiati con piccole differenze, costanti ripetute, cicli che fanno la stessa ricerca. Per ognuno: dove sta (file e righe), che cosa avrebbe di comune, **dove andrebbe** (in quale classe e in quale modulo, rispettando i livelli: un modulo vede solo quelli sotto), quante righe si risparmiano e che cosa si rischia. Non vale la pena di fattorizzare due righe uguali, né di unire cose che si somigliano oggi ma hanno ragioni diverse per cambiare. Riusa quel che i passi prima hanno messo in comune (per esempio `strumenti.Maiuscole`, `GrammaticaPigra.riga`).
 > 3. **Leggibilità per un neofita.** Immagina un lettore che conosce le basi di Java ma non le lambda, gli stream, i generici più complicati né il gioco. **Aggiungi i commenti** (in italiano, con le convenzioni di `CLAUDE.md`, virgolette “ ”):
 >    - in testa a **ogni classe** che non ce l'ha, un Javadoc che dice che cosa rappresenta nel gioco, chi la usa e perché esiste (non come è fatta);
 >    - sui **metodi pubblici** il cui nome non basta (che cosa restituisce, quando restituisce `null` o una lista vuota, che effetti ha sullo stato del gioco);
 >    - sulle righe **criptiche**: stream lunghi (che cosa ne esce), espressioni con operatori ternari annidati, calcoli con numeri (da dove vengono e che cosa vogliono dire: per esempio una probabilità, una formula di danno), giochi di bit, ordinamenti con `Comparator` composti, ricorsioni, convenzioni del progetto che un esterno non conosce (il bus degli eventi, i fornitori di dati, il `Dado` con il suo `ContestoLancio`, i `…MD`).
->    Non commentare l'ovvio (`// incrementa i`) e non riscrivere il codice per renderlo più leggibile senza chiedere: se un pezzo andrebbe riscritto (un metodo di 150 righe, un nome che inganna), proponilo nel rapporto. Non cambiare nomi, firme né comportamento.
+>    Correggi i Javadoc che non dicono più il vero (sono il difetto più frequente trovato finora). Non commentare l'ovvio (`// incrementa i`) e non riscrivere il codice per renderlo più leggibile senza chiedere: se un pezzo andrebbe riscritto (un metodo di 150 righe, un nome che inganna, un numero senza nome), proponilo. Non cambiare nomi, firme né comportamento.
 >
 > Alla fine:
-> - compila e lancia i test del modulo (`mvn -q test -pl <modulo> -am`, oppure senza `-q` per vedere gli errori); i commenti non devono rompere niente;
+> - compila e lancia i test con i moduli da cui dipende (`mvn test -o -pl <modulo> -am`: senza `-am` Maven prende i jar vecchi di `~/.m2`); i commenti non devono rompere niente;
 > - **non fare commit**;
-> - aggiorna `assessment.md`: nella tabella del §11.3 la colonna «Stato» del passo (`fatto il <data>`, o `in corso` se non hai finito, con il punto in cui riprendere), nel §11.4 una sottosezione `#### Passo <PASSO>` con: i possibili `NullPointerException` (certi / plausibili / controllati e scartati), le parti in comune proposte, i pezzi che andrebbero riscritti, i file commentati; nel §11.5 le proposte fra moduli;
-> - poi riassumimi le proposte, una per una, e aspetta l'ok prima di applicarle.
+> - riassumimi le proposte, una per una con il loro peso, e aspetta l'ok prima di applicarle; dopo le mie decisioni applica quelle approvate, lancia tutti i test (`mvn test -o`) e aggiorna i documenti dei moduli toccati;
+> - aggiorna `assessment.md`: nel §11.3 la colonna «Stato» del passo e, nella riga di un passo successivo, le verifiche rimandate a lui; nel §11.4 una sottosezione `#### Passo <PASSO>` con il giudizio e le sole migliorie rimaste aperte; nel §11.5 le mie decisioni da non riproporre. Quel che è stato applicato non va nell'assessment ma nel messaggio di commit.
 
 ### 11.3 I passi
 
 In ordine di livello. Le righe sono quelle di `wc -l` su `src/main/java` al 2026-11-13. I test non entrano nella revisione (si leggono solo per capire come si usa una classe). Per i moduli grandi il passo dice quali pacchetti o file entrano; «A–M» vuol dire i file il cui nome comincia con una lettera da A a M.
 
-| Passo | Modulo | Che cosa entra | Righe | Stato |
+| Passo | Modulo | Che cosa entra (e verifiche rimandate) | Righe | Stato |
 | ---: | :--- | :--- | ---: | :--- |
-| 1 | `00-foresta-serializzazione`, `00-foresta-strumenti`, `01-foresta-eventi`, `01-foresta-punteggi` | tutto | 2.700 | fatto il 2026-11-13, proposte applicate |
-| 2 | `01-foresta-testi` | tutto (`GestoreGrammatiche`, già `GrammarBean`, da solo fa 2.600 righe) | 4.600 | fatto il 2026-11-13, proposte applicate |
-| 3 | `02-foresta-attributi`, `02-foresta-comandi`, `02-foresta-effettidistato`, `02-foresta-mappa` | tutto | 3.600 | fatto il 2026-11-13, proposte applicate (D3.2 al passo 9) |
-| 4 | `02-foresta-notizie`, `03-foresta-danni`, `03-foresta-tutorial` | tutto | 1.550 | fatto il 2026-11-13, proposte applicate |
-| 5 | `04-foresta-artefatti` | tutto | 5.250 | fatto il 2026-11-13, proposte applicate |
+| 1 | `00-foresta-serializzazione`, `00-foresta-strumenti`, `01-foresta-eventi`, `01-foresta-punteggi` | tutto | 2.700 | fatto (2026-11-13) |
+| 2 | `01-foresta-testi` | tutto (`GestoreGrammatiche` da solo fa 2.600 righe) | 4.600 | fatto (2026-11-13) |
+| 3 | `02-foresta-attributi`, `02-foresta-comandi`, `02-foresta-effettidistato`, `02-foresta-mappa` | tutto | 3.600 | fatto (2026-11-13) |
+| 4 | `02-foresta-notizie`, `03-foresta-danni`, `03-foresta-tutorial` | tutto | 1.550 | fatto (2026-11-13) |
+| 5 | `04-foresta-artefatti` | tutto | 5.250 | fatto (2026-11-13) |
 | 6 | `05-foresta-personaggi` | `tipi` (con `CostantiPersonaggi`), `modellodati`, `interfacce`, `eventi` | 5.700 | da fare |
 | 7 | `05-foresta-personaggi` | `personaggi`: i meccanismi (`PersonaggioBase`, `Personaggio`, `SaluteEMorte`, `EffettiDiStato`, `ModificatoriTemporanei`, `AttributiSecondari`, `CaricoEInventario`, `GestoreProgressione`, `Progressione`, `RegoleEquipaggiamento`, `CalcolatoreRiposo`, `RisultatoRiposo`, `FabbricaPersonaggi`, `EquipaggiamentoIniziale`, `LanciatoreDeiDadi`, `MoltiplicatoriDiClasse`, `NomeEDescrizione`, `ArmaNaturale`, `PersonaggioNonCombattente`) e `gruppi` | 5.500 | da fare |
 | 8 | `05-foresta-personaggi` | `personaggi`: le classi dei personaggi e dei mostri (tutti gli altri file, da `Alchimista` a `Viverna`): **qui le parti in comune sono il tema principale** (sono una sessantina di classi corte e simili: se non basta una sessione, A–L e M–Z) | 7.550 | da fare |
-| 9 | `06-foresta-bestiario`, `06-foresta-combattimento`, `06-foresta-statistiche` | tutto; **in più (dal passo 3, D3.2): riscrivere i Javadoc delle costanti di `TipoAttributo` (`02-foresta-attributi`) con quello che ogni attributo fa davvero, leggendone gli usi nel combattimento, e togliere l'avviso in testa all'enum** | 4.000 | da fare |
+| 9 | `06-foresta-bestiario`, `06-foresta-combattimento`, `06-foresta-statistiche` | tutto. **Rimandati qui:** riscrivere i Javadoc delle costanti di `TipoAttributo` (`02-foresta-attributi`) con quel che ogni attributo fa davvero, leggendone gli usi nel combattimento, e togliere l'avviso in testa all'enum (passo 3); controllare che chi chiama `TipoInterazioneConEffettiDiStato.getDannoAdArea()` sappia che è null per le reazioni senza area (passo 4) | 4.000 | da fare |
 | 10 | `07-foresta-intermezzi`, `07-foresta-mondo` | tutto | 4.600 | da fare |
 | 11 | `07-foresta-poteri` | tutto | 3.600 | da fare |
 | 12 | `08-foresta-bottino`, `08-foresta-economia` | tutto | 3.350 | da fare |
 | 13 | `08-foresta-tattiche` | tutto | 5.950 | da fare |
-| 14 | `09-foresta-missioni` | `missioni` (l'infrastruttura: `MissioneAPassi`, `Passo`, `RegistroMissioni`…), `tipi`, `modellodati`, `eventi`, `interfacce`, `intermezzi`, `oggetti` | 6.250 | da fare |
+| 14 | `09-foresta-missioni` | `missioni` (l'infrastruttura: `MissioneAPassi`, `Passo`, `RegistroMissioni`…), `tipi`, `modellodati`, `eventi`, `interfacce`, `intermezzi`, `oggetti`. **Rimandato qui:** che nessuno metta un valore null nelle proprietà di `MissioneMD` (`MappaProprieta.salva` lo scriverebbe come il testo "null"; per le caselle è già escluso) (passo 1) | 6.250 | da fare |
 | 15 | `09-foresta-missioni` | `missioni/incarichi` | 6.250 | da fare |
 | 16 | `09-foresta-missioni` | `missioni/richieste` | 4.050 | da fare |
 | 17 | `09-foresta-missioni` | `missioni/storie`, `missioni/leggende`, `missioni/principali` | 5.000 | da fare |
 | 18 | `10-foresta-modellodati`, `10-foresta-trofei`, `11-foresta-motore-api` | tutto | 2.800 | da fare |
 | 19 | `12-foresta-motore` | `motore` (con `Automa`) | 4.750 | da fare |
 | 20 | `12-foresta-motore` | `locazioni` (con `LocazioneBase`) | 4.150 | da fare |
-| 21 | `12-foresta-motore` | `salvataggi`, `oggetti`, `testi`, `tutorial`, `tipi`, `intermezzi` | 1.950 | da fare |
+| 21 | `12-foresta-motore` | `salvataggi`, `oggetti`, `testi`, `tutorial`, `tipi`, `intermezzi`. **Rimandato qui:** il costruttore di `GestorePunteggiBase` chiama `carica()`, che le sottoclassi ridefiniscono (gira prima che i campi della sottoclasse siano inizializzati: oggi va bene solo perché `nomeFile` non ha un valore iniziale) (passo 1) | 1.950 | da fare |
 | 22 | `12-foresta-ui-comune` | `ui` (il pacchetto, senza i sottopacchetti: `SchermoDelGioco`, `ForestaUI`, il router…), `tipi`, `eventi` | 5.250 | da fare |
 | 23 | `12-foresta-ui-comune` | `ui/schermate` A–M | 3.850 | da fare |
 | 24 | `12-foresta-ui-comune` | `ui/schermate` N–Z | 3.750 | da fare |
 | 25 | `12-foresta-ui-comune` | `ui/riquadri`, `ui/tutorial` | 4.450 | da fare |
-| 26 | `12-foresta-ui-comune` | `ui/barra`, `ui/componenti`, `ui/testo` | 4.250 | da fare |
+| 26 | `12-foresta-ui-comune` | `ui/barra`, `ui/componenti`, `ui/testo`. **Rimandato qui:** `BarraIcone` concatena `Comando.getDescrizione()`, che è null per i comandi senza descrizione: vedere se ci arriva solo con comandi che ce l'hanno (passo 3) | 4.250 | da fare |
 | 27 | `12-foresta-ui-comune` | `ui/immagini`, `ui/sfx`, `ui/sprite` | 5.250 | da fare |
 | 28 | `12-foresta-swing` | `ui` (il pacchetto), `ui/barra`, `ui/componenti`, `ui/immagini`, `ui/testo`, `ui/tutorial`, `tipi`, `eventi` | 3.950 | da fare |
 | 29 | `12-foresta-swing` | `ui/riquadri`, `ui/schermate`, `ui/tattiche` | 3.600 | da fare |
@@ -390,353 +396,71 @@ In ordine di livello. Le righe sono quelle di `wc -l` su `src/main/java` al 2026
 | 32 | `12-foresta-libgdx` | `libgdx` S–Z, `libgdx/sviluppo`; **confronto con Swing**: quel che le due interfacce fanno uguale e potrebbe scendere in `12-foresta-ui-comune` | 3.850 | da fare |
 | 33 | `13-foresta-app-swing`, `13-foresta-app-libgdx`, `13-foresta-app-android`, `foresta-android/` (`AndroidLauncher`, `app/build.gradle`) | tutto; per Android e Gradle solo leggibilità e robustezza | 1.100 | da fare |
 
-### 11.4 Risultati dei passi
+### 11.4 Giudizio e migliorie aperte
 
-Ogni passo aggiunge qui la sua sottosezione, `#### Passo N`.
+**Per tutto il progetto** (tornano in ogni passo):
+- **Il rientro mescola tab e spazi**, a volte nello stesso modulo (per esempio `LettoreCampi`, `Logger` e `Classifica` con i tab, `Dado`, `BusEventi` e `TrucchiDiSviluppo` con quattro spazi). Non cambia niente nel funzionamento, ma un neofita nota l'incoerenza. Uniformare è un lavoro meccanico, da fare su tutto il progetto in un commit a parte, quando la revisione sarà finita.
+- **I Javadoc invecchiano.** Quasi ogni passo ne ha trovati di falsi: dicevano chi crea una classe, quando si salva una cosa, dove sta una regola. Un commento che descrive il «che cosa» resiste; uno che descrive il «chi» o il «quando» va ricontrollato a ogni cambiamento.
+- **Lo stato statico** (registri, cataloghi, fornitori di dati) è comodo in un gioco single-player, ma ogni registro va azzerato a mano nei test e al cambio di lingua.
 
-#### Passo 1: `00-foresta-serializzazione`, `00-foresta-strumenti`, `01-foresta-eventi`, `01-foresta-punteggi` (2026-11-13)
+#### Passo 1: serializzazione, strumenti, eventi, punteggi
 
-Letti per intero i 39 file (2.700 righe), seguendo i chiamanti nei moduli sopra dove serviva per decidere se un caso è raggiungibile. Test dei quattro moduli verdi dopo i commenti (32 + 51 + 16 + 7).
-
-**Esito (2026-11-13):** l'utente ha approvato tutte le proposte tranne X1, e sono applicate:
-- N1.1: `getMessaggio` restituisce null invece di andare in errore;
-- D1.1: `booleano` accetta solo `true` e `false`, e il test che verificava il vecchio comportamento è stato adattato;
-- D1.2: il registro riceve anche il messaggio;
-- D1.3: `volatile`;
-- D1.5: la costante è fra le notifiche;
-- F1.1: c'è `NotificaDiTesto`;
-- F1.2 e F1.3.
-
-In più, su richiesta, i nomi inglesi di `BusEventi` sono diventati italiani (`tipoDiEvento`, `iscritto`, `iscritti`). Dopo le modifiche sono verdi tutti i test del progetto: 3.759, di cui 37 saltati.
-
-**`NullPointerException` possibili**
-
-- *Certi:* nessuno.
-- *Plausibili:*
-  - **N1.1** `InternoException.getMessaggio()` (`01-foresta-eventi`) fa `exception.getMessage()` se il messaggio è null: con un'eccezione null esce una `NullPointerException`. Oggi tutti quelli che la costruiscono le passano un'eccezione presa in un `catch`, quindi non succede. Però `SegnalatoreDegliErrori.descrizione` (`12-foresta-ui-comune`) controlla `eccezione == null` *dopo* aver chiamato `getMessaggio()`, e quel controllo non può mai servire. Correzione proposta: `getMessaggio()` restituisce null se mancano tutti e due, così il controllo della UI funziona.
-  - **N1.2** `MappaProprieta.salva` (`00-foresta-serializzazione`): una chiave null dà una `NullPointerException` in `validaChiave`, e un valore null si salva come il testo `"null"` (e si rilegge come `"null"`). Il controllo c'è in `pulisciValore`, ma solo se chi riempie la mappa lo chiama. Da verificare nei passi 3 (`LocazioneMD`) e 14 (`MissioneMD`), che sono quelli che la riempiono.
-- *Controllati e scartati:*
-  - `TemporizzatoreJ2SE`: `temporizzabile.tick()` con un `temporizzabile` null. Non succede: `Automa` e `ForestaUI` lo impostano nel costruttore, prima di qualunque `inizia`, e comunque l'errore si prenderebbe e si segnalerebbe.
-  - `Classifica.getPunteggio` prima di riempirla, con i nomi null. Non succede: `GestorePunteggiBase` la legge dal file o rimette la predefinita nel costruttore.
-  - `BusEventi.pubblica(null)` e `Dado.scegli(contesto, null)`: sarebbero errori di chi chiama, e nessuno lo fa.
-
-**Altri difetti (non `NullPointerException`)**
-
-- **D1.1** `LettoreCampi.booleano()` legge come falso qualunque testo diverso da `true`. `intero()` ed `enumerato()` invece danno un `IOException` su un campo rovinato, mentre un booleano rovinato diventa falso senza dire niente. Proposta: accettare solo `true` e `false`, e dare errore per il resto.
-- **D1.2** Il costruttore senza argomenti di `TemporizzatoreJ2SE` butta via il messaggio «Impulsi fermati dopo N errori di fila» (la lambda scrive solo l'eccezione). Lo usano solo i test, quindi è poco grave; ma o si scrive anche il messaggio o si toglie il costruttore (togliere va chiesto).
-- **D1.3** `TemporizzatoreJ2SE`: `impulsiFalliti` e `temporizzabile` si leggono e si scrivono sul thread principale fuori dal lucchetto, mentre `pianifica` li tocca dentro. In pratica funziona, perché il passaggio dalla coda del thread principale fa vedere i valori aggiornati, ma non è dichiarato. Se si vuole essere puliti, basta `volatile` su `temporizzabile`.
-- **D1.4** (da guardare nel passo 21) Il costruttore di `GestorePunteggiBase` chiama `carica()`, che le sottoclassi ridefiniscono. È una trappola nota di Java: il metodo della sottoclasse gira prima che i suoi campi siano inizializzati. Oggi va bene solo perché il campo `nomeFile` di `GestorePunteggiSuFile` non ha un valore iniziale.
-- **D1.5** In `TipoEvento` la costante `NOTIFICA_MESSAGGIO_DEL_TUTORIAL` sta nel blocco degli eventi interni. È solo una questione di ordine, ma confonde chi legge.
-
-**Parti in comune**
-
-- **F1.1** `NotificaTestoFrase` e `NotificaTestoParagrafo` sono uguali, tranne il tipo. Possono estendere una classe astratta `NotificaDiTesto` (stesso pacchetto) con il messaggio, il getter e `conInizialeMaiuscola`; devono comunque restare due classi, perché il bus smista per classe. Si risparmiano una quindicina di righe, e soprattutto si vede che sono parenti.
-- **F1.2** `Serializzabile.facoltativo` ripete la regola delle enum di `campo`. Può diventare `valore == null ? "" : campo(valore)`: tre righe in meno e una regola in un posto solo.
-- **F1.3** `InternoErrore` ha il campo `messaggio` sia `public final` sia con il getter. Il campo andrebbe reso `private`, come in tutti gli altri eventi.
-- *Non vale la pena:* i controlli ripetuti di `Dado` (`tira(N)`, `tira(contesto, N)`, i due `tiraAncheAUnaFaccia`). Sono quattro righe ciascuno, e ognuno ha un messaggio che nomina il suo metodo, che è utile.
-- Una proposta che tocca tutti i moduli (`TipoEvento`) è nel §11.5.
-
-**Pezzi che andrebbero riscritti:** nessuno.
-
-**Commenti aggiunti**
-
-Su `Serializzabile` (che cos'è un salvataggio a righe, con un esempio), `LettoreCampi` (`Pattern.quote` e lo `split` con -1), `Dado` (l'ordine delle precedenze fra trucchi dei test, truccatore e caso; il `- 1` della scelta; un Javadoc che diceva «da 1 a N» dove il risultato va da min a max), `TrucchiDiSviluppo`, `ModalitaDiProva`, `DestinazioneConsoleEFile`, `TemporizzatoreJ2SE` (il thread daemon e `scheduleWithFixedDelay`; gli accenti scritti con l'apostrofo), `ThreadPrincipale` (perché un thread solo), `BusEventi` (che cos'è il publish/subscribe, con un esempio; le collezioni concorrenti, il `ThreadLocal`, il cast con `@SuppressWarnings`, lo smistamento per classe esatta), `EventoBase` (diceva «astratta» e non lo è; a che serve il tipo), `InternoException`, `InternoMessaggio` (il Javadoc del getter era sbagliato), `TipoEvento`, `Classifica` (gli array paralleli, i passi di `inserisci`), `GestorePunteggi` (diceva che lo crea `Main`, invece è `AvvioDelMotore`) e `Punteggio`.
-
-**Giudizio**
-
-Questi quattro moduli sono la parte più curata del progetto. Sono piccoli, fanno una cosa sola, sono coperti al 100% dai loro test e hanno quasi tutti un Javadoc che spiega il perché, non solo il cosa. Alcune scelte sono buone e non banali:
+**Giudizio.** La parte più curata del progetto. Sono moduli piccoli, che fanno una cosa sola, coperti al 100% dai loro test e con Javadoc che spiegano il perché. Alcune scelte sono buone e non banali:
 - il `Dado` come unica sorgente di caso, con tre livelli di trucco in un ordine chiaro;
-- il bus che isola l'iscritto che fallisce senza togliere l'evento agli altri;
-- il temporizzatore che rende innocui gli impulsi già in coda dopo un cambio di stato (il numero di «pianificazione»);
-- `LettoreCampi`, che trasforma un salvataggio rovinato in un `IOException` con la riga, invece di un errore a caso più avanti.
+- il bus che isola l'iscritto che fallisce;
+- il temporizzatore che rende innocui gli impulsi rimasti in coda dopo un cambio di stato;
+- `LettoreCampi`, che trasforma un salvataggio rovinato in un errore che dice la riga.
 
-Da migliorare, in ordine di importanza:
-1. Le parti più difficili per un neofita, cioè la concorrenza del temporizzatore, i generici e il `ThreadLocal` del bus, ora sono commentate, ma restano le più delicate del progetto. Chi le tocca deve conoscere il modello dei thread descritto in `ThreadPrincipale`.
-2. Lo stile non è uniforme: alcuni file sono rientrati con i tab (`LettoreCampi`, `Logger`, `Classifica`), altri con quattro spazi (`Dado`, `BusEventi`, `TrucchiDiSviluppo`). (`BusEventi` usava anche nomi inglesi, `eventType`, `listener`, `list`; corretti.) Non cambia niente nel funzionamento, ma un neofita nota l'incoerenza. Uniformare è un lavoro meccanico, da fare se si vuole su tutto il progetto e in un commit a parte.
-3. Il difetto D1.1 (un booleano rovinato letto in silenzio come falso) è l'unica crepa nella regola, altrimenti rispettata, che un salvataggio rovinato si dichiara.
-4. `TipoEvento` oggi serve solo al registro (570 righe che ripetono i nomi delle classi); l'utente lo tiene come dizionario degli eventi (§11.5, X1).
+La concorrenza del temporizzatore e del bus resta la parte più delicata da capire, anche ora che è commentata.
 
-#### Passo 2: `01-foresta-testi` (2026-11-13)
+**Aperto:** niente, oltre al rientro (vedi sopra). `TipoEvento` resta, per decisione (§11.5).
 
-**Esito (2026-11-13):** l'utente ha approvato tutto, e ha chiesto anche di rinominare la classe. Applicate:
-- **la rinomina (R2.1).** `GrammarBean` è diventata `GestoreGrammatiche`, con tutti i nomi in italiano: metodi, campi, classi interne, costanti e variabili, compresi quelli che usano gli altri moduli. Per esempio `produce` diventa `produci`, `reset` diventa `ripristina`, `canProduce` diventa `puoProdurre`, `setRootNode` diventa `setRadice`, `addFixedProduction` diventa `fissaProduzione`, `fromResource` diventa `daRisorsa`; `InvalidGrammarException` diventa `GrammaticaMalformataException`, `IncludeResolver` diventa `RisolutoreDelleInclusioni`. Sono stati rinominati anche i test (`GestoreGrammatiche*Test`), il manuale (`GestoreGrammatiche.md`) e i rimandi in tutti i documenti, tranne il diario `revisione_documentazione.md`. **I messaggi d'errore restano in inglese, per decisione dell'utente**: li legge chi modifica le grammatiche, che può non sapere l'italiano. La decisione è scritta in `GestoreGrammatiche.md` §9 e nel Javadoc della classe;
-- **D2.1:** una graffa di chiusura senza apertura è un errore di caricamento. Due casi limite in `GestoreGrammaticheCasiLimiteTest`, che si aspettavano il vecchio comportamento, sono stati adattati;
-- **D2.2 e D2.3:** le produzioni derivate si risolvono in ordine di dipendenza (`risolviDerivate`), e solo un ciclo vero è un errore. Sono state corrette, non tolte, e il manuale ora le descrive (§4.13);
-- **D2.4:** in `Testi`, la lingua e la sua catena di file stanno in un solo oggetto immutabile;
-- **D2.5:** un ordinale fuori da 1–41 è un'`IllegalArgumentException` che lo dice;
-- **D2.6:** tolte le frasi di storia dai Javadoc;
-- **F2.1:** la classe interna `Scansione` sostituisce cinque scanner (`unescapeQuotes`, che trasforma il testo, resta a parte ma segue la stessa regola degli escape);
-- **F2.2**, **F2.3**, **F2.4** (`GrammaticaPigra.riga`, 20 chiamate) e **X2** (`strumenti.Maiuscole`, al posto di sei copie).
+#### Passo 2: testi
 
-Ci sono tre test nuovi: la graffa isolata, le derivate a catena nei due ordini, il ciclo. Sono verdi tutti i test del progetto: 3.762, di cui 37 saltati.
+**Giudizio.** Il modulo ha due metà diverse.
+- **Le classi della lingua** (`Testi`, `RegoleDellaLingua` con `LinguaItaliana`, `LinguaInglese` e il decoratore `RegoleConEccezioni`, `Nome`, `Articoli`, `Numeri`) sono il miglior esempio didattico del progetto: piccole, una classe per lingua, testi nei `.properties` con il ripiego sull'italiano.
+- **`GestoreGrammatiche`** è un piccolo linguaggio, potente e molto provato. Ora ha i nomi in italiano e una sola `Scansione` per la sintassi, ma resta la classe più lunga e più difficile del modulo.
 
-Letti per intero i 26 file (4.600 righe, di cui 2.563 di `GestoreGrammatiche`), con le grammatiche dove serviva per decidere se un caso è raggiungibile. I tre difetti di `GestoreGrammatiche` qui sotto li ho confermati con piccole grammatiche lanciate con `jshell` sulle classi compilate. Test del modulo verdi dopo i commenti (341).
+**Aperto:**
+- La guida completa della sintassi sta due volte, nel Javadoc della classe (circa 200 righe) e in `GestoreGrammatiche.md`. Si potrebbe lasciare nel codice solo il riassunto, che c'è già («Come orientarsi»), e mandare al manuale.
+- Le sezioni statiche (`#include_static`, circa 250 righe con il loro lucchetto) potrebbero diventare una classe a parte: `GestoreGrammatiche` scenderebbe sotto le 2.300 righe.
 
-**`NullPointerException` possibili**
+#### Passo 3: attributi, comandi, effetti di stato, mappa
 
-- *Certi:* nessuno.
-- *Plausibili:* nessuno.
-- *Controllati e scartati:*
-  - `GestoreGrammatiche.produzioneStatica` con una produzione che non è statica (`staticSectionOf` darebbe null): la si chiama solo dopo `isStaticName`.
-  - `GestoreGrammatiche.produci()` senza radice: la radice è la prima produzione del file, impostata al caricamento.
-  - `CaricatoreDiGrammatiche.perLaLingua` con una risorsa senza punto (darebbe un errore di indice, non una `NullPointerException`): tutti passano un `.txt`.
-  - `GrammaticaNonValidaException` con la causa null: tutti la costruiscono in un `catch`.
-  - `Lingue.per(null)`: `Testi.getLingua()` non è mai null.
-  - Le grammatiche che `ProduttoriDiTesti.resetProduzioni` non azzera (mondo, sfide, templi, rovine, missioni): non hanno produzioni monouso, quindi non si consumano (ho contato le `NOME$` in tutti i file e in tutte le lingue).
+**Giudizio.** Moduli piccoli e ben separati. Il calcolo degli attributi non sa chi li possiede; la mappa non sa chi costruisce il mondo (riceve un `PopolatoreDellaForesta`); i dati prendono il fornitore dall'esterno. Il punto debole per chi legge erano i Javadoc di `TipoAttributo`, che promettono meccaniche inesistenti: la loro riscrittura è rimandata al passo 9.
 
-**Altri difetti (non `NullPointerException`)**
+**Aperto:**
+- La generazione della mappa conta su presupposti non scritti. Le città sono quattro come i quadranti, e una quinta città non troverebbe un quadrante libero. `Foresta.getCoordinateLibere` e `GeneratoreDellaForesta.getCoordinateLibere` girano all'infinito se la mappa non ha più caselle libere. Con la mappa di oggi (20×20) non succede, ma un controllo esplicito, o un test, lo direbbe a chi cambia le dimensioni.
 
-- **D2.1 (confermato)** In `GestoreGrammatiche.splitTopLevelAlternatives`, una graffa `}` isolata fuori dalle virgolette porta il contatore sotto zero, e da lì in poi i `|` non dividono più. La riga `A } | B` diventa una sola alternativa, `A } | B`, senza errore. Gli altri cinque scanner della classe invece si fermano a zero (`Math.max(0, …)`). Proposta: una graffa di chiusura senza apertura è un errore di caricamento (`GrammaticaMalformataException`), come quella di apertura senza chiusura.
-- **D2.2 (confermato)** Con le produzioni derivate a catena (`A = B`, poi `B = C`), `A` resta senza alternative: il caricamento non se ne accorge (`validatePreviousProduction` salta le derivate) e la produzione fallisce dopo, con un errore di indice.
-- **D2.3 (confermato)** Nell'ordine inverso (`C`, `B = C`, `A = B`) il caricamento rifiuta la grammatica dicendo che A e B «are mutually derived», e non è vero: è una catena, non un ciclo. **Nessuna grammatica del gioco usa le produzioni derivate**: le usano solo i test di `GestoreGrammaticheTest`. Le strade sono due: correggerle (risolvere le derivazioni in ordine di dipendenza e rifiutare solo i cicli veri), oppure toglierle dalla sintassi. Togliere è una cancellazione: decide l'utente.
-- **D2.4** `Testi.impostaLingua` scrive `lingua` e `catena` in due momenti diversi: un thread che legge proprio in mezzo vede la lingua nuova con la catena dei file vecchia. Oggi la lingua cambia dalla schermata delle opzioni, sul thread principale, quindi non succede. Se si vuole chiuderlo, basta tenere le due cose in un solo oggetto immutabile.
-- **D2.5** `Numeri.getOrdinaleM(0)` dà «nullo» e `getOrdinaleF(0)` «nulla»: viene da `append(null)` sulla radice che manca, ed è documentato. Da 42 in su c'è un errore di indice senza spiegazione. Proposta: un'`IllegalArgumentException` che dica l'intervallo valido (da 1 a 41).
-- **D2.6** Alcuni Javadoc di `GestoreGrammatiche` raccontano la storia del codice («prima che questa funzione esistesse», «una volta era un Random privato», «una semplice HashMap lasciava…»). La convenzione del progetto è che i documenti descrivono il presente: andrebbero tolte quelle frasi, senza toccare il resto.
+#### Passo 4: notizie, danni, tutorial
 
-**Parti in comune**
-
-- **F2.1** In `GestoreGrammatiche` sei scanner scorrono il testo carattere per carattere tenendo il conto di virgolette, escape, graffe e quadre: `splitTopLevelAlternatives`, `findNextUnquotedOpeningBrace`, `unescapeQuotes`, `findMatchingClosingBrace`, `findDefaultSeparator` e `hasTopLevelAssignment`. Ognuno lo rifà a modo suo, con piccole differenze: alcuni riconoscono solo l'escape delle virgolette, altri qualunque escape; alcuni si fermano a zero e altri no, ed è da qui che nasce D2.1. Una piccola classe interna che fa la scansione e dice a ogni carattere «sono fra virgolette, a questa profondità» toglierebbe un centinaio di righe e le differenze. Il rischio è medio, perché è il cuore del parser, ma i 341 test del modulo lo coprono bene. Conviene farla dopo D2.1.
-- **F2.2** `produci()` e `produci(String)` hanno lo stesso corpo: il primo può essere `return produci(rootNode);`.
-- **F2.3** `Nome.di(Enum)` e `Nome.di(String, Enum)` ripetono la stessa costruzione di dieci righe, cambiando solo dove si cerca una voce. Possono chiamare un metodo privato che riceve «come si legge una voce» (una `Function<String, Optional<String>>`). Resta diverso solo il ripiego del singolare.
-- **F2.4** I sette produttori ripetono una ventina di volte `GRAMMATICA.get().produci("PRODUZIONE").get(0).trim()`. Un metodo `GrammaticaPigra.riga(String produzione)` li renderebbe di una riga ciascuno, più facili da leggere.
-- **F2.5** La maiuscola iniziale è scritta tre volte in questo modulo (`Articoli.inizialeMaiuscola`, `LinguaInglese.inizialeMaiuscola`, `GestoreGrammatiche.capitalizeFirstLetter`) e altre tre fuori: §11.5, X2.
-- *Non vale la pena:* il ciclo che salta i caratteri non lettera all'inizio di `suonoIniziale`, uguale in italiano e in inglese. Sono cinque righe, e il resto dei due metodi è diverso.
-
-**Pezzi che andrebbero riscritti**
-
-- **R2.1** `GestoreGrammatiche` ha tutti i nomi in inglese: campi, metodi, classi interne e messaggi d'errore (`"Production X is empty!"`). I commenti invece sono in italiano, come il resto del progetto. Per un neofita la classe è doppiamente difficile: la sintassi delle grammatiche e due lingue mescolate. Tradurre i nomi privati è meccanico. I nomi pubblici (`produci`, `ripristina`, `setRadice`, `puoProdurre`, `fissaProduzione`) li usano anche gli altri moduli, quindi andrebbero cambiati con loro. I messaggi d'errore li controllano decine di test (`contains("is not defined")`…). È un lavoro grande: decide l'utente se e quando farlo.
-- **R2.2** Il Javadoc di `GestoreGrammatiche` è accurato ma prolisso: quello della classe è lungo duecento righe, e molti metodi ripetono le stesse spiegazioni. Ho aggiunto in testa una mappa per orientarsi (le due fasi, caricamento e produzione, con i metodi principali e un esempio). Si potrebbe portare la guida della sintassi in `GestoreGrammatiche.md`, che esiste già, e lasciare nel codice solo il riassunto. Anche questo è da decidere.
-- *Idea, non urgente:* le sezioni statiche (`#include_static`, circa 250 righe con il loro lucchetto) potrebbero diventare una classe a parte, e `GestoreGrammatiche` scenderebbe sotto le 2.300 righe.
-
-**Commenti aggiunti**
-
-- `GestoreGrammatiche`: come orientarsi nella classe, con un esempio; il «righello» della scelta pesata; il richiamo alle altre copie della maiuscola.
-- `GrammaticaPigra`: perché la mappa è concorrente.
-- `RegoleConEccezioni`: il trucco della «x» al posto del nome.
-- `Numeri`: perché l'articolo si elide solo per 8 e 11, con un esempio.
-- `Nome`: l'indice degli articoli.
-- `Elenchi`: il ternario annidato.
-- `LinguaInglese`: gli ordinali composti.
-- `ProduttoriDiTesti`: quali grammatiche si azzerano, e che cosa fare se se ne aggiunge una con produzioni monouso.
-- `Testi`: che cosa fa `impostaLinguaImpl`.
-- `Articoli`: 33 Javadoc avevano perso il punto prima di «Vale».
-
-**Giudizio**
-
-È un modulo in due metà diverse.
-
-**Le classi della lingua** (`Testi`, `Lingue`, `RegoleDellaLingua` con `LinguaItaliana`, `LinguaInglese` e `RegoleConEccezioni`, `Nome`, `Articoli`, `Numeri`) sono il miglior esempio didattico del progetto. Hanno un'interfaccia piccola, una classe per lingua, le eccezioni dei nomi messe davanti alla regola con un decoratore (`RegoleConEccezioni`) e i testi nei file `.properties` con il ripiego sull'italiano. Un neofita le legge senza aiuto.
-
-**`GestoreGrammatiche`** è un piccolo linguaggio di programmazione, potente e molto provato (341 test nel modulo, quasi tutti suoi). Però è la classe più difficile del progetto:
-- è lunga, ha due lingue mescolate (R2.1) e un Javadoc che spiega tutto ma annega il lettore (R2.2);
-- contiene sei scanner simili che non si comportano allo stesso modo (F2.1), e da lì è nato D2.1;
-- le produzioni derivate (D2.2, D2.3) sono una funzione rotta, ma che nessuna grammatica usa.
-
-I sette produttori di testi sono semplici ma ripetitivi (F2.4).
-
-In ordine di valore per il lettore: F2.4, F2.2 e F2.3 (piccoli e sicuri), poi D2.1 e la decisione su D2.2/D2.3, poi F2.1. R2.1 è il cambiamento più utile per un neofita, ma anche il più costoso.
-
-#### Passo 3: `02-foresta-attributi`, `02-foresta-comandi`, `02-foresta-effettidistato`, `02-foresta-mappa` (2026-11-13)
-
-Letti per intero i 34 file (3.600 righe), seguendo i chiamanti nei moduli sopra dove serviva (`AttributiSecondari` in `05-foresta-personaggi` per gli attributi, i chiamanti di `Comando` e della mappa). Test dei quattro moduli verdi dopo i commenti.
-
-**Esito (2026-11-13):** applicate:
-- **D3.1:** `CalcolatoreAttributiSecondari.radice`, per cui un primario negativo conta come 0, anche nel carico. C'è un test;
-- **N3.1:** `ForestaMD.casellaCostruita` dà un `IllegalStateException` che nomina la casella, al posto della `NullPointerException`. C'è un test. Il test «nessuna casella vuota dopo la generazione» c'era già (`GeneratoreDellaForestaTest`);
-- **D3.6**;
-- **F3.1**, tutte e due le metà: `variazione` e `tempo` in `TestoDeiModificatori`;
-- **F3.2:** `Comando.ofPersonaggio` in due righe;
-- **F3.3:** le costanti di `Direzioni`;
-- **D3.3:** tolti i quattro `package-info` dei pacchetti vuoti. Il loro contenuto è nei documenti dei moduli, e il riferimento in `CLAUDE.md` è corretto.
-
-**D3.4 resta così, per decisione dell'utente:** `RUTTOLOMEO` e `STORPSGORBLIN` sono rimanenze storiche a cui è affezionato. **D3.2 è spostato al passo 9**, scritto nella sua riga della tabella del §11.3. Su richiesta successiva dell'utente, il campo `valore` di `EffettoDiStatoMD` è diventato `durata`. Sono verdi tutti i test del progetto: 3.764, di cui 37 saltati.
-
-**`NullPointerException` possibili**
-
-- *Certi:* nessuno.
-- *Plausibili:*
-  - **N3.1** `ForestaMD`: `impostaLocazioneVisitata`, `isLocazioneVisitata`, `isLocazioneConosciuta`, l'`impostaLocazioneConosciuta` privata e `salva` leggono la casella senza controllare che esista. Durante la costruzione le caselle non ancora assegnate sono null (lo dicono `ottieniTipoLocazione` e `Foresta.nomeNuovo`, che le controllano). Oggi `GeneratoreDellaForesta` riempie di bosco ogni casella vuota prima di mettere il gruppo sulla mappa, e lo dice in un commento. Chi spostasse quel passo, o chiamasse `Foresta.setPosizioneDelGruppo` durante la costruzione, avrebbe una `NullPointerException`. Una casella rimasta vuota farebbe fallire anche il salvataggio. Proposta: o un controllo con un messaggio chiaro («casella (x, y) non ancora costruita»), o un test che dopo `genera` nessuna casella sia null.
-  - **N3.2** `Foresta.getNomeDaMostrare` e `Foresta.nomeDelTempio(CoordinateMD)` usano `getLocazioneMD(…)` senza controllo: hanno lo stesso presupposto di N3.1 (a partita avviata tutte le caselle esistono).
-- *Controllati e scartati:*
-  - **N1.2 del passo 1** (un valore null in `MappaProprieta.salva`) per le caselle: `LocazioneMD.aggiungiProprieta` passa da `pulisciValore`, che rifiuta il null, e `setNome` toglie la proprietà invece di metterci null. Le chiavi sono costanti. Resta da vedere `MissioneMD` (passo 14).
-  - `TestoDeiModificatori.nota(null)`: la nota di un modificatore non è mai null (il costruttore la porta a "").
-  - `Comando.getDescrizione()` null: in `BarraIcone` si concatena solo per i comandi in ricarica, che hanno tutti una descrizione (da ricontrollare al passo 26).
-
-**Altri difetti**
-
-- **D3.1 (confermato nel codice)** `CalcolatoreAttributiSecondari` fa la radice quadrata dei primari, e `AttributiSecondari.quantitaModificata` (`05-foresta-personaggi`) li somma ai modificatori senza un limite in basso. Un primario portato sotto zero (Forza 5 con un −10, o una percentuale oltre −100%) dà `NaN`, «non un numero», e il cast `(int)` lo trasforma in 0. Così **l'intero secondario vale 0**, anche se l'altro primario è alto: per esempio la parata con Forza −5 e Destrezza 30. Proposta: in `grezzo` contare un primario negativo come 0, cioè `Math.sqrt(Math.max(0, primario))`. È una riga, ma cambia il comportamento.
-- **D3.2** I Javadoc delle costanti di `TipoAttributo` descrivono meccaniche che il gioco non ha: lo scudo di mana di MAGIA, la sopravvivenza a 1 punto vita di FORTUNA, l'attacco furtivo di FURTIVITA, la schivata, il costo in vigore della STANCHEZZA. Ho cercato nel codice e non c'è niente del genere. Per un neofita è la cosa più fuorviante del passo, e ho aggiunto un avviso in testa all'enum. Proposta: riscrivere ogni costante con quello che fa davvero, da fare al passo 9 (combattimento), quando si leggono gli usi. Le descrizioni per il giocatore (`tipo_attributo_it.properties`) sono brevi e corrette.
-- **D3.3** Pacchetti che contengono solo il `package-info.java`: `attributi.tipi`, `modificatori.tipi`, `effettidistato.tipi` e `artefatti.tipi` (quest'ultimo del passo 5). Sono quel che resta di quando i tipi stavano in un pacchetto per modulo. Descrivono classi che stanno in `tipi`, e un neofita li apre e li trova vuoti. Proposta: portare il loro testo nel documento del modulo e toglierli. È una cancellazione: decide l'utente.
-- **D3.4** `Comando.RUTTOLOMEO` e `STORPSGORBLIN`, «vecchi comandi non più in uso», hanno ancora un'icona in `TipoIcona` e due immagini. `Comando.of(int)` lo usano solo i test. Anche qui togliere è una cancellazione.
-- **D3.5** `GeneratoreDellaForesta` mette una città per quadrante: le città sono 4 come i quadranti, e con una quinta città `quadranti.remove(0)` darebbe un errore di indice. `Foresta.getCoordinateLibere` e `GeneratoreDellaForesta.getCoordinateLibere` girano all'infinito se non c'è più una casella libera. Con le dimensioni di oggi (20×20) non succede. Ho messo un commento accanto alle città.
-- **D3.6** Il Javadoc di `Foresta.getVarianteDelBosco` parla di un «bosco creato prima che questa proprietà esistesse»: è storia, e i salvataggi non devono restare compatibili. Il ripiego a 1 si può tenere, ma va detto per che cosa serve davvero (una casella costruita a mano dai test).
-
-**Parti in comune**
-
-- **F3.1** `TestoDeiModificatori.durata` e `durataResidua` sono lo stesso `switch` con un prefisso diverso (`DURATA_` / `RESIDUO_`): un metodo privato con il prefisso li riduce a una riga ciascuno. Allo stesso modo `effetto` e `breve` scrivono il valore con lo stesso `switch`.
-- **F3.2** `Comando.ofPersonaggio` è una catena di otto `if` che si può scrivere in due righe (`values()[PERSONAGGIO_1.ordinal() + posizione]`, con il controllo dell'intervallo).
-- **F3.3** `Direzioni` usa i numeri 6 (caselle al giorno), 36, 50 e 4 senza nome. La regola del progetto (niente valori magici) chiede costanti con nome, per esempio `CASELLE_AL_GIORNO`. Ho aggiunto i commenti, ma le costanti sarebbero meglio.
-- *Non vale la pena:* i quattro `getMaxPassiX`/`muoveX` di `Foresta` sono già fattorizzati su `getMaxPassi(dx, dy)` e `muove(dx, dy)`.
-
-**Pezzi che andrebbero riscritti**
-
-- `EffettoDiStatoMD` chiama `valore` la durata (e `getDurata` lo restituisce): rinominare il campo privato in `durata` è sicuro e toglie un inciampo. Intanto l'ho commentato.
-- `TipoAttributo` (D3.2).
-
-**Commenti aggiunti**
-
-- `TipoAttributo`: l'avviso sui Javadoc che non descrivono il codice.
-- `CalcolatoreAttributiSecondari`: la radice di un negativo.
-- `TestoDeiModificatori`: `%+d`.
-- `ModificatoreAttributoMD`: la condizione del costruttore.
-- `EffettoDiStatoMD`: il campo `valore`.
-- `Comando`: l'ordine delle costanti `PERSONAGGIO_n` non si cambia.
-- `RichiestaConComandi`: diceva «astratta» e non lo è.
-- `ForestaMD`: la griglia in un array, con un esempio.
-- `GeneratoreDellaForesta`: `>> 2` e `>> 1` sono divisioni per 4 e per 2; una città per quadrante.
-- `Direzioni`: la distanza a piedi, la regola delle direzioni oblique, le 6 caselle al giorno.
-- `Foresta`: come si contano i passi; il commento sulla posizione del gruppo, che era finito sopra il metodo sbagliato.
-- `Quadrante`: il `- 1`.
-
-**Giudizio**
-
-Moduli piccoli e ordinati, con una buona separazione: il calcolo degli attributi non sa chi li possiede, la mappa non sa chi costruisce il mondo (riceve un `PopolatoreDellaForesta`), i dati prendono il fornitore dall'esterno.
-
-- **Il difetto più serio è D3.1**: un caso limite, ma che dà un risultato assurdo (una parata nulla) senza nessun errore.
-- **La cosa più dannosa per chi legge è D3.2**: Javadoc che promettono meccaniche inesistenti. Un neofita che studia `TipoAttributo` impara un gioco che non c'è.
-- La mappa è chiara, ma conta su presupposti non scritti nel codice: tutte le caselle esistono (N3.1), quattro città per quattro quadranti (D3.5). Andrebbero resi espliciti con un controllo o un test.
-- Restano alcuni residui (D3.3, D3.4) e numeri senza nome (F3.3, e gli spostamenti di bit nel generatore).
-
-#### Passo 4: `02-foresta-notizie`, `03-foresta-danni`, `03-foresta-tutorial` (2026-11-13)
-
-Letti per intero i 17 file (1.550 righe), con i chiamanti dove serviva (`RegistroNotizie` e `StatoDelMotore` nel motore, `AvvioDelMotore` per il tutorial, `SituazioniDellaUI` per le situazioni). Test dei tre moduli verdi dopo i commenti.
-
-**Esito (2026-11-13):** l'utente ha approvato tutto, e tutto è applicato:
-- **D4.3:** `SuggerimentiMD.leggi` usa `booleano()`;
-- **D4.4:** tolto il `package-info` di `danni.tipi`; corretti `03-foresta-danni.md` e il rimando di `CLAUDE.md`;
-- **F4.1:** le 34 reazioni sono su una riga ciascuna, con `stati`, `danni`, `nessuno` e gli import statici delle due enum, e il file è passato da 440 a 291 righe.
-
-Sono verdi tutti i test del progetto: 3.764, di cui 37 saltati.
-
-**`NullPointerException` possibili**
-
-- *Certi:* nessuno.
-- *Plausibili:* nessuno.
-- *Controllati e scartati:*
-  - `NotiziaMD` con id o corpo null, che si salverebbero come il testo "null": l'unico che ne crea una è `RegistroNotizie`, con l'identificativo preso dalla notizia e un corpo già controllato (non vuoto).
-  - `RegistroSuggerimenti.impostaGestore(null)`: non lo fa nessuno.
-  - `TipoInterazioneConEffettiDiStato.getDannoAdArea()` restituisce null per le reazioni che non colpiscono un'area: è documentato, e i chiamanti lo sanno (da ricontrollare al passo 9).
-
-**Altri difetti**
-
-- **D4.1** I Javadoc di `Notizie` e di `NotizieMD` si contraddicevano: tutti e due dicevano che la regola di rotazione (il nuovo in testa, i più vecchi scartati) stava nell'altra classe. Sta in `NotizieMD`. Corretti.
-- **D4.2** I Javadoc di `RegistroSuggerimenti` e di `GestoreSuggerimenti` dicevano che il motore non passa un gestore e che il tutorial non si salva «finché non è finito». Non è più vero: `AvvioDelMotore` passa `GestoreSuggerimentiSuFile`, e il tutorial si salva. Corretti.
-- **D4.3** `SuggerimentiMD.leggi` controlla a mano che la prima riga sia `true` o `false`, perché `LettoreCampi.booleano()` leggeva qualunque altro testo come falso. Dal passo 1 (D1.1) `booleano()` fa quel controllo da sé: le otto righe si possono ridurre a `attivo = new LettoreCampi(riga).booleano();`. Il commento, che diceva il contrario, è corretto.
-- **D4.4** `03-foresta-danni` ha anch'esso un pacchetto `danni.tipi` con il solo `package-info.java`, sfuggito al passo 3 (D3.3). Va tolto come gli altri quattro, che l'utente ha già approvato.
-
-**Parti in comune**
-
-- **F4.1** `TipoInterazioneConEffettiDiStato`: le 34 reazioni sono scritte con `Collections.singletonList(TipoEffettoDiStato.X)`, `Arrays.asList(...)` e `Collections.emptyList()`, cinque argomenti di quel tipo per costante. Con tre metodi statici di una riga (`stati(...)`, `danni(...)`, `nessuno()`) ogni reazione diventerebbe leggibile in una o due righe, per esempio `ELETTROCUZIONE(stati(BAGNATO), danni(FULMINE), 1.5, nessuno(), nessuno())` (con gli import statici delle due enum). Si risparmiano circa 100 righe, e un neofita vede subito i cinque dati. Ho aggiunto un commento che li elenca.
-- *Non vale la pena:* `getDannoAdArea` è uno `switch` su tre costanti. Metterlo fra i dati del costruttore vorrebbe dire aggiungere un sesto argomento a tutte e 34 le costanti.
-
-**Pezzi che andrebbero riscritti:** nessuno.
-
-**Commenti aggiunti**
-
-- `Notizie` e `NotizieMD` (D4.1), `RegistroSuggerimenti` e `GestoreSuggerimenti` (D4.2), `SuggerimentiMD` (D4.3).
-- `TipoInterazioneConEffettiDiStato`: i cinque dati di una reazione.
-- `TipoDanno`: un refuso, e la precisazione che i commenti delle costanti descrivono le intenzioni.
-- `BersaglioDelSuggerimento`: `EnumSet.of`.
-- `TipoSuggerimento`: le pagine contate da 1 e il bersaglio che si ripete.
-- `MessaggioMD`: un accento.
-
-**Giudizio**
-
-Tre moduli piccoli e puliti, i migliori incontrati finora insieme a quelli del passo 1.
-
-- **Il tutorial** è un esempio di separazione ben riuscita: il registro non sa niente della UI, la UI gli dice che cosa vede con un insieme di `Situazione`, e ogni costante di `TipoSuggerimento` ha accanto un commento che spiega perché sta in quel punto dell'ordine.
-- **I danni** sono tabelle ben documentate (ogni reazione ha il suo Javadoc), ma scritte in modo prolisso (F4.1).
+**Giudizio.** Tre moduli piccoli e puliti.
+- **Il tutorial** è un esempio di separazione ben riuscita: il registro non sa niente della UI, la UI gli dice che cosa vede con un insieme di `Situazione`, e ogni suggerimento ha accanto il perché del suo posto nell'ordine.
+- **I danni** sono tabelle ben documentate, ora leggibili su una riga per reazione.
 - **Le notizie** sono semplici.
 
-I difetti sono tutti di documentazione: Javadoc rimasti indietro rispetto al codice (D4.1, D4.2, D4.3). È lo stesso fenomeno dei documenti `.md` del §6, in piccolo, e ogni passo ne trova qualcuno. Conferma che un commento che descrive il «quando» o il «chi» invecchia più in fretta di uno che descrive il «che cosa».
+**Aperto:** niente.
 
-#### Passo 5: `04-foresta-artefatti` (2026-11-13)
+#### Passo 5: artefatti
 
-Letti per intero i 44 file (5.250 righe), con i chiamanti dove serviva (`CommercioDelGruppo` e `GestoreBotteghe` per la fusione, le risorse delle grammatiche per le traduzioni, `ConvenzioniDiLocalizzazioneTest`). Test del modulo verdi dopo i commenti.
-
-**Esito (2026-11-13):** l'utente ha approvato tutto. Applicato:
-- **D5.1:** i testi dell'ingrediente del Core Dump stanno in `generatore_artefatti_<lingua>.properties` (voci `CORE_DUMP.NOME` e `CORE_DUMP.DESCRIZIONE`), e il nome del tipo viene da `nomi_artefatti`: in inglese è «the Core Dump Gem, that holds…».
-- **D5.2, decisione dell'utente:** *una qualsiasi grammatica rotta deve impedire al gioco di partire*. `GrammaticaArtefatti` non ha più `caricaOppureNull`. Carica le sue due grammatiche con `CaricatoreDiGrammatiche` (`GrammaticaPigra`, una volta per lingua), e un errore è una `GrammaticaNonValidaException`, che `PrecaricatoreDeiTesti` trasforma in uscita dal gioco. Il test che si aspettava null per una grammatica inesistente ora si aspetta l'errore. `artefatti2.txt` si carica una volta sola, perché i nomi degli aggiornamenti li dà `GrammaticaArtefatti.nomeAggiornamento`. **Test nuovo, `TutteLeGrammaticheTest`** (`12-foresta-motore`): carica tutte le grammatiche del gioco (testi, artefatti, ingredienti, leggendari) e i cataloghi che se ne leggono, in italiano, inglese e inglese britannico. `mvn package` esegue i test, quindi con una grammatica rotta il jar non si costruisce.
-- **D5.3 e F5.1:** la classe `RigaDiCampi` legge le righe di oggetti, set e libri tecnici, e ogni errore dice la riga. I messaggi sono `new IllegalArgumentException(…)`, perché `ConvenzioniDiLocalizzazioneTest` riconosce così i messaggi per chi sviluppa.
-- **D5.4, D5.5, F5.2, F5.3:** in `CostantiArtefatti` ci sono `ARTEFATTO_COSTO_BASE`, `ARTEFATTO_COSTO_PER_LIVELLO`, `ARTEFATTO_PERCENTUALE_PER_LIVELLO` e `ARMA_SCARTO_DANNI`.
-
-Sono verdi tutti i test del progetto: 3.767, di cui 37 saltati.
-
-**`NullPointerException` possibili**
-
-- *Certi:* nessuno.
-- *Plausibili:* nessuno.
-- *Controllati e scartati:*
-  - `ArtefattoMD.addModificatore(modificatore)` legge `tipo.getCategoria()`, ma tutti quelli che creano un artefatto danno prima il tipo: i generatori, `IngredienteDelCoreDump` e il costruttore a passi, che non permette altro.
-  - `ArtefattoMD.salva` con un nome null, che si scriverebbe come "null": tutti danno un nome, e il costruttore a passi lo impone.
-  - `GeneratoreArtefattiTabelle.peso(tipo)` restituisce un `Double` che diventa `double` e darebbe una `NullPointerException` per un tipo senza peso. Oggi tutti i 24 tipi hanno il loro peso (li ho confrontati), ma un tipo nuovo senza peso romperebbe la generazione: è fragile.
-  - Il nome proprio che `RegoleIncantatura.fondi` cancella quando il giocatore non ne dà uno: è voluto, perché `GestoreBotteghe` propone quello che c'è e il giocatore lo può svuotare.
-
-**Altri difetti**
-
-- **D5.1 (confermato)** `IngredienteDelCoreDump` scrive i suoi testi in italiano direttamente nel codice: i nomi (`"la Pergamena"`, `"il Monile"`…), `" del Core Dump"` e `"che conserva "`. In nessun file di testi ce n'è una traduzione, quindi in inglese l'ingrediente si chiama «la Gemma del Core Dump», «che conserva Fire Major». È l'unico testo per il giocatore scritto nel codice trovato finora. Proposta:
-  - il nome del tipo con `Nome.di("nomi_artefatti", tipo)` e il suo articolo, come fa già `GeneratoreArtefattiTabelle.nomeComune`;
-  - due voci, `CORE_DUMP.NOME` e `CORE_DUMP.DESCRIZIONE`, in `generatore_artefatti_<lingua>.properties`.
-
-  *Correzione:* avevo scritto che `ConvenzioniDiLocalizzazioneTest` controlla solo i `.properties`. Non è così: `leStringheItalianeNelCodiceNonAumentano` conta le stringhe italiane nel codice, modulo per modulo, e fallisce se il numero supera quello registrato in `localizzazione_baseline.properties`. Queste frasi gli sfuggivano perché sono pezzi corti (`"la Gemma"`, `" del Core Dump"`), che il riconoscitore non prende per frasi.
-- **D5.2 (decisa, vedi l'esito)** Due politiche diverse per una grammatica rotta. `GrammaticaArtefatti.caricaOppureNull` scrive l'errore nel registro e il gioco continua con le tabelle, cioè con nomi più poveri, senza che il giocatore lo sappia. Le grammatiche dei testi invece fermano il gioco con `GrammaticaNonValidaException`. Inoltre `artefatti2.txt` si carica due volte: una in `GrammaticaArtefatti` e una in `ProduttoreDiArtefattiCasuale.AGGIORNAMENTI`. Decide l'utente se una grammatica degli artefatti rotta debba fermare il gioco come le altre.
-- **D5.3** Una riga sbagliata in `leggendari.txt` dà un messaggio che non dice quale riga è. In `OggettoLeggendario` e `LibroTecnico` «Manca il campo X» non ha la riga, e neanche gli errori di `TipoArtefatto.valueOf`, `Integer.parseInt` e `Double.parseDouble`. `SetLeggendario` invece la mette. Si risolve con F5.1.
-- **D5.4** In `CostruttoreArtefatto.StepDanniBase.setDanniBase(int livello)` (e nell'implementazione) il parametro si chiama `livello` ma sono i danni: un nome che inganna. Da rinominare in `danni`.
-- **D5.5** `GeneratoreArtefattiTabelle` usa numeri senza nome per il bilanciamento: il costo di partenza `5 + 5 * livello`, il `5.0 * livello` per cento di parata, resistenza magica e potere magico (in tre punti), lo scarto `nextInt(3) - 1`. Eppure accanto c'è `CostantiArtefatti`, che esiste proprio per questi valori. La regola del progetto (niente valori magici) li vuole lì, con un nome.
-
-**Parti in comune**
-
-- **F5.1** `OggettoLeggendario`, `LibroTecnico` e `SetLeggendario` leggono ognuno a modo suo le stesse righe `CHIAVE=valore;CHIAVE=valore`: dividono sul `;`, controllano l'`=`, rifiutano i campi sconosciuti e quelli ripetuti, hanno ciascuno il proprio `obbligatorio`. Una piccola classe `RigaDiCampi` nel pacchetto `leggendari` farebbe tutto questo una volta, con i metodi `obbligatorio(chiave)`, `facoltativo(chiave)` e `ripetuti(chiave)`, e con messaggi che dicono sempre la riga (D5.3). Si risparmiano circa 60 righe.
-- **F5.2** `ProduttoreDiArtefattiCasuale` ripete cinque volte `.get().produci(X).get(0).trim()`: è `GrammaticaPigra.riga(X)`, nato al passo 2.
-- **F5.3** `LibroTecnico.getTitoloDaLeggere` mette la maiuscola a mano. `ArtefattoMD.normalizzaNomeProprio` la mette a ogni parola, e può usare `Maiuscole.inizialeMaiuscola` su ciascuna.
-- *Non vale la pena:* `GrammaticaArtefatti.esisteRadice` usa un'eccezione come domanda. Funziona, è commentato, e si chiama solo al caricamento.
-
-**Pezzi che andrebbero riscritti:** nessuno. `RegoleIncantatura.piano` è il pezzo più difficile del modulo, ma è corto: ora ha un commento che spiega l'idea.
-
-**Commenti aggiunti**
-
-- `CostruttoreArtefatto`: come funziona il costruttore a passi.
-- `Artefatto.da`: il cast.
-- `RegoleIncantatura.piano`: la fila degli effetti per prezzo, e l'`indexOf` per identità.
-- `GeneratoreArtefattiTabelle`: lo scarto dei danni, l'uno su tre degli incantamenti, l'indice unico degli ingredienti.
-- `GrammaticaArtefatti`: l'eccezione usata come domanda.
-- `GradoIncantamento`: l'ordine delle costanti conta.
-- `TipoRaritaArtefatto`: la formula degli effetti massimi, con esempi.
-- `OggettoLeggendario`: il ramo dell'arma nel costruttore.
-- `IncantamentoMD`: i commenti dei campi erano scomposti, su righe a sé.
-
-**Giudizio**
-
-Un modulo ben progettato, il più ricco visto finora:
+**Giudizio.** Il modulo più ricco visto finora, e ben progettato:
 - gli artefatti non sanno che esiste un mondo, perché ricevono il livello come parametro;
-- le regole della fusione sono funzioni pure, che il motore e la UI interrogano senza cambiare niente (il `Piano`);
+- le regole della fusione sono funzioni pure, che restituiscono un `Piano` senza cambiare niente;
 - il costruttore a passi rende impossibile un artefatto senza nome;
-- i leggendari e i set sono dati, controllati per intero al caricamento, con messaggi chiari (set con meno di due pezzi, pezzi che non si possono indossare insieme).
+- i leggendari e i set sono dati, controllati per intero al caricamento, con messaggi che dicono la riga sbagliata.
 
 Per un neofita le parti dure sono `RegoleIncantatura.piano`, il costruttore a passi e le tabelle del generatore: ora sono commentate.
 
-Difetti:
-- **D5.1 è un difetto vero per chi gioca in inglese**: testi italiani scritti nel codice.
-- D5.5 è la regola dei valori magici non rispettata proprio accanto alla classe delle costanti.
-- Tre parser della stessa sintassi (F5.1).
-- Come altrove, lo stato statico (i cataloghi, `SpadaNormalmenteNascosta.fonteDelLivello`) è comodo ma va azzerato a mano nei test, e il rientro mescola tab e spazi.
+**Aperto:**
+- `GeneratoreArtefattiTabelle` ha una tabella dei pesi (`PESI`) che deve coprire ogni `TipoArtefatto`: un tipo nuovo senza peso darebbe una `NullPointerException` alla prima generazione. Oggi tutti i 24 tipi ce l'hanno. Un test che lo controlli renderebbe esplicito il vincolo.
 
-### 11.5 Proposte che toccano più moduli
+### 11.5 Decisioni prese (da non riproporre)
 
-Le fattorizzazioni che spostano codice fra moduli si raccolgono qui, con i passi che le hanno trovate, e si decidono a parte.
-
-- **X1 `TipoEvento` (passo 1) — decisa: resta.** Per l'utente è il dizionario centralizzato di tutti i tipi di evento del gioco, e potrà servire ancora; il suo Javadoc ora lo dice. L'enum ha 134 costanti, una per classe di evento, e ogni evento la passa al costruttore di `EventoBase`. Il bus però smista per classe, e il tipo lo legge solo `SnifferBusEventi` (`13-foresta-app-swing`) per scriverlo nel registro, dove basterebbe `evento.getClass().getSimpleName()`. Toglierlo vorrebbe dire eliminare un'enum di 570 righe e un argomento dai costruttori di circa 134 classi, in quasi tutti i moduli. In cambio, aggiungere un evento costerebbe un passo in meno (oggi va aggiunta anche la costante). Si perderebbero i commenti di una riga di ogni costante, che però ripetono il Javadoc delle classi, e il raggruppamento per famiglia, che dicono già i sottopacchetti `comandigiocatore`, `notifiche`, `richieste` e `interni`.
-- **X2 La maiuscola iniziale (passo 2) — fatta:** ora c'è `strumenti.Maiuscole.inizialeMaiuscola`. «Il primo carattere in maiuscolo, il resto com'è» è scritto sei volte: `Articoli.inizialeMaiuscola`, `LinguaInglese.inizialeMaiuscola` e `GestoreGrammatiche.capitalizeFirstLetter` (`01-foresta-testi`), `NotificaDiTesto.conInizialeMaiuscola` (`01-foresta-eventi`), `IncaricoInCitta` (`09-foresta-missioni`) e `RivelazioneDellArtefatto` (`12-foresta-ui-comune`). `01-foresta-eventi` non vede `01-foresta-testi`, perché sono allo stesso livello: l'unico posto che vedono tutti è `00-foresta-strumenti`, per esempio una classe `strumenti.Maiuscole` con un metodo statico. Le varianti hanno differenze minime (alcune lasciano com'è un testo che comincia già in maiuscolo, altre accettano null) che si possono unire senza cambiare il comportamento. È una fattorizzazione piccola ma tocca quattro moduli.
+- **`TipoEvento` resta** (passo 1): per l'utente è il dizionario centralizzato di tutti i tipi di evento, e potrà servire ancora, anche se oggi lo legge solo il registro.
+- **I messaggi d'errore di `GestoreGrammatiche` restano in inglese** (passo 2): li legge chi modifica le grammatiche, che può non sapere l'italiano. È scritto in `GestoreGrammatiche.md` §9.
+- **Le produzioni derivate (`NOME = ALTRA`) restano nella sintassi** (passo 2): sono state corrette, non tolte, anche se oggi nessuna grammatica del gioco le usa.
+- **`Comando.RUTTOLOMEO` e `STORPSGORBLIN` restano** (passo 3), con le loro icone: sono rimanenze storiche a cui l'utente è affezionato.
+- **Una qualsiasi grammatica rotta impedisce al gioco di partire** (passo 5), e `TutteLeGrammaticheTest` le carica tutte, in ogni lingua, prima che si costruisca il jar.
 
 ## Osservazioni
 
