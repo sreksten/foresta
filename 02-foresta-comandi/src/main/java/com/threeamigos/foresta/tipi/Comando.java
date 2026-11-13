@@ -228,25 +228,14 @@ public enum Comando {
 	 *
 	 * @throws IllegalArgumentException se la posizione non è fra 0 e 7
 	 */
+	// Questo metodo, getIndicePersonaggio e isPersonaggio contano sul fatto che PERSONAGGIO_1 ... PERSONAGGIO_8 siano scritti
+	// uno dopo l'altro nell'enum: l'ordine delle costanti qui sopra non si cambia
 	public static Comando ofPersonaggio(int personaggio) {
-		if (personaggio == 0) {
-			return PERSONAGGIO_1;
-		} else if (personaggio == 1) {
-			return PERSONAGGIO_2;
-		} else if (personaggio == 2) {
-			return PERSONAGGIO_3;
-		} else if (personaggio == 3) {
-			return PERSONAGGIO_4;
-		} else if (personaggio == 4) {
-			return PERSONAGGIO_5;
-		} else if (personaggio == 5) {
-			return PERSONAGGIO_6;
-		} else if (personaggio == 6) {
-			return PERSONAGGIO_7;
-		} else if (personaggio == 7) {
-			return PERSONAGGIO_8;
+		int ultimo = PERSONAGGIO_8.ordinal() - PERSONAGGIO_1.ordinal();
+		if (personaggio < 0 || personaggio > ultimo) {
+			throw new IllegalArgumentException("Posizione nel gruppo " + personaggio + ": vale da 0 a " + ultimo);
 		}
-		throw new IllegalArgumentException();
+		return values()[PERSONAGGIO_1.ordinal() + personaggio];
 	}
 
 	/**

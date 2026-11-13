@@ -68,5 +68,6 @@ Come i modificatori si sommano e si applicano agli attributi lo decide `Personag
 
 ## Osservazioni
 
-- I pacchetti `attributi.tipi` e `modificatori.tipi` contengono solo un `package-info`: i tipi veri stanno nel pacchetto `com.threeamigos.foresta.tipi`, come per tutti i moduli.
+- I tipi stanno nel pacchetto `com.threeamigos.foresta.tipi`, come per tutti i moduli: `TipoAttributo` e `CategoriaAttributo` (gli attributi), `TipoModificatore`, `UnitaDurataModificatore` e `BersaglioModificatore` (come cambia un attributo, per quanto tempo e su chi).
+- Un primario negativo (un modificatore può portarcelo) conta come 0 nelle formule dei secondari: la radice di un negativo non esiste, e senza questa regola tutto il secondario varrebbe 0.
 - Le formule dei secondari sono costanti dentro i metodi: per ritarare il bilanciamento di un secondario si tocca qui, non nelle costanti dei personaggi (che hanno invece i moltiplicatori di classe).

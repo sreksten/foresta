@@ -37,4 +37,4 @@ Come gli stati si applicano, durano e scadono in combattimento sta in `06-forest
 ## Osservazioni
 
 - Il modulo è piccolo di proposito: tenerlo separato dai danni evita un ciclo (i danni citano gli stati che possono causare; gli stati non citano i danni, che si ritrovano nelle reazioni in `03-foresta-danni`).
-- Il pacchetto `effettidistato.tipi` contiene solo un `package-info`: l'enum sta, come per ogni modulo, in `com.threeamigos.foresta.tipi`.
+- L'enum sta, come per ogni modulo, in `com.threeamigos.foresta.tipi`.

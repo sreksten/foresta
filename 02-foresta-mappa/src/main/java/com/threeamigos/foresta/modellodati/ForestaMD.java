@@ -272,7 +272,7 @@ public class ForestaMD implements Serializzabile {
 	 * Segna la casella come visitata o, con <code>false</code>, toglie il segno. Cambia la versione della mappa.
 	 */
 	public final void impostaLocazioneVisitata(CoordinateMD coordinate, boolean visitata) {
-		LocazioneMD locazioneMD = ottieniLocazioneMD(coordinate);
+		LocazioneMD locazioneMD = casellaCostruita(coordinate.getX(), coordinate.getY());
 		if (visitata) {
 			locazioneMD.aggiungiProprieta(LocazioneMD.VISITATA, LocazioneMD.AFFERMATIVO);
 		} else {
@@ -285,7 +285,7 @@ public class ForestaMD implements Serializzabile {
 	 * Se il gruppo è già passato da quella casella.
 	 */
 	public final boolean isLocazioneVisitata(CoordinateMD coordinate) {
-		return ottieniLocazioneMD(coordinate).ottieniProprieta(LocazioneMD.VISITATA) != null;
+		return casellaCostruita(coordinate.getX(), coordinate.getY()).ottieniProprieta(LocazioneMD.VISITATA) != null;
 	}
 
 	/**
@@ -300,7 +300,7 @@ public class ForestaMD implements Serializzabile {
 	 * Se il gruppo sa cosa c'è in quella casella.
 	 */
 	public final boolean isLocazioneConosciuta(CoordinateMD coordinate) {
-		return ottieniLocazioneMD(coordinate).ottieniProprieta(LocazioneMD.CONOSCIUTA) != null;
+		return casellaCostruita(coordinate.getX(), coordinate.getY()).ottieniProprieta(LocazioneMD.CONOSCIUTA) != null;
 	}
 
 	/**
@@ -320,6 +320,8 @@ public class ForestaMD implements Serializzabile {
 	 * L'indice della casella nell'array. Una posizione fuori dalla mappa (o su una mappa non ancora preparata con
 	 * {@link #reimposta}) è un errore: senza il controllo una colonna oltre il bordo finirebbe nella riga dopo.
 	 */
+	// La griglia sta in un array a una dimensione, riga dopo riga: la casella (x, y) è la numero x + y * larghezza.
+	// Per esempio in una mappa larga 20 la casella (3, 2) è la 43 (due righe intere da 20, più 3)
 	private int offset(int x, int y) {
 		if (x < 0 || x >= dimensioneX || y < 0 || y >= dimensioneY) {
 			throw new IllegalArgumentException("Posizione (" + x + ", " + y + ") fuori dalla mappa " + dimensioneX + "x" + dimensioneY);
@@ -327,8 +329,19 @@ public class ForestaMD implements Serializzabile {
 		return x + y * dimensioneX;
 	}
 
+	// La casella, che deve esistere: durante la costruzione della Foresta le caselle non ancora assegnate sono null, e
+	// segnarle come visitate o conosciute è un errore di chi costruisce (vedi GeneratoreDellaForesta, che posa il bosco
+	// prima di mettere il gruppo sulla mappa)
+	private LocazioneMD casellaCostruita(int x, int y) {
+		LocazioneMD locazioneMD = arrayLocazioni[offset(x, y)];
+		if (locazioneMD == null) {
+			throw new IllegalStateException("La casella (" + x + ", " + y + ") non è ancora stata costruita");
+		}
+		return locazioneMD;
+	}
+
 	private void impostaLocazioneConosciuta(int x, int y) {
-		arrayLocazioni[offset(x, y)].aggiungiProprieta(LocazioneMD.CONOSCIUTA, LocazioneMD.AFFERMATIVO);
+		casellaCostruita(x, y).aggiungiProprieta(LocazioneMD.CONOSCIUTA, LocazioneMD.AFFERMATIVO);
 		aggiornaEstremiConosciuti(x, y);
 		versioneMappa = ULTIMA_VERSIONE_MAPPA.incrementAndGet();
 	}
@@ -364,8 +377,8 @@ public class ForestaMD implements Serializzabile {
 				posizioneDelGruppo.getY()));
 		campi.addAll(cittaDistrutte);
 		stampaRiga(stream, campi);
-		for (LocazioneMD locazioneMD : arrayLocazioni) {
-			locazioneMD.salva(stream);
+		for (int indice = 0; indice < arrayLocazioni.length; indice++) {
+			casellaCostruita(indice % dimensioneX, indice / dimensioneX).salva(stream);
 		}
 	}
 

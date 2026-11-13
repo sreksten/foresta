@@ -33,6 +33,7 @@ public final class GeneratoreDellaForesta {
                 numeroCitta++;
             }
         }
+        // ">> 2" sposta i bit di due posti a destra: è la divisione intera per 4 (">> 1" più sotto è la divisione per 2)
         int numeroLocandeMax = Math.max(personaggiDisponibili, (dimensioneX + dimensioneY) >> 2);
         List<ProduttoreDiLocandeCasuale.DatiLocanda> poolDatiLocanda = ProduttoreDiLocandeCasuale.getDatiLocanda(numeroCitta + numeroLocandeMax);
 
@@ -66,6 +67,8 @@ public final class GeneratoreDellaForesta {
      * Le città, una per quadrante (in ordine casuale).
      */
     private static void costruisciLeCitta(List<ProduttoreDiLocandeCasuale.DatiLocanda> poolDatiLocanda, PopolatoreDellaForesta popolatore) {
+        // Una città per quadrante, così sono sparse per la mappa: le città sono quattro come i quadranti, e una quinta città
+        // non troverebbe un quadrante libero
         List<Quadrante> quadranti = Quadrante.inOrdineCasuale();
         for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
             if (tipoLocazione.getCategoriaLocazione() == CategoriaLocazione.CITTA) {

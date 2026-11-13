@@ -358,13 +358,13 @@ In ordine di livello. Le righe sono quelle di `wc -l` su `src/main/java` al 2026
 | ---: | :--- | :--- | ---: | :--- |
 | 1 | `00-foresta-serializzazione`, `00-foresta-strumenti`, `01-foresta-eventi`, `01-foresta-punteggi` | tutto | 2.700 | fatto il 2026-11-13, proposte applicate |
 | 2 | `01-foresta-testi` | tutto (`GestoreGrammatiche`, già `GrammarBean`, da solo fa 2.600 righe) | 4.600 | fatto il 2026-11-13, proposte applicate |
-| 3 | `02-foresta-attributi`, `02-foresta-comandi`, `02-foresta-effettidistato`, `02-foresta-mappa` | tutto | 3.600 | da fare |
+| 3 | `02-foresta-attributi`, `02-foresta-comandi`, `02-foresta-effettidistato`, `02-foresta-mappa` | tutto | 3.600 | fatto il 2026-11-13, proposte applicate (D3.2 al passo 9) |
 | 4 | `02-foresta-notizie`, `03-foresta-danni`, `03-foresta-tutorial` | tutto | 1.550 | da fare |
 | 5 | `04-foresta-artefatti` | tutto | 5.250 | da fare |
 | 6 | `05-foresta-personaggi` | `tipi` (con `CostantiPersonaggi`), `modellodati`, `interfacce`, `eventi` | 5.700 | da fare |
 | 7 | `05-foresta-personaggi` | `personaggi`: i meccanismi (`PersonaggioBase`, `Personaggio`, `SaluteEMorte`, `EffettiDiStato`, `ModificatoriTemporanei`, `AttributiSecondari`, `CaricoEInventario`, `GestoreProgressione`, `Progressione`, `RegoleEquipaggiamento`, `CalcolatoreRiposo`, `RisultatoRiposo`, `FabbricaPersonaggi`, `EquipaggiamentoIniziale`, `LanciatoreDeiDadi`, `MoltiplicatoriDiClasse`, `NomeEDescrizione`, `ArmaNaturale`, `PersonaggioNonCombattente`) e `gruppi` | 5.500 | da fare |
 | 8 | `05-foresta-personaggi` | `personaggi`: le classi dei personaggi e dei mostri (tutti gli altri file, da `Alchimista` a `Viverna`): **qui le parti in comune sono il tema principale** (sono una sessantina di classi corte e simili: se non basta una sessione, A–L e M–Z) | 7.550 | da fare |
-| 9 | `06-foresta-bestiario`, `06-foresta-combattimento`, `06-foresta-statistiche` | tutto | 4.000 | da fare |
+| 9 | `06-foresta-bestiario`, `06-foresta-combattimento`, `06-foresta-statistiche` | tutto; **in più (dal passo 3, D3.2): riscrivere i Javadoc delle costanti di `TipoAttributo` (`02-foresta-attributi`) con quello che ogni attributo fa davvero, leggendone gli usi nel combattimento, e togliere l'avviso in testa all'enum** | 4.000 | da fare |
 | 10 | `07-foresta-intermezzi`, `07-foresta-mondo` | tutto | 4.600 | da fare |
 | 11 | `07-foresta-poteri` | tutto | 3.600 | da fare |
 | 12 | `08-foresta-bottino`, `08-foresta-economia` | tutto | 3.350 | da fare |
@@ -535,6 +535,77 @@ Letti per intero i 26 file (4.600 righe, di cui 2.563 di `GestoreGrammatiche`), 
 I sette produttori di testi sono semplici ma ripetitivi (F2.4).
 
 In ordine di valore per il lettore: F2.4, F2.2 e F2.3 (piccoli e sicuri), poi D2.1 e la decisione su D2.2/D2.3, poi F2.1. R2.1 è il cambiamento più utile per un neofita, ma anche il più costoso.
+
+#### Passo 3: `02-foresta-attributi`, `02-foresta-comandi`, `02-foresta-effettidistato`, `02-foresta-mappa` (2026-11-13)
+
+Letti per intero i 34 file (3.600 righe), seguendo i chiamanti nei moduli sopra dove serviva (`AttributiSecondari` in `05-foresta-personaggi` per gli attributi, i chiamanti di `Comando` e della mappa). Test dei quattro moduli verdi dopo i commenti.
+
+**Esito (2026-11-13):** applicate:
+- **D3.1:** `CalcolatoreAttributiSecondari.radice`, per cui un primario negativo conta come 0, anche nel carico. C'è un test;
+- **N3.1:** `ForestaMD.casellaCostruita` dà un `IllegalStateException` che nomina la casella, al posto della `NullPointerException`. C'è un test. Il test «nessuna casella vuota dopo la generazione» c'era già (`GeneratoreDellaForestaTest`);
+- **D3.6**;
+- **F3.1**, tutte e due le metà: `variazione` e `tempo` in `TestoDeiModificatori`;
+- **F3.2:** `Comando.ofPersonaggio` in due righe;
+- **F3.3:** le costanti di `Direzioni`;
+- **D3.3:** tolti i quattro `package-info` dei pacchetti vuoti. Il loro contenuto è nei documenti dei moduli, e il riferimento in `CLAUDE.md` è corretto.
+
+**D3.4 resta così, per decisione dell'utente:** `RUTTOLOMEO` e `STORPSGORBLIN` sono rimanenze storiche a cui è affezionato. **D3.2 è spostato al passo 9**, scritto nella sua riga della tabella del §11.3. Su richiesta successiva dell'utente, il campo `valore` di `EffettoDiStatoMD` è diventato `durata`. Sono verdi tutti i test del progetto: 3.764, di cui 37 saltati.
+
+**`NullPointerException` possibili**
+
+- *Certi:* nessuno.
+- *Plausibili:*
+  - **N3.1** `ForestaMD`: `impostaLocazioneVisitata`, `isLocazioneVisitata`, `isLocazioneConosciuta`, l'`impostaLocazioneConosciuta` privata e `salva` leggono la casella senza controllare che esista. Durante la costruzione le caselle non ancora assegnate sono null (lo dicono `ottieniTipoLocazione` e `Foresta.nomeNuovo`, che le controllano). Oggi `GeneratoreDellaForesta` riempie di bosco ogni casella vuota prima di mettere il gruppo sulla mappa, e lo dice in un commento. Chi spostasse quel passo, o chiamasse `Foresta.setPosizioneDelGruppo` durante la costruzione, avrebbe una `NullPointerException`. Una casella rimasta vuota farebbe fallire anche il salvataggio. Proposta: o un controllo con un messaggio chiaro («casella (x, y) non ancora costruita»), o un test che dopo `genera` nessuna casella sia null.
+  - **N3.2** `Foresta.getNomeDaMostrare` e `Foresta.nomeDelTempio(CoordinateMD)` usano `getLocazioneMD(…)` senza controllo: hanno lo stesso presupposto di N3.1 (a partita avviata tutte le caselle esistono).
+- *Controllati e scartati:*
+  - **N1.2 del passo 1** (un valore null in `MappaProprieta.salva`) per le caselle: `LocazioneMD.aggiungiProprieta` passa da `pulisciValore`, che rifiuta il null, e `setNome` toglie la proprietà invece di metterci null. Le chiavi sono costanti. Resta da vedere `MissioneMD` (passo 14).
+  - `TestoDeiModificatori.nota(null)`: la nota di un modificatore non è mai null (il costruttore la porta a "").
+  - `Comando.getDescrizione()` null: in `BarraIcone` si concatena solo per i comandi in ricarica, che hanno tutti una descrizione (da ricontrollare al passo 26).
+
+**Altri difetti**
+
+- **D3.1 (confermato nel codice)** `CalcolatoreAttributiSecondari` fa la radice quadrata dei primari, e `AttributiSecondari.quantitaModificata` (`05-foresta-personaggi`) li somma ai modificatori senza un limite in basso. Un primario portato sotto zero (Forza 5 con un −10, o una percentuale oltre −100%) dà `NaN`, «non un numero», e il cast `(int)` lo trasforma in 0. Così **l'intero secondario vale 0**, anche se l'altro primario è alto: per esempio la parata con Forza −5 e Destrezza 30. Proposta: in `grezzo` contare un primario negativo come 0, cioè `Math.sqrt(Math.max(0, primario))`. È una riga, ma cambia il comportamento.
+- **D3.2** I Javadoc delle costanti di `TipoAttributo` descrivono meccaniche che il gioco non ha: lo scudo di mana di MAGIA, la sopravvivenza a 1 punto vita di FORTUNA, l'attacco furtivo di FURTIVITA, la schivata, il costo in vigore della STANCHEZZA. Ho cercato nel codice e non c'è niente del genere. Per un neofita è la cosa più fuorviante del passo, e ho aggiunto un avviso in testa all'enum. Proposta: riscrivere ogni costante con quello che fa davvero, da fare al passo 9 (combattimento), quando si leggono gli usi. Le descrizioni per il giocatore (`tipo_attributo_it.properties`) sono brevi e corrette.
+- **D3.3** Pacchetti che contengono solo il `package-info.java`: `attributi.tipi`, `modificatori.tipi`, `effettidistato.tipi` e `artefatti.tipi` (quest'ultimo del passo 5). Sono quel che resta di quando i tipi stavano in un pacchetto per modulo. Descrivono classi che stanno in `tipi`, e un neofita li apre e li trova vuoti. Proposta: portare il loro testo nel documento del modulo e toglierli. È una cancellazione: decide l'utente.
+- **D3.4** `Comando.RUTTOLOMEO` e `STORPSGORBLIN`, «vecchi comandi non più in uso», hanno ancora un'icona in `TipoIcona` e due immagini. `Comando.of(int)` lo usano solo i test. Anche qui togliere è una cancellazione.
+- **D3.5** `GeneratoreDellaForesta` mette una città per quadrante: le città sono 4 come i quadranti, e con una quinta città `quadranti.remove(0)` darebbe un errore di indice. `Foresta.getCoordinateLibere` e `GeneratoreDellaForesta.getCoordinateLibere` girano all'infinito se non c'è più una casella libera. Con le dimensioni di oggi (20×20) non succede. Ho messo un commento accanto alle città.
+- **D3.6** Il Javadoc di `Foresta.getVarianteDelBosco` parla di un «bosco creato prima che questa proprietà esistesse»: è storia, e i salvataggi non devono restare compatibili. Il ripiego a 1 si può tenere, ma va detto per che cosa serve davvero (una casella costruita a mano dai test).
+
+**Parti in comune**
+
+- **F3.1** `TestoDeiModificatori.durata` e `durataResidua` sono lo stesso `switch` con un prefisso diverso (`DURATA_` / `RESIDUO_`): un metodo privato con il prefisso li riduce a una riga ciascuno. Allo stesso modo `effetto` e `breve` scrivono il valore con lo stesso `switch`.
+- **F3.2** `Comando.ofPersonaggio` è una catena di otto `if` che si può scrivere in due righe (`values()[PERSONAGGIO_1.ordinal() + posizione]`, con il controllo dell'intervallo).
+- **F3.3** `Direzioni` usa i numeri 6 (caselle al giorno), 36, 50 e 4 senza nome. La regola del progetto (niente valori magici) chiede costanti con nome, per esempio `CASELLE_AL_GIORNO`. Ho aggiunto i commenti, ma le costanti sarebbero meglio.
+- *Non vale la pena:* i quattro `getMaxPassiX`/`muoveX` di `Foresta` sono già fattorizzati su `getMaxPassi(dx, dy)` e `muove(dx, dy)`.
+
+**Pezzi che andrebbero riscritti**
+
+- `EffettoDiStatoMD` chiama `valore` la durata (e `getDurata` lo restituisce): rinominare il campo privato in `durata` è sicuro e toglie un inciampo. Intanto l'ho commentato.
+- `TipoAttributo` (D3.2).
+
+**Commenti aggiunti**
+
+- `TipoAttributo`: l'avviso sui Javadoc che non descrivono il codice.
+- `CalcolatoreAttributiSecondari`: la radice di un negativo.
+- `TestoDeiModificatori`: `%+d`.
+- `ModificatoreAttributoMD`: la condizione del costruttore.
+- `EffettoDiStatoMD`: il campo `valore`.
+- `Comando`: l'ordine delle costanti `PERSONAGGIO_n` non si cambia.
+- `RichiestaConComandi`: diceva «astratta» e non lo è.
+- `ForestaMD`: la griglia in un array, con un esempio.
+- `GeneratoreDellaForesta`: `>> 2` e `>> 1` sono divisioni per 4 e per 2; una città per quadrante.
+- `Direzioni`: la distanza a piedi, la regola delle direzioni oblique, le 6 caselle al giorno.
+- `Foresta`: come si contano i passi; il commento sulla posizione del gruppo, che era finito sopra il metodo sbagliato.
+- `Quadrante`: il `- 1`.
+
+**Giudizio**
+
+Moduli piccoli e ordinati, con una buona separazione: il calcolo degli attributi non sa chi li possiede, la mappa non sa chi costruisce il mondo (riceve un `PopolatoreDellaForesta`), i dati prendono il fornitore dall'esterno.
+
+- **Il difetto più serio è D3.1**: un caso limite, ma che dà un risultato assurdo (una parata nulla) senza nessun errore.
+- **La cosa più dannosa per chi legge è D3.2**: Javadoc che promettono meccaniche inesistenti. Un neofita che studia `TipoAttributo` impara un gioco che non c'è.
+- La mappa è chiara, ma conta su presupposti non scritti nel codice: tutte le caselle esistono (N3.1), quattro città per quattro quadranti (D3.5). Andrebbero resi espliciti con un controllo o un test.
+- Restano alcuni residui (D3.3, D3.4) e numeri senza nome (F3.3, e gli spostamenti di bit nel generatore).
 
 ### 11.5 Proposte che toccano più moduli
 

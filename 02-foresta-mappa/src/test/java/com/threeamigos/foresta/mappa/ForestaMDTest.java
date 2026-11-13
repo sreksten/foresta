@@ -241,4 +241,15 @@ class ForestaMDTest {
         assertEquals(minY, foresta.getMinYConosciuta(), "minY");
         assertEquals(maxY, foresta.getMaxYConosciuta(), "maxY");
     }
+
+    @Test
+    void unaCasellaNonAncoraCostruitaDaUnErroreChiaro() {
+        ForestaMD dati = new ForestaMD();
+        dati.reimposta(3, 3);
+        CoordinateMD vuota = new CoordinateMD(1, 2);
+        IllegalStateException errore = assertThrows(IllegalStateException.class, () -> dati.impostaLocazioneConosciuta(vuota));
+        assertTrue(errore.getMessage().contains("(1, 2)"), errore.getMessage());
+        assertThrows(IllegalStateException.class, () -> dati.isLocazioneVisitata(vuota));
+        assertNull(dati.ottieniLocazioneMD(vuota), "chi vuole solo guardare una casella riceve null, come prima");
+    }
 }

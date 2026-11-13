@@ -66,6 +66,7 @@ public class ModificatoreAttributoMD {
     public ModificatoreAttributoMD(TipoAttributo tipoAttributo, TipoModificatore tipoModificatore,
                                  double quantita, String note, UnitaDurataModificatore unitaDurata, int durata,
                                  BersaglioModificatore bersaglio, boolean rimovibile) {
+        // È un errore se è permanente ma ha una durata, o se è a tempo ma la sua durata è finita
         if (unitaDurata == UnitaDurataModificatore.PERMANENTE ? durata != 0 : durata < 1) {
             throw new IllegalArgumentException("Un modificatore permanente ha durata 0, uno a tempo almeno 1: "
                     + unitaDurata + " " + durata);

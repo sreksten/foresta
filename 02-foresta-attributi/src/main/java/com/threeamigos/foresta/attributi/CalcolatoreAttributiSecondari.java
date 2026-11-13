@@ -27,7 +27,16 @@ public final class CalcolatoreAttributiSecondari {
      * Una somma pesata delle radici dei due attributi di partenza: la base di tutte le formule tranne il carico.
      */
     private static double grezzo(double pesoPrincipale, int principale, double pesoSecondario, int secondario) {
-        return pesoPrincipale * Math.sqrt(principale) + pesoSecondario * Math.sqrt(secondario);
+        return pesoPrincipale * radice(principale) + pesoSecondario * radice(secondario);
+    }
+
+    /**
+     * La radice quadrata di un primario, che conta come 0 se è negativo. Un modificatore può portare un primario sotto zero
+     * (Forza 5 con un -10), e la radice di un negativo non esiste: {@code Math.sqrt} darebbe NaN ("non un numero"), il cast a
+     * intero lo trasformerebbe in 0 e tutto il secondario varrebbe 0, anche con l'altro primario alto.
+     */
+    private static double radice(int primario) {
+        return Math.sqrt(Math.max(0, primario));
     }
 
     /**
@@ -156,6 +165,6 @@ public final class CalcolatoreAttributiSecondari {
         }
         final double PESO_PER_RADICE_FORZA = 12.0;
         final double PESO_PER_RADICE_COSTITUZIONE = 6.0;
-        return (PESO_PER_RADICE_FORZA * Math.sqrt(forza) + PESO_PER_RADICE_COSTITUZIONE * Math.sqrt(costituzione)) * moltiplicatore;
+        return (PESO_PER_RADICE_FORZA * radice(forza) + PESO_PER_RADICE_COSTITUZIONE * radice(costituzione)) * moltiplicatore;
     }
 }

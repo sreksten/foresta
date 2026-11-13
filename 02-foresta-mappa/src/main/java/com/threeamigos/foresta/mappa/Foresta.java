@@ -94,7 +94,7 @@ public class Foresta {
 	}
 
 	/**
-	 * L'indice (1-based) della variante scelta per questo bosco, o 1 se manca (bosco creato prima che questa proprietà esistesse).
+	 * L'indice (1-based) della variante scelta per questo bosco, o 1 se manca (una casella di bosco messa a mano, per esempio nei test, senza passare da {@link #impostaVarianteDelBoscoACaso}).
 	 */
 	public static int getVarianteDelBosco(LocazioneMD modelloDati) {
 		String valore = modelloDati.ottieniProprieta(VARIANTE_BOSCO);
@@ -393,8 +393,6 @@ public class Foresta {
 		ottieniMappaZona(daX, daY, aX, aY);
 	}
 
-	// La posizione del gruppo del giocatore: il gruppo non sa dove sta, lo sa la mappa
-
 	/**
 	 * Se quella città è stata distrutta (dal Drago, vedi LineaTemporale).
 	 *
@@ -418,6 +416,8 @@ public class Foresta {
 		}
 		getForestaMD().addCittaDistrutta(citta);
 	}
+
+	// La posizione del gruppo del giocatore: il gruppo non sa dove sta, lo sa la mappa
 
 	/**
 	 * La casella su cui si trova il gruppo del giocatore.
@@ -491,6 +491,8 @@ public class Foresta {
 		return getMaxPassi(-1, 0);
 	}
 
+	// dx e dy dicono la direzione (per esempio 0 e -1 è il nord). Si prova un passo alla volta: ci si ferma al bordo della
+	// mappa, o sulla prima casella che non è bosco né radura (il gruppo ci entra e lì si ferma)
 	private static int getMaxPassi(int dx, int dy) {
 		CoordinateMD posizione = getPosizioneDelGruppo();
 		int x = posizione.getX();

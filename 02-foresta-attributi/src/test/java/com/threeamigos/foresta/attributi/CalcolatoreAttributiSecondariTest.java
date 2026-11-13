@@ -109,4 +109,13 @@ class CalcolatoreAttributiSecondariTest {
         assertEquals(179.4, CalcolatoreAttributiSecondari.potenzialeDiCarico(81, 25, 1.3), 1e-9);  // (12*9 + 6*5) * 1,3
         assertEquals(148.2, CalcolatoreAttributiSecondari.potenzialeDiCarico(25, 81, 1.3), 1e-9);  // (12*5 + 6*9) * 1,3
     }
+
+    @Test
+    void unPrimarioNegativoContaComeZeroENonAzzeraIlSecondario() {
+        // Forza portata sotto zero da un modificatore: conta solo la Destrezza, come con Forza 0
+        assertEquals(CalcolatoreAttributiSecondari.parata(0, 30, 1.0), CalcolatoreAttributiSecondari.parata(-5, 30, 1.0));
+        assertTrue(CalcolatoreAttributiSecondari.parata(-5, 30, 1.0) > 0);
+        assertEquals(CalcolatoreAttributiSecondari.potenzialeDiCarico(0, 16, 1.0),
+                CalcolatoreAttributiSecondari.potenzialeDiCarico(-4, 16, 1.0), 0.0001);
+    }
 }

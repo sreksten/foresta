@@ -78,6 +78,7 @@ public enum Quadrante {
 	/**
 	 * Una casella a caso del quadrante.
 	 */
+	// Il dado dà da 1 a N, le caselle si contano da 0: per questo il - 1
 	public CoordinateMD getCoordinateACaso() {
 		return new CoordinateMD(getMinX() + Dado.tiraAncheAUnaFaccia(getMaxX() - getMinX()) - 1,
 				getMinY() + Dado.tiraAncheAUnaFaccia(getMaxY() - getMinY()) - 1);

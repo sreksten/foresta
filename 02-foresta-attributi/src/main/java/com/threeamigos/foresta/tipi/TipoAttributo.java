@@ -10,6 +10,11 @@ import com.threeamigos.foresta.testi.Testi;
  * <p>
  * I testi di ogni costante (NOME, DESCRIZIONE) non stanno qui ma nel file {@code tipo_attributo_<lingua>.properties}, alla voce
  * {@code COSTANTE.VOCE}, in modo che il gioco si possa tradurre (vedi {@link Testi}).
+ * <p>
+ * <b>Attenzione:</b> le note «In attacco» e «In difesa» di alcune costanti raccontano le intenzioni di progetto, non
+ * quello che il codice fa oggi (per esempio lo scudo di mana di {@link #MAGIA}, la sopravvivenza a 1 punto vita di
+ * {@link #FORTUNA} o l'attacco furtivo di {@link #FURTIVITA} non esistono). Cosa fa davvero un attributo lo dicono i
+ * suoi usi: le formule in {@code CalcolatoreAttributiSecondari} e il combattimento in {@code CalcolatoreCombattimento}.
  *
  * @author Stefano Reksten
  */

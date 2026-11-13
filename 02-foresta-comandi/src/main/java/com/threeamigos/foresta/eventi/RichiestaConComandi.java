@@ -6,8 +6,9 @@ import com.threeamigos.foresta.tipi.Comando;
 import java.util.Collection;
 
 /**
- * Classe base astratta per eventi che accadono all'interno del motore e che richiedono al giocatore
- * di fare una scelta tra un insieme di possibili comandi.
+ * La base degli eventi con cui il motore chiede al giocatore di scegliere fra alcuni comandi (per esempio i pulsanti di
+ * una domanda): la UI mostra le {@link #getPossibilita() possibilità} e risponde con il comando scelto. Sta in questo
+ * modulo, e non negli eventi, perché porta dei {@link Comando}.
  *
  * @author Stefano Reksten
  */

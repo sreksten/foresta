@@ -28,19 +28,8 @@ public final class TestoDeiModificatori {
 	 * L'effetto, per esempio "Fortuna porta a 0" o "Coraggio -20%".
 	 */
 	public static String effetto(ModificatoreAttributoMD modificatore) {
-		int valore = (int) modificatore.getQuantita();
-		String testo;
-		switch (modificatore.getTipoModificatoreAttributo()) {
-			case VARIAZIONE_FISSA:
-				testo = String.format(Locale.ROOT, "%+d", valore);
-				break;
-			case VARIAZIONE_PERCENTUALE:
-				testo = String.format(Locale.ROOT, "%+d%%", valore);
-				break;
-			default:
-				testo = testo("PORTA_A", valore);
-				break;
-		}
+		String variazione = variazione(modificatore);
+		String testo = variazione != null ? variazione : testo("PORTA_A", (int) modificatore.getQuantita());
 		return modificatore.getTipoAttributo().getNome() + " " + testo;
 	}
 
@@ -48,15 +37,24 @@ public final class TestoDeiModificatori {
 	 * Breve, per gli sprite: "Furtività +5", "Coraggio -3", "Coraggio -20%", "Intelligenza a 0".
 	 */
 	public static String breve(ModificatoreAttributoMD modificatore) {
-		int valore = (int) modificatore.getQuantita();
 		String nome = modificatore.getTipoAttributo().getNome();
+		String variazione = variazione(modificatore);
+		return variazione != null ? nome + " " + variazione : testo("BREVE_A", nome, (int) modificatore.getQuantita());
+	}
+
+	/**
+	 * La variazione con il suo segno, "+5" o "-20%"; null per un modificatore che porta l'attributo a un valore, che ogni
+	 * metodo scrive a modo suo. {@code %+d} scrive il numero sempre con il segno, anche quando è positivo.
+	 */
+	private static String variazione(ModificatoreAttributoMD modificatore) {
+		int valore = (int) modificatore.getQuantita();
 		switch (modificatore.getTipoModificatoreAttributo()) {
 			case VARIAZIONE_FISSA:
-				return String.format(Locale.ROOT, "%s %+d", nome, valore);
+				return String.format(Locale.ROOT, "%+d", valore);
 			case VARIAZIONE_PERCENTUALE:
-				return String.format(Locale.ROOT, "%s %+d%%", nome, valore);
+				return String.format(Locale.ROOT, "%+d%%", valore);
 			default:
-				return testo("BREVE_A", nome, valore);
+				return null;
 		}
 	}
 
@@ -64,27 +62,25 @@ public final class TestoDeiModificatori {
 	 * La durata, per esempio "per 3 turni" o "per 1 locazione"; vuota se è permanente.
 	 */
 	public static String durata(ModificatoreAttributoMD modificatore) {
-		int durata = modificatore.getDurata();
-		switch (modificatore.getUnitaDurata()) {
-			case TURNI:
-				return testo(durata == 1 ? "DURATA_TURNO" : "DURATA_TURNI", durata);
-			case LOCAZIONI:
-				return testo(durata == 1 ? "DURATA_LOCAZIONE" : "DURATA_LOCAZIONI", durata);
-			default:
-				return "";
-		}
+		return tempo(modificatore, "DURATA_");
 	}
 
 	/**
 	 * Quanto manca alla fine, per esempio "ancora 3 turni"; vuota se il modificatore è permanente.
 	 */
 	public static String durataResidua(ModificatoreAttributoMD modificatore) {
+		return tempo(modificatore, "RESIDUO_");
+	}
+
+	// La durata in turni o in locazioni, al singolare o al plurale: le chiavi sono il prefisso più TURNO, TURNI, LOCAZIONE o
+	// LOCAZIONI ("DURATA_TURNI" dà "per 3 turni", "RESIDUO_TURNI" dà "ancora 3 turni"); vuota se il modificatore è permanente
+	private static String tempo(ModificatoreAttributoMD modificatore, String prefisso) {
 		int durata = modificatore.getDurata();
 		switch (modificatore.getUnitaDurata()) {
 			case TURNI:
-				return testo(durata == 1 ? "RESIDUO_TURNO" : "RESIDUO_TURNI", durata);
+				return testo(prefisso + (durata == 1 ? "TURNO" : "TURNI"), durata);
 			case LOCAZIONI:
-				return testo(durata == 1 ? "RESIDUO_LOCAZIONE" : "RESIDUO_LOCAZIONI", durata);
+				return testo(prefisso + (durata == 1 ? "LOCAZIONE" : "LOCAZIONI"), durata);
 			default:
 				return "";
 		}

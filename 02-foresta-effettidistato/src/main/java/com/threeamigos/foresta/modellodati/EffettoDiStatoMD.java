@@ -22,7 +22,7 @@ public class EffettoDiStatoMD {
     // Quale stato è
     private final TipoEffettoDiStato tipoEffettoDiStato;
     // La durata rimasta
-    private int valore;
+    private int durata;
     // I danni a ogni scatto del tempo
     private int danniNelTempo;
     // La forza dell'effetto, per gli stati che ne hanno una
@@ -31,18 +31,18 @@ public class EffettoDiStatoMD {
     /**
      * Un effetto senza intensità.
      */
-    public EffettoDiStatoMD(TipoEffettoDiStato tipoEffettoDiStato, int valore, int danniNelTempo) {
-        this(tipoEffettoDiStato, valore, danniNelTempo, 0.0d);
+    public EffettoDiStatoMD(TipoEffettoDiStato tipoEffettoDiStato, int durata, int danniNelTempo) {
+        this(tipoEffettoDiStato, durata, danniNelTempo, 0.0d);
     }
 
     /**
-     * @param valore la durata rimasta
+     * @param durata la durata rimasta
      * @param danniNelTempo i danni a ogni scatto del tempo, 0 per gli stati che non ne fanno
      * @param intensita la forza dell'effetto, 0 per gli stati che non ne hanno
      */
-    public EffettoDiStatoMD(TipoEffettoDiStato tipoEffettoDiStato, int valore, int danniNelTempo, double intensita) {
+    public EffettoDiStatoMD(TipoEffettoDiStato tipoEffettoDiStato, int durata, int danniNelTempo, double intensita) {
         this.tipoEffettoDiStato = tipoEffettoDiStato;
-        this.valore = valore;
+        this.durata = durata;
         this.danniNelTempo = danniNelTempo;
         this.intensita = intensita;
     }
@@ -58,14 +58,14 @@ public class EffettoDiStatoMD {
      * La durata rimasta.
      */
     public int getDurata() {
-        return valore;
+        return durata;
     }
 
     /**
      * Cambia la durata rimasta (a ogni turno scende, e a zero l'effetto finisce).
      */
-    public void setDurata(int valore) {
-    	this.valore = valore;
+    public void setDurata(int durata) {
+    	this.durata = durata;
     }
 
     /**
@@ -104,7 +104,7 @@ public class EffettoDiStatoMD {
     public String comeCampo() {
         return composto(
                 tipoEffettoDiStato,
-                valore,
+                durata,
                 danniNelTempo,
                 intensita);
     }
