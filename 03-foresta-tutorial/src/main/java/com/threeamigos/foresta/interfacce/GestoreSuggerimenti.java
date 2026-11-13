@@ -4,7 +4,7 @@ import com.threeamigos.foresta.modellodati.SuggerimentiMD;
 
 /**
  * Dove sta il tutorial, che vale da una partita all'altra: il motore passa a {@code RegistroSuggerimenti} l'implementazione su file, i test un
- * gestore in memoria. Finché il tutorial non è finito non se ne passa nessuno e non si salva niente.
+ * gestore in memoria (o nessuno, e allora non si salva niente).
  */
 public interface GestoreSuggerimenti {
 

@@ -3,6 +3,9 @@ package com.threeamigos.foresta.tipi;
 import com.threeamigos.foresta.testi.Testi;
 import java.util.*;
 
+import static com.threeamigos.foresta.tipi.TipoDanno.*;
+import static com.threeamigos.foresta.tipi.TipoEffettoDiStato.*;
+
 /**
  * Le reazioni fra un tipo di danno e uno stato del difensore: una reazione scatta se il difensore ha almeno uno degli stati
  * delle precondizioni e riceve uno dei tipi di danno degli innescanti (vedi CalcolatoreCombattimento.interazioniAttive, che
@@ -24,310 +27,158 @@ import java.util.*;
  */
 public enum TipoInterazioneConEffettiDiStato {
 
+    // Ogni reazione ha cinque dati, in quest'ordine: gli stati del difensore che la permettono (ne basta uno), i tipi di
+    // danno che la fanno scattare, il moltiplicatore del danno (1.0 lo lascia com'è), gli stati che toglie al difensore e
+    // quelli che gli mette (nessuno() se non ne toglie o non ne mette). I nomi degli stati e dei danni sono quelli di
+    // TipoEffettoDiStato e di TipoDanno (vedi gli import statici).
+
     // Interazioni con BAGNATO
     // + FULMINE
     /** Se il difensore è {@code BAGNATO} e riceve un danno {@code FULMINE}: il danno si moltiplica per 1,5. */
-    ELETTROCUZIONE(
-            Collections.singletonList(TipoEffettoDiStato.BAGNATO),
-            Collections.singletonList(TipoDanno.FULMINE),
-            1.5d,
-            Collections.emptyList(),
-            Collections.emptyList()),
+    ELETTROCUZIONE(stati(BAGNATO), danni(FULMINE), 1.5d, nessuno(), nessuno()),
     // + GELO
     /** Se il difensore è {@code BAGNATO} e riceve un danno {@code GELO}: perde {@code BAGNATO}; riceve {@code CONGELATO}. */
-    CONGELAMENTO(
-            Collections.singletonList(TipoEffettoDiStato.BAGNATO),
-            Collections.singletonList(TipoDanno.GELO),
-            1.0d,
-            Collections.singletonList(TipoEffettoDiStato.BAGNATO),
-            Collections.singletonList(TipoEffettoDiStato.CONGELATO)),
+    CONGELAMENTO(stati(BAGNATO), danni(GELO), 1.0d, stati(BAGNATO), stati(CONGELATO)),
     // + FUOCO
     /** Se il difensore è {@code BAGNATO} e riceve un danno {@code FUOCO}: il danno si moltiplica per 0,5; perde {@code BAGNATO}; riceve {@code ACCECATO}. */
-    VAPORIZZAZIONE(
-            Collections.singletonList(TipoEffettoDiStato.BAGNATO),
-            Collections.singletonList(TipoDanno.FUOCO),
-            0.5d,
-            Collections.singletonList(TipoEffettoDiStato.BAGNATO),
-            Collections.singletonList(TipoEffettoDiStato.ACCECATO)),
+    VAPORIZZAZIONE(stati(BAGNATO), danni(FUOCO), 0.5d, stati(BAGNATO), stati(ACCECATO)),
 
     // + ARIA
     /** Se il difensore è {@code BAGNATO} e riceve un danno {@code ARIA}: perde {@code BAGNATO}; riceve {@code RAFFREDDATO} (tre turni, e a ogni turno una volta su due starnutisce e perde il turno). */
-    RAFFREDDAMENTO(
-            Collections.singletonList(TipoEffettoDiStato.BAGNATO),
-            Collections.singletonList(TipoDanno.ARIA),
-            1.0d,
-            Collections.singletonList(TipoEffettoDiStato.BAGNATO),
-            Collections.singletonList(TipoEffettoDiStato.RAFFREDDATO)),
+    RAFFREDDAMENTO(stati(BAGNATO), danni(ARIA), 1.0d, stati(BAGNATO), stati(RAFFREDDATO)),
 
     // Interazioni con BRUCIATO
     // + ARIA
     /** Se il difensore è {@code BRUCIATO} e riceve un danno {@code ARIA}: il danno si moltiplica per 1,5; riceve {@code BRUCIATO}. */
-    ALIMENTAZIONE_FIAMMA(
-            Collections.singletonList(TipoEffettoDiStato.BRUCIATO),
-            Collections.singletonList(TipoDanno.ARIA),
-            1.5d,
-            Collections.emptyList(),
-            Collections.singletonList(TipoEffettoDiStato.BRUCIATO)),
+    ALIMENTAZIONE_FIAMMA(stati(BRUCIATO), danni(ARIA), 1.5d, nessuno(), stati(BRUCIATO)),
     // + ACQUA
     /** Se il difensore è {@code BRUCIATO} e riceve un danno {@code ACQUA}: perde {@code BRUCIATO} e {@code BAGNATO}. */
-    ESTINZIONE(
-            Collections.singletonList(TipoEffettoDiStato.BRUCIATO),
-            Collections.singletonList(TipoDanno.ACQUA),
-            1.0d,
-            Arrays.asList(TipoEffettoDiStato.BRUCIATO, TipoEffettoDiStato.BAGNATO),
-            Collections.emptyList()),
+    ESTINZIONE(stati(BRUCIATO), danni(ACQUA), 1.0d, stati(BRUCIATO, BAGNATO), nessuno()),
     // + GELO
     /** Se il difensore è {@code BRUCIATO} e riceve un danno {@code GELO}: il danno si moltiplica per 1,5; perde {@code BRUCIATO}; riceve {@code BAGNATO}. */
-    SCIOGLIMENTO_TERMICO(
-            Collections.singletonList(TipoEffettoDiStato.BRUCIATO),
-            Collections.singletonList(TipoDanno.GELO),
-            1.5d,
-            Collections.singletonList(TipoEffettoDiStato.BRUCIATO),
-            Collections.singletonList(TipoEffettoDiStato.BAGNATO)),
+    SCIOGLIMENTO_TERMICO(stati(BRUCIATO), danni(GELO), 1.5d, stati(BRUCIATO), stati(BAGNATO)),
     // + VELENO
     /** Se il difensore è {@code BRUCIATO} e riceve un danno {@code VELENO}: il danno si moltiplica per 1,3; perde {@code BRUCIATO} e {@code AVVELENATO}. */
-    ESPLOSIONE_DI_GAS(
-            Collections.singletonList(TipoEffettoDiStato.BRUCIATO),
-            Collections.singletonList(TipoDanno.VELENO),
-            1.3d,
-            Arrays.asList(TipoEffettoDiStato.BRUCIATO, TipoEffettoDiStato.AVVELENATO),
-            Collections.emptyList()),
+    ESPLOSIONE_DI_GAS(stati(BRUCIATO), danni(VELENO), 1.3d, stati(BRUCIATO, AVVELENATO), nessuno()),
 
     // Interazioni con AVVELENATO
     // + FUOCO
     /** Se il difensore è {@code AVVELENATO} e riceve un danno {@code FUOCO}: il danno si moltiplica per 1,3; perde {@code AVVELENATO}; riceve {@code BRUCIATO}. */
-    VAMPATA_TOSSICA(
-            Collections.singletonList(TipoEffettoDiStato.AVVELENATO),
-            Collections.singletonList(TipoDanno.FUOCO),
-            1.3d,
-            Collections.singletonList(TipoEffettoDiStato.AVVELENATO),
-            Collections.singletonList(TipoEffettoDiStato.BRUCIATO)),
+    VAMPATA_TOSSICA(stati(AVVELENATO), danni(FUOCO), 1.3d, stati(AVVELENATO), stati(BRUCIATO)),
     // + ACIDO
     /** Se il difensore è {@code AVVELENATO} e riceve un danno {@code ACIDO}: il danno si moltiplica per 1,15. */
-    REAZIONE_TOSSICA(
-            Collections.singletonList(TipoEffettoDiStato.AVVELENATO),
-            Collections.singletonList(TipoDanno.ACIDO),
-            1.15d,
-            Collections.emptyList(),
-            Collections.emptyList()),
+    REAZIONE_TOSSICA(stati(AVVELENATO), danni(ACIDO), 1.15d, nessuno(), nessuno()),
 
     // Interazioni con SANGUINAMENTO
     // + ACQUA
     /** Se il difensore è {@code SANGUINAMENTO} e riceve un danno {@code ACQUA}: il danno si moltiplica per 1,05. */
-    DILUIZIONE_EMATICA(
-            Collections.singletonList(TipoEffettoDiStato.SANGUINAMENTO),
-            Collections.singletonList(TipoDanno.ACQUA),
-            1.05d,
-            Collections.emptyList(),
-            Collections.emptyList()),
+    DILUIZIONE_EMATICA(stati(SANGUINAMENTO), danni(ACQUA), 1.05d, nessuno(), nessuno()),
     // + GELO
     /** Se il difensore è {@code SANGUINAMENTO} e riceve un danno {@code GELO}: il danno si moltiplica per 1,05; perde {@code SANGUINAMENTO}; riceve {@code RALLENTATO}. */
-    COAGULAZIONE_FORZATA(
-            Collections.singletonList(TipoEffettoDiStato.SANGUINAMENTO),
-            Collections.singletonList(TipoDanno.GELO),
-            1.05d,
-            Collections.singletonList(TipoEffettoDiStato.SANGUINAMENTO),
-            Collections.singletonList(TipoEffettoDiStato.RALLENTATO)),
+    COAGULAZIONE_FORZATA(stati(SANGUINAMENTO), danni(GELO), 1.05d, stati(SANGUINAMENTO), stati(RALLENTATO)),
 
     // Interazioni con CONGELATO
     // + CONTUNDENTE
     /** Se il difensore è {@code CONGELATO} e riceve un danno {@code CONTUNDENTE}: perde {@code CONGELATO}. */
-    FRANTUMAZIONE_DEL_GHIACCIO(
-            Collections.singletonList(TipoEffettoDiStato.CONGELATO),
-            Collections.singletonList(TipoDanno.CONTUNDENTE),
-            1.0d,
-            Collections.singletonList(TipoEffettoDiStato.CONGELATO),
-            Collections.emptyList()),
+    FRANTUMAZIONE_DEL_GHIACCIO(stati(CONGELATO), danni(CONTUNDENTE), 1.0d, stati(CONGELATO), nessuno()),
     // + FUOCO
     /** Se il difensore è {@code CONGELATO} e riceve un danno {@code FUOCO}: il danno si moltiplica per 1,5; perde {@code CONGELATO}. */
-    DISGELO_VIOLENTO(
-            Collections.singletonList(TipoEffettoDiStato.CONGELATO),
-            Collections.singletonList(TipoDanno.FUOCO),
-            1.5d,
-            Collections.singletonList(TipoEffettoDiStato.CONGELATO),
-            Collections.emptyList()),
+    DISGELO_VIOLENTO(stati(CONGELATO), danni(FUOCO), 1.5d, stati(CONGELATO), nessuno()),
     // + FULMINE
     /** Se il difensore è {@code CONGELATO} e riceve un danno {@code FULMINE}: il danno si moltiplica per 1,3. */
-    SUPERCONDUZIONE(
-            Collections.singletonList(TipoEffettoDiStato.CONGELATO),
-            Collections.singletonList(TipoDanno.FULMINE),
-            1.3d,
-            Collections.emptyList(),
-            Collections.emptyList()),
+    SUPERCONDUZIONE(stati(CONGELATO), danni(FULMINE), 1.3d, nessuno(), nessuno()),
 
     // Interazioni con MALEDETTO
     // + NECROTICO
     /** Se il difensore è {@code MALEDETTO} e riceve un danno {@code NECROTICO}: il danno si moltiplica per 2. */
-    MIETITURA(
-            Collections.singletonList(TipoEffettoDiStato.MALEDETTO),
-            Collections.singletonList(TipoDanno.NECROTICO),
-            2.0d,
-            Collections.emptyList(),
-            Collections.emptyList()),
+    MIETITURA(stati(MALEDETTO), danni(NECROTICO), 2.0d, nessuno(), nessuno()),
     // + SACRO
     /** Se il difensore è {@code MALEDETTO} e riceve un danno {@code SACRO}: perde {@code MALEDETTO}. */
-    RIGETTO(
-            Collections.singletonList(TipoEffettoDiStato.MALEDETTO),
-            Collections.singletonList(TipoDanno.SACRO),
-            1.0d,
-            Collections.singletonList(TipoEffettoDiStato.MALEDETTO),
-            Collections.emptyList()),
+    RIGETTO(stati(MALEDETTO), danni(SACRO), 1.0d, stati(MALEDETTO), nessuno()),
     // + VUOTO
     /** Se il difensore è {@code MALEDETTO} e riceve un danno {@code VUOTO}: perde {@code MALEDETTO}. */
-    COLLASSO_ENTROPICO(
-            Collections.singletonList(TipoEffettoDiStato.MALEDETTO),
-            Collections.singletonList(TipoDanno.VUOTO),
-            1.0d,
-            Collections.singletonList(TipoEffettoDiStato.MALEDETTO),
-            Collections.emptyList()),
+    COLLASSO_ENTROPICO(stati(MALEDETTO), danni(VUOTO), 1.0d, stati(MALEDETTO), nessuno()),
 
     // Interazioni con INFETTATO
     // + SACRO
     /** Se il difensore è {@code INFETTATO} e riceve un danno {@code SACRO}: il danno si moltiplica per 1,5; perde {@code INFETTATO}. */
-    PURIFICAZIONE(
-            Collections.singletonList(TipoEffettoDiStato.INFETTATO),
-            Collections.singletonList(TipoDanno.SACRO),
-            1.5d,
-            Collections.singletonList(TipoEffettoDiStato.INFETTATO),
-            Collections.emptyList()),
+    PURIFICAZIONE(stati(INFETTATO), danni(SACRO), 1.5d, stati(INFETTATO), nessuno()),
     // + ARCANO
     /** Se il difensore è {@code INFETTATO} e riceve un danno {@code ARCANO}: nessun cambiamento di stato né di danno. */
-    SIFONE_VITALE(
-            Collections.singletonList(TipoEffettoDiStato.INFETTATO),
-            Collections.singletonList(TipoDanno.ARCANO),
-            1.0d,
-            Collections.emptyList(),
-            Collections.emptyList()),
+    SIFONE_VITALE(stati(INFETTATO), danni(ARCANO), 1.0d, nessuno(), nessuno()),
     // + VELENO
     /** Se il difensore è {@code INFETTATO} e riceve un danno {@code VELENO}: riceve {@code AVVELENATO}. */
-    TOSSICITA_SETTICA(
-            Collections.singletonList(TipoEffettoDiStato.INFETTATO),
-            Collections.singletonList(TipoDanno.VELENO),
-            1.2d,
-            Collections.emptyList(),
-            Collections.singletonList(TipoEffettoDiStato.AVVELENATO)),
+    TOSSICITA_SETTICA(stati(INFETTATO), danni(VELENO), 1.2d, nessuno(), stati(AVVELENATO)),
 
     // Interazioni con STORDITO / ATTERRATO (fisica, non elementale)
     // + TAGLIENTE / PERFORANTE
     /** Se il difensore è {@code STORDITO} o {@code ATTERRATO} e riceve un danno {@code TAGLIENTE} o {@code PERFORANTE}: nessun cambiamento di stato né di danno. */
-    COLPO_DI_GRAZIA(
-            Arrays.asList(TipoEffettoDiStato.STORDITO, TipoEffettoDiStato.ATTERRATO),
-            Arrays.asList(TipoDanno.TAGLIENTE, TipoDanno.PERFORANTE),
-            1.0d,
-            Collections.emptyList(),
-            Collections.emptyList()),
+    COLPO_DI_GRAZIA(stati(STORDITO, ATTERRATO), danni(TAGLIENTE, PERFORANTE), 1.0d, nessuno(), nessuno()),
 
     // Interazioni con ATTERRATO (fisica, non elementale)
     // + CONTUNDENTE
     /** Se il difensore è {@code ATTERRATO} e riceve un danno {@code CONTUNDENTE}: il danno si moltiplica per 2; riceve {@code ATTERRATO}. */
-    SCHIACCIAMENTO(
-            Collections.singletonList(TipoEffettoDiStato.ATTERRATO),
-            Collections.singletonList(TipoDanno.CONTUNDENTE),
-            2.0d,
-            Collections.emptyList(),
-            Collections.singletonList(TipoEffettoDiStato.ATTERRATO)),
+    SCHIACCIAMENTO(stati(ATTERRATO), danni(CONTUNDENTE), 2.0d, nessuno(), stati(ATTERRATO)),
 
     // Interazioni con RALLENTATO
     // + TERRA / CONTUNDENTE
     /** Se il difensore è {@code RALLENTATO} e riceve un danno {@code TERRA} o {@code CONTUNDENTE}: il danno si moltiplica per 1,3; riceve {@code ATTERRATO}. */
-    INCIAMPO(
-            Collections.singletonList(TipoEffettoDiStato.RALLENTATO),
-            Arrays.asList(TipoDanno.TERRA, TipoDanno.CONTUNDENTE),
-            1.3d,
-            Collections.emptyList(),
-            Collections.singletonList(TipoEffettoDiStato.ATTERRATO)),
+    INCIAMPO(stati(RALLENTATO), danni(TERRA, CONTUNDENTE), 1.3d, nessuno(), stati(ATTERRATO)),
 
     // Interazioni con IMMOBILIZZATO
     // + FUOCO
     /** Se il difensore è {@code IMMOBILIZZATO} e riceve un danno {@code FUOCO}: il danno si moltiplica per 1,5; perde {@code IMMOBILIZZATO}. */
-    INCENDIO_LIBERATORIO(
-            Collections.singletonList(TipoEffettoDiStato.IMMOBILIZZATO),
-            Collections.singletonList(TipoDanno.FUOCO),
-            1.5d,
-            Collections.singletonList(TipoEffettoDiStato.IMMOBILIZZATO),
-            Collections.emptyList()),
+    INCENDIO_LIBERATORIO(stati(IMMOBILIZZATO), danni(FUOCO), 1.5d, stati(IMMOBILIZZATO), nessuno()),
     // + CONTUNDENTE / TERRA
     /** Se il difensore è {@code IMMOBILIZZATO} e riceve un danno {@code CONTUNDENTE} o {@code TERRA}: il danno si moltiplica per 1,3. */
-    IMPATTO_RIGIDO(
-            Collections.singletonList(TipoEffettoDiStato.IMMOBILIZZATO),
-            Arrays.asList(TipoDanno.CONTUNDENTE, TipoDanno.TERRA),
-            1.3d,
-            Collections.emptyList(),
-            Collections.emptyList()),
+    IMPATTO_RIGIDO(stati(IMMOBILIZZATO), danni(CONTUNDENTE, TERRA), 1.3d, nessuno(), nessuno()),
 
     // Interazioni con SPAVENTATO / CONFUSO
     // + ARCANO
     /** Se il difensore è {@code SPAVENTATO} o {@code CONFUSO} e riceve un danno {@code ARCANO}: perde {@code SPAVENTATO} e {@code CONFUSO}; riceve {@code STORDITO}. */
-    SOVRACCARICO_MENTALE(
-            Arrays.asList(TipoEffettoDiStato.SPAVENTATO, TipoEffettoDiStato.CONFUSO),
-            Collections.singletonList(TipoDanno.ARCANO),
-            1.0d,
-            Arrays.asList(TipoEffettoDiStato.SPAVENTATO, TipoEffettoDiStato.CONFUSO),
-            Collections.singletonList(TipoEffettoDiStato.STORDITO)),
+    SOVRACCARICO_MENTALE(stati(SPAVENTATO, CONFUSO), danni(ARCANO), 1.0d, stati(SPAVENTATO, CONFUSO), stati(STORDITO)),
     // + danno FISICO (qualsiasi tipo)
     /** Se il difensore è {@code SPAVENTATO} o {@code CONFUSO} e riceve un danno {@code TAGLIENTE}, {@code PERFORANTE} o {@code CONTUNDENTE}: il danno si moltiplica per 1,2; perde {@code SPAVENTATO} e {@code CONFUSO}. */
-    SHOCK_DI_REALTA(
-            Arrays.asList(TipoEffettoDiStato.SPAVENTATO, TipoEffettoDiStato.CONFUSO),
-            Arrays.asList(TipoDanno.TAGLIENTE, TipoDanno.PERFORANTE, TipoDanno.CONTUNDENTE),
-            1.2d,
-            Arrays.asList(TipoEffettoDiStato.SPAVENTATO, TipoEffettoDiStato.CONFUSO),
-            Collections.emptyList()),
+    SHOCK_DI_REALTA(stati(SPAVENTATO, CONFUSO), danni(TAGLIENTE, PERFORANTE, CONTUNDENTE), 1.2d, stati(SPAVENTATO, CONFUSO), nessuno()),
 
     // Interazioni con CONFUSO (esclusiva, non condivisa con SPAVENTATO)
     // + VUOTO
     /** Se il difensore è {@code CONFUSO} e riceve un danno {@code VUOTO}: il danno si moltiplica per 1,5; perde {@code CONFUSO}; riceve {@code MENTE_FRATTURATA}. */
-    FOLLIA_COSMICA(
-            Collections.singletonList(TipoEffettoDiStato.CONFUSO),
-            Collections.singletonList(TipoDanno.VUOTO),
-            1.5d,
-            Collections.singletonList(TipoEffettoDiStato.CONFUSO),
-            Collections.singletonList(TipoEffettoDiStato.MENTE_FRATTURATA)),
+    FOLLIA_COSMICA(stati(CONFUSO), danni(VUOTO), 1.5d, stati(CONFUSO), stati(MENTE_FRATTURATA)),
 
     // Interazioni con ACCECATO
     // + ARIA
     /** Se il difensore è {@code ACCECATO} e riceve un danno {@code ARIA}: il danno si moltiplica per 1,05; perde {@code ACCECATO}. */
-    DISPERSIONE(
-            Collections.singletonList(TipoEffettoDiStato.ACCECATO),
-            Collections.singletonList(TipoDanno.ARIA),
-            1.05d,
-            Collections.singletonList(TipoEffettoDiStato.ACCECATO),
-            Collections.emptyList()),
+    DISPERSIONE(stati(ACCECATO), danni(ARIA), 1.05d, stati(ACCECATO), nessuno()),
     // + ACQUA
     /** Se il difensore è {@code ACCECATO} e riceve un danno {@code ACQUA}: il danno si moltiplica per 1,05; riceve {@code RALLENTATO}. */
-    FANGO(
-            Collections.singletonList(TipoEffettoDiStato.ACCECATO),
-            Collections.singletonList(TipoDanno.ACQUA),
-            1.05d,
-            Collections.emptyList(),
-            Collections.singletonList(TipoEffettoDiStato.RALLENTATO)),
+    FANGO(stati(ACCECATO), danni(ACQUA), 1.05d, nessuno(), stati(RALLENTATO)),
 
     // Interazioni con ASSORDATO
     // + SONICO
     /** Se il difensore è {@code ASSORDATO} e riceve un danno {@code SONICO}: il danno si moltiplica per 1,05; perde {@code ASSORDATO}; riceve {@code STORDITO}. */
-    DISORIENTAMENTO(
-            Collections.singletonList(TipoEffettoDiStato.ASSORDATO),
-            Collections.singletonList(TipoDanno.SONICO),
-            1.05d,
-            Collections.singletonList(TipoEffettoDiStato.ASSORDATO),
-            Collections.singletonList(TipoEffettoDiStato.STORDITO)),
+    DISORIENTAMENTO(stati(ASSORDATO), danni(SONICO), 1.05d, stati(ASSORDATO), stati(STORDITO)),
 
     // Interazioni con SILENZIATO
     // + ARCANO
     /** Se il difensore è {@code SILENZIATO} e riceve un danno {@code ARCANO}: nessun cambiamento di stato né di danno. */
-    RISONANZA_SIGILLATA(
-            Collections.singletonList(TipoEffettoDiStato.SILENZIATO),
-            Collections.singletonList(TipoDanno.ARCANO),
-            1.0d,
-            Collections.emptyList(),
-            Collections.emptyList()),
+    RISONANZA_SIGILLATA(stati(SILENZIATO), danni(ARCANO), 1.0d, nessuno(), nessuno()),
     // + PSICHICO
     /** Se il difensore è {@code SILENZIATO} e riceve un danno {@code PSICHICO}: il danno si moltiplica per 1,5; riceve {@code ACCECATO}. */
-    ISOLAMENTO_SENSORIALE(
-            Collections.singletonList(TipoEffettoDiStato.SILENZIATO),
-            Collections.singletonList(TipoDanno.PSICHICO),
-            1.5d,
-            Collections.emptyList(),
-            Collections.singletonList(TipoEffettoDiStato.ACCECATO));
+    ISOLAMENTO_SENSORIALE(stati(SILENZIATO), danni(PSICHICO), 1.5d, nessuno(), stati(ACCECATO));
+
+    // Per scrivere le reazioni qui sopra in una riga: gli stati, i danni, o nessuno
+    private static List<TipoEffettoDiStato> stati(TipoEffettoDiStato... stati) {
+        return Arrays.asList(stati);
+    }
+
+    private static List<TipoDanno> danni(TipoDanno... danni) {
+        return Arrays.asList(danni);
+    }
+
+    private static <T> List<T> nessuno() {
+        return Collections.emptyList();
+    }
 
     private static Set<TipoEffettoDiStato> insieme(Collection<TipoEffettoDiStato> stati) {
         return stati.isEmpty() ? EnumSet.noneOf(TipoEffettoDiStato.class) : EnumSet.copyOf(stati);

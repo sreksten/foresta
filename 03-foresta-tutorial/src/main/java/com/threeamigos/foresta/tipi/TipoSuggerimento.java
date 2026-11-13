@@ -130,6 +130,8 @@ public enum TipoSuggerimento {
 	/**
 	 * A che cosa punta il fumetto in quella pagina (da 1): la pagina che parla dell'icona della mappa punta alla mappa, non alle frecce.
 	 */
+	// Le pagine si contano da 1, l'array da 0: la pagina 1 è bersagli[0]. Una pagina oltre l'ultimo bersaglio usa l'ultimo
+	// (un suggerimento con tre pagine e un bersaglio solo punta sempre lì)
 	public BersaglioDelSuggerimento getBersaglio(int pagina) {
 		return bersagli[Math.max(0, Math.min(pagina, bersagli.length) - 1)];
 	}

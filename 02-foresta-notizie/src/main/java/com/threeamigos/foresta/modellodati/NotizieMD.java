@@ -14,8 +14,8 @@ import java.util.List;
  * Gli ultimi messaggi mostrati al giocatore nel pannello di testo (per poterlo ripopolare dopo un ricaricamento) e le
  * ultime notizie destinate alla schermata della mappa, salvati con la partita.
  * <p>
- * La logica di aggiunta (testa della lista, scarto delle più vecchie oltre il limite) vive in
- * {@code notizie.Notizie}, non qui: questa classe tiene solo i dati.
+ * Qui si tengono i dati e la regola con cui si aggiungono (il nuovo in testa, i più vecchi oltre il limite scartati);
+ * da dove arrivano messaggi e notizie lo decide {@code notizie.Notizie}.
  *
  * @author Stefano Reksten
  */

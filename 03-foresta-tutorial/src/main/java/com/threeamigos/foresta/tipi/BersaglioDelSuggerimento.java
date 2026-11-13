@@ -58,6 +58,8 @@ public enum BersaglioDelSuggerimento {
 
 	private final Set<Comando> icone;
 
+	// EnumSet.of vuole il primo elemento a parte e poi gli altri: si passa il primo e poi tutto l'array (il primo compare due
+	// volte, ma un insieme lo tiene una volta sola)
 	BersaglioDelSuggerimento(Comando... icone) {
 		this.icone = icone.length == 0 ? Collections.<Comando>emptySet() : Collections.unmodifiableSet(EnumSet.of(icone[0], icone));
 	}

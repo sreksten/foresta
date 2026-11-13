@@ -81,12 +81,8 @@ public class SuggerimentiMD implements Serializzabile {
 		if (riga == null || riga.isEmpty()) {
 			return;
 		}
-		// Una prima riga che non dice né true né false è un file rovinato (booleano() la leggerebbe come falso e spegnerebbe il tutorial)
-		String stato = new LettoreCampi(riga).testo();
-		if (!"true".equals(stato) && !"false".equals(stato)) {
-			throw new IOException("Il file del tutorial non comincia con lo stato (true o false): " + stato);
-		}
-		attivo = Boolean.parseBoolean(stato);
+		// Una prima riga che non dice né true né false è un file rovinato: booleano() lancia IOException, invece di spegnere il tutorial
+		attivo = new LettoreCampi(riga).booleano();
 		while ((riga = stream.readLine()) != null) {
 			if (riga.isEmpty()) {
 				continue;

@@ -359,7 +359,7 @@ In ordine di livello. Le righe sono quelle di `wc -l` su `src/main/java` al 2026
 | 1 | `00-foresta-serializzazione`, `00-foresta-strumenti`, `01-foresta-eventi`, `01-foresta-punteggi` | tutto | 2.700 | fatto il 2026-11-13, proposte applicate |
 | 2 | `01-foresta-testi` | tutto (`GestoreGrammatiche`, già `GrammarBean`, da solo fa 2.600 righe) | 4.600 | fatto il 2026-11-13, proposte applicate |
 | 3 | `02-foresta-attributi`, `02-foresta-comandi`, `02-foresta-effettidistato`, `02-foresta-mappa` | tutto | 3.600 | fatto il 2026-11-13, proposte applicate (D3.2 al passo 9) |
-| 4 | `02-foresta-notizie`, `03-foresta-danni`, `03-foresta-tutorial` | tutto | 1.550 | da fare |
+| 4 | `02-foresta-notizie`, `03-foresta-danni`, `03-foresta-tutorial` | tutto | 1.550 | fatto il 2026-11-13, proposte applicate |
 | 5 | `04-foresta-artefatti` | tutto | 5.250 | da fare |
 | 6 | `05-foresta-personaggi` | `tipi` (con `CostantiPersonaggi`), `modellodati`, `interfacce`, `eventi` | 5.700 | da fare |
 | 7 | `05-foresta-personaggi` | `personaggi`: i meccanismi (`PersonaggioBase`, `Personaggio`, `SaluteEMorte`, `EffettiDiStato`, `ModificatoriTemporanei`, `AttributiSecondari`, `CaricoEInventario`, `GestoreProgressione`, `Progressione`, `RegoleEquipaggiamento`, `CalcolatoreRiposo`, `RisultatoRiposo`, `FabbricaPersonaggi`, `EquipaggiamentoIniziale`, `LanciatoreDeiDadi`, `MoltiplicatoriDiClasse`, `NomeEDescrizione`, `ArmaNaturale`, `PersonaggioNonCombattente`) e `gruppi` | 5.500 | da fare |
@@ -606,6 +606,59 @@ Moduli piccoli e ordinati, con una buona separazione: il calcolo degli attributi
 - **La cosa più dannosa per chi legge è D3.2**: Javadoc che promettono meccaniche inesistenti. Un neofita che studia `TipoAttributo` impara un gioco che non c'è.
 - La mappa è chiara, ma conta su presupposti non scritti nel codice: tutte le caselle esistono (N3.1), quattro città per quattro quadranti (D3.5). Andrebbero resi espliciti con un controllo o un test.
 - Restano alcuni residui (D3.3, D3.4) e numeri senza nome (F3.3, e gli spostamenti di bit nel generatore).
+
+#### Passo 4: `02-foresta-notizie`, `03-foresta-danni`, `03-foresta-tutorial` (2026-11-13)
+
+Letti per intero i 17 file (1.550 righe), con i chiamanti dove serviva (`RegistroNotizie` e `StatoDelMotore` nel motore, `AvvioDelMotore` per il tutorial, `SituazioniDellaUI` per le situazioni). Test dei tre moduli verdi dopo i commenti.
+
+**Esito (2026-11-13):** l'utente ha approvato tutto, e tutto è applicato:
+- **D4.3:** `SuggerimentiMD.leggi` usa `booleano()`;
+- **D4.4:** tolto il `package-info` di `danni.tipi`; corretti `03-foresta-danni.md` e il rimando di `CLAUDE.md`;
+- **F4.1:** le 34 reazioni sono su una riga ciascuna, con `stati`, `danni`, `nessuno` e gli import statici delle due enum, e il file è passato da 440 a 291 righe.
+
+Sono verdi tutti i test del progetto: 3.764, di cui 37 saltati.
+
+**`NullPointerException` possibili**
+
+- *Certi:* nessuno.
+- *Plausibili:* nessuno.
+- *Controllati e scartati:*
+  - `NotiziaMD` con id o corpo null, che si salverebbero come il testo "null": l'unico che ne crea una è `RegistroNotizie`, con l'identificativo preso dalla notizia e un corpo già controllato (non vuoto).
+  - `RegistroSuggerimenti.impostaGestore(null)`: non lo fa nessuno.
+  - `TipoInterazioneConEffettiDiStato.getDannoAdArea()` restituisce null per le reazioni che non colpiscono un'area: è documentato, e i chiamanti lo sanno (da ricontrollare al passo 9).
+
+**Altri difetti**
+
+- **D4.1** I Javadoc di `Notizie` e di `NotizieMD` si contraddicevano: tutti e due dicevano che la regola di rotazione (il nuovo in testa, i più vecchi scartati) stava nell'altra classe. Sta in `NotizieMD`. Corretti.
+- **D4.2** I Javadoc di `RegistroSuggerimenti` e di `GestoreSuggerimenti` dicevano che il motore non passa un gestore e che il tutorial non si salva «finché non è finito». Non è più vero: `AvvioDelMotore` passa `GestoreSuggerimentiSuFile`, e il tutorial si salva. Corretti.
+- **D4.3** `SuggerimentiMD.leggi` controlla a mano che la prima riga sia `true` o `false`, perché `LettoreCampi.booleano()` leggeva qualunque altro testo come falso. Dal passo 1 (D1.1) `booleano()` fa quel controllo da sé: le otto righe si possono ridurre a `attivo = new LettoreCampi(riga).booleano();`. Il commento, che diceva il contrario, è corretto.
+- **D4.4** `03-foresta-danni` ha anch'esso un pacchetto `danni.tipi` con il solo `package-info.java`, sfuggito al passo 3 (D3.3). Va tolto come gli altri quattro, che l'utente ha già approvato.
+
+**Parti in comune**
+
+- **F4.1** `TipoInterazioneConEffettiDiStato`: le 34 reazioni sono scritte con `Collections.singletonList(TipoEffettoDiStato.X)`, `Arrays.asList(...)` e `Collections.emptyList()`, cinque argomenti di quel tipo per costante. Con tre metodi statici di una riga (`stati(...)`, `danni(...)`, `nessuno()`) ogni reazione diventerebbe leggibile in una o due righe, per esempio `ELETTROCUZIONE(stati(BAGNATO), danni(FULMINE), 1.5, nessuno(), nessuno())` (con gli import statici delle due enum). Si risparmiano circa 100 righe, e un neofita vede subito i cinque dati. Ho aggiunto un commento che li elenca.
+- *Non vale la pena:* `getDannoAdArea` è uno `switch` su tre costanti. Metterlo fra i dati del costruttore vorrebbe dire aggiungere un sesto argomento a tutte e 34 le costanti.
+
+**Pezzi che andrebbero riscritti:** nessuno.
+
+**Commenti aggiunti**
+
+- `Notizie` e `NotizieMD` (D4.1), `RegistroSuggerimenti` e `GestoreSuggerimenti` (D4.2), `SuggerimentiMD` (D4.3).
+- `TipoInterazioneConEffettiDiStato`: i cinque dati di una reazione.
+- `TipoDanno`: un refuso, e la precisazione che i commenti delle costanti descrivono le intenzioni.
+- `BersaglioDelSuggerimento`: `EnumSet.of`.
+- `TipoSuggerimento`: le pagine contate da 1 e il bersaglio che si ripete.
+- `MessaggioMD`: un accento.
+
+**Giudizio**
+
+Tre moduli piccoli e puliti, i migliori incontrati finora insieme a quelli del passo 1.
+
+- **Il tutorial** è un esempio di separazione ben riuscita: il registro non sa niente della UI, la UI gli dice che cosa vede con un insieme di `Situazione`, e ogni costante di `TipoSuggerimento` ha accanto un commento che spiega perché sta in quel punto dell'ordine.
+- **I danni** sono tabelle ben documentate (ogni reazione ha il suo Javadoc), ma scritte in modo prolisso (F4.1).
+- **Le notizie** sono semplici.
+
+I difetti sono tutti di documentazione: Javadoc rimasti indietro rispetto al codice (D4.1, D4.2, D4.3). È lo stesso fenomeno dei documenti `.md` del §6, in piccolo, e ogni passo ne trova qualcuno. Conferma che un commento che descrive il «quando» o il «chi» invecchia più in fretta di uno che descrive il «che cosa».
 
 ### 11.5 Proposte che toccano più moduli
 

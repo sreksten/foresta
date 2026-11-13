@@ -12,8 +12,9 @@ import java.util.function.Supplier;
 
 /**
  * Facciata su {@link NotizieMD}: tiene gli ultimi messaggi mostrati al giocatore (per poter ripopolare il pannello di
- * testo dopo un ricaricamento) e le ultime notizie destinate alla schermata della mappa. Il modello dati resta un
- * bean di soli dati; la logica di rotazione (nuovo elemento in testa, scarto dei più vecchi oltre il limite) vive qui.
+ * testo dopo un ricaricamento) e le ultime notizie destinate alla schermata della mappa. Qui si decide da dove arrivano
+ * (il bus o chi produce le notizie); come si tengono (il nuovo in testa, i più vecchi oltre il limite scartati) lo fa
+ * {@link NotizieMD}.
  * <p>
  * I messaggi li prende dal bus, ascoltando le notifiche di testo che il motore pubblica per la UI: sono centinaia i
  * punti che le pubblicano, e lo storico è proprio quel che il giocatore ha visto, quindi ascoltarle è la scelta

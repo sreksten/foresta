@@ -50,4 +50,4 @@ Durate e danni periodici degli stati messi sono quelli normali, salvo eccezioni 
 ## Osservazioni
 
 - Le reazioni sono tutte un'unica enum lunga (più di 400 righe): aggiungerne una vuol dire una voce qui, un testo nel file `tipo_interazione_con_effetti_di_stato_<lingua>.properties` (e `AREA` se ha un danno ad area) e, se serve, un'eccezione nel calcolo del danno. `TestiDelleEnumTest` controlla che i testi ci siano tutti.
-- Il pacchetto `danni.tipi` contiene solo un `package-info`.
+- I tipi stanno nel pacchetto `com.threeamigos.foresta.tipi`, come per tutti i moduli. Le reazioni di `TipoInterazioneConEffettiDiStato` si scrivono in una riga con `stati(...)`, `danni(...)` e `nessuno()`.

@@ -7,7 +7,7 @@ import com.threeamigos.foresta.testi.Testi;
  * I tipi di danno, divisi in fisici, elementali e magici ({@link CategoriaDanno}). Ogni tipo ha un nome da mostrare
  * e gli {@link TipoEffettoDiStato stati alterati} che può causare.
  * <p>
- * I commenti su a ciascun tipo descrivono come ci si aspetta che si comporti. Le debolezze e le resistenze delle classi
+ * I commenti di ciascun tipo descrivono come ci si aspetta che si comporti, non sempre quel che il codice fa oggi. Le debolezze e le resistenze delle classi
  * di personaggio ai vari tipi stanno in {@code TipoPersonaggio} e in {@code CategoriaPersonaggio} (modulo 05-foresta-personaggi).
  * <p>
  * I testi di ogni costante (NOME) non stanno qui ma nel file {@code tipo_danno_<lingua>.properties}, alla voce

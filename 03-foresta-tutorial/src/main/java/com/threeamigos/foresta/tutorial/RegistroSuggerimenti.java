@@ -16,8 +16,8 @@ import java.util.Set;
  * chiede qui per pilotare la partita.
  * <p>
  * Il tutorial vale da una partita all'altra, come i trofei e il bestiario, e non fa parte del salvataggio di una partita. Si salva a ogni novità,
- * ma solo se qualcuno ha detto dove ({@link #impostaGestore}); finché il tutorial non è finito il motore non lo dice, quindi non si salva niente e
- * parte sempre acceso e senza suggerimenti visti.
+ * se qualcuno ha detto dove ({@link #impostaGestore}): nel gioco lo fa il motore all'avvio, con il gestore su file; nei test, senza gestore, non si
+ * salva niente e il tutorial parte acceso e senza suggerimenti visti.
  */
 public final class RegistroSuggerimenti {
 
