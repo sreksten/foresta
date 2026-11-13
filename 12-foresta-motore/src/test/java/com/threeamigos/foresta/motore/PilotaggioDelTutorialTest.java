@@ -103,7 +103,23 @@ class PilotaggioDelTutorialTest {
 			assertEquals(TipoSuggerimento.NON_ANCORA_IL_MOMENTO, messaggio.getSuggerimento());
 			assertEquals(java.util.Collections.singletonList("un tempio"), messaggio.getParametri());
 
-			// A tutorial spento si va dove si vuole
+			// Chi ha già letto l'elenco dei luoghi sa che cosa trova: va dove vuole, anche se il tutorial pilota ancora
+			RegistroSuggerimenti.visto(TipoSuggerimento.LUOGHI);
+			assertTrue(PilotaggioDelTutorial.pilotaQuestoTurno());
+			partita.comando(verso).comando(Comando.NUMERO_1);
+			assertEquals(tempio, com.threeamigos.foresta.mappa.Foresta.getPosizioneDelGruppo());
+		}
+	}
+
+	@Test
+	void aTutorialSpentoSiVaDoveSiVuole() {
+		try (PartitaDiTest partita = partita(31)) {
+			com.threeamigos.foresta.modellodati.CoordinateMD citta = com.threeamigos.foresta.mappa.Foresta.getPosizioneDelGruppo();
+			Comando verso = citta.getY() > 1 ? Comando.NORD : Comando.SUD;
+			com.threeamigos.foresta.modellodati.CoordinateMD tempio = new com.threeamigos.foresta.modellodati.CoordinateMD(citta.getX(),
+					citta.getY() + (verso == Comando.NORD ? -1 : 1));
+			com.threeamigos.foresta.mappa.Foresta.costruisciLocazione(tempio, TipoLocazione.TEMPIO);
+			partita.comando(Comando.ESCI_DA_CITTA);
 			RegistroSuggerimenti.setAttivo(false);
 			partita.comando(verso).comando(Comando.NUMERO_1);
 			assertEquals(tempio, com.threeamigos.foresta.mappa.Foresta.getPosizioneDelGruppo());
@@ -406,6 +422,19 @@ class PilotaggioDelTutorialTest {
 			assertFalse(aiuto.isSalvoDallaMorte());
 			aiuto.subSalute(aiuto.getSalute() + 100, null, Personaggio.NotificaFerite.SI, Personaggio.NotificaMorte.SI);
 			assertFalse(aiuto.isVivo());
+		}
+	}
+
+	@Test
+	void chiEGiaStatoPilotatoInUnaPartitaDiPrimaNonLoEDiNuovo() {
+		try (PartitaDiTest partita = partita(33)) {
+			// I suggerimenti visti si salvano: una partita nuova li trova già visti tutti, e il tutorial non pilota la prima locazione
+			for (TipoSuggerimento suggerimento : PilotaggioDelTutorial.SUGGERIMENTI_CHE_SBLOCCANO) {
+				RegistroSuggerimenti.visto(suggerimento);
+			}
+			PilotaggioDelTutorial.ricomincia();
+			PilotaggioDelTutorial.iniziaLocazione();
+			assertFalse(PilotaggioDelTutorial.pilotaQuestoTurno());
 		}
 	}
 }

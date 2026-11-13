@@ -216,6 +216,7 @@ public abstract class ForestaUI implements Temporizzabile {
 			aggiornaIlTutorial();
 		}));
 		BusEventi.iscriviti(InternoSfidaCartaForbiciSasso.class, e -> {
+			schermo.getRiquadroSfida().setNomi(e.getNomeDelGiocatore(), e.getNomeDellAvversario());
 			schermo.getRiquadroSfida().aggiorna(e.getMossaDelGiocatore(), e.getMossaDellAvversario(), e.getPunteggioDelGiocatore(),
 					e.getPunteggioDellAvversario(), e.isInizio());
 			schermo.primoPiano(TipoFinestra.SFIDA);

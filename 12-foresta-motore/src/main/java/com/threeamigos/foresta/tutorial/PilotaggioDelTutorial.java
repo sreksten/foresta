@@ -85,10 +85,10 @@ public final class PilotaggioDelTutorial implements TruccatoreDiDadi {
 	 * dopo; si avanza di un passo per volta. Lo chiama {@code LocazioneBase.crea}.
 	 */
 	public static void iniziaLocazione() {
-		// Si avanza di un passo per locazione, al massimo: un suggerimento visto prima del suo momento (l'inventario, per un oggetto trovato per caso) non
-		// deve far saltare un passo intero
-		int precedente = passoDellaLocazione == PASSO_DA_CALCOLARE ? 0 : passoDellaLocazione;
-		passoDellaLocazione = Math.min(calcolaIlPasso(), precedente + 1);
+		// A inizio partita si parte dal passo a cui si era arrivati (i suggerimenti visti si salvano: chi è già stato pilotato in una partita di prima non
+		// lo è di nuovo); poi si avanza di un passo per locazione, al massimo: un suggerimento visto prima del suo momento (l'inventario, per un oggetto
+		// trovato per caso) non deve far saltare un passo intero
+		passoDellaLocazione = passoDellaLocazione == PASSO_DA_CALCOLARE ? calcolaIlPasso() : Math.min(calcolaIlPasso(), passoDellaLocazione + 1);
 		azzeraIlPrimoScontro();
 	}
 

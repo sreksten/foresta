@@ -4,9 +4,11 @@ import com.threeamigos.foresta.tipi.MossaCartaForbiciSasso;
 import com.threeamigos.foresta.ui.DisplayableCanvas;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.Misura;
+import com.threeamigos.foresta.ui.Punto;
 import com.threeamigos.foresta.ui.immagini.NomiDelleImmagini;
 import com.threeamigos.foresta.ui.immagini.BufferedImageBuilder;
 import com.threeamigos.foresta.ui.immagini.ImageCache;
+import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.testo.TestoGrande;
 
 import java.awt.*;
@@ -35,6 +37,8 @@ public class DisplayableCanvasRiquadroSfida extends RiquadroSfida {
 	private final Map<MossaCartaForbiciSasso, BufferedImage> maniSinistre = new EnumMap<>(MossaCartaForbiciSasso.class);
 	private final Map<MossaCartaForbiciSasso, BufferedImage> maniDestre = new EnumMap<>(MossaCartaForbiciSasso.class);
 	private final Map<Integer, BufferedImage> punteggi = new HashMap<>();
+	// Di quanto l'ombra dei nomi è spostata in basso a destra
+	private static final int OMBRA = 2;
 
 	private boolean dimensionato;
 	private BufferedImage cornice;
@@ -74,6 +78,7 @@ public class DisplayableCanvasRiquadroSfida extends RiquadroSfida {
 			g.drawImage(cornice, 0, 0, null);
 			disegnaLeMani(g, fotogramma);
 			scriviIPunteggi(g);
+			scriviINomi(g);
 		} finally {
 			g.dispose();
 		}
@@ -90,6 +95,7 @@ public class DisplayableCanvasRiquadroSfida extends RiquadroSfida {
 			g.drawImage(cornice, 0, 0, null);
 			disegnaLeMani(g, fotogrammaFermo());
 			scriviIPunteggi(g);
+			scriviINomi(g);
 		} finally {
 			g.dispose();
 		}
@@ -132,6 +138,25 @@ public class DisplayableCanvasRiquadroSfida extends RiquadroSfida {
 		Disposizione d = disposizione();
 		scriviIlPunteggio(graphics, getPunteggioDelGiocatore(), d.getXManoSinistra(), d.getLarghezzaManoSinistra(), d.getYDelPunteggio());
 		scriviIlPunteggio(graphics, getPunteggioDellAvversario(), d.getXManoDestra(), d.getLarghezzaManoDestra(), d.getYDelPunteggio());
+	}
+
+	/**
+	 * I nomi negli angoli, come i titoli delle cornici dell'inventario: grigio chiaro con l'ombra nera
+	 */
+	private void scriviINomi(Graphics2D graphics) {
+		if (!getNomeDelGiocatore().isEmpty()) {
+			scriviConLOmbra(graphics, getNomeDelGiocatore(), posizioneDelNomeDelGiocatore());
+		}
+		if (!getNomeDellAvversario().isEmpty()) {
+			Image nome = ImageCache.get(getNomeDellAvversario(), DoomdarkColorModel.Color.LIGHT_GRAY);
+			scriviConLOmbra(graphics, getNomeDellAvversario(),
+					posizioneDelNomeDellAvversario(new Misura(nome.getWidth(null) + OMBRA, nome.getHeight(null) + OMBRA)));
+		}
+	}
+
+	private static void scriviConLOmbra(Graphics2D graphics, String testo, Punto punto) {
+		graphics.drawImage(ImageCache.get(testo, DoomdarkColorModel.Color.BLACK), punto.x + OMBRA, punto.y + OMBRA, null);
+		graphics.drawImage(ImageCache.get(testo, DoomdarkColorModel.Color.LIGHT_GRAY), punto.x, punto.y, null);
 	}
 
 	private void scriviIlPunteggio(Graphics2D graphics, int punteggio, int xMano, int larghezzaMano, int y) {

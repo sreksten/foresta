@@ -14,8 +14,12 @@ public class InternoSfidaCartaForbiciSasso extends EventoBase {
     /**
      * La sfida comincia: entrambi con il sasso in mano, zero a zero.
      */
-    public static InternoSfidaCartaForbiciSasso apre() {
-        return new InternoSfidaCartaForbiciSasso(MossaCartaForbiciSasso.SASSO, MossaCartaForbiciSasso.SASSO, 0, 0, false, true);
+    /**
+     * La sfida comincia: il capo del gruppo (nomeDelGiocatore) contro chi lo sfida (nomeDellAvversario)
+     */
+    public static InternoSfidaCartaForbiciSasso apre(String nomeDelGiocatore, String nomeDellAvversario) {
+        return new InternoSfidaCartaForbiciSasso(MossaCartaForbiciSasso.SASSO, MossaCartaForbiciSasso.SASSO, 0, 0, false, true, nomeDelGiocatore,
+                nomeDellAvversario);
     }
 
     /**
@@ -24,9 +28,10 @@ public class InternoSfidaCartaForbiciSasso extends EventoBase {
      */
     public static InternoSfidaCartaForbiciSasso mano(MossaCartaForbiciSasso mossaDelGiocatore,
                                                      MossaCartaForbiciSasso mossaDellAvversario, int punteggioDelGiocatore,
-                                                     int punteggioDellAvversario, boolean finale) {
+                                                     int punteggioDellAvversario, boolean finale, String nomeDelGiocatore,
+                                                     String nomeDellAvversario) {
         return new InternoSfidaCartaForbiciSasso(mossaDelGiocatore, mossaDellAvversario, punteggioDelGiocatore,
-                punteggioDellAvversario, finale, false);
+                punteggioDellAvversario, finale, false, nomeDelGiocatore, nomeDellAvversario);
     }
 
     private final MossaCartaForbiciSasso mossaDelGiocatore;
@@ -35,10 +40,13 @@ public class InternoSfidaCartaForbiciSasso extends EventoBase {
     private final int punteggioDellAvversario;
     private final boolean finale;
     private final boolean inizio;
+    private final String nomeDelGiocatore;
+    private final String nomeDellAvversario;
 
     private InternoSfidaCartaForbiciSasso(MossaCartaForbiciSasso mossaDelGiocatore,
                                           MossaCartaForbiciSasso mossaDellAvversario, int punteggioDelGiocatore,
-                                          int punteggioDellAvversario, boolean finale, boolean inizio) {
+                                          int punteggioDellAvversario, boolean finale, boolean inizio, String nomeDelGiocatore,
+                                          String nomeDellAvversario) {
         super(TipoEvento.INTERNO_SFIDA_CARTA_FORBICI_SASSO);
         this.mossaDelGiocatore = mossaDelGiocatore;
         this.mossaDellAvversario = mossaDellAvversario;
@@ -46,6 +54,8 @@ public class InternoSfidaCartaForbiciSasso extends EventoBase {
         this.punteggioDellAvversario = punteggioDellAvversario;
         this.finale = finale;
         this.inizio = inizio;
+        this.nomeDelGiocatore = nomeDelGiocatore;
+        this.nomeDellAvversario = nomeDellAvversario;
     }
 
     public MossaCartaForbiciSasso getMossaDelGiocatore() {
@@ -73,6 +83,16 @@ public class InternoSfidaCartaForbiciSasso extends EventoBase {
      */
     public boolean isInizio() {
         return inizio;
+    }
+
+    /** Il nome del capo del gruppo, che gioca la sfida */
+    public String getNomeDelGiocatore() {
+        return nomeDelGiocatore;
+    }
+
+    /** Il nome di chi ha lanciato la sfida */
+    public String getNomeDellAvversario() {
+        return nomeDellAvversario;
     }
 
 }

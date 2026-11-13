@@ -50,7 +50,9 @@ locazione, come `CHI_DUELLA`. Sfondo e avversari sono quelli della locazione; l'
 `DisplayableCanvasRiquadroSfida` (`TipoFinestra.SFIDA`) sta al centro dell'area di contenuto: la cornice larga
 (`ImageCache.corniceLarga`, `fondi/CorniceLarga.png`) è lo **sfondo** e le mani (`img/fondi/<Carta|Forbici|Sasso>-sx.png`
 per il giocatore, a sinistra, e `…-dx.png` per l'avversario, a destra, con la trasparenza) si disegnano **sopra**; in alto
-il punteggio di ognuno, con `TestoGrande` e il suo alone (`conAlone`). Le immagini si caricano e si scalano al primo uso,
+il punteggio di ognuno, con `TestoGrande` e il suo alone (`conAlone`); in alto a sinistra il nome del capo del gruppo e in basso a destra quello di chi lo
+sfida, a 12 pixel dai bordi esterni del riquadro (`RiquadroSfida.DISTANZA_DEI_NOMI`), nel font medio grigio chiaro con l'ombra nera come i titoli delle cornici dell'inventario (i nomi arrivano con
+`InternoSfidaCartaForbiciSasso`, i posti li dà `RiquadroSfida.posizioneDelNome…`). Le immagini si caricano e si scalano al primo uso,
 qualunque siano le loro dimensioni: il riquadro occupa **al massimo metà della larghezza e metà dell'altezza** dell'area di
 contenuto (`fattoreDiScala`, mai un ingrandimento). Si disegna dopo tutte le altre finestre (nessuna lo copre).
 

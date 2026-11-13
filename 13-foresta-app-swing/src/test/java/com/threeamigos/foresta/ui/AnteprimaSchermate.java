@@ -78,6 +78,13 @@ public final class AnteprimaSchermate {
 		canvas.getSchermo().notifica("Trovate una pozione, un'antica spada e due monete d'oro. Che fortuna!");
 		canvas.getSchermo().notifica("Un lupo vi guarda dal bosco, poi se ne va: può darsi che tornerà domani.");
 		salva(canvas, new File(cartella, "gioco.png"));
+		// La sfida a carta, forbici e sasso, ferma su una mano, con i nomi negli angoli
+		com.threeamigos.foresta.ui.riquadri.RiquadroSfida sfida = canvas.getSchermo().getRiquadroSfida();
+		sfida.setNomi("Aldric", "Folletto");
+		sfida.aggiorna(com.threeamigos.foresta.tipi.MossaCartaForbiciSasso.CARTA, com.threeamigos.foresta.tipi.MossaCartaForbiciSasso.SASSO, 2, 1, false);
+		canvas.getSchermo().primoPiano(com.threeamigos.foresta.tipi.TipoFinestra.SFIDA);
+		salva(canvas, new File(cartella, "sfida.png"));
+		sfida.setVisibile(false);
 		// Con la mappa davanti: sul telefono è uno dei riquadri della pila
 		canvas.getSchermo().primoPiano(TipoFinestra.MAPPA);
 		salva(canvas, new File(cartella, "gioco_mappa.png"));

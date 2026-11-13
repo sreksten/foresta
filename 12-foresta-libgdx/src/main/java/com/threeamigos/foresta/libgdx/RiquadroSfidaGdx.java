@@ -8,6 +8,8 @@ import com.threeamigos.foresta.tipi.MossaCartaForbiciSasso;
 import com.threeamigos.foresta.ui.Area;
 import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.Misura;
+import com.threeamigos.foresta.ui.Punto;
+import com.threeamigos.foresta.ui.testo.DoomdarkColorModel;
 import com.threeamigos.foresta.ui.immagini.NomiDelleImmagini;
 import com.threeamigos.foresta.ui.riquadri.RiquadroSfida;
 import com.threeamigos.foresta.ui.sprite.ModelloDelloSprite;
@@ -22,12 +24,16 @@ public final class RiquadroSfidaGdx extends RiquadroSfida {
 
 	private final ImmaginiGdx immagini;
 	private final TestoGrandeGdx testoGrande;
+	private final TestoGdx medio;
 	private final float zoom = (float) LivelloDiZoom.valore();
+	// Di quanto l'ombra dei nomi è spostata in basso a destra
+	private static final int OMBRA = 2;
 
-	public RiquadroSfidaGdx(int larghezzaContenuto, int altezzaContenuto, ImmaginiGdx immagini, TestoGrandeGdx testoGrande) {
+	public RiquadroSfidaGdx(int larghezzaContenuto, int altezzaContenuto, ImmaginiGdx immagini, TestoGrandeGdx testoGrande, TestoGdx medio) {
 		super(larghezzaContenuto, altezzaContenuto);
 		this.immagini = immagini;
 		this.testoGrande = testoGrande;
+		this.medio = medio;
 	}
 
 	@Override
@@ -96,6 +102,19 @@ public final class RiquadroSfidaGdx extends RiquadroSfida {
 
 		scriviIlPunteggio(batch, getPunteggioDelGiocatore(), area.getX() + d.getXManoSinistra(), d.getLarghezzaManoSinistra(), area.getY() + d.getYDelPunteggio());
 		scriviIlPunteggio(batch, getPunteggioDellAvversario(), area.getX() + d.getXManoDestra(), d.getLarghezzaManoDestra(), area.getY() + d.getYDelPunteggio());
+		// I nomi negli angoli, come i titoli delle cornici dell'inventario: grigio chiaro con l'ombra nera
+		if (!getNomeDelGiocatore().isEmpty()) {
+			scriviConLOmbra(batch, getNomeDelGiocatore(), area, posizioneDelNomeDelGiocatore());
+		}
+		if (!getNomeDellAvversario().isEmpty()) {
+			Misura scritta = new Misura(medio.larghezza(getNomeDellAvversario()) + OMBRA, medio.getFont().getHeight() + OMBRA);
+			scriviConLOmbra(batch, getNomeDellAvversario(), area, posizioneDelNomeDellAvversario(scritta));
+		}
+	}
+
+	private void scriviConLOmbra(Batch batch, String testo, Area area, Punto punto) {
+		medio.disegna(batch, testo, area.getX() + punto.x + OMBRA, area.getY() + punto.y + OMBRA, DoomdarkColorModel.Color.BLACK);
+		medio.disegna(batch, testo, area.getX() + punto.x, area.getY() + punto.y, DoomdarkColorModel.Color.LIGHT_GRAY);
 	}
 
 	private void scriviIlPunteggio(Batch batch, int punteggio, int xMano, int larghezzaMano, int y) {

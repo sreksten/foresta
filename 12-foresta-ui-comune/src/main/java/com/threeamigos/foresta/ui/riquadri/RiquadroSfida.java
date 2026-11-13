@@ -4,11 +4,13 @@ import com.threeamigos.foresta.tipi.MossaCartaForbiciSasso;
 import com.threeamigos.foresta.ui.Area;
 import com.threeamigos.foresta.ui.Finestra;
 import com.threeamigos.foresta.ui.Misura;
+import com.threeamigos.foresta.ui.Punto;
 import com.threeamigos.foresta.ui.immagini.NomiDelleImmagini;
 
 /**
  * Il riquadro della sfida a carta, forbici e sasso (vedi carta_forbici_sasso.md), senza disegno: la cornice larga come sfondo e, sopra, le mani delle due mosse
- * affiancate, a sinistra quella del giocatore e a destra quella dell'avversario, e in alto il punteggio di ognuno.
+ * affiancate, a sinistra quella del giocatore e a destra quella dell'avversario, e in alto il punteggio di ognuno; dentro la cornice, in alto a sinistra il
+ * nome del capo del gruppo e in basso a destra quello di chi lo sfida.
  * <p>
  * Mentre il giocatore sceglie, le due mani (due sassi) si muovono come nel "bim bum bam": su e giù e avanti e indietro, con due sinusoidi piccole attorno a
  * una posizione spostata verso i bordi della cornice, ritagliate allo spazio dentro il bordo nero ({@link #BORDO_DELLA_CORNICE}). Quando il giocatore ha
@@ -49,6 +51,10 @@ public abstract class RiquadroSfida implements Finestra {
 	public static final int RAGGIO_ALONE = 6;
 	// Il punteggio sta in alto, a questa distanza dal bordo interno della cornice (a grandezza naturale)
 	private static final int MARGINE_PUNTEGGIO = 8;
+	/**
+	 * I nomi stanno in due angoli opposti, a questa distanza in pixel dai bordi esterni del riquadro
+	 */
+	public static final int DISTANZA_DEI_NOMI = 12;
 
 	/**
 	 * Dove stanno la cornice e le mani, alla grandezza di schermo (l'origine è l'angolo in alto a sinistra del riquadro)
@@ -193,6 +199,8 @@ public abstract class RiquadroSfida implements Finestra {
 	private MossaCartaForbiciSasso mossaDellAvversario = MossaCartaForbiciSasso.SASSO;
 	private int punteggioDelGiocatore;
 	private int punteggioDellAvversario;
+	private String nomeDelGiocatore = "";
+	private String nomeDellAvversario = "";
 	// Quando le mani ripartono (il movimento comincia da ferme), e fino a quando mostrano le mosse scelte
 	private long inizioMovimentoNanos;
 	private long fermeFinoANanos;
@@ -276,6 +284,39 @@ public abstract class RiquadroSfida implements Finestra {
 
 	public int getPunteggioDellAvversario() {
 		return punteggioDellAvversario;
+	}
+
+	/**
+	 * Chi gioca: il capo del gruppo e chi lo ha sfidato
+	 */
+	public void setNomi(String nomeDelGiocatore, String nomeDellAvversario) {
+		this.nomeDelGiocatore = nomeDelGiocatore == null ? "" : nomeDelGiocatore;
+		this.nomeDellAvversario = nomeDellAvversario == null ? "" : nomeDellAvversario;
+	}
+
+	public String getNomeDelGiocatore() {
+		return nomeDelGiocatore;
+	}
+
+	public String getNomeDellAvversario() {
+		return nomeDellAvversario;
+	}
+
+	/**
+	 * Dove va il nome del capo del gruppo (l'angolo in alto a sinistra della scritta, nel riquadro): in alto a sinistra, a {@value #DISTANZA_DEI_NOMI}
+	 * pixel dai bordi esterni del riquadro
+	 */
+	public Punto posizioneDelNomeDelGiocatore() {
+		return new Punto(DISTANZA_DEI_NOMI, DISTANZA_DEI_NOMI);
+	}
+
+	/**
+	 * Dove va il nome di chi sfida, grande così (l'angolo in alto a sinistra della scritta, nel riquadro): in basso a destra, che finisca a
+	 * {@value #DISTANZA_DEI_NOMI} pixel dai bordi esterni del riquadro
+	 */
+	public Punto posizioneDelNomeDellAvversario(Misura scritta) {
+		Misura cornice = disposizione().cornice;
+		return new Punto(cornice.larghezza - DISTANZA_DEI_NOMI - scritta.larghezza, cornice.altezza - DISTANZA_DEI_NOMI - scritta.altezza);
 	}
 
 	/**

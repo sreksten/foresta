@@ -88,16 +88,18 @@ class ComponentiDelleMissioniTest {
 
     @Test
     void gliEventiDellaSfida() {
-        InternoSfidaCartaForbiciSasso apre = InternoSfidaCartaForbiciSasso.apre();
+        InternoSfidaCartaForbiciSasso apre = InternoSfidaCartaForbiciSasso.apre("Arsenio", "Folletto");
         assertTrue(apre.isInizio());
         assertFalse(apre.isFinale());
-        InternoSfidaCartaForbiciSasso mano = InternoSfidaCartaForbiciSasso.mano(MossaCartaForbiciSasso.CARTA, MossaCartaForbiciSasso.FORBICE, 1, 2, true);
+        InternoSfidaCartaForbiciSasso mano = InternoSfidaCartaForbiciSasso.mano(MossaCartaForbiciSasso.CARTA, MossaCartaForbiciSasso.FORBICE, 1, 2, true, "Arsenio", "Folletto");
         assertFalse(mano.isInizio());
         assertTrue(mano.isFinale());
         assertEquals(MossaCartaForbiciSasso.CARTA, mano.getMossaDelGiocatore());
         assertEquals(MossaCartaForbiciSasso.FORBICE, mano.getMossaDellAvversario());
         assertEquals(1, mano.getPunteggioDelGiocatore());
         assertEquals(2, mano.getPunteggioDellAvversario());
+        assertEquals("Arsenio", apre.getNomeDelGiocatore());
+        assertEquals("Folletto", mano.getNomeDellAvversario());
     }
 
     // ---- Gli incontri

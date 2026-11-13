@@ -109,7 +109,7 @@ public final class SchermoGdx extends SchermoDelGioco<SpriteGdx, SpriteAnnuncioG
 		// Centrato sul testo sotto la locazione, non sull'intero schermo
 		riquadroCombattimento = new RiquadroCombattimentoGdx(disposizione.getColonnaDestraX(), altezza, disposizione.getYPreferitaDelCombattimento(),
 				vistaPartita, immagini, medio);
-		riquadroSfida = new RiquadroSfidaGdx(larghezza, altezza, immagini, testoGrande);
+		riquadroSfida = new RiquadroSfidaGdx(larghezza, altezza, immagini, testoGrande, medio);
 		Area testo = disposizione.getTesto();
 		riquadroTesto = new RiquadroTestoGdx(testo.getX(), testo.getY(), testo.getLarghezza(), testo.getAltezza(), immagini, medio);
 		riquadroGruppo = new RiquadroGruppoGdx(disposizione.getGruppo().getX(), disposizione.getGruppo().getY(), vistaPartita, immagini, medio);

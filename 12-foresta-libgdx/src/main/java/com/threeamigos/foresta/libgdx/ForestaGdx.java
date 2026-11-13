@@ -105,7 +105,8 @@ public class ForestaGdx extends ApplicationAdapter {
 		riquadroIncantesimi = new RiquadroIncantesimiEPozioniGdx(MARGINE + 368 + 10, MARGINE, partita, immagini, medio);
 		nuvole = new NuvoleGdx(immagini);
 		testoGrande = new TestoGrandeGdx(immagini);
-		riquadroSfida = new RiquadroSfidaGdx(LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE, immagini, testoGrande);
+		riquadroSfida = new RiquadroSfidaGdx(LARGHEZZA_VIRTUALE, ALTEZZA_VIRTUALE, immagini, testoGrande, medio);
+		riquadroSfida.setNomi("Aldric", "Folletto");
 		riquadroSfida.aggiorna(MossaCartaForbiciSasso.SASSO, MossaCartaForbiciSasso.SASSO, 3, 1, true);
 		// La barra delle icone in fondo allo schermo, come il Dock; i comandi sono tanti, perché scorrano
 		ComandiPossibili.set(Arrays.asList(Comando.PERSONAGGIO_1, Comando.PERSONAGGIO_2, Comando.PERSONAGGIO_3, Comando.NORD, Comando.EST, Comando.SUD,

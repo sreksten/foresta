@@ -2091,7 +2091,7 @@ public abstract class LocazioneBase implements Locazione {
 		statoLocazione = StatoLocazione.SFIDA_CARTA_FORBICI_SASSO;
 		opzioneAmiciziaDisponibile = false;
 		opzioneCorruzioneDisponibile = false;
-		BusEventi.pubblica(InternoSfidaCartaForbiciSasso.apre());
+		BusEventi.pubblica(InternoSfidaCartaForbiciSasso.apre(gruppo.getCapo().getNome(), gruppoAvversario.getCapo().getNome()));
 		BusEventi.pubblica(new NotificaTestoFrase(dice(ProduttoreDiSfideCasuale.fraseDiSfida())));
 		impostaComandiPossibili();
 		return Stato.IN_LOCAZIONE;
@@ -2109,7 +2109,8 @@ public abstract class LocazioneBase implements Locazione {
 		}
 		PartitaCartaForbiciSasso.Mano mano = sfida.gioca(mossa);
 		BusEventi.pubblica(InternoSfidaCartaForbiciSasso.mano(mano.getGiocatore(), mano.getAvversario(),
-				sfida.getVittorieDelGiocatore(), sfida.getVittorieDellAvversario(), sfida.isFinita()));
+				sfida.getVittorieDelGiocatore(), sfida.getVittorieDellAvversario(), sfida.isFinita(), gruppo.getCapo().getNome(),
+				gruppoAvversario.getCapo().getNome()));
 		if (!sfida.isFinita()) {
 			impostaComandiPossibili();
 			return Stato.IN_LOCAZIONE;
