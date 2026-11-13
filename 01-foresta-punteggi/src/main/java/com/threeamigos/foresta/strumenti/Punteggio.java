@@ -7,8 +7,14 @@ package com.threeamigos.foresta.strumenti;
  */
 public interface Punteggio {
 
+    /**
+     * Il nome di chi ha fatto il punteggio, come lo ha scritto a fine partita.
+     */
     String getNome();
 
+    /**
+     * I punti.
+     */
     int getPunteggio();
 
     /**

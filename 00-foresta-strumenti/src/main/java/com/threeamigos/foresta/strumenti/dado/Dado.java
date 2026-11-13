@@ -95,12 +95,15 @@ public final class Dado {
         return trucco.doubleValue();
     }
 
+    // Il cuore di tutti i tira...: prende il prossimo trucco dei test, se c'è, altrimenti chiede un numero al generatore.
+    // pollFirst toglie il primo elemento della coda e lo restituisce, o restituisce null se la coda è vuota
     private static int intero(int min, int max) {
         Number trucco = TRUCCHI.pollFirst();
         if (trucco == null) {
             // Con un intervallo enorme (per esempio tutti gli int) max - min + 1 uscirebbe dagli int
             long ampiezza = (long) max - min + 1;
             if (ampiezza <= Integer.MAX_VALUE) {
+                // nextInt(n) dà un numero da 0 a n-1: sommando min si va da min a max
                 return SORGENTE.nextInt((int) ampiezza) + min;
             }
             return (int) (min + (long) (SORGENTE.nextDouble() * ampiezza));
@@ -132,11 +135,13 @@ public final class Dado {
     }
 
     /**
-     * Simula un lancio di dado a (max - min + 1) facce con numero minimo &gt;= 1.
+     * Un numero a caso fra min e max compresi, anche quando min e max sono uguali (allora il risultato è min, senza
+     * lanciare e senza consumare trucchi). Come {@link #tiraAncheAUnaFaccia(int)}, serve quando l'intervallo viene da un
+     * calcolo e può ridursi a un valore solo.
      * <p>L'unico controllo è che min sia &lt;= max
      * @param min il valore minimo
      * @param max il valore massimo
-     * @return il risultato del lancio, da 1 a N inclusi
+     * @return il risultato del lancio, da min a max inclusi
      */
     public static int tiraAncheSenzaRange(int min, int max) {
         if (min > max) {
@@ -181,6 +186,9 @@ public final class Dado {
         if (min >= max) {
             throw new IllegalArgumentException("Dado.tira(" + contesto + ", " + min + ", " + max + "): il valore minimo deve essere minore del valore massimo");
         }
+        // L'ordine delle precedenze: prima la coda dei trucchi dei test (la consuma intero), poi il truccatore della
+        // finestra di prova, infine il caso. Il truccatore si copia in una variabile locale perché un altro thread
+        // potrebbe cambiarlo fra il controllo e l'uso
         if (TRUCCHI.isEmpty()) {
             TruccatoreDiDadi t = truccatore;
             if (t != null) {
@@ -229,6 +237,7 @@ public final class Dado {
         if (voluto.isPresent()) {
             return voluto.get();
         }
+        // Il dado dà un numero da 1 a size, la lista si conta da 0: per questo il - 1
         return ammessi.get(tiraAncheAUnaFaccia(ammessi.size()) - 1);
     }
 

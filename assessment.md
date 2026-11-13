@@ -5,13 +5,13 @@ Valutazione del progetto al **2026-11-09**, rifatta da zero dopo la nascita dei 
 - la copertura viene da JaCoCo, sia modulo per modulo sia con tutti i test insieme;
 - i moduli e le loro dipendenze sono letti dai `pom.xml` e confrontati con `CLAUDE.md` e con il documento di ogni modulo.
 
-I giudizi sono segnati come **Giudizio**. I difetti ancora aperti stanno nel §5, con i codici della revisione precedente (B35, B41…), che [`todo.md`](todo.md) usa. Il §6 è nuovo: dice quanto i documenti `.md` sono allineati al codice. Le cose da fare per il porting su Android e iOS sono in [`assessment_portabilita.md`](assessment_portabilita.md): qui c'è solo il riassunto.
+I giudizi sono segnati come **Giudizio**. I difetti ancora aperti stanno nel §5, con i codici della revisione precedente (B35, B41…), che [`todo.md`](todo.md) usa. Il §6 è nuovo: dice quanto i documenti `.md` sono allineati al codice. Le cose da fare per il porting su Android e iOS sono in [`assessment_portabilita.md`](assessment_portabilita.md): qui c'è solo il riassunto. Il §11 (2026-11-13) è il piano della **revisione del codice modulo per modulo** (possibili `NullPointerException`, parti in comune da fattorizzare, leggibilità per un neofita), da fare un passo alla volta, con il prompt da usare.
 
 Questo assessment **non è una nuova lettura integrale dei sorgenti**. Sono rifatti da capo le misure, il grafo dei moduli, la verifica dei difetti aperti e il confronto fra documenti e codice (§6, che non è un controllo riga per riga: vedi le Osservazioni).
 
 ## 1. Sintesi
 
-- **Il gioco è completo e giocabile** da inizio a fine, con una novità: ora c'è un tutorial di 31 suggerimenti (modulo `03-foresta-tutorial`), e l'interfaccia esiste in due versioni, Swing e libGDX (con un lanciatore Android fuori da Maven).
+- **Il gioco è completo e giocabile** da inizio a fine, con una novità: ora c'è un tutorial di 31 suggerimenti (modulo `03-foresta-tutorial`), e l'interfaccia esiste in due versioni, Swing e libGDX (con un lanciatore Android, un progetto Gradle che Maven lancia con il profilo `android`).
 - **Il progetto è diviso in 33 moduli Maven, in fila.** Ognuno vede solo quelli sotto di lui, e il compilatore lo garantisce. I moduli nuovi dall'ultima volta sono `03-foresta-tutorial`, `12-foresta-ui-comune` (la logica di interfaccia che non disegna), `12-foresta-libgdx` e `13-foresta-app-libgdx`.
 - **3633 test, tutti verdi** (31 saltati, simulazioni da lanciare a mano), in 5 minuti e 25 secondi. La copertura delle righe con tutti i test è dell'**84%** (era 77%). Fuori dalla UI quasi ogni modulo è coperto al 95-100% dai test suoi.
 - **Giudizio sul codice:** in buona salute. Non ci sono difetti aperti di gravità alta o media. Il confine fra logica e disegno è nuovo e funziona: `DisplayableCanvas` è passato da 1781 a 676 righe, `PersonaggioBase` da 2054 a 1162. `Automa` però è cresciuto (da 2415 a 2615 righe).
@@ -109,7 +109,7 @@ Dal basso in alto, con il livello che porta il nome del modulo. Le dipendenze so
 | 10 | `modellodati`, `trofei` |
 | 11 | `motore-api` |
 | 12 | `motore`, `ui-comune`, `swing`, `libgdx` |
-| 13 | `app-swing`, `app-libgdx` |
+| 13 | `app-swing`, `app-libgdx`, `app-android` (solo con il profilo `android`, nato dopo questa valutazione) |
 
 **Giudizio:** il livello di `swing` e `libgdx` non rispetta la regola di `CLAUDE.md` (0 se non dipendono da nessuno, altrimenti 1 più il livello più alto fra le dipendenze dirette). Dipendono solo da `ui-comune`, che è al 12: per la regola sarebbero al 13, e le due applicazioni al 14. Gli altri 31 moduli la rispettano. O si rinominano quattro moduli (cartelle, `artifactId`, documenti, riferimenti), o si scrive nella regola che la UI sta tutta al 12. Decide l'utente.
 
@@ -199,55 +199,7 @@ Questo è l'elenco dei rilievi della valutazione. **Il 2026-11-09, subito dopo, 
 - i rilievi di dominio: `01-foresta-eventi.md` (134 costanti), `GrammarBean.md`, `artefatti_e_incantamenti.md` §7, `intermezzi.md`, `gestione_missioni.md`, `passi_missioni.md`, `09-foresta-missioni.md`, `05-foresta-personaggi.md`, `04-foresta-artefatti.md`, `08-foresta-tattiche.md`, `06-foresta-bestiario.md` e `bestiario.md`, `06-foresta-combattimento.md`, `03-foresta-danni.md`, `debolezze_e_resistenze.md`, `nomi.md`, `07-foresta-intermezzi.md`, `strumenti_di_prova.md`, `personaggi_giocabili.md`, `foresta-android.md`, `todo.md`, `missione_a_tappe.md`, `12-foresta-motore.md`, `10-foresta-modellodati.md`, `11-foresta-motore-api.md`, `02-foresta-notizie.md`, `00-foresta-strumenti.md` e `13-foresta-app-swing.md`;
 - `assessment_portabilita.md`: ha solo un blocco di aggiornamento in testa (non è riscritto).
 
-Qui sotto il testo originale dei rilievi, per memoria; nel §6.4 quel che resta aperto.
-
-**`CLAUDE.md`** (il documento che si legge per primo):
-- la tabella dei moduli ha la riga di `12-foresta-ui-comune` e quella di `12-foresta-swing` sulla stessa riga (`||`): `swing` non risulta in tabella;
-- la colonna «Dipende da» mescola dipendenze dirette e transitive, e non registra `comandi` per `bestiario` e `poteri`, né `tutorial` per `motore` e `ui-comune`;
-- `RegistroMissioni.setRifornitoreDelleBotteghe` non esiste più (c'è `setFornitoreLocazioneCompleta`); lo cita anche `09-foresta-missioni.md` e `foresta.md`;
-- percorsi vecchi: `…/artefatti/tipi/TipoArtefatto` (ora `…/tipi/`), `…/effettidistato/EffettoDiStatoMD` e `…/modificatori/ModificatoreAttributoMD` (ora `…/modellodati/`), `motore/RegoleEquipaggiamento` (ora `personaggi/`, in `05-foresta-personaggi`), `…/ui/DisplayableCanvasRiquadroSfida` (ora `…/ui/riquadri/`), `…/ui/immagini/MappaBottinoImmagine` (sta in `…/tipi/` di `12-foresta-swing`);
-- la ricetta dell'artefatto con nome e immagine propri manda a «un gif in `12-foresta-swing/…/img/oggetti/`»: le immagini sono PNG in atlanti, in `12-foresta-ui-comune/…/img/oggetti/` (`atlante_oggetti.png` e `.txt`);
-- `ImmagineBestiario` compare come la classe che compone le immagini del bestiario (§5.2);
-- il tutorial non ha una riga nella tabella «Dove trovare le cose» e il fumetto (`DisplayableCanvasTutorial`, `TutorialGdx`) non è nella sezione «Schermate».
-
-**I documenti che raccontano ancora un'altra epoca** (gravità alta: chi li segue sbaglia modulo o crede che manchi cose che ci sono):
-
-| Documento | Cosa non torna |
-| :--- | :--- |
-| `assessment_portabilita.md` | «Stato al 2026-10-26… non esiste ancora nessun modulo Android o libGDX»; la sezione sulla UI Swing ha numeri vecchi (`DisplayableCanvas` 1788 righe, oggi 676; `TracciatoreLogo` 1443, oggi 454; 99 file, oggi 85; «327 immagini gif», oggi PNG in atlanti) e le decisioni già prese (modulo libGDX, modulo comune, prototipo) sono ancora presentate come aperte |
-| `tutorial.md` | riga 3 «piano, niente codice ancora»; i suggerimenti sono contati 15, 17, 20, 21 in punti diversi (sono 31); fra i «Da fare» ci sono cose fatte (dotazione all'eremita, nome del modulo, testi); i punti operativi parlano ancora di scheletro e chimera drago, tolti il 2026-11-09 |
-| `motore_di_gioco.md` | la mappa dei pacchetti mette tutto nel motore (oggi `Foresta` è in `02-foresta-mappa`, `LineaTemporale` in `06-foresta-statistiche`, i gruppi in `05-foresta-personaggi`, `Dado` in `00-foresta-strumenti`, `trofei` nel modulo 10); la foresta ha 3 categorie di locazione (non 4, con `MISSIONE_SECONDARIA`) e la costruisce `CostruttoreDellaForesta`, non `Foresta.reimposta()`; il popolamento descrive «5 guerrieri, 4 ladri… Fra' Stornato e Sorella Intronata» mentre `RegistroPersonaggi` crea 4 guerrieri, 4 ladri e due per ogni altra classe, compresi Chierico e Druido, che il documento non nomina; 18 effetti di stato (sono 21); `tipi.ClasseIncantesimo` (è `TipoIncantesimo`); `FornitoreMissione` e `InternoStatoDiGioco` non esistono più |
-| `motore_grafico.md` | «tutto il rendering è Java2D/Swing/AWT»: c'è anche libGDX; dice che `GestoreMouse` fa da router (è `RouterDegliInput`, nel comune; `GestoreMouse` traduce solo gli eventi AWT); la barra icone è descritta come classe di Swing, ma il modello è `BarraIcone` in `ui-comune`; `TipoIcona.getIcona`/`componi` e `impostaAzioni` non esistono più; il tutorial è citato solo di passaggio; mancano bestiario, grimorio, tattiche e scelta della classe fra le schermate |
-| `12-foresta-swing.md` | dice che `TipoFinestra`, `TipoIcona` e `Orientamento` stanno nel pacchetto `tipi` di Swing (sono in `ui-comune`); la tabella dei pacchetti non ha `tutorial`; `JoystickVirtuale` è nel comune (in Swing c'è `JoystickVirtualeAwt`); «`DisplayableCanvas` 1800 righe» (sono 676) |
-| `tattiche_internals.md`, `tattiche_di_combattimento_automatiche.md` | dicono che la logica delle tattiche sta in `12-foresta-motore` e i dati in `10-foresta-modellodati`: sta tutta in `08-foresta-tattiche` (nel motore restano `LocazioneBase` e `Automa`, e il modulo 10 dipende da `08`); mancano molte azioni (Martello sacro, Attacco alle spalle, le abilità di Chierico e Druido, le sei globali) e le pozioni sono cinque, non quattro; i criteri di scelta dell'incantesimo sono cinque |
-| `03-foresta-tutorial.md` | «Da fare» che sono fatti (la UI col fumetto, il pollice, l'annulla, `ForestaUI` che mette insieme le situazioni); `PAGINE_MASSIME` è 12 (il documento dice 6) e la lista dei luoghi ha 12 pagine; non cita `NotificaMessaggioDelTutorial`, l'unico evento del modulo (la pubblica l'`Automa`) |
-| `tutorial_tattiche.md` | §1 dice che nessun suggerimento si apre nella schermata delle tattiche (c'è) e §4-5 propongono tre suggerimenti separati: è uno solo, di dodici pagine |
-| `intermezzi.md` | «due momenti di innesco» (`MomentoIntermezzo` ne ha 8 o 9); le risorse sarebbero in `12-foresta-swing/…/img/` (stanno in `12-foresta-ui-comune`); `IntermezzoDiProva` non esiste |
-| `GrammarBean.md` | `ProductionModeEnum` con `RANDOM`/`FIRST`/`LAST` (è `TipoModalitaProduzioneTesti` con `CASUALE`/`PRIMO`/`ULTIMO`); due messaggi d'errore che non esistono più; l'esempio d'uso cita `artefatti.txt` fuori dal progetto; «161 test e una grammatica di ~1300 righe» (258 test, 2563 righe) |
-| `artefatti_e_incantamenti.md` | §7 mette `artefatti2.txt` e `GrammaticaArtefatti` in `12-foresta-motore`: stanno in `04-foresta-artefatti` |
-| `01-foresta-eventi.md` | «129 costanti» di `TipoEvento` (sono 134: 9 comandi, 48 notifiche, 17 richieste, 60 interni; corretto) |
-| `foresta.md`, `didattico.md` | 30 e 29 moduli (sono 33); 19 e 18 effetti di stato (21); «1705 test» e «2145 test» (3633); «715 file e 96.500 righe, il motore 55.000» (1059 file e 132.968 righe, il motore 10.487); classi giocabili senza Chierico e Druido; UI solo Swing; la tabella dell'architettura di `foresta.md` è malformata; `oggetti.leggendari` (è `artefatti.leggendari`); `foresta.md` non elenca `foresta-android.md` e `porting_libGDX.md` |
-| `gestione_missioni.md`, `passi_missioni.md`, `09-foresta-missioni.md` | `TipoMissionePredefinita`, `FornitoreMissione` e `tipi.ClasseMissione` non esistono più (è `MissionePredefinita`); le «due missioni di recupero» sono una riga `TIPO=RECUPERO` di `IncaricoDiCombattimento`; «i testi sono in corso di spostamento»: il porting è finito; `leggendari.txt` non è in `12-foresta-motore` (sta in `04-foresta-artefatti`); `MissionePredefinita` ha 52 costanti, non 49 |
-| `12-foresta-motore.md` | `Stato` ha 54 costanti, non 51; dice che `AvvioDelMotore` passa `GestoreSuggerimentiSuFile` al registro (la riga è commentata); non nomina il tutorial fra le dipendenze dichiarate nel pom |
-
-**Gravità media o bassa** (un nome, un numero, una riga):
-- `05-foresta-personaggi.md`: `TipoIncantesimo` ha 16 formule (il documento ne conta 10, senza le sei globali), `PortataIncantesimo` 5 valori, le famiglie sono quattro e non tre, a `TipoMotivoNelGruppo` manca `MISSIONE`.
-- `08-foresta-tattiche.md`: `CriterioIncantesimo` ha 5 valori (manca `PIU_ECONOMICO_CHE_BASTA`); `TatticheBase` ha 554 righe.
-- `06-foresta-bestiario.md` e `bestiario.md`: le voci sono 33 (25 mostri più 8 ruoli), non 32; `bestiario.md` mette `GestoreBestiario` in `11-foresta-motore-api` (sta in `06-foresta-bestiario`).
-- `debolezze_e_resistenze.md`: la tabella non ha Chierico e Druido (che hanno regole) né l'immunità dell'Arpia all'aria.
-- `04-foresta-artefatti.md`: `TipoSlotArtefatto` ha 9 valori, con `NUCLEO`.
-- `03-foresta-danni.md`: dice che le tattiche guardano `statiCausabili`; non è così (§5.2).
-- `nomi.md`: la generazione dei residenti sta in `CostruttoreDellaForesta`/`PopolatoreDelMondo`, non in `Foresta.reimposta()`; il conteggio di due liste di nomi è di uno o due fuori.
-- `12-foresta-ui-comune.md` e `12-foresta-libgdx.md`: «Da fare» già fatti (estrarre da Swing la barra, `TipoIcona`, gli sprite; l'input a tocco), «gli sprite arriveranno» (arrivati), FitViewport 1142×656 (è quello delle pagine di prova).
-- `porting_libGDX.md`: la riga 98 dice che il Dock non ha senso sul tocco, e il §9 dice il contrario; la tabella 12bis elenca come «da estrarre» classi già nel comune (con «1203 righe» per `DisplayableCanvasTattiche`, oggi 212).
-- `todo.md`: le voci sul tutorial sono già in gran parte fatte; «sedici TODO sparsi» (sono 4); parla di gif per le immagini.
-- `foresta-android.md`: tra le cose da fare c'è «schermo sempre acceso», ma `AndroidLauncher` imposta `useWakelock`; «945 file» non è riproducibile.
-- `strumenti_di_prova.md`: la tabella dei contesti di lancio non ha `EFFETTO_DI_STATO_DELL_ARMA`; `TrucchiDiSviluppo` sta in `00-foresta-strumenti` e non nel «modulo contratti».
-- `personaggi_giocabili.md`: `TipoIcona.getIconaInRicarica` non esiste (è `IconeAwt.iconaInRicarica`).
-- `10-foresta-modellodati.md` e `11-foresta-motore-api.md`: una voce di troppo o di meno in un elenco (`Notizie.setFornitoreDiDati`, `FaseDiGioco.LINGUA`).
-- `13-foresta-app-swing.md`: non cita `ConvenzioniDiLocalizzazioneTest`, `AnteprimaSchermate` e `AnteprimaIntermezzo`.
-
-**Diari nei documenti.** `artefatti_e_incantamenti.md`, `interazioni_effetti_di_stato.md`, `modificatori_temporanei.md`, `testi_delle_missioni.md`, `gestione_missioni.md` e `tutorial.md` portano lunghe sezioni «fatto (data)», che sono la storia del lavoro e citano nomi sparito. `CLAUDE.md` dice che i documenti descrivono lo stato attuale e che la storia è in git: queste sezioni sono la ragione per cui così tanti nomi non si trovano più nel codice.
+Il testo dettagliato dei rilievi (documento per documento, con i nomi e i numeri sbagliati) è nella storia di git, nella versione di questo file del 2026-11-09; qui resta solo quel che è ancora aperto (§6.4). Un'osservazione vale ancora: i **diari nei documenti** (le sezioni «fatto (data)» di `artefatti_e_incantamenti.md`, `interazioni_effetti_di_stato.md`, `modificatori_temporanei.md`, `testi_delle_missioni.md`, `gestione_missioni.md` e `tutorial.md`) citano nomi che non esistono più, ed è per loro che così tanti nomi non si trovavano nel codice.
 
 ### 6.4 Cosa resta da correggere
 
@@ -262,7 +214,7 @@ Qui sotto il testo originale dei rilievi, per memoria; nel §6.4 quel che resta 
 Il dettaglio è in [`assessment_portabilita.md`](assessment_portabilita.md), che però è fermo al 2026-10-26 (§6.3): va letto come l'analisi di partenza, non come lo stato.
 
 - **Fatto da allora:**
-  - esiste `12-foresta-libgdx` (l'interfaccia in libGDX, con la stessa partita di Swing), con `13-foresta-app-libgdx` per il desktop e `foresta-android/` (Gradle, fuori da Maven) per Android;
+  - esiste `12-foresta-libgdx` (l'interfaccia in libGDX, con la stessa partita di Swing), con `13-foresta-app-libgdx` per il desktop e `foresta-android/` (Gradle) per Android, che dal 2026-11-13 Maven costruisce con `mvn package -Pandroid` (`13-foresta-app-android`);
   - la logica d'interfaccia che non disegna è in `12-foresta-ui-comune`, senza `java.awt`, Swing né libGDX (lo controlla `DipendenzeDalToolkitGraficoTest`);
   - la barra delle icone, il Dock (anche col dito e in verticale), il tutorial e i gesti sul tocco sono nel comune.
 - **Già pronto, come prima:** nessun modulo sotto la UI usa il toolkit grafico; la cartella dei file si può iniettare; l'uscita dal gioco è affidata alla piattaforma (`NotificaUscitaDalGioco`); i contenuti (storia, finali, testi delle enum, grammatiche) stanno sotto la UI.
@@ -357,6 +309,159 @@ Dire che il combattimento è «senza posizioni» è troppo: la posizione c'è, m
 
 Dal meno rischioso: (1) opzioni per la rigiocabilità (seme a scelta, difficoltà), perché toccano poco; (2) l'audio, perché è un'aggiunta isolata; (3) le due file, che si appoggiano all'ordine del gruppo; (4) una scelta di abilità a ogni livello, come primo passo verso gli alberi; (5) il resto, che chiede contenuto o più piattaforme. I punti di forza del §10.1 non vanno toccati senza un motivo: le tattiche, in particolare, dovranno poter usare ogni nuova abilità.
 
+## 11. Revisione del codice modulo per modulo (dal 2026-11-13)
+
+### 11.1 Perché e come
+
+Gli assessment precedenti hanno misurato il progetto ma non hanno riletto i sorgenti. Questa revisione li rilegge tutti, con tre obiettivi:
+
+1. **Robustezza**: trovare dove può nascere una `NullPointerException` (e, già che si legge, gli altri errori che si vedono a occhio: indici fuori dai limiti, divisioni per zero, casi dimenticati di uno `switch`, risorse non chiuse).
+2. **Parti in comune**: trovare il codice ripetuto che si potrebbe mettere in un posto solo (dentro un modulo o, se serve a più moduli, nel più basso che li serve tutti).
+3. **Leggibilità per un neofita**: il codice deve poterlo leggere anche chi conosce Java da poco e non conosce il gioco. Dove serve si aggiungono commenti; dove il codice è criptico si spiega.
+
+Si procede **un passo alla volta**, dal basso verso l'alto (§11.3): un passo è un modulo o un pezzo di un modulo grande, fra le 2.000 e le 6.000 righe circa, così una sessione basta e non servono decine di agenti insieme. Dal basso perché le parti in comune possono solo scendere: quando si arriva a un modulo alto si sa già che cosa offrono quelli sotto.
+
+**Cosa si fa subito e cosa si propone.** In ogni passo:
+- **i commenti si aggiungono subito** (non cambiano il comportamento);
+- **le correzioni dei possibili `NullPointerException` e le fattorizzazioni si propongono**, con file e riga, e si applicano solo dopo l'ok dell'utente (regole di `CLAUDE.md`: niente iniziative sul disegno, prima di cambiare la forma del codice si chiede). Le correzioni piccole e locali (un controllo, un valore di ritorno) si possono applicare nello stesso passo, dopo l'ok; le fattorizzazioni fra moduli diversi vanno nel §11.5 e si fanno a parte;
+- **il commit si fa solo su richiesta**, dopo la revisione dell'utente.
+
+Alla fine di ogni passo si aggiornano la riga della tabella del §11.3 (stato, data) e il §11.4 (che cosa si è trovato).
+
+### 11.2 Il prompt di un passo
+
+Da incollare in una sessione nuova di Claude Code, mettendo al posto di `<PASSO>` il numero del passo della tabella del §11.3:
+
+> Esegui il passo `<PASSO>` della revisione del codice descritta in `assessment.md` §11. Leggi prima §11.1 e §11.3 (che cosa entra nel passo) e §11.4 e §11.5 (che cosa hanno trovato i passi prima: non ripeterlo, e usa le parti comuni già proposte). Lavora tu, leggendo i file per intero; al massimo un agente di aiuto se il passo è grande, mai più di due.
+>
+> Per **ogni file** del passo:
+>
+> 1. **`NullPointerException` possibili.** Per ogni riferimento che si usa (chiamata di metodo, accesso a un campo, `unboxing` di un `Integer`/`Boolean`, `switch` su un'enum, `for` su una collezione) chiediti se può valere `null`, e **non fermarti al file**: risali a chi lo produce (chi chiama il metodo, chi assegna il campo, cosa restituisce il metodo chiamato). Casi tipici in questo progetto: `Map.get` su una chiave che può mancare; metodi che restituiscono `null` per dire «non c'è» (`trova…`, `cerca…`, `get…OrNull`); campi dei `…MD` dopo la rilettura di un salvataggio (un campo che il file non aveva); singleton e registri usati prima di `azzera`/`installa`/`setFornitoreDiDati`; parametri che arrivano dagli eventi del bus; `Testi.get` con una chiave che manca nei `.properties`; personaggi morti o rimossi dal gruppo nel mezzo di un combattimento; liste vuote dove si prende il primo elemento. Segnala **solo i casi che puoi raggiungere davvero** (scrivi il percorso: chi chiama, con quali dati), separando i certi dai plausibili; un caso che hai controllato e scartato scrivilo in una riga, così il passo dopo non lo ricontrolla. Non proporre controlli `if (x != null)` che nascondono un errore: se `null` vuol dire che qualcosa è andato storto prima, la correzione è lì.
+> 2. **Parti in comune.** Cerca il codice ripetuto: metodi quasi uguali in classi sorelle (per esempio le classi dei personaggi e dei mostri, le missioni, le schermate Swing e libGDX), blocchi copiati con piccole differenze, costanti ripetute, cicli che fanno la stessa ricerca. Per ognuno: dove sta (file e righe), che cosa avrebbe di comune, **dove andrebbe** (in quale classe e in quale modulo, rispettando i livelli: un modulo vede solo quelli sotto), quante righe si risparmiano e che cosa si rischia. Non vale la pena di fattorizzare due righe uguali, né di unire cose che si somigliano oggi ma hanno ragioni diverse per cambiare. Le proposte che toccano più moduli vanno nel §11.5.
+> 3. **Leggibilità per un neofita.** Immagina un lettore che conosce le basi di Java ma non le lambda, gli stream, i generici più complicati né il gioco. **Aggiungi i commenti** (in italiano, con le convenzioni di `CLAUDE.md`, virgolette “ ”):
+>    - in testa a **ogni classe** che non ce l'ha, un Javadoc che dice che cosa rappresenta nel gioco, chi la usa e perché esiste (non come è fatta);
+>    - sui **metodi pubblici** il cui nome non basta (che cosa restituisce, quando restituisce `null` o una lista vuota, che effetti ha sullo stato del gioco);
+>    - sulle righe **criptiche**: stream lunghi (che cosa ne esce), espressioni con operatori ternari annidati, calcoli con numeri (da dove vengono e che cosa vogliono dire: per esempio una probabilità, una formula di danno), giochi di bit, ordinamenti con `Comparator` composti, ricorsioni, convenzioni del progetto che un esterno non conosce (il bus degli eventi, i fornitori di dati, il `Dado` con il suo `ContestoLancio`, i `…MD`).
+>    Non commentare l'ovvio (`// incrementa i`) e non riscrivere il codice per renderlo più leggibile senza chiedere: se un pezzo andrebbe riscritto (un metodo di 150 righe, un nome che inganna), proponilo nel rapporto. Non cambiare nomi, firme né comportamento.
+>
+> Alla fine:
+> - compila e lancia i test del modulo (`mvn -q test -pl <modulo> -am`, oppure senza `-q` per vedere gli errori); i commenti non devono rompere niente;
+> - **non fare commit**;
+> - aggiorna `assessment.md`: nella tabella del §11.3 la colonna «Stato» del passo (`fatto il <data>`, o `in corso` se non hai finito, con il punto in cui riprendere), nel §11.4 una sottosezione `#### Passo <PASSO>` con: i possibili `NullPointerException` (certi / plausibili / controllati e scartati), le parti in comune proposte, i pezzi che andrebbero riscritti, i file commentati; nel §11.5 le proposte fra moduli;
+> - poi riassumimi le proposte, una per una, e aspetta l'ok prima di applicarle.
+
+### 11.3 I passi
+
+In ordine di livello. Le righe sono quelle di `wc -l` su `src/main/java` al 2026-11-13. I test non entrano nella revisione (si leggono solo per capire come si usa una classe). Per i moduli grandi il passo dice quali pacchetti o file entrano; «A–M» vuol dire i file il cui nome comincia con una lettera da A a M.
+
+| Passo | Modulo | Che cosa entra | Righe | Stato |
+| ---: | :--- | :--- | ---: | :--- |
+| 1 | `00-foresta-serializzazione`, `00-foresta-strumenti`, `01-foresta-eventi`, `01-foresta-punteggi` | tutto | 2.700 | fatto il 2026-11-13, proposte applicate |
+| 2 | `01-foresta-testi` | tutto (`GrammarBean` da solo fa 2.563 righe) | 4.600 | da fare |
+| 3 | `02-foresta-attributi`, `02-foresta-comandi`, `02-foresta-effettidistato`, `02-foresta-mappa` | tutto | 3.600 | da fare |
+| 4 | `02-foresta-notizie`, `03-foresta-danni`, `03-foresta-tutorial` | tutto | 1.550 | da fare |
+| 5 | `04-foresta-artefatti` | tutto | 5.250 | da fare |
+| 6 | `05-foresta-personaggi` | `tipi` (con `CostantiPersonaggi`), `modellodati`, `interfacce`, `eventi` | 5.700 | da fare |
+| 7 | `05-foresta-personaggi` | `personaggi`: i meccanismi (`PersonaggioBase`, `Personaggio`, `SaluteEMorte`, `EffettiDiStato`, `ModificatoriTemporanei`, `AttributiSecondari`, `CaricoEInventario`, `GestoreProgressione`, `Progressione`, `RegoleEquipaggiamento`, `CalcolatoreRiposo`, `RisultatoRiposo`, `FabbricaPersonaggi`, `EquipaggiamentoIniziale`, `LanciatoreDeiDadi`, `MoltiplicatoriDiClasse`, `NomeEDescrizione`, `ArmaNaturale`, `PersonaggioNonCombattente`) e `gruppi` | 5.500 | da fare |
+| 8 | `05-foresta-personaggi` | `personaggi`: le classi dei personaggi e dei mostri (tutti gli altri file, da `Alchimista` a `Viverna`): **qui le parti in comune sono il tema principale** (sono una sessantina di classi corte e simili: se non basta una sessione, A–L e M–Z) | 7.550 | da fare |
+| 9 | `06-foresta-bestiario`, `06-foresta-combattimento`, `06-foresta-statistiche` | tutto | 4.000 | da fare |
+| 10 | `07-foresta-intermezzi`, `07-foresta-mondo` | tutto | 4.600 | da fare |
+| 11 | `07-foresta-poteri` | tutto | 3.600 | da fare |
+| 12 | `08-foresta-bottino`, `08-foresta-economia` | tutto | 3.350 | da fare |
+| 13 | `08-foresta-tattiche` | tutto | 5.950 | da fare |
+| 14 | `09-foresta-missioni` | `missioni` (l'infrastruttura: `MissioneAPassi`, `Passo`, `RegistroMissioni`…), `tipi`, `modellodati`, `eventi`, `interfacce`, `intermezzi`, `oggetti` | 6.250 | da fare |
+| 15 | `09-foresta-missioni` | `missioni/incarichi` | 6.250 | da fare |
+| 16 | `09-foresta-missioni` | `missioni/richieste` | 4.050 | da fare |
+| 17 | `09-foresta-missioni` | `missioni/storie`, `missioni/leggende`, `missioni/principali` | 5.000 | da fare |
+| 18 | `10-foresta-modellodati`, `10-foresta-trofei`, `11-foresta-motore-api` | tutto | 2.800 | da fare |
+| 19 | `12-foresta-motore` | `motore` (con `Automa`) | 4.750 | da fare |
+| 20 | `12-foresta-motore` | `locazioni` (con `LocazioneBase`) | 4.150 | da fare |
+| 21 | `12-foresta-motore` | `salvataggi`, `oggetti`, `testi`, `tutorial`, `tipi`, `intermezzi` | 1.950 | da fare |
+| 22 | `12-foresta-ui-comune` | `ui` (il pacchetto, senza i sottopacchetti: `SchermoDelGioco`, `ForestaUI`, il router…), `tipi`, `eventi` | 5.250 | da fare |
+| 23 | `12-foresta-ui-comune` | `ui/schermate` A–M | 3.850 | da fare |
+| 24 | `12-foresta-ui-comune` | `ui/schermate` N–Z | 3.750 | da fare |
+| 25 | `12-foresta-ui-comune` | `ui/riquadri`, `ui/tutorial` | 4.450 | da fare |
+| 26 | `12-foresta-ui-comune` | `ui/barra`, `ui/componenti`, `ui/testo` | 4.250 | da fare |
+| 27 | `12-foresta-ui-comune` | `ui/immagini`, `ui/sfx`, `ui/sprite` | 5.250 | da fare |
+| 28 | `12-foresta-swing` | `ui` (il pacchetto), `ui/barra`, `ui/componenti`, `ui/immagini`, `ui/testo`, `ui/tutorial`, `tipi`, `eventi` | 3.950 | da fare |
+| 29 | `12-foresta-swing` | `ui/riquadri`, `ui/schermate`, `ui/tattiche` | 3.600 | da fare |
+| 30 | `12-foresta-swing` | `ui/sprite`, `ui/sfx`, `ui/sviluppo` | 2.450 | da fare |
+| 31 | `12-foresta-libgdx` | `libgdx` A–R | 3.000 | da fare |
+| 32 | `12-foresta-libgdx` | `libgdx` S–Z, `libgdx/sviluppo`; **confronto con Swing**: quel che le due interfacce fanno uguale e potrebbe scendere in `12-foresta-ui-comune` | 3.850 | da fare |
+| 33 | `13-foresta-app-swing`, `13-foresta-app-libgdx`, `13-foresta-app-android`, `foresta-android/` (`AndroidLauncher`, `app/build.gradle`) | tutto; per Android e Gradle solo leggibilità e robustezza | 1.100 | da fare |
+
+### 11.4 Risultati dei passi
+
+Ogni passo aggiunge qui la sua sottosezione, `#### Passo N`.
+
+#### Passo 1: `00-foresta-serializzazione`, `00-foresta-strumenti`, `01-foresta-eventi`, `01-foresta-punteggi` (2026-11-13)
+
+Letti per intero i 39 file (2.700 righe), seguendo i chiamanti nei moduli sopra dove serviva per decidere se un caso è raggiungibile. Test dei quattro moduli verdi dopo i commenti (32 + 51 + 16 + 7).
+
+**Esito (2026-11-13):** l'utente ha approvato tutte le proposte tranne X1, e sono applicate:
+- N1.1: `getMessaggio` restituisce null invece di andare in errore;
+- D1.1: `booleano` accetta solo `true` e `false`, e il test che verificava il vecchio comportamento è stato adattato;
+- D1.2: il registro riceve anche il messaggio;
+- D1.3: `volatile`;
+- D1.5: la costante è fra le notifiche;
+- F1.1: c'è `NotificaDiTesto`;
+- F1.2 e F1.3.
+
+In più, su richiesta, i nomi inglesi di `BusEventi` sono diventati italiani (`tipoDiEvento`, `iscritto`, `iscritti`). Dopo le modifiche sono verdi tutti i test del progetto: 3.759, di cui 37 saltati.
+
+**`NullPointerException` possibili**
+
+- *Certi:* nessuno.
+- *Plausibili:*
+  - **N1.1** `InternoException.getMessaggio()` (`01-foresta-eventi`) fa `exception.getMessage()` se il messaggio è null: con un'eccezione null esce una `NullPointerException`. Oggi tutti quelli che la costruiscono le passano un'eccezione presa in un `catch`, quindi non succede. Però `SegnalatoreDegliErrori.descrizione` (`12-foresta-ui-comune`) controlla `eccezione == null` *dopo* aver chiamato `getMessaggio()`, e quel controllo non può mai servire. Correzione proposta: `getMessaggio()` restituisce null se mancano tutti e due, così il controllo della UI funziona.
+  - **N1.2** `MappaProprieta.salva` (`00-foresta-serializzazione`): una chiave null dà una `NullPointerException` in `validaChiave`, e un valore null si salva come il testo `"null"` (e si rilegge come `"null"`). Il controllo c'è in `pulisciValore`, ma solo se chi riempie la mappa lo chiama. Da verificare nei passi 3 (`LocazioneMD`) e 14 (`MissioneMD`), che sono quelli che la riempiono.
+- *Controllati e scartati:*
+  - `TemporizzatoreJ2SE`: `temporizzabile.tick()` con un `temporizzabile` null. Non succede: `Automa` e `ForestaUI` lo impostano nel costruttore, prima di qualunque `inizia`, e comunque l'errore si prenderebbe e si segnalerebbe.
+  - `Classifica.getPunteggio` prima di riempirla, con i nomi null. Non succede: `GestorePunteggiBase` la legge dal file o rimette la predefinita nel costruttore.
+  - `BusEventi.pubblica(null)` e `Dado.scegli(contesto, null)`: sarebbero errori di chi chiama, e nessuno lo fa.
+
+**Altri difetti (non `NullPointerException`)**
+
+- **D1.1** `LettoreCampi.booleano()` legge come falso qualunque testo diverso da `true`. `intero()` ed `enumerato()` invece danno un `IOException` su un campo rovinato, mentre un booleano rovinato diventa falso senza dire niente. Proposta: accettare solo `true` e `false`, e dare errore per il resto.
+- **D1.2** Il costruttore senza argomenti di `TemporizzatoreJ2SE` butta via il messaggio «Impulsi fermati dopo N errori di fila» (la lambda scrive solo l'eccezione). Lo usano solo i test, quindi è poco grave; ma o si scrive anche il messaggio o si toglie il costruttore (togliere va chiesto).
+- **D1.3** `TemporizzatoreJ2SE`: `impulsiFalliti` e `temporizzabile` si leggono e si scrivono sul thread principale fuori dal lucchetto, mentre `pianifica` li tocca dentro. In pratica funziona, perché il passaggio dalla coda del thread principale fa vedere i valori aggiornati, ma non è dichiarato. Se si vuole essere puliti, basta `volatile` su `temporizzabile`.
+- **D1.4** (da guardare nel passo 21) Il costruttore di `GestorePunteggiBase` chiama `carica()`, che le sottoclassi ridefiniscono. È una trappola nota di Java: il metodo della sottoclasse gira prima che i suoi campi siano inizializzati. Oggi va bene solo perché il campo `nomeFile` di `GestorePunteggiSuFile` non ha un valore iniziale.
+- **D1.5** In `TipoEvento` la costante `NOTIFICA_MESSAGGIO_DEL_TUTORIAL` sta nel blocco degli eventi interni. È solo una questione di ordine, ma confonde chi legge.
+
+**Parti in comune**
+
+- **F1.1** `NotificaTestoFrase` e `NotificaTestoParagrafo` sono uguali, tranne il tipo. Possono estendere una classe astratta `NotificaDiTesto` (stesso pacchetto) con il messaggio, il getter e `conInizialeMaiuscola`; devono comunque restare due classi, perché il bus smista per classe. Si risparmiano una quindicina di righe, e soprattutto si vede che sono parenti.
+- **F1.2** `Serializzabile.facoltativo` ripete la regola delle enum di `campo`. Può diventare `valore == null ? "" : campo(valore)`: tre righe in meno e una regola in un posto solo.
+- **F1.3** `InternoErrore` ha il campo `messaggio` sia `public final` sia con il getter. Il campo andrebbe reso `private`, come in tutti gli altri eventi.
+- *Non vale la pena:* i controlli ripetuti di `Dado` (`tira(N)`, `tira(contesto, N)`, i due `tiraAncheAUnaFaccia`). Sono quattro righe ciascuno, e ognuno ha un messaggio che nomina il suo metodo, che è utile.
+- Una proposta che tocca tutti i moduli (`TipoEvento`) è nel §11.5.
+
+**Pezzi che andrebbero riscritti:** nessuno.
+
+**Commenti aggiunti**
+
+Su `Serializzabile` (che cos'è un salvataggio a righe, con un esempio), `LettoreCampi` (`Pattern.quote` e lo `split` con -1), `Dado` (l'ordine delle precedenze fra trucchi dei test, truccatore e caso; il `- 1` della scelta; un Javadoc che diceva «da 1 a N» dove il risultato va da min a max), `TrucchiDiSviluppo`, `ModalitaDiProva`, `DestinazioneConsoleEFile`, `TemporizzatoreJ2SE` (il thread daemon e `scheduleWithFixedDelay`; gli accenti scritti con l'apostrofo), `ThreadPrincipale` (perché un thread solo), `BusEventi` (che cos'è il publish/subscribe, con un esempio; le collezioni concorrenti, il `ThreadLocal`, il cast con `@SuppressWarnings`, lo smistamento per classe esatta), `EventoBase` (diceva «astratta» e non lo è; a che serve il tipo), `InternoException`, `InternoMessaggio` (il Javadoc del getter era sbagliato), `TipoEvento`, `Classifica` (gli array paralleli, i passi di `inserisci`), `GestorePunteggi` (diceva che lo crea `Main`, invece è `AvvioDelMotore`) e `Punteggio`.
+
+**Giudizio**
+
+Questi quattro moduli sono la parte più curata del progetto. Sono piccoli, fanno una cosa sola, sono coperti al 100% dai loro test e hanno quasi tutti un Javadoc che spiega il perché, non solo il cosa. Alcune scelte sono buone e non banali:
+- il `Dado` come unica sorgente di caso, con tre livelli di trucco in un ordine chiaro;
+- il bus che isola l'iscritto che fallisce senza togliere l'evento agli altri;
+- il temporizzatore che rende innocui gli impulsi già in coda dopo un cambio di stato (il numero di «pianificazione»);
+- `LettoreCampi`, che trasforma un salvataggio rovinato in un `IOException` con la riga, invece di un errore a caso più avanti.
+
+Da migliorare, in ordine di importanza:
+1. Le parti più difficili per un neofita, cioè la concorrenza del temporizzatore, i generici e il `ThreadLocal` del bus, ora sono commentate, ma restano le più delicate del progetto. Chi le tocca deve conoscere il modello dei thread descritto in `ThreadPrincipale`.
+2. Lo stile non è uniforme: alcuni file sono rientrati con i tab (`LettoreCampi`, `Logger`, `Classifica`), altri con quattro spazi (`Dado`, `BusEventi`, `TrucchiDiSviluppo`). (`BusEventi` usava anche nomi inglesi, `eventType`, `listener`, `list`; corretti.) Non cambia niente nel funzionamento, ma un neofita nota l'incoerenza. Uniformare è un lavoro meccanico, da fare se si vuole su tutto il progetto e in un commit a parte.
+3. Il difetto D1.1 (un booleano rovinato letto in silenzio come falso) è l'unica crepa nella regola, altrimenti rispettata, che un salvataggio rovinato si dichiara.
+4. `TipoEvento` oggi serve solo al registro (570 righe che ripetono i nomi delle classi); l'utente lo tiene come dizionario degli eventi (§11.5, X1).
+
+### 11.5 Proposte che toccano più moduli
+
+Le fattorizzazioni che spostano codice fra moduli si raccolgono qui, con i passi che le hanno trovate, e si decidono a parte.
+
+- **X1 `TipoEvento` (passo 1) — decisa: resta.** Per l'utente è il dizionario centralizzato di tutti i tipi di evento del gioco, e potrà servire ancora; il suo Javadoc ora lo dice. L'enum ha 134 costanti, una per classe di evento, e ogni evento la passa al costruttore di `EventoBase`. Il bus però smista per classe, e il tipo lo legge solo `SnifferBusEventi` (`13-foresta-app-swing`) per scriverlo nel registro, dove basterebbe `evento.getClass().getSimpleName()`. Toglierlo vorrebbe dire eliminare un'enum di 570 righe e un argomento dai costruttori di circa 134 classi, in quasi tutti i moduli. In cambio, aggiungere un evento costerebbe un passo in meno (oggi va aggiunta anche la costante). Si perderebbero i commenti di una riga di ogni costante, che però ripetono il Javadoc delle classi, e il raggruppamento per famiglia, che dicono già i sottopacchetti `comandigiocatore`, `notifiche`, `richieste` e `interni`. **È una cancellazione: decide l'utente.**
+
 ## Osservazioni
 
 - **Come è stato fatto.** Rispetto all'assessment del 2026-10-25 sono rifatti da capo:
@@ -374,5 +479,5 @@ Dal meno rischioso: (1) opzioni per la rigiocabilità (seme a scelta, difficolt�
 
 - Un test sui documenti, come quelli che già controllano le convenzioni del codice: la sezione «Dipendenze» di ogni documento di modulo contro i `pom.xml` (righe «Dichiarate nel pom», «Solo per i test», «Lo dichiarano») e l'esistenza delle classi e dei file citati fra apici (con un elenco di eccezioni per i segnaposto e per i documenti diario). Avrebbe preso quasi tutto il §6.3.
 - Mettere nel progetto la misura della copertura con tutti i test, per esempio come profilo Maven o come piccolo strumento in `risorse_e_documenti_vari/`.
-- Una nuova lettura integrale dei sorgenti, modulo per modulo, quando la divisione sarà finita.
+- Una nuova lettura integrale dei sorgenti, modulo per modulo: è il §11.
 - Un test che produca tutte le alternative delle grammatiche e le disegni con i font, per prendere le produzioni malformate e i caratteri che il font non ha; con lo stesso passo, decidere quali produzioni sono davvero morte (§5.1, B35e).

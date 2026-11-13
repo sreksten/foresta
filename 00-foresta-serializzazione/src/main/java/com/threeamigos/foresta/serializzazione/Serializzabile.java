@@ -8,7 +8,17 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 /**
- * Dichiara che un certo oggetto può essere scritto e riletto da un flusso di input/output
+ * Dichiara che un oggetto sa scriversi in un salvataggio e rileggersi da lì.
+ * <p>
+ * Un salvataggio è un file di testo, una riga per record, con i campi separati da {@link #PIPE}. Per esempio la riga
+ * {@code GUERRIERO|Bruno|12|} ha quattro campi: un'enum (scritta con il suo nome), un testo, un numero e un campo vuoto
+ * (un valore che manca, vedi {@link #facoltativo(Object)}). Chi implementa l'interfaccia scrive le sue righe in
+ * {@link #salva(PrintWriter)} con {@link #stampaRiga(PrintWriter, Object...)} e le rilegge in
+ * {@link #leggi(BufferedReader)} con {@link LettoreCampi}, <b>nello stesso ordine</b>: il formato non ha nomi di campo,
+ * conta solo la posizione.
+ * <p>
+ * I metodi {@code static} qui sotto sono gli aiuti comuni per scrivere i campi (in un'interfaccia Java un metodo
+ * {@code static} si chiama con il nome dell'interfaccia: {@code Serializzabile.campo(x)}).
  *
  * @author Stefano Reksten
  */
@@ -44,10 +54,7 @@ public interface Serializzabile {
 	 * Come scrivere un campo che può mancare: il campo vuoto, che {@link LettoreCampi} rilegge come null.
 	 */
 	static String facoltativo(Object valore) {
-		if (valore == null) {
-			return "";
-		}
-		return valore instanceof Enum ? ((Enum<?>) valore).name() : valore.toString();
+		return valore == null ? "" : campo(valore);
 	}
 
 	/**

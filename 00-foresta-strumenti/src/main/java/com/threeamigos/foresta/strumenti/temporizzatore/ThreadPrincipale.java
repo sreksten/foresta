@@ -4,7 +4,10 @@ package com.threeamigos.foresta.strumenti.temporizzatore;
  * Il thread su cui gira tutta la logica di gioco (per Swing l'Event Dispatch Thread, per un altro front-end il suo
  * thread principale). Motore e bus eventi non conoscono il toolkit grafico: chiedono qui di eseguire un'operazione
  * sul thread principale, e chi assembla il gioco installa con {@link #imposta} l'esecutore del proprio toolkit.
- * Finche' non se ne installa uno, le operazioni girano subito sul thread chiamante.
+ * Finché non se ne installa uno, le operazioni girano subito sul thread chiamante (è quel che succede nei test).
+ * <p>
+ * Perché un thread solo: i toolkit grafici (Swing, libGDX, Android) vogliono che l'interfaccia si tocchi sempre dallo
+ * stesso thread, e con la logica di gioco sullo stesso thread non servono lucchetti fra motore e interfaccia.
  *
  * @author Stefano Reksten
  */

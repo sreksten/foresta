@@ -30,7 +30,7 @@ Non dipende da niente, nemmeno dal registro di log: solo dal JDK. Il formato dei
 
 Legge i campi di una riga **conservando quelli vuoti** (`a||b` sono tre campi, a differenza di `StringTokenizer`), così un testo vuoto non sposta quelli che lo seguono. Una riga vuota non ha nessun campo: è il caso delle liste vuote scritte su una sola riga.
 
-I metodi leggono il campo successivo con il tipo giusto: `testo`, `testoFacoltativo`, `intero`, `decimale`, `booleano`, `enumerato(Class)` e `enumeratoFacoltativo(Class)` (che ritrovano la costante dal nome, come i salvataggi), `sottocampi(min, max)` per i campi composti, `resto()` per l'ultimo campo (che può contenere `|`), `haAltriCampi()`. Per le righe che contengono un solo valore ci sono le versioni statiche `leggiIntero`, `leggiTesto`, `leggiBooleano` che leggono direttamente da un `BufferedReader`. Una riga mancante o un campo illeggibile sono `IOException` con la riga intera nel messaggio, così si capisce dov'è l'errore.
+I metodi leggono il campo successivo con il tipo giusto: `testo`, `testoFacoltativo`, `intero`, `decimale`, `booleano`, `enumerato(Class)` e `enumeratoFacoltativo(Class)` (che ritrovano la costante dal nome, come i salvataggi), `sottocampi(min, max)` per i campi composti, `resto()` per l'ultimo campo (che può contenere `|`), `haAltriCampi()`. Per le righe che contengono un solo valore ci sono le versioni statiche `leggiIntero`, `leggiTesto`, `leggiBooleano` che leggono direttamente da un `BufferedReader`. `booleano` accetta solo `true` e `false`. Una riga mancante o un campo illeggibile sono `IOException` con la riga intera nel messaggio, così si capisce dov'è l'errore.
 
 ### `MappaProprieta`: le mappe chiave-valore
 

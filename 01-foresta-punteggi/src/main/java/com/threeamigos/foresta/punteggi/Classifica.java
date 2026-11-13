@@ -10,8 +10,13 @@ import com.threeamigos.foresta.strumenti.Punteggio;
  */
 public final class Classifica {
 
+	/**
+	 * Quanti posti ha la classifica.
+	 */
 	public static final int NUMERO_MASSIMO = 10;
 
+	// I posti della classifica in tre array paralleli: la posizione i (0 è il primo posto) è fatta da nomi[i],
+	// punteggi[i] e idPartite[i]. Prima di ripristinaLaPredefinita o della lettura da file i nomi sono null
 	private final String[] nomi = new String[NUMERO_MASSIMO];
 	private final int[] punteggi = new int[NUMERO_MASSIMO];
 	// La partita di ogni punteggio, null per quelli predefiniti
@@ -33,10 +38,17 @@ public final class Classifica {
 		impostaPosizione(9, "Axel e il sERCIO", 0, null);
 	}
 
+	/**
+	 * Quanti posti ha la classifica: sempre {@value #NUMERO_MASSIMO}.
+	 */
 	public int getConteggio() {
 		return NUMERO_MASSIMO;
 	}
 
+	/**
+	 * Il punteggio in quella posizione, da 0 (il primo posto) a {@link #getConteggio()} - 1: una copia, che non cambia
+	 * se poi cambia la classifica.
+	 */
 	public Punteggio getPunteggio(int posizione) {
 		return new PunteggioImpl(nomi[posizione], punteggi[posizione], idPartite[posizione]);
 	}
@@ -72,10 +84,13 @@ public final class Classifica {
 		for (int i = daTogliere; i < NUMERO_MASSIMO - 1; i++) {
 			impostaPosizione(i, nomi[i + 1], punteggi[i + 1], idPartite[i + 1]);
 		}
+		// Adesso l'ultimo posto è libero. Si cerca dove va il nuovo punteggio salendo dal fondo finché quello sopra è più
+		// basso; a parità resta sotto chi c'era già
 		int posizione = NUMERO_MASSIMO - 1;
 		while (posizione > 0 && punteggio > punteggi[posizione - 1]) {
 			posizione--;
 		}
+		// Chi sta da quella posizione in giù scende di un posto, per fargli spazio
 		for (int i = NUMERO_MASSIMO - 1; i > posizione; i--) {
 			impostaPosizione(i, nomi[i - 1], punteggi[i - 1], idPartite[i - 1]);
 		}

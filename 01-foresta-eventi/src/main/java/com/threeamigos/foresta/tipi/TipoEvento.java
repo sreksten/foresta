@@ -1,6 +1,10 @@
 package com.threeamigos.foresta.tipi;
 
 /**
+ * Il tipo di ogni evento del bus: ogni classe di evento ne dichiara uno nel costruttore (vedi {@code EventoBase}). È il
+ * dizionario di tutto quello che può succedere nel gioco, in un posto solo e diviso per famiglia. Oggi serve a scrivere
+ * gli eventi nel registro ({@code SnifferBusEventi}); il bus non lo guarda, smista gli eventi per classe.
+ * <p>
  * Gli eventi che accadono nel gioco si distinguono in:
  * <ul>
  *     <li>COMANDI che il giocatore invia al motore</li>
@@ -314,6 +318,10 @@ public enum TipoEvento {
      * Un Personaggio muore o resuscita
      */
     NOTIFICA_VARIAZIONE_STATO_VITALE_PERSONAGGIO,
+    /**
+     * Il motore chiede alla UI di dire una cosa con la finestra del tutorial (per esempio che non è ancora il momento di visitare un luogo)
+     */
+    NOTIFICA_MESSAGGIO_DEL_TUTORIAL,
 
 
     // Eventi interni per il funzionamento del gioco
@@ -502,10 +510,6 @@ public enum TipoEvento {
      * L'incantatore ha spezzato un artefatto in artefatto base e ingredienti del Core Dump
      */
     INTERNO_ARTEFATTO_SPEZZATO,
-    /**
-     * Il motore chiede alla UI di dire una cosa con la finestra del tutorial (per esempio che non è ancora il momento di visitare un luogo)
-     */
-    NOTIFICA_MESSAGGIO_DEL_TUTORIAL,
     /**
      * Il motore chiede alla UI di portare in primo piano il riquadro dello stato del gruppo
      */

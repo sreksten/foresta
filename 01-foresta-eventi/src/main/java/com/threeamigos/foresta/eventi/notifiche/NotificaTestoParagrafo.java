@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.eventi.notifiche;
 
-import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.tipi.TipoEvento;
 
 /**
@@ -9,27 +8,13 @@ import com.threeamigos.foresta.tipi.TipoEvento;
  *
  * @author Stefano Reksten
  */
-public class NotificaTestoParagrafo extends EventoBase {
-
-    private final String messaggio;
+public class NotificaTestoParagrafo extends NotificaDiTesto {
 
     /**
-     * Un messaggio per il giocatore; se comincia con una lettera minuscola gli dà la maiuscola (vedi {@link NotificaTestoFrase}).
-     *
-     * @param messaggio il messaggio da inviare al giocatore
+     * @param messaggio il messaggio da inviare al giocatore (vedi {@link NotificaDiTesto} per la maiuscola iniziale)
      */
     public NotificaTestoParagrafo(String messaggio) {
-        super(TipoEvento.NOTIFICA_TESTO_PARAGRAFO);
-        this.messaggio = NotificaTestoFrase.conInizialeMaiuscola(messaggio);
-    }
-
-    /**
-     * Il messaggio da mostrare.
-     *
-     * @return il messaggio da inviare al giocatore
-     */
-    public String getMessaggio() {
-        return messaggio;
+        super(TipoEvento.NOTIFICA_TESTO_PARAGRAFO, messaggio);
     }
 
 }

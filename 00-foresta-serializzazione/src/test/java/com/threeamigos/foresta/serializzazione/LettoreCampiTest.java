@@ -106,7 +106,8 @@ class LettoreCampiTest {
         LettoreCampi campi = new LettoreCampi("true|false|boh");
         assertTrue(campi.booleano());
         assertFalse(campi.booleano());
-        assertFalse(campi.booleano(), "ciò che non è true vale falso");
+        IOException errore = assertThrows(IOException.class, campi::booleano, "un campo che non è né true né false è un salvataggio rovinato");
+        assertTrue(errore.getMessage().contains("boh"), errore.getMessage());
     }
 
     @Test

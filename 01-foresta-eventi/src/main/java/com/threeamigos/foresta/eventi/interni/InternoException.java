@@ -4,7 +4,9 @@ import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.tipi.TipoEvento;
 
 /**
- * Gestisce una eccezione.
+ * Un errore imprevisto (un'eccezione) avvenuto mentre il gioco faceva qualcosa: chi lo prende lo pubblica sul bus, e la
+ * UI lo dice al giocatore (vedi {@code SegnalatoreDegliErrori}). Lo pubblica anche il bus stesso, quando un iscritto
+ * fallisce durante una consegna.
  *
  * @author Stefano Reksten
  */
@@ -32,10 +34,14 @@ public class InternoException extends EventoBase {
     }
 
     /**
-     * Il messaggio da mostrare: quello dato, o quello dell'eccezione.
+     * Il messaggio da mostrare: quello dato, o quello dell'eccezione; null se non c'è né l'uno né l'altro (molte
+     * eccezioni, come una NullPointerException, non hanno messaggio).
      */
     public String getMessaggio() {
-        return messaggio != null ? messaggio : exception.getMessage();
+        if (messaggio != null) {
+            return messaggio;
+        }
+        return exception == null ? null : exception.getMessage();
     }
 
     /**

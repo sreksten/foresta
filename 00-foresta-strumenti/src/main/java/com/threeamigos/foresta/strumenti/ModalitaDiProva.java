@@ -8,15 +8,23 @@ package com.threeamigos.foresta.strumenti;
  */
 public final class ModalitaDiProva {
 
+	// Statico: vale per tutto il programma, lo si decide una volta all'avvio
 	private static boolean attiva;
 
+	// Una classe di soli metodi statici: non si istanzia
 	private ModalitaDiProva() {
 	}
 
+	/**
+	 * Accende o spegne la modalità di prova; si chiama all'avvio, prima di creare la partita.
+	 */
 	public static void setAttiva(boolean attiva) {
 		ModalitaDiProva.attiva = attiva;
 	}
 
+	/**
+	 * Se la modalità di prova è accesa.
+	 */
 	public static boolean isAttiva() {
 		return attiva;
 	}

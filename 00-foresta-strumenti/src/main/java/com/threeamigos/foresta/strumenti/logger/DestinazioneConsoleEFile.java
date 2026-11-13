@@ -30,6 +30,8 @@ public final class DestinazioneConsoleEFile implements DestinazioneDiLog {
 			cartella.mkdirs();
 			// Locale.ROOT: il nome del file non deve cambiare con la lingua del telefono (calendario e cifre di un'altra lingua)
 			String nomeFile = new SimpleDateFormat("yyyyMMdd-HHmmss", Locale.ROOT).format(new Date()) + ".log";
+			// Il primo true apre il file in aggiunta (non lo svuota); il secondo fa scrivere ogni riga subito su disco
+			// (autoflush), così il log c'è anche se il gioco si chiude male
 			return new PrintWriter(new OutputStreamWriter(
 					new FileOutputStream(new File(cartella, nomeFile), true), StandardCharsets.UTF_8), true);
 		} catch (IOException e) {

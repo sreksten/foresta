@@ -22,7 +22,8 @@ public final class LettoreCampi {
 	// Il prossimo campo da leggere
 	private int indice;
 
-	// Il separatore dei campi, già pronto per dividere le righe
+	// Il separatore dei campi, già pronto per dividere le righe. Pattern.quote serve perché split vuole un'espressione
+	// regolare, in cui "|" vorrebbe dire "oppure": quotato, è il carattere e basta
 	private static final Pattern SEPARATORE = Pattern.compile(Pattern.quote(Serializzabile.PIPE));
 
 	/**
@@ -35,6 +36,8 @@ public final class LettoreCampi {
 			throw new IOException("Fine del salvataggio inattesa");
 		}
 		this.riga = riga;
+		// Il -1 dice a split di tenere anche i campi vuoti in fondo alla riga ("a|b|" sono tre campi, l'ultimo vuoto):
+		// senza, split li butterebbe via e la rilettura si troverebbe con un campo in meno
 		this.campi = riga.isEmpty() ? new String[0] : SEPARATORE.split(riga, -1);
 	}
 
@@ -120,10 +123,19 @@ public final class LettoreCampi {
 	}
 
 	/**
-	 * Il prossimo campo come valore vero o falso.
+	 * Il prossimo campo come valore vero o falso, scritto "true" o "false" (come lo scrive {@link Serializzabile#campo}).
+	 *
+	 * @throws IOException se il campo è un altro testo: un salvataggio rovinato non diventa "falso" senza dirlo
 	 */
 	public boolean booleano() throws IOException {
-		return Boolean.parseBoolean(testo());
+		String testo = testo();
+		if ("true".equals(testo)) {
+			return true;
+		}
+		if ("false".equals(testo)) {
+			return false;
+		}
+		throw new IOException("\"" + testo + "\" non è vero o falso nella riga: " + riga);
 	}
 
 	/**

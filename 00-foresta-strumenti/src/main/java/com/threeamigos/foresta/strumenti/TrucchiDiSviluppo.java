@@ -27,6 +27,8 @@ public final class TrucchiDiSviluppo implements TruccatoreDiDadi {
         return ISTANZA;
     }
 
+    // Un contesto o dà un numero o sceglie un elemento (vedi ContestoLancio.isScelta): accendere il trucco sbagliato è un
+    // errore di chi programma la finestra di prova
     private static void controllaTipo(ContestoLancio contesto, boolean scelta) {
         if (contesto.isScelta() != scelta) {
             throw new IllegalArgumentException(
@@ -34,6 +36,8 @@ public final class TrucchiDiSviluppo implements TruccatoreDiDadi {
         }
     }
 
+    // I trucchi accesi, per contesto. EnumMap è una mappa fatta apposta per le chiavi di un'enum. Tutti i metodi che le
+    // toccano sono synchronized: la finestra di prova le cambia dal suo thread mentre il gioco le legge dal suo
     private final Map<ContestoLancio, Integer> numeri = new EnumMap<>(ContestoLancio.class);
     private final Map<ContestoLancio, Object> elementi = new EnumMap<>(ContestoLancio.class);
 

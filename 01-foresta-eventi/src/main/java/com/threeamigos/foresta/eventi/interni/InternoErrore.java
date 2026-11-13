@@ -10,10 +10,7 @@ import com.threeamigos.foresta.tipi.TipoEvento;
  */
 public class InternoErrore extends EventoBase {
 
-    /**
-     * Il messaggio d'errore.
-     */
-    public final String messaggio;
+    private final String messaggio;
 
     /**
      * Un evento con quel messaggio.

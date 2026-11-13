@@ -21,7 +21,7 @@ public class InternoMessaggio extends EventoBase {
     }
 
     /**
-     * Il messaggio d'errore.
+     * Il messaggio, da scrivere nel registro.
      */
     public String getMessaggioInterno() {
         return messaggioInterno;

@@ -82,7 +82,6 @@ class EventiDiBaseTest {
     void unErroreEUnMessaggioPortanoIlLoroTesto() {
         InternoErrore errore = new InternoErrore("qualcosa non va");
         assertEquals("qualcosa non va", errore.getMessaggio());
-        assertEquals("qualcosa non va", errore.messaggio);
         assertEquals(TipoEvento.INTERNO_ERRORE, errore.getTipoEvento());
         InternoMessaggio messaggio = new InternoMessaggio("da registrare");
         assertEquals("da registrare", messaggio.getMessaggioInterno());
