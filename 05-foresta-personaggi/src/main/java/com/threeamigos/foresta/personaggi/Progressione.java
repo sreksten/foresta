@@ -25,6 +25,9 @@ final class Progressione {
 		return p.getModelloDati();
 	}
 
+	/**
+	 * Aggiunge esperienza (non ai PNG) e, se basta per salire di livello, lo annuncia e dà un punto abilità per ogni livello guadagnato.
+	 */
 	void addPuntiEsperienza(int esperienza) {
 		if (p.isPNG()) {
 			return;
@@ -49,10 +52,8 @@ final class Progressione {
 			md().setPuntiAbilitaDisponibili(nuoviPuntiAbilitaDisponibili);
 			BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(p, TipoAttributo.PUNTI_ABILITA, puntiAbilitaDisponibili, nuoviPuntiAbilitaDisponibili));
 		}
-		// QUI PUOI AGGANCIARE IL CODICE PRECEDENTE:
-		// 1. Ricalcola il nuovo budget di punti primari (con la tolleranza del 5%)
-		// 2. Aggiorna le statistiche nel modello md().setForza(...), ecc.
-		// 3. Ricalcola i valori derivati come Carico, Critico, Velocità.
+		// Salute e magia massime non si toccano: crescono da sole con il livello (vedi PersonaggioBase.calcolaSaluteMassima). I primari
+		// crescono solo con i punti abilità che il giocatore spende.
 	}
 
 	void impostaLivelloDopoReclutamento(int livello) {
@@ -73,6 +74,9 @@ final class Progressione {
 		md().set(TipoAttributo.MAGIA, (int) (p.getMagiaMassima() * frazioneMagia));
 	}
 
+	/**
+	 * Spende un punto abilità su un primario (+1), se ne ha; altrimenti, o per un attributo che non è primario, non fa niente.
+	 */
 	void spendiPuntoAbilita(TipoAttributo tipoAttributo) {
 		if (!tipoAttributo.isPrimario() || md().getPuntiAbilitaDisponibili() <= 0) {
 			return;

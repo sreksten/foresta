@@ -4,6 +4,7 @@ import com.threeamigos.foresta.artefatti.Artefatto;
 import com.threeamigos.foresta.artefatti.GeneratoreArtefattiTabelle;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.strumenti.dado.Dado;
+import com.threeamigos.foresta.eventi.interni.InternoPersonaggioEntratoNelGruppo;
 import com.threeamigos.foresta.eventi.interni.InternoPrelievoArtefatto;
 import com.threeamigos.foresta.eventi.interni.InternoPuntiEsperienzaAssegnati;
 import com.threeamigos.foresta.eventi.interni.InternoStoccaggioArtefatto;
@@ -113,6 +114,21 @@ class GruppoGiocatoreTest {
         dati.setIndiceCapo(7);
         ricostruito.setModelloDati(dati);
         assertSame(ricostruito.getPersonaggio(0), ricostruito.getCapo(), "senza un indice valido il capo è il primo");
+    }
+
+    @Test
+    void laCopiaPerLaTestataDiUnSalvataggioNonAnnunciaChiVientra() {
+        GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
+        gruppo.aggiungiPersonaggio(guerriero("Arsenio"));
+        GruppoGiocatoreMD dati = (GruppoGiocatoreMD) gruppo.getGruppoMD();
+        List<InternoPersonaggioEntratoNelGruppo> entrati = new ArrayList<>();
+        iscrizioni.add(BusEventi.iscriviti(InternoPersonaggioEntratoNelGruppo.class, entrati::add));
+
+        GruppoGiocatore.of(dati);
+        assertTrue(entrati.isEmpty(), "il bestiario non deve sbloccare le classi di uno slot solo a guardarlo");
+
+        gruppo.setModelloDati(dati);
+        assertEquals(1, entrati.size(), "il gruppo della partita, riletto, le annuncia");
     }
 
     // --- Membri e ospiti

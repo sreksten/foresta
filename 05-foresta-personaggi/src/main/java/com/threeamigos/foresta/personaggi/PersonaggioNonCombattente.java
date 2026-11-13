@@ -6,12 +6,15 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
  * Chi nelle scene non combatte: il locandiere, l'armaiolo, l'alchimista, il venditore di pergamene, l'incantatore, la
- * moglie del bardo. Ha le sue caratteristiche (CostantiPersonaggi.NON_COMBATTENTE_*, un poco più basse di quelle di un bardo),
+ * moglie del bardo, il borgomastro e i mandanti qualunque (Uomo, Donna). Ha le sue caratteristiche (CostantiPersonaggi.NON_COMBATTENTE_*, un poco più basse di quelle di un bardo),
  * nessuna capacità propria (niente dardo arcano né alba sacra né canti), non si incontra, non si recluta e non si
  * corrompe: compare nelle scene e viaggia con il gruppo come ospite quando una missione lo deve scortare (vedi
  * Viandante). Non è un Bardo.
  * <p>
- * Gli articoli e il genere sono quelli del maschile: chi è femmina li ridefinisce (vedi MoglieDelBardo).
+ * Gli articoli e il genere sono quelli del maschile: chi è femmina li ridefinisce (vedi MoglieDelBardo, Donna).
+ * <p>
+ * I metodi che seguono restituiscono, uno per uno, le costanti NON_COMBATTENTE_* di CostantiPersonaggi: i valori che PersonaggioBase
+ * chiede a ogni classe (salute e magia di partenza, moltiplicatori degli attributi secondari...).
  */
 public abstract class PersonaggioNonCombattente extends PersonaggioBase implements Personaggio {
 

@@ -55,9 +55,6 @@ public abstract class PersonaggioBase implements Personaggio {
 	 */
 	private int ordinale;
 	/**
-	 * Personaggio Non Giocante (*solitamente*, un avversario)
-	 */
-	/**
 	 * Suscettibile a corruzione da parte del gruppo del giocatore
 	 */
 	private boolean corrompibile;
@@ -95,6 +92,9 @@ public abstract class PersonaggioBase implements Personaggio {
 	 * gli altri con un valore fra il 75% e il 100% dei massimi.
 	 */
 	public PersonaggioBase(TipoPersonaggio classe, int livello) {
+		// Attenzione: questo costruttore chiama metodi che le classi concrete ridefiniscono (getSaluteBase, impostaValoriDiPartenza,
+		// isParteConValoriMassimi...) quando i campi della classe concreta non sono ancora inizializzati. Funziona perché quei metodi
+		// restituiscono costanti (CostantiPersonaggi): non devono leggere campi propri della sottoclasse.
 		md.setClasse(classe);
 		md.setPng(true);
 
@@ -104,6 +104,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		if (isParteConValoriMassimi()) {
 			funzionePerValoriIniziali = val -> val;
 		} else {
+			// Un numero a caso fra i tre quarti del massimo e il massimo
 			funzionePerValoriIniziali = (max) -> Dado.tiraAncheSenzaRange(max * 3 / 4, max);
 		}
 
@@ -176,7 +177,6 @@ public abstract class PersonaggioBase implements Personaggio {
 	public void setCorrompibile(boolean corrompibile) {
 		this.corrompibile = corrompibile;
 	}
-	
 
 	public boolean isAmichevole() {
 		return amichevole;
@@ -204,6 +204,9 @@ public abstract class PersonaggioBase implements Personaggio {
 		return repertorio;
 	}
 
+	/**
+	 * Se la classe ha la magia: la sua magia cresce con il livello (getLivellamentoMagia maggiore di 0)
+	 */
 	public boolean isMagico() {
 		return getLivellamentoMagia() > 0.0d;
 	}
@@ -284,6 +287,9 @@ public abstract class PersonaggioBase implements Personaggio {
 		return md.isPng();
 	}
 
+	/**
+	 * Se le cure lo guariscono: non un non morto del gruppo del giocatore (vedi Personaggio.isCurabile)
+	 */
 	public boolean isCurabile() {
 		return !isNonMorto() || !GruppoGiocatore.getIstanza().contiene(this);
 	}
@@ -361,8 +367,6 @@ public abstract class PersonaggioBase implements Personaggio {
 		this.sfidanteACartaForbiciSasso = sfidante;
 	}
 
-
-
 	/**
 	 * Se sta dalla parte del giocatore: nel suo gruppo o fra i suoi ospiti (un ospite vulnerabile non è nella lista dei personaggi, ma non è
 	 * un avversario: per esempio la Purificazione che lo colpisce cura il gruppo del giocatore, non i mostri).
@@ -373,11 +377,9 @@ public abstract class PersonaggioBase implements Personaggio {
 		return giocatore.contiene(this) || giocatore.getOspiti().contains(this);
 	}
 
-
 	public String getCausaTrapasso() {
 		return md.getCausaTrapasso();
 	}
-
 
 	/**
 	 * Quanti bersagli colpisce un incantesimo MULTIPLO: il NUMERO_BERSAGLI calcolato dalle caratteristiche (con il
@@ -406,10 +408,6 @@ public abstract class PersonaggioBase implements Personaggio {
 	public double getModificaDanniMagia(double danni) {
 		return danni * getPotereMagico() / 100.0d;
 	}
-
-
-
-
 
 	/**
 	 * L'arma impugnata nella mano principale (o a due mani); senza, l'arma naturale.
@@ -499,8 +497,6 @@ public abstract class PersonaggioBase implements Personaggio {
 		ricalcolaAttributiSecondari();
 	}
 
-	// Statistiche del personaggio
-
 	// CLASSE
 	// Il nome della classe con quel che serve per articolarlo, nella lingua in uso: viene dai file dei testi della classe
 	// (NOME_SINGOLARE, NOME_PLURALE, GENERE, PRONOME...) e le regole sono della lingua (vedi RegoleDellaLingua)
@@ -580,19 +576,17 @@ public abstract class PersonaggioBase implements Personaggio {
 		return Optional.ofNullable(md.getNome());
 	}
 
-
-
 	@Override
 	public String getLetteraFinaleAttributo() {
 		return getSesso() == Personaggio.Sesso.MASCHIO ? "o" : "a";
 	}
 
 	/**
-	 * Da chiamare durante l'inizializzazione di un personaggio. Imposta il personaggio a vivo, il livello a 1
-	 * e l'esperienza e il carico a 0. Inoltre in base ai valori massimi degli attributi primari imposta quelli
-	 * correnti per gli attributi primari e calcola gli attributi secondari.
-	 * @param funzione una funzione che determina il valore per un attributo. O il massimo valore possibile
-	 *                    o un valore scelto a caso in un dato intervallo.
+	 * Da chiamare durante l'inizializzazione di un personaggio: lo fa vivo, al livello dato e senza esperienza, e gli dà salute,
+	 * magia e stanchezza di partenza. Gli attributi primari e secondari li impostano altri (LanciatoreDeiDadi e
+	 * ricalcolaAttributiSecondari, nel costruttore).
+	 * @param funzione dal massimo di un valore, quello di partenza: il massimo stesso (i boss) o un valore a caso fra i tre quarti e il
+	 *                 massimo. Per la stanchezza vale al contrario (si parte da MAX_STANCHEZZA meno il valore: da 0 a 2 di stanchezza).
 	 */
 	private void impostaValoriDiPartenzaGenerali(Function<Integer, Integer> funzione, int livello) {
 		md.setVivo(true);
@@ -645,31 +639,15 @@ public abstract class PersonaggioBase implements Personaggio {
 		return GestoreProgressione.getXpPerProssimoLivello(md.getLivello());
 	}
 
-
-
 	@Override
 	public int getPuntiAbilitaDisponibili() {
 		return md.getPuntiAbilitaDisponibili();
 	}
 
-
-	// CARICO
-
-
-
-
-
-
-
 	@Override
 	public boolean puoFormulare(TipoIncantesimo tipoIncantesimo) {
 		return getMagia() >= tipoIncantesimo.getCostoPerBersaglio() && !hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO);
 	}
-
-	// CARICO MASSIMO
-
-
-
 
 	// ESPERIENZA E PUNTI ABILITA'
 
@@ -793,8 +771,6 @@ public abstract class PersonaggioBase implements Personaggio {
 		return (int) md.get(TipoAttributo.SALUTE);
 	}
 
-
-
 	// SALUTE MASSIMA
 
 	/**
@@ -809,6 +785,13 @@ public abstract class PersonaggioBase implements Personaggio {
 	 * La salute massima: quella di base della classe per la radice quadrata del livello, più i modificatori.
 	 */
 	protected double calcolaSaluteMassima() {
+		return getQuantitaModificata(md, saluteMassimaSenzaModificatori(), TipoAttributo.SALUTE);
+	}
+
+	/**
+	 * La salute massima prima dei modificatori: la base a cui si applicano.
+	 */
+	private double saluteMassimaSenzaModificatori() {
 		// Cresce con la radice quadrata del livello (100, 141, 173, 200...), per tutti: come il danno
 		// (vedi CalcolatoreCombattimento.livelloDiCombattimento), così uno scontro alla pari dura uguale a ogni livello
 		double saluteMassima = getSaluteBase() * Math.sqrt(getLivello());
@@ -816,7 +799,6 @@ public abstract class PersonaggioBase implements Personaggio {
 			// I mostri comuni crescono un po' più dei giocanti, che hanno le armi e le armature di livello via via più alto
 			saluteMassima *= 1.0d + CostantiPersonaggi.MOSTRI_COMUNI_CRESCITA_SALUTE_PER_LIVELLO * (getLivello() - 1);
 		}
-		saluteMassima = getQuantitaModificata(md, saluteMassima, TipoAttributo.SALUTE);
 		return saluteMassima;
 	}
 
@@ -831,8 +813,6 @@ public abstract class PersonaggioBase implements Personaggio {
 	public int getMagia() {
 		return (int) md.get(TipoAttributo.MAGIA);
 	}
-
-
 
 	@Override
 	public int getMagiaMassima() {
@@ -852,9 +832,30 @@ public abstract class PersonaggioBase implements Personaggio {
 		if (getLivellamentoMagia() == 0.0d) {
 			return 0.0d;
 		}
-		double magiaMassima = getMagiaBase() + getLivellamentoMagia() * Math.sqrt(getLivello() - 1);
-		magiaMassima = getQuantitaModificata(md, magiaMassima, TipoAttributo.MAGIA);
-		return magiaMassima;
+		return getQuantitaModificata(md, magiaMassimaSenzaModificatori(), TipoAttributo.MAGIA);
+	}
+
+	/**
+	 * La magia massima prima dei modificatori: zero per chi non ha magia.
+	 */
+	private double magiaMassimaSenzaModificatori() {
+		return getLivellamentoMagia() == 0.0d ? 0.0d : getMagiaBase() + getLivellamentoMagia() * Math.sqrt(getLivello() - 1);
+	}
+
+	/**
+	 * La salute recuperata a fine locazione prima dei modificatori di RIGENERAZIONE_SALUTE: 5 punti più una quota della salute massima
+	 * (la usa SaluteEMorte.getRigenerazioneSalute)
+	 */
+	double rigenerazioneSaluteSenzaModificatori() {
+		return CostantiPersonaggi.RIGENERAZIONE_PARTE_FISSA + getSaluteMassima() * CostantiPersonaggi.RIGENERAZIONE_SALUTE_QUOTA_SALUTE_MASSIMA;
+	}
+
+	/**
+	 * La magia recuperata a fine locazione prima dei modificatori di RIGENERAZIONE_MAGIA: 5 punti più una quota della magia massima
+	 * (la usa SaluteEMorte.getRigenerazioneMagia)
+	 */
+	double rigenerazioneMagiaSenzaModificatori() {
+		return CostantiPersonaggi.RIGENERAZIONE_PARTE_FISSA + getMagiaMassima() * CostantiPersonaggi.RIGENERAZIONE_MAGIA_QUOTA_MAGIA_MASSIMA;
 	}
 
 	// ATTRIBUTI PRIMARI E SECONDARI
@@ -955,7 +956,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		int quantitaPrecedente = (int) md.get(TipoAttributo.STANCHEZZA);
 		quantita = limitaEntroMassimi(quantitaPrecedente, CostantiPersonaggi.MAX_STANCHEZZA, quantita);
 		int quantitaAttuale = quantitaPrecedente + quantita;
-		md.setStanchezza((int) md.get(TipoAttributo.STANCHEZZA) + quantita);
+		md.setStanchezza(quantitaAttuale);
 		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.STANCHEZZA, quantitaPrecedente, quantitaAttuale));
 	}
 
@@ -997,21 +998,22 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	/**
-	 * Il valore a cui si applicano i modificatori di un attributo (lo stesso dei suoi getter)
+	 * Il valore a cui si applicano i modificatori di un attributo, lo stesso dei suoi getter (salute e magia massime e le
+	 * rigenerazioni passano dagli stessi metodi). Serve a ModificatoriTemporanei per dire di quanto i soli temporanei spostano
+	 * l'attributo.
 	 */
 	double baseDelModificabile(TipoAttributo tipoAttributo) {
 		switch (tipoAttributo) {
 			case POTERE_MAGICO:
 				return 100.0d;
 			case SALUTE:
-				return getSaluteBase() * Math.sqrt(getLivello());
+				return saluteMassimaSenzaModificatori();
 			case MAGIA:
-				return getLivellamentoMagia() == 0.0d ? 0.0d
-						: getMagiaBase() + getLivellamentoMagia() * Math.sqrt(getLivello() - 1);
+				return magiaMassimaSenzaModificatori();
 			case RIGENERAZIONE_SALUTE:
-				return 5.0d + getSaluteMassima() * CostantiPersonaggi.RIGENERAZIONE_SALUTE_QUOTA_SALUTE_MASSIMA;
+				return rigenerazioneSaluteSenzaModificatori();
 			case RIGENERAZIONE_MAGIA:
-				return 5.0d + getMagiaMassima() * CostantiPersonaggi.RIGENERAZIONE_MAGIA_QUOTA_MAGIA_MASSIMA;
+				return rigenerazioneMagiaSenzaModificatori();
 			case CARICO_MASSIMO:
 				// Quello salvato ha già i modificatori: applicandoli di nuovo la variazione dei temporanei verrebbe contata due volte
 				return potenzialeDiCarico(md, this);
@@ -1040,39 +1042,17 @@ public abstract class PersonaggioBase implements Personaggio {
 		AttributiSecondari.ricalcola(md, moltiplicatori, null);
 	}
 
-
-
 	public abstract double getMoltiplicatoreCarico();
-
 	public abstract double getMoltiplicatoreCritico();
-
-
 	public abstract double getMoltiplicatorePrecisione();
-
-
 	public abstract double getMoltiplicatoreVelocita();
-
-
 	public abstract double getMoltiplicatoreFurtivita();
-
-
 	public abstract double getMoltiplicatoreParata();
-
-
 	public abstract double getMoltiplicatoreResistenzaMagica();
-
-
 	public abstract double getMoltiplicatorePercezione();
-
-
 	public abstract double getMoltiplicatoreSoggezione();
-
-
 	public abstract double getMoltiplicatoreFuria();
-
-
 	public abstract double getMoltiplicatoreCoraggio();
-
 
 	/**
 	 * Solo chi può entrare nel gruppo (eroi e i pochi mostri che si uniscono per amicizia o per denaro) tratta con i
@@ -1083,22 +1063,9 @@ public abstract class PersonaggioBase implements Personaggio {
 		return 0;
 	}
 
-
-
 	public abstract double getMoltiplicatoreValore();
-
-
 	public abstract double getMoltiplicatoreNumeroBersagli();
-
-
-
 	public abstract double getMoltiplicatoreStanchezza();
-
-
-	// -- funzioni per calcolo modificatori
-
-
-
 
 	// EFFETTI DI STATO
 
@@ -1169,10 +1136,4 @@ public abstract class PersonaggioBase implements Personaggio {
 	public int getQuantitaEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
 		return effettiDiStato.getQuantitaEffettoDiStato(tipoEffettoDiStato);
 	}
-
-	// Scambiatore Artefatti
-
-
-
-
 }

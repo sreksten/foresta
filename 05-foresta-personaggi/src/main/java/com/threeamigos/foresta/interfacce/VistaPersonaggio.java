@@ -139,7 +139,7 @@ public interface VistaPersonaggio {
 	double getPotereMagico();
 
 	/**
-	 * Quanti bersagli colpisce al massimo con un incantesimo a più bersagli (MULTIPLO): almeno uno
+	 * Quanti bersagli colpisce al massimo un suo potere a più bersagli (un incantesimo MULTIPLO, un canto, un'abilità): almeno uno
 	 */
 	int getBersagli();
 

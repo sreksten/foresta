@@ -42,6 +42,7 @@ final class NomeEDescrizione {
 		int coraggio = p.get(TipoAttributo.CORAGGIO);
 		int valore = p.get(TipoAttributo.VALORE);
 		int carisma = (int) md().get(TipoAttributo.CARISMA);
+		// Coraggio e valore in tre fasce (sotto 30, sotto 60, oltre), il carisma anche (sotto 3, sotto 6, oltre)
 		StringBuilder sb = new StringBuilder(testo("FRASE", chi,
 				salute,
 				testo(coraggio < 30 ? "CORAGGIO.BASSO" : coraggio < 60 ? "CORAGGIO.MEDIO" : "CORAGGIO.ALTO"),
@@ -56,7 +57,7 @@ final class NomeEDescrizione {
 		return sb.toString();
 	}
 
-	// La chiave della salute, per fasce
+	// La chiave della salute, per fasce di punti (non di percentuale: un drago ferito può restare «sano come un pesce»)
 	private String livelloDellaSalute(int salute) {
 		if (salute < 20) {
 			return "SALUTE.MOLTO_DEBOLE";
@@ -80,6 +81,11 @@ final class NomeEDescrizione {
 		return Testi.formatta(FILE_DEI_TESTI, chiave, valori);
 	}
 
+	/**
+	 * Il nome, con le opzioni di VistaPersonaggio.OpzioniGetNome: il nome proprio se ce l'ha (gli articoli non servono, la preposizione sì:
+	 * «di Aldo»), altrimenti quello della classe con l'articolo o la preposizione chiesti, e con l'ordinale se ci sono più mostri della
+	 * stessa specie. Un personaggio giocante senza nome è un errore.
+	 */
 	String getNome(Personaggio.OpzioniGetNome... opzioni) {
 		boolean includiArticoloDeterminativoSingolare = false;
 		boolean includiArticoloIndeterminativoSingolare = false;

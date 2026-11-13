@@ -65,7 +65,7 @@ I mostri attaccano con `ArmaNaturale` (artigli, morsi, soffi… al posto dell'ar
 
 ### Le costanti
 
-`CostantiPersonaggi` (circa 1300 righe) contiene i valori di partenza di ogni classe (salute e magia di base, quanti se ne incontrano, l'esperienza che danno, l'intelligenza massima che regola l'astuzia delle tattiche), i moltiplicatori e il bilanciamento del combattimento (fuga, mietitura, danno ad area, cambi d'arma, dimensione dei gruppi…); `CostantiIncantesimi` quelli degli incantesimi.
+`CostantiPersonaggi` (circa 1300 righe) contiene i valori di partenza di ogni classe (salute e magia di base, quanti se ne incontrano, l'esperienza che danno, l'intelligenza massima che regola l'astuzia delle tattiche), i moltiplicatori, il recupero a fine locazione e con il riposo (`RIGENERAZIONE_*`, `RIPOSO_*`) e il bilanciamento del combattimento (fuga, mietitura, danno ad area, cambi d'arma, dimensione dei gruppi…); `CostantiIncantesimi` quelli degli incantesimi.
 
 ### I dati e i contratti
 

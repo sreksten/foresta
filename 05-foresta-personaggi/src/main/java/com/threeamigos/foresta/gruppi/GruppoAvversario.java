@@ -21,6 +21,9 @@ public class GruppoAvversario extends Gruppo {
 	
 	private static GruppoAvversario gruppoAvversario;
 	
+	/**
+	 * Il gruppo avversario della partita; la prima chiamata lo crea vuoto.
+	 */
 	public static GruppoAvversario getIstanza() {
 		if (gruppoAvversario == null) {
 			gruppoAvversario = new GruppoAvversario();
@@ -29,12 +32,15 @@ public class GruppoAvversario extends Gruppo {
 	}
 
 	/**
-	 * Dimentica il gruppo avversario corrente. Serve ai test (vedi GruppoGiocatore.azzeraIstanza).
+	 * Dimentica il gruppo avversario corrente: lo chiama StatoDelMotore.azzera quando si riparte da zero (vedi GruppoGiocatore.azzeraIstanza).
 	 */
 	public static void azzeraIstanza() {
 		gruppoAvversario = null;
 	}
 
+	/**
+	 * Svuota il gruppo e le sue scorte: lo si fa all'inizio di una partita e a ogni nuova locazione.
+	 */
 	@Override
 	public void reimposta() {
 		super.reimposta();
@@ -55,6 +61,9 @@ public class GruppoAvversario extends Gruppo {
 		super.rimuoviPersonaggio(p);
 	}
 
+	/**
+	 * Toglie tutti i personaggi e dimentica i caduti rimossi; le scorte restano (le azzera {@link #reimposta()}).
+	 */
 	@Override
 	public void rimuoviPersonaggi() {
 		super.rimuoviPersonaggi();
@@ -98,6 +107,10 @@ public class GruppoAvversario extends Gruppo {
 		return quanti;
 	}
 
+	/**
+	 * Il primo avversario che può ancora combattere (vivo e non in panchina), nell'ordine del gruppo; null se non ce n'è nessuno, cioè se
+	 * lo scontro è vinto.
+	 */
 	public Personaggio getPersonaggioVivo() {
 		for (Personaggio personaggio : personaggi) {
 			if (!personaggio.isFuoriCombattimento()) {

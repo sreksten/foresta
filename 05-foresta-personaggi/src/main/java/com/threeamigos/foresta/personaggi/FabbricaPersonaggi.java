@@ -77,7 +77,7 @@ public final class FabbricaPersonaggi {
 	}
 
 	/**
-	 * Un nuovo personaggio di quella classe e di quel livello
+	 * Un nuovo personaggio di quella classe e di quel livello (ogni TipoPersonaggio ha il suo costruttore: lo controlla TuttiIPersonaggiTest)
 	 */
 	public static Personaggio crea(TipoPersonaggio tipo, int livello) {
 		return COSTRUTTORI.get(tipo).apply(livello);

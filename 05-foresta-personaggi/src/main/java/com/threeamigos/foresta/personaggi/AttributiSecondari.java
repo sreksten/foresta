@@ -23,14 +23,22 @@ import java.util.OptionalDouble;
  * Gli attributi secondari di un personaggio (carico massimo, critico, precisione, velocità, furtività, parata, resistenza magica, percezione,
  * soggezione, furia, coraggio, valore, contrattazione, numero di bersagli) e il valore di ogni attributo con i suoi modificatori. Le formule
  * stanno in {@link CalcolatoreAttributiSecondari}; qui si leggono i primari dal {@link PersonaggioMD}, si sceglie il moltiplicatore della
- * classe e si scrive il risultato, pubblicando le variazioni se c'è un personaggio a cui riferirle. Funzioni statiche: servono anche in
- * fase di caricamento, quando il personaggio non esiste ancora.
+ * classe e si scrive il risultato, pubblicando le variazioni se c'è un personaggio a cui riferirle. Funzioni statiche, perché servono
+ * anche alla rilettura di una partita: lì i dati sono un {@link PersonaggioMD} appena letto, i moltiplicatori vengono da un personaggio
+ * modello della stessa classe e non c'è nessuno a cui riferire le variazioni (vedi PersonaggioBase.ricalcolaAttributiSecondari).
+ * <p>
+ * Nei metodi, {@code moltiplicatori} è il personaggio da cui si leggono i moltiplicatori della classe e {@code sorgenteEvento} quello
+ * nominato nelle notifiche (null per non pubblicarne).
  */
 final class AttributiSecondari {
 
 	private AttributiSecondari() {
 	}
 
+	/**
+	 * Ricalcola e scrive nel modello dati tutti gli attributi secondari. Pubblica una NotificaVariazioneStatistichePersonaggio per ogni
+	 * valore cambiato, ma solo se c'è {@code sorgenteEvento} e il valore c'era già (la prima volta non è una variazione).
+	 */
 	static void ricalcola(PersonaggioMD md, Personaggio moltiplicatori, Personaggio sorgenteEvento) {
 		// Il carico massimo è un massimo, non un valore: si legge e si scrive con getMassimo/setMassimo
 		Optional<Double> valorePrecedente = md.getMassimo(TipoAttributo.CARICO_MASSIMO);
@@ -63,8 +71,8 @@ final class AttributiSecondari {
 	}
 
 	/**
-	 * Calcola il critico (0-100) basandosi UNICAMENTE sulle statistiche primarie
-	 * e sul moltiplicatore della classe, mantenendo i rendimenti decrescenti.
+	 * Il critico (0-100): dai primari DESTREZZA e FORTUNA, con i loro modificatori, e dal moltiplicatore della classe. La formula, con i
+	 * rendimenti decrescenti, sta in {@link CalcolatoreAttributiSecondari#critico}; i modificatori del CRITICO stesso li applica chi lo legge.
 	 */
 	static int calcolaCritico(PersonaggioMD md, Personaggio moltiplicatori) {
 		return CalcolatoreAttributiSecondari.critico(valoreDi(md, TipoAttributo.DESTREZZA), valoreDi(md, TipoAttributo.FORTUNA), moltiplicatori.getMoltiplicatoreCritico());
@@ -114,6 +122,9 @@ final class AttributiSecondari {
 		return CalcolatoreAttributiSecondari.valore(valoreDi(md, TipoAttributo.SAGGEZZA), valoreDi(md, TipoAttributo.COSTITUZIONE), moltiplicatori.getMoltiplicatoreValore());
 	}
 
+	/**
+	 * Quanti bersagli il personaggio minaccia insieme. I due primari da cui dipende cambiano con la classe (vedi i rami dello switch).
+	 */
 	static int calcolaNumeroBersagli(PersonaggioMD md, Personaggio moltiplicatori) {
 		// Recuperiamo la classe per capire qual è la forza trainante del personaggio
 		TipoPersonaggio classe = moltiplicatori.getClasse();
@@ -121,14 +132,11 @@ final class AttributiSecondari {
 		int statPrincipale;
 		int statSecondaria;
 
-		// BIVIO DI BILANCIAMENTO IN BASE ALL'ARCHETIPO DI CLASSE
-		switch (classe) {
+		// I due primari secondo il genere di classe. Si guarda il ruolo (TipoPersonaggio.getRuolo): la Maga va con il Mago, e così via
+		switch (classe.getRuolo()) {
 			case MAGO:
-			case MAGA:
 			case SACERDOTE:
-			case SACERDOTESSA:
 			case DRUIDO:
-			case DRUIDA:
 			case LICH:
 			case STREGA:
 			case NECROMANTE:
@@ -138,7 +146,6 @@ final class AttributiSecondari {
 				break;
 
 			case BARDO:
-			case CANTASTORIE:
 			case VIANDANTE:
 			case BARDO_DELLE_LOCANDE:
 			case LOCANDIERE:
@@ -155,18 +162,14 @@ final class AttributiSecondari {
 				break;
 
 			case LADRO:
-			case LADRA:
 			case ELFO:
-			case ELFA:
-				// Classi agili (e il Ladro che mena a due mani): Destrezza (70%) + Fortuna/Forza (30%)
+				// Classi agili (il Ladro e l'Elfo, che combattono a due mani): Destrezza (70%) + Forza (30%)
 				statPrincipale = valoreDi(md, TipoAttributo.DESTREZZA);
 				statSecondaria = valoreDi(md, TipoAttributo.FORZA);
 				break;
 
 			case GUERRIERO:
-			case GUERRIERA:
 			case CHIERICO:
-			case CHIERICA:
 			case CAPITANO_DELLE_GUARDIE:
 			case VICHINGO:
 			case MINOTAURO:
@@ -181,7 +184,7 @@ final class AttributiSecondari {
 				break;
 
 			default:
-				// Fail-safe per mostri generici ed eremiti (Forza ed equilibrio mentale)
+				// Tutti gli altri (i mostri non elencati, l'Eremita, l'Ombrafiamma): Forza (70%) + Intelligenza (30%)
 				statPrincipale = valoreDi(md, TipoAttributo.FORZA);
 				statSecondaria = valoreDi(md, TipoAttributo.INTELLIGENZA);
 				break;
@@ -192,8 +195,8 @@ final class AttributiSecondari {
 	}
 
 	/**
-	 * Calcola il carico massimo basandosi UNICAMENTE sulle statistiche primarie
-	 * e sul moltiplicatore della classe, mantenendo i rendimenti decrescenti.
+	 * Il carico massimo: il potenziale che viene da FORZA, COSTITUZIONE e moltiplicatore della classe (vedi {@link #potenzialeDiCarico}),
+	 * cambiato dai modificatori di CARICO_MASSIMO (quelli degli artefatti e quelli a tempo).
 	 */
 	static double calcolaCaricoMassimo(PersonaggioMD md, Personaggio moltiplicatori) {
 		return getQuantitaModificata(md, potenzialeDiCarico(md, moltiplicatori), TipoAttributo.CARICO_MASSIMO);
@@ -207,18 +210,31 @@ final class AttributiSecondari {
 	}
 
 	/**
-	 * Riporta l'attributo del personaggio modificato sia dai modificatori locali che quelli degli artefatti. Il valore di
-	 * base, che nel modello dati è un double, qui si usa troncato a intero: è così che il gioco lo ha sempre calcolato, e
-	 * per questo il modello dati non ha più un getter per ogni attributo.
+	 * Riporta l'attributo del personaggio modificato sia dai suoi modificatori (anche quelli a tempo) sia da quelli degli artefatti che
+	 * porta. Il valore di base, che nel modello dati è un double, si tronca a intero prima di applicare i modificatori, e si tronca di
+	 * nuovo il risultato. L'attributo deve esserci nel modello dati, altrimenti PersonaggioMD.get lancia un'eccezione.
 	 */
 	static int valoreDi(PersonaggioMD md, TipoAttributo tipoAttributo) {
 		return (int) getQuantitaModificata(md, (int) md.get(tipoAttributo), tipoAttributo);
 	}
 
+	/**
+	 * Come {@link #quantitaModificata}, con anche i modificatori a tempo.
+	 */
 	static double getQuantitaModificata(PersonaggioMD md, double quantitaOriginale, TipoAttributo tipoAttributo) {
 		return quantitaModificata(md, quantitaOriginale, tipoAttributo, true);
 	}
 
+	/**
+	 * Applica a {@code quantitaOriginale} i modificatori di quell'attributo: quelli del personaggio (senza quelli a tempo se
+	 * {@code conTemporanei} è false) e quelli degli artefatti equipaggiati che valgono per chi li porta. Le regole, nell'ordine:
+	 * <ol>
+	 * <li>se c'è un modificatore a QUANTITA_ASSOLUTA, il valore è quello e basta (se sono più d'uno, il più basso);</li>
+	 * <li>altrimenti si sommano all'originale le VARIAZIONE_FISSA;</li>
+	 * <li>poi si moltiplica per (1 + somma delle VARIAZIONE_PERCENTUALE / 100): +10 e -30 fanno -20%, cioè ×0,8.</li>
+	 * </ol>
+	 * Il confronto fra il valore con e senza i modificatori a tempo dice quanto valgono questi (vedi ModificatoriTemporanei).
+	 */
 	static double quantitaModificata(PersonaggioMD md, double quantitaOriginale, TipoAttributo tipoAttributo,
 											 boolean conTemporanei) {
 		List<ModificatoreAttributoMD> modificatoriLocali = new ArrayList<>();

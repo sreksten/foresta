@@ -22,16 +22,18 @@ import java.util.*;
  * al massimo un artefatto per testa, corpo e ciascuna mano, accessori senza limite, pergamene mai,
  * arma in mano secondaria solo per Ladro/Ladra ed Elfo/Elfa, armi a due mani solo con entrambe le mani libere.
  * Ogni classe giocabile usa solo le armi, lo scudo, il libro e l'armatura adatti a lei ({@link #puoUsare}): il Ladro, il Mago e il Sacerdote, per esempio, non portano armature, e nemmeno l'elmo.
- * Peso e FORZA per l'armatura non sono controllati qui, ma in {@link PersonaggioBase#puoEquipaggiare}.
+ * Qui si controllano anche la FORZA minima per l'armatura, il peso e il livello dell'artefatto (vedi {@link #valuta}).
+ * {@link PersonaggioBase#puoEquipaggiare} e CambioDArma (nel combattimento) chiedono qui; le classi che non hanno una tabella (i mostri,
+ * l'Ombrafiamma, i non combattenti) usano tutto.
  */
 public final class RegoleEquipaggiamento {
 
 	// Armi, scudo, libro e armatura che ogni classe giocabile usa (vedi artefatti_e_incantamenti.md, §2,
-	// "Equipaggiamento secondo la classe"). Vesti e accessori li portano tutti, e l'elmo tutti tranne il Ladro, il Mago e il Sacerdote. L'armatura la portano tutti
+	// “Equipaggiamento secondo la classe”). Vesti e accessori li portano tutti, e l'elmo tutti tranne il Ladro, il Mago e il Sacerdote. L'armatura la portano tutti
 	// tranne il Ladro, che non la usa mai (agisce con la destrezza), il Mago (la magia non si fa in armatura) e il
 	// Sacerdote (un sacerdote in armatura è il Chierico); chi
 	// può portarla chiede una FORZA minima.
-	// Le classi che non sono qui (i mostri, l'Ombrafiamma) non hanno limiti.
+	// Le classi che non sono qui (i mostri, l'Ombrafiamma, i non combattenti) non hanno limiti (vedi ammessi).
 	private static final Set<TipoArtefatto> GUERRIERO = EnumSet.of(TipoArtefatto.SPADA, TipoArtefatto.SPADONE, TipoArtefatto.FALCE,
 			TipoArtefatto.MAZZA, TipoArtefatto.ASCIA, TipoArtefatto.LANCIA, TipoArtefatto.SCUDO, TipoArtefatto.ARMATURA);
 	private static final Set<TipoArtefatto> LADRO = EnumSet.of(TipoArtefatto.SPADA, TipoArtefatto.MAZZA, TipoArtefatto.ASCIA);
@@ -48,7 +50,8 @@ public final class RegoleEquipaggiamento {
 	private static final Set<TipoArtefatto> DRUIDO = EnumSet.of(TipoArtefatto.BASTONE_MAGICO, TipoArtefatto.LANCIA, TipoArtefatto.LIBRO_MAGICO);
 
 	/**
-	 * Lo slot che l'artefatto occuperebbe, oppure il motivo per cui non si può prendere.
+	 * Lo slot che l'artefatto occuperebbe, oppure il motivo per cui non si può prendere: uno dei due è sempre null. Con il motivo ci sono
+	 * anche le due frasi già pronte: la spiegazione in terza persona (con il nome del personaggio davanti) e la frase del fumetto.
 	 */
 	public static final class EsitoControlloRichiestaEquipaggiamento {
 		private final TipoSlotArtefatto slot;
@@ -56,6 +59,8 @@ public final class RegoleEquipaggiamento {
 		private final String descrizione;
 		private final String fumetto;
 
+		// artefattoMD è l'artefatto da nominare nelle frasi (quello nuovo o quello che occupa già il posto, secondo il motivo); null per i
+		// motivi le cui frasi non nominano nessun artefatto
 		private EsitoControlloRichiestaEquipaggiamento(Personaggio personaggio, TipoSlotArtefatto slot,
 													   TipoMotivoRifiutoEquipaggiamento motivo, ArtefattoMD artefattoMD) {
 			this.slot = slot;
@@ -89,18 +94,31 @@ public final class RegoleEquipaggiamento {
 			return new EsitoControlloRichiestaEquipaggiamento(personaggio, null, motivo, artefatto);
 		}
 
+		/**
+		 * Lo slot in cui andrebbe l'artefatto; null se è un rifiuto.
+		 */
 		public TipoSlotArtefatto getSlot() {
 			return slot;
 		}
 
+		/**
+		 * Il motivo del rifiuto; null se l'artefatto si può prendere.
+		 */
 		public TipoMotivoRifiutoEquipaggiamento getMotivo() {
 			return motivo;
 		}
 
+		/**
+		 * La spiegazione del rifiuto in terza persona, con il nome del personaggio (“Il ladro non usa questo tipo di oggetti.”); null se
+		 * non è un rifiuto.
+		 */
 		public String getDescrizione() {
 			return descrizione;
 		}
 
+		/**
+		 * La frase del rifiuto che il personaggio dice nel fumetto, in prima persona; null se non è un rifiuto.
+		 */
 		public String getFumetto() {
 			return fumetto;
 		}
@@ -110,8 +128,10 @@ public final class RegoleEquipaggiamento {
 	}
 
 	/**
-	 * Valuta se il personaggio può usare l'artefatto, nell'ordine: la classe usa quel genere di oggetti, la forza basta per un'armatura, il peso è sostenibile, il livello è sufficiente, lo slot è libero
-	 * (con le regole di mani e seconda arma) e il peso è sostenibile.
+	 * Valuta se il personaggio può usare l'artefatto, nell'ordine: la classe usa quel genere di oggetti, la forza basta per un'armatura, il
+	 * peso è sostenibile, non è una pergamena o un ingrediente (slot NUCLEO), il livello è sufficiente, lo slot è libero (con le regole di
+	 * mani e seconda arma). Il primo controllo che fallisce dà il motivo. Non cambia niente: è
+	 * chi chiama a equipaggiare, se l'esito lo permette.
 	 *
 	 * @return l'esito del controllo, con il motivo del rifiuto se non può
 	 */
@@ -210,20 +230,25 @@ public final class RegoleEquipaggiamento {
 	}
 
 	/**
-	 * Lo slot che un artefatto equipaggiato occupa. Se slotEquipaggiamento manca (artefatto aggiunto
-	 * senza passare dalle regole) si ripiega sullo slot del suo tipo.
+	 * Lo slot che un artefatto equipaggiato occupa: di solito quello del suo tipo, ma una seconda arma nella mano secondaria ha
+	 * MANO_SECONDARIA anche se il suo tipo dice MANO_PRINCIPALE. Se slotEquipaggiamento manca (artefatto aggiunto senza passare dalle
+	 * regole) si ripiega sullo slot del suo tipo.
 	 */
 	public static TipoSlotArtefatto slotOccupato(ArtefattoMD artefatto) {
 		TipoSlotArtefatto slot = artefatto.getSlotEquipaggiamento();
 		return slot != null ? slot : artefatto.getTipo().getSlotArtefatto();
 	}
 
+	/**
+	 * Il primo artefatto, fra quelli equipaggiati, che occupa quello slot; vuoto se lo slot è libero.
+	 */
 	public static Optional<ArtefattoMD> occupato(Collection<ArtefattoMD> equipaggiati, TipoSlotArtefatto slot) {
 		return equipaggiati.stream().filter(a -> slotOccupato(a) == slot).findFirst();
 	}
 
 	/**
-	 * Lancia e bastone magico restano solo nella mano principale
+	 * Se un'arma a una mano si può portare anche nella mano secondaria, come seconda arma: solo spada, mazza e ascia (lancia e bastone
+	 * magico restano nella principale). Chi può farlo lo dice {@link #puoImpugnareDueArmi}.
 	 */
 	public static boolean isArmaDaManoSecondaria(TipoArtefatto tipo) {
 		return tipo == TipoArtefatto.SPADA || tipo == TipoArtefatto.MAZZA || tipo == TipoArtefatto.ASCIA;
@@ -250,50 +275,45 @@ public final class RegoleEquipaggiamento {
 	 * Il Ladro, il Mago e il Sacerdote non portano l'elmo: non sta bene in testa a chi vive di destrezza, di magia e di preghiera.
 	 */
 	private static boolean isSenzaElmo(TipoPersonaggio classe) {
-		return classe == TipoPersonaggio.LADRO || classe == TipoPersonaggio.LADRA
-				|| classe == TipoPersonaggio.MAGO || classe == TipoPersonaggio.MAGA
-				|| classe == TipoPersonaggio.SACERDOTE || classe == TipoPersonaggio.SACERDOTESSA;
+		// getRuolo mette insieme le forme maschile e femminile: la Ladra come il Ladro
+		TipoPersonaggio ruolo = classe.getRuolo();
+		return ruolo == TipoPersonaggio.LADRO || ruolo == TipoPersonaggio.MAGO || ruolo == TipoPersonaggio.SACERDOTE;
 	}
 
+	// Le armi, lo scudo, il libro e l'armatura che la classe sa usare; null per le classi senza limiti (i mostri, l'Ombrafiamma, i non
+	// combattenti). Si guarda il ruolo (TipoPersonaggio.getRuolo): la forma femminile usa quel che usa la maschile
 	private static Set<TipoArtefatto> ammessi(TipoPersonaggio classe) {
-		switch (classe) {
+		switch (classe.getRuolo()) {
 			case GUERRIERO:
-			case GUERRIERA:
 			case CAPITANO_DELLE_GUARDIE:
 			case VICHINGO:
 				return GUERRIERO;
 			case LADRO:
-			case LADRA:
 				return LADRO;
 			case ELFO:
-			case ELFA:
 				return ELFO;
 			case BARDO:
-			case CANTASTORIE:
 				return BARDO;
 			case MAGO:
-			case MAGA:
 				return MAGO;
 			case SACERDOTE:
-			case SACERDOTESSA:
 				return SACERDOTE;
 			case CHIERICO:
-			case CHIERICA:
 				return CHIERICO;
 			case DRUIDO:
-			case DRUIDA:
 				return DRUIDO;
 			default:
 				return null;
 		}
 	}
 
+	/**
+	 * Se la classe combatte con due armi, una per mano: solo il Ladro e l'Elfo (e le loro forme femminili, che hanno lo stesso ruolo).
+	 */
 	public static boolean puoImpugnareDueArmi(TipoPersonaggio classe) {
-		switch (classe) {
+		switch (classe.getRuolo()) {
 			case LADRO:
-			case LADRA:
 			case ELFO:
-			case ELFA:
 				return true;
 			default:
 				return false;

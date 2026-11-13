@@ -53,6 +53,7 @@ public class GestoreProgressione {
         if (livello + 1 >= CostantiPersonaggi.MASSIMO_LIVELLO) return (int) mancanti;
         long ampiezzaLivello = getXpRichiestiPerProssimoLivello(livello);
         long ampiezzaProssimo = getXpRichiestiPerProssimoLivello(livello + 1);
+        // La stessa frazione mancante, riportata sull'ampiezza del livello dopo; (a + b - 1) / b è la divisione intera arrotondata per eccesso
         long mancantiDopo = (mancanti * ampiezzaProssimo + ampiezzaLivello - 1) / ampiezzaLivello;
         return (int) (mancanti + ampiezzaProssimo - mancantiDopo);
     }
@@ -64,7 +65,7 @@ public class GestoreProgressione {
     public static int calcolaLivelloDaXp(int xpTotali) {
         if (xpTotali <= 0) return 1;
 
-        // Invertiamo la formula quadratica usando la radice quadrata
+        // La formula inversa di getXpNecessariPerLivello: xp = COSTANTE_XP * (livello - 1)^2, quindi livello = radice(xp / COSTANTE_XP) + 1
         int livelloCalcolato = (int) Math.floor(Math.sqrt((double) xpTotali / COSTANTE_XP)) + 1;
 
         // Mettiamo un tetto massimo per evitare che i livelli scalino all'infinito

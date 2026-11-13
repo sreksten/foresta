@@ -37,7 +37,7 @@ class TipoMotivoRifiutoEquipaggiamentoTest {
 
 	@Test
 	void iTestiSiComponganoComePrima() {
-		assertEquals("Pippo non ha uno slot libero per usare la spada.",
+		assertEquals("Pippo porta già la spada.",
 				TipoMotivoRifiutoEquipaggiamento.SLOT_OCCUPATO.formattaSpiegazione("Pippo", "la spada"));
 		assertEquals("Pippo è già al massimo del carico che può portare.",
 				TipoMotivoRifiutoEquipaggiamento.TROPPO_CARICO.formattaSpiegazione("Pippo"));

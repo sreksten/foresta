@@ -21,7 +21,10 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * Un personaggio: le letture stanno in VistaPersonaggio, che è quel che ne vede la UI.
+ * Un personaggio del gioco, giocante o mostro, con tutto quel che il motore e i poteri gli possono chiedere o fare. Le letture
+ * stanno in VistaPersonaggio, che è quel che ne vede la UI (in sola lettura); qui si aggiungono le operazioni che lo cambiano
+ * (ferite, cure, stati, modificatori, esperienza, inventario) e i valori della sua classe (i moltiplicatori in fondo, che ogni
+ * classe prende da CostantiPersonaggi). L'implementazione è PersonaggioBase.
  */
 public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, ScambiatoreArtefatti {
 
@@ -65,11 +68,11 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	 */
     String getDa();
 	/**
-	 * Il nome singolare della razza del personaggio
+	 * Il nome singolare della classe del personaggio
 	 */
     String getNomeSingolare();
 	/**
-	 * Il nome plurale dela razza del personaggio
+	 * Il nome plurale della classe del personaggio
 	 */
     String getNomePlurale();
 	/**
@@ -79,7 +82,7 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 
 	/**
 	 * Usata da LocazioneBase per impostare il numero del personaggio che viene poi
-	 * utilizzato duranre i combattimenti (il primo mostro non ce l'ha fatta...)
+	 * utilizzato durante i combattimenti (il primo mostro non ce l'ha fatta...)
 	 */
     void setOrdinale(int ordinale);
 	/**
@@ -89,7 +92,7 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
     int getOrdinale();
 
 	/**
-	 * Il sesso del personaggio da ClassiPersonaggio
+	 * Il sesso del personaggio: lo dice la sua classe (la Maga, il Mago)
 	 */
     Sesso getSesso();
 	/**
@@ -153,14 +156,14 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	 */
     boolean isInPanchina();
     void setInPanchina(boolean inPanchina);
-	/**
-	 * Se il personaggio non può combattere: è morto o in panchina.
-	 */
     @Override
     default String getUuid() {
         return getModelloDati().getUuid();
     }
 
+	/**
+	 * Se il personaggio non può combattere: è morto o in panchina.
+	 */
     default boolean isFuoriCombattimento() {
         return !isVivo() || isInPanchina();
     }
@@ -235,10 +238,8 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	/**
 	 * Sottrae salute (ferisce) a un personaggio
 	 * @param avversario il personaggio responsabile del ferimento
-	 * @param notificaFerite se true verra' richiesto all'UI di notificare che il
-	 *        personaggio è stato ferito
-	 * @param notificaMorte se true verra' richiesto all'UI (in caso di decesso) che
-	 *        il personagio è morto
+	 * @param notificaFerite con SI si pubblicano le notifiche delle ferite (la UI le mostra)
+	 * @param notificaMorte con SI, se muore, si pubblica la notifica della morte
 	 */
     void subSalute(int quantita, Personaggio avversario, NotificaFerite notificaFerite, NotificaMorte notificaMorte);
 	/**
@@ -250,7 +251,7 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	 */
     void addMagia(int quantita);
 	/**
-	 * Alcuni oggetti possono aumentare la salute massima di un personaggio
+	 * Alcuni oggetti possono aumentare la magia massima di un personaggio (la pozione della magia grande)
 	 */
 	void addMagiaMassima(int quantita, String note);
 	/**
@@ -267,7 +268,7 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	 */
     double getModificaDanniMagia(double danni);
 	/**
-	 * Aumenta la stanchezza di un personaggio fino a 9
+	 * Aumenta la stanchezza di un personaggio fino a CostantiPersonaggi.MAX_STANCHEZZA
 	 */
     void addStanchezza(int quantita);
 	/**
@@ -279,9 +280,8 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	 */
     void add(TipoAttributo tipoAttributo, int quantita);
 	/**
-	 * Quanti avversari può impegnare un personaggio in combattimento
-	 * (combatte con uno ma impedisce agli altri di formulare incantesimi, oppure cerca di colpire con un
-	 * incantesimo quel numero di bersagli)
+	 * Quanti bersagli colpisce al massimo un suo potere a più bersagli: un incantesimo MULTIPLO, un canto, un'abilità di danno.
+	 * Almeno uno.
 	 */
     int getBersagli();
 	/**
@@ -289,8 +289,8 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	 */
     String getDescrizione();
 	/**
-	 * Il personaggio riposa per diminuire la stanchezza e aumentare la forza e la magia.
-	 * Se il personaggio riposa al coperto (locanda o città) o davanti a un fuoco allora i valori aumentano.
+	 * Il personaggio riposa: cala la stanchezza, tornano salute e magia (vedi CalcolatoreRiposo). Quanto, dipende dalle ore e da
+	 * dove riposa (vedi TipoRiposo: all'aperto senza fuoco la metà, al coperto una volta e mezza).
 	 */
     void riposa(int ore, TipoRiposo tipoRiposo);
 	/**
@@ -313,7 +313,8 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
     TipoMotivoNelGruppo getMotivoNelGruppo();
 
 	/**
-	 * Indica che un personaggio si ferma nel gruppo per un certo numero di turni (aiuto gratuito o mercenario).
+	 * Indica che un personaggio si ferma nel gruppo per un certo numero di turni (aiuto, corrotto, scheletro della mietitura,
+	 * compagno di una missione: vedi TipoMotivoNelGruppo.isATempo).
 	 */
     boolean isATempo();
 	/**
@@ -352,14 +353,8 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 
 	void setModelloDati(PersonaggioMD modelloDati);
 
-	/*
-	 * Nuove funzionalità per i personaggi
-	 */
-
-	// Statistiche del personaggio
-
 	/**
-	 * La classe del personaggio da ClassiPersonaggio
+	 * La classe del personaggio
 	 */
     TipoPersonaggio getClasse();
 
@@ -375,7 +370,8 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
     String getNome(OpzioniGetNome... opzioni);
 
 	/**
-	 * Ritorna la lettera da usare per un aggettivo relativo al personaggio
+	 * La lettera finale di un aggettivo italiano riferito al personaggio: "o" per un maschio, "a" per una femmina (la usano le
+	 * notizie, vedi RegistroNotizie)
 	 */
     String getLetteraFinaleAttributo();
 
@@ -435,8 +431,8 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
     int getSaluteMassima();
 
 	/**
-	 * La quantita' di salute che il personaggio riacquista riposando, somma del recupero base più
-	 * dei modificatori di salute degli artefatti.
+	 * La salute che il personaggio recupera a fine locazione: una base (5 più una quota della salute massima) con i modificatori,
+	 * aumentata dalla COSTITUZIONE e moltiplicata per il recupero fisico della classe (0 per chi non guarisce, come i non morti).
 	 */
     int getRigenerazioneSalute();
 
@@ -451,8 +447,8 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
     int getMagiaMassima();
 
 	/**
-	 * La quantita' di magia che il personaggio riacquista riposando, somma del recupero base più
-	 * dei modificatori di magia degli artefatti.
+	 * La magia che il personaggio recupera a fine locazione: una base (5 più una quota della magia massima) con i modificatori,
+	 * moltiplicata per il recupero magico della classe.
 	 */
     int getRigenerazioneMagia();
 
@@ -483,9 +479,6 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	 * Punti esperienza derivanti dalla sconfitta
 	 */
 	int getPuntiEsperienza();
-
-	// Modificatori di stato
-
 
 	/**
 	 * Effetti di stato attivi sul personaggio
@@ -568,9 +561,18 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	 */
     void rimuoviEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato);
 
+	/**
+	 * L'arma della mano principale (o a due mani); senza, l'arma naturale della classe (artigli, morso, tocco gelido...)
+	 */
 	Arma getArmaEquipaggiata();
 
+	/**
+	 * L'arma della mano secondaria, per chi combatte con due armi (Ladro, Elfo)
+	 */
 	Optional<Arma> getArmaSecondaria();
+
+	// I valori della classe: ogni classe concreta li restituisce da CostantiPersonaggi (per esempio Mago.getSaluteBase restituisce
+	// MAGO_SALUTE_BASE). I moltiplicatori valgono 1 nella media, di più per un punto di forza, di meno per un punto debole.
 
 	double getSaluteBase();
 

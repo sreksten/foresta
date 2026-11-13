@@ -61,6 +61,9 @@ final class SaluteEMorte {
 		BusEventi.pubblica(new InternoPersonaggioArreso(p));
 	}
 
+	/**
+	 * Muore (non chi è immortale): perde gli effetti di stato e i modificatori a tempo, senza raccontarlo, e lo annuncia.
+	 */
 	void muore(String causaTrapasso) {
 		if (p.isImmortale()) {
 			return;
@@ -79,16 +82,19 @@ final class SaluteEMorte {
 		BusEventi.pubblica(new NotificaVariazioneStatoVitalePersonaggio(p, false));
 	}
 
+	/**
+	 * Torna in vita con un decimo della salute massima e la stanchezza al massimo.
+	 */
 	void resuscita() {
 		int salutePrecedente = (int) md().get(TipoAttributo.SALUTE);
 		int stanchezzaPrecedente = (int) md().get(TipoAttributo.STANCHEZZA);
 		int salute = (int)(p.calcolaSaluteMassima() / 10.0d);
 		md().set(TipoAttributo.SALUTE, salute);
-		md().set(TipoAttributo.STANCHEZZA, 9);
+		md().set(TipoAttributo.STANCHEZZA, CostantiPersonaggi.MAX_STANCHEZZA);
 		md().setVivo(true);
 		md().setCausaTrapasso(null);
 		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(p, TipoAttributo.SALUTE, salutePrecedente, salute));
-		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(p, TipoAttributo.STANCHEZZA, stanchezzaPrecedente, 9));
+		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(p, TipoAttributo.STANCHEZZA, stanchezzaPrecedente, CostantiPersonaggi.MAX_STANCHEZZA));
 		BusEventi.pubblica(new NotificaVariazioneStatoVitalePersonaggio(p, true));
 	}
 
@@ -103,6 +109,11 @@ final class SaluteEMorte {
 		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(p, TipoAttributo.SALUTE, salutePrecedente, saluteCorrente));
 	}
 
+	/**
+	 * Le ferite, in quest'ordine: chi non può morire resta a un punto; chi combatte fino alla resa si arrende; chi arriva a zero muore
+	 * (con il racconto e la causa della morte); gli altri si sentono dire quante ferite restano. Alla fine, se scende sotto la sua soglia,
+	 * chi ha il berserk ci entra. Con un danno di zero o meno si dice solo che il colpo non ha fatto nulla (avversario non null).
+	 */
 	void subSalute(int quantita, Personaggio avversario, Personaggio.NotificaFerite notificaFerite, Personaggio.NotificaMorte notificaMorte) {
 		// Un morto non subisce altri danni: la sua morte non va annunciata due volte (doppio danno periodico, collasso, doppia resa)
 		if (!p.isVivo()) {
@@ -198,18 +209,17 @@ final class SaluteEMorte {
 	 * RIGENERAZIONE_SALUTE (del personaggio, degli artefatti e dei set leggendari) valgono su tutta la base.
 	 */
 	int getRigenerazioneSalute() {
-		// Se la creatura è un non-morto o uno spettro, il moltiplicatore è 0.0, quindi guarisce 0
+		// Chi ha un recupero fisico nullo (i non morti) non guarisce
 		if (p.getMoltiplicatoreRecuperoFisico() == 0.0) {
 			return 0;
 		}
 		// 1. Base di partenza mista
-		double baseGrezza = AttributiSecondari.getQuantitaModificata(md(),
-				5.0d + p.getSaluteMassima() * CostantiPersonaggi.RIGENERAZIONE_SALUTE_QUOTA_SALUTE_MASSIMA, TipoAttributo.RIGENERAZIONE_SALUTE);
-		// 2. Impatto dell'attributo Costituzione con Diminishing Returns
+		double baseGrezza = AttributiSecondari.getQuantitaModificata(md(), p.rigenerazioneSaluteSenzaModificatori(), TipoAttributo.RIGENERAZIONE_SALUTE);
+		// 2. La COSTITUZIONE aiuta, ma sempre meno quanto più è alta (la radice): 25 di costituzione danno +50%, 100 danno +100%
 		double bonusCostituzione = 1.0 + (Math.sqrt(p.get(TipoAttributo.COSTITUZIONE)) / 10.0);
 		// 3. Calcolo finale combinato con il moltiplicatore di archetipo
 		double saluteFinale = (baseGrezza * bonusCostituzione) * p.getMoltiplicatoreRecuperoFisico();
-		// Arrotondamento a un decimale per la UI
+		// Arrotondato per eccesso all'intero
 		return (int)Math.ceil(saluteFinale);
 	}
 
@@ -219,11 +229,10 @@ final class SaluteEMorte {
 	 */
 	int getRigenerazioneMagia() {
 		// 1. Calcolo del recupero potenziale: una parte fissa e una sulla capienza massima
-		double recuperoGrezzo = AttributiSecondari.getQuantitaModificata(md(),
-				5.0d + p.getMagiaMassima() * CostantiPersonaggi.RIGENERAZIONE_MAGIA_QUOTA_MAGIA_MASSIMA, TipoAttributo.RIGENERAZIONE_MAGIA);
+		double recuperoGrezzo = AttributiSecondari.getQuantitaModificata(md(), p.rigenerazioneMagiaSenzaModificatori(), TipoAttributo.RIGENERAZIONE_MAGIA);
 		// 2. Applicazione del moltiplicatore di classe/razza
 		double manaRigenerato = recuperoGrezzo * p.getMoltiplicatoreRecuperoMagico();
-		// Arrotondamento a un decimale per l'interfaccia utente (UI)
+		// Arrotondato per eccesso all'intero
 		return (int)Math.ceil(manaRigenerato);
 	}
 

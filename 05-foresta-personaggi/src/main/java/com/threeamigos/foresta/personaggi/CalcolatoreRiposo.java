@@ -1,22 +1,18 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
 /**
- * Calcola quanto recupera un personaggio riposando: salute, magia e stanchezza, in base alle ore e al tipo di riposo.
+ * Calcola quanto recupera un personaggio riposando (un'ora nelle locazioni tranquille o una notte intera: vedi LocazioneBase e Pernottamento, nel motore): salute,
+ * magia e stanchezza, in base alle ore e al tipo di riposo. Non cambia niente: il recupero lo applica SaluteEMorte.riposa.
  *
  * @author Stefano Reksten
  */
 public class CalcolatoreRiposo {
 
-    private static final double BASE_RECUPERO_SALUTE = 5.0;
-    private static final double PERCENTUALE_SALUTE_MAX = 0.05;
-
-    private static final double BASE_RECUPERO_MANA = 4.0;
-    private static final double PERCENTUALE_MANA_MAX = 0.05;
-
-    private static final double BASE_RIDUZIONE_STANCHEZZA = 2.0;
+    // I valori di bilanciamento stanno in CostantiPersonaggi (RIPOSO_*)
 
     /**
      * Il recupero di un personaggio che riposa quelle ore in quel modo. Il tempo conta con la radice delle ore (quattro ore valgono il doppio
@@ -36,22 +32,22 @@ public class CalcolatoreRiposo {
 
         // --- CALCOLO RECUPERO SALUTE ---
         if (personaggio.getMoltiplicatoreRecuperoFisico() > 0.0) { // Salta se è un non-morto/spettro
-            double saluteGrezza = BASE_RECUPERO_SALUTE + (personaggio.getSaluteMassima() * PERCENTUALE_SALUTE_MAX);
+            double saluteGrezza = CostantiPersonaggi.RIPOSO_SALUTE_PARTE_FISSA + (personaggio.getSaluteMassima() * CostantiPersonaggi.RIPOSO_SALUTE_QUOTA_SALUTE_MASSIMA);
             saluteRigenerata = (int) Math.ceil(saluteGrezza * moltiplicatoreGlobale *
                     personaggio.getMoltiplicatoreRecuperoFisico());
         }
 
         // --- CALCOLO RECUPERO Magia ---
-        double manaGrezzo = BASE_RECUPERO_MANA + (personaggio.getMagiaMassima() * PERCENTUALE_MANA_MAX);
+        double manaGrezzo = CostantiPersonaggi.RIPOSO_MAGIA_PARTE_FISSA + (personaggio.getMagiaMassima() * CostantiPersonaggi.RIPOSO_MAGIA_QUOTA_MAGIA_MASSIMA);
         manaRigenerato = (int) Math.ceil(manaGrezzo * moltiplicatoreGlobale *
                 personaggio.getMoltiplicatoreRecuperoMagico());
 
         // --- CALCOLO ABBASSAMENTO STANCHEZZA ---
         if (personaggio.getMoltiplicatoreStanchezza() > 0.0) { // I non-morti ignorano la stanchezza
             // Più si riposa in un luogo comodo, più la stanchezza scende drasticamente
-            double stanchezzaGrezza = BASE_RIDUZIONE_STANCHEZZA * moltiplicatoreGlobale;
+            double stanchezzaGrezza = CostantiPersonaggi.RIPOSO_RIDUZIONE_STANCHEZZA * moltiplicatoreGlobale;
 
-            // La stanchezza non può scendere sotto lo zero
+            // Che la stanchezza non scenda sotto lo zero lo garantisce subStanchezza
             stanchezzaRimossa = (int) Math.ceil(stanchezzaGrezza);
         }
 

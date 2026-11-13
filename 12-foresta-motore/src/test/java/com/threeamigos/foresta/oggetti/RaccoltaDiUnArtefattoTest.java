@@ -10,6 +10,7 @@ import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.gruppi.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Mago;
+import com.threeamigos.foresta.tipi.Comando;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -75,5 +77,16 @@ class RaccoltaDiUnArtefattoTest {
 
 		assertTrue(paragrafi.isEmpty(), "paragrafi: " + paragrafi);
 		assertTrue(frasi.stream().anyMatch(f -> f.contains("nessuno può utilizzarlo in questo momento")), "frasi: " + frasi);
+	}
+
+	@Test
+	void seIlGiocatoreLoDaAChiNonPuoPrenderloIlMessaggioDiceIlMotivo() {
+		gruppo.aggiungiPersonaggio(new Mago("Merlino", 5));
+
+		RaccoltaBottino.raccogliArtefatto(gruppo, Comando.ofPersonaggio(0), spada(1));
+
+		assertEquals(1, paragrafi.size(), "frasi: " + frasi);
+		assertTrue(paragrafi.get(0).contains("non usa questo tipo di oggetti"), paragrafi.get(0));
+		assertFalse(paragrafi.get(0).contains("@"), "niente oggetti Java nel testo: " + paragrafi.get(0));
 	}
 }

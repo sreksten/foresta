@@ -5,14 +5,16 @@ import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tipi.TipoPersonaggio; // Presumo sia la tua Enum delle 30 classi
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.Collection;
 import java.util.Collections;
 
 /**
- * Rappresenta gli attacchi biologici, magici o spettrali innati delle creature
- * che non utilizzano armi tradizionali nell'inventario.
+ * L'arma di chi non ne impugna una: gli artigli, il morso, il tocco gelido... delle creature, e i pugni di un personaggio rimasto senza
+ * arma in mano. PersonaggioBase.getArmaEquipaggiata ne crea una ogni volta che la mano principale è vuota, e il combattimento la usa come
+ * un'arma qualsiasi (con {@link #controDifensore} per la Fiamma viva). Non è un artefatto: non si salva, non si trova e non si incanta;
+ * il suo livello è quello del proprietario.
  */
 public class ArmaNaturale implements Arma {
 
@@ -24,20 +26,20 @@ public class ArmaNaturale implements Arma {
      * gli attacchi fisici, l'Intelligenza per quelli magici).
      */
     public enum TipoAttaccoNaturale {
-        /** Gli artigli di Arpia, Folletto e Goblin */
-        ARTIGLI_LEGGERI(4, true, TipoDanno.TAGLIENTE),   // Arpia, Folletto, Goblin
-        /** Il morso di Minotauro, Troll e Chimera */
-        MORSO_BRUTO(8, true, TipoDanno.PERFORANTE),       // Minotauro, Troll, Chimera
-        /** La zampata di Gigante e Minotauro Gigante */
-        ZAMPATA_COLOSSALE(12, true, TipoDanno.CONTUNDENTE),// Gigante, Minotauro Gigante
+        /** Gli artigli di Arpia, Folletto, Goblin, Hobgoblin e Scheletro; anche i pugni di chiunque altro sia senza arma */
+        ARTIGLI_LEGGERI(4, true, TipoDanno.TAGLIENTE),
+        /** Il morso di Minotauro, Troll, Chimera e Idra */
+        MORSO_BRUTO(8, true, TipoDanno.PERFORANTE),
+        /** La zampata di Gigante, Minotauro Gigante, Titano, Gargoyle e Centauro */
+        ZAMPATA_COLOSSALE(12, true, TipoDanno.CONTUNDENTE),
         /** Le zanne di Drago, Viverna e Chimera Drago */
-        ZANNE_DRACONICHE(16, true, TipoDanno.VELENO), // Drago, Viverna, Chimera Drago
+        ZANNE_DRACONICHE(16, true, TipoDanno.VELENO),
         /** Il tocco di Spettro e Fantasma */
-        TOCCO_GELIDO(5, false, TipoDanno.GELO),     // Spettro, Fantasma
-        /** La dissipazione dell'anima di Ombra Nera e Spirito */
-        DISSIPAZIONE_ANIMA(10, false, TipoDanno.NECROTICO),// Ombra Nera, Spirito
+        TOCCO_GELIDO(5, false, TipoDanno.GELO),
+        /** La dissipazione dell'anima di Ombra Nera, Spirito, Lich e Necromante */
+        DISSIPAZIONE_ANIMA(10, false, TipoDanno.NECROTICO),
         /** La fiamma viva dell'Ombrafiamma */
-        FIAMMA_VIVA(14, false, TipoDanno.FUOCO);     // Ombrafiamma
+        FIAMMA_VIVA(14, false, TipoDanno.FUOCO);
 
         private final int dannoInizialeFisso;
         private final boolean scalaSuForza; // true = Forza (Fisico), false = Intelligenza (Magico)
@@ -73,7 +75,7 @@ public class ArmaNaturale implements Arma {
     }
 
     /**
-     * Associa automaticamente ogni classe/mostro al suo corretto stile di attacco innato.
+     * L'attacco innato di ogni classe; chi non è elencato (i giocanti, i non combattenti, l'Eremita, la Strega...) ha gli artigli leggeri.
      */
     private TipoAttaccoNaturale assegnaTipoAttacco(TipoPersonaggio classe) {
         switch (classe) {
@@ -108,7 +110,7 @@ public class ArmaNaturale implements Arma {
                 return TipoAttaccoNaturale.DISSIPAZIONE_ANIMA;
             case OMBRAFIAMMA:
                 return TipoAttaccoNaturale.FIAMMA_VIVA;
-            // Classi umane giocabili (se rimangono disarmate per errore)
+            // Tutti gli altri, giocanti compresi quando non hanno un'arma nella mano principale
             default:
                 return TipoAttaccoNaturale.ARTIGLI_LEGGERI;
         }
@@ -126,11 +128,12 @@ public class ArmaNaturale implements Arma {
         int statRiferimento = tipoAttacco.scalaSuForza ?
                 proprietario.get(TipoAttributo.FORZA) : proprietario.get(TipoAttributo.INTELLIGENZA);
 
-        // Applichiamo i Diminishing Returns tramite radice quadrata sulla statistica.
-        // Evita che i mostri con 100 di Forza facciano istantaneamente kill in un colpo.
-        double bonusStatistica = Math.sqrt(statRiferimento) * 1.5;
+        // Il bonus cresce con la radice quadrata dell'attributo (rendimenti decrescenti): Forza 16 dà +6, Forza 100 dà +15, così un
+        // mostro fortissimo non uccide in un colpo. Un attributo portato sotto zero da un modificatore conta 0: la radice di un negativo
+        // darebbe NaN, e il danno 0 invece del minimo 1
+        double bonusStatistica = Math.sqrt(Math.max(0, statRiferimento)) * 1.5;
 
-        // Calcolo del danno dell'arma a livello 1
+        // Il danno fisso del tipo di attacco più il bonus, troncato, e mai meno di 1. Il livello non entra qui: conta attraverso l'attributo
         double dannoCalcolato = tipoAttacco.dannoInizialeFisso + bonusStatistica;
 
         return (int) Math.max(1, Math.floor(dannoCalcolato));

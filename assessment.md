@@ -368,7 +368,7 @@ In ordine di livello. Le righe sono quelle di `wc -l` su `src/main/java` al 2026
 | 4 | `02-foresta-notizie`, `03-foresta-danni`, `03-foresta-tutorial` | tutto | 1.550 | fatto (2026-11-13) |
 | 5 | `04-foresta-artefatti` | tutto | 5.250 | fatto (2026-11-13) |
 | 6 | `05-foresta-personaggi` | `tipi` (con `CostantiPersonaggi`), `modellodati`, `interfacce`, `eventi` | 5.700 | fatto (2026-11-13) |
-| 7 | `05-foresta-personaggi` | `personaggi`: i meccanismi (`PersonaggioBase`, `Personaggio`, `SaluteEMorte`, `EffettiDiStato`, `ModificatoriTemporanei`, `AttributiSecondari`, `CaricoEInventario`, `GestoreProgressione`, `Progressione`, `RegoleEquipaggiamento`, `CalcolatoreRiposo`, `RisultatoRiposo`, `FabbricaPersonaggi`, `EquipaggiamentoIniziale`, `LanciatoreDeiDadi`, `MoltiplicatoriDiClasse`, `NomeEDescrizione`, `ArmaNaturale`, `PersonaggioNonCombattente`) e `gruppi` | 5.500 | da fare |
+| 7 | `05-foresta-personaggi` | `personaggi`: i meccanismi (`PersonaggioBase`, `Personaggio`, `SaluteEMorte`, `EffettiDiStato`, `ModificatoriTemporanei`, `AttributiSecondari`, `CaricoEInventario`, `GestoreProgressione`, `Progressione`, `RegoleEquipaggiamento`, `CalcolatoreRiposo`, `RisultatoRiposo`, `FabbricaPersonaggi`, `EquipaggiamentoIniziale`, `LanciatoreDeiDadi`, `MoltiplicatoriDiClasse`, `NomeEDescrizione`, `ArmaNaturale`, `PersonaggioNonCombattente`) e `gruppi` | 5.500 | fatto (2026-11-13) |
 | 8 | `05-foresta-personaggi` | `personaggi`: le classi dei personaggi e dei mostri (tutti gli altri file, da `Alchimista` a `Viverna`): **qui le parti in comune sono il tema principale** (sono una sessantina di classi corte e simili: se non basta una sessione, A–L e M–Z). **Rimandato qui** (passo 6): ogni classe restituisce da una ventina di metodi le sue costanti di `CostantiPersonaggi` (circa 1.250 righe di blocchi uguali): valutare una tabella, una riga per classe (un oggetto `ValoriDiClasse` o un file di dati come `leggendari.txt`) | 7.550 | da fare |
 | 9 | `06-foresta-bestiario`, `06-foresta-combattimento`, `06-foresta-statistiche` | tutto. **Rimandati qui:** riscrivere i Javadoc delle costanti di `TipoAttributo` (`02-foresta-attributi`) con quel che ogni attributo fa davvero, leggendone gli usi nel combattimento, e togliere l'avviso in testa all'enum (passo 3); controllare che chi chiama `TipoInterazioneConEffettiDiStato.getDannoAdArea()` sappia che è null per le reazioni senza area (passo 4) | 4.000 | da fare |
 | 10 | `07-foresta-intermezzi`, `07-foresta-mondo` | tutto | 4.600 | da fare |
@@ -463,7 +463,20 @@ Per un neofita le parti dure sono `RegoleIncantatura.piano`, il costruttore a pa
 **Aperto:**
 - La causa della morte si salva già tradotta (`PersonaggioMD.causaTrapasso`): dopo un cambio di lingua resta nella lingua di quando il personaggio è morto.
 
+#### Passo 7: personaggi (i meccanismi) e gruppi
 
+**Giudizio.** `PersonaggioBase`, dopo l'estrazione dei sette collaboratori (salute, effetti, modificatori, carico, progressione, nome), è leggibile: ogni collaboratore ha un compito e rilegge i dati dal personaggio. I punti deboli erano:
+- i resti dell'estrazione: righe vuote, titoletti senza contenuto, commenti rimasti da sessioni con un'IA;
+- le formule di salute e magia scritte due volte;
+- i commenti di `LanciatoreDeiDadi`, che smentivano le tabelle;
+- i Javadoc dell'interfaccia `Personaggio`, invecchiati.
+
+**Aperto:**
+- `FabbricaPersonaggi.modello` crea un personaggio vero alla prima richiesta: tira i dadi (e consuma i lanci truccati dei test, `Dado.trucca`) e pubblica `InternoCreazionePersonaggio`. Chi chiede il nome di una classe a metà partita sposta la sequenza dei numeri a caso.
+- `PersonaggioBase` pubblica `InternoCreazionePersonaggio` dal costruttore, prima che la sottoclasse abbia finito di costruirsi: oggi lo ascolta solo lo sniffer.
+- `Personaggio.getLetteraFinaleAttributo` («o»/«a») vale solo per l'italiano: da vedere al passo 21, con `RegistroNotizie`.
+
+### 11.5 Decisioni prese (da non riproporre)
 
 - **`TipoEvento` resta** (passo 1): per l'utente è il dizionario centralizzato di tutti i tipi di evento, e potrà servire ancora, anche se oggi lo legge solo il registro.
 - **I messaggi d'errore di `GestoreGrammatiche` restano in inglese** (passo 2): li legge chi modifica le grammatiche, che può non sapere l'italiano. È scritto in `GestoreGrammatiche.md` §9.
@@ -472,6 +485,7 @@ Per un neofita le parti dure sono `RegoleIncantatura.piano`, il costruttore a pa
 - **Una qualsiasi grammatica rotta impedisce al gioco di partire** (passo 5), e `TutteLeGrammaticheTest` le carica tutte, in ogni lingua, prima che si costruisca il jar.
 - **`NotificaRifiutoStoccaggioArtefatto` resta** (passo 6), anche se oggi nessuno la pubblica: servirà quando l'inventario generale avrà un limite di peso.
 - **Chi è immune a un incantesimo è immune anche al suo tipo di danno** (passo 6): l'immunità della Viverna all'incantesimo Fuoco senza l'immunità al danno di fuoco era un difetto, e così quelle di Arpia, Troll e Strega (che resta debole al fuoco e non è più immune all'incantesimo Fuoco). Lo controlla `CaratteristicheDiClasseTest`; fa eccezione Morte, che non fa danno.
+- **L'Ombrafiamma e l'Ombra nera hanno il budget dei giocanti** in `LanciatoreDeiDadi` (passo 7), come il Necromante: quello dei mostri comuni non era voluto.
 - **Chi è immune a un tipo di danno non subisce nemmeno le reazioni elementali di quel danno** (passo 6): un'arpia bagnata colpita dall'aria non si raffredda. Resta com'è scritto in `debolezze_e_resistenze.md`.
 
 ## Osservazioni

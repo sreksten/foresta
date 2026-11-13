@@ -341,7 +341,7 @@ public final class RaccoltaBottino {
 			return true;
 		}
 		gruppo.addArtefatto(artefatto);
-		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore", "RaccoltaBottino.5", comeSoggetto(artefatto), personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE), motivoRifiuto.get())));
+		BusEventi.pubblica(new NotificaTestoParagrafo(Testi.formatta("messaggi_motore", "RaccoltaBottino.5", comeSoggetto(artefatto), motivoRifiuto.get().getDescrizione())));
 		return false;
 	}
 

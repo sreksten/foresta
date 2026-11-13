@@ -23,6 +23,10 @@ import com.threeamigos.foresta.testi.Lingue;
  * Un insieme di personaggi, con il suo capo e le sue scorte di pergamene e pozioni. Le due specializzazioni sono {@link GruppoGiocatore} e
  * {@link GruppoAvversario}. Le scorte stanno nel modello dati del gruppo: le variazioni di quelle del giocatore si annunciano alla UI con le
  * notifiche, quelle degli avversari no (sono scorte che i mostri hanno con sé e che a scontro finito possono diventare bottino).
+ * <p>
+ * L'elenco dei personaggi tiene anche i morti: chi cade resta nel gruppo (si può risuscitare) finché qualcuno non lo toglie. Per chi può
+ * ancora combattere c'è {@link #getPersonaggiVivi()}. Il capo è il primo personaggio entrato, se nessuno lo cambia: nel gruppo del giocatore
+ * è il personaggio del giocatore, e se muore la partita è persa.
  */
 public abstract class Gruppo implements VistaGruppo {
 	
@@ -31,7 +35,8 @@ public abstract class Gruppo implements VistaGruppo {
 	protected Personaggio capo;
 
 	/**
-	 * Svuota il gruppo: nessun personaggio e nessun capo.
+	 * Svuota il gruppo: nessun personaggio e nessun capo. Le sottoclassi azzerano anche le scorte (vedi le loro versioni); lo chiama chi
+	 * prepara una partita nuova o, per il gruppo avversario, una nuova locazione.
 	 */
 	public void reimposta() {
 		personaggi.clear();
@@ -42,8 +47,8 @@ public abstract class Gruppo implements VistaGruppo {
 	private final GruppoMD gruppoMD = new GruppoMD();
 
 	/**
-	 * Il modello dati del gruppo: le scorte di incantesimi e di pozioni stanno lì (nel gruppo del giocatore anche tutto il
-	 * resto, e si salvano)
+	 * Il modello dati del gruppo: le scorte di incantesimi e di pozioni stanno lì. Il gruppo del giocatore lo ridefinisce e dà il
+	 * suo, che ha anche tutto il resto e si salva con la partita.
 	 */
 	public GruppoMD getGruppoMD() {
 		return gruppoMD;
@@ -53,12 +58,16 @@ public abstract class Gruppo implements VistaGruppo {
 	// annunciano alla UI; quelle del gruppo avversario no (sono scorte che i mostri hanno con sé, e che a scontro finito
 	// possono diventare bottino)
 
+	/**
+	 * Quante pergamene di quell'incantesimo ha il gruppo (zero se non ne ha mai avute).
+	 */
 	public final int getIncantesimi(TipoIncantesimo tipoIncantesimo) {
 		return getGruppoMD().getIncantesimi(tipoIncantesimo);
 	}
 
 	/**
-	 * Aggiunge pergamene di quell'incantesimo alle scorte; il gruppo del giocatore lo annuncia alla UI.
+	 * Aggiunge pergamene di quell'incantesimo alle scorte (con una quantità negativa le toglie: non controlla che ce ne siano abbastanza); il
+	 * gruppo del giocatore lo annuncia alla UI.
 	 */
 	public final void addIncantesimi(TipoIncantesimo tipoIncantesimo, int quantita) {
 		int valorePrecedente = getGruppoMD().getIncantesimi(tipoIncantesimo);
@@ -100,14 +109,28 @@ public abstract class Gruppo implements VistaGruppo {
 	}
 
 	/**
-	 * Fa bere a quel personaggio una pozione della salute: ne toglie una dalle scorte e gli restituisce un po' di salute.
+	 * Fa bere a quel personaggio una pozione della salute: ne toglie una dalle scorte e gli restituisce un po' di salute
+	 * ({@link CostantiPersonaggi#RECUPERO_DA_POZIONE_SALUTE}). Non controlla che ce ne sia una: lo fa prima chi offre il comando
+	 * (vedi {@link #isPozioneSaluteUtilizzabile()}).
 	 */
 	public final void consumaPozioneSalute(Personaggio personaggio) {
 		subPozioniSalute(1);
 		personaggio.addSalute(CostantiPersonaggi.RECUPERO_DA_POZIONE_SALUTE);
-		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_personaggi", "POZIONE_SALUTE", personaggio.getNome(
-				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
+		raccontaLaPozione("POZIONE_SALUTE", personaggio);
+	}
+
+	/**
+	 * Racconta chi ha bevuto la pozione, con la frase di messaggi_personaggi a quella chiave («Il guerriero beve...»)
+	 */
+	private static void raccontaLaPozione(String chiave, Personaggio personaggio) {
+		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_personaggi", chiave, chiConArticolo(personaggio))));
+	}
+
+	/**
+	 * Il nome del personaggio con l'articolo e l'iniziale maiuscola, per cominciare una frase: «Il guerriero», «Aldo»
+	 */
+	private static String chiConArticolo(Personaggio personaggio) {
+		return personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 	}
 
 	public final int getPozioniSaluteGrande() {
@@ -140,9 +163,7 @@ public abstract class Gruppo implements VistaGruppo {
 		subPozioniSaluteGrande(1);
 		personaggio.addSaluteMassima(CostantiPersonaggi.AUMENTO_SALUTE_DA_POZIONE_SALUTE_GRANDE, "POZIONE_SALUTE_GRANDE");
 		personaggio.addSalute(CostantiPersonaggi.RECUPERO_DA_POZIONE_SALUTE_GRANDE);
-		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_personaggi", "POZIONE_SALUTE_GRANDE", personaggio.getNome(
-				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
+		raccontaLaPozione("POZIONE_SALUTE_GRANDE", personaggio);
 	}
 
 	public final int getPozioniMagia() {
@@ -174,9 +195,7 @@ public abstract class Gruppo implements VistaGruppo {
 	public final void consumaPozioneMagia(Personaggio personaggio) {
 		subPozioniMagia(1);
 		personaggio.addMagia(CostantiPersonaggi.RECUPERO_DA_POZIONE_MAGIA);
-		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_personaggi", "POZIONE_MAGIA", personaggio.getNome(
-				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
+		raccontaLaPozione("POZIONE_MAGIA", personaggio);
 	}
 
 	public final int getPozioniMagiaGrande() {
@@ -209,9 +228,7 @@ public abstract class Gruppo implements VistaGruppo {
 		subPozioniMagiaGrande(1);
 		personaggio.addMagiaMassima(CostantiPersonaggi.AUMENTO_MAGIA_DA_POZIONE_MAGIA_GRANDE, "POZIONE_MAGIA_GRANDE");
 		personaggio.addMagia(CostantiPersonaggi.RECUPERO_DA_POZIONE_MAGIA_GRANDE);
-		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_personaggi", "POZIONE_MAGIA_GRANDE", personaggio.getNome(
-				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
+		raccontaLaPozione("POZIONE_MAGIA_GRANDE", personaggio);
 	}
 
 	public final int getPozioniPanacea() {
@@ -244,9 +261,7 @@ public abstract class Gruppo implements VistaGruppo {
 	public final void consumaPozionePanacea(Personaggio personaggio) {
 		subPozioniPanacea(1);
 		personaggio.rimuoviGliEffettiDiStatoNegativi();
-		BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_personaggi", "PANACEA", personaggio.getNome(
-				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))));
+		raccontaLaPozione("PANACEA", personaggio);
 	}
 
 	public final int getPozioniAumentoLivello() {
@@ -304,9 +319,7 @@ public abstract class Gruppo implements VistaGruppo {
 	 * {@link GestoreProgressione#getXpPerAumentoDiLivello}). Se è già al livello massimo non fa nulla e la pozione resta.
 	 */
 	public final void consumaPozioneAumentoLivello(Personaggio personaggio) {
-		String chi = personaggio.getNome(
-				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
+		String chi = chiConArticolo(personaggio);
 		if (personaggio.isAlLivelloMassimo()) {
 			BusEventi.pubblica(new NotificaTestoFrase(Testi.formatta("messaggi_personaggi", "POZIONE_LIVELLO_MASSIMO", chi)));
 			return;
@@ -317,7 +330,7 @@ public abstract class Gruppo implements VistaGruppo {
 	}
 
 	/**
-	 * Riporta se il gruppo sia quello del giocatore o il gruppo avversario
+	 * Se è il gruppo del giocatore (true) o il gruppo avversario (false): decide se le variazioni delle scorte si annunciano alla UI.
 	 */
 	public abstract boolean isGruppoGiocatore();
 
@@ -334,7 +347,7 @@ public abstract class Gruppo implements VistaGruppo {
 	}
 
 	/**
-	 * Riporta il numero di personaggi permanenti (esclusi quelli a tempo).
+	 * Riporta il numero di personaggi permanenti (esclusi quelli a tempo, vedi Personaggio.isATempo), vivi e morti.
 	 */
 	public final int getNumeroPersonaggiPermanenti() {
 		return (int) personaggi.stream()
@@ -342,12 +355,16 @@ public abstract class Gruppo implements VistaGruppo {
 				.count();
 	}
 
+	/**
+	 * Tutti i personaggi, anche i morti e quelli in panchina, nell'ordine del gruppo. È la lista vera, non una copia: chi la scorre non
+	 * deve togliere personaggi nel frattempo (per questo {@link GruppoGiocatore#congedaChiNonRisorge()} ne fa una copia).
+	 */
 	public final List<Personaggio> getPersonaggi() {
 		return personaggi;
 	}
 	
 	/**
-	 * I personaggi vivi e in campo: chi è in panchina non conta (vedi Personaggio.isInPanchina).
+	 * I personaggi vivi e in campo: chi è in panchina non conta (vedi Personaggio.isInPanchina). È una lista nuova a ogni chiamata.
 	 */
 	public final List<Personaggio> getPersonaggiVivi() {
 		return personaggi.stream().filter(p -> !p.isFuoriCombattimento()).collect(Collectors.toList());
@@ -364,6 +381,7 @@ public abstract class Gruppo implements VistaGruppo {
 			if (!personaggio.isCurabile()) {
 				continue;
 			}
+			// La quota è la salute in proporzione al massimo (1.0 = illeso): si parte da 1.0, così chi è illeso non viene mai scelto
 			double quota = (double) personaggio.getSalute() / personaggio.getSaluteMassima();
 			if (quota < quotaMinima) {
 				quotaMinima = quota;
@@ -418,10 +436,17 @@ public abstract class Gruppo implements VistaGruppo {
 		personaggi.add(p);
 	}
 
+	/**
+	 * Il capo del gruppo; null solo se il gruppo è vuoto.
+	 */
 	public final Personaggio getCapo() {
 		return capo;
 	}
 	
+	/**
+	 * Il personaggio in quella posizione del gruppo (da 0), vivo o morto; la UI e i comandi indicano un personaggio così.
+	 * Una posizione fuori dal gruppo è un errore di chi chiama ({@code IndexOutOfBoundsException}).
+	 */
 	public final Personaggio getPersonaggio(int numero) {
 		return personaggi.get(numero);
 	}
@@ -446,6 +471,7 @@ public abstract class Gruppo implements VistaGruppo {
 			return false;
 		}
 		int a = da + direzione;
+		// Si salta chi è a tempo: lo scambio avviene con il primo permanente in quella direzione
 		while (a >= 0 && a < personaggi.size() && personaggi.get(a).isATempo()) {
 			a += direzione;
 		}
@@ -459,7 +485,7 @@ public abstract class Gruppo implements VistaGruppo {
 	}
 
 	/**
-	 * Toglie tutti i personaggi e il capo.
+	 * Toglie tutti i personaggi e il capo (come {@link #reimposta()}, ma senza toccare le scorte nemmeno nelle sottoclassi).
 	 */
 	public void rimuoviPersonaggi() {
 		personaggi.clear();
@@ -477,7 +503,7 @@ public abstract class Gruppo implements VistaGruppo {
 	}
 
 	/**
-	 * Chi parla, per le frasi dei testi: "il gruppo" se sono più di uno, altrimenti il capo con l'articolo.
+	 * Chi parla, per le frasi dei testi: “il gruppo” se sono più di uno (contando anche i morti), altrimenti il capo con l'articolo.
 	 */
 	public String chi() {
 		return personaggi.size() > 1 ? Testi.formatta("gruppo", "CHI") : capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
@@ -487,7 +513,7 @@ public abstract class Gruppo implements VistaGruppo {
 	 * Come {@link #chi()}, con l'iniziale maiuscola.
 	 */
 	public String chiMaiuscolo() {
-		return personaggi.size() > 1 ? Lingue.corrente().inizialeMaiuscola(Testi.formatta("gruppo", "CHI")) : capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
+		return personaggi.size() > 1 ? Lingue.corrente().inizialeMaiuscola(Testi.formatta("gruppo", "CHI")) : chiConArticolo(capo);
 	}
 	
 	@Override

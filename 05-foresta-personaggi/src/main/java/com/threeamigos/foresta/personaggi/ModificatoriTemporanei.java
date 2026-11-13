@@ -19,7 +19,8 @@ import java.util.stream.Collectors;
 import com.threeamigos.foresta.testi.Testi;
 
 /**
- * I modificatori di attributo di un personaggio (benedizioni, pozioni, effetti delle armi...): li aggiunge, li fa scorrere a turni e a ore, li
+ * I modificatori di attributo di un personaggio, a tempo e permanenti (benedizioni, pozioni, effetti delle armi...): li aggiunge, li fa
+ * scorrere a turni e a locazioni, li
  * toglie, e quando cambiano ricalcola quello che ne dipende (salute e magia massime, attributi secondari). Lo tiene {@link PersonaggioBase},
  * che ne inoltra i metodi di {@link Personaggio}; i dati stanno nel {@link PersonaggioMD} del personaggio, che qui si rilegge a ogni uso
  * perché può essere sostituito (vedi {@link PersonaggioBase#setModelloDati}).
@@ -150,11 +151,18 @@ final class ModificatoriTemporanei {
 		}
 	}
 
+	/**
+	 * Di quanto i soli modificatori a tempo spostano l'attributo: il valore con tutti i modificatori meno quello senza i temporanei
+	 */
 	public double getVariazioneDaTemporanei(TipoAttributo tipoAttributo) {
 		double base = p.baseDelModificabile(tipoAttributo);
 		return AttributiSecondari.quantitaModificata(md(), base, tipoAttributo, true) - AttributiSecondari.quantitaModificata(md(), base, tipoAttributo, false);
 	}
 
+	/**
+	 * Il modificatore che porta l'attributo a un valore fisso (QUANTITA_ASSOLUTA), del personaggio o di un suo artefatto: se ce ne sono
+	 * più d'uno vince il valore più basso. Vuoto se nessuno lo fissa.
+	 */
 	public Optional<ModificatoreAttivo> getFissaggio(TipoAttributo tipoAttributo) {
 		ModificatoreAttivo fissaggio = null;
 		for (ModificatoreAttributoMD m : md().getModificatori()) {

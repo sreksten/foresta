@@ -42,6 +42,10 @@ final class EffettiDiStato {
 		addEffettoDiStato(tipoEffettoDiStato, durata, danniNelTempo, 0.0d);
 	}
 
+	/**
+	 * Aggiunge l'effetto, se il personaggio è vivo e non ne è immune (allora lo dice, e il bestiario se ne ricorda). Se ce l'ha già non
+	 * si somma: si tengono la durata, i danni nel tempo e l'intensità più alti, e lo si annuncia come un rinforzo.
+	 */
 	public void addEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato, int durata, int danniNelTempo, double intensita) {
 		if (!p.isVivo()) {
 			return;
@@ -63,6 +67,7 @@ final class EffettiDiStato {
 				.findFirst();
 		if (equivalenteOpt.isPresent()) {
 			EffettoDiStatoMD equivalente = equivalenteOpt.get();
+			int durataPrecedente = equivalente.getDurata();
 			boolean duraDiPiu = equivalente.getDurata() < durata;
 			boolean aumentaDanni = equivalente.getDanniNelTempo() < danniNelTempo;
 			boolean aumentaIntensita = equivalente.getIntensita() < intensita;
@@ -78,7 +83,7 @@ final class EffettiDiStato {
 				}
 				BusEventi.pubblica(new NotificaVariazioneEffettoDiStatoPersonaggio(p,
 						NotificaVariazioneEffettoDiStatoPersonaggio.TipoVariazione.RINFORZO, tipoEffettoDiStato,
-						equivalente.getDurata(), equivalente.getDanniNelTempo()));
+						durataPrecedente, equivalente.getDurata()));
 			}
 		} else {
 			md().aggiungiEffettoDiStato(new EffettoDiStatoMD(tipoEffettoDiStato, durata, danniNelTempo, intensita));
@@ -145,6 +150,7 @@ final class EffettiDiStato {
 	}
 
 	public void rimuoviTuttiGliEffettiDiStato() {
+		// Con null, rimuoviEffettoDiStato li toglie tutti
 		rimuoviEffettoDiStato(null);
 	}
 
@@ -153,6 +159,9 @@ final class EffettiDiStato {
 				.collect(Collectors.toList()).forEach(this::rimuoviEffettoDiStato);
 	}
 
+	/**
+	 * Toglie l'effetto di quel tipo, annunciandolo; con null li toglie tutti
+	 */
 	public void rimuoviEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
 		List<EffettoDiStatoMD> effettiDiStatoDaRimuovere = getEffettiDiStato()
 				.stream()
@@ -170,6 +179,9 @@ final class EffettiDiStato {
 		return md().getEffettiDiStato().stream().anyMatch(e -> e.getTipoEffettoDiStato() == tipoEffettoDiStato);
 	}
 
+	/**
+	 * Quanti turni restano all'effetto di quel tipo (la somma delle durate); zero se non ce l'ha
+	 */
 	public int getQuantitaEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
 		return md().getEffettiDiStato().stream().filter(e -> e.getTipoEffettoDiStato() == tipoEffettoDiStato).mapToInt(EffettoDiStatoMD::getDurata).sum();
 	}

@@ -84,12 +84,21 @@ public final class CostantiPersonaggi {
     public static final int FUGA_IGNOMINIA_LOCAZIONI = 3;
     public static final String FUGA_IGNOMINIA_NOTA = "Ignominia della fuga";
 
-    // A fine locazione ogni personaggio vivo recupera getRigenerazioneSalute(): 5 punti più questa quota della salute
+    // A fine locazione ogni personaggio vivo recupera getRigenerazioneSalute(): la parte fissa più questa quota della salute
     // massima, aumentati dalla COSTITUZIONE (circa il 25% della salute massima a inizio partita)
-    // Allo stesso modo ognuno recupera getRigenerazioneMagia(): 5 punti più questa quota della magia massima, per il
+    // Allo stesso modo ognuno recupera getRigenerazioneMagia(): la parte fissa più questa quota della magia massima, per il
     // moltiplicatore di recupero magico della classe (a inizio partita circa 12 al Mago, 9 al Bardo, 3 al Guerriero)
+    public static final double RIGENERAZIONE_PARTE_FISSA = 5.0;
     public static final double RIGENERAZIONE_SALUTE_QUOTA_SALUTE_MASSIMA = 0.15;
     public static final double RIGENERAZIONE_MAGIA_QUOTA_MAGIA_MASSIMA = 0.05;
+
+    // Il riposo (vedi CalcolatoreRiposo): per ogni ora pesata (la radice delle ore per il moltiplicatore di TipoRiposo) si recuperano
+    // una parte fissa più una quota del massimo di salute e di magia, e si toglie un po' di stanchezza
+    public static final double RIPOSO_SALUTE_PARTE_FISSA = 5.0;
+    public static final double RIPOSO_SALUTE_QUOTA_SALUTE_MASSIMA = 0.05;
+    public static final double RIPOSO_MAGIA_PARTE_FISSA = 4.0;
+    public static final double RIPOSO_MAGIA_QUOTA_MAGIA_MASSIMA = 0.05;
+    public static final double RIPOSO_RIDUZIONE_STANCHEZZA = 2.0;
 
     /**
      * Il livello massimo di un personaggio e del mondo: oltre, i punti esperienza non fanno più salire di livello (vedi GestoreProgressione)
