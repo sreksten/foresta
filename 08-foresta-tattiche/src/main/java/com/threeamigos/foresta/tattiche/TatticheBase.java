@@ -48,7 +48,13 @@ public final class TatticheBase {
 	private static final int SOGLIA_ESPERTO = 20;
 	private static final int SOGLIA_STRATEGA = 31;
 
-	private static final Map<TipoPersonaggio, Integer> ASTUZIA_MASSIMA = new EnumMap<>(TipoPersonaggio.class);
+	/** Le classi di mostri che hanno una tattica base; quanto sono astute lo dice la loro intelligenza massima (CostantiPersonaggi.valoriDi) */
+	private static final Set<TipoPersonaggio> MOSTRI = EnumSet.of(
+			TipoPersonaggio.ARPIA, TipoPersonaggio.CENTAURO, TipoPersonaggio.CHIMERA, TipoPersonaggio.CHIMERA_DRAGO, TipoPersonaggio.DRAGO,
+			TipoPersonaggio.EREMITA, TipoPersonaggio.FANTASMA, TipoPersonaggio.FOLLETTO, TipoPersonaggio.GARGOYLE, TipoPersonaggio.GIGANTE,
+			TipoPersonaggio.GOBLIN, TipoPersonaggio.HOBGOBLIN, TipoPersonaggio.IDRA, TipoPersonaggio.LICH, TipoPersonaggio.MINOTAURO,
+			TipoPersonaggio.MINOTAURO_GIGANTE, TipoPersonaggio.NECROMANTE, TipoPersonaggio.OMBRA_NERA, TipoPersonaggio.OMBRAFIAMMA, TipoPersonaggio.SCHELETRO,
+			TipoPersonaggio.SPETTRO, TipoPersonaggio.SPIRITO, TipoPersonaggio.STREGA, TipoPersonaggio.TITANO, TipoPersonaggio.TROLL, TipoPersonaggio.VIVERNA);
 	// TODO: questi tre elenchi (MAGICI, CON_SILENZIO, CON_MORTE) sono scritti a mano e vanno tenuti allineati con PersonaggioBase.getRepertorioIncantesimi
 	//  e con le classi: se cambia il repertorio di un mostro, o ne arriva uno nuovo, nessun test se ne accorge. Trovare il modo di derivarli dal codice (o
 	//  almeno un test che li confronti con le classi vere) e togliere gli elenchi.
@@ -69,34 +75,6 @@ public final class TatticheBase {
 	/** I bruti che si voltano contro chi li ha colpiti, oltre alle bestie */
 	private static final Set<TipoPersonaggio> VENDICATIVI = EnumSet.of(TipoPersonaggio.TROLL, TipoPersonaggio.MINOTAURO, TipoPersonaggio.GOBLIN);
 
-	static {
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.ARPIA, CostantiPersonaggi.ARPIA_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.CENTAURO, CostantiPersonaggi.CENTAURO_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.CHIMERA, CostantiPersonaggi.CHIMERA_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.CHIMERA_DRAGO, CostantiPersonaggi.CHIMERADRAGO_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.DRAGO, CostantiPersonaggi.DRAGO_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.EREMITA, CostantiPersonaggi.EREMITA_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.FANTASMA, CostantiPersonaggi.FANTASMA_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.FOLLETTO, CostantiPersonaggi.FOLLETTO_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.GARGOYLE, CostantiPersonaggi.GARGOYLE_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.GIGANTE, CostantiPersonaggi.GIGANTE_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.GOBLIN, CostantiPersonaggi.GOBLIN_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.HOBGOBLIN, CostantiPersonaggi.HOBGOBLIN_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.IDRA, CostantiPersonaggi.IDRA_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.LICH, CostantiPersonaggi.LICH_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.MINOTAURO, CostantiPersonaggi.MINOTAURO_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.MINOTAURO_GIGANTE, CostantiPersonaggi.MINOTAUROGIGANTE_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.NECROMANTE, CostantiPersonaggi.NECROMANTE_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.OMBRA_NERA, CostantiPersonaggi.OMBRANERA_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.OMBRAFIAMMA, CostantiPersonaggi.OMBRAFIAMMA_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.SCHELETRO, CostantiPersonaggi.SCHELETRO_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.SPETTRO, CostantiPersonaggi.SPETTRO_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.SPIRITO, CostantiPersonaggi.SPIRITO_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.STREGA, CostantiPersonaggi.STREGA_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.TITANO, CostantiPersonaggi.TITANO_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.TROLL, CostantiPersonaggi.TROLL_MAX_INTELLIGENZA);
-		ASTUZIA_MASSIMA.put(TipoPersonaggio.VIVERNA, CostantiPersonaggi.VIVERNA_MAX_INTELLIGENZA);
-	}
 
 	// TODO: i mostri non hanno azioni proprie: oggi le tattiche usano solo l'attacco e gli incantesimi del repertorio. Mancano le abilità caratteristiche, che
 	//  vanno prima create come azioni (TipoAzione) e poi usate qui: la rigenerazione del Troll, le teste dell'Idra, il canto dell'Arpia.
@@ -135,7 +113,7 @@ public final class TatticheBase {
 	 * Le classi di mostri che hanno una tattica base
 	 */
 	public static Set<TipoPersonaggio> classiDeiMostri() {
-		return Collections.unmodifiableSet(ASTUZIA_MASSIMA.keySet());
+		return Collections.unmodifiableSet(MOSTRI);
 	}
 
 	// ======================================================================= i pezzi
@@ -235,10 +213,10 @@ public final class TatticheBase {
 	 * La tattica base di una classe di mostri, o null se non ne ha una (vedi {@link #classiDeiMostri})
 	 */
 	public static TatticaMD deiMostri(TipoPersonaggio classe) {
-		Integer massima = ASTUZIA_MASSIMA.get(classe);
-		if (massima == null) {
+		if (!MOSTRI.contains(classe)) {
 			return null;
 		}
+		int massima = (int) CostantiPersonaggi.valoriDi(classe).getMaxIntelligenza();
 		boolean magico = MAGICI.contains(classe);
 		boolean cacciatoreDelPiuForte = CACCIATORI_DEL_PIU_FORTE.contains(classe);
 		boolean vendicativo = VENDICATIVI.contains(classe) || classe.isDellaCategoria(CategoriaPersonaggio.BESTIA);

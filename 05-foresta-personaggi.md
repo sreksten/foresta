@@ -42,7 +42,7 @@ Restano alla base ciò che le classi concrete ridefiniscono (i massimi `calcolaS
 - **danni, morte e resa**, con le debolezze, le resistenze e le immunità di classe ai tipi di danno (`getMoltiplicatoreDannoSubito`);
 - le notifiche degli eventi (`NotificaVariazioneStatistichePersonaggio`, `…StatoVitale…`, `…EffettoDiStato…`, `…Modificatore…`, `NotificaReazioneDiClassePersonaggio` per le debolezze e le resistenze, `NotificaColpoMancato` quando un attacco o un incantesimo non raggiunge il bersaglio).
 
-Una **classe concreta** aggiunge solo ciò che la distingue: i valori di partenza degli attributi presi da `CostantiPersonaggi`, i nomi e gli articoli, il repertorio di incantesimi, le immunità e le offerte che può fare. Sono quattro famiglie:
+I **valori fissi di ogni classe** (sesso, se si corrompe, se è amichevole, se è un boss, salute e magia di base, esperienza, quanti se ne incontrano, intelligenza massima e i moltiplicatori) stanno in una tabella con una riga per classe, `CostantiPersonaggi.valoriDi` (oggetti `ValoriDiClasse`), che `PersonaggioBase` legge per tutti. Una **classe concreta** aggiunge solo il comportamento che la distingue: il repertorio di incantesimi, le offerte che può fare, le immunità del singolo personaggio e i casi speciali. Sono quattro famiglie:
 
 | Famiglia | Classi |
 | :--- | :--- |

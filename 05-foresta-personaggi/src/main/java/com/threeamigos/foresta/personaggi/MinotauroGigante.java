@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.personaggi;
 
-import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -15,21 +14,9 @@ import java.util.Set;
 public class MinotauroGigante extends PersonaggioBase implements Personaggio {
 
 	public TipoPersonaggio getClasse() { return TipoPersonaggio.MINOTAURO_GIGANTE; }
-	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public MinotauroGigante(int livello) {
 		super(TipoPersonaggio.MINOTAURO_GIGANTE, livello);
-	}
-
-	@Override
-	public boolean isParteConValoriMassimi() {
-		return true;
-	}
-
-	@Override
-	protected void impostaValoriDiPartenza() {
-
-		setQuantitaMassima(CostantiPersonaggi.MINOTAUROGIGANTE_MAX_NUMERO);
 	}
 
 	@Override
@@ -37,118 +24,4 @@ public class MinotauroGigante extends PersonaggioBase implements Personaggio {
 		return EnumSet.noneOf(TipoIncantesimo.class);
 	}
 
-	@Override
-	public int getPuntiEsperienza() {
-		return CostantiPersonaggi.MINOTAUROGIGANTE_PUNTI_ESPERIENZA;
-	}
-
-	@Override
-	public double getSaluteBase() {
-		return CostantiPersonaggi.MINOTAUROGIGANTE_SALUTE_BASE;
-	}
-
-	@Override
-	public double getMagiaBase() {
-		return CostantiPersonaggi.MINOTAUROGIGANTE_MAGIA_BASE;
-	}
-
-	@Override
-	public double getLivellamentoMagia() {
-		return CostantiPersonaggi.MINOTAUROGIGANTE_LIVELLAMENTO_MAGIA;
-	}
-
-	@Override
-	public double getMoltiplicatoreCarico() {
-		return CostantiPersonaggi.MINOTAUROGIGANTE_MOLTIPLICATORE_CARICO;
-	}
-
-	@Override
-	public double getMoltiplicatoreCritico() {
-		return CostantiPersonaggi.MINOTAUROGIGANTE_MOLTIPLICATORE_CRITICO;
-	}
-
-	@Override
-	public double getMoltiplicatorePrecisione() {
-		return CostantiPersonaggi.MINOTAUROGIGANTE_MOLTIPLICATORE_PRECISIONE;
-	}
-
-	@Override
-	public double getMoltiplicatoreVelocita() {
-		return CostantiPersonaggi.MINOTAUROGIGANTE_MOLTIPLICATORE_VELOCITA;
-	}
-
-	@Override
-	public double getMoltiplicatoreFurtivita() {
-		return CostantiPersonaggi.MINOTAUROGIGANTE_MOLTIPLICATORE_FURTIVITA;
-	}
-
-	@Override
-	public double getMoltiplicatoreParata() {
-		return CostantiPersonaggi.MINOTAUROGIGANTE_MOLTIPLICATORE_PARATA;
-	}
-
-	@Override
-	public double getMoltiplicatoreResistenzaMagica() {
-		return CostantiPersonaggi.MINOTAUROGIGANTE_MOLTIPLICATORE_RESISTENZA_MAGICA;
-	}
-
-	@Override
-	public double getMoltiplicatorePercezione() {
-		return CostantiPersonaggi.MINOTAUROGIGANTE_MOLTIPLICATORE_PERCEZIONE;
-	}
-
-	@Override
-	public double getMoltiplicatoreSoggezione() {
-		return CostantiPersonaggi.MINOTAUROGIGANTE_MOLTIPLICATORE_SOGGEZIONE;
-	}
-
-	@Override
-	public double getMoltiplicatoreFuria() {
-		return CostantiPersonaggi.MINOTAUROGIGANTE_MOLTIPLICATORE_FURIA;
-	}
-
-	@Override
-	public double getMoltiplicatoreCoraggio() {
-		return CostantiPersonaggi.MINOTAUROGIGANTE_MOLTIPLICATORE_CORAGGIO;
-	}
-
-	@Override
-	public double getMoltiplicatoreValore() {
-		return CostantiPersonaggi.MINOTAUROGIGANTE_MOLTIPLICATORE_VALORE;
-	}
-
-	@Override
-	public double getMoltiplicatoreNumeroBersagli() {
-		return CostantiPersonaggi.MINOTAUROGIGANTE_MOLTIPLICATORE_NUMERO_BERSAGLI;
-	}
-
-	@Override
-	public double getMoltiplicatoreStanchezza() {
-		return CostantiPersonaggi.MINOTAUROGIGANTE_MOLTIPLICATORE_STANCHEZZA;
-	}
-
-	@Override
-	public double getMoltiplicatoreDanniMagici() {
-		return CostantiPersonaggi.MINOTAUROGIGANTE_MOLTIPLICATORE_DANNI_MAGICI;
-	}
-
-	@Override
-	public double getMoltiplicatoreDanniFisici() {
-		return CostantiPersonaggi.MINOTAUROGIGANTE_MOLTIPLICATORE_DANNI_FISICI;
-	}
-
-	@Override
-	public double getMoltiplicatoreRecuperoMagico() {
-		return CostantiPersonaggi.MINOTAUROGIGANTE_MOLTIPLICATORE_RECUPERO_MAGICO;
-	}
-
-	@Override
-	public double getMoltiplicatoreRecuperoFisico() {
-		return CostantiPersonaggi.MINOTAUROGIGANTE_MOLTIPLICATORE_RECUPERO_FISICO;
-	}
-
-	@Override
-	public double getMaxIntelligenza() {
-		return CostantiPersonaggi.MINOTAUROGIGANTE_MAX_INTELLIGENZA;
-	}
 }

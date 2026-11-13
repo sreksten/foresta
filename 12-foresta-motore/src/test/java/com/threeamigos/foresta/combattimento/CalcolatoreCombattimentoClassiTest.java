@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.combattimento;
 
 import com.threeamigos.foresta.tipi.CostantiPersonaggi;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import com.threeamigos.foresta.artefatti.Arma;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
@@ -25,7 +26,7 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * I moltiplicatori di danno delle classi (Costanti.*_MOLTIPLICATORE_DANNI_FISICI e _MAGICI): a parità di statistiche
+ * I moltiplicatori di danno delle classi (danniFisici e danniMaGICI): a parità di statistiche
  * il guerriero fa più danno fisico, il mago più danno magico. Il Ladro fa da riferimento: i confronti sono in
  * rapporto ai suoi moltiplicatori.
  * Il critico è neutralizzato, così i danni sono deterministici.
@@ -47,7 +48,7 @@ class CalcolatoreCombattimentoClassiTest {
         Arma spada = arma(TipoDanno.TAGLIENTE, Collections.emptyList());
         double ladro = danno(new Ladro("Riferimento", 5), spada);
         double guerriero = danno(new Guerriero("Pippo", 5), spada);
-        assertEquals(ladro * CostantiPersonaggi.GUERRIERO_MOLTIPLICATORE_DANNI_FISICI / CostantiPersonaggi.LADRO_MOLTIPLICATORE_DANNI_FISICI, guerriero, 1.0);
+        assertEquals(ladro * CostantiPersonaggi.valoriDi(TipoPersonaggio.GUERRIERO).getMoltiplicatoreDanniFisici() / CostantiPersonaggi.valoriDi(TipoPersonaggio.LADRO).getMoltiplicatoreDanniFisici(), guerriero, 1.0);
     }
 
     @Test
@@ -55,7 +56,7 @@ class CalcolatoreCombattimentoClassiTest {
         Arma bastone = arma(TipoDanno.CONTUNDENTE, Collections.emptyList());
         double ladro = danno(new Ladro("Riferimento", 5), bastone);
         double mago = danno(new Mago("Merlino", 5), bastone);
-        assertEquals(ladro * CostantiPersonaggi.MAGO_MOLTIPLICATORE_DANNI_FISICI / CostantiPersonaggi.LADRO_MOLTIPLICATORE_DANNI_FISICI, mago, 1.0);
+        assertEquals(ladro * CostantiPersonaggi.valoriDi(TipoPersonaggio.MAGO).getMoltiplicatoreDanniFisici() / CostantiPersonaggi.valoriDi(TipoPersonaggio.LADRO).getMoltiplicatoreDanniFisici(), mago, 1.0);
     }
 
     @Test
@@ -64,8 +65,8 @@ class CalcolatoreCombattimentoClassiTest {
         double ladro = danno(new Ladro("Riferimento", 5), aria);
         double mago = danno(new Mago("Merlino", 5), aria);
         double guerriero = danno(new Guerriero("Pippo", 5), aria);
-        assertEquals(ladro * CostantiPersonaggi.MAGO_MOLTIPLICATORE_DANNI_MAGICI, mago, 1.0);
-        assertEquals(ladro * CostantiPersonaggi.GUERRIERO_MOLTIPLICATORE_DANNI_MAGICI, guerriero, 1.0);
+        assertEquals(ladro * CostantiPersonaggi.valoriDi(TipoPersonaggio.MAGO).getMoltiplicatoreDanniMagici(), mago, 1.0);
+        assertEquals(ladro * CostantiPersonaggi.valoriDi(TipoPersonaggio.GUERRIERO).getMoltiplicatoreDanniMagici(), guerriero, 1.0);
     }
 
     @Test
@@ -80,7 +81,7 @@ class CalcolatoreCombattimentoClassiTest {
         IncantamentoMD soloPercentuale = new IncantamentoMD("Fuoco", TipoDanno.FUOCO, 0, 1.0);
         double ladro = dannoIncantamento(new Ladro("Riferimento", 5), soloPercentuale);
         double mago = dannoIncantamento(new Mago("Merlino", 5), soloPercentuale);
-        assertEquals(ladro * CostantiPersonaggi.MAGO_MOLTIPLICATORE_DANNI_MAGICI, mago, 1.0);
+        assertEquals(ladro * CostantiPersonaggi.valoriDi(TipoPersonaggio.MAGO).getMoltiplicatoreDanniMagici(), mago, 1.0);
     }
 
     /**

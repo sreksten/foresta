@@ -437,4 +437,4 @@ Misure precedenti di Chierico e Druido (con `AnalisiAbilitaInnateTest`, 200–30
 - Il Chierico non ha un'abilità di attacco: se risulta troppo debole rispetto al Sacerdote si può dargliene una o ritoccare i valori.
 - Le armi del Druido, se un giorno ci saranno gli archi.
 - Un altro canto del Bardo (per esempio uno di scherno che abbassa le difese) è fuori da questo lavoro.
-- Tarare insieme la probabilità di cedere del canto ipnotico (stessa coppia soggezione/coraggio con cui si spaventano i nemici nel resto del gioco) e i valori di `VIANDANTE_*` e `NON_COMBATTENTE_*`, uguali a quelli del Bardo.
+- Tarare insieme la probabilità di cedere del canto ipnotico (stessa coppia soggezione/coraggio con cui si spaventano i nemici nel resto del gioco) e i valori del Viandante e dei non combattenti nella tabella `CostantiPersonaggi.valoriDi`, simili a quelli del Bardo.

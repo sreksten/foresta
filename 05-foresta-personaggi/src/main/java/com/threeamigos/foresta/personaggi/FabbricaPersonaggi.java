@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.tipi.CostantiPersonaggi;
+
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.EnumMap;
@@ -112,6 +114,6 @@ public final class FabbricaPersonaggi {
 	 * Quanti personaggi di quella classe si incontrano al massimo in una locazione
 	 */
 	public static int quantitaMassima(TipoPersonaggio tipo) {
-		return ((PersonaggioBase) modello(tipo)).getQuantitaMassima();
+		return CostantiPersonaggi.valoriDi(tipo).getQuantitaMassima();
 	}
 }

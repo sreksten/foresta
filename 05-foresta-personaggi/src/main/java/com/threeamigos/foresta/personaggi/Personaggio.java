@@ -571,8 +571,8 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	 */
 	Optional<Arma> getArmaSecondaria();
 
-	// I valori della classe: ogni classe concreta li restituisce da CostantiPersonaggi (per esempio Mago.getSaluteBase restituisce
-	// MAGO_SALUTE_BASE). I moltiplicatori valgono 1 nella media, di più per un punto di forza, di meno per un punto debole.
+	// I valori della classe, uguali per tutti i suoi personaggi: PersonaggioBase li legge dalla tabella CostantiPersonaggi.valoriDi (vedi
+	// ValoriDiClasse). I moltiplicatori valgono 1 nella media, di più per un punto di forza, di meno per un punto debole.
 
 	double getSaluteBase();
 

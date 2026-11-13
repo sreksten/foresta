@@ -16,5 +16,4 @@ public class Donna extends PersonaggioNonCombattente {
 		super(nome, TipoPersonaggio.DONNA, livello);
 	}
 
-	@Override public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
 }

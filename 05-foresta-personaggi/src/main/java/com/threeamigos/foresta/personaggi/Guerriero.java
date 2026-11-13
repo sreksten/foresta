@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.personaggi;
 
-import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -10,8 +9,6 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
  * spavento. Il femminile è la {@link Guerriera}.
  */
 public class Guerriero extends PersonaggioBase implements Personaggio {
-
-	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public Guerriero(int livello) {
 		super(TipoPersonaggio.GUERRIERO, livello);
@@ -26,134 +23,6 @@ public class Guerriero extends PersonaggioBase implements Personaggio {
 	 */
 	protected Guerriero(String nome, TipoPersonaggio classe, int livello) {
 		super(nome, classe, livello);
-	}
-
-	@Override
-	protected void impostaValoriDiPartenza() {
-		setCorrompibile(true);
-		setAmichevole(true);
-
-		setQuantitaMassima(CostantiPersonaggi.GUERRIERO_MAX_NUMERO);
-	}
-
-	@Override
-	public int getPuntiEsperienza() {
-		return CostantiPersonaggi.GUERRIERO_PUNTI_ESPERIENZA;
-	}
-
-	@Override
-	public double getSaluteBase() {
-		return CostantiPersonaggi.GUERRIERO_SALUTE_BASE;
-	}
-
-	@Override
-	public double getMagiaBase() {
-		return CostantiPersonaggi.GUERRIERO_MAGIA_BASE;
-	}
-
-	@Override
-	public double getLivellamentoMagia() {
-		return CostantiPersonaggi.GUERRIERO_LIVELLAMENTO_MAGIA;
-	}
-
-	@Override
-	public double getMoltiplicatoreCarico() {
-		return CostantiPersonaggi.GUERRIERO_MOLTIPLICATORE_CARICO;
-	}
-
-	@Override
-	public double getMoltiplicatoreCritico() {
-		return CostantiPersonaggi.GUERRIERO_MOLTIPLICATORE_CRITICO;
-	}
-
-	@Override
-	public double getMoltiplicatorePrecisione() {
-		return CostantiPersonaggi.GUERRIERO_MOLTIPLICATORE_PRECISIONE;
-	}
-
-	@Override
-	public double getMoltiplicatoreVelocita() {
-		return CostantiPersonaggi.GUERRIERO_MOLTIPLICATORE_VELOCITA;
-	}
-
-	@Override
-	public double getMoltiplicatoreFurtivita() {
-		return CostantiPersonaggi.GUERRIERO_MOLTIPLICATORE_FURTIVITA;
-	}
-
-	@Override
-	public double getMoltiplicatoreParata() {
-		return CostantiPersonaggi.GUERRIERO_MOLTIPLICATORE_PARATA;
-	}
-
-	@Override
-	public double getMoltiplicatoreResistenzaMagica() {
-		return CostantiPersonaggi.GUERRIERO_MOLTIPLICATORE_RESISTENZA_MAGICA;
-	}
-
-	@Override
-	public double getMoltiplicatorePercezione() {
-		return CostantiPersonaggi.GUERRIERO_MOLTIPLICATORE_PERCEZIONE;
-	}
-
-	@Override
-	public double getMoltiplicatoreSoggezione() {
-		return CostantiPersonaggi.GUERRIERO_MOLTIPLICATORE_SOGGEZIONE;
-	}
-
-	@Override
-	public double getMoltiplicatoreFuria() {
-		return CostantiPersonaggi.GUERRIERO_MOLTIPLICATORE_FURIA;
-	}
-
-	@Override
-	public double getMoltiplicatoreCoraggio() {
-		return CostantiPersonaggi.GUERRIERO_MOLTIPLICATORE_CORAGGIO;
-	}
-
-	@Override
-	public double getMoltiplicatoreValore() {
-		return CostantiPersonaggi.GUERRIERO_MOLTIPLICATORE_VALORE;
-	}
-
-	@Override
-	public double getMoltiplicatoreContrattazione() {
-		return CostantiPersonaggi.GUERRIERO_MOLTIPLICATORE_CONTRATTAZIONE;
-	}
-
-	@Override
-	public double getMoltiplicatoreNumeroBersagli() {
-		return CostantiPersonaggi.GUERRIERO_MOLTIPLICATORE_NUMERO_BERSAGLI;
-	}
-
-	@Override
-	public double getMoltiplicatoreStanchezza() {
-		return CostantiPersonaggi.GUERRIERO_MOLTIPLICATORE_STANCHEZZA;
-	}
-
-	@Override
-	public double getMoltiplicatoreDanniMagici() {
-		return CostantiPersonaggi.GUERRIERO_MOLTIPLICATORE_DANNI_MAGICI;
-	}
-
-	@Override
-	public double getMoltiplicatoreDanniFisici() {
-		return CostantiPersonaggi.GUERRIERO_MOLTIPLICATORE_DANNI_FISICI;
-	}
-
-	@Override
-	public double getMoltiplicatoreRecuperoMagico() {
-		return CostantiPersonaggi.GUERRIERO_MOLTIPLICATORE_RECUPERO_MAGICO;
-	}
-
-	@Override
-	public double getMoltiplicatoreRecuperoFisico() {
-		return CostantiPersonaggi.GUERRIERO_MOLTIPLICATORE_RECUPERO_FISICO;
-	}
-
-	@Override
-	public double getMaxIntelligenza() {
-		return CostantiPersonaggi.GUERRIERO_MAX_INTELLIGENZA;
 	}
 
 	@Override

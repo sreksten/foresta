@@ -477,7 +477,7 @@ public class CalcolatoreCombattimento {
         if (Logger.isAttivo()) {
         	Logger.log(String.format(Locale.ROOT, "contributoEroe (statOffensiva %d * livello attaccante %d / 5 = %f", statOffensiva, attaccante.getLivello(), contributoEroe));
         }
-        // Il carattere della classe: il guerriero picchia, il mago incanta (Costanti.*_MOLTIPLICATORE_DANNI_*)
+        // Il carattere della classe: il guerriero picchia, il mago incanta (i moltiplicatori dei danni della classe, vedi CostantiPersonaggi.valoriDi)
         double moltiplicatoreClasse = dannoNonFisico ? moltiplicatoreDanniMagici(attaccante) : attaccante.getMoltiplicatoreDanniFisici();
         double dannoOffensivoGrezzo = (dannoBaseArma + Math.floor(contributoEroe * rapportoEfficacia)) * fattore * moltiplicatoreClasse;
         if (Logger.isAttivo()) {

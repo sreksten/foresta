@@ -6,148 +6,17 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
  * Chi nelle scene non combatte: il locandiere, l'armaiolo, l'alchimista, il venditore di pergamene, l'incantatore, la
- * moglie del bardo, il borgomastro e i mandanti qualunque (Uomo, Donna). Ha le sue caratteristiche (CostantiPersonaggi.NON_COMBATTENTE_*, un poco più basse di quelle di un bardo),
+ * moglie del bardo, il borgomastro e i mandanti qualunque (Uomo, Donna). Ha le sue caratteristiche (la riga comune dei non combattenti in CostantiPersonaggi, un poco più basse di quelle di un bardo),
  * nessuna capacità propria (niente dardo arcano né alba sacra né canti), non si incontra, non si recluta e non si
  * corrompe: compare nelle scene e viaggia con il gruppo come ospite quando una missione lo deve scortare (vedi
  * Viandante). Non è un Bardo.
  * <p>
- * Gli articoli e il genere sono quelli del maschile: chi è femmina li ridefinisce (vedi MoglieDelBardo, Donna).
- * <p>
- * I metodi che seguono restituiscono, uno per uno, le costanti NON_COMBATTENTE_* di CostantiPersonaggi: i valori che PersonaggioBase
- * chiede a ogni classe (salute e magia di partenza, moltiplicatori degli attributi secondari...).
+ * Il sesso lo dice la tabella delle classi (la moglie del bardo e la donna sono femmine).
  */
 public abstract class PersonaggioNonCombattente extends PersonaggioBase implements Personaggio {
-
-	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	protected PersonaggioNonCombattente(String nome, TipoPersonaggio classe, int livello) {
 		super(nome, classe, livello);
 	}
 
-	@Override
-	protected void impostaValoriDiPartenza() {
-		setCorrompibile(false);
-		setAmichevole(false);
-		setQuantitaMassima(CostantiPersonaggi.NON_COMBATTENTE_MAX_NUMERO);
-	}
-
-	@Override
-	public int getPuntiEsperienza() {
-		return CostantiPersonaggi.NON_COMBATTENTE_PUNTI_ESPERIENZA;
-	}
-
-	@Override
-	public double getSaluteBase() {
-		return CostantiPersonaggi.NON_COMBATTENTE_SALUTE_BASE;
-	}
-
-	@Override
-	public double getMagiaBase() {
-		return CostantiPersonaggi.NON_COMBATTENTE_MAGIA_BASE;
-	}
-
-	@Override
-	public double getLivellamentoMagia() {
-		return CostantiPersonaggi.NON_COMBATTENTE_LIVELLAMENTO_MAGIA;
-	}
-
-	@Override
-	public double getMoltiplicatoreCarico() {
-		return CostantiPersonaggi.NON_COMBATTENTE_MOLTIPLICATORE_CARICO;
-	}
-
-	@Override
-	public double getMoltiplicatoreCritico() {
-		return CostantiPersonaggi.NON_COMBATTENTE_MOLTIPLICATORE_CRITICO;
-	}
-
-	@Override
-	public double getMoltiplicatorePrecisione() {
-		return CostantiPersonaggi.NON_COMBATTENTE_MOLTIPLICATORE_PRECISIONE;
-	}
-
-	@Override
-	public double getMoltiplicatoreVelocita() {
-		return CostantiPersonaggi.NON_COMBATTENTE_MOLTIPLICATORE_VELOCITA;
-	}
-
-	@Override
-	public double getMoltiplicatoreFurtivita() {
-		return CostantiPersonaggi.NON_COMBATTENTE_MOLTIPLICATORE_FURTIVITA;
-	}
-
-	@Override
-	public double getMoltiplicatoreParata() {
-		return CostantiPersonaggi.NON_COMBATTENTE_MOLTIPLICATORE_PARATA;
-	}
-
-	@Override
-	public double getMoltiplicatoreResistenzaMagica() {
-		return CostantiPersonaggi.NON_COMBATTENTE_MOLTIPLICATORE_RESISTENZA_MAGICA;
-	}
-
-	@Override
-	public double getMoltiplicatorePercezione() {
-		return CostantiPersonaggi.NON_COMBATTENTE_MOLTIPLICATORE_PERCEZIONE;
-	}
-
-	@Override
-	public double getMoltiplicatoreSoggezione() {
-		return CostantiPersonaggi.NON_COMBATTENTE_MOLTIPLICATORE_SOGGEZIONE;
-	}
-
-	@Override
-	public double getMoltiplicatoreFuria() {
-		return CostantiPersonaggi.NON_COMBATTENTE_MOLTIPLICATORE_FURIA;
-	}
-
-	@Override
-	public double getMoltiplicatoreCoraggio() {
-		return CostantiPersonaggi.NON_COMBATTENTE_MOLTIPLICATORE_CORAGGIO;
-	}
-
-	@Override
-	public double getMoltiplicatoreValore() {
-		return CostantiPersonaggi.NON_COMBATTENTE_MOLTIPLICATORE_VALORE;
-	}
-
-	@Override
-	public double getMoltiplicatoreContrattazione() {
-		return CostantiPersonaggi.NON_COMBATTENTE_MOLTIPLICATORE_CONTRATTAZIONE;
-	}
-
-	@Override
-	public double getMoltiplicatoreNumeroBersagli() {
-		return CostantiPersonaggi.NON_COMBATTENTE_MOLTIPLICATORE_NUMERO_BERSAGLI;
-	}
-
-	@Override
-	public double getMoltiplicatoreStanchezza() {
-		return CostantiPersonaggi.NON_COMBATTENTE_MOLTIPLICATORE_STANCHEZZA;
-	}
-
-	@Override
-	public double getMoltiplicatoreDanniMagici() {
-		return CostantiPersonaggi.NON_COMBATTENTE_MOLTIPLICATORE_DANNI_MAGICI;
-	}
-
-	@Override
-	public double getMoltiplicatoreDanniFisici() {
-		return CostantiPersonaggi.NON_COMBATTENTE_MOLTIPLICATORE_DANNI_FISICI;
-	}
-
-	@Override
-	public double getMoltiplicatoreRecuperoMagico() {
-		return CostantiPersonaggi.NON_COMBATTENTE_MOLTIPLICATORE_RECUPERO_MAGICO;
-	}
-
-	@Override
-	public double getMoltiplicatoreRecuperoFisico() {
-		return CostantiPersonaggi.NON_COMBATTENTE_MOLTIPLICATORE_RECUPERO_FISICO;
-	}
-
-	@Override
-	public double getMaxIntelligenza() {
-		return CostantiPersonaggi.NON_COMBATTENTE_MAX_INTELLIGENZA;
-	}
 }

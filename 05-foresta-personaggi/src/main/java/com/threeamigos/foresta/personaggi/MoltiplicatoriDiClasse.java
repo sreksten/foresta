@@ -1,8 +1,10 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 import com.threeamigos.foresta.tipi.MoltiplicatoreDiClasse;
 import com.threeamigos.foresta.tipi.NoteDeiPersonaggi;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.tipi.ValoriDiClasse;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,7 +12,7 @@ import java.util.List;
 
 /**
  * I moltiplicatori di una classe di personaggi (quelli che ogni classe dichiara in CostantiPersonaggi) con la nota che dice perché ha quel valore
- * (note_personaggi_it.properties). Li legge dal personaggio modello della classe: sono uguali per tutti i personaggi della classe.
+ * (note_personaggi_it.properties). Li legge dalla tabella della classe (CostantiPersonaggi.valoriDi): sono uguali per tutti i personaggi della classe.
  */
 public final class MoltiplicatoriDiClasse {
 
@@ -21,7 +23,7 @@ public final class MoltiplicatoriDiClasse {
 	 * I moltiplicatori della classe, nell'ordine in cui i testi li elencano
 	 */
 	public static List<MoltiplicatoreDiClasse> di(TipoPersonaggio classe) {
-		Personaggio modello = FabbricaPersonaggi.modello(classe);
+		ValoriDiClasse modello = CostantiPersonaggi.valoriDi(classe);
 		List<MoltiplicatoreDiClasse> moltiplicatori = new ArrayList<>();
 		aggiungi(moltiplicatori, classe, "CARICO_MASSIMO", modello.getMoltiplicatoreCarico());
 		aggiungi(moltiplicatori, classe, "CRITICO", modello.getMoltiplicatoreCritico());

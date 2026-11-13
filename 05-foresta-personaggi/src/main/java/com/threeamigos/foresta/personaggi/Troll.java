@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.personaggi;
 
-import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
@@ -9,131 +8,8 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
  */
 public class Troll extends PersonaggioBase implements Personaggio {
 
-	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
-
 	public Troll(int livello) {
 		super(TipoPersonaggio.TROLL, livello);
 	}
 
-	@Override
-	protected void impostaValoriDiPartenza() {
-		setCorrompibile(true);
-
-		setQuantitaMassima(CostantiPersonaggi.TROLL_MAX_NUMERO);
-	}
-
-	@Override
-	public int getPuntiEsperienza() {
-		return CostantiPersonaggi.TROLL_PUNTI_ESPERIENZA;
-	}
-
-	@Override
-	public double getSaluteBase() {
-		return CostantiPersonaggi.TROLL_SALUTE_BASE;
-	}
-
-	@Override
-	public double getMagiaBase() {
-		return CostantiPersonaggi.TROLL_MAGIA_BASE;
-	}
-
-	@Override
-	public double getLivellamentoMagia() {
-		return CostantiPersonaggi.TROLL_LIVELLAMENTO_MAGIA;
-	}
-
-	@Override
-	public double getMoltiplicatoreCarico() {
-		return CostantiPersonaggi.TROLL_MOLTIPLICATORE_CARICO;
-	}
-
-	@Override
-	public double getMoltiplicatoreCritico() {
-		return CostantiPersonaggi.TROLL_MOLTIPLICATORE_CRITICO;
-	}
-
-	@Override
-	public double getMoltiplicatorePrecisione() {
-		return CostantiPersonaggi.TROLL_MOLTIPLICATORE_PRECISIONE;
-	}
-
-	@Override
-	public double getMoltiplicatoreVelocita() {
-		return CostantiPersonaggi.TROLL_MOLTIPLICATORE_VELOCITA;
-	}
-
-	@Override
-	public double getMoltiplicatoreFurtivita() {
-		return CostantiPersonaggi.TROLL_MOLTIPLICATORE_FURTIVITA;
-	}
-
-	@Override
-	public double getMoltiplicatoreParata() {
-		return CostantiPersonaggi.TROLL_MOLTIPLICATORE_PARATA;
-	}
-
-	@Override
-	public double getMoltiplicatoreResistenzaMagica() {
-		return CostantiPersonaggi.TROLL_MOLTIPLICATORE_RESISTENZA_MAGICA;
-	}
-
-	@Override
-	public double getMoltiplicatorePercezione() {
-		return CostantiPersonaggi.TROLL_MOLTIPLICATORE_PERCEZIONE;
-	}
-
-	@Override
-	public double getMoltiplicatoreSoggezione() {
-		return CostantiPersonaggi.TROLL_MOLTIPLICATORE_SOGGEZIONE;
-	}
-
-	@Override
-	public double getMoltiplicatoreFuria() {
-		return CostantiPersonaggi.TROLL_MOLTIPLICATORE_FURIA;
-	}
-
-	@Override
-	public double getMoltiplicatoreCoraggio() {
-		return CostantiPersonaggi.TROLL_MOLTIPLICATORE_CORAGGIO;
-	}
-
-	@Override
-	public double getMoltiplicatoreValore() {
-		return CostantiPersonaggi.TROLL_MOLTIPLICATORE_VALORE;
-	}
-
-	@Override
-	public double getMoltiplicatoreNumeroBersagli() {
-		return CostantiPersonaggi.TROLL_MOLTIPLICATORE_NUMERO_BERSAGLI;
-	}
-
-	@Override
-	public double getMoltiplicatoreStanchezza() {
-		return CostantiPersonaggi.TROLL_MOLTIPLICATORE_STANCHEZZA;
-	}
-
-	@Override
-	public double getMoltiplicatoreDanniMagici() {
-		return CostantiPersonaggi.TROLL_MOLTIPLICATORE_DANNI_MAGICI;
-	}
-
-	@Override
-	public double getMoltiplicatoreDanniFisici() {
-		return CostantiPersonaggi.TROLL_MOLTIPLICATORE_DANNI_FISICI;
-	}
-
-	@Override
-	public double getMoltiplicatoreRecuperoMagico() {
-		return CostantiPersonaggi.TROLL_MOLTIPLICATORE_RECUPERO_MAGICO;
-	}
-
-	@Override
-	public double getMoltiplicatoreRecuperoFisico() {
-		return CostantiPersonaggi.TROLL_MOLTIPLICATORE_RECUPERO_FISICO;
-	}
-
-	@Override
-	public double getMaxIntelligenza() {
-		return CostantiPersonaggi.TROLL_MAX_INTELLIGENZA;
-	}
 }

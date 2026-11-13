@@ -38,9 +38,9 @@ class MoltiplicatoriDiClasseTest {
 	void iValoriSonoQuelliDichiaratiInCostantiEIDueRecuperiVengonoDaiMoltiplicatoriDiRecupero() {
 		List<MoltiplicatoreDiClasse> bardo = MoltiplicatoriDiClasse.di(TipoPersonaggio.BARDO);
 
-		assertEquals(CostantiPersonaggi.BARDO_MOLTIPLICATORE_RECUPERO_MAGICO, di(bardo, "RIGENERAZIONE_MAGIA").getMoltiplicatore(), 0.0001d);
-		assertEquals(CostantiPersonaggi.BARDO_MOLTIPLICATORE_RECUPERO_FISICO, di(bardo, "RIGENERAZIONE_SALUTE").getMoltiplicatore(), 0.0001d);
-		assertEquals(CostantiPersonaggi.BARDO_MOLTIPLICATORE_CARICO, di(bardo, "CARICO_MASSIMO").getMoltiplicatore(), 0.0001d);
+		assertEquals(CostantiPersonaggi.valoriDi(TipoPersonaggio.BARDO).getMoltiplicatoreRecuperoMagico(), di(bardo, "RIGENERAZIONE_MAGIA").getMoltiplicatore(), 0.0001d);
+		assertEquals(CostantiPersonaggi.valoriDi(TipoPersonaggio.BARDO).getMoltiplicatoreRecuperoFisico(), di(bardo, "RIGENERAZIONE_SALUTE").getMoltiplicatore(), 0.0001d);
+		assertEquals(CostantiPersonaggi.valoriDi(TipoPersonaggio.BARDO).getMoltiplicatoreCarico(), di(bardo, "CARICO_MASSIMO").getMoltiplicatore(), 0.0001d);
 		assertEquals("Danni magici", di(bardo, "DANNI_MAGICI").getNome());
 		assertEquals("Carico massimo", di(bardo, "CARICO_MASSIMO").getNome());
 	}

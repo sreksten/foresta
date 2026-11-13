@@ -55,18 +55,6 @@ public abstract class PersonaggioBase implements Personaggio {
 	 */
 	private int ordinale;
 	/**
-	 * Suscettibile a corruzione da parte del gruppo del giocatore
-	 */
-	private boolean corrompibile;
-	/**
-	 * Amichevole nei confronti del gruppo del giocatore
-	 */
-	private boolean amichevole;
-	/**
-	 * Quantità massima per locazione
-	 */
-	private int quantitaMassima = 1;
-	/**
 	 * Fuori dal combattimento di questa locazione (vedi Personaggio.isInPanchina): non si salva.
 	 */
 	private boolean inPanchina;
@@ -92,9 +80,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	 * gli altri con un valore fra il 75% e il 100% dei massimi.
 	 */
 	public PersonaggioBase(TipoPersonaggio classe, int livello) {
-		// Attenzione: questo costruttore chiama metodi che le classi concrete ridefiniscono (getSaluteBase, impostaValoriDiPartenza,
-		// isParteConValoriMassimi...) quando i campi della classe concreta non sono ancora inizializzati. Funziona perché quei metodi
-		// restituiscono costanti (CostantiPersonaggi): non devono leggere campi propri della sottoclasse.
+		// La classe va scritta per prima: i valori di partenza vengono dalla sua riga della tabella (CostantiPersonaggi.valoriDi)
 		md.setClasse(classe);
 		md.setPng(true);
 
@@ -111,8 +97,6 @@ public abstract class PersonaggioBase implements Personaggio {
 		// Questo imposta salute, magia e stanchezza
 		impostaValoriDiPartenzaGenerali(funzionePerValoriIniziali, livello);
 
-		// Questo imposta il resto (quantità massima, corrompibile, amichevole)
-		impostaValoriDiPartenza();
 		// Gli attributi primari vengono dal budget della classe (LanciatoreDeiDadi), boss compresi
 		LanciatoreDeiDadi.tiraDadiPer(classe, getLivello(), md);
 
@@ -129,12 +113,18 @@ public abstract class PersonaggioBase implements Personaggio {
 		md.setNome(nome);
 	}
 
-	int getQuantitaMassima() {
-		return quantitaMassima;
+	/**
+	 * I valori fissi della classe del personaggio: caratteristiche, valori di partenza e moltiplicatori (vedi ValoriDiClasse)
+	 */
+	private ValoriDiClasse valori() {
+		return CostantiPersonaggi.valoriDi(getClasse());
 	}
 
-	protected void setQuantitaMassima(int quantitaMassima) {
-		this.quantitaMassima = quantitaMassima;
+	/**
+	 * Quanti personaggi della sua classe si incontrano al massimo in una locazione
+	 */
+	int getQuantitaMassima() {
+		return valori().getQuantitaMassima();
 	}
 
 	/**
@@ -170,20 +160,19 @@ public abstract class PersonaggioBase implements Personaggio {
 		this.ordinale = ordinale;
 	}
 
-	public boolean isCorrompibile() {
-		return corrompibile;
-	}
-	
-	public void setCorrompibile(boolean corrompibile) {
-		this.corrompibile = corrompibile;
+	@Override
+	public Personaggio.Sesso getSesso() {
+		return valori().isFemmina() ? Personaggio.Sesso.FEMMINA : Personaggio.Sesso.MASCHIO;
 	}
 
-	public boolean isAmichevole() {
-		return amichevole;
+	@Override
+	public boolean isCorrompibile() {
+		return valori().isCorrompibile();
 	}
-	
-	public void setAmichevole(boolean amichevole) {
-		this.amichevole = amichevole;
+
+	@Override
+	public boolean isAmichevole() {
+		return valori().isAmichevole();
 	}
 
 	/**
@@ -276,11 +265,11 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 	
 	/**
-	 * I boss: partono con salute e magia piene e non possono essere mietuti (vedi ApplicazioneDelRisultato)
+	 * I boss: partono con salute e magia piene e non possono essere mietuti (vedi ApplicazioneDelRisultato). Lo dice la tabella della classe.
 	 */
 	@Override
 	public boolean isParteConValoriMassimi() {
-		return false;
+		return valori().isBoss();
 	}
 
 	public boolean isPNG() {
@@ -597,11 +586,6 @@ public abstract class PersonaggioBase implements Personaggio {
 		md.set(TipoAttributo.STANCHEZZA,CostantiPersonaggi.MAX_STANCHEZZA - funzione.apply(CostantiPersonaggi.MAX_STANCHEZZA));
 	}
 
-	/**
-	 * Chiamato alla creazione: la classe concreta imposta la quantità massima per locazione e i suoi indicatori (corrompibile,
-	 * amichevole). Gli attributi primari non si impostano qui: li distribuisce LanciatoreDeiDadi, dal budget della classe.
-	 */
-	protected abstract void impostaValoriDiPartenza();
 
 	/**
 	 * Funzione che limita il valore di un attributo al suo massimo (valore base più modifica da artefatti). Non restituisce mai meno di 0
@@ -1042,30 +1026,128 @@ public abstract class PersonaggioBase implements Personaggio {
 		AttributiSecondari.ricalcola(md, moltiplicatori, null);
 	}
 
-	public abstract double getMoltiplicatoreCarico();
-	public abstract double getMoltiplicatoreCritico();
-	public abstract double getMoltiplicatorePrecisione();
-	public abstract double getMoltiplicatoreVelocita();
-	public abstract double getMoltiplicatoreFurtivita();
-	public abstract double getMoltiplicatoreParata();
-	public abstract double getMoltiplicatoreResistenzaMagica();
-	public abstract double getMoltiplicatorePercezione();
-	public abstract double getMoltiplicatoreSoggezione();
-	public abstract double getMoltiplicatoreFuria();
-	public abstract double getMoltiplicatoreCoraggio();
+	// I valori della classe, dalla sua riga della tabella (CostantiPersonaggi.valoriDi): uguali per tutti i personaggi della classe
 
-	/**
-	 * Solo chi può entrare nel gruppo (eroi e i pochi mostri che si uniscono per amicizia o per denaro) tratta con i
-	 * mercanti: gli altri non hanno CONTRATTAZIONE e non ridefiniscono questo metodo.
-	 */
 	@Override
-	public double getMoltiplicatoreContrattazione() {
-		return 0;
+	public int getPuntiEsperienza() {
+		return valori().getPuntiEsperienza();
 	}
 
-	public abstract double getMoltiplicatoreValore();
-	public abstract double getMoltiplicatoreNumeroBersagli();
-	public abstract double getMoltiplicatoreStanchezza();
+	@Override
+	public double getSaluteBase() {
+		return valori().getSaluteBase();
+	}
+
+	@Override
+	public double getMagiaBase() {
+		return valori().getMagiaBase();
+	}
+
+	@Override
+	public double getLivellamentoMagia() {
+		return valori().getLivellamentoMagia();
+	}
+
+	@Override
+	public double getMaxIntelligenza() {
+		return valori().getMaxIntelligenza();
+	}
+
+	@Override
+	public double getMoltiplicatoreCarico() {
+		return valori().getMoltiplicatoreCarico();
+	}
+
+	@Override
+	public double getMoltiplicatoreCritico() {
+		return valori().getMoltiplicatoreCritico();
+	}
+
+	@Override
+	public double getMoltiplicatorePrecisione() {
+		return valori().getMoltiplicatorePrecisione();
+	}
+
+	@Override
+	public double getMoltiplicatoreVelocita() {
+		return valori().getMoltiplicatoreVelocita();
+	}
+
+	@Override
+	public double getMoltiplicatoreFurtivita() {
+		return valori().getMoltiplicatoreFurtivita();
+	}
+
+	@Override
+	public double getMoltiplicatoreParata() {
+		return valori().getMoltiplicatoreParata();
+	}
+
+	@Override
+	public double getMoltiplicatoreResistenzaMagica() {
+		return valori().getMoltiplicatoreResistenzaMagica();
+	}
+
+	@Override
+	public double getMoltiplicatorePercezione() {
+		return valori().getMoltiplicatorePercezione();
+	}
+
+	@Override
+	public double getMoltiplicatoreSoggezione() {
+		return valori().getMoltiplicatoreSoggezione();
+	}
+
+	@Override
+	public double getMoltiplicatoreFuria() {
+		return valori().getMoltiplicatoreFuria();
+	}
+
+	@Override
+	public double getMoltiplicatoreCoraggio() {
+		return valori().getMoltiplicatoreCoraggio();
+	}
+
+	@Override
+	public double getMoltiplicatoreValore() {
+		return valori().getMoltiplicatoreValore();
+	}
+
+	@Override
+	public double getMoltiplicatoreContrattazione() {
+		return valori().getMoltiplicatoreContrattazione();
+	}
+
+	@Override
+	public double getMoltiplicatoreNumeroBersagli() {
+		return valori().getMoltiplicatoreNumeroBersagli();
+	}
+
+	@Override
+	public double getMoltiplicatoreStanchezza() {
+		return valori().getMoltiplicatoreStanchezza();
+	}
+
+	@Override
+	public double getMoltiplicatoreDanniMagici() {
+		return valori().getMoltiplicatoreDanniMagici();
+	}
+
+	@Override
+	public double getMoltiplicatoreDanniFisici() {
+		return valori().getMoltiplicatoreDanniFisici();
+	}
+
+	@Override
+	public double getMoltiplicatoreRecuperoFisico() {
+		return valori().getMoltiplicatoreRecuperoFisico();
+	}
+
+	@Override
+	public double getMoltiplicatoreRecuperoMagico() {
+		return valori().getMoltiplicatoreRecuperoMagico();
+	}
+
 
 	// EFFETTI DI STATO
 

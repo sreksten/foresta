@@ -15,5 +15,4 @@ public class MoglieDelBardo extends PersonaggioNonCombattente {
 		super(nome, TipoPersonaggio.MOGLIE_DEL_BARDO, livello);
 	}
 
-	@Override public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
 }

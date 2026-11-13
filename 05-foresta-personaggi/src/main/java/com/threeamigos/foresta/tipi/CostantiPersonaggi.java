@@ -1,8 +1,11 @@
 package com.threeamigos.foresta.tipi;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 /**
- * Le costanti di bilanciamento dei personaggi: per ogni classe di personaggio i valori di partenza ({@code GOBLIN_MAX_INTELLIGENZA},
- * {@code GOBLIN_SALUTE_BASE}...) e i moltiplicatori con le loro note ({@code GOBLIN_MOLTIPLICATORE_CRITICO}), e quelli del combattimento,
+ * Le costanti di bilanciamento dei personaggi: per ogni classe di personaggio i caratteristiche, i valori di partenza e i moltiplicatori, in una
+ * tabella con una riga per classe (vedi {@link #valoriDi(TipoPersonaggio)} e {@link ValoriDiClasse}), e quelli del combattimento,
  * dell'equipaggiamento, del riposo e dei gruppi. Si possono cambiare qui per variare la difficoltà senza toccare le regole a giro per il codice.
  * <p>
  * Le note testuali che spiegano ogni moltiplicatore (perché il goblin ha quel valore di critico) stanno nel file
@@ -136,1195 +139,335 @@ public final class CostantiPersonaggi {
     // La stanchezza più alta che un personaggio può avere
     public static final int MAX_STANCHEZZA = 9;
 
-    // Da qui, un blocco per classe, tutti con le stesse voci (ogni classe del pacchetto personaggi le restituisce dai suoi metodi:
-    // Mago.getSaluteBase restituisce MAGO_SALUTE_BASE, e così via):
-    // - MAX_INTELLIGENZA: l'intelligenza massima della classe (Personaggio.getMaxIntelligenza), per l'astuzia delle tattiche (Astuzia).
-    //   Non è l'intelligenza vera del personaggio: i primari li distribuisce LanciatoreDeiDadi, con un budget suo;
-    // - MAX_NUMERO: quanti personaggi di quella classe si incontrano al massimo in una locazione;
-    // - PUNTI_ESPERIENZA: quanti ne dà, sconfitto;
-    // - SALUTE_BASE, MAGIA_BASE e LIVELLAMENTO_MAGIA: da dove partono salute e magia, e quanto cresce la magia massima con il livello
-    //   (per la radice quadrata di livello - 1; 0 per chi non ha magia: vedi PersonaggioBase.calcolaMagiaMassima);
-    // - MOLTIPLICATORE_<attributo secondario, danni o recupero>: 1 è la media, di più un punto di forza, di meno un punto
-    //   debole; il perché di ognuno sta in note_personaggi_<lingua>.properties (vedi NoteDeiPersonaggi), e il bestiario li mostra.
-
-    public static final int BARDO_MAX_INTELLIGENZA = 35;
-    public static final int BARDO_MAX_NUMERO = 1;
-    public static final int BARDO_PUNTI_ESPERIENZA = 25;
-
-    public static final int BARDO_SALUTE_BASE = 105;
-    public static final int BARDO_MAGIA_BASE = 40;
-    public static final int BARDO_LIVELLAMENTO_MAGIA = 18;
-    public static final double BARDO_MOLTIPLICATORE_CARICO = 0.9;
-    public static final double BARDO_MOLTIPLICATORE_CRITICO = 1.1;
-    public static final double BARDO_MOLTIPLICATORE_PRECISIONE = 1.0;
-    public static final double BARDO_MOLTIPLICATORE_VELOCITA = 1.1;
-    public static final double BARDO_MOLTIPLICATORE_FURTIVITA = 1.1;
-    public static final double BARDO_MOLTIPLICATORE_PARATA = 1.0;
-    public static final double BARDO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
-    public static final double BARDO_MOLTIPLICATORE_PERCEZIONE = 1.1;
-    public static final double BARDO_MOLTIPLICATORE_SOGGEZIONE = 1.2;
-    public static final double BARDO_MOLTIPLICATORE_FURIA = 1.1;
-    public static final double BARDO_MOLTIPLICATORE_CORAGGIO = 1.1;
-    public static final double BARDO_MOLTIPLICATORE_VALORE = 1.1;
-    public static final double BARDO_MOLTIPLICATORE_CONTRATTAZIONE = 1.2;
-    public static final double BARDO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
-    public static final double BARDO_MOLTIPLICATORE_STANCHEZZA = 1.0;
-    public static final double BARDO_MOLTIPLICATORE_DANNI_MAGICI = 1.1;
-    public static final double BARDO_MOLTIPLICATORE_DANNI_FISICI = 0.9;
-    public static final double BARDO_MOLTIPLICATORE_RECUPERO_FISICO = 1.1;
-    public static final double BARDO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.2;
-
-    public static final int CANTASTORIE_MAX_INTELLIGENZA = 35;
-    public static final int CANTASTORIE_MAX_NUMERO = 1;
-    public static final int CANTASTORIE_PUNTI_ESPERIENZA = 25;
-
-    public static final int CANTASTORIE_SALUTE_BASE = 105;
-    public static final int CANTASTORIE_MAGIA_BASE = 40;
-    public static final int CANTASTORIE_LIVELLAMENTO_MAGIA = 18;
-    public static final double CANTASTORIE_MOLTIPLICATORE_CARICO = 0.85;
-    public static final double CANTASTORIE_MOLTIPLICATORE_CRITICO = 1.15;
-    public static final double CANTASTORIE_MOLTIPLICATORE_PRECISIONE = 1.0;
-    public static final double CANTASTORIE_MOLTIPLICATORE_VELOCITA = 1.1;
-    public static final double CANTASTORIE_MOLTIPLICATORE_FURTIVITA = 1.1;
-    public static final double CANTASTORIE_MOLTIPLICATORE_PARATA = 1.0;
-    public static final double CANTASTORIE_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
-    public static final double CANTASTORIE_MOLTIPLICATORE_PERCEZIONE = 1.1;
-    public static final double CANTASTORIE_MOLTIPLICATORE_SOGGEZIONE = 1.2;
-    public static final double CANTASTORIE_MOLTIPLICATORE_FURIA = 1.1;
-    public static final double CANTASTORIE_MOLTIPLICATORE_CORAGGIO = 1.1;
-    public static final double CANTASTORIE_MOLTIPLICATORE_VALORE = 1.1;
-    public static final double CANTASTORIE_MOLTIPLICATORE_CONTRATTAZIONE = 1.2;
-    public static final double CANTASTORIE_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
-    public static final double CANTASTORIE_MOLTIPLICATORE_STANCHEZZA = 1.0;
-    public static final double CANTASTORIE_MOLTIPLICATORE_DANNI_MAGICI = 1.1;
-    public static final double CANTASTORIE_MOLTIPLICATORE_DANNI_FISICI = 0.9;
-    public static final double CANTASTORIE_MOLTIPLICATORE_RECUPERO_FISICO = 1.1;
-    public static final double CANTASTORIE_MOLTIPLICATORE_RECUPERO_MAGICO = 1.2;
-
-    public static final int ELFA_MAX_INTELLIGENZA = 45;
-    public static final int ELFA_MAX_NUMERO = 1;
-    public static final int ELFA_PUNTI_ESPERIENZA = 25;
-
-    public static final int ELFA_SALUTE_BASE = 105;
-    public static final int ELFA_MAGIA_BASE = 45;
-    public static final int ELFA_LIVELLAMENTO_MAGIA = 22;
-    public static final double ELFA_MOLTIPLICATORE_CARICO = 0.85;
-    public static final double ELFA_MOLTIPLICATORE_CRITICO = 1.2;
-    public static final double ELFA_MOLTIPLICATORE_PRECISIONE = 1.3;
-    public static final double ELFA_MOLTIPLICATORE_VELOCITA = 1.2;
-    public static final double ELFA_MOLTIPLICATORE_FURTIVITA = 1.3;
-    public static final double ELFA_MOLTIPLICATORE_PARATA = 1.1;
-    public static final double ELFA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.4;
-    public static final double ELFA_MOLTIPLICATORE_PERCEZIONE = 1.4;
-    public static final double ELFA_MOLTIPLICATORE_SOGGEZIONE = 1.1;
-    public static final double ELFA_MOLTIPLICATORE_FURIA = 1.2;
-    public static final double ELFA_MOLTIPLICATORE_CORAGGIO = 1.1;
-    public static final double ELFA_MOLTIPLICATORE_VALORE = 1.2;
-    public static final double ELFA_MOLTIPLICATORE_CONTRATTAZIONE = 1.0;
-    public static final double ELFA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.0;
-    public static final double ELFA_MOLTIPLICATORE_STANCHEZZA = 0.8;
-    public static final double ELFA_MOLTIPLICATORE_DANNI_MAGICI = 1.4;
-    public static final double ELFA_MOLTIPLICATORE_DANNI_FISICI = 0.9;
-    public static final double ELFA_MOLTIPLICATORE_RECUPERO_FISICO = 1.1;
-    public static final double ELFA_MOLTIPLICATORE_RECUPERO_MAGICO = 1.3;
-
-    public static final int ELFO_MAX_INTELLIGENZA = 45;
-    public static final int ELFO_MAX_NUMERO = 1;
-    public static final int ELFO_PUNTI_ESPERIENZA = 25;
-
-    public static final int ELFO_SALUTE_BASE = 105;
-    public static final int ELFO_MAGIA_BASE = 45;
-    public static final int ELFO_LIVELLAMENTO_MAGIA = 22;
-    public static final double ELFO_MOLTIPLICATORE_CARICO = 0.9;
-    public static final double ELFO_MOLTIPLICATORE_CRITICO = 1.2;
-    public static final double ELFO_MOLTIPLICATORE_PRECISIONE = 1.3;
-    public static final double ELFO_MOLTIPLICATORE_VELOCITA = 1.2;
-    public static final double ELFO_MOLTIPLICATORE_FURTIVITA = 1.3;
-    public static final double ELFO_MOLTIPLICATORE_PARATA = 1.1;
-    public static final double ELFO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.4;
-    public static final double ELFO_MOLTIPLICATORE_PERCEZIONE = 1.4;
-    public static final double ELFO_MOLTIPLICATORE_SOGGEZIONE = 1.1;
-    public static final double ELFO_MOLTIPLICATORE_FURIA = 1.2;
-    public static final double ELFO_MOLTIPLICATORE_CORAGGIO = 1.1;
-    public static final double ELFO_MOLTIPLICATORE_VALORE = 1.2;
-    public static final double ELFO_MOLTIPLICATORE_CONTRATTAZIONE = 1.0;
-    public static final double ELFO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.0;
-    public static final double ELFO_MOLTIPLICATORE_STANCHEZZA = 0.8;
-    public static final double ELFO_MOLTIPLICATORE_DANNI_MAGICI = 1.4;
-    public static final double ELFO_MOLTIPLICATORE_DANNI_FISICI = 0.9;
-    public static final double ELFO_MOLTIPLICATORE_RECUPERO_FISICO = 1.1;
-    public static final double ELFO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.3;
-
-    public static final int GUERRIERA_MAX_INTELLIGENZA = 15;
-    public static final int GUERRIERA_MAX_NUMERO = 1;
-    public static final int GUERRIERA_PUNTI_ESPERIENZA = 25;
-
-    public static final int GUERRIERA_SALUTE_BASE = 150;
-    public static final int GUERRIERA_MAGIA_BASE = 20;
-    public static final int GUERRIERA_LIVELLAMENTO_MAGIA = 6;
-    public static final double GUERRIERA_MOLTIPLICATORE_CARICO = 1.2;
-    public static final double GUERRIERA_MOLTIPLICATORE_CRITICO = 1.0;
-    public static final double GUERRIERA_MOLTIPLICATORE_PRECISIONE = 1.1;
-    public static final double GUERRIERA_MOLTIPLICATORE_VELOCITA = 1.0;
-    public static final double GUERRIERA_MOLTIPLICATORE_FURTIVITA = 1.0;
-    public static final double GUERRIERA_MOLTIPLICATORE_PARATA = 1.5;
-    public static final double GUERRIERA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.0;
-    public static final double GUERRIERA_MOLTIPLICATORE_PERCEZIONE = 1.0;
-    public static final double GUERRIERA_MOLTIPLICATORE_SOGGEZIONE = 1.0;
-    public static final double GUERRIERA_MOLTIPLICATORE_FURIA = 1.5;
-    public static final double GUERRIERA_MOLTIPLICATORE_CORAGGIO = 1.3;
-    public static final double GUERRIERA_MOLTIPLICATORE_VALORE = 1.5;
-    public static final double GUERRIERA_MOLTIPLICATORE_CONTRATTAZIONE = 0.9;
-    public static final double GUERRIERA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
-    public static final double GUERRIERA_MOLTIPLICATORE_STANCHEZZA = 1.0;
-    public static final double GUERRIERA_MOLTIPLICATORE_DANNI_MAGICI = 0.5;
-    public static final double GUERRIERA_MOLTIPLICATORE_DANNI_FISICI = 1.3;
-    public static final double GUERRIERA_MOLTIPLICATORE_RECUPERO_FISICO = 1.4;
-    public static final double GUERRIERA_MOLTIPLICATORE_RECUPERO_MAGICO = 0.5;
-
-    public static final int GUERRIERO_MAX_INTELLIGENZA = 15;
-    public static final int GUERRIERO_MAX_NUMERO = 1;
-
     // Il berserk: la parte della salute massima sotto la quale scatta, e di quanto cresce il danno fisico per ogni parte di salute persa.
     // Il vichingo scatta prima (a metà) e con il bonus doppio.
     public static final double BERSERK_SOGLIA = 1.0d / 3.0d;
     public static final double BERSERK_BONUS = 0.5d;
     public static final double VICHINGO_BERSERK_SOGLIA = 1.0d / 2.0d;
     public static final double VICHINGO_BERSERK_BONUS = 2 * BERSERK_BONUS;
-    public static final int GUERRIERO_PUNTI_ESPERIENZA = 25;
 
-    public static final int GUERRIERO_SALUTE_BASE = 150;
-    public static final int GUERRIERO_MAGIA_BASE = 20;
-    public static final int GUERRIERO_LIVELLAMENTO_MAGIA = 6;
-    public static final double GUERRIERO_MOLTIPLICATORE_CARICO = 1.25;
-    public static final double GUERRIERO_MOLTIPLICATORE_CRITICO = 1.0;
-    public static final double GUERRIERO_MOLTIPLICATORE_PRECISIONE = 1.1;
-    public static final double GUERRIERO_MOLTIPLICATORE_VELOCITA = 1.0;
-    public static final double GUERRIERO_MOLTIPLICATORE_FURTIVITA = 1.0;
-    public static final double GUERRIERO_MOLTIPLICATORE_PARATA = 1.5;
-    public static final double GUERRIERO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.0;
-    public static final double GUERRIERO_MOLTIPLICATORE_PERCEZIONE = 1.0;
-    public static final double GUERRIERO_MOLTIPLICATORE_SOGGEZIONE = 1.0;
-    public static final double GUERRIERO_MOLTIPLICATORE_FURIA = 1.5;
-    public static final double GUERRIERO_MOLTIPLICATORE_CORAGGIO = 1.3;
-    public static final double GUERRIERO_MOLTIPLICATORE_VALORE = 1.5;
-    public static final double GUERRIERO_MOLTIPLICATORE_CONTRATTAZIONE = 0.9;
-    public static final double GUERRIERO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
-    public static final double GUERRIERO_MOLTIPLICATORE_STANCHEZZA = 1.0;
-    public static final double GUERRIERO_MOLTIPLICATORE_DANNI_MAGICI = 0.5;
-    public static final double GUERRIERO_MOLTIPLICATORE_DANNI_FISICI = 1.3;
-    public static final double GUERRIERO_MOLTIPLICATORE_RECUPERO_FISICO = 1.4;
-    public static final double GUERRIERO_MOLTIPLICATORE_RECUPERO_MAGICO = 0.5;
-
-    public static final int LADRA_MAX_INTELLIGENZA = 30;
-    public static final int LADRA_MAX_NUMERO = 1;
-    public static final int LADRA_PUNTI_ESPERIENZA = 25;
-
-    public static final int LADRA_SALUTE_BASE = 100;
-    public static final int LADRA_MAGIA_BASE = 25;
-    public static final int LADRA_LIVELLAMENTO_MAGIA = 8;
-    public static final double LADRA_MOLTIPLICATORE_CARICO = 0.95;
-    public static final double LADRA_MOLTIPLICATORE_CRITICO = 1.5;
-    public static final double LADRA_MOLTIPLICATORE_PRECISIONE = 1.3;
-    public static final double LADRA_MOLTIPLICATORE_VELOCITA = 1.4;
-    public static final double LADRA_MOLTIPLICATORE_FURTIVITA = 1.5;
-    public static final double LADRA_MOLTIPLICATORE_PARATA = 1.0;
-    public static final double LADRA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.3;
-    public static final double LADRA_MOLTIPLICATORE_PERCEZIONE = 1.3;
-    public static final double LADRA_MOLTIPLICATORE_SOGGEZIONE = 0.9;
-    public static final double LADRA_MOLTIPLICATORE_FURIA = 1.0;
-    public static final double LADRA_MOLTIPLICATORE_CORAGGIO = 1.0;
-    public static final double LADRA_MOLTIPLICATORE_VALORE = 1.0;
-    public static final double LADRA_MOLTIPLICATORE_CONTRATTAZIONE = 1.3;
-    public static final double LADRA_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.9;
-    public static final double LADRA_MOLTIPLICATORE_STANCHEZZA = 0.9;
-    public static final double LADRA_MOLTIPLICATORE_DANNI_MAGICI = 1.0;
-    public static final double LADRA_MOLTIPLICATORE_DANNI_FISICI = 1.0;
-    public static final double LADRA_MOLTIPLICATORE_RECUPERO_FISICO = 1.1;
-    public static final double LADRA_MOLTIPLICATORE_RECUPERO_MAGICO = 0.9;
-
-    public static final int LADRO_MAX_INTELLIGENZA = 30;
-    public static final int LADRO_MAX_NUMERO = 1;
-    public static final int LADRO_PUNTI_ESPERIENZA = 25;
-
-    public static final int LADRO_SALUTE_BASE = 100;
-    public static final int LADRO_MAGIA_BASE = 25;
-    public static final int LADRO_LIVELLAMENTO_MAGIA = 8;
-    public static final double LADRO_MOLTIPLICATORE_CARICO = 1.0;
-    public static final double LADRO_MOLTIPLICATORE_CRITICO = 1.5;
-    public static final double LADRO_MOLTIPLICATORE_PRECISIONE = 1.3;
-    public static final double LADRO_MOLTIPLICATORE_VELOCITA = 1.4;
-    public static final double LADRO_MOLTIPLICATORE_FURTIVITA = 1.5;
-    public static final double LADRO_MOLTIPLICATORE_PARATA = 1.0;
-    public static final double LADRO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.3;
-    public static final double LADRO_MOLTIPLICATORE_PERCEZIONE = 1.3;
-    public static final double LADRO_MOLTIPLICATORE_SOGGEZIONE = 0.9;
-    public static final double LADRO_MOLTIPLICATORE_FURIA = 1.0;
-    public static final double LADRO_MOLTIPLICATORE_CORAGGIO = 1.0;
-    public static final double LADRO_MOLTIPLICATORE_VALORE = 1.0;
-    public static final double LADRO_MOLTIPLICATORE_CONTRATTAZIONE = 1.3;
-    public static final double LADRO_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.9;
-    public static final double LADRO_MOLTIPLICATORE_STANCHEZZA = 0.9;
-    public static final double LADRO_MOLTIPLICATORE_DANNI_MAGICI = 1.0;
-    public static final double LADRO_MOLTIPLICATORE_DANNI_FISICI = 1.0;
-    public static final double LADRO_MOLTIPLICATORE_RECUPERO_FISICO = 1.1;
-    public static final double LADRO_MOLTIPLICATORE_RECUPERO_MAGICO = 0.9;
-
-    public static final int MAGA_MAX_INTELLIGENZA = 55;
-    public static final int MAGA_MAX_NUMERO = 1;
-    public static final int MAGA_PUNTI_ESPERIENZA = 25;
-
-    public static final int MAGA_SALUTE_BASE = 80;
-    public static final int MAGA_MAGIA_BASE = 60;
-    public static final int MAGA_LIVELLAMENTO_MAGIA = 34;
-    public static final double MAGA_MOLTIPLICATORE_CARICO = 0.75;
-    public static final double MAGA_MOLTIPLICATORE_CRITICO = 0.8;
-    public static final double MAGA_MOLTIPLICATORE_PRECISIONE = 1.0;
-    public static final double MAGA_MOLTIPLICATORE_VELOCITA = 0.9;
-    public static final double MAGA_MOLTIPLICATORE_FURTIVITA = 0.9;
-    public static final double MAGA_MOLTIPLICATORE_PARATA = 0.6;
-    public static final double MAGA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
-    public static final double MAGA_MOLTIPLICATORE_PERCEZIONE = 1.1;
-    public static final double MAGA_MOLTIPLICATORE_SOGGEZIONE = 1.0;
-    public static final double MAGA_MOLTIPLICATORE_FURIA = 1.0;
-    public static final double MAGA_MOLTIPLICATORE_CORAGGIO = 1.0;
-    public static final double MAGA_MOLTIPLICATORE_VALORE = 1.0;
-    public static final double MAGA_MOLTIPLICATORE_CONTRATTAZIONE = 1.0;
-    public static final double MAGA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.3;
-    public static final double MAGA_MOLTIPLICATORE_STANCHEZZA = 1.4;
-    public static final double MAGA_MOLTIPLICATORE_DANNI_MAGICI = 2.0;
-    public static final double MAGA_MOLTIPLICATORE_DANNI_FISICI = 0.5;
-    public static final double MAGA_MOLTIPLICATORE_RECUPERO_FISICO = 0.7;
-    public static final double MAGA_MOLTIPLICATORE_RECUPERO_MAGICO = 1.5;
-
-    public static final int MAGO_MAX_INTELLIGENZA = 55;
-    public static final int MAGO_MAX_NUMERO = 1;
-    public static final int MAGO_PUNTI_ESPERIENZA = 25;
-
-    public static final int MAGO_SALUTE_BASE = 80;
-    public static final int MAGO_MAGIA_BASE = 60;
-    public static final int MAGO_LIVELLAMENTO_MAGIA = 34;
-    public static final double MAGO_MOLTIPLICATORE_CARICO = 0.8;
-    public static final double MAGO_MOLTIPLICATORE_CRITICO = 0.8;
-    public static final double MAGO_MOLTIPLICATORE_PRECISIONE = 1.0;
-    public static final double MAGO_MOLTIPLICATORE_VELOCITA = 0.9;
-    public static final double MAGO_MOLTIPLICATORE_FURTIVITA = 0.9;
-    public static final double MAGO_MOLTIPLICATORE_PARATA = 0.6;
-    public static final double MAGO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
-    public static final double MAGO_MOLTIPLICATORE_PERCEZIONE = 1.1;
-    public static final double MAGO_MOLTIPLICATORE_SOGGEZIONE = 1.0;
-    public static final double MAGO_MOLTIPLICATORE_FURIA = 1.0;
-    public static final double MAGO_MOLTIPLICATORE_CORAGGIO = 1.0;
-    public static final double MAGO_MOLTIPLICATORE_VALORE = 1.0;
-    public static final double MAGO_MOLTIPLICATORE_CONTRATTAZIONE = 1.0;
-    public static final double MAGO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.3;
-    public static final double MAGO_MOLTIPLICATORE_STANCHEZZA = 1.4;
-    public static final double MAGO_MOLTIPLICATORE_DANNI_MAGICI = 2.0;
-    public static final double MAGO_MOLTIPLICATORE_DANNI_FISICI = 0.5;
-    public static final double MAGO_MOLTIPLICATORE_RECUPERO_FISICO = 0.7;
-    public static final double MAGO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.5;
-
-    // Sacerdote e Sacerdotessa: la magia dell'elfo con più Saggezza e più robustezza, senza doppia arma e senza dardo arcano
-    public static final int SACERDOTE_MAX_INTELLIGENZA = 40;
-    public static final int SACERDOTE_MAX_NUMERO = 1;
-    public static final int SACERDOTE_PUNTI_ESPERIENZA = 25;
-    public static final int SACERDOTE_SALUTE_BASE = 100;
-    public static final int SACERDOTE_MAGIA_BASE = 45;
-    public static final int SACERDOTE_LIVELLAMENTO_MAGIA = 22;
-    public static final double SACERDOTE_MOLTIPLICATORE_CARICO = 0.85;
-    public static final double SACERDOTE_MOLTIPLICATORE_CRITICO = 1.0;
-    public static final double SACERDOTE_MOLTIPLICATORE_PRECISIONE = 1.1;
-    public static final double SACERDOTE_MOLTIPLICATORE_VELOCITA = 1.0;
-    public static final double SACERDOTE_MOLTIPLICATORE_FURTIVITA = 0.9;
-    public static final double SACERDOTE_MOLTIPLICATORE_PARATA = 0.8;
-    public static final double SACERDOTE_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.3;
-    public static final double SACERDOTE_MOLTIPLICATORE_PERCEZIONE = 1.2;
-    public static final double SACERDOTE_MOLTIPLICATORE_SOGGEZIONE = 1.1;
-    public static final double SACERDOTE_MOLTIPLICATORE_FURIA = 1.0;
-    public static final double SACERDOTE_MOLTIPLICATORE_CORAGGIO = 1.2;
-    public static final double SACERDOTE_MOLTIPLICATORE_VALORE = 1.1;
-    public static final double SACERDOTE_MOLTIPLICATORE_CONTRATTAZIONE = 1.0;
-    public static final double SACERDOTE_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.0;
-    public static final double SACERDOTE_MOLTIPLICATORE_STANCHEZZA = 1.0;
-    public static final double SACERDOTE_MOLTIPLICATORE_DANNI_MAGICI = 1.4;
-    public static final double SACERDOTE_MOLTIPLICATORE_DANNI_FISICI = 0.8;
-    public static final double SACERDOTE_MOLTIPLICATORE_RECUPERO_FISICO = 0.9;
-    public static final double SACERDOTE_MOLTIPLICATORE_RECUPERO_MAGICO = 1.3;
-
-    public static final int SACERDOTESSA_MAX_INTELLIGENZA = 40;
-    public static final int SACERDOTESSA_MAX_NUMERO = 1;
-    public static final int SACERDOTESSA_PUNTI_ESPERIENZA = 25;
-    public static final int SACERDOTESSA_SALUTE_BASE = 100;
-    public static final int SACERDOTESSA_MAGIA_BASE = 45;
-    public static final int SACERDOTESSA_LIVELLAMENTO_MAGIA = 22;
-    public static final double SACERDOTESSA_MOLTIPLICATORE_CARICO = 0.8;
-    public static final double SACERDOTESSA_MOLTIPLICATORE_CRITICO = 1.0;
-    public static final double SACERDOTESSA_MOLTIPLICATORE_PRECISIONE = 1.1;
-    public static final double SACERDOTESSA_MOLTIPLICATORE_VELOCITA = 1.0;
-    public static final double SACERDOTESSA_MOLTIPLICATORE_FURTIVITA = 0.9;
-    public static final double SACERDOTESSA_MOLTIPLICATORE_PARATA = 0.8;
-    public static final double SACERDOTESSA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.3;
-    public static final double SACERDOTESSA_MOLTIPLICATORE_PERCEZIONE = 1.2;
-    public static final double SACERDOTESSA_MOLTIPLICATORE_SOGGEZIONE = 1.1;
-    public static final double SACERDOTESSA_MOLTIPLICATORE_FURIA = 1.0;
-    public static final double SACERDOTESSA_MOLTIPLICATORE_CORAGGIO = 1.2;
-    public static final double SACERDOTESSA_MOLTIPLICATORE_VALORE = 1.1;
-    public static final double SACERDOTESSA_MOLTIPLICATORE_CONTRATTAZIONE = 1.0;
-    public static final double SACERDOTESSA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.0;
-    public static final double SACERDOTESSA_MOLTIPLICATORE_STANCHEZZA = 1.0;
-    public static final double SACERDOTESSA_MOLTIPLICATORE_DANNI_MAGICI = 1.4;
-    public static final double SACERDOTESSA_MOLTIPLICATORE_DANNI_FISICI = 0.8;
-    public static final double SACERDOTESSA_MOLTIPLICATORE_RECUPERO_FISICO = 0.9;
-    public static final double SACERDOTESSA_MOLTIPLICATORE_RECUPERO_MAGICO = 1.3;
-
-    // Chierico e Chierica: il sacerdote che combatte in prima linea (mazza, scudo, armatura): fra il Sacerdote e il Guerriero,
-    // con più salute e parata del primo e più magia del secondo
-    public static final int CHIERICO_MAX_INTELLIGENZA = 25;
-    public static final int CHIERICO_MAX_NUMERO = 1;
-    public static final int CHIERICO_PUNTI_ESPERIENZA = 25;
-    public static final int CHIERICO_SALUTE_BASE = 130;
-    public static final int CHIERICO_MAGIA_BASE = 30;
-    public static final int CHIERICO_LIVELLAMENTO_MAGIA = 14;
-    public static final double CHIERICO_MOLTIPLICATORE_CARICO = 1.1;
-    public static final double CHIERICO_MOLTIPLICATORE_CRITICO = 1.0;
-    public static final double CHIERICO_MOLTIPLICATORE_PRECISIONE = 1.0;
-    public static final double CHIERICO_MOLTIPLICATORE_VELOCITA = 0.9;
-    public static final double CHIERICO_MOLTIPLICATORE_FURTIVITA = 0.8;
-    public static final double CHIERICO_MOLTIPLICATORE_PARATA = 1.3;
-    public static final double CHIERICO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.2;
-    public static final double CHIERICO_MOLTIPLICATORE_PERCEZIONE = 1.0;
-    public static final double CHIERICO_MOLTIPLICATORE_SOGGEZIONE = 1.1;
-    public static final double CHIERICO_MOLTIPLICATORE_FURIA = 1.0;
-    public static final double CHIERICO_MOLTIPLICATORE_CORAGGIO = 1.2;
-    public static final double CHIERICO_MOLTIPLICATORE_VALORE = 1.2;
-    public static final double CHIERICO_MOLTIPLICATORE_CONTRATTAZIONE = 1.0;
-    public static final double CHIERICO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.0;
-    public static final double CHIERICO_MOLTIPLICATORE_STANCHEZZA = 1.0;
-    public static final double CHIERICO_MOLTIPLICATORE_DANNI_MAGICI = 1.0;
-    public static final double CHIERICO_MOLTIPLICATORE_DANNI_FISICI = 1.0;
-    public static final double CHIERICO_MOLTIPLICATORE_RECUPERO_FISICO = 1.2;
-    public static final double CHIERICO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.0;
-
-    public static final int CHIERICA_MAX_INTELLIGENZA = 25;
-    public static final int CHIERICA_MAX_NUMERO = 1;
-    public static final int CHIERICA_PUNTI_ESPERIENZA = 25;
-    public static final int CHIERICA_SALUTE_BASE = 130;
-    public static final int CHIERICA_MAGIA_BASE = 30;
-    public static final int CHIERICA_LIVELLAMENTO_MAGIA = 14;
-    public static final double CHIERICA_MOLTIPLICATORE_CARICO = 1.1;
-    public static final double CHIERICA_MOLTIPLICATORE_CRITICO = 1.0;
-    public static final double CHIERICA_MOLTIPLICATORE_PRECISIONE = 1.0;
-    public static final double CHIERICA_MOLTIPLICATORE_VELOCITA = 0.9;
-    public static final double CHIERICA_MOLTIPLICATORE_FURTIVITA = 0.8;
-    public static final double CHIERICA_MOLTIPLICATORE_PARATA = 1.3;
-    public static final double CHIERICA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.2;
-    public static final double CHIERICA_MOLTIPLICATORE_PERCEZIONE = 1.0;
-    public static final double CHIERICA_MOLTIPLICATORE_SOGGEZIONE = 1.1;
-    public static final double CHIERICA_MOLTIPLICATORE_FURIA = 1.0;
-    public static final double CHIERICA_MOLTIPLICATORE_CORAGGIO = 1.2;
-    public static final double CHIERICA_MOLTIPLICATORE_VALORE = 1.2;
-    public static final double CHIERICA_MOLTIPLICATORE_CONTRATTAZIONE = 1.0;
-    public static final double CHIERICA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.0;
-    public static final double CHIERICA_MOLTIPLICATORE_STANCHEZZA = 1.0;
-    public static final double CHIERICA_MOLTIPLICATORE_DANNI_MAGICI = 1.0;
-    public static final double CHIERICA_MOLTIPLICATORE_DANNI_FISICI = 1.0;
-    public static final double CHIERICA_MOLTIPLICATORE_RECUPERO_FISICO = 1.2;
-    public static final double CHIERICA_MOLTIPLICATORE_RECUPERO_MAGICO = 1.0;
-
-    // Druido e Druida: l'incantatore della natura, con più Percezione, Saggezza e recupero magico del Mago ma meno magia
-    // base, e senza armatura né scudo
-    public static final int DRUIDO_MAX_INTELLIGENZA = 40;
-    public static final int DRUIDO_MAX_NUMERO = 1;
-    public static final int DRUIDO_PUNTI_ESPERIENZA = 25;
-    public static final int DRUIDO_SALUTE_BASE = 110;
-    public static final int DRUIDO_MAGIA_BASE = 40;
-    public static final int DRUIDO_LIVELLAMENTO_MAGIA = 20;
-    public static final double DRUIDO_MOLTIPLICATORE_CARICO = 0.85;
-    public static final double DRUIDO_MOLTIPLICATORE_CRITICO = 1.0;
-    public static final double DRUIDO_MOLTIPLICATORE_PRECISIONE = 1.1;
-    public static final double DRUIDO_MOLTIPLICATORE_VELOCITA = 1.1;
-    public static final double DRUIDO_MOLTIPLICATORE_FURTIVITA = 1.1;
-    public static final double DRUIDO_MOLTIPLICATORE_PARATA = 0.9;
-    public static final double DRUIDO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.2;
-    public static final double DRUIDO_MOLTIPLICATORE_PERCEZIONE = 1.3;
-    public static final double DRUIDO_MOLTIPLICATORE_SOGGEZIONE = 1.1;
-    public static final double DRUIDO_MOLTIPLICATORE_FURIA = 1.0;
-    public static final double DRUIDO_MOLTIPLICATORE_CORAGGIO = 1.1;
-    public static final double DRUIDO_MOLTIPLICATORE_VALORE = 1.0;
-    public static final double DRUIDO_MOLTIPLICATORE_CONTRATTAZIONE = 1.0;
-    public static final double DRUIDO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.0;
-    public static final double DRUIDO_MOLTIPLICATORE_STANCHEZZA = 0.9;
-    public static final double DRUIDO_MOLTIPLICATORE_DANNI_MAGICI = 1.2;
-    public static final double DRUIDO_MOLTIPLICATORE_DANNI_FISICI = 0.9;
-    public static final double DRUIDO_MOLTIPLICATORE_RECUPERO_FISICO = 1.1;
-    public static final double DRUIDO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.2;
-
-    public static final int DRUIDA_MAX_INTELLIGENZA = 40;
-    public static final int DRUIDA_MAX_NUMERO = 1;
-    public static final int DRUIDA_PUNTI_ESPERIENZA = 25;
-    public static final int DRUIDA_SALUTE_BASE = 110;
-    public static final int DRUIDA_MAGIA_BASE = 40;
-    public static final int DRUIDA_LIVELLAMENTO_MAGIA = 20;
-    public static final double DRUIDA_MOLTIPLICATORE_CARICO = 0.85;
-    public static final double DRUIDA_MOLTIPLICATORE_CRITICO = 1.0;
-    public static final double DRUIDA_MOLTIPLICATORE_PRECISIONE = 1.1;
-    public static final double DRUIDA_MOLTIPLICATORE_VELOCITA = 1.1;
-    public static final double DRUIDA_MOLTIPLICATORE_FURTIVITA = 1.1;
-    public static final double DRUIDA_MOLTIPLICATORE_PARATA = 0.9;
-    public static final double DRUIDA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.2;
-    public static final double DRUIDA_MOLTIPLICATORE_PERCEZIONE = 1.3;
-    public static final double DRUIDA_MOLTIPLICATORE_SOGGEZIONE = 1.1;
-    public static final double DRUIDA_MOLTIPLICATORE_FURIA = 1.0;
-    public static final double DRUIDA_MOLTIPLICATORE_CORAGGIO = 1.1;
-    public static final double DRUIDA_MOLTIPLICATORE_VALORE = 1.0;
-    public static final double DRUIDA_MOLTIPLICATORE_CONTRATTAZIONE = 1.0;
-    public static final double DRUIDA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.0;
-    public static final double DRUIDA_MOLTIPLICATORE_STANCHEZZA = 0.9;
-    public static final double DRUIDA_MOLTIPLICATORE_DANNI_MAGICI = 1.2;
-    public static final double DRUIDA_MOLTIPLICATORE_DANNI_FISICI = 0.9;
-    public static final double DRUIDA_MOLTIPLICATORE_RECUPERO_FISICO = 1.1;
-    public static final double DRUIDA_MOLTIPLICATORE_RECUPERO_MAGICO = 1.2;
-
-    // I personaggi non combattenti (locandiere, armaiolo, alchimista, venditore di pergamene, incantatore, moglie del
-    // bardo): come il bardo ma un poco meno, e senza capacità proprie (vedi PersonaggioNonCombattente)
-    public static final int NON_COMBATTENTE_SALUTE_BASE = 90;
-    public static final int NON_COMBATTENTE_MAGIA_BASE = 30;
-    public static final int NON_COMBATTENTE_LIVELLAMENTO_MAGIA = 14;
-
-    // L'intelligenza massima dei non combattenti: quella del bardo per 0,85
-    public static final double NON_COMBATTENTE_MAX_INTELLIGENZA = 29.75;
-    public static final int NON_COMBATTENTE_MAX_NUMERO = 1;
-    public static final int NON_COMBATTENTE_PUNTI_ESPERIENZA = 25;
-    public static final double NON_COMBATTENTE_MOLTIPLICATORE_CARICO = 0.9;
-    public static final double NON_COMBATTENTE_MOLTIPLICATORE_CRITICO = 1.1;
-    public static final double NON_COMBATTENTE_MOLTIPLICATORE_PRECISIONE = 1.0;
-    public static final double NON_COMBATTENTE_MOLTIPLICATORE_VELOCITA = 1.1;
-    public static final double NON_COMBATTENTE_MOLTIPLICATORE_FURTIVITA = 1.1;
-    public static final double NON_COMBATTENTE_MOLTIPLICATORE_PARATA = 1.0;
-    public static final double NON_COMBATTENTE_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
-    public static final double NON_COMBATTENTE_MOLTIPLICATORE_PERCEZIONE = 1.1;
-    public static final double NON_COMBATTENTE_MOLTIPLICATORE_SOGGEZIONE = 1.2;
-    public static final double NON_COMBATTENTE_MOLTIPLICATORE_FURIA = 1.1;
-    public static final double NON_COMBATTENTE_MOLTIPLICATORE_CORAGGIO = 1.1;
-    public static final double NON_COMBATTENTE_MOLTIPLICATORE_VALORE = 1.1;
-    public static final double NON_COMBATTENTE_MOLTIPLICATORE_CONTRATTAZIONE = 1.2;
-    public static final double NON_COMBATTENTE_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
-    public static final double NON_COMBATTENTE_MOLTIPLICATORE_STANCHEZZA = 1.0;
-    public static final double NON_COMBATTENTE_MOLTIPLICATORE_DANNI_MAGICI = 1.1;
-    public static final double NON_COMBATTENTE_MOLTIPLICATORE_DANNI_FISICI = 0.9;
-    public static final double NON_COMBATTENTE_MOLTIPLICATORE_RECUPERO_FISICO = 1.1;
-    public static final double NON_COMBATTENTE_MOLTIPLICATORE_RECUPERO_MAGICO = 1.2;
-
-    // Il Viandante: un ospite di missione, con valori simili a quelli del bardo
-    public static final int VIANDANTE_MAX_INTELLIGENZA = 35;
-    public static final int VIANDANTE_MAX_NUMERO = 1;
-    public static final int VIANDANTE_PUNTI_ESPERIENZA = 25;
-    public static final int VIANDANTE_SALUTE_BASE = 105;
-    public static final int VIANDANTE_MAGIA_BASE = 40;
-    public static final int VIANDANTE_LIVELLAMENTO_MAGIA = 18;
-    public static final double VIANDANTE_MOLTIPLICATORE_CARICO = 0.9;
-    public static final double VIANDANTE_MOLTIPLICATORE_CRITICO = 1.1;
-    public static final double VIANDANTE_MOLTIPLICATORE_PRECISIONE = 1.0;
-    public static final double VIANDANTE_MOLTIPLICATORE_VELOCITA = 1.1;
-    public static final double VIANDANTE_MOLTIPLICATORE_FURTIVITA = 1.1;
-    public static final double VIANDANTE_MOLTIPLICATORE_PARATA = 1.0;
-    public static final double VIANDANTE_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
-    public static final double VIANDANTE_MOLTIPLICATORE_PERCEZIONE = 1.1;
-    public static final double VIANDANTE_MOLTIPLICATORE_SOGGEZIONE = 1.2;
-    public static final double VIANDANTE_MOLTIPLICATORE_FURIA = 1.1;
-    public static final double VIANDANTE_MOLTIPLICATORE_CORAGGIO = 1.1;
-    public static final double VIANDANTE_MOLTIPLICATORE_VALORE = 1.1;
-    public static final double VIANDANTE_MOLTIPLICATORE_CONTRATTAZIONE = 1.2;
-    public static final double VIANDANTE_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
-    public static final double VIANDANTE_MOLTIPLICATORE_STANCHEZZA = 1.0;
-    public static final double VIANDANTE_MOLTIPLICATORE_DANNI_MAGICI = 1.1;
-    public static final double VIANDANTE_MOLTIPLICATORE_DANNI_FISICI = 0.9;
-    public static final double VIANDANTE_MOLTIPLICATORE_RECUPERO_FISICO = 1.1;
-    public static final double VIANDANTE_MOLTIPLICATORE_RECUPERO_MAGICO = 1.2;
-
-    public static final int OMBRAFIAMMA_MAX_INTELLIGENZA = 50;
-    public static final int OMBRAFIAMMA_MAX_NUMERO = 1;
-    public static final int OMBRAFIAMMA_PUNTI_ESPERIENZA = 100;
-
-    public static final int OMBRAFIAMMA_SALUTE_BASE = 140;
-    public static final int OMBRAFIAMMA_MAGIA_BASE = 50;
-    public static final int OMBRAFIAMMA_LIVELLAMENTO_MAGIA = 20;
-    public static final double OMBRAFIAMMA_MOLTIPLICATORE_CARICO = 90;
-    public static final double OMBRAFIAMMA_MOLTIPLICATORE_CRITICO = 1.5;
-    public static final double OMBRAFIAMMA_MOLTIPLICATORE_PRECISIONE = 1.5;
-    public static final double OMBRAFIAMMA_MOLTIPLICATORE_VELOCITA = 1.5;
-    public static final double OMBRAFIAMMA_MOLTIPLICATORE_FURTIVITA = 1.5;
-    public static final double OMBRAFIAMMA_MOLTIPLICATORE_PARATA = 1.5;
-    public static final double OMBRAFIAMMA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.5;
-    public static final double OMBRAFIAMMA_MOLTIPLICATORE_PERCEZIONE = 1.5;
-    public static final double OMBRAFIAMMA_MOLTIPLICATORE_SOGGEZIONE = 1.5;
-    public static final double OMBRAFIAMMA_MOLTIPLICATORE_FURIA = 1.5;
-    public static final double OMBRAFIAMMA_MOLTIPLICATORE_CORAGGIO = 1.5;
-    public static final double OMBRAFIAMMA_MOLTIPLICATORE_VALORE = 1.5;
-    public static final double OMBRAFIAMMA_MOLTIPLICATORE_CONTRATTAZIONE = 1.0;
-    public static final double OMBRAFIAMMA_MOLTIPLICATORE_NUMERO_BERSAGLI = 3;
-    public static final double OMBRAFIAMMA_MOLTIPLICATORE_STANCHEZZA = 0.1;
-    public static final double OMBRAFIAMMA_MOLTIPLICATORE_DANNI_MAGICI = 2.0;
-    public static final double OMBRAFIAMMA_MOLTIPLICATORE_DANNI_FISICI = 2.0;
-    public static final double OMBRAFIAMMA_MOLTIPLICATORE_RECUPERO_FISICO = 1.8;
-    public static final double OMBRAFIAMMA_MOLTIPLICATORE_RECUPERO_MAGICO = 1.5;
-
-    public static final int ARPIA_MAX_INTELLIGENZA = 8;
-    public static final int ARPIA_MAX_NUMERO = 4;
-    public static final int ARPIA_PUNTI_ESPERIENZA = 15;
-
-    public static final int ARPIA_SALUTE_BASE = 95;
-    public static final int ARPIA_MAGIA_BASE = 35;
-    public static final int ARPIA_LIVELLAMENTO_MAGIA = 12;
-    public static final double ARPIA_MOLTIPLICATORE_CARICO = 0.7;
-    public static final double ARPIA_MOLTIPLICATORE_CRITICO = 1.3;
-    public static final double ARPIA_MOLTIPLICATORE_PRECISIONE = 1.1;
-    public static final double ARPIA_MOLTIPLICATORE_VELOCITA = 1.3;
-    public static final double ARPIA_MOLTIPLICATORE_FURTIVITA = 0.7;
-    public static final double ARPIA_MOLTIPLICATORE_PARATA = 0.7;
-    public static final double ARPIA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.4;
-    public static final double ARPIA_MOLTIPLICATORE_PERCEZIONE = 1.4;
-    public static final double ARPIA_MOLTIPLICATORE_SOGGEZIONE = 0.9;
-    public static final double ARPIA_MOLTIPLICATORE_FURIA = 0.5;
-    public static final double ARPIA_MOLTIPLICATORE_CORAGGIO = 0.7;
-    public static final double ARPIA_MOLTIPLICATORE_VALORE = 0.5;
-    public static final double ARPIA_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.8;
-    public static final double ARPIA_MOLTIPLICATORE_STANCHEZZA = 1.1;
-    public static final double ARPIA_MOLTIPLICATORE_DANNI_MAGICI = 0.8;
-    public static final double ARPIA_MOLTIPLICATORE_DANNI_FISICI = 0.9;
-    public static final double ARPIA_MOLTIPLICATORE_RECUPERO_FISICO = 1.0;
-    public static final double ARPIA_MOLTIPLICATORE_RECUPERO_MAGICO = 0.8;
-
-    public static final int CENTAURO_MAX_NUMERO = 4;
-    public static final int CENTAURO_MAX_INTELLIGENZA = 12;
-    public static final int CENTAURO_PUNTI_ESPERIENZA = 40;
-
-    public static final int CENTAURO_SALUTE_BASE = 125;
-    public static final int CENTAURO_MAGIA_BASE = 15;
-    public static final int CENTAURO_LIVELLAMENTO_MAGIA = 4;
-    public static final double CENTAURO_MOLTIPLICATORE_CARICO = 2.0;
-    public static final double CENTAURO_MOLTIPLICATORE_CRITICO = 0.8;
-    public static final double CENTAURO_MOLTIPLICATORE_PRECISIONE = 1.1;
-    public static final double CENTAURO_MOLTIPLICATORE_VELOCITA = 1.4;
-    public static final double CENTAURO_MOLTIPLICATORE_FURTIVITA = 0.5;
-    public static final double CENTAURO_MOLTIPLICATORE_PARATA = 1.1;
-    public static final double CENTAURO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
-    public static final double CENTAURO_MOLTIPLICATORE_PERCEZIONE = 1.1;
-    public static final double CENTAURO_MOLTIPLICATORE_SOGGEZIONE = 1.1;
-    public static final double CENTAURO_MOLTIPLICATORE_FURIA = 1.3;
-    public static final double CENTAURO_MOLTIPLICATORE_CORAGGIO = 1.1;
-    public static final double CENTAURO_MOLTIPLICATORE_VALORE = 1.3;
-    public static final double CENTAURO_MOLTIPLICATORE_CONTRATTAZIONE = 0.9;
-    public static final double CENTAURO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.2;
-    public static final double CENTAURO_MOLTIPLICATORE_STANCHEZZA = 0.8;
-    public static final double CENTAURO_MOLTIPLICATORE_DANNI_MAGICI = 0.8;
-    public static final double CENTAURO_MOLTIPLICATORE_DANNI_FISICI = 1.3;
-    public static final double CENTAURO_MOLTIPLICATORE_RECUPERO_FISICO = 1.3;
-    public static final double CENTAURO_MOLTIPLICATORE_RECUPERO_MAGICO = 0.7;
-
-    public static final int CHIMERA_MAX_NUMERO = 5;
-    public static final int CHIMERA_MAX_INTELLIGENZA = 6;
-    public static final int CHIMERA_PUNTI_ESPERIENZA = 40;
-
-    public static final int CHIMERA_SALUTE_BASE = 120;
-    public static final int CHIMERA_MAGIA_BASE = 30;
-    public static final int CHIMERA_LIVELLAMENTO_MAGIA = 8;
-    public static final double CHIMERA_MOLTIPLICATORE_CARICO = 2.5;
-    public static final double CHIMERA_MOLTIPLICATORE_CRITICO = 1.1;
-    public static final double CHIMERA_MOLTIPLICATORE_PRECISIONE = 1.0;
-    public static final double CHIMERA_MOLTIPLICATORE_VELOCITA = 1.2;
-    public static final double CHIMERA_MOLTIPLICATORE_FURTIVITA = 1.1;
-    public static final double CHIMERA_MOLTIPLICATORE_PARATA = 0.9;
-    public static final double CHIMERA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.3;
-    public static final double CHIMERA_MOLTIPLICATORE_PERCEZIONE = 1.3;
-    public static final double CHIMERA_MOLTIPLICATORE_SOGGEZIONE = 1.2;
-    public static final double CHIMERA_MOLTIPLICATORE_FURIA = 0.6;
-    public static final double CHIMERA_MOLTIPLICATORE_CORAGGIO = 1.0;
-    public static final double CHIMERA_MOLTIPLICATORE_VALORE = 0.6;
-    public static final double CHIMERA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.4;
-    public static final double CHIMERA_MOLTIPLICATORE_STANCHEZZA = 0.9;
-    public static final double CHIMERA_MOLTIPLICATORE_DANNI_MAGICI = 0.9;
-    public static final double CHIMERA_MOLTIPLICATORE_DANNI_FISICI = 1.3;
-    public static final double CHIMERA_MOLTIPLICATORE_RECUPERO_FISICO = 1.2;
-    public static final double CHIMERA_MOLTIPLICATORE_RECUPERO_MAGICO = 0.8;
-
-    public static final int CHIMERADRAGO_MAX_NUMERO = 2;
-    public static final int CHIMERADRAGO_MAX_INTELLIGENZA = 28;
-    public static final int CHIMERADRAGO_PUNTI_ESPERIENZA = 70;
-
-    public static final int CHIMERADRAGO_SALUTE_BASE = 300;
-    public static final int CHIMERADRAGO_MAGIA_BASE = 60;
-    public static final int CHIMERADRAGO_LIVELLAMENTO_MAGIA = 16;
-    public static final double CHIMERADRAGO_MOLTIPLICATORE_CARICO = 6.0;
-    public static final double CHIMERADRAGO_MOLTIPLICATORE_CRITICO = 0.8;
-    public static final double CHIMERADRAGO_MOLTIPLICATORE_PRECISIONE = 0.9;
-    public static final double CHIMERADRAGO_MOLTIPLICATORE_VELOCITA = 0.9;
-    public static final double CHIMERADRAGO_MOLTIPLICATORE_FURTIVITA = 0.6;
-    public static final double CHIMERADRAGO_MOLTIPLICATORE_PARATA = 1.2;
-    public static final double CHIMERADRAGO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.4;
-    public static final double CHIMERADRAGO_MOLTIPLICATORE_PERCEZIONE = 1.4;
-    public static final double CHIMERADRAGO_MOLTIPLICATORE_SOGGEZIONE = 1.4;
-    public static final double CHIMERADRAGO_MOLTIPLICATORE_FURIA = 0.7;
-    public static final double CHIMERADRAGO_MOLTIPLICATORE_CORAGGIO = 1.2;
-    public static final double CHIMERADRAGO_MOLTIPLICATORE_VALORE = 0.7;
-    public static final double CHIMERADRAGO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.6;
-    public static final double CHIMERADRAGO_MOLTIPLICATORE_STANCHEZZA = 1.1;
-    public static final double CHIMERADRAGO_MOLTIPLICATORE_DANNI_MAGICI = 1.2;
-    public static final double CHIMERADRAGO_MOLTIPLICATORE_DANNI_FISICI = 2.0;
-    public static final double CHIMERADRAGO_MOLTIPLICATORE_RECUPERO_FISICO = 1.3;
-    public static final double CHIMERADRAGO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.2;
-
-    public static final int EREMITA_MAX_INTELLIGENZA = 25;
-    public static final int EREMITA_MAX_NUMERO = 1;
-    public static final int EREMITA_PUNTI_ESPERIENZA = 15;
-
-    public static final int EREMITA_SALUTE_BASE = 120;
-    public static final int EREMITA_MAGIA_BASE = 20;
-    public static final int EREMITA_LIVELLAMENTO_MAGIA = 10;
-    public static final double EREMITA_MOLTIPLICATORE_CARICO = 0.8;
-    public static final double EREMITA_MOLTIPLICATORE_CRITICO = 0.8;
-    public static final double EREMITA_MOLTIPLICATORE_PRECISIONE = 0.9;
-    public static final double EREMITA_MOLTIPLICATORE_VELOCITA = 0.8;
-    public static final double EREMITA_MOLTIPLICATORE_FURTIVITA = 1.1;
-    public static final double EREMITA_MOLTIPLICATORE_PARATA = 0.8;
-    public static final double EREMITA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.2;
-    public static final double EREMITA_MOLTIPLICATORE_PERCEZIONE = 1.2;
-    public static final double EREMITA_MOLTIPLICATORE_SOGGEZIONE = 0.8;
-    public static final double EREMITA_MOLTIPLICATORE_FURIA = 1.0;
-    public static final double EREMITA_MOLTIPLICATORE_CORAGGIO = 1.0;
-    public static final double EREMITA_MOLTIPLICATORE_VALORE = 1.0;
-    public static final double EREMITA_MOLTIPLICATORE_CONTRATTAZIONE = 0.8;
-    public static final double EREMITA_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.9;
-    public static final double EREMITA_MOLTIPLICATORE_STANCHEZZA = 1.2;
-    public static final double EREMITA_MOLTIPLICATORE_DANNI_MAGICI = 1.3;
-    public static final double EREMITA_MOLTIPLICATORE_DANNI_FISICI = 0.7;
-    public static final double EREMITA_MOLTIPLICATORE_RECUPERO_FISICO = 0.9;
-    public static final double EREMITA_MOLTIPLICATORE_RECUPERO_MAGICO = 1.4;
-
-    public static final int FANTASMA_MAX_NUMERO = 3;
-    public static final int FANTASMA_MAX_INTELLIGENZA = 15;
-    public static final int FANTASMA_PUNTI_ESPERIENZA = 15;
-
-    public static final int FANTASMA_SALUTE_BASE = 100;
-    public static final int FANTASMA_MAGIA_BASE = 30;
-    public static final int FANTASMA_LIVELLAMENTO_MAGIA = 15;
-    public static final double FANTASMA_MOLTIPLICATORE_CARICO = 0.0;
-    public static final double FANTASMA_MOLTIPLICATORE_CRITICO = 0.5;
-    public static final double FANTASMA_MOLTIPLICATORE_PRECISIONE = 0.8;
-    public static final double FANTASMA_MOLTIPLICATORE_VELOCITA = 1.1;
-    public static final double FANTASMA_MOLTIPLICATORE_FURTIVITA = 1.3;
-    public static final double FANTASMA_MOLTIPLICATORE_PARATA = 0.2;
-    public static final double FANTASMA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.0;
-    public static final double FANTASMA_MOLTIPLICATORE_PERCEZIONE = 1.0;
-    public static final double FANTASMA_MOLTIPLICATORE_SOGGEZIONE = 1.1;
-    public static final double FANTASMA_MOLTIPLICATORE_FURIA = 0.4;
-    public static final double FANTASMA_MOLTIPLICATORE_CORAGGIO = 1.2;
-    public static final double FANTASMA_MOLTIPLICATORE_VALORE = 0.4;
-    public static final double FANTASMA_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.9;
-    public static final double FANTASMA_MOLTIPLICATORE_STANCHEZZA = 0.0;
-    public static final double FANTASMA_MOLTIPLICATORE_DANNI_MAGICI = 1.2;
-    public static final double FANTASMA_MOLTIPLICATORE_DANNI_FISICI = 0.2;
-    public static final double FANTASMA_MOLTIPLICATORE_RECUPERO_FISICO = 0.0;
-    public static final double FANTASMA_MOLTIPLICATORE_RECUPERO_MAGICO = 1.2;
-
-    public static final int FOLLETTO_MAX_NUMERO = 5;
-    public static final int FOLLETTO_MAX_INTELLIGENZA = 8;
-    public static final int FOLLETTO_PUNTI_ESPERIENZA = 15;
-
-    public static final int FOLLETTO_SALUTE_BASE = 45;
-    public static final int FOLLETTO_MAGIA_BASE = 65;
-    public static final int FOLLETTO_LIVELLAMENTO_MAGIA = 28;
-    public static final double FOLLETTO_MOLTIPLICATORE_CARICO = 0.2;
-    public static final double FOLLETTO_MOLTIPLICATORE_CRITICO = 1.2;
-    public static final double FOLLETTO_MOLTIPLICATORE_PRECISIONE = 1.1;
-    public static final double FOLLETTO_MOLTIPLICATORE_VELOCITA = 1.5;
-    public static final double FOLLETTO_MOLTIPLICATORE_FURTIVITA = 1.4;
-    public static final double FOLLETTO_MOLTIPLICATORE_PARATA = 0.3;
-    public static final double FOLLETTO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
-    public static final double FOLLETTO_MOLTIPLICATORE_PERCEZIONE = 1.1;
-    public static final double FOLLETTO_MOLTIPLICATORE_SOGGEZIONE = 0.4;
-    public static final double FOLLETTO_MOLTIPLICATORE_FURIA = 0.5;
-    public static final double FOLLETTO_MOLTIPLICATORE_CORAGGIO = 0.6;
-    public static final double FOLLETTO_MOLTIPLICATORE_VALORE = 0.5;
-    public static final double FOLLETTO_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.6;
-    public static final double FOLLETTO_MOLTIPLICATORE_STANCHEZZA = 1.3;
-    public static final double FOLLETTO_MOLTIPLICATORE_DANNI_MAGICI = 1.2;
-    public static final double FOLLETTO_MOLTIPLICATORE_DANNI_FISICI = 0.3;
-    public static final double FOLLETTO_MOLTIPLICATORE_RECUPERO_FISICO = 0.8;
-    public static final double FOLLETTO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.3;
-
-    public static final int GARGOYLE_MAX_NUMERO = 2;
-    public static final int GARGOYLE_MAX_INTELLIGENZA = 18;
-    public static final int GARGOYLE_PUNTI_ESPERIENZA = 40;
-
-    public static final int GARGOYLE_SALUTE_BASE = 135;
-    public static final int GARGOYLE_MAGIA_BASE = 25;
-    public static final int GARGOYLE_LIVELLAMENTO_MAGIA = 6;
-    public static final double GARGOYLE_MOLTIPLICATORE_CARICO = 1.4;
-    public static final double GARGOYLE_MOLTIPLICATORE_CRITICO = 0.8;
-    public static final double GARGOYLE_MOLTIPLICATORE_PRECISIONE = 0.9;
-    public static final double GARGOYLE_MOLTIPLICATORE_VELOCITA = 0.7;
-    public static final double GARGOYLE_MOLTIPLICATORE_FURTIVITA = 0.4;
-    public static final double GARGOYLE_MOLTIPLICATORE_PARATA = 1.4;
-    public static final double GARGOYLE_MOLTIPLICATORE_RESISTENZA_MAGICA = 0.9;
-    public static final double GARGOYLE_MOLTIPLICATORE_PERCEZIONE = 0.9;
-    public static final double GARGOYLE_MOLTIPLICATORE_SOGGEZIONE = 1.1;
-    public static final double GARGOYLE_MOLTIPLICATORE_FURIA = 1.2;
-    public static final double GARGOYLE_MOLTIPLICATORE_CORAGGIO = 1.3;
-    public static final double GARGOYLE_MOLTIPLICATORE_VALORE = 1.2;
-    public static final double GARGOYLE_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
-    public static final double GARGOYLE_MOLTIPLICATORE_STANCHEZZA = 0.5;
-    public static final double GARGOYLE_MOLTIPLICATORE_DANNI_MAGICI = 0.7;
-    public static final double GARGOYLE_MOLTIPLICATORE_DANNI_FISICI = 1.2;
-    public static final double GARGOYLE_MOLTIPLICATORE_RECUPERO_FISICO = 1.4;
-    public static final double GARGOYLE_MOLTIPLICATORE_RECUPERO_MAGICO = 1.0;
-
-    public static final int GIGANTE_MAX_NUMERO = 3;
-    public static final int GIGANTE_MAX_INTELLIGENZA = 15;
-    public static final int GIGANTE_PUNTI_ESPERIENZA = 70;
-
-    public static final int GIGANTE_SALUTE_BASE = 250;
-    public static final int GIGANTE_MAGIA_BASE = 0;
-    public static final int GIGANTE_LIVELLAMENTO_MAGIA = 0;
-    public static final double GIGANTE_MOLTIPLICATORE_CARICO = 4.5;
-    public static final double GIGANTE_MOLTIPLICATORE_CRITICO = 0.6;
-    public static final double GIGANTE_MOLTIPLICATORE_PRECISIONE = 0.7;
-    public static final double GIGANTE_MOLTIPLICATORE_VELOCITA = 0.6;
-    public static final double GIGANTE_MOLTIPLICATORE_FURTIVITA = 0.2;
-    public static final double GIGANTE_MOLTIPLICATORE_PARATA = 1.4;
-    public static final double GIGANTE_MOLTIPLICATORE_RESISTENZA_MAGICA = 0.8;
-    public static final double GIGANTE_MOLTIPLICATORE_PERCEZIONE = 0.8;
-    public static final double GIGANTE_MOLTIPLICATORE_SOGGEZIONE = 1.4;
-    public static final double GIGANTE_MOLTIPLICATORE_FURIA = 1.1;
-    public static final double GIGANTE_MOLTIPLICATORE_CORAGGIO = 1.2;
-    public static final double GIGANTE_MOLTIPLICATORE_VALORE = 1.1;
-    public static final double GIGANTE_MOLTIPLICATORE_CONTRATTAZIONE = 0.7;
-    public static final double GIGANTE_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.6;
-    public static final double GIGANTE_MOLTIPLICATORE_STANCHEZZA = 1.3;
-    public static final double GIGANTE_MOLTIPLICATORE_DANNI_MAGICI = 0.6;
-    public static final double GIGANTE_MOLTIPLICATORE_DANNI_FISICI = 1.6;
-    public static final double GIGANTE_MOLTIPLICATORE_RECUPERO_FISICO = 1.3;
-    public static final double GIGANTE_MOLTIPLICATORE_RECUPERO_MAGICO = 0.5;
-
-    public static final int GOBLIN_MAX_NUMERO = 5;
-    public static final int GOBLIN_MAX_INTELLIGENZA = 4;
-    public static final int GOBLIN_PUNTI_ESPERIENZA = 15;
-
-    public static final int GOBLIN_SALUTE_BASE = 90;
-    public static final int GOBLIN_MAGIA_BASE = 0;
-    public static final int GOBLIN_LIVELLAMENTO_MAGIA = 0;
-    public static final double GOBLIN_MOLTIPLICATORE_CARICO = 0.6;
-    public static final double GOBLIN_MOLTIPLICATORE_CRITICO = 1.2;
-    public static final double GOBLIN_MOLTIPLICATORE_PRECISIONE = 1.0;
-    public static final double GOBLIN_MOLTIPLICATORE_VELOCITA = 1.2;
-    public static final double GOBLIN_MOLTIPLICATORE_FURTIVITA = 1.3;
-    public static final double GOBLIN_MOLTIPLICATORE_PARATA = 0.8;
-    public static final double GOBLIN_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
-    public static final double GOBLIN_MOLTIPLICATORE_PERCEZIONE = 1.1;
-    public static final double GOBLIN_MOLTIPLICATORE_SOGGEZIONE = 0.5;
-    public static final double GOBLIN_MOLTIPLICATORE_FURIA = 0.3;
-    public static final double GOBLIN_MOLTIPLICATORE_CORAGGIO = 0.4;
-    public static final double GOBLIN_MOLTIPLICATORE_VALORE = 0.3;
-    public static final double GOBLIN_MOLTIPLICATORE_CONTRATTAZIONE = 1.2;
-    public static final double GOBLIN_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.8;
-    public static final double GOBLIN_MOLTIPLICATORE_STANCHEZZA = 1.1;
-    public static final double GOBLIN_MOLTIPLICATORE_DANNI_MAGICI = 0.8;
-    public static final double GOBLIN_MOLTIPLICATORE_DANNI_FISICI = 1.4;
-    public static final double GOBLIN_MOLTIPLICATORE_RECUPERO_FISICO = 0.9;
-    public static final double GOBLIN_MOLTIPLICATORE_RECUPERO_MAGICO = 0.9;
-
-    public static final int HOBGOBLIN_MAX_NUMERO = 3;
-    public static final int HOBGOBLIN_MAX_INTELLIGENZA = 12;
-    public static final int HOBGOBLIN_PUNTI_ESPERIENZA = 15;
-
-    public static final int HOBGOBLIN_SALUTE_BASE = 130;
-    public static final int HOBGOBLIN_MAGIA_BASE = 0;
-    public static final int HOBGOBLIN_LIVELLAMENTO_MAGIA = 0;
-    public static final double HOBGOBLIN_MOLTIPLICATORE_CARICO = 1.1;
-    public static final double HOBGOBLIN_MOLTIPLICATORE_CRITICO = 1.1;
-    public static final double HOBGOBLIN_MOLTIPLICATORE_PRECISIONE = 1.2;
-    public static final double HOBGOBLIN_MOLTIPLICATORE_VELOCITA = 0.9;
-    public static final double HOBGOBLIN_MOLTIPLICATORE_FURTIVITA = 0.9;
-    public static final double HOBGOBLIN_MOLTIPLICATORE_PARATA = 1.4;
-    public static final double HOBGOBLIN_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
-    public static final double HOBGOBLIN_MOLTIPLICATORE_PERCEZIONE = 1.1;
-    public static final double HOBGOBLIN_MOLTIPLICATORE_SOGGEZIONE = 1.1;
-    public static final double HOBGOBLIN_MOLTIPLICATORE_FURIA = 1.3;
-    public static final double HOBGOBLIN_MOLTIPLICATORE_CORAGGIO = 1.3;
-    public static final double HOBGOBLIN_MOLTIPLICATORE_VALORE = 1.3;
-    public static final double HOBGOBLIN_MOLTIPLICATORE_CONTRATTAZIONE = 1.1;
-    public static final double HOBGOBLIN_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
-    public static final double HOBGOBLIN_MOLTIPLICATORE_STANCHEZZA = 1.0;
-    public static final double HOBGOBLIN_MOLTIPLICATORE_DANNI_MAGICI = 0.7;
-    public static final double HOBGOBLIN_MOLTIPLICATORE_DANNI_FISICI = 1.8;
-    public static final double HOBGOBLIN_MOLTIPLICATORE_RECUPERO_FISICO = 1.2;
-    public static final double HOBGOBLIN_MOLTIPLICATORE_RECUPERO_MAGICO = 0.7;
-
-    public static final int MINOTAURO_MAX_NUMERO = 3;
-    public static final int MINOTAURO_MAX_INTELLIGENZA = 10;
-    public static final int MINOTAURO_PUNTI_ESPERIENZA = 40;
-
-    public static final int MINOTAURO_SALUTE_BASE = 180;
-    public static final int MINOTAURO_MAGIA_BASE = 0;
-    public static final int MINOTAURO_LIVELLAMENTO_MAGIA = 0;
-    public static final double MINOTAURO_MOLTIPLICATORE_CARICO = 2.2;
-    public static final double MINOTAURO_MOLTIPLICATORE_CRITICO = 0.7;
-    public static final double MINOTAURO_MOLTIPLICATORE_PRECISIONE = 0.9;
-    public static final double MINOTAURO_MOLTIPLICATORE_VELOCITA = 0.8;
-    public static final double MINOTAURO_MOLTIPLICATORE_FURTIVITA = 0.5;
-    public static final double MINOTAURO_MOLTIPLICATORE_PARATA = 1.2;
-    public static final double MINOTAURO_MOLTIPLICATORE_RESISTENZA_MAGICA = 0.8;
-    public static final double MINOTAURO_MOLTIPLICATORE_PERCEZIONE = 0.8;
-    public static final double MINOTAURO_MOLTIPLICATORE_SOGGEZIONE = 1.3;
-    public static final double MINOTAURO_MOLTIPLICATORE_FURIA = 0.6;
-    public static final double MINOTAURO_MOLTIPLICATORE_CORAGGIO = 1.2;
-    public static final double MINOTAURO_MOLTIPLICATORE_VALORE = 0.6;
-    public static final double MINOTAURO_MOLTIPLICATORE_CONTRATTAZIONE = 0.6;
-    public static final double MINOTAURO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.3;
-    public static final double MINOTAURO_MOLTIPLICATORE_STANCHEZZA = 1.2;
-    public static final double MINOTAURO_MOLTIPLICATORE_DANNI_MAGICI = 0.5;
-    public static final double MINOTAURO_MOLTIPLICATORE_DANNI_FISICI = 2.0;
-    public static final double MINOTAURO_MOLTIPLICATORE_RECUPERO_FISICO = 1.3;
-    public static final double MINOTAURO_MOLTIPLICATORE_RECUPERO_MAGICO = 0.5;
-
-    public static final int OMBRANERA_MAX_NUMERO = 2;
-    public static final int OMBRANERA_MAX_INTELLIGENZA = 31;
-    public static final int OMBRANERA_PUNTI_ESPERIENZA = 40;
-
-    public static final int OMBRANERA_SALUTE_BASE = 220;
-    public static final int OMBRANERA_MAGIA_BASE = 40;
-    public static final int OMBRANERA_LIVELLAMENTO_MAGIA = 20;
-    public static final double OMBRANERA_MOLTIPLICATORE_CARICO = 0.0;
-    public static final double OMBRANERA_MOLTIPLICATORE_CRITICO = 1.4;
-    public static final double OMBRANERA_MOLTIPLICATORE_PRECISIONE = 1.2;
-    public static final double OMBRANERA_MOLTIPLICATORE_VELOCITA = 1.3;
-    public static final double OMBRANERA_MOLTIPLICATORE_FURTIVITA = 1.5;
-    public static final double OMBRANERA_MOLTIPLICATORE_PARATA = 1.4;
-    public static final double OMBRANERA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.2;
-    public static final double OMBRANERA_MOLTIPLICATORE_PERCEZIONE = 1.2;
-    public static final double OMBRANERA_MOLTIPLICATORE_SOGGEZIONE = 1.4;
-    public static final double OMBRANERA_MOLTIPLICATORE_FURIA = 0.3;
-    public static final double OMBRANERA_MOLTIPLICATORE_CORAGGIO = 1.4;
-    public static final double OMBRANERA_MOLTIPLICATORE_VALORE = 0.3;
-    public static final double OMBRANERA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
-    public static final double OMBRANERA_MOLTIPLICATORE_STANCHEZZA = 0.0;
-    public static final double OMBRANERA_MOLTIPLICATORE_DANNI_MAGICI = 1.4;
-    public static final double OMBRANERA_MOLTIPLICATORE_DANNI_FISICI = 1.0;
-    public static final double OMBRANERA_MOLTIPLICATORE_RECUPERO_FISICO = 0.0;
-    public static final double OMBRANERA_MOLTIPLICATORE_RECUPERO_MAGICO = 1.8;
-
-    public static final int SCHELETRO_MAX_NUMERO = 4;
-    public static final int SCHELETRO_MAX_INTELLIGENZA = 6;
-    public static final int SCHELETRO_PUNTI_ESPERIENZA = 15;
-
-    public static final int SCHELETRO_SALUTE_BASE = 100;
-    public static final int SCHELETRO_MAGIA_BASE = 0;
-    public static final int SCHELETRO_LIVELLAMENTO_MAGIA = 0;
-    public static final double SCHELETRO_MOLTIPLICATORE_CARICO = 1.1;
-    public static final double SCHELETRO_MOLTIPLICATORE_CRITICO = 1.1;
-    public static final double SCHELETRO_MOLTIPLICATORE_PRECISIONE = 1.0;
-    public static final double SCHELETRO_MOLTIPLICATORE_VELOCITA = 1.0;
-    public static final double SCHELETRO_MOLTIPLICATORE_FURTIVITA = 0.9;
-    public static final double SCHELETRO_MOLTIPLICATORE_PARATA = 1.1;
-    public static final double SCHELETRO_MOLTIPLICATORE_RESISTENZA_MAGICA = 0.6;
-    public static final double SCHELETRO_MOLTIPLICATORE_PERCEZIONE = 0.6;
-    public static final double SCHELETRO_MOLTIPLICATORE_SOGGEZIONE = 0.8;
-    public static final double SCHELETRO_MOLTIPLICATORE_FURIA = 0.0;
-    public static final double SCHELETRO_MOLTIPLICATORE_CORAGGIO = 1.5;
-    public static final double SCHELETRO_MOLTIPLICATORE_VALORE = 0.0;
-    public static final double SCHELETRO_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.9;
-    public static final double SCHELETRO_MOLTIPLICATORE_STANCHEZZA = 0.0;
-    public static final double SCHELETRO_MOLTIPLICATORE_DANNI_MAGICI = 0.5;
-    public static final double SCHELETRO_MOLTIPLICATORE_DANNI_FISICI = 1.4;
-    public static final double SCHELETRO_MOLTIPLICATORE_RECUPERO_FISICO = 0.0;
-    public static final double SCHELETRO_MOLTIPLICATORE_RECUPERO_MAGICO = 0.6;
-
-    public static final int SPETTRO_MAX_NUMERO = 2;
-    public static final int SPETTRO_MAX_INTELLIGENZA = 18;
-    public static final int SPETTRO_PUNTI_ESPERIENZA = 15;
-
-    public static final int SPETTRO_SALUTE_BASE = 130;
-    public static final int SPETTRO_MAGIA_BASE = 50;
-    public static final int SPETTRO_LIVELLAMENTO_MAGIA = 25;
-    public static final double SPETTRO_MOLTIPLICATORE_CARICO = 0.0;
-    public static final double SPETTRO_MOLTIPLICATORE_CRITICO = 0.5;
-    public static final double SPETTRO_MOLTIPLICATORE_PRECISIONE = 0.8;
-    public static final double SPETTRO_MOLTIPLICATORE_VELOCITA = 1.2;
-    public static final double SPETTRO_MOLTIPLICATORE_FURTIVITA = 1.4;
-    public static final double SPETTRO_MOLTIPLICATORE_PARATA = 0.3;
-    public static final double SPETTRO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
-    public static final double SPETTRO_MOLTIPLICATORE_PERCEZIONE = 1.1;
-    public static final double SPETTRO_MOLTIPLICATORE_SOGGEZIONE = 1.3;
-    public static final double SPETTRO_MOLTIPLICATORE_FURIA = 0.2;
-    public static final double SPETTRO_MOLTIPLICATORE_CORAGGIO = 1.3;
-    public static final double SPETTRO_MOLTIPLICATORE_VALORE = 0.2;
-    public static final double SPETTRO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
-    public static final double SPETTRO_MOLTIPLICATORE_STANCHEZZA = 0.0;
-    public static final double SPETTRO_MOLTIPLICATORE_DANNI_MAGICI = 1.3;
-    public static final double SPETTRO_MOLTIPLICATORE_DANNI_FISICI = 0.3;
-    public static final double SPETTRO_MOLTIPLICATORE_RECUPERO_FISICO = 0.0;
-    public static final double SPETTRO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.4;
-
-    public static final int SPIRITO_MAX_NUMERO = 2;
-    public static final int SPIRITO_MAX_INTELLIGENZA = 15;
-    public static final int SPIRITO_PUNTI_ESPERIENZA = 15;
-
-    public static final int SPIRITO_SALUTE_BASE = 110;
-    public static final int SPIRITO_MAGIA_BASE = 45;
-    public static final int SPIRITO_LIVELLAMENTO_MAGIA = 20;
-    public static final double SPIRITO_MOLTIPLICATORE_CARICO = 0.0;
-    public static final double SPIRITO_MOLTIPLICATORE_CRITICO = 0.5;
-    public static final double SPIRITO_MOLTIPLICATORE_PRECISIONE = 0.8;
-    public static final double SPIRITO_MOLTIPLICATORE_VELOCITA = 1.1;
-    public static final double SPIRITO_MOLTIPLICATORE_FURTIVITA = 1.2;
-    public static final double SPIRITO_MOLTIPLICATORE_PARATA = 0.3;
-    public static final double SPIRITO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.2;
-    public static final double SPIRITO_MOLTIPLICATORE_PERCEZIONE = 1.2;
-    public static final double SPIRITO_MOLTIPLICATORE_SOGGEZIONE = 1.0;
-    public static final double SPIRITO_MOLTIPLICATORE_FURIA = 0.9;
-    public static final double SPIRITO_MOLTIPLICATORE_CORAGGIO = 1.1;
-    public static final double SPIRITO_MOLTIPLICATORE_VALORE = 0.9;
-    public static final double SPIRITO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.0;
-    public static final double SPIRITO_MOLTIPLICATORE_STANCHEZZA = 0.0;
-    public static final double SPIRITO_MOLTIPLICATORE_DANNI_MAGICI = 1.3;
-    public static final double SPIRITO_MOLTIPLICATORE_DANNI_FISICI = 0.2;
-    public static final double SPIRITO_MOLTIPLICATORE_RECUPERO_FISICO = 0.0;
-    public static final double SPIRITO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.4;
-
-    public static final int TITANO_MAX_NUMERO = 3;
-    public static final int TITANO_MAX_INTELLIGENZA = 22;
-    public static final int TITANO_PUNTI_ESPERIENZA = 100;
-
-    public static final int TITANO_SALUTE_BASE = 300;
-    public static final int TITANO_MAGIA_BASE = 0;
-    public static final int TITANO_LIVELLAMENTO_MAGIA = 0;
-    public static final double TITANO_MOLTIPLICATORE_CARICO = 10.0;
-    public static final double TITANO_MOLTIPLICATORE_CRITICO = 0.4;
-    public static final double TITANO_MOLTIPLICATORE_PRECISIONE = 0.5;
-    public static final double TITANO_MOLTIPLICATORE_VELOCITA = 0.4;
-    public static final double TITANO_MOLTIPLICATORE_FURTIVITA = 0.0;
-    public static final double TITANO_MOLTIPLICATORE_PARATA = 1.6;
-    public static final double TITANO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.0;
-    public static final double TITANO_MOLTIPLICATORE_PERCEZIONE = 1.0;
-    public static final double TITANO_MOLTIPLICATORE_SOGGEZIONE = 1.6;
-    public static final double TITANO_MOLTIPLICATORE_FURIA = 1.4;
-    public static final double TITANO_MOLTIPLICATORE_CORAGGIO = 1.7;
-    public static final double TITANO_MOLTIPLICATORE_VALORE = 1.4;
-    public static final double TITANO_MOLTIPLICATORE_CONTRATTAZIONE = 0.8;
-    public static final double TITANO_MOLTIPLICATORE_NUMERO_BERSAGLI = 2.0;
-    public static final double TITANO_MOLTIPLICATORE_STANCHEZZA = 0.5;
-    public static final double TITANO_MOLTIPLICATORE_DANNI_MAGICI = 1.5;
-    public static final double TITANO_MOLTIPLICATORE_DANNI_FISICI = 2.0;
-    public static final double TITANO_MOLTIPLICATORE_RECUPERO_FISICO = 1.5;
-    public static final double TITANO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.4;
-
-    public static final int TROLL_MAX_NUMERO = 3;
-    public static final int TROLL_MAX_INTELLIGENZA = 10;
-    public static final int TROLL_PUNTI_ESPERIENZA = 40;
-
-    public static final int TROLL_SALUTE_BASE = 180;
-    public static final int TROLL_MAGIA_BASE = 0;
-    public static final int TROLL_LIVELLAMENTO_MAGIA = 0;
-    public static final double TROLL_MOLTIPLICATORE_CARICO = 2.8;
-    public static final double TROLL_MOLTIPLICATORE_CRITICO = 0.7;
-    public static final double TROLL_MOLTIPLICATORE_PRECISIONE = 0.9;
-    public static final double TROLL_MOLTIPLICATORE_VELOCITA = 0.7;
-    public static final double TROLL_MOLTIPLICATORE_FURTIVITA = 0.5;
-    public static final double TROLL_MOLTIPLICATORE_PARATA = 1.2;
-    public static final double TROLL_MOLTIPLICATORE_RESISTENZA_MAGICA = 0.7;
-    public static final double TROLL_MOLTIPLICATORE_PERCEZIONE = 0.7;
-    public static final double TROLL_MOLTIPLICATORE_SOGGEZIONE = 1.1;
-    public static final double TROLL_MOLTIPLICATORE_FURIA = 0.7;
-    public static final double TROLL_MOLTIPLICATORE_CORAGGIO = 0.9;
-    public static final double TROLL_MOLTIPLICATORE_VALORE = 0.7;
-    public static final double TROLL_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.2;
-    public static final double TROLL_MOLTIPLICATORE_STANCHEZZA = 0.8;
-    public static final double TROLL_MOLTIPLICATORE_DANNI_MAGICI = 0.5;
-    public static final double TROLL_MOLTIPLICATORE_DANNI_FISICI = 2.0;
-    public static final double TROLL_MOLTIPLICATORE_RECUPERO_FISICO = 1.5;
-    public static final double TROLL_MOLTIPLICATORE_RECUPERO_MAGICO = 0.5;
-
-    public static final int VIVERNA_MAX_NUMERO = 3;
-    public static final int VIVERNA_MAX_INTELLIGENZA = 30;
-    public static final int VIVERNA_PUNTI_ESPERIENZA = 40;
-
-    public static final int VIVERNA_SALUTE_BASE = 170;
-    public static final int VIVERNA_MAGIA_BASE = 30;
-    public static final int VIVERNA_LIVELLAMENTO_MAGIA = 10;
-    public static final double VIVERNA_MOLTIPLICATORE_CARICO = 3.5;
-    public static final double VIVERNA_MOLTIPLICATORE_CRITICO = 1.2;
-    public static final double VIVERNA_MOLTIPLICATORE_PRECISIONE = 1.1;
-    public static final double VIVERNA_MOLTIPLICATORE_VELOCITA = 1.2;
-    public static final double VIVERNA_MOLTIPLICATORE_FURTIVITA = 0.8;
-    public static final double VIVERNA_MOLTIPLICATORE_PARATA = 0.9;
-    public static final double VIVERNA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.3;
-    public static final double VIVERNA_MOLTIPLICATORE_PERCEZIONE = 1.3;
-    public static final double VIVERNA_MOLTIPLICATORE_SOGGEZIONE = 1.2;
-    public static final double VIVERNA_MOLTIPLICATORE_FURIA = 0.8;
-    public static final double VIVERNA_MOLTIPLICATORE_CORAGGIO = 1.0;
-    public static final double VIVERNA_MOLTIPLICATORE_VALORE = 0.8;
-    public static final double VIVERNA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.2;
-    public static final double VIVERNA_MOLTIPLICATORE_STANCHEZZA = 1.0;
-    public static final double VIVERNA_MOLTIPLICATORE_DANNI_MAGICI = 0.8;
-    public static final double VIVERNA_MOLTIPLICATORE_DANNI_FISICI = 1.7;
-    public static final double VIVERNA_MOLTIPLICATORE_RECUPERO_FISICO = 1.1;
-    public static final double VIVERNA_MOLTIPLICATORE_RECUPERO_MAGICO = 0.8;
-
-    public static final int IDRA_MAX_INTELLIGENZA = 25;
-    public static final int IDRA_MAX_NUMERO = 1;
-    public static final int IDRA_PUNTI_ESPERIENZA = 70;
-
-    public static final int IDRA_SALUTE_BASE = 850;
-    public static final int IDRA_MAGIA_BASE = 10;
-    public static final int IDRA_LIVELLAMENTO_MAGIA = 4;
-    public static final double IDRA_MOLTIPLICATORE_CARICO = 5.0;
-    public static final double IDRA_MOLTIPLICATORE_CRITICO = 0.6;
-    public static final double IDRA_MOLTIPLICATORE_PRECISIONE = 1.2;
-    public static final double IDRA_MOLTIPLICATORE_VELOCITA = 0.8;
-    public static final double IDRA_MOLTIPLICATORE_FURTIVITA = 0.4;
-    public static final double IDRA_MOLTIPLICATORE_PARATA = 1.0;
-    public static final double IDRA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.3;
-    public static final double IDRA_MOLTIPLICATORE_PERCEZIONE = 1.3;
-    public static final double IDRA_MOLTIPLICATORE_SOGGEZIONE = 1.3;
-    public static final double IDRA_MOLTIPLICATORE_FURIA = 0.5;
-    public static final double IDRA_MOLTIPLICATORE_CORAGGIO = 1.1;
-    public static final double IDRA_MOLTIPLICATORE_VALORE = 0.5;
-    public static final double IDRA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.9;
-    public static final double IDRA_MOLTIPLICATORE_STANCHEZZA = 0.9;
-    public static final double IDRA_MOLTIPLICATORE_DANNI_MAGICI = 0.9;
-    public static final double IDRA_MOLTIPLICATORE_DANNI_FISICI = 2.8;
-    public static final double IDRA_MOLTIPLICATORE_RECUPERO_FISICO = 1.5;
-    public static final double IDRA_MOLTIPLICATORE_RECUPERO_MAGICO = 0.8;
-
-    public static final int LICH_MAX_INTELLIGENZA = 70;
-    public static final int LICH_MAX_NUMERO = 1;
-    public static final int LICH_PUNTI_ESPERIENZA = 100;
-
-    public static final int LICH_SALUTE_BASE = 300;
-    public static final int LICH_MAGIA_BASE = 80;
-    public static final int LICH_LIVELLAMENTO_MAGIA = 45;
-    public static final double LICH_MOLTIPLICATORE_CARICO = 1.0;
-    public static final double LICH_MOLTIPLICATORE_CRITICO = 1.0;
-    public static final double LICH_MOLTIPLICATORE_PRECISIONE = 1.1;
-    public static final double LICH_MOLTIPLICATORE_VELOCITA = 0.9;
-    public static final double LICH_MOLTIPLICATORE_FURTIVITA = 0.8;
-    public static final double LICH_MOLTIPLICATORE_PARATA = 0.7;
-    public static final double LICH_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.2;
-    public static final double LICH_MOLTIPLICATORE_PERCEZIONE = 1.2;
-    public static final double LICH_MOLTIPLICATORE_SOGGEZIONE = 1.5;
-    public static final double LICH_MOLTIPLICATORE_FURIA = 0.2;
-    public static final double LICH_MOLTIPLICATORE_CORAGGIO = 1.6;
-    public static final double LICH_MOLTIPLICATORE_VALORE = 0.2;
-    public static final double LICH_MOLTIPLICATORE_NUMERO_BERSAGLI = 5.0;
-    public static final double LICH_MOLTIPLICATORE_STANCHEZZA = 0.0;
-    public static final double LICH_MOLTIPLICATORE_DANNI_MAGICI = 3;
-    public static final double LICH_MOLTIPLICATORE_DANNI_FISICI = 0.5;
-    public static final double LICH_MOLTIPLICATORE_RECUPERO_FISICO = 0.0;
-    public static final double LICH_MOLTIPLICATORE_RECUPERO_MAGICO = 1.6;
-
-    // Il Necromante: avversario umano oscuro, un mago che ha fatto dei morti il suo esercito. Come il Mago per forza e magia, ma più temibile a vedersi
-    public static final int NECROMANTE_MAX_INTELLIGENZA = 55;
-    public static final int NECROMANTE_MAX_NUMERO = 1;
-    public static final int NECROMANTE_PUNTI_ESPERIENZA = 40;
-
-    public static final int NECROMANTE_SALUTE_BASE = 300;
-    public static final int NECROMANTE_MAGIA_BASE = 60;
-    public static final int NECROMANTE_LIVELLAMENTO_MAGIA = 34;
-    public static final double NECROMANTE_MOLTIPLICATORE_CARICO = 0.8;
-    public static final double NECROMANTE_MOLTIPLICATORE_CRITICO = 0.8;
-    public static final double NECROMANTE_MOLTIPLICATORE_PRECISIONE = 1.0;
-    public static final double NECROMANTE_MOLTIPLICATORE_VELOCITA = 0.9;
-    public static final double NECROMANTE_MOLTIPLICATORE_FURTIVITA = 0.9;
-    public static final double NECROMANTE_MOLTIPLICATORE_PARATA = 1.4;
-    public static final double NECROMANTE_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
-    public static final double NECROMANTE_MOLTIPLICATORE_PERCEZIONE = 1.1;
-    public static final double NECROMANTE_MOLTIPLICATORE_SOGGEZIONE = 1.3;
-    public static final double NECROMANTE_MOLTIPLICATORE_FURIA = 0.8;
-    public static final double NECROMANTE_MOLTIPLICATORE_CORAGGIO = 1.2;
-    public static final double NECROMANTE_MOLTIPLICATORE_VALORE = 1.0;
-    public static final double NECROMANTE_MOLTIPLICATORE_CONTRATTAZIONE = 1.0;
-    public static final double NECROMANTE_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.3;
-    public static final double NECROMANTE_MOLTIPLICATORE_STANCHEZZA = 1.4;
-    public static final double NECROMANTE_MOLTIPLICATORE_DANNI_MAGICI = 2.6;
-    public static final double NECROMANTE_MOLTIPLICATORE_DANNI_FISICI = 0.5;
-    public static final double NECROMANTE_MOLTIPLICATORE_RECUPERO_FISICO = 0.7;
-    public static final double NECROMANTE_MOLTIPLICATORE_RECUPERO_MAGICO = 1.5;
-
-    public static final int MINOTAUROGIGANTE_MAX_INTELLIGENZA = 20;
-    public static final int MINOTAUROGIGANTE_MAX_NUMERO = 1;
-    public static final int MINOTAUROGIGANTE_PUNTI_ESPERIENZA = 70;
-
-    public static final int MINOTAUROGIGANTE_SALUTE_BASE = 950;
-    public static final int MINOTAUROGIGANTE_MAGIA_BASE = 0;
-    public static final int MINOTAUROGIGANTE_LIVELLAMENTO_MAGIA = 0;
-    public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_CARICO = 4.0;
-    public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_CRITICO = 0.5;
-    public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_PRECISIONE = 1.2;
-    public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_VELOCITA = 0.5;
-    public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_FURTIVITA = 0.2;
-    public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_PARATA = 1.4;
-    public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_RESISTENZA_MAGICA = 0.6;
-    public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_PERCEZIONE = 0.6;
-    public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_SOGGEZIONE = 1.5;
-    public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_FURIA = 0.5;
-    public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_CORAGGIO = 1.3;
-    public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_VALORE = 0.5;
-    public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.6;
-    public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_STANCHEZZA = 1.4;
-    public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_DANNI_MAGICI = 0.4;
-    public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_DANNI_FISICI = 2.8;
-    public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_RECUPERO_FISICO = 1.4;
-    public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_RECUPERO_MAGICO = 0.4;
-
-    public static final int STREGA_MAX_INTELLIGENZA = 65;
-    public static final int STREGA_MAX_NUMERO = 1;
-    public static final int STREGA_PUNTI_ESPERIENZA = 100;
-
-    public static final int STREGA_SALUTE_BASE = 190;
-    public static final int STREGA_MAGIA_BASE = 55;
-    public static final int STREGA_LIVELLAMENTO_MAGIA = 32;
-    public static final double STREGA_MOLTIPLICATORE_CARICO = 0.95;
-    public static final double STREGA_MOLTIPLICATORE_CRITICO = 0.8;
-    public static final double STREGA_MOLTIPLICATORE_PRECISIONE = 0.9;
-    public static final double STREGA_MOLTIPLICATORE_VELOCITA = 0.9;
-    public static final double STREGA_MOLTIPLICATORE_FURTIVITA = 1.0;
-    public static final double STREGA_MOLTIPLICATORE_PARATA = 0.6;
-    public static final double STREGA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.4;
-    public static final double STREGA_MOLTIPLICATORE_PERCEZIONE = 1.3;
-    public static final double STREGA_MOLTIPLICATORE_SOGGEZIONE = 1.2;
-    public static final double STREGA_MOLTIPLICATORE_FURIA = 0.8;
-    public static final double STREGA_MOLTIPLICATORE_CORAGGIO = 1.1;
-    public static final double STREGA_MOLTIPLICATORE_VALORE = 0.8;
-    public static final double STREGA_MOLTIPLICATORE_NUMERO_BERSAGLI = 5.0;
-    public static final double STREGA_MOLTIPLICATORE_STANCHEZZA = 1.4;
-    public static final double STREGA_MOLTIPLICATORE_DANNI_MAGICI = 3.0;
-    public static final double STREGA_MOLTIPLICATORE_DANNI_FISICI = 0.6;
-    public static final double STREGA_MOLTIPLICATORE_RECUPERO_FISICO = 0.8;
-    public static final double STREGA_MOLTIPLICATORE_RECUPERO_MAGICO = 1.4;
-
-    public static final int DRAGO_MAX_INTELLIGENZA = 80;
-    public static final int DRAGO_MAX_NUMERO = 1;
-    public static final int DRAGO_PUNTI_ESPERIENZA = 250;
-
-    public static final int DRAGO_SALUTE_BASE = 600;
-    public static final int DRAGO_MAGIA_BASE = 30;
-    public static final int DRAGO_LIVELLAMENTO_MAGIA = 8;
-    public static final double DRAGO_MOLTIPLICATORE_CARICO = 8.0;
-    public static final double DRAGO_MOLTIPLICATORE_CRITICO = 1.0;
-    public static final double DRAGO_MOLTIPLICATORE_PRECISIONE = 1.2;
-    public static final double DRAGO_MOLTIPLICATORE_VELOCITA = 1.1;
-    public static final double DRAGO_MOLTIPLICATORE_FURTIVITA = 0.5;
-    public static final double DRAGO_MOLTIPLICATORE_PARATA = 1.4;
-    public static final double DRAGO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.5;
-    public static final double DRAGO_MOLTIPLICATORE_PERCEZIONE = 1.5;
-    public static final double DRAGO_MOLTIPLICATORE_SOGGEZIONE = 1.6;
-    public static final double DRAGO_MOLTIPLICATORE_FURIA = 1.1;
-    public static final double DRAGO_MOLTIPLICATORE_CORAGGIO = 1.6;
-    public static final double DRAGO_MOLTIPLICATORE_VALORE = 1.1;
-    public static final double DRAGO_MOLTIPLICATORE_NUMERO_BERSAGLI = 5.0;
-    public static final double DRAGO_MOLTIPLICATORE_STANCHEZZA = 0.7;
-    public static final double DRAGO_MOLTIPLICATORE_DANNI_MAGICI = 3.0;
-    public static final double DRAGO_MOLTIPLICATORE_DANNI_FISICI = 1.7;
-    public static final double DRAGO_MOLTIPLICATORE_RECUPERO_FISICO = 1.4;
-    public static final double DRAGO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.5;
+    // La tabella dei valori di ogni classe (vedi ValoriDiClasse): le caratteristiche (femmina, corrompibile, amichevole, boss), salute e
+    // magia di base con il livellamento della magia, l'esperienza che dà, quanti se ne incontrano al massimo (quanti), l'intelligenza
+    // massima che regola l'astuzia delle tattiche, e i moltiplicatori: 1 è la media, di più un punto di forza, di meno un punto debole;
+    // il perché di ognuno sta in note_personaggi_<lingua>.properties (vedi NoteDeiPersonaggi), e il bestiario li mostra. Chi non dà la
+    // contrattazione non tratta con i mercanti. Ogni TipoPersonaggio deve avere la sua riga: lo controlla ValoriDiClasseTest.
+    private static final Map<TipoPersonaggio, ValoriDiClasse> VALORI_DI_CLASSE = new EnumMap<>(TipoPersonaggio.class);
+
+    static {
+        metti(TipoPersonaggio.BARDO, ValoriDiClasse.nuovi().corrompibile().amichevole()
+                .salute(105).magia(40, 18).esperienza(25).quanti(1).intelligenza(35)
+                .carico(0.9).critico(1.1).precisione(1.0).velocita(1.1).furtivita(1.1).parata(1.0)
+                .resistenzaMagica(1.1).percezione(1.1).soggezione(1.2).furia(1.1).coraggio(1.1).valore(1.1)
+                .contrattazione(1.2).numeroBersagli(1.1).stanchezza(1.0).danniMagici(1.1).danniFisici(0.9)
+                .recuperoFisico(1.1).recuperoMagico(1.2));
+        // Il bardo delle locande ha i valori del bardo
+        comeIl(TipoPersonaggio.BARDO_DELLE_LOCANDE, TipoPersonaggio.BARDO);
+        metti(TipoPersonaggio.CANTASTORIE, ValoriDiClasse.nuovi().femmina().corrompibile().amichevole()
+                .salute(105).magia(40, 18).esperienza(25).quanti(1).intelligenza(35)
+                .carico(0.85).critico(1.15).precisione(1.0).velocita(1.1).furtivita(1.1).parata(1.0)
+                .resistenzaMagica(1.1).percezione(1.1).soggezione(1.2).furia(1.1).coraggio(1.1).valore(1.1)
+                .contrattazione(1.2).numeroBersagli(1.1).stanchezza(1.0).danniMagici(1.1).danniFisici(0.9)
+                .recuperoFisico(1.1).recuperoMagico(1.2));
+        metti(TipoPersonaggio.ELFA, ValoriDiClasse.nuovi().femmina().corrompibile().amichevole()
+                .salute(105).magia(45, 22).esperienza(25).quanti(1).intelligenza(45)
+                .carico(0.85).critico(1.2).precisione(1.3).velocita(1.2).furtivita(1.3).parata(1.1)
+                .resistenzaMagica(1.4).percezione(1.4).soggezione(1.1).furia(1.2).coraggio(1.1).valore(1.2)
+                .contrattazione(1.0).numeroBersagli(1.0).stanchezza(0.8).danniMagici(1.4).danniFisici(0.9)
+                .recuperoFisico(1.1).recuperoMagico(1.3));
+        metti(TipoPersonaggio.ELFO, ValoriDiClasse.nuovi().corrompibile().amichevole()
+                .salute(105).magia(45, 22).esperienza(25).quanti(1).intelligenza(45)
+                .carico(0.9).critico(1.2).precisione(1.3).velocita(1.2).furtivita(1.3).parata(1.1)
+                .resistenzaMagica(1.4).percezione(1.4).soggezione(1.1).furia(1.2).coraggio(1.1).valore(1.2)
+                .contrattazione(1.0).numeroBersagli(1.0).stanchezza(0.8).danniMagici(1.4).danniFisici(0.9)
+                .recuperoFisico(1.1).recuperoMagico(1.3));
+        metti(TipoPersonaggio.GUERRIERA, ValoriDiClasse.nuovi().femmina().corrompibile().amichevole()
+                .salute(150).magia(20, 6).esperienza(25).quanti(1).intelligenza(15)
+                .carico(1.2).critico(1.0).precisione(1.1).velocita(1.0).furtivita(1.0).parata(1.5)
+                .resistenzaMagica(1.0).percezione(1.0).soggezione(1.0).furia(1.5).coraggio(1.3).valore(1.5)
+                .contrattazione(0.9).numeroBersagli(1.1).stanchezza(1.0).danniMagici(0.5).danniFisici(1.3)
+                .recuperoFisico(1.4).recuperoMagico(0.5));
+        metti(TipoPersonaggio.GUERRIERO, ValoriDiClasse.nuovi().corrompibile().amichevole()
+                .salute(150).magia(20, 6).esperienza(25).quanti(1).intelligenza(15)
+                .carico(1.25).critico(1.0).precisione(1.1).velocita(1.0).furtivita(1.0).parata(1.5)
+                .resistenzaMagica(1.0).percezione(1.0).soggezione(1.0).furia(1.5).coraggio(1.3).valore(1.5)
+                .contrattazione(0.9).numeroBersagli(1.1).stanchezza(1.0).danniMagici(0.5).danniFisici(1.3)
+                .recuperoFisico(1.4).recuperoMagico(0.5));
+        // Il capitano delle guardie e il vichingo hanno i valori del guerriero
+        comeIl(TipoPersonaggio.CAPITANO_DELLE_GUARDIE, TipoPersonaggio.GUERRIERO);
+        comeIl(TipoPersonaggio.VICHINGO, TipoPersonaggio.GUERRIERO);
+        metti(TipoPersonaggio.LADRA, ValoriDiClasse.nuovi().femmina().corrompibile().amichevole()
+                .salute(100).magia(25, 8).esperienza(25).quanti(1).intelligenza(30)
+                .carico(0.95).critico(1.5).precisione(1.3).velocita(1.4).furtivita(1.5).parata(1.0)
+                .resistenzaMagica(1.3).percezione(1.3).soggezione(0.9).furia(1.0).coraggio(1.0).valore(1.0)
+                .contrattazione(1.3).numeroBersagli(0.9).stanchezza(0.9).danniMagici(1.0).danniFisici(1.0)
+                .recuperoFisico(1.1).recuperoMagico(0.9));
+        metti(TipoPersonaggio.LADRO, ValoriDiClasse.nuovi().corrompibile().amichevole()
+                .salute(100).magia(25, 8).esperienza(25).quanti(1).intelligenza(30)
+                .carico(1.0).critico(1.5).precisione(1.3).velocita(1.4).furtivita(1.5).parata(1.0)
+                .resistenzaMagica(1.3).percezione(1.3).soggezione(0.9).furia(1.0).coraggio(1.0).valore(1.0)
+                .contrattazione(1.3).numeroBersagli(0.9).stanchezza(0.9).danniMagici(1.0).danniFisici(1.0)
+                .recuperoFisico(1.1).recuperoMagico(0.9));
+        metti(TipoPersonaggio.MAGA, ValoriDiClasse.nuovi().femmina().corrompibile().amichevole()
+                .salute(80).magia(60, 34).esperienza(25).quanti(1).intelligenza(55)
+                .carico(0.75).critico(0.8).precisione(1.0).velocita(0.9).furtivita(0.9).parata(0.6)
+                .resistenzaMagica(1.1).percezione(1.1).soggezione(1.0).furia(1.0).coraggio(1.0).valore(1.0)
+                .contrattazione(1.0).numeroBersagli(1.3).stanchezza(1.4).danniMagici(2.0).danniFisici(0.5)
+                .recuperoFisico(0.7).recuperoMagico(1.5));
+        metti(TipoPersonaggio.MAGO, ValoriDiClasse.nuovi().corrompibile().amichevole()
+                .salute(80).magia(60, 34).esperienza(25).quanti(1).intelligenza(55)
+                .carico(0.8).critico(0.8).precisione(1.0).velocita(0.9).furtivita(0.9).parata(0.6)
+                .resistenzaMagica(1.1).percezione(1.1).soggezione(1.0).furia(1.0).coraggio(1.0).valore(1.0)
+                .contrattazione(1.0).numeroBersagli(1.3).stanchezza(1.4).danniMagici(2.0).danniFisici(0.5)
+                .recuperoFisico(0.7).recuperoMagico(1.5));
+        // Sacerdote e Sacerdotessa: la magia dell'elfo con più Saggezza e più robustezza, senza doppia arma e senza dardo arcano
+        metti(TipoPersonaggio.SACERDOTE, ValoriDiClasse.nuovi().corrompibile().amichevole()
+                .salute(100).magia(45, 22).esperienza(25).quanti(1).intelligenza(40)
+                .carico(0.85).critico(1.0).precisione(1.1).velocita(1.0).furtivita(0.9).parata(0.8)
+                .resistenzaMagica(1.3).percezione(1.2).soggezione(1.1).furia(1.0).coraggio(1.2).valore(1.1)
+                .contrattazione(1.0).numeroBersagli(1.0).stanchezza(1.0).danniMagici(1.4).danniFisici(0.8)
+                .recuperoFisico(0.9).recuperoMagico(1.3));
+        metti(TipoPersonaggio.SACERDOTESSA, ValoriDiClasse.nuovi().femmina().corrompibile().amichevole()
+                .salute(100).magia(45, 22).esperienza(25).quanti(1).intelligenza(40)
+                .carico(0.8).critico(1.0).precisione(1.1).velocita(1.0).furtivita(0.9).parata(0.8)
+                .resistenzaMagica(1.3).percezione(1.2).soggezione(1.1).furia(1.0).coraggio(1.2).valore(1.1)
+                .contrattazione(1.0).numeroBersagli(1.0).stanchezza(1.0).danniMagici(1.4).danniFisici(0.8)
+                .recuperoFisico(0.9).recuperoMagico(1.3));
+        // Chierico e Chierica: il sacerdote che combatte in prima linea (mazza, scudo, armatura): fra il Sacerdote e il Guerriero,
+        // con più salute e parata del primo e più magia del secondo
+        metti(TipoPersonaggio.CHIERICO, ValoriDiClasse.nuovi().corrompibile().amichevole()
+                .salute(130).magia(30, 14).esperienza(25).quanti(1).intelligenza(25)
+                .carico(1.1).critico(1.0).precisione(1.0).velocita(0.9).furtivita(0.8).parata(1.3)
+                .resistenzaMagica(1.2).percezione(1.0).soggezione(1.1).furia(1.0).coraggio(1.2).valore(1.2)
+                .contrattazione(1.0).numeroBersagli(1.0).stanchezza(1.0).danniMagici(1.0).danniFisici(1.0)
+                .recuperoFisico(1.2).recuperoMagico(1.0));
+        metti(TipoPersonaggio.CHIERICA, ValoriDiClasse.nuovi().femmina().corrompibile().amichevole()
+                .salute(130).magia(30, 14).esperienza(25).quanti(1).intelligenza(25)
+                .carico(1.1).critico(1.0).precisione(1.0).velocita(0.9).furtivita(0.8).parata(1.3)
+                .resistenzaMagica(1.2).percezione(1.0).soggezione(1.1).furia(1.0).coraggio(1.2).valore(1.2)
+                .contrattazione(1.0).numeroBersagli(1.0).stanchezza(1.0).danniMagici(1.0).danniFisici(1.0)
+                .recuperoFisico(1.2).recuperoMagico(1.0));
+        // Druido e Druida: l'incantatore della natura, con più Percezione, Saggezza e recupero magico del Mago ma meno magia
+        // base, e senza armatura né scudo
+        metti(TipoPersonaggio.DRUIDO, ValoriDiClasse.nuovi().corrompibile().amichevole()
+                .salute(110).magia(40, 20).esperienza(25).quanti(1).intelligenza(40)
+                .carico(0.85).critico(1.0).precisione(1.1).velocita(1.1).furtivita(1.1).parata(0.9)
+                .resistenzaMagica(1.2).percezione(1.3).soggezione(1.1).furia(1.0).coraggio(1.1).valore(1.0)
+                .contrattazione(1.0).numeroBersagli(1.0).stanchezza(0.9).danniMagici(1.2).danniFisici(0.9)
+                .recuperoFisico(1.1).recuperoMagico(1.2));
+        metti(TipoPersonaggio.DRUIDA, ValoriDiClasse.nuovi().femmina().corrompibile().amichevole()
+                .salute(110).magia(40, 20).esperienza(25).quanti(1).intelligenza(40)
+                .carico(0.85).critico(1.0).precisione(1.1).velocita(1.1).furtivita(1.1).parata(0.9)
+                .resistenzaMagica(1.2).percezione(1.3).soggezione(1.1).furia(1.0).coraggio(1.1).valore(1.0)
+                .contrattazione(1.0).numeroBersagli(1.0).stanchezza(0.9).danniMagici(1.2).danniFisici(0.9)
+                .recuperoFisico(1.1).recuperoMagico(1.2));
+        // I personaggi non combattenti (locandiere, armaiolo, alchimista, venditore di pergamene, incantatore, moglie del
+        // bardo, borgomastro, uomo e donna qualunque): tutti con la stessa riga (vedi nonCombattente), al maschile o al femminile
+        metti(TipoPersonaggio.LOCANDIERE, nonCombattente());
+        metti(TipoPersonaggio.ARMAIOLO, nonCombattente());
+        metti(TipoPersonaggio.ALCHIMISTA, nonCombattente());
+        metti(TipoPersonaggio.VENDITORE_DI_PERGAMENE, nonCombattente());
+        metti(TipoPersonaggio.INCANTATORE, nonCombattente());
+        metti(TipoPersonaggio.MOGLIE_DEL_BARDO, nonCombattente().femmina());
+        metti(TipoPersonaggio.UOMO, nonCombattente());
+        metti(TipoPersonaggio.BORGOMASTRO, nonCombattente());
+        metti(TipoPersonaggio.DONNA, nonCombattente().femmina());
+        // Il Viandante: un ospite di missione, con valori simili a quelli del bardo
+        metti(TipoPersonaggio.VIANDANTE, ValoriDiClasse.nuovi().corrompibile().amichevole()
+                .salute(105).magia(40, 18).esperienza(25).quanti(1).intelligenza(35)
+                .carico(0.9).critico(1.1).precisione(1.0).velocita(1.1).furtivita(1.1).parata(1.0)
+                .resistenzaMagica(1.1).percezione(1.1).soggezione(1.2).furia(1.1).coraggio(1.1).valore(1.1)
+                .contrattazione(1.2).numeroBersagli(1.1).stanchezza(1.0).danniMagici(1.1).danniFisici(0.9)
+                .recuperoFisico(1.1).recuperoMagico(1.2));
+        metti(TipoPersonaggio.OMBRAFIAMMA, ValoriDiClasse.nuovi().femmina().corrompibile().amichevole().boss()
+                .salute(140).magia(50, 20).esperienza(100).quanti(1).intelligenza(50)
+                .carico(90).critico(1.5).precisione(1.5).velocita(1.5).furtivita(1.5).parata(1.5)
+                .resistenzaMagica(1.5).percezione(1.5).soggezione(1.5).furia(1.5).coraggio(1.5).valore(1.5)
+                .contrattazione(1.0).numeroBersagli(3).stanchezza(0.1).danniMagici(2.0).danniFisici(2.0)
+                .recuperoFisico(1.8).recuperoMagico(1.5));
+        metti(TipoPersonaggio.ARPIA, ValoriDiClasse.nuovi().femmina()
+                .salute(95).magia(35, 12).esperienza(15).quanti(4).intelligenza(8)
+                .carico(0.7).critico(1.3).precisione(1.1).velocita(1.3).furtivita(0.7).parata(0.7)
+                .resistenzaMagica(1.4).percezione(1.4).soggezione(0.9).furia(0.5).coraggio(0.7).valore(0.5)
+                .numeroBersagli(0.8).stanchezza(1.1).danniMagici(0.8).danniFisici(0.9).recuperoFisico(1.0)
+                .recuperoMagico(0.8));
+        metti(TipoPersonaggio.CENTAURO, ValoriDiClasse.nuovi().corrompibile().amichevole()
+                .salute(125).magia(15, 4).esperienza(40).quanti(4).intelligenza(12)
+                .carico(2.0).critico(0.8).precisione(1.1).velocita(1.4).furtivita(0.5).parata(1.1)
+                .resistenzaMagica(1.1).percezione(1.1).soggezione(1.1).furia(1.3).coraggio(1.1).valore(1.3)
+                .contrattazione(0.9).numeroBersagli(1.2).stanchezza(0.8).danniMagici(0.8).danniFisici(1.3)
+                .recuperoFisico(1.3).recuperoMagico(0.7));
+        metti(TipoPersonaggio.CHIMERA, ValoriDiClasse.nuovi().femmina()
+                .salute(120).magia(30, 8).esperienza(40).quanti(5).intelligenza(6)
+                .carico(2.5).critico(1.1).precisione(1.0).velocita(1.2).furtivita(1.1).parata(0.9)
+                .resistenzaMagica(1.3).percezione(1.3).soggezione(1.2).furia(0.6).coraggio(1.0).valore(0.6)
+                .numeroBersagli(1.4).stanchezza(0.9).danniMagici(0.9).danniFisici(1.3).recuperoFisico(1.2)
+                .recuperoMagico(0.8));
+        metti(TipoPersonaggio.CHIMERA_DRAGO, ValoriDiClasse.nuovi().femmina()
+                .salute(300).magia(60, 16).esperienza(70).quanti(2).intelligenza(28)
+                .carico(6.0).critico(0.8).precisione(0.9).velocita(0.9).furtivita(0.6).parata(1.2)
+                .resistenzaMagica(1.4).percezione(1.4).soggezione(1.4).furia(0.7).coraggio(1.2).valore(0.7)
+                .numeroBersagli(1.6).stanchezza(1.1).danniMagici(1.2).danniFisici(2.0).recuperoFisico(1.3)
+                .recuperoMagico(1.2));
+        metti(TipoPersonaggio.EREMITA, ValoriDiClasse.nuovi().corrompibile().amichevole()
+                .salute(120).magia(20, 10).esperienza(15).quanti(1).intelligenza(25)
+                .carico(0.8).critico(0.8).precisione(0.9).velocita(0.8).furtivita(1.1).parata(0.8)
+                .resistenzaMagica(1.2).percezione(1.2).soggezione(0.8).furia(1.0).coraggio(1.0).valore(1.0)
+                .contrattazione(0.8).numeroBersagli(0.9).stanchezza(1.2).danniMagici(1.3).danniFisici(0.7)
+                .recuperoFisico(0.9).recuperoMagico(1.4));
+        metti(TipoPersonaggio.FANTASMA, ValoriDiClasse.nuovi()
+                .salute(100).magia(30, 15).esperienza(15).quanti(3).intelligenza(15)
+                .carico(0.0).critico(0.5).precisione(0.8).velocita(1.1).furtivita(1.3).parata(0.2)
+                .resistenzaMagica(1.0).percezione(1.0).soggezione(1.1).furia(0.4).coraggio(1.2).valore(0.4)
+                .numeroBersagli(0.9).stanchezza(0.0).danniMagici(1.2).danniFisici(0.2).recuperoFisico(0.0)
+                .recuperoMagico(1.2));
+        metti(TipoPersonaggio.FOLLETTO, ValoriDiClasse.nuovi().corrompibile().amichevole()
+                .salute(45).magia(65, 28).esperienza(15).quanti(5).intelligenza(8)
+                .carico(0.2).critico(1.2).precisione(1.1).velocita(1.5).furtivita(1.4).parata(0.3)
+                .resistenzaMagica(1.1).percezione(1.1).soggezione(0.4).furia(0.5).coraggio(0.6).valore(0.5)
+                .numeroBersagli(0.6).stanchezza(1.3).danniMagici(1.2).danniFisici(0.3).recuperoFisico(0.8)
+                .recuperoMagico(1.3));
+        metti(TipoPersonaggio.GARGOYLE, ValoriDiClasse.nuovi()
+                .salute(135).magia(25, 6).esperienza(40).quanti(2).intelligenza(18)
+                .carico(1.4).critico(0.8).precisione(0.9).velocita(0.7).furtivita(0.4).parata(1.4)
+                .resistenzaMagica(0.9).percezione(0.9).soggezione(1.1).furia(1.2).coraggio(1.3).valore(1.2)
+                .numeroBersagli(1.1).stanchezza(0.5).danniMagici(0.7).danniFisici(1.2).recuperoFisico(1.4)
+                .recuperoMagico(1.0));
+        metti(TipoPersonaggio.GIGANTE, ValoriDiClasse.nuovi().corrompibile().amichevole()
+                .salute(250).magia(0, 0).esperienza(70).quanti(3).intelligenza(15)
+                .carico(4.5).critico(0.6).precisione(0.7).velocita(0.6).furtivita(0.2).parata(1.4)
+                .resistenzaMagica(0.8).percezione(0.8).soggezione(1.4).furia(1.1).coraggio(1.2).valore(1.1)
+                .contrattazione(0.7).numeroBersagli(1.6).stanchezza(1.3).danniMagici(0.6).danniFisici(1.6)
+                .recuperoFisico(1.3).recuperoMagico(0.5));
+        metti(TipoPersonaggio.GOBLIN, ValoriDiClasse.nuovi().corrompibile()
+                .salute(90).magia(0, 0).esperienza(15).quanti(5).intelligenza(4)
+                .carico(0.6).critico(1.2).precisione(1.0).velocita(1.2).furtivita(1.3).parata(0.8)
+                .resistenzaMagica(1.1).percezione(1.1).soggezione(0.5).furia(0.3).coraggio(0.4).valore(0.3)
+                .contrattazione(1.2).numeroBersagli(0.8).stanchezza(1.1).danniMagici(0.8).danniFisici(1.4)
+                .recuperoFisico(0.9).recuperoMagico(0.9));
+        metti(TipoPersonaggio.HOBGOBLIN, ValoriDiClasse.nuovi().corrompibile()
+                .salute(130).magia(0, 0).esperienza(15).quanti(3).intelligenza(12)
+                .carico(1.1).critico(1.1).precisione(1.2).velocita(0.9).furtivita(0.9).parata(1.4)
+                .resistenzaMagica(1.1).percezione(1.1).soggezione(1.1).furia(1.3).coraggio(1.3).valore(1.3)
+                .contrattazione(1.1).numeroBersagli(1.1).stanchezza(1.0).danniMagici(0.7).danniFisici(1.8)
+                .recuperoFisico(1.2).recuperoMagico(0.7));
+        metti(TipoPersonaggio.MINOTAURO, ValoriDiClasse.nuovi().corrompibile()
+                .salute(180).magia(0, 0).esperienza(40).quanti(3).intelligenza(10)
+                .carico(2.2).critico(0.7).precisione(0.9).velocita(0.8).furtivita(0.5).parata(1.2)
+                .resistenzaMagica(0.8).percezione(0.8).soggezione(1.3).furia(0.6).coraggio(1.2).valore(0.6)
+                .contrattazione(0.6).numeroBersagli(1.3).stanchezza(1.2).danniMagici(0.5).danniFisici(2.0)
+                .recuperoFisico(1.3).recuperoMagico(0.5));
+        metti(TipoPersonaggio.OMBRA_NERA, ValoriDiClasse.nuovi().femmina()
+                .salute(220).magia(40, 20).esperienza(40).quanti(2).intelligenza(31)
+                .carico(0.0).critico(1.4).precisione(1.2).velocita(1.3).furtivita(1.5).parata(1.4)
+                .resistenzaMagica(1.2).percezione(1.2).soggezione(1.4).furia(0.3).coraggio(1.4).valore(0.3)
+                .numeroBersagli(1.1).stanchezza(0.0).danniMagici(1.4).danniFisici(1.0).recuperoFisico(0.0)
+                .recuperoMagico(1.8));
+        metti(TipoPersonaggio.SCHELETRO, ValoriDiClasse.nuovi()
+                .salute(100).magia(0, 0).esperienza(15).quanti(4).intelligenza(6)
+                .carico(1.1).critico(1.1).precisione(1.0).velocita(1.0).furtivita(0.9).parata(1.1)
+                .resistenzaMagica(0.6).percezione(0.6).soggezione(0.8).furia(0.0).coraggio(1.5).valore(0.0)
+                .numeroBersagli(0.9).stanchezza(0.0).danniMagici(0.5).danniFisici(1.4).recuperoFisico(0.0)
+                .recuperoMagico(0.6));
+        metti(TipoPersonaggio.SPETTRO, ValoriDiClasse.nuovi()
+                .salute(130).magia(50, 25).esperienza(15).quanti(2).intelligenza(18)
+                .carico(0.0).critico(0.5).precisione(0.8).velocita(1.2).furtivita(1.4).parata(0.3)
+                .resistenzaMagica(1.1).percezione(1.1).soggezione(1.3).furia(0.2).coraggio(1.3).valore(0.2)
+                .numeroBersagli(1.1).stanchezza(0.0).danniMagici(1.3).danniFisici(0.3).recuperoFisico(0.0)
+                .recuperoMagico(1.4));
+        metti(TipoPersonaggio.SPIRITO, ValoriDiClasse.nuovi().amichevole()
+                .salute(110).magia(45, 20).esperienza(15).quanti(2).intelligenza(15)
+                .carico(0.0).critico(0.5).precisione(0.8).velocita(1.1).furtivita(1.2).parata(0.3)
+                .resistenzaMagica(1.2).percezione(1.2).soggezione(1.0).furia(0.9).coraggio(1.1).valore(0.9)
+                .numeroBersagli(1.0).stanchezza(0.0).danniMagici(1.3).danniFisici(0.2).recuperoFisico(0.0)
+                .recuperoMagico(1.4));
+        metti(TipoPersonaggio.TITANO, ValoriDiClasse.nuovi().corrompibile().amichevole()
+                .salute(300).magia(0, 0).esperienza(100).quanti(3).intelligenza(22)
+                .carico(10.0).critico(0.4).precisione(0.5).velocita(0.4).furtivita(0.0).parata(1.6)
+                .resistenzaMagica(1.0).percezione(1.0).soggezione(1.6).furia(1.4).coraggio(1.7).valore(1.4)
+                .contrattazione(0.8).numeroBersagli(2.0).stanchezza(0.5).danniMagici(1.5).danniFisici(2.0)
+                .recuperoFisico(1.5).recuperoMagico(1.4));
+        metti(TipoPersonaggio.TROLL, ValoriDiClasse.nuovi().corrompibile()
+                .salute(180).magia(0, 0).esperienza(40).quanti(3).intelligenza(10)
+                .carico(2.8).critico(0.7).precisione(0.9).velocita(0.7).furtivita(0.5).parata(1.2)
+                .resistenzaMagica(0.7).percezione(0.7).soggezione(1.1).furia(0.7).coraggio(0.9).valore(0.7)
+                .numeroBersagli(1.2).stanchezza(0.8).danniMagici(0.5).danniFisici(2.0).recuperoFisico(1.5)
+                .recuperoMagico(0.5));
+        metti(TipoPersonaggio.VIVERNA, ValoriDiClasse.nuovi().femmina()
+                .salute(170).magia(30, 10).esperienza(40).quanti(3).intelligenza(30)
+                .carico(3.5).critico(1.2).precisione(1.1).velocita(1.2).furtivita(0.8).parata(0.9)
+                .resistenzaMagica(1.3).percezione(1.3).soggezione(1.2).furia(0.8).coraggio(1.0).valore(0.8)
+                .numeroBersagli(1.2).stanchezza(1.0).danniMagici(0.8).danniFisici(1.7).recuperoFisico(1.1)
+                .recuperoMagico(0.8));
+        metti(TipoPersonaggio.IDRA, ValoriDiClasse.nuovi().femmina().boss()
+                .salute(850).magia(10, 4).esperienza(70).quanti(1).intelligenza(25)
+                .carico(5.0).critico(0.6).precisione(1.2).velocita(0.8).furtivita(0.4).parata(1.0)
+                .resistenzaMagica(1.3).percezione(1.3).soggezione(1.3).furia(0.5).coraggio(1.1).valore(0.5)
+                .numeroBersagli(1.9).stanchezza(0.9).danniMagici(0.9).danniFisici(2.8).recuperoFisico(1.5)
+                .recuperoMagico(0.8));
+        metti(TipoPersonaggio.LICH, ValoriDiClasse.nuovi().boss()
+                .salute(300).magia(80, 45).esperienza(100).quanti(1).intelligenza(70)
+                .carico(1.0).critico(1.0).precisione(1.1).velocita(0.9).furtivita(0.8).parata(0.7)
+                .resistenzaMagica(1.2).percezione(1.2).soggezione(1.5).furia(0.2).coraggio(1.6).valore(0.2)
+                .numeroBersagli(5.0).stanchezza(0.0).danniMagici(3).danniFisici(0.5).recuperoFisico(0.0)
+                .recuperoMagico(1.6));
+        // Il Necromante: avversario umano oscuro, un mago che ha fatto dei morti il suo esercito. Come il Mago per forza e magia, ma più temibile a vedersi
+        metti(TipoPersonaggio.NECROMANTE, ValoriDiClasse.nuovi()
+                .salute(300).magia(60, 34).esperienza(40).quanti(1).intelligenza(55)
+                .carico(0.8).critico(0.8).precisione(1.0).velocita(0.9).furtivita(0.9).parata(1.4)
+                .resistenzaMagica(1.1).percezione(1.1).soggezione(1.3).furia(0.8).coraggio(1.2).valore(1.0)
+                .contrattazione(1.0).numeroBersagli(1.3).stanchezza(1.4).danniMagici(2.6).danniFisici(0.5)
+                .recuperoFisico(0.7).recuperoMagico(1.5));
+        metti(TipoPersonaggio.MINOTAURO_GIGANTE, ValoriDiClasse.nuovi().boss()
+                .salute(950).magia(0, 0).esperienza(70).quanti(1).intelligenza(20)
+                .carico(4.0).critico(0.5).precisione(1.2).velocita(0.5).furtivita(0.2).parata(1.4)
+                .resistenzaMagica(0.6).percezione(0.6).soggezione(1.5).furia(0.5).coraggio(1.3).valore(0.5)
+                .numeroBersagli(1.6).stanchezza(1.4).danniMagici(0.4).danniFisici(2.8).recuperoFisico(1.4)
+                .recuperoMagico(0.4));
+        metti(TipoPersonaggio.STREGA, ValoriDiClasse.nuovi().femmina().boss()
+                .salute(190).magia(55, 32).esperienza(100).quanti(1).intelligenza(65)
+                .carico(0.95).critico(0.8).precisione(0.9).velocita(0.9).furtivita(1.0).parata(0.6)
+                .resistenzaMagica(1.4).percezione(1.3).soggezione(1.2).furia(0.8).coraggio(1.1).valore(0.8)
+                .numeroBersagli(5.0).stanchezza(1.4).danniMagici(3.0).danniFisici(0.6).recuperoFisico(0.8)
+                .recuperoMagico(1.4));
+        metti(TipoPersonaggio.DRAGO, ValoriDiClasse.nuovi().boss()
+                .salute(600).magia(30, 8).esperienza(250).quanti(1).intelligenza(80)
+                .carico(8.0).critico(1.0).precisione(1.2).velocita(1.1).furtivita(0.5).parata(1.4)
+                .resistenzaMagica(1.5).percezione(1.5).soggezione(1.6).furia(1.1).coraggio(1.6).valore(1.1)
+                .numeroBersagli(5.0).stanchezza(0.7).danniMagici(3.0).danniFisici(1.7).recuperoFisico(1.4)
+                .recuperoMagico(1.5));
+    }
+
+    /**
+     * I valori fissi di quella classe (vedi ValoriDiClasse).
+     *
+     * @throws IllegalStateException se la classe non ha la sua riga nella tabella
+     */
+    public static ValoriDiClasse valoriDi(TipoPersonaggio classe) {
+        ValoriDiClasse valori = VALORI_DI_CLASSE.get(classe);
+        if (valori == null) {
+            throw new IllegalStateException("La classe " + classe + " non ha i suoi valori in CostantiPersonaggi");
+        }
+        return valori;
+    }
+
+    // Una riga della tabella: i valori, con il controllo che non ne manchi nessuno
+    private static void metti(TipoPersonaggio classe, ValoriDiClasse.Costruttore valori) {
+        VALORI_DI_CLASSE.put(classe, valori.per(classe));
+    }
+
+    // Una classe che ha gli stessi valori di un'altra, già nella tabella (il capitano delle guardie quelli del guerriero)
+    private static void comeIl(TipoPersonaggio classe, TipoPersonaggio altra) {
+        VALORI_DI_CLASSE.put(classe, valoriDi(altra));
+    }
+
+    // I valori comuni a tutti i non combattenti (locandiere, armaiolo, alchimista...): le massime del bardo per 0,85 e un poco meno
+    // salute e magia; nessuno di loro si corrompe né fa amicizia
+    private static ValoriDiClasse.Costruttore nonCombattente() {
+        return ValoriDiClasse.nuovi()
+                .salute(90).magia(30, 14).esperienza(25).quanti(1).intelligenza(29.75)
+                .carico(0.9).critico(1.1).precisione(1.0).velocita(1.1).furtivita(1.1).parata(1.0)
+                .resistenzaMagica(1.1).percezione(1.1).soggezione(1.2).furia(1.1).coraggio(1.1).valore(1.1)
+                .contrattazione(1.2).numeroBersagli(1.1).stanchezza(1.0).danniMagici(1.1).danniFisici(0.9)
+                .recuperoFisico(1.1).recuperoMagico(1.2);
+    }
 }

@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.personaggi;
 
-import com.threeamigos.foresta.tipi.CostantiPersonaggi;
 
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
@@ -10,8 +9,6 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
  */
 public class Ladro extends PersonaggioBase implements Personaggio {
 
-	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
-
 	public Ladro(int livello) {
 		super(TipoPersonaggio.LADRO, livello);
 	}
@@ -20,131 +17,4 @@ public class Ladro extends PersonaggioBase implements Personaggio {
 		super(nome, TipoPersonaggio.LADRO, livello);
 	}
 
-	@Override
-	protected void impostaValoriDiPartenza() {
-		setCorrompibile(true);
-		setAmichevole(true);
-
-		setQuantitaMassima(CostantiPersonaggi.LADRO_MAX_NUMERO);
-	}
-
-	@Override
-	public int getPuntiEsperienza() {
-		return CostantiPersonaggi.LADRO_PUNTI_ESPERIENZA;
-	}
-
-	@Override
-	public double getSaluteBase() {
-		return CostantiPersonaggi.LADRO_SALUTE_BASE;
-	}
-
-	@Override
-	public double getMagiaBase() {
-		return CostantiPersonaggi.LADRO_MAGIA_BASE;
-	}
-
-	@Override
-	public double getLivellamentoMagia() {
-		return CostantiPersonaggi.LADRO_LIVELLAMENTO_MAGIA;
-	}
-
-	@Override
-	public double getMoltiplicatoreCarico() {
-		return CostantiPersonaggi.LADRO_MOLTIPLICATORE_CARICO;
-	}
-
-	@Override
-	public double getMoltiplicatoreCritico() {
-		return CostantiPersonaggi.LADRO_MOLTIPLICATORE_CRITICO;
-	}
-
-	@Override
-	public double getMoltiplicatorePrecisione() {
-		return CostantiPersonaggi.LADRO_MOLTIPLICATORE_PRECISIONE;
-	}
-
-	@Override
-	public double getMoltiplicatoreVelocita() {
-		return CostantiPersonaggi.LADRO_MOLTIPLICATORE_VELOCITA;
-	}
-
-	@Override
-	public double getMoltiplicatoreFurtivita() {
-		return CostantiPersonaggi.LADRO_MOLTIPLICATORE_FURTIVITA;
-	}
-
-	@Override
-	public double getMoltiplicatoreParata() {
-		return CostantiPersonaggi.LADRO_MOLTIPLICATORE_PARATA;
-	}
-
-	@Override
-	public double getMoltiplicatoreResistenzaMagica() {
-		return CostantiPersonaggi.LADRO_MOLTIPLICATORE_RESISTENZA_MAGICA;
-	}
-
-	@Override
-	public double getMoltiplicatorePercezione() {
-		return CostantiPersonaggi.LADRO_MOLTIPLICATORE_PERCEZIONE;
-	}
-
-	@Override
-	public double getMoltiplicatoreSoggezione() {
-		return CostantiPersonaggi.LADRO_MOLTIPLICATORE_SOGGEZIONE;
-	}
-
-	@Override
-	public double getMoltiplicatoreFuria() {
-		return CostantiPersonaggi.LADRO_MOLTIPLICATORE_FURIA;
-	}
-
-	@Override
-	public double getMoltiplicatoreCoraggio() {
-		return CostantiPersonaggi.LADRO_MOLTIPLICATORE_CORAGGIO;
-	}
-
-	@Override
-	public double getMoltiplicatoreValore() {
-		return CostantiPersonaggi.LADRO_MOLTIPLICATORE_VALORE;
-	}
-
-	@Override
-	public double getMoltiplicatoreContrattazione() {
-		return CostantiPersonaggi.LADRO_MOLTIPLICATORE_CONTRATTAZIONE;
-	}
-
-	@Override
-	public double getMoltiplicatoreNumeroBersagli() {
-		return CostantiPersonaggi.LADRO_MOLTIPLICATORE_NUMERO_BERSAGLI;
-	}
-
-	@Override
-	public double getMoltiplicatoreStanchezza() {
-		return CostantiPersonaggi.LADRO_MOLTIPLICATORE_STANCHEZZA;
-	}
-
-	@Override
-	public double getMoltiplicatoreDanniMagici() {
-		return CostantiPersonaggi.LADRO_MOLTIPLICATORE_DANNI_MAGICI;
-	}
-
-	@Override
-	public double getMoltiplicatoreDanniFisici() {
-		return CostantiPersonaggi.LADRO_MOLTIPLICATORE_DANNI_FISICI;
-	}
-
-	@Override
-	public double getMoltiplicatoreRecuperoMagico() {
-		return CostantiPersonaggi.LADRO_MOLTIPLICATORE_RECUPERO_MAGICO;
-	}
-
-	@Override
-	public double getMoltiplicatoreRecuperoFisico() {
-		return CostantiPersonaggi.LADRO_MOLTIPLICATORE_RECUPERO_FISICO;
-	}
-
-	@Override
-	public double getMaxIntelligenza() {
-		return CostantiPersonaggi.LADRO_MAX_INTELLIGENZA;
-	}
 }
